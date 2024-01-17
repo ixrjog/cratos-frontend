@@ -1,0 +1,90 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.tagKey"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [headerBg]="true"
+    [showLoading]="table.showLoading"
+  >
+    <thead dTableHead [checkable]="true">
+    <tr dTableRow>
+      <th dHeadCell *ngFor="let column of columns">
+        {{ column.header }}
+      </th>
+    </tr>
+    </thead>
+    <tbody dTableBody>
+    <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
+      <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked,'table-row-invalid': !(rowItem['valid']) }">
+        <td dTableCell class="devui-checkable-cell" [fixedLeft]="'0px'">
+          <d-checkbox
+            [ngModelOptions]="{ standalone: true }"
+            [ngModel]="rowItem.$checked"
+            [halfchecked]="rowItem.$halfChecked"
+            (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+          >
+          </d-checkbox>
+        </td>
+        <td
+          dTableCell
+          *ngFor="let column of columns"
+          [ngSwitch]="column.field"
+        >
+          <span *ngSwitchCase="'createTime'">
+          {{ (rowItem[column.field] | i18nDate: 'full') }}
+          </span>
+          <span *ngSwitchCase="'color'">
+           <input type="color" [value]="(rowItem['color'])" disabled="true"/>
+          </span>
+          <span *ngSwitchCase="'actions'">
+            <d-icon-group>
+              <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit((rowItem),'standard')"></d-icon>
+              <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getValid()">
+              </d-icon>
+              <span dDropDown>
+                <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+                <ul dDropDownMenu>
+                  <li class="devui-dropdown-item">删除</li>
+                  <li class="devui-dropdown-item">保存</li>
+                </ul>
+              </span>
+            </d-icon-group>
+          </span>
+          <span *ngSwitchDefault>
+          {{ rowItem[column.field] }}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    </tbody>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">No Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<d-pagination
+  class="spacing-pagination"
+  [total]="table.pager.total"
+  [(pageSize)]="table.pager.pageSize"
+  [(pageIndex)]="table.pager.pageIndex"
+  [canViewTotal]="true"
+  [canChangePageSize]="true"
+  [maxItems]="5"
+  (pageIndexChange)="pageIndexChange($event)"
+  (pageSizeChange)="pageSizeChange($event)"
+>
+</d-pagination>

@@ -1,0 +1,58 @@
+<section>
+  <form
+    dForm
+    [layout]="layoutDirection"
+    [formGroup]="tagFormGroup"
+    (dSubmit)="submitForm()"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Tag Type</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="tagTypeOptions"
+          [valueKey]="'tagType'"
+          [filterKey]="'desc'"
+          formControlName="tagType"
+          (valueChange)="onChangeTest($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Key</d-form-label>
+      <d-form-control>
+        <input dTextInput name="tagKey" formControlName="tagKey"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Value</d-form-label>
+      <d-form-control>
+        <input dTextInput name="tagValue"  formControlName="tagKey"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Color</d-form-label>
+      <d-form-control>
+        <input type="color" name="color" formControlName="color"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">PromptColor</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="promptColorOptions"
+          [valueKey]="'value'"
+          [filterKey]="'label'"
+          formControlName="promptColor"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px" formControlName="comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

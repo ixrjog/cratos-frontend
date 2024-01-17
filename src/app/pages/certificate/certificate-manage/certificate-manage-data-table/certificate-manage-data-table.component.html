@@ -1,0 +1,55 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button
+    class="button"
+    (click)="fetchData()"
+  >Fetch Data
+  </d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [showLoading]="table.showLoading">
+    <thead dTableHead>
+    <tr dTableRow>
+      <th dHeadCell *ngFor="let column of columns">
+        {{ column.header }}
+      </th>
+    </tr>
+    </thead>
+    <tbody dTableBody>
+    <ng-template let-rowItem="rowItem">
+      <tr dTableRow>
+        <td dTableCell *ngFor="let column of columns">
+          {{ column.fieldType === 'date' ? (rowItem[column.field] | i18nDate: 'full') : rowItem[column.field] }}
+        </td>
+      </tr>
+    </ng-template>
+    </tbody>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">No Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<d-pagination
+  class="spacing-pagination"
+  [total]="table.pager.total"
+  [(pageSize)]="table.pager.pageSize"
+  [(pageIndex)]="table.pager.pageIndex"
+  [canViewTotal]="true"
+  [canChangePageSize]="true"
+  [maxItems]="5"
+  (pageIndexChange)="pageIndexChange($event)"
+  (pageSizeChange)="pageSizeChange($event)">
+</d-pagination>

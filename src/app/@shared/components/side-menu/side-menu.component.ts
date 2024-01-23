@@ -9,7 +9,8 @@ export class SideMenuComponent implements OnInit {
 
   @Input() data: any;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

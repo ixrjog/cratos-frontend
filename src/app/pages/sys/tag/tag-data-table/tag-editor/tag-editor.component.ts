@@ -13,53 +13,62 @@ export class TagEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
-  data: TagVo;
+  data: any;
+
+  formData: TagVo;
   tagFormGroup: FormGroup;
 
-  tagTypeOptions = [
-    { tagType: 0, desc: 'SYS' },
-    { tagType: 1, desc: 'CUSTOM' },
-  ];
+  tagTypeOptions = [ 'SYS', 'CUSTOM' ];
 
   promptColorOptions = [
-    { value: 0, label: 'BLACK' },
-    { value: 1, label: 'RED' },
-    { value: 2, label: 'GREEN' },
-    { value: 3, label: 'YELLOW' },
-    { value: 4, label: 'BLUE' },
-    { value: 5, label: 'MAGENTA' },
-    { value: 6, label: 'CYAN' },
-    { value: 7, label: 'WHITE' },
-    { value: 8, label: 'BRIGHT' },
+    'BLACK',
+    'RED',
+    'GREEN',
+    'YELLOW',
+    'BLUE',
+    'MAGENTA',
+    'CYAN',
+    'WHITE',
+    'BRIGHT',
   ];
 
-  constructor(private fb: FormBuilder,
-              private tagService: TagService) {
+  constructor(
+    private fb: FormBuilder,
+    private tagService: TagService,
+  ) {
   }
 
   ngOnInit(): void {
+    this.formData = this.data['formData'];
     this.tagFormGroup = this.fb.group({
-      id: [ this.data.id ? this.data.id : null, null ],
-      tagType: [ this.data.tagType, [ Validators.required ] ],
-      tagKey: [ this.data.tagKey, [ Validators.required ] ],
-      tagValue: [ this.data.tagValue, [ Validators.required ] ],
-      color: [ this.data.color, null ],
-      promptColor: [ this.data.promptColor, [ Validators.required ] ],
-      seq: [ this.data.seq, null ],
-      valid: [ this.data.valid, [ Validators.required ] ],
-      comment: [ this.data.comment, null ],
+      id: [ this.formData.id ? this.data.id : null, null ],
+      tagType: [ this.formData.tagType, [ Validators.required ] ],
+      tagKey: [ this.formData.tagKey, [ Validators.required ] ],
+      tagValue: [ this.formData.tagValue, null ],
+      color: [ this.formData.color, null ],
+      promptColor: [ this.formData.promptColor, [ Validators.required ] ],
+      seq: [ this.formData.seq, null ],
+      valid: [ this.formData.valid, [ Validators.required ] ],
+      comment: [ this.formData.comment, null ],
     });
   }
 
-  submitForm() {
-    // const param: TagEdit = {
-    //   ...this.tagFormGroup
-    // }
-    // if (param)
-    // this.tagService.updateTag(this.)
-    console.log(1231213);
+  addForm() {
+    if (this.tagFormGroup.valid) {
+      const param: TagEdit = {
+        ...this.tagFormGroup.value,
+      };
+      return this.tagService.addTag(param);
+    }
   }
-  onChangeTest(val){
-    console.log(val);
+
+  updateForm() {
+    if (this.tagFormGroup.valid) {
+      const param: TagEdit = {
+        ...this.tagFormGroup.value,
+      };
+      return this.tagService.updateTag(param);
+    }
   }
+
 }

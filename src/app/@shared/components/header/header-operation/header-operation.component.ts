@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/@core/services/auth.service';
 import { LANGUAGES } from 'src/config/language-config';
 import { User } from '../../../models/user';
 import { I18nService } from 'ng-devui/i18n';
+import { LoginVo } from '../../../../@core/data/log';
+import { LogService } from '../../../../@core/services/log.service';
 
 @Component({
   selector: 'da-header-operation',
@@ -12,14 +14,14 @@ import { I18nService } from 'ng-devui/i18n';
   styleUrls: ['./header-operation.component.scss'],
 })
 export class HeaderOperationComponent implements OnInit {
-  user: User;
+  user: LoginVo;
   languages = LANGUAGES;
   language: string;
   haveLoggedIn = false;
 
   constructor(
     private route: Router,
-    private authService: AuthService,
+    private logService: LogService,
     private translate: TranslateService,
     private i18n: I18nService
   ) {}
@@ -28,12 +30,12 @@ export class HeaderOperationComponent implements OnInit {
     if (localStorage.getItem('userinfo')) {
       this.user = JSON.parse(localStorage.getItem('userinfo')!);
       this.haveLoggedIn = true;
-    } else {
-      this.authService.login('Admin', '******').subscribe((res) => {
-        this.authService.setSession(res);
-        this.user = JSON.parse(localStorage.getItem('userinfo')!);
-        this.haveLoggedIn = true;
-      });
+    // } else {
+    //   this.authService.login('Admin', '******').subscribe((res) => {
+    //     this.authService.setSession(res);
+    //     this.user = JSON.parse(localStorage.getItem('userinfo')!);
+    //     this.haveLoggedIn = true;
+    //   });
     }
 
     this.language = this.translate.currentLang;
@@ -54,7 +56,7 @@ export class HeaderOperationComponent implements OnInit {
     switch (operation) {
       case 'logout': {
         this.haveLoggedIn = false;
-        this.authService.logout();
+        this.logService.logout();
         this.route.navigate(['/', 'login']);
         break;
       }

@@ -11,38 +11,7 @@
   <d-badge [count]="5">
     <i class="icon icon-notice"></i>
   </d-badge>
-  <div class="da-operations-user" dDropDown [trigger]="'hover'" appendToBody dDropDownToggle>
-    <d-avatar
-      [name]="user.userName"
-      [width]="22"
-      [height]="22"
-    ></d-avatar>
-    <span class="da-user-name">{{ user?.userName }}</span>
-    <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu" style="min-width: 120px">
-      <ng-container *ngIf="haveLoggedIn; else login">
-        <li role="menuitem">
-          <a
-            class="devui-dropdown-item"
-            [routerLink]="['/pages', 'user', 'center']"
-            ><i class="icon icon-mine"></i>{{ "header.userCenter" | translate }}</a
-          >
-        </li>
-        <li role="menuitem">
-          <a
-            class="devui-dropdown-item"
-            [routerLink]="['/pages', 'user', 'settings']"
-            ><i class="icon icon-setting"></i>{{ "header.userSettings" | translate }}</a
-          >
-        </li>
-        <li role="menuitem" (click)="handleUserOps('logout')">
-          <a class="devui-dropdown-item logout"
-            ><i class="icon icon-exit"></i>{{ "header.logout" | translate }}</a
-          >
-        </li>
-      </ng-container>
-    </ul>
-  </div>
-  
+
   <div
     class="da-language-wrapper"
     dDropDown
@@ -77,7 +46,39 @@
       </li>
     </ul>
   </div>
-  
+
+  <div class="da-operations-user" dDropDown [trigger]="'hover'" appendToBody dDropDownToggle>
+    <d-avatar
+      [name]="user.name"
+      [width]="22"
+      [height]="22"
+    ></d-avatar>
+    <span class="da-user-name">{{ user?.name }}</span>
+    <ul dDropDownMenu class="devui-dropdown-menu devui-scrollbar" role="menu" style="min-width: 120px">
+      <ng-container *ngIf="haveLoggedIn; else login">
+        <li role="menuitem">
+          <a
+            class="devui-dropdown-item"
+            [routerLink]="['/pages', 'user', 'center']"
+          ><i class="icon icon-mine"></i>{{ "header.userCenter" | translate }}</a
+          >
+        </li>
+        <li role="menuitem">
+          <a
+            class="devui-dropdown-item"
+            [routerLink]="['/pages', 'user', 'settings']"
+          ><i class="icon icon-setting"></i>{{ "header.userSettings" | translate }}</a
+          >
+        </li>
+        <li role="menuitem" (click)="handleUserOps('logout')">
+          <a class="devui-dropdown-item logout"
+          ><i class="icon icon-exit"></i>{{ "header.logout" | translate }}</a
+          >
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
 </div>
 
 <ng-template #login>

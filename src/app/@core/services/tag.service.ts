@@ -16,7 +16,7 @@ export class TagService extends TagData {
   }
 
   updateTag(param: TagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/tag/update', param);
+    return this.apiService.put('/tag/update', param);
   }
 
   addTag(param: TagEdit): Observable<HttpResult<Boolean>> {

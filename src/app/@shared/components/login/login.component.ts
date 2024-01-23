@@ -1,16 +1,16 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { I18nService } from 'ng-devui/i18n';
 import { Subject } from 'rxjs';
 import { DValidateRules } from 'ng-devui';
-import { takeUntil } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { AuthService } from 'src/app/@core/services/auth.service';
+import { map, takeUntil } from 'rxjs/operators';
 import { PersonalizeService } from 'src/app/@core/services/personalize.service';
 import { ThemeType } from '../../models/theme';
 import { FormLayout } from 'ng-devui/form';
 import { LANGUAGES } from 'src/config/language-config';
+import { LogService } from '../../../@core/services/log.service';
+import { LoginParam } from '../../../@core/data/log';
 
 @Component({
   selector: 'da-login',
@@ -22,44 +22,40 @@ export class LoginComponent implements OnInit {
 
   tabActiveId: string | number = 'tab1';
   showPassword = false;
-  horizontalLayout: FormLayout = FormLayout.Horizontal;
+  horizontalLayout: FormLayout = FormLayout.Vertical;
 
   toastMessage: any;
   languages = LANGUAGES;
   language: string;
-
   tabItems: any;
-
   i18nValues: any;
 
-  formData = {
-    userAccount: 'Admin',
-    userAccountPassword: '******',
-    userEmail: 'admin@devui.com',
-    userEmailPassword: '******'
+  formData: LoginParam = {
+    otp: '', password: '', username: '',
   };
 
   formRules: { [key: string]: DValidateRules } = {
     usernameRules: {
       validators: [
         { required: true },
-        { minlength: 3 },
-        { maxlength: 20 },
-        {
-          pattern: /^[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+)*$/,
-          message: 'The user name cannot contain characters except uppercase and lowercase letters.',
-        },
+        // { minlength: 3 },
+        // { maxlength: 20 },
+        // {
+        //   pattern: /^[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+)*$/,
+        //   message: 'The user name cannot contain characters except uppercase and lowercase letters.',
+        // },
       ]
     },
-    emailRules: {
-      validators: [
-        { required: true },
-        { email: true },
-      ],
-    },
     passwordRules: {
-      validators: [{ required: true }, { minlength: 6 }, { maxlength: 15 }, { pattern: /^[a-zA-Z0-9\d@$!%*?&.]+(\s+[a-zA-Z0-9]+)*$/ }],
-      message: 'Enter a password that contains 6 to 15 digits and letters.',
+      validators: [
+        // { required: true },
+        // { minlength: 6 },
+        // { maxlength: 100 },
+        // {
+        //   pattern: /^[a-zA-Z0-9\d@$!%*?&.]+(\s+[a-zA-Z0-9]+)*$/,
+        // },
+      ],
+      // message: 'Enter a password that contains 6 to 15 digits and letters.',
     },
   };
 
@@ -71,7 +67,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService,
+    private logService: LogService,
     private translate: TranslateService,
     private i18n: I18nService,
     private personalizeService: PersonalizeService
@@ -116,43 +112,15 @@ export class LoginComponent implements OnInit {
   onClick(tabId: string | number) {
     switch (tabId) {
       case 'tab1':
-        this.authService
-          .login(this.formData.userAccount, this.formData.userAccountPassword)
+        const param: LoginParam = {
+          ...this.formData,
+        };
+        this.logService.login(param)
           .subscribe(
-            (res) => {
-              this.authService.setSession(res);
-              this.router.navigate(['/']);
-            },
-            (error) => {
-              this.toastMessage = [
-                {
-                  severity: 'error',
-                  summary: this.i18nValues['noticeMessage']['summary'],
-                  content: this.i18nValues['noticeMessage']['accountContent']
-                  
-                }
-              ];
-            }
-          );
-        break;
-      case 'tab2':
-        this.authService
-          .login(this.formData.userEmail, this.formData.userEmailPassword)
-          .subscribe(
-            (res) => {
-              this.authService.setSession(res);
-              this.router.navigate(['/']);
-            },
-            (error) => {
-              this.toastMessage = [
-                {
-                  severity: 'error',
-                  summary: this.i18nValues['noticeMessage']['summary'],
-                  content: this.i18nValues['noticeMessage']['emailContent']
-                }
-              ];
-            }
-          );
+            ({ body }) => {
+              this.logService.setSession(body);
+              this.router.navigate([ '/' ]);
+            });
         break;
       default:
         break;
@@ -172,10 +140,10 @@ export class LoginComponent implements OnInit {
         id: 'tab1',
         title: values['loginWays']['account']
       },
-      {
-        id: 'tab2',
-        title: values['loginWays']['email']
-      }
+      // {
+      //   id: 'tab2',
+      //   title: values['loginWays']['email']
+      // }
     ];
   }
 

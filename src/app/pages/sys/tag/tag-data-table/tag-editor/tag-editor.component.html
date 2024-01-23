@@ -1,21 +1,9 @@
 <section>
-  <form
-    dForm
-    [layout]="layoutDirection"
-    [formGroup]="tagFormGroup"
-    (dSubmit)="submitForm()"
-  >
+  <form dForm [layout]="layoutDirection" [formGroup]="tagFormGroup">
     <d-form-item>
       <d-form-label [required]="true">Tag Type</d-form-label>
       <d-form-control>
-        <d-select
-          [options]="tagTypeOptions"
-          [valueKey]="'tagType'"
-          [filterKey]="'desc'"
-          formControlName="tagType"
-          (valueChange)="onChangeTest($event)"
-        >
-        </d-select>
+        <d-select [options]="tagTypeOptions" formControlName="tagType" [disabled]="true"></d-select>
       </d-form-control>
     </d-form-item>
     <d-form-item>
@@ -25,9 +13,9 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Value</d-form-label>
+      <d-form-label>Value</d-form-label>
       <d-form-control>
-        <input dTextInput name="tagValue"  formControlName="tagKey"/>
+        <input dTextInput name="tagValue" formControlName="tagValue" />
       </d-form-control>
     </d-form-item>
     <d-form-item>
@@ -37,15 +25,15 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">PromptColor</d-form-label>
+      <d-form-label [required]="true">Prompt Color</d-form-label>
       <d-form-control>
-        <d-select
-          [options]="promptColorOptions"
-          [valueKey]="'value'"
-          [filterKey]="'label'"
-          formControlName="promptColor"
-        >
-        </d-select>
+        <d-select [options]="promptColorOptions" formControlName="promptColor"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Valid</d-form-label>
+      <d-form-control>
+        <d-toggle formControlName="valid"></d-toggle>
       </d-form-control>
     </d-form-item>
     <d-form-item>

@@ -1,4 +1,13 @@
-import { Component, ChangeDetectionStrategy, HostBinding, Input, Renderer2, ElementRef, OnInit, OnChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnChanges,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { setGridClass } from './layout-utils';
 import { DaAlignSelf, DaMergedProperty } from './layout.types';
 
@@ -56,7 +65,8 @@ export class ColComponent implements OnInit, OnChanges {
   constructor(
     private elementRef: ElementRef,
     private renderer: Renderer2,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     setGridClass(this, this.elementRef, this.renderer);

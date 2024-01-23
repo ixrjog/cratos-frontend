@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
-  Router
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from 'ng-devui';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
+import { LogService } from './log.service';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
@@ -17,20 +11,18 @@ export class AuthGuardService implements CanActivate {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private logService: LogService,
     private toastService: ToastService,
     private translate: TranslateService
-  ) {}
+  ) {
+  }
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (!this.authService.isUserLoggedIn()) {
+    if (!this.logService.isUserLoggedIn()) {
       this.i18nValues = this.translate.instant('authNotice');
       this.toastService.open({
         value: [

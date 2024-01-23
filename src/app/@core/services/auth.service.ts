@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { throwError, of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { User } from 'src/app/@shared/models/user';
 
 const USERS = [

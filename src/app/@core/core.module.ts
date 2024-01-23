@@ -2,7 +2,6 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { AuthService } from './services/auth.service';
 import { PersonalizeService } from './services/personalize.service';
 import { CustomThemeService } from './services/custom-theme.service';
 import { CourseData } from './data/course';
@@ -12,6 +11,8 @@ import { AuthGuardService } from './services/auth-guard-service.guard';
 import { CertificateService } from './services/certificate.service';
 import { TagService } from './services/tag.service';
 import { CredentialService } from './services/credential.service';
+import { ToastModule } from 'ng-devui';
+import { LogService } from './services/log.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -20,7 +21,6 @@ const DATA_SERVICES = [
 export const DEVUI_CORE_PROVIDERS = [
   ...MockDataModule.forRoot().providers!,
   ...DATA_SERVICES,
-  AuthService,
   PersonalizeService,
   AuthGuardService,
   CustomThemeService,
@@ -30,11 +30,12 @@ export const CRATOS_PROVIDERS = [
   CertificateService,
   CredentialService,
   TagService,
+  LogService,
 ];
 
 @NgModule({
   declarations: [],
-  imports: [ CommonModule ],
+  imports: [ CommonModule,ToastModule ],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

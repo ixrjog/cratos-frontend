@@ -63,6 +63,7 @@ const DEVUI_MODULES = [
   TagsInputModule,
   SelectModule,
   TextareaModule,
+  ToastModule,
 ];
 const COMPONENTS = [
   HeaderComponent,
@@ -93,7 +94,6 @@ const PIPES = [
     DCommonModule,
     AlertModule,
     ClipboardModule,
-    ToastModule,
     TooltipModule,
     I18nModule,
     IconModule,

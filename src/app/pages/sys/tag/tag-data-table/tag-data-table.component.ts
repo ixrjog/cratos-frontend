@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Table } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
-import { TagPageQuery, TagVo } from '../../../../@core/data/tag';
-import { DataTableComponent, DialogService } from 'ng-devui';
+import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
+import { DataTableComponent, DialogService, ToastService } from 'ng-devui';
 import { TagEditorComponent } from './tag-editor/tag-editor.component';
 
 @Component({
@@ -24,16 +24,24 @@ export class TagDataTableComponent implements OnInit {
   };
 
   columns = [
-    { field: 'tagType', header: 'Tag Type', fieldType: 'text' },
-    { field: 'tagKey', header: 'Tag Key', fieldType: 'text' },
+    { field: 'tagKey', header: 'Tag Key', fieldType: 'text',width: '150px' },
     { field: 'tagValue', header: 'Tag Value', fieldType: 'text' },
+    { field: 'tagType', header: 'Tag Type', fieldType: 'text' },
     { field: 'color', header: 'Color', fieldType: 'text' },
+    { field: 'promptColor', header: 'Prompt Color', fieldType: 'text' },
+    { field: 'seq', header: 'Seq', fieldType: 'text' },
     { field: 'createTime', header: 'Create Time', fieldType: 'date' },
-    { field: 'actions', header: 'Actions', fixedRight: '0px' },
   ];
 
-  constructor(private tagService: TagService,
-              private dialogService: DialogService) {
+  newTag: TagEdit = {
+    color: '#FFFFFF', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
+  };
+
+  constructor(
+    private tagService: TagService,
+    private dialogService: DialogService,
+    private toastService: ToastService,
+  ) {
   }
 
   fetchData() {
@@ -76,12 +84,12 @@ export class TagDataTableComponent implements OnInit {
     width: '30%',
     maxHeight: '600px',
     content: TagEditorComponent,
-    backdropCloseable: true,
+    backdropCloseable: false,
   };
 
-  onRowEdit(rowItem: TagVo, dialogtype: string) {
+  OnNewRow(dialogtype: string) {
     const results = this.dialogService.open({
-      title: 'Edit Tag',
+      title: 'New Tag',
       ...this.dialogDate,
       buttons: [
         {
@@ -89,8 +97,15 @@ export class TagDataTableComponent implements OnInit {
           text: '确定',
           disabled: false,
           handler: ($event: Event) => {
-            results.modalContentInstance.submitForm();
-            results.modalInstance.hide();
+            results.modalContentInstance.addForm()
+              .subscribe(() => {
+                this.toastService.open({
+                  value: [ { severity: 'success', summary: 'Success', content: 'Add Success' } ],
+                  life: 2000,
+                });
+                results.modalInstance.hide();
+                this.fetchData();
+              });
           },
         },
         {
@@ -103,12 +118,52 @@ export class TagDataTableComponent implements OnInit {
         },
       ],
       data: {
-        ...rowItem,
+        formData: this.newTag,
+        canConfirm: (value: boolean) => {
+          results.modalInstance.updateButtonOptions([ { disabled: !value } ]);
+        },
       },
     });
-    console.log(111111);
-    console.log(results.modalContentInstance);
-    console.log(111111);
+  }
+
+
+  onRowEdit(rowItem: TagVo, dialogtype: string) {
+    const results = this.dialogService.open({
+      title: 'Edit Tag',
+      ...this.dialogDate,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: '确定',
+          disabled: false,
+          handler: ($event: Event) => {
+            results.modalContentInstance.updateForm()
+              .subscribe(() => {
+                this.toastService.open({
+                  value: [ { severity: 'success', summary: 'Success', content: 'Update Success' } ],
+                  life: 2000,
+                });
+                results.modalInstance.hide();
+                this.fetchData();
+              });
+          }
+        },
+        {
+          id: 'btn-cancel',
+          cssClass: 'common',
+          text: '取消',
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        },
+      ],
+      data: {
+        formData: rowItem,
+        canConfirm: (value: boolean) => {
+          results.modalInstance.updateButtonOptions([ { disabled: !value } ]);
+        },
+      },
+    });
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
@@ -120,5 +175,9 @@ export class TagDataTableComponent implements OnInit {
       rowItem: rowItem,
       checked: checked,
     });
+  }
+
+  onDelete($event: MouseEvent) {
+    console.log('on delete')
   }
 }

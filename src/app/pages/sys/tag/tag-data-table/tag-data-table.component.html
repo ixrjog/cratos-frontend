@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="OnNewRow('standard')">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.tagKey"
@@ -22,15 +22,19 @@
   >
     <thead dTableHead [checkable]="true">
     <tr dTableRow>
-      <th dHeadCell *ngFor="let column of columns">
+      <th
+        dHeadCell
+        *ngFor="let column of columns"
+      >
         {{ column.header }}
       </th>
+      <th dHeadCell [fixedRight]="'0px'">Actions</th>
     </tr>
     </thead>
     <tbody dTableBody>
     <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
       <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked,'table-row-invalid': !(rowItem['valid']) }">
-        <td dTableCell class="devui-checkable-cell" [fixedLeft]="'0px'">
+        <td dTableCell class="devui-checkable-cell">
           <d-checkbox
             [ngModelOptions]="{ standalone: true }"
             [ngModel]="rowItem.$checked"
@@ -43,6 +47,7 @@
           dTableCell
           *ngFor="let column of columns"
           [ngSwitch]="column.field"
+          [width]="'1500px'"
         >
           <span *ngSwitchCase="'createTime'">
           {{ (rowItem[column.field] | i18nDate: 'full') }}
@@ -50,23 +55,22 @@
           <span *ngSwitchCase="'color'">
            <input type="color" [value]="(rowItem['color'])" disabled="true"/>
           </span>
-          <span *ngSwitchCase="'actions'">
-            <d-icon-group>
-              <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit((rowItem),'standard')"></d-icon>
-              <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getValid()">
-              </d-icon>
-              <span dDropDown>
-                <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
-                <ul dDropDownMenu>
-                  <li class="devui-dropdown-item">删除</li>
-                  <li class="devui-dropdown-item">保存</li>
-                </ul>
-              </span>
-            </d-icon-group>
-          </span>
           <span *ngSwitchDefault>
           {{ rowItem[column.field] }}
           </span>
+        </td>
+        <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'" [width]="'200px'">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit((rowItem),'standard')"></d-icon>
+            <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getValid()">
+            </d-icon>
+            <span dDropDown appendToBody>
+                <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+                <ul dDropDownMenu >
+                  <li class="devui-dropdown-item" (click)="onDelete($event)">删除</li>
+                </ul>
+              </span>
+          </d-icon-group>
         </td>
       </tr>
     </ng-template>

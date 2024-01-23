@@ -10,6 +10,7 @@ export default {
     submit: '提交',
     userName: '用户名',
     password: '密码',
+    otp: 'OTP',
     email: '邮箱',
     noticeMessage: {
       summary: '用户名或密码错误',

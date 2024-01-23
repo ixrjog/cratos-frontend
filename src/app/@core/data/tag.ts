@@ -3,11 +3,11 @@ import { BaseVO, DataTable, HttpResult, PageQuery } from './base-data';
 
 export interface TagVo extends BaseVO{
   id: number;
-  tagType: number;
+  tagType: string;
   tagKey: string;
   tagValue: string;
   color: string;
-  promptColor: number;
+  promptColor: string;
   seq: number;
   valid: boolean;
   comment: string;
@@ -20,12 +20,12 @@ export interface TagPageQuery extends PageQuery {
 
 export interface TagEdit {
   id?: number;
-  tagType: number;
+  tagType: string;
   tagKey: string;
-  tagValue: string;
-  color?: string;
-  promptColor?: number;
-  seq?: number;
+  tagValue?: string;
+  color: string;
+  promptColor: string;
+  seq: number;
   valid: boolean;
   comment?: string;
 }

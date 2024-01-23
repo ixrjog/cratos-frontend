@@ -10,6 +10,7 @@ export default {
     submit: 'Submit',
     userName: 'Username',
     password: 'Password',
+    otp: 'OTP',
     email: 'Email',
     noticeMessage: {
       summary: 'Login Failed',

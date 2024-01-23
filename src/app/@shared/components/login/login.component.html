@@ -22,7 +22,10 @@
           </ng-template>
         </d-tab>
       </d-tabs>
-      <ng-container *ngIf="tabActiveId === 'tab1'; else loginWithEmail">
+      <!--      <ng-container *ngIf="tabActiveId === 'tab1'; else loginWithEmail">-->
+      <!--        <ng-template [ngTemplateOutlet]="loginWithPassword"></ng-template>-->
+      <!--      </ng-container>-->
+      <ng-container *ngIf="tabActiveId === 'tab1'">
         <ng-template [ngTemplateOutlet]="loginWithPassword"></ng-template>
       </ng-container>
     </div>
@@ -75,7 +78,6 @@
       </li>
     </ul>
   </div>
-
   <da-footer></da-footer>
 </div>
 
@@ -88,9 +90,10 @@
           <input
             dTextInput
             autocomplete="off"
-            name="userName"
-            placeholder="Admin or User"
-            [(ngModel)]="formData.userAccount"
+            name="username"
+            placeholder="username"
+            [(ngModel)]="formData.username"
+            (keyup)="onKeyUp($event, tabActiveId)"
             [dValidateRules]="formRules['usernameRules']"
           />
         </div>
@@ -104,71 +107,39 @@
           name="password"
           [type]="showPassword ? 'text' : 'password'"
           placeholder="******"
-          [(ngModel)]="formData.userAccountPassword"
+          [(ngModel)]="formData.password"
           (keyup)="onKeyUp($event, tabActiveId)"
           [dValidateRules]="formRules['passwordRules']"
         />
       </d-form-control>
     </d-form-item>
-    <div class="da-login-options">
-      <div class="da-auto-login">
-        <d-toggle [checked]="true"></d-toggle>
-        <span class="da-auto-login-text" style="margin-left: 8px">
-          {{'loginPage.autoLogin' | translate}}
-        </span>
-      </div>
-      <span
-        ><a href="#">{{ 'loginPage.forgetPassword' | translate }}</a></span
-      >
-    </div>
-    <button class="da-submit-button" dFormSubmit>
-       {{ 'loginPage.submit' | translate }}
-    </button>
-  </form>
-</ng-template>
-<ng-template #loginWithEmail>
-  <form dForm [layout]="horizontalLayout" [labelSize]="'sm'" ngForm (dSubmit)="onClick(tabActiveId)">
     <d-form-item>
-      <d-form-label>{{ 'loginPage.email' | translate }}：</d-form-label>
+      <d-form-label>{{ 'loginPage.otp' | translate }}：</d-form-label>
       <d-form-control>
         <div>
           <input
             dTextInput
             autocomplete="off"
-            name="userEmail"
-            placeholder="admin@devui.com"
-            [(ngModel)]="formData.userEmail"
-            [dValidateRules]="formRules['emailRules']"
+            name="otp"
+            placeholder="one time passsword"
+            [(ngModel)]="formData.otp"
+            (keyup)="onKeyUp($event, tabActiveId)"
           />
         </div>
       </d-form-control>
     </d-form-item>
-    <d-form-item>
-      <d-form-label>{{ 'loginPage.password' | translate }}：</d-form-label>
-      <d-form-control [suffixTemplate]="suffixTemplate">
-        <input
-          dTextInput
-          [type]="showPassword ? 'text' : 'password'"
-          name="emailPassword"
-          placeholder="******"
-          [(ngModel)]="formData.userEmailPassword"
-          (keyup)="onKeyUp($event, tabActiveId)"
-          [dValidateRules]="formRules['passwordRules']"
-        />
-      </d-form-control>
-    </d-form-item>
-    <div class="da-login-options">
-      <div class="da-auto-login">
-        <d-toggle [checked]="true"></d-toggle>
-        <span class="da-auto-login-text" style="margin-left: 8px">
-          {{'loginPage.autoLogin' | translate}}
-        </span>
-      </div>
-      <span
-        ><a href="#">{{ 'loginPage.forgetPassword' | translate }}</a></span
-      >
-    </div>
-    <button class="da-submit-button" dFormSubmit>
+    <!--    <div class="da-login-options">-->
+    <!--      <div class="da-auto-login">-->
+    <!--        <d-toggle [checked]="true"></d-toggle>-->
+    <!--        <span class="da-auto-login-text" style="margin-left: 8px">-->
+    <!--          {{'loginPage.autoLogin' | translate}}-->
+    <!--        </span>-->
+    <!--      </div>-->
+    <!--      <span>-->
+    <!--        <a href="#">{{ 'loginPage.forgetPassword' | translate }}</a>-->
+    <!--      </span>-->
+    <!--    </div>-->
+    <button class="da-submit-button" dFormSubmit (Click)="onClick(tabActiveId)">
        {{ 'loginPage.submit' | translate }}
     </button>
   </form>

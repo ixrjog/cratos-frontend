@@ -23,4 +23,12 @@ export class TagService extends TagData {
     return this.apiService.post('/tag/add', param);
   }
 
+  deleteTagById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete('/tag/del', param);
+  }
+
+  setTagValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam('/tag/valid/set', param);
+  }
+
 }

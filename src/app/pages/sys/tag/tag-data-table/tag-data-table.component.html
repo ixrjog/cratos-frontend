@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="OnNewRow('standard')">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="OnRowNew('standard')">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.tagKey"
@@ -50,7 +50,7 @@
           [width]="'1500px'"
         >
           <span *ngSwitchCase="'createTime'">
-          {{ (rowItem[column.field] | i18nDate: 'full') }}
+          {{ (rowItem[column.field] | dDatePipe: 'y/M/d HH:mm:ss zzzz') }}
           </span>
           <span *ngSwitchCase="'color'">
            <input type="color" [value]="(rowItem['color'])" disabled="true"/>
@@ -61,13 +61,13 @@
         </td>
         <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'" [width]="'200px'">
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit((rowItem),'standard')"></d-icon>
-            <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getValid()">
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem,'standard')"></d-icon>
+            <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getRowColor(rowItem)" (click)="onRowValid(rowItem)">
             </d-icon>
             <span dDropDown appendToBody>
                 <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
                 <ul dDropDownMenu >
-                  <li class="devui-dropdown-item" (click)="onDelete($event)">删除</li>
+                  <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
                 </ul>
               </span>
           </d-icon-group>
@@ -80,15 +80,41 @@
     </ng-template>
   </d-data-table>
 </div>
-<d-pagination
-  class="spacing-pagination"
-  [total]="table.pager.total"
-  [(pageSize)]="table.pager.pageSize"
-  [(pageIndex)]="table.pager.pageIndex"
-  [canViewTotal]="true"
-  [canChangePageSize]="true"
-  [maxItems]="5"
-  (pageIndexChange)="pageIndexChange($event)"
-  (pageSizeChange)="pageSizeChange($event)"
->
-</d-pagination>
+
+<div class="spacing-pagination">
+
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a DropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>
+

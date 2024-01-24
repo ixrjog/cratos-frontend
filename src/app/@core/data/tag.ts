@@ -31,9 +31,15 @@ export interface TagEdit {
 }
 
 export abstract class TagData {
+
   abstract queryTagPage(param: TagPageQuery): Observable<DataTable<TagVo>>;
 
   abstract updateTag(param: TagEdit): Observable<HttpResult<Boolean>>;
 
   abstract addTag(param: TagEdit): Observable<HttpResult<Boolean>>;
+
+  abstract deleteTagById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract setTagValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
 }

@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Table } from '../../../../@core/data/base-data';
+import { HttpResult, Table } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
 import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
 import { DataTableComponent, DialogService, ToastService } from 'ng-devui';
 import { TagEditorComponent } from './tag-editor/tag-editor.component';
+import { Observable, zip } from 'rxjs';
+import { DialogUtil } from '../../../../@shared/utils/dialog.util';
 
 @Component({
   selector: 'app-tag-data-table',
@@ -40,6 +42,7 @@ export class TagDataTableComponent implements OnInit {
   constructor(
     private tagService: TagService,
     private dialogService: DialogService,
+    private dialogUtil: DialogUtil,
     private toastService: ToastService,
   ) {
   }
@@ -74,23 +77,38 @@ export class TagDataTableComponent implements OnInit {
     this.fetchData();
   }
 
-  getValid(): string {
-    return 'var(--devui-success)';
-    // return 'var(--devui-danger)'
+  getRowColor(rowItem: TagVo): string {
+    return rowItem.valid ? 'var(--devui-success)' : 'var(--devui-danger)';
   }
 
   dialogDate = {
-    id: 'tag-editor',
-    width: '30%',
-    maxHeight: '600px',
-    content: TagEditorComponent,
-    backdropCloseable: false,
-  };
+    editorData: {
+      id: 'tag-editor',
+      width: '30%',
+      maxHeight: '600px',
+      content: TagEditorComponent,
+      backdropCloseable: false,
+    },
+    warningOperateData: {
+      id: 'operate-warning',
+      width: '346px',
+      maxHeight: '600px',
+      zIndex: 1050,
+      backdropCloseable: true,
+      html: true,
+      dialogtype: 'warning',
+    },
+    content: {
+      delete: '<strong>Confirm delete this row ?</strong>',
+      batchDelete: '<strong>Confirm delete these rows ?</strong>',
+      batchValid: '<strong>Confirm update these rows ?</strong>',
+    },
+  }
 
-  OnNewRow(dialogtype: string) {
+  OnRowNew(dialogtype: string) {
     const results = this.dialogService.open({
       title: 'New Tag',
-      ...this.dialogDate,
+      ...this.dialogDate.editorData,
       buttons: [
         {
           cssClass: 'primary',
@@ -118,23 +136,19 @@ export class TagDataTableComponent implements OnInit {
         },
       ],
       data: {
-        formData: this.newTag,
-        canConfirm: (value: boolean) => {
-          results.modalInstance.updateButtonOptions([ { disabled: !value } ]);
-        },
+        formData: this.newTag
       },
     });
   }
 
-
   onRowEdit(rowItem: TagVo, dialogtype: string) {
     const results = this.dialogService.open({
       title: 'Edit Tag',
-      ...this.dialogDate,
+      ...this.dialogDate.editorData,
       buttons: [
         {
           cssClass: 'primary',
-          text: '确定',
+          text: 'Confirm',
           disabled: false,
           handler: ($event: Event) => {
             results.modalContentInstance.updateForm()
@@ -151,17 +165,14 @@ export class TagDataTableComponent implements OnInit {
         {
           id: 'btn-cancel',
           cssClass: 'common',
-          text: '取消',
+          text: 'Cancel',
           handler: ($event: Event) => {
             results.modalInstance.hide();
           },
         },
       ],
       data: {
-        formData: rowItem,
-        canConfirm: (value: boolean) => {
-          results.modalInstance.updateButtonOptions([ { disabled: !value } ]);
-        },
+        formData: rowItem
       },
     });
   }
@@ -177,7 +188,63 @@ export class TagDataTableComponent implements OnInit {
     });
   }
 
-  onDelete($event: MouseEvent) {
-    console.log('on delete')
+  onRowDelete(rowItem: TagVo) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.tagService.deleteTagById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastService.open({
+            value: [ { severity: 'success', summary: 'Success', content: 'Delete Success' } ],
+            life: 2000,
+          });
+          this.fetchData();
+        });
+    });
+  }
+
+  onBatchValid() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchValid,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      for (let row of checkedRows) {
+        obList.push(this.tagService.setTagValidById({ id: row.id }));
+      }
+      zip(obList)
+        .subscribe(() => {
+          this.fetchData();
+        });
+    });
+  }
+
+  onBatchDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchDelete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      for (let row of checkedRows) {
+        obList.push(this.tagService.deleteTagById({ id: row.id }));
+      }
+      zip(obList)
+        .subscribe(() => {
+          this.fetchData();
+        });
+    });
+  }
+
+  onRowValid(rowItem: any) {
+    this.tagService.setTagValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
   }
 }

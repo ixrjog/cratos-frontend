@@ -23,8 +23,12 @@ export class ApiService {
     return this.http.put(`${this.apiUrl}${url}`, JSON.stringify(data), { headers: this.headers });
   }
 
-  delete(url: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${url}`, { headers: this.headers });
+  putByParam(url: string, params: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}${url}` + this.initGetParams(params), { headers: this.headers });
+  }
+
+  delete(url: string, params: any): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${url}` + this.initGetParams(params), { headers: this.headers });
   }
 
   get headers(): HttpHeaders {

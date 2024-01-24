@@ -3,31 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import {
-  AccordionModule,
-  AlertModule,
-  AvatarModule,
-  BadgeModule,
-  BreadcrumbModule,
-  ButtonModule,
-  CheckBoxModule,
-  DCommonModule,
-  DrawerModule,
-  DropDownModule,
-  FormModule,
-  LayoutModule,
-  ModalModule,
-  RadioModule,
-  SearchModule,
-  SelectModule,
-  TabsModule,
-  TagsInputModule,
-  TextareaModule,
-  TextInputModule,
-  ToastModule,
-  ToggleModule,
-  TooltipModule,
-} from 'ng-devui';
+import { AlertModule, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
 import { IconModule } from 'ng-devui/icon';
 import { I18nModule } from 'ng-devui/i18n';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,28 +18,10 @@ import { HeaderLogoComponent } from './components/header/header-logo/header-logo
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SafePipe } from './pipe/safePipe';
+import { DialogUtil } from './utils/dialog.util';
 
 const DEVUI_MODULES = [
-  LayoutModule,
-  AccordionModule,
-  SearchModule,
-  AvatarModule,
-  BadgeModule,
-  DropDownModule,
-  FormModule,
-  TabsModule,
-  TextInputModule,
-  ToggleModule,
-  ButtonModule,
-  DrawerModule,
-  BreadcrumbModule,
-  RadioModule,
-  ModalModule,
-  CheckBoxModule,
-  TagsInputModule,
-  SelectModule,
-  TextareaModule,
-  ToastModule,
+  DevUIModule,
 ];
 const COMPONENTS = [
   HeaderComponent,
@@ -76,6 +34,11 @@ const PIPES = [
   SafePipe,
 ];
 
+const CRATOS_COMPONENTS = [];
+
+const CRATOS_UTILS = [
+  DialogUtil,
+];
 @NgModule({
   declarations: [
     LoginComponent,
@@ -85,6 +48,7 @@ const PIPES = [
     RegisterComponent,
     ...COMPONENTS,
     ...PIPES,
+    ...CRATOS_COMPONENTS,
   ],
   imports: [
     CommonModule,
@@ -113,13 +77,14 @@ const PIPES = [
     ...DEVUI_MODULES,
     ...COMPONENTS,
     ...PIPES,
+    ...CRATOS_COMPONENTS,
   ],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
-      providers: [],
+      providers: [ ...CRATOS_UTILS ],
     };
   }
 }

@@ -2,7 +2,7 @@
 /* 脚手架自带 */
 @import 'ng-devui/styles-var/devui-var.less';
 
-:root{
+:root {
   --devui-z-index-dropdown: 2000;
 }
 
@@ -14,8 +14,6 @@
 @add-button-color: @devui-info;
 @delete-button-color: @devui-danger;
 
-
-/* 查询栏 */
 /* input input-max-width */
 @search-input-max-width: 150px;
 /* 水平间距 */
@@ -32,17 +30,6 @@
   padding: @page-padding;
 }
 
-.spacing {
-  margin-bottom: @search-col-sm;
-
-  .search {
-    margin-right: @search-row-sm;
-  }
-
-  .button {
-    margin-right: @search-row-sm;
-  }
-}
 /* data table 通用布局*/
 .spacing-search {
   margin-bottom: @search-col-sm;
@@ -65,11 +52,16 @@
 
 .spacing-pagination {
   margin-top: @search-col-sm;
-}
 
-:host {
-  .table-row-invalid {
-    background: @devui-gray-10;
+  .pagination {
+    display: inline-block;
+    float: right;
+    padding: 3px 0;
+  }
+
+  .batch-button {
+    margin-right: @search-row-sm;
+    display: inline-block;
   }
 }
 

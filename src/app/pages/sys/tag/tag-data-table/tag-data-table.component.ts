@@ -5,7 +5,8 @@ import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
 import { DataTableComponent, DialogService, ToastService } from 'ng-devui';
 import { TagEditorComponent } from './tag-editor/tag-editor.component';
 import { Observable, zip } from 'rxjs';
-import { DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-tag-data-table',
@@ -77,38 +78,24 @@ export class TagDataTableComponent implements OnInit {
     this.fetchData();
   }
 
-  getRowColor(rowItem: TagVo): string {
-    return rowItem.valid ? 'var(--devui-success)' : 'var(--devui-danger)';
-  }
-
   dialogDate = {
     editorData: {
-      id: 'tag-editor',
-      width: '30%',
-      maxHeight: '600px',
+      ...DIALOG_DATA.editorData,
       content: TagEditorComponent,
-      backdropCloseable: false,
     },
     warningOperateData: {
-      id: 'operate-warning',
-      width: '346px',
-      maxHeight: '600px',
-      zIndex: 1050,
-      backdropCloseable: true,
-      html: true,
-      dialogtype: 'warning',
+      ...DIALOG_DATA.warningOperateData,
     },
     content: {
-      delete: '<strong>Confirm delete this row ?</strong>',
-      batchDelete: '<strong>Confirm delete these rows ?</strong>',
-      batchValid: '<strong>Confirm update these rows ?</strong>',
-    },
+      ...DIALOG_DATA.content,
+    }
   }
 
-  OnRowNew(dialogtype: string) {
+  onRowNew(dialogtype: string) {
     const results = this.dialogService.open({
       title: 'New Tag',
       ...this.dialogDate.editorData,
+      content: TagEditorComponent,
       buttons: [
         {
           cssClass: 'primary',
@@ -145,6 +132,7 @@ export class TagDataTableComponent implements OnInit {
     const results = this.dialogService.open({
       title: 'Edit Tag',
       ...this.dialogDate.editorData,
+      content: TagEditorComponent,
       buttons: [
         {
           cssClass: 'primary',
@@ -247,4 +235,6 @@ export class TagDataTableComponent implements OnInit {
         this.fetchData();
       });
   }
+
+  protected readonly getRowColor = getRowColor;
 }

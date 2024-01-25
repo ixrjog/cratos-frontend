@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="OnRowNew('standard')">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew('standard')">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.tagKey"
@@ -17,7 +17,6 @@
     [tableOverflowType]="'overlay'"
     [backdrop]="true"
     [scrollable]="true"
-    [headerBg]="true"
     [showLoading]="table.showLoading"
   >
     <thead dTableHead [checkable]="true">
@@ -34,7 +33,7 @@
     <tbody dTableBody>
     <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
       <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked,'table-row-invalid': !(rowItem['valid']) }">
-        <td dTableCell class="devui-checkable-cell">
+        <td dTableCell class="devui-checkable-cell" [fixedLeft]="'0px'">
           <d-checkbox
             [ngModelOptions]="{ standalone: true }"
             [ngModel]="rowItem.$checked"
@@ -43,12 +42,7 @@
           >
           </d-checkbox>
         </td>
-        <td
-          dTableCell
-          *ngFor="let column of columns"
-          [ngSwitch]="column.field"
-          [width]="'1500px'"
-        >
+        <td dTableCell *ngFor="let column of columns" [ngSwitch]="column.field">
           <span *ngSwitchCase="'createTime'">
           {{ (rowItem[column.field] | dDatePipe: 'y/M/d HH:mm:ss zzzz') }}
           </span>
@@ -59,10 +53,15 @@
           {{ rowItem[column.field] }}
           </span>
         </td>
-        <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'" [width]="'200px'">
+        <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem,'standard')"></d-icon>
-            <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getRowColor(rowItem)" (click)="onRowValid(rowItem)">
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
             </d-icon>
             <span dDropDown appendToBody>
                 <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
@@ -80,9 +79,7 @@
     </ng-template>
   </d-data-table>
 </div>
-
 <div class="spacing-pagination">
-
   <div dDropDown class="batch-button">
     <d-button-group>
       <d-button bsStyle="common" dDropDownToggle>
@@ -103,7 +100,6 @@
       </li>
     </ul>
   </div>
-
   <d-pagination
     class="pagination"
     [total]="table.pager.total"

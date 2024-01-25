@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CertificateService } from '../../../../@core/services/certificate.service';
 import { CertificatePageQuery, CertificateVo } from '../../../../@core/data/certificate';
 import { Table } from '../../../../@core/data/base-data';
+import { DataTableComponent, DialogService, ToastService } from 'ng-devui';
+import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { DialogUtil } from '../../../../@shared/utils/dialog.util';
 
 @Component({
   selector: 'app-certificate-manage-data-table',
@@ -10,6 +13,7 @@ import { Table } from '../../../../@core/data/base-data';
 })
 export class CertificateManageDataTableComponent implements OnInit {
 
+  @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   @Input() queryParam = {
     queryName: '',
   };
@@ -52,7 +56,12 @@ export class CertificateManageDataTableComponent implements OnInit {
     },
   ];
 
-  constructor(private certificateService: CertificateService) {
+  constructor(
+    private certificateService: CertificateService,
+    private dialogService: DialogService,
+    private dialogUtil: DialogUtil,
+    private toastService: ToastService,
+  ) {
   }
 
   fetchData() {
@@ -83,5 +92,45 @@ export class CertificateManageDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  onRowNew(dialogtype: string) {
+
+  }
+
+  onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
+    rowItem.$checked = checked;
+    rowItem.$halfChecked = false;
+    this.datatable.setRowCheckStatus({
+      rowIndex: rowIndex,
+      nestedIndex: nestedIndex,
+      rowItem: rowItem,
+      checked: checked,
+    });
+  }
+
+  onRowEdit(rowItem: CertificateVo, standard: string) {
+
+  }
+
+  protected readonly getRowColor = getRowColor;
+
+  onRowValid(rowItem: any) {
+    this.certificateService.setCertificateValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
+  }
+
+  onRowDelete(rowItem: CertificateVo) {
+
+  }
+
+  onBatchValid() {
+
+  }
+
+  onBatchDelete() {
+
   }
 }

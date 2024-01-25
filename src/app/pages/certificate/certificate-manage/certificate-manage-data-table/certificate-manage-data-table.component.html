@@ -1,4 +1,5 @@
 <div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew('standard')">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -7,11 +8,7 @@
     (change)="fetchData()"
   >
   </d-search>
-  <d-button
-    class="button"
-    (click)="fetchData()"
-  >Fetch Data
-  </d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -20,19 +17,56 @@
     [tableOverflowType]="'overlay'"
     [backdrop]="true"
     [scrollable]="true"
-    [showLoading]="table.showLoading">
-    <thead dTableHead>
+    [showLoading]="table.showLoading"
+  >
+    <thead dTableHead [checkable]="true">
     <tr dTableRow>
-      <th dHeadCell *ngFor="let column of columns">
+      <th
+        dHeadCell
+        *ngFor="let column of columns"
+      >
         {{ column.header }}
       </th>
+      <th dHeadCell [fixedRight]="'0px'">Actions</th>
     </tr>
     </thead>
     <tbody dTableBody>
-    <ng-template let-rowItem="rowItem">
-      <tr dTableRow>
-        <td dTableCell *ngFor="let column of columns">
-          {{ column.fieldType === 'date' ? (rowItem[column.field] | i18nDate: 'full') : rowItem[column.field] }}
+    <ng-template let-rowItem="rowItem" let-rowIndex="rowIndex" let-nestedIndex="nestedIndex">
+      <tr dTableRow [ngClass]="{ 'table-row-selected': rowItem.$checked,'table-row-invalid': !(rowItem['valid']) }">
+        <td dTableCell class="devui-checkable-cell" [fixedLeft]="'0px'">
+          <d-checkbox
+            [ngModelOptions]="{ standalone: true }"
+            [ngModel]="rowItem.$checked"
+            [halfchecked]="rowItem.$halfChecked"
+            (ngModelChange)="onRowCheckChange($event, rowIndex, nestedIndex, rowItem)"
+          >
+          </d-checkbox>
+        </td>
+        <td dTableCell *ngFor="let column of columns" [ngSwitch]="column.field">
+          <span *ngSwitchCase="'createTime'">
+          {{ (rowItem[column.field] | dDatePipe: 'y/M/d HH:mm:ss zzzz') }}
+          </span>
+          <span *ngSwitchDefault>
+          {{ rowItem[column.field] }}
+          </span>
+        </td>
+        <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem,'standard')"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <span dDropDown appendToBody>
+                <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+                <ul dDropDownMenu >
+                  <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+                </ul>
+              </span>
+          </d-icon-group>
         </td>
       </tr>
     </ng-template>
@@ -42,14 +76,37 @@
     </ng-template>
   </d-data-table>
 </div>
-<d-pagination
-  class="spacing-pagination"
-  [total]="table.pager.total"
-  [(pageSize)]="table.pager.pageSize"
-  [(pageIndex)]="table.pager.pageIndex"
-  [canViewTotal]="true"
-  [canChangePageSize]="true"
-  [maxItems]="5"
-  (pageIndexChange)="pageIndexChange($event)"
-  (pageSizeChange)="pageSizeChange($event)">
-</d-pagination>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a DropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

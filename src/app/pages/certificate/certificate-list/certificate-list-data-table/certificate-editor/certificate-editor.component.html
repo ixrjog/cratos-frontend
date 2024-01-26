@@ -1,0 +1,87 @@
+<section>
+  <form
+    dForm
+    #certificateEditorForm="dValidateRules"
+    [formGroup]="certificateFormGroup"
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Certificate ID</d-form-label>
+      <d-form-control>
+        <input dTextInput name="certificateId" formControlName="certificateId" [dValidateRules]="formRules['certificateId']"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" formControlName="name" [dValidateRules]="formRules['name']"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Domain Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="domainName" formControlName="domainName" [dValidateRules]="formRules['domainName']"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Certificate Type</d-form-label>
+      <d-form-control>
+        <d-select [options]="certificateTypeOptions" formControlName="certificateType" [dValidateRules]="formRules['certificateType']"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Key Algorithm</d-form-label>
+      <d-form-control>
+        <input dTextInput name="keyAlgorithm" formControlName="keyAlgorithm"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Validity Period</d-form-label>
+      <d-form-control>
+        <div class="two-date-wrapper" dTwoDatePicker [dateFormat]="'yyyy-MM-dd'">
+          <div class="devui-input-group devui-dropdown-origin" dActiveFormControl>
+            <input
+              class="devui-input devui-form-control"
+              placeholder="yyyy-MM-dd"
+              dTwoDatePickerStart
+              name="notBefore"
+              formControlName="notBefore"
+              #startPicker="twoDatePickerStart"
+              (click)="startPicker.toggle()"
+            />
+            <div class="devui-input-group-addon" (click)="startPicker.toggle()">
+              <i class="icon icon-calendar"></i>
+            </div>
+          </div>
+          <div class="devui-input-group devui-dropdown-origin" dActiveFormControl>
+            <input
+              class="devui-input devui-form-control"
+              placeholder="yyyy-MM-dd"
+              dTwoDatePickerEnd
+              name="notBefore"
+              formControlName="notAfter"
+              #endPicker="twoDatePickerEnd"
+              (click)="endPicker.toggle()"
+            />
+            <div class="devui-input-group-addon" (click)="endPicker.toggle()">
+              <i class="icon icon-calendar"></i>
+            </div>
+          </div>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Valid</d-form-label>
+      <d-form-control>
+        <d-toggle formControlName="valid"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px" formControlName="comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

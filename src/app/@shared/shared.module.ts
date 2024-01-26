@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { AlertModule, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
+import { AlertModule, DatePipe, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
 import { IconModule } from 'ng-devui/icon';
 import { I18nModule } from 'ng-devui/i18n';
 import { TranslateModule } from '@ngx-translate/core';

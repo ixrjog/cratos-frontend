@@ -3,7 +3,7 @@
     <d-form-item>
       <d-form-label [required]="true">Tag Type</d-form-label>
       <d-form-control>
-        <d-select [options]="tagTypeOptions" formControlName="tagType" [disabled]="true"></d-select>
+        <d-select [options]="tagTypeOptions" formControlName="tagType" [disabled]="!operationType"></d-select>
       </d-form-control>
     </d-form-item>
     <d-form-item>

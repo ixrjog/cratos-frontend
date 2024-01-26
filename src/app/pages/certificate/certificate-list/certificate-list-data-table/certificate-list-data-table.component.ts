@@ -1,47 +1,78 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { CertificateService } from '../../../../@core/services/certificate.service';
+import { CertificateEdit, CertificatePageQuery, CertificateVo } from '../../../../@core/data/certificate';
 import { HttpResult, Table } from '../../../../@core/data/base-data';
-import { TagService } from '../../../../@core/services/tag.service';
-import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
 import { DataTableComponent, ToastService } from 'ng-devui';
-import { TagEditorComponent } from './tag-editor/tag-editor.component';
+import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import {
+  ADD_OPERATION,
+  DIALOG_DATA,
+  DialogUtil,
+  UPDATE_OPERATION,
+} from '../../../../@shared/utils/dialog.util';
+import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
+import { TagVo } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 
 @Component({
-  selector: 'app-tag-data-table',
-  templateUrl: './tag-data-table.component.html',
-  styleUrls: [ './tag-data-table.component.less' ],
+  selector: 'app-certificate-list-data-table',
+  templateUrl: './certificate-list-data-table.component.html',
+  styleUrls: [ './certificate-list-data-table.component.less' ],
 })
-export class TagDataTableComponent implements OnInit {
+export class CertificateListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   @Input() queryParam = {
-    tagKey: '',
+    queryName: '',
   };
 
-  table: Table<TagVo> = {
+  table: Table<CertificateVo> = {
     showLoading: false,
     data: [],
-    pager: { pageIndex: 1, pageSize: 10, total: 0 },
+    pager: {
+      pageIndex: 1,
+      pageSize: 10,
+      total: 0,
+    },
   };
 
   columns = [
-    { field: 'tagKey', header: 'Tag Key', fieldType: 'text',width: '150px' },
-    { field: 'tagValue', header: 'Tag Value', fieldType: 'text' },
-    { field: 'tagType', header: 'Tag Type', fieldType: 'text' },
-    { field: 'color', header: 'Color', fieldType: 'text' },
-    { field: 'promptColor', header: 'Prompt Color', fieldType: 'text' },
-    { field: 'seq', header: 'Seq', fieldType: 'text' },
+    { field: 'certificateId', header: 'Certificate ID', fieldType: 'text' },
+    { field: 'name', header: 'Name', fieldType: 'text' },
+    { field: 'domainName', header: 'Domain Name', fieldType: 'text' },
+    { field: 'certificateType', header: 'Certificate Type', fieldType: 'text' },
+    { field: 'notBefore', header: 'Not Before', fieldType: 'date' },
+    { field: 'notAfter', header: 'Not After', fieldType: 'date' },
     { field: 'createTime', header: 'Create Time', fieldType: 'date' },
   ];
 
-  newTag: TagEdit = {
-    color: '#FFFFFF', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
+  newCertificate: CertificateEdit = {
+    certificateId: '',
+    certificateType: '',
+    domainName: '',
+    keyAlgorithm: '',
+    name: '',
+    notAfter: new Date(),
+    notBefore: null,
+    valid: true,
+    comment: '',
+  };
+
+  dialogDate = {
+    editorData: {
+      ...DIALOG_DATA.editorData,
+      content: CertificateEditorComponent,
+    },
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
   };
 
   constructor(
-    private tagService: TagService,
+    private certificateService: CertificateService,
     private dialogUtil: DialogUtil,
     private toastService: ToastService,
   ) {
@@ -50,12 +81,12 @@ export class TagDataTableComponent implements OnInit {
   fetchData() {
     this.table.data = [];
     this.table.showLoading = true;
-    const param: TagPageQuery = {
+    const param: CertificatePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    this.tagService.queryTagPage(param)
+    this.certificateService.queryCertificatePage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
         this.table.showLoading = false;
@@ -77,37 +108,14 @@ export class TagDataTableComponent implements OnInit {
     this.fetchData();
   }
 
-  dialogDate = {
-    editorData: {
-      ...DIALOG_DATA.editorData,
-      content: TagEditorComponent,
-    },
-    warningOperateData: {
-      ...DIALOG_DATA.warningOperateData,
-    },
-    content: {
-      ...DIALOG_DATA.content,
-    }
-  }
-
   onRowNew() {
     const dialogDate = {
-      title: 'New Tag',
+      title: 'New Certificate',
       ...this.dialogDate.editorData,
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newTag);
-  }
-
-  onRowEdit(rowItem: TagVo) {
-    const dialogDate = {
-      title: 'Edit Tag',
-      ...this.dialogDate.editorData,
-    };
-    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
-      this.fetchData();
-    }, rowItem);
+    }, this.newCertificate);
   }
 
   onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
@@ -121,13 +129,32 @@ export class TagDataTableComponent implements OnInit {
     });
   }
 
-  onRowDelete(rowItem: TagVo) {
+  onRowEdit(rowItem: CertificateVo) {
+    const dialogDate = {
+      title: 'Edit Certificate',
+      ...this.dialogDate.editorData,
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
+
+  protected readonly getRowColor = getRowColor;
+
+  onRowValid(rowItem: any) {
+    this.certificateService.setCertificateValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
+  }
+
+  onRowDelete(rowItem: CertificateVo) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.tagService.deleteTagById({ id: rowItem.id })
+      this.certificateService.deleteCertificateById({ id: rowItem.id })
         .subscribe(() => {
           this.toastService.open({
             value: [ { severity: 'success', summary: 'Success', content: 'Delete Success' } ],
@@ -147,14 +174,10 @@ export class TagDataTableComponent implements OnInit {
       const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
       for (let row of checkedRows) {
-        obList.push(this.tagService.setTagValidById({ id: row.id }));
+        obList.push(this.certificateService.setCertificateValidById({ id: row.id }));
       }
       zip(obList)
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Batch update Success' } ],
-            life: 2000,
-          });
           this.fetchData();
         });
     });
@@ -169,25 +192,12 @@ export class TagDataTableComponent implements OnInit {
       const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
       for (let row of checkedRows) {
-        obList.push(this.tagService.deleteTagById({ id: row.id }));
+        obList.push(this.certificateService.deleteCertificateById({ id: row.id }));
       }
       zip(obList)
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Batch delete Success' } ],
-            life: 2000,
-          });
           this.fetchData();
         });
     });
   }
-
-  onRowValid(rowItem: any) {
-    this.tagService.setTagValidById({ id: rowItem.id })
-      .subscribe(() => {
-        this.fetchData();
-      });
-  }
-
-  protected readonly getRowColor = getRowColor;
 }

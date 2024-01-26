@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew('standard')">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -43,16 +43,22 @@
           </d-checkbox>
         </td>
         <td dTableCell *ngFor="let column of columns" [ngSwitch]="column.field">
+          <span *ngSwitchCase="'notBefore'">
+            {{ (rowItem[column.field] | dDatePipe: 'yyyy/MM/dd') }}
+          </span>
+          <span *ngSwitchCase="'notAfter'">
+            {{ (rowItem[column.field] | dDatePipe: 'yyyy/MM/d') }}
+          </span>
           <span *ngSwitchCase="'createTime'">
-          {{ (rowItem[column.field] | dDatePipe: 'y/M/d HH:mm:ss zzzz') }}
+            {{ (rowItem[column.field] | dDatePipe: 'y/M/d HH:mm:ss zzzz') }}
           </span>
           <span *ngSwitchDefault>
-          {{ rowItem[column.field] }}
+            {{ rowItem[column.field] }}
           </span>
         </td>
         <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'">
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem,'standard')"></d-icon>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"

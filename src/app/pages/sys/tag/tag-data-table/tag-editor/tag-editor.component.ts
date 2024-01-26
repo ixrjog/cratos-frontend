@@ -14,9 +14,9 @@ export class TagEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
   data: any;
-
   formData: TagVo;
   tagFormGroup: FormGroup;
+  operationType: boolean;
 
   tagTypeOptions = [ 'SYS', 'CUSTOM' ];
 
@@ -39,6 +39,7 @@ export class TagEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.operationType = this.data['operationType'];
     this.formData = this.data['formData'];
     this.tagFormGroup = this.fb.group({
       id: [ this.formData.id ? this.data.id : null, null ],

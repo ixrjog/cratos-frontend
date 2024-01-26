@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './@core/core.module';
 import { SharedModule } from './@shared/shared.module';
 import { Observable, of } from 'rxjs';
-import { DevUIModule } from 'ng-devui';
+import { DatePipe, DevUIModule } from 'ng-devui';
 import { I18N } from '../config/language-config';
 import { DefaultInterceptor } from './@core/services/default.interceptor';
 
@@ -36,7 +36,7 @@ class I18NLoader implements TranslateLoader {
     })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }, DatePipe,
   ],
   bootstrap: [AppComponent],
 })

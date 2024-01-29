@@ -1,13 +1,11 @@
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult } from './base-data';
-
+import { HttpResult } from './base-data';
 
 export interface LoginVo {
   name: string;
   uuid: string;
   token: string;
 }
-
 
 export interface LoginParam {
   username: string;

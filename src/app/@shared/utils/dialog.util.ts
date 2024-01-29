@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DialogService, ToastService } from 'ng-devui';
 import { Observable } from 'rxjs';
+import {
+  BusinessTagEditorComponent
+} from '../components/business-tag/business-tag-editor/business-tag-editor.component';
 
 @Injectable()
 export class DialogUtil {
@@ -39,7 +42,7 @@ export class DialogUtil {
       buttons: [
         {
           cssClass: 'primary',
-          text: '确定',
+          text: 'Confirm',
           disabled: false,
           handler: ($event: Event) => {
             let ob: Observable<any>;
@@ -64,7 +67,7 @@ export class DialogUtil {
         {
           id: 'btn-cancel',
           cssClass: 'common',
-          text: '取消',
+          text: 'Cancel',
           handler: ($event: Event) => {
             results.modalInstance.hide();
           },
@@ -76,6 +79,31 @@ export class DialogUtil {
         ...extend
       },
     });
+  }
+
+  onBusinessTagEditDialog(businessType: string) {
+    const results = this.dialogService.open({
+      id: 'business-tag-edit',
+      width: '50%',
+      maxHeight: '600px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      content: BusinessTagEditorComponent,
+      buttons: [
+        {
+          id: 'btn-cancel',
+          cssClass: 'common',
+          text: 'Confirm',
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        },
+      ],
+      data: {
+        businessType: businessType
+      },
+    });
+
   }
 }
 

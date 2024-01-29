@@ -1,0 +1,67 @@
+<section>
+  <d-splitter [orientation]="orientation">
+    <d-splitter-pane
+      [size]="size"
+      [minSize]="minSize"
+      [maxSize]="maxSize"
+      [collapsible]="true"
+    >
+      <div class="pane-content">
+        <h2>Left</h2>
+        <div>
+          <form
+            dForm
+            ngForm
+            [dValidateRules]="formRules['rule']"
+            [layout]="layoutDirection"
+            #userForm="dValidateRules"
+            (dSubmit)="submitForm($event)"
+          >
+            <d-form-item>
+              <d-form-label [required]="true">Tag Key</d-form-label>
+              <d-form-control>
+                <d-select
+                  name="tagKey"
+                  [filterKey]="'tagKey'"
+                  [appendToBody]="true"
+                  [(ngModel)]="formData.tag"
+                  [searchFn]="onSearchTag"
+                  [isSearch]="true"
+                  [searchPlaceholder]="'search tag'"
+                  (change)="onSearchTag('')"
+                >
+                </d-select>
+              </d-form-control>
+            </d-form-item>
+            <d-form-item>
+              <d-form-label [required]="true">Tag Value</d-form-label>
+              <d-form-control>
+                <input
+                  dTextInput
+                  name="tagValue"
+                  [(ngModel)]="formData.tagValue"
+                  placeholder="Enter a value of 1 to 15 characters"
+                  [dValidateRules]="formRules['tagValue']"
+                  dAutoComplete
+                  [searchFn]="onSearchTagValue.bind(this)"
+                />
+              </d-form-control>
+            </d-form-item>
+            <d-form-operation>
+              <d-button class="mr-element-spacing" [title]="userForm.errorMessage || ''" circled="true" style="margin-right: 8px" dFormSubmit
+              >Bind
+              </d-button>
+              <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>
+            </d-form-operation>
+          </form>
+        </div>
+      </div>
+    </d-splitter-pane>
+    <d-splitter-pane minSize="15%">
+      <div class="pane-content">
+        <h2>Right</h2>
+        <div>Content</div>
+      </div>
+    </d-splitter-pane>
+  </d-splitter>
+</section>

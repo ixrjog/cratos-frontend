@@ -60,14 +60,16 @@
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
             <d-icon
-              [icon]="'icon-priority'"
+              [icon]="'icon-add-label'"
               [operable]="true"
-              [color]="getRowColor(rowItem['valid'])"
-              (click)="onRowValid(rowItem)"
+              (click)="onRowBusinessTag(rowItem)"
             >
             </d-icon>
             <span dDropDown appendToBody>
                 <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu >
+                  <li class="devui-dropdown-item" (click)="onRowValid(rowItem)">Valid</li>
+                </ul>
                 <ul dDropDownMenu >
                   <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
                 </ul>

@@ -13,6 +13,7 @@ import { TagService } from './services/tag.service';
 import { CredentialService } from './services/credential.service';
 import { ToastModule } from 'ng-devui';
 import { LogService } from './services/log.service';
+import { BusinessTagService } from './services/business-tag.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -31,6 +32,7 @@ export const CRATOS_PROVIDERS = [
   CredentialService,
   TagService,
   LogService,
+  BusinessTagService,
 ];
 
 @NgModule({

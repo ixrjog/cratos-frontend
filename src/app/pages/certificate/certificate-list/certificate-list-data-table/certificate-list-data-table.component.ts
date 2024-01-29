@@ -4,15 +4,11 @@ import { CertificateEdit, CertificatePageQuery, CertificateVo } from '../../../.
 import { HttpResult, Table } from '../../../../@core/data/base-data';
 import { DataTableComponent, ToastService } from 'ng-devui';
 import { getRowColor } from '../../../../@shared/utils/data-table.utli';
-import {
-  ADD_OPERATION,
-  DIALOG_DATA,
-  DialogUtil,
-  UPDATE_OPERATION,
-} from '../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 import { TagVo } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
+import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -25,6 +21,8 @@ export class CertificateListDataTableComponent implements OnInit {
   @Input() queryParam = {
     queryName: '',
   };
+
+  businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVo> = {
     showLoading: false,
@@ -52,7 +50,7 @@ export class CertificateListDataTableComponent implements OnInit {
     domainName: '',
     keyAlgorithm: '',
     name: '',
-    notAfter: new Date(),
+    notAfter: null,
     notBefore: null,
     valid: true,
     comment: '',
@@ -139,8 +137,6 @@ export class CertificateListDataTableComponent implements OnInit {
     }, rowItem);
   }
 
-  protected readonly getRowColor = getRowColor;
-
   onRowValid(rowItem: any) {
     this.certificateService.setCertificateValidById({ id: rowItem.id })
       .subscribe(() => {
@@ -199,5 +195,9 @@ export class CertificateListDataTableComponent implements OnInit {
           this.fetchData();
         });
     });
+  }
+
+  onRowBusinessTag(rowItem: CertificateVo) {
+    this.dialogUtil.onBusinessTagEditDialog(this.businessType)
   }
 }

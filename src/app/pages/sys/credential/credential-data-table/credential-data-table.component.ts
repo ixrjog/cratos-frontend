@@ -16,7 +16,7 @@ export class CredentialDataTableComponent implements OnInit {
   };
 
   table: Table<CredentialVo> = {
-    showLoading: false,
+    loading: false,
     data: [],
     pager: {
       pageIndex: 1,
@@ -53,7 +53,7 @@ export class CredentialDataTableComponent implements OnInit {
 
   fetchData() {
     this.table.data = [];
-    this.table.showLoading = true;
+    this.table.loading = true;
     const param: CredentialPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -62,7 +62,7 @@ export class CredentialDataTableComponent implements OnInit {
     this.credentialService.queryCredentialPage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
-        this.table.showLoading = false;
+        this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
   }

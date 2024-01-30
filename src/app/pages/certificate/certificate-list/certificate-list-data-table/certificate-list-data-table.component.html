@@ -13,20 +13,20 @@
 <div class="spacing-table">
   <d-data-table
     dLoading
+    [tableWidthConfig]="tableWidthConfig"
     [dataSource]="table.data"
     [tableOverflowType]="'overlay'"
     [backdrop]="true"
     [scrollable]="true"
-    [showLoading]="table.showLoading"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
   >
     <thead dTableHead [checkable]="true">
     <tr dTableRow>
-      <th
-        dHeadCell
-        *ngFor="let column of columns"
-      >
+      <th dHeadCell *ngFor="let column of columns">
         {{ column.header }}
       </th>
+      <th dHeadCell>Tags</th>
       <th dHeadCell [fixedRight]="'0px'">Actions</th>
     </tr>
     </thead>
@@ -56,6 +56,9 @@
             {{ rowItem[column.field] }}
           </span>
         </td>
+        <td dTableCell class="devui-checkable-cell">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </td>
         <td dTableCell class="devui-checkable-cell" [fixedRight]="'0px'">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
@@ -67,10 +70,10 @@
             </d-icon>
             <span dDropDown appendToBody>
                 <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
-              <ul dDropDownMenu >
+              <ul dDropDownMenu>
                   <li class="devui-dropdown-item" (click)="onRowValid(rowItem)">Valid</li>
                 </ul>
-                <ul dDropDownMenu >
+                <ul dDropDownMenu>
                   <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
                 </ul>
               </span>
@@ -80,7 +83,7 @@
     </ng-template>
     </tbody>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">No Data</div>
+      <div class="no-data">Fetch Data</div>
     </ng-template>
   </d-data-table>
 </div>

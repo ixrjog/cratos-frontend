@@ -15,6 +15,10 @@ export class BusinessTagService extends BusinessTagData {
     return this.apiService.post('/business/tag/add', param);
   }
 
+  saveBusinessTag(param: BusinessTagEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.post('/business/tag/save', param);
+  }
+
   deleteBusinessTagById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete('/business/tag/del', param);
   }
@@ -27,7 +31,7 @@ export class BusinessTagService extends BusinessTagData {
     return this.apiService.put('/business/tag/update', param);
   }
 
-  queryBusinessTagByValue(param: ListValue): Observable<HttpResult<Array<BusinessTagVo>>> {
+  queryBusinessTagByValue(param: ListValue): Observable<HttpResult<Array<String>>> {
     return this.apiService.post('/business/tag/query/by/value', param);
   }
 

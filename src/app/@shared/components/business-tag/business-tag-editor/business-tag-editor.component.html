@@ -1,4 +1,5 @@
 <section>
+  <h2>Edit Tags</h2>
   <d-splitter [orientation]="orientation">
     <d-splitter-pane
       [size]="size"
@@ -7,7 +8,7 @@
       [collapsible]="true"
     >
       <div class="pane-content">
-        <h2>Left</h2>
+        <h3>Bind</h3>
         <div>
           <form
             dForm
@@ -27,8 +28,9 @@
                   [(ngModel)]="formData.tag"
                   [searchFn]="onSearchTag"
                   [isSearch]="true"
+                  placeholder="Select tag"
                   [searchPlaceholder]="'search tag'"
-                  (change)="onSearchTag('')"
+                  (valueChange)="onTagChange($event)"
                 >
                 </d-select>
               </d-form-control>
@@ -38,6 +40,7 @@
               <d-form-control>
                 <input
                   dTextInput
+                  [appendToBody]="true"
                   name="tagValue"
                   [(ngModel)]="formData.tagValue"
                   placeholder="Enter a value of 1 to 15 characters"
@@ -59,9 +62,23 @@
     </d-splitter-pane>
     <d-splitter-pane minSize="15%">
       <div class="pane-content">
-        <h2>Right</h2>
-        <div>Content</div>
+        <h3>Tags</h3>
+        <div dLoading [loadingStyle]="'infinity'" [loading]="loading">
+            <d-tag
+              *ngFor="let businessTag of businessTags"
+              style="margin: 5px 5px 0 0"
+              [tag]="businessTag"
+              [customViewTemplate]="customTag"
+              [maxWidth]="'100px'"
+              [customColor]="businessTag.tag.color"
+            >
+            </d-tag>
+        </div>
       </div>
     </d-splitter-pane>
   </d-splitter>
 </section>
+<ng-template #customTag let-tag="tag">
+  <span>{{ tag.tag.tagKey }}:{{ tag.tagValue }}</span>
+  <span class="icon-close" style="vertical-align: center; padding-left: 4px" (click)="onTagDelete(tag)"></span>
+</ng-template>

@@ -19,7 +19,6 @@ export class TagEditorComponent implements OnInit {
   operationType: boolean;
 
   tagTypeOptions = [ 'SYS', 'CUSTOM' ];
-
   promptColorOptions = [
     'BLACK',
     'RED',
@@ -42,7 +41,7 @@ export class TagEditorComponent implements OnInit {
     this.operationType = this.data['operationType'];
     this.formData = this.data['formData'];
     this.tagFormGroup = this.fb.group({
-      id: [ this.formData.id ? this.data.id : null, null ],
+      id: [ this.formData.id ? this.formData.id : null, null ],
       tagType: [ this.formData.tagType, [ Validators.required ] ],
       tagKey: [ this.formData.tagKey, [ Validators.required ] ],
       tagValue: [ this.formData.tagValue, null ],

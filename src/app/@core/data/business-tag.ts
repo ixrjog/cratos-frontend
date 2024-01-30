@@ -39,7 +39,7 @@ export abstract class BusinessTagData {
 
   abstract deleteBusinessTagById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
-  abstract queryBusinessTagByValue(param: ListValue): Observable<HttpResult<Array<BusinessTagVo>>>;
+  abstract queryBusinessTagByValue(param: ListValue): Observable<HttpResult<Array<String>>>;
 
 }
 

@@ -27,7 +27,7 @@ export interface BaseVO {
 }
 
 export interface Table<T> {
-  showLoading: boolean,
+  loading: boolean,
   data: Array<T>,
   pager: {
     pageIndex: number,

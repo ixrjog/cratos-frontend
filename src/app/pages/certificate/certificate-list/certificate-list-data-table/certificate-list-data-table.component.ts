@@ -2,8 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CertificateService } from '../../../../@core/services/certificate.service';
 import { CertificateEdit, CertificatePageQuery, CertificateVo } from '../../../../@core/data/certificate';
 import { HttpResult, Table } from '../../../../@core/data/base-data';
-import { DataTableComponent, ToastService } from 'ng-devui';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { DataTableComponent, TableWidthConfig, ToastService } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 import { TagVo } from '../../../../@core/data/tag';
@@ -25,7 +24,7 @@ export class CertificateListDataTableComponent implements OnInit {
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVo> = {
-    showLoading: false,
+    loading: false,
     data: [],
     pager: {
       pageIndex: 1,
@@ -69,6 +68,17 @@ export class CertificateListDataTableComponent implements OnInit {
     },
   };
 
+  tableWidthConfig: TableWidthConfig[] = [
+    {
+      field: 'checkbox',
+      width: '30px',
+    },
+    {
+      field: 'name',
+      width: '200px',
+    },
+  ];
+
   constructor(
     private certificateService: CertificateService,
     private dialogUtil: DialogUtil,
@@ -78,7 +88,7 @@ export class CertificateListDataTableComponent implements OnInit {
 
   fetchData() {
     this.table.data = [];
-    this.table.showLoading = true;
+    this.table.loading = true;
     const param: CertificatePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -87,7 +97,7 @@ export class CertificateListDataTableComponent implements OnInit {
     this.certificateService.queryCertificatePage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
-        this.table.showLoading = false;
+        this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
   }
@@ -198,6 +208,7 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   onRowBusinessTag(rowItem: CertificateVo) {
-    this.dialogUtil.onBusinessTagEditDialog(this.businessType)
+    this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
+
 }

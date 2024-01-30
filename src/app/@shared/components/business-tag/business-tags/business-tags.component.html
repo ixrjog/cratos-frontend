@@ -1,0 +1,13 @@
+<d-tag
+  *ngFor="let businessTag of businessTags"
+  style="margin: 5px 5px 0 0"
+  [tag]="businessTag"
+  [customViewTemplate]="customTag"
+  [maxWidth]="'100px'"
+  [customColor]="businessTag.tag.color"
+>
+</d-tag>
+
+<ng-template #customTag let-tag="tag">
+  <span>{{ tag.tag.tagKey }}:{{ tag.tagValue }}</span>
+</ng-template>

@@ -21,7 +21,7 @@ export class TagDataTableComponent implements OnInit {
   };
 
   table: Table<TagVo> = {
-    showLoading: false,
+    loading: false,
     data: [],
     pager: { pageIndex: 1, pageSize: 10, total: 0 },
   };
@@ -37,7 +37,7 @@ export class TagDataTableComponent implements OnInit {
   ];
 
   newTag: TagEdit = {
-    color: '#FFFFFF', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
+    color: '#000000', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
   };
 
   constructor(
@@ -49,7 +49,7 @@ export class TagDataTableComponent implements OnInit {
 
   fetchData() {
     this.table.data = [];
-    this.table.showLoading = true;
+    this.table.loading = true;
     const param: TagPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -58,7 +58,7 @@ export class TagDataTableComponent implements OnInit {
     this.tagService.queryTagPage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
-        this.table.showLoading = false;
+        this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
   }

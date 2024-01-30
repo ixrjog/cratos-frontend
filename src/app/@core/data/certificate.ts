@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { BaseVO, DataTable, HttpResult, PageQuery } from './base-data';
+import { BusinessTagVo } from './business-tag';
 
-export interface CertificateVo extends BaseVO{
+export interface CertificateVo extends BaseVO {
   id: number;
   certificateId: string;
   name: string;
@@ -12,6 +13,7 @@ export interface CertificateVo extends BaseVO{
   notBefore: Date;
   notAfter: Date;
   comment: string;
+  businessTags: BusinessTagVo[];
 }
 export interface CertificatePageQuery extends PageQuery {
   queryName?: string;

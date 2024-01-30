@@ -20,6 +20,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { SafePipe } from './pipe/safePipe';
 import { DialogUtil } from './utils/dialog.util';
 import { BusinessTagEditorComponent } from './components/business-tag/business-tag-editor/business-tag-editor.component';
+import { BusinessTagsComponent } from './components/business-tag/business-tags/business-tags.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -36,7 +37,8 @@ const PIPES = [
 ];
 
 const CRATOS_COMPONENTS = [
-  BusinessTagEditorComponent
+  BusinessTagEditorComponent,
+  BusinessTagsComponent
 ];
 
 const CRATOS_UTILS = [
@@ -53,6 +55,7 @@ const CRATOS_UTILS = [
     ...PIPES,
     ...CRATOS_COMPONENTS,
     BusinessTagEditorComponent,
+    BusinessTagsComponent,
   ],
   imports: [
     CommonModule,

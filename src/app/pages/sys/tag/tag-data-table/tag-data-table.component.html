@@ -17,7 +17,8 @@
     [tableOverflowType]="'overlay'"
     [backdrop]="true"
     [scrollable]="true"
-    [showLoading]="table.showLoading"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
   >
     <thead dTableHead [checkable]="true">
     <tr dTableRow>
@@ -75,7 +76,7 @@
     </ng-template>
     </tbody>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">No Data</div>
+      <div class="no-data">Fetch Data</div>
     </ng-template>
   </d-data-table>
 </div>

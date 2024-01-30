@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DialogService, ToastService } from 'ng-devui';
 import { Observable } from 'rxjs';
 import {
-  BusinessTagEditorComponent
+  BusinessTagEditorComponent,
 } from '../components/business-tag/business-tag-editor/business-tag-editor.component';
 
 @Injectable()
@@ -81,7 +81,7 @@ export class DialogUtil {
     });
   }
 
-  onBusinessTagEditDialog(businessType: string) {
+  onBusinessTagEditDialog(businessType: string, businessObject: any, onFetch: Function) {
     const results = this.dialogService.open({
       id: 'business-tag-edit',
       width: '50%',
@@ -95,12 +95,14 @@ export class DialogUtil {
           cssClass: 'common',
           text: 'Confirm',
           handler: ($event: Event) => {
+            onFetch();
             results.modalInstance.hide();
           },
         },
       ],
       data: {
-        businessType: businessType
+        businessType: businessType,
+        businessObject: businessObject,
       },
     });
 

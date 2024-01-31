@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { AlertModule, DatePipe, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
 import { IconModule } from 'ng-devui/icon';
@@ -21,9 +21,12 @@ import { SafePipe } from './pipe/safePipe';
 import { DialogUtil } from './utils/dialog.util';
 import { BusinessTagEditorComponent } from './components/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessTagsComponent } from './components/business-tag/business-tags/business-tags.component';
+import { RelativeTimeModule } from 'ng-devui/relative-time';
 
 const DEVUI_MODULES = [
   DevUIModule,
+  RelativeTimeModule,
+  ReactiveFormsModule,
 ];
 const COMPONENTS = [
   HeaderComponent,

@@ -13,6 +13,7 @@ export interface CredentialVo extends BaseVO {
   credential: string;
   credential2: string;
   passphrase: string;
+  valid: boolean;
   comment: string;
   businessTags: BusinessTagVo[];
 }

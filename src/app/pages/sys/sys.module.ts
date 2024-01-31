@@ -13,6 +13,7 @@ import { BasicFormModule } from '../getting-started/sample/basic-form/basic-form
 import { SharedModule } from '../../@shared/shared.module';
 import { CredentialDataTableComponent } from './credential/credential-data-table/credential-data-table.component';
 import { TagEditorComponent } from './tag/tag-data-table/tag-editor/tag-editor.component';
+import { CredentialEditorComponent } from './credential/credential-data-table/credential-editor/credential-editor.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { TagEditorComponent } from './tag/tag-data-table/tag-editor/tag-editor.c
     TagDataTableComponent,
     CredentialDataTableComponent,
     TagEditorComponent,
+    CredentialEditorComponent,
   ],
   imports: [
     CommonModule,

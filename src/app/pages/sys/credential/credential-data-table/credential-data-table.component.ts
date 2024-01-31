@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Table } from '../../../../@core/data/base-data';
+import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { CredentialService } from '../../../../@core/services/credential.service';
 import { CredentialPageQuery, CredentialVo } from '../../../../@core/data/credential';
+import { getRowColor } from '../../../../@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -10,43 +11,15 @@ import { CredentialPageQuery, CredentialVo } from '../../../../@core/data/creden
 })
 export class CredentialDataTableComponent implements OnInit {
 
-  @Input() queryParam = {
+  @Input()
+  queryParam = {
     queryName: '',
     credentialType: '',
   };
 
   table: Table<CredentialVo> = {
-    loading: false,
-    data: [],
-    pager: {
-      pageIndex: 1,
-      pageSize: 10,
-      total: 0,
-    },
+    ...TABLE_DATA
   };
-
-  columns = [
-    {
-      field: 'title',
-      header: 'Title',
-      fieldType: 'text',
-    },
-    {
-      field: 'credentialType',
-      header: 'Credential Type',
-      fieldType: 'text',
-    },
-    {
-      field: 'username',
-      header: 'Username',
-      fieldType: 'text',
-    },
-    {
-      field: 'createTime',
-      header: 'Create Time',
-      fieldType: 'date',
-    },
-  ];
 
   constructor(private credentialService: CredentialService) {
   }
@@ -62,6 +35,12 @@ export class CredentialDataTableComponent implements OnInit {
     this.credentialService.queryCredentialPage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
+        for (let row of this.table.data) {
+          if (!row.valid) {
+            row['$rowClass'] = 'table-row-invalid';
+            console.log(row);
+          }
+        }
         this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
@@ -79,5 +58,31 @@ export class CredentialDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  protected readonly getRowColor = getRowColor;
+
+  onRowEdit(rowItem: any) {
+
+  }
+
+  onRowBusinessTag(rowItem: any) {
+
+  }
+
+  onRowValid(rowItem: any) {
+
+  }
+
+  onRowDelete(rowItem: any) {
+
+  }
+
+  onBatchValid() {
+
+  }
+
+  onBatchDelete() {
+
   }
 }

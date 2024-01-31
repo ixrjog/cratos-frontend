@@ -13,6 +13,7 @@ import { CertificateListDataTableComponent } from './certificate-list/certificat
 import { BasicFormModule } from '../getting-started/sample/basic-form/basic-form.module';
 import { CertificateEditorComponent } from './certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RelativeTimeModule } from 'ng-devui/relative-time';
 
 
 @NgModule({
@@ -33,7 +34,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     LoadingModule,
     BasicFormModule,
     PaginationModule,
-    ReactiveFormsModule,
   ],
   providers: [
   ]

@@ -35,3 +35,13 @@ export interface Table<T> {
     total: number,
   }
 }
+
+export const TABLE_DATA: Table<any> = {
+  loading: false,
+  data: [],
+  pager: {
+    pageIndex: 1,
+    pageSize: 10,
+    total: 0,
+  },
+};

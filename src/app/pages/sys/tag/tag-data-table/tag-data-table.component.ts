@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { HttpResult, Table } from '../../../../@core/data/base-data';
+import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
 import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
 import { DataTableComponent, ToastService } from 'ng-devui';
@@ -16,25 +16,14 @@ import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 export class TagDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  @Input() queryParam = {
+  @Input()
+  queryParam = {
     tagKey: '',
   };
 
   table: Table<TagVo> = {
-    loading: false,
-    data: [],
-    pager: { pageIndex: 1, pageSize: 10, total: 0 },
+    ...TABLE_DATA
   };
-
-  columns = [
-    { field: 'tagKey', header: 'Tag Key', fieldType: 'text',width: '150px' },
-    { field: 'tagValue', header: 'Tag Value', fieldType: 'text' },
-    { field: 'tagType', header: 'Tag Type', fieldType: 'text' },
-    { field: 'color', header: 'Color', fieldType: 'text' },
-    { field: 'promptColor', header: 'Prompt Color', fieldType: 'text' },
-    { field: 'seq', header: 'Seq', fieldType: 'text' },
-    { field: 'createTime', header: 'Create Time', fieldType: 'date' },
-  ];
 
   newTag: TagEdit = {
     color: '#000000', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
@@ -58,6 +47,12 @@ export class TagDataTableComponent implements OnInit {
     this.tagService.queryTagPage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
+        for (let row of this.table.data) {
+          if (!row.valid) {
+            row['$rowClass'] = 'table-row-invalid';
+            console.log(row);
+          }
+        }
         this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
@@ -108,17 +103,6 @@ export class TagDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
-  }
-
-  onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
-    rowItem.$checked = checked;
-    rowItem.$halfChecked = false;
-    this.datatable.setRowCheckStatus({
-      rowIndex: rowIndex,
-      nestedIndex: nestedIndex,
-      rowItem: rowItem,
-      checked: checked,
-    });
   }
 
   onRowDelete(rowItem: TagVo) {

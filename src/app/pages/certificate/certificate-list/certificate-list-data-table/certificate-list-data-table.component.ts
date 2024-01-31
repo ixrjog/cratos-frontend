@@ -1,13 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CertificateService } from '../../../../@core/services/certificate.service';
 import { CertificateEdit, CertificatePageQuery, CertificateVo } from '../../../../@core/data/certificate';
-import { HttpResult, Table } from '../../../../@core/data/base-data';
-import { DataTableComponent, TableWidthConfig, ToastService } from 'ng-devui';
+import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { DataTableComponent, ToastService } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 import { TagVo } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
 import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
+import { getRowColor } from '../../../../@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -17,31 +18,16 @@ import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 export class CertificateListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  @Input() queryParam = {
+  @Input()
+  queryParam = {
     queryName: '',
   };
-
+  limit = 3 * 12 * 30 * 24 * 60 * 60;   // three years
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVo> = {
-    loading: false,
-    data: [],
-    pager: {
-      pageIndex: 1,
-      pageSize: 10,
-      total: 0,
-    },
+    ...TABLE_DATA,
   };
-
-  columns = [
-    { field: 'certificateId', header: 'Certificate ID', fieldType: 'text' },
-    { field: 'name', header: 'Name', fieldType: 'text' },
-    { field: 'domainName', header: 'Domain Name', fieldType: 'text' },
-    { field: 'certificateType', header: 'Certificate Type', fieldType: 'text' },
-    { field: 'notBefore', header: 'Not Before', fieldType: 'date' },
-    { field: 'notAfter', header: 'Not After', fieldType: 'date' },
-    { field: 'createTime', header: 'Create Time', fieldType: 'date' },
-  ];
 
   newCertificate: CertificateEdit = {
     certificateId: '',
@@ -68,17 +54,6 @@ export class CertificateListDataTableComponent implements OnInit {
     },
   };
 
-  tableWidthConfig: TableWidthConfig[] = [
-    {
-      field: 'checkbox',
-      width: '50px',
-    },
-    {
-      field: 'notBefore',
-      width: '500px',
-    },
-  ];
-
   constructor(
     private certificateService: CertificateService,
     private dialogUtil: DialogUtil,
@@ -97,6 +72,12 @@ export class CertificateListDataTableComponent implements OnInit {
     this.certificateService.queryCertificatePage(param)
       .subscribe(({ body }) => {
         this.table.data = body.data;
+        for (let row of this.table.data) {
+          if (!row.valid) {
+            row['$rowClass'] = 'table-row-invalid';
+            console.log(row);
+          }
+        }
         this.table.loading = false;
         this.table.pager.total = body.totalNum;
       });
@@ -124,17 +105,6 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
     }, this.newCertificate);
-  }
-
-  onRowCheckChange(checked, rowIndex, nestedIndex, rowItem) {
-    rowItem.$checked = checked;
-    rowItem.$halfChecked = false;
-    this.datatable.setRowCheckStatus({
-      rowIndex: rowIndex,
-      nestedIndex: nestedIndex,
-      rowItem: rowItem,
-      checked: checked,
-    });
   }
 
   onRowEdit(rowItem: CertificateVo) {
@@ -211,4 +181,5 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  protected readonly getRowColor = getRowColor;
 }

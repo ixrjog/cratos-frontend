@@ -71,11 +71,11 @@ export class CertificateListDataTableComponent implements OnInit {
   tableWidthConfig: TableWidthConfig[] = [
     {
       field: 'checkbox',
-      width: '30px',
+      width: '50px',
     },
     {
-      field: 'name',
-      width: '200px',
+      field: 'notBefore',
+      width: '500px',
     },
   ];
 

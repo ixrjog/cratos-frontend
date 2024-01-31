@@ -71,12 +71,10 @@
             <span dDropDown appendToBody>
                 <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
-                  <li class="devui-dropdown-item" (click)="onRowValid(rowItem)">Valid</li>
-                </ul>
-                <ul dDropDownMenu>
-                  <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
-                </ul>
-              </span>
+                <li class="devui-dropdown-item" (click)="onRowValid(rowItem)">Valid</li>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
           </d-icon-group>
         </td>
       </tr>

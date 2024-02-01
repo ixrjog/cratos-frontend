@@ -1,14 +1,13 @@
 import { Observable } from 'rxjs';
-import { BaseVO, DataTable, HttpResult, PageQuery } from './base-data';
+import {  DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { BusinessTagVo } from './business-tag';
 
-export interface CertificateVo extends BaseVO {
+export interface CertificateVo extends ValidVO {
   id: number;
   certificateId: string;
   name: string;
   domainName: string;
   certificateType: string;
-  valid: boolean;
   keyAlgorithm: string;
   notBefore: Date;
   notAfter: Date;

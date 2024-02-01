@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { DialogService, ToastService } from 'ng-devui';
+import { DialogService } from 'ng-devui';
 import { Observable } from 'rxjs';
 import {
   BusinessTagEditorComponent,
 } from '../components/business-tag/business-tag-editor/business-tag-editor.component';
+import { TOAST_CONTENT, ToastUtil } from './toast.util';
 
 @Injectable()
 export class DialogUtil {
 
   constructor(private dialogService: DialogService,
-              private toastService: ToastService) {
+              private toastUtil: ToastUtil) {
   }
 
   onDialog(dialogDate: any, handler: Function) {
@@ -48,17 +49,14 @@ export class DialogUtil {
             let ob: Observable<any>;
             let content: string;
             if (operationType) {
-              content = 'Add Success';
+              content = TOAST_CONTENT.ADD;
               ob = results.modalContentInstance.addForm();
             } else {
-              content = 'Update Success';
+              content = TOAST_CONTENT.UPDATE;
               ob = results.modalContentInstance.updateForm();
             }
             ob.subscribe(() => {
-              this.toastService.open({
-                value: [ { severity: 'success', summary: 'Success', content: content } ],
-                life: 2000,
-              });
+              this.toastUtil.onSuccessToast(content);
               onFetch();
               results.modalInstance.hide();
             });
@@ -105,7 +103,6 @@ export class DialogUtil {
         businessObject: businessObject,
       },
     });
-
   }
 }
 

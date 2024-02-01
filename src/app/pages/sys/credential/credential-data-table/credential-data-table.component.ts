@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { CredentialService } from '../../../../@core/services/credential.service';
 import { CredentialPageQuery, CredentialVo } from '../../../../@core/data/credential';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -33,16 +33,8 @@ export class CredentialDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     this.credentialService.queryCredentialPage(param)
-      .subscribe(({ body }) => {
-        this.table.data = body.data;
-        for (let row of this.table.data) {
-          if (!row.valid) {
-            row['$rowClass'] = 'table-row-invalid';
-            console.log(row);
-          }
-        }
-        this.table.loading = false;
-        this.table.pager.total = body.totalNum;
+      .subscribe(res => {
+        onFetchValidData(this.table, res);
       });
   }
 
@@ -61,6 +53,10 @@ export class CredentialDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+
+  onRowNew() {
+
+  }
 
   onRowEdit(rowItem: any) {
 

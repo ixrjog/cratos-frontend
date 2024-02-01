@@ -2,13 +2,14 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CertificateService } from '../../../../@core/services/certificate.service';
 import { CertificateEdit, CertificatePageQuery, CertificateVo } from '../../../../@core/data/certificate';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { DataTableComponent, ToastService } from 'ng-devui';
+import { DataTableComponent } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 import { TagVo } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
 import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -57,7 +58,7 @@ export class CertificateListDataTableComponent implements OnInit {
   constructor(
     private certificateService: CertificateService,
     private dialogUtil: DialogUtil,
-    private toastService: ToastService,
+    private toastUtil: ToastUtil,
   ) {
   }
 
@@ -70,16 +71,8 @@ export class CertificateListDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     this.certificateService.queryCertificatePage(param)
-      .subscribe(({ body }) => {
-        this.table.data = body.data;
-        for (let row of this.table.data) {
-          if (!row.valid) {
-            row['$rowClass'] = 'table-row-invalid';
-            console.log(row);
-          }
-        }
-        this.table.loading = false;
-        this.table.pager.total = body.totalNum;
+      .subscribe(res => {
+        onFetchValidData(this.table, res);
       });
   }
 
@@ -132,10 +125,7 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       this.certificateService.deleteCertificateById({ id: rowItem.id })
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Delete Success' } ],
-            life: 2000,
-          });
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
         });
     });
@@ -154,6 +144,7 @@ export class CertificateListDataTableComponent implements OnInit {
       }
       zip(obList)
         .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
           this.fetchData();
         });
     });

@@ -1,10 +1,10 @@
-import { BaseVO, DataTable, PageQuery } from './base-data';
+import { DataTable, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 
 interface BusinessTagVo {
 }
 
-export interface CredentialVo extends BaseVO {
+export interface CredentialVo extends ValidVO {
   id: number;
   title: string;
   credentialType: string;
@@ -13,7 +13,6 @@ export interface CredentialVo extends BaseVO {
   credential: string;
   credential2: string;
   passphrase: string;
-  valid: boolean;
   comment: string;
   businessTags: BusinessTagVo[];
 }

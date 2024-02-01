@@ -2,11 +2,12 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
 import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
-import { DataTableComponent, ToastService } from 'ng-devui';
+import { DataTableComponent } from 'ng-devui';
 import { TagEditorComponent } from './tag-editor/tag-editor.component';
 import { Observable, zip } from 'rxjs';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
+import { getRowColor, onFetchValidData } from 'src/app/@shared/utils/data-table.utli';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-tag-data-table',
@@ -32,7 +33,7 @@ export class TagDataTableComponent implements OnInit {
   constructor(
     private tagService: TagService,
     private dialogUtil: DialogUtil,
-    private toastService: ToastService,
+    private toastUtil: ToastUtil,
   ) {
   }
 
@@ -45,16 +46,8 @@ export class TagDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     this.tagService.queryTagPage(param)
-      .subscribe(({ body }) => {
-        this.table.data = body.data;
-        for (let row of this.table.data) {
-          if (!row.valid) {
-            row['$rowClass'] = 'table-row-invalid';
-            console.log(row);
-          }
-        }
-        this.table.loading = false;
-        this.table.pager.total = body.totalNum;
+      .subscribe(res => {
+        onFetchValidData(this.table, res);
       });
   }
 
@@ -113,10 +106,7 @@ export class TagDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       this.tagService.deleteTagById({ id: rowItem.id })
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Delete Success' } ],
-            life: 2000,
-          });
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
         });
     });
@@ -135,10 +125,7 @@ export class TagDataTableComponent implements OnInit {
       }
       zip(obList)
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Batch update Success' } ],
-            life: 2000,
-          });
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
           this.fetchData();
         });
     });
@@ -157,10 +144,7 @@ export class TagDataTableComponent implements OnInit {
       }
       zip(obList)
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Batch delete Success' } ],
-            life: 2000,
-          });
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
           this.fetchData();
         });
     });
@@ -169,6 +153,7 @@ export class TagDataTableComponent implements OnInit {
   onRowValid(rowItem: any) {
     this.tagService.setTagValidById({ id: rowItem.id })
       .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
         this.fetchData();
       });
   }

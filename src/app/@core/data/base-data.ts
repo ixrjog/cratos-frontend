@@ -26,6 +26,12 @@ export interface BaseVO {
   updateTime: Date;
 }
 
+export interface ValidVO {
+  valid: boolean;
+  createTim: Date;
+  updateTime: Date;
+}
+
 export interface Table<T> {
   loading: boolean,
   data: Array<T>,

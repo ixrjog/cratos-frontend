@@ -22,6 +22,7 @@ import { DialogUtil } from './utils/dialog.util';
 import { BusinessTagEditorComponent } from './components/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessTagsComponent } from './components/business-tag/business-tags/business-tags.component';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
+import { ToastUtil } from './utils/toast.util';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -46,6 +47,7 @@ const CRATOS_COMPONENTS = [
 
 const CRATOS_UTILS = [
   DialogUtil,
+  ToastUtil,
 ];
 @NgModule({
   declarations: [

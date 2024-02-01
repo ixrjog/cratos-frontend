@@ -13,7 +13,6 @@ export class CredentialService extends CredentialData {
 
   queryCredentialPage(param: CredentialPageQuery): Observable<DataTable<CredentialVo>> {
     return this.apiService.post('/credential/page/query', param);
-    ;
   }
 
 }

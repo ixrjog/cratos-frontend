@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { BaseVO, DataTable, HttpResult, PageQuery } from './base-data';
+import { DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 
-export interface TagVo extends BaseVO{
+export interface TagVo extends ValidVO{
   id: number;
   tagType: string;
   tagKey: string;
@@ -9,7 +9,6 @@ export interface TagVo extends BaseVO{
   color: string;
   promptColor: string;
   seq: number;
-  valid: boolean;
   comment: string;
 }
 

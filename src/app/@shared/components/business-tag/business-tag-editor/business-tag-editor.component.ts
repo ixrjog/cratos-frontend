@@ -7,7 +7,7 @@ import { TagPageQuery, TagVo } from '../../../../@core/data/tag';
 import { BusinessTagEdit, BusinessTagVo, GetByBusiness, ListValue } from '../../../../@core/data/business-tag';
 import { map } from 'rxjs/operators';
 import { DIALOG_DATA, DialogUtil } from '../../../utils/dialog.util';
-import { Observable } from 'rxjs';
+import { TOAST_CONTENT, ToastUtil } from '../../../utils/toast.util';
 
 @Component({
   selector: 'app-business-tag-editor',
@@ -62,7 +62,7 @@ export class BusinessTagEditorComponent implements OnInit {
     private tagService: TagService,
     private businessTagService: BusinessTagService,
     private dialogUtil: DialogUtil,
-    private toastService: ToastService) {
+    private toastUtil: ToastUtil) {
   }
 
   onSearchTag = (term: string) => {
@@ -129,11 +129,6 @@ export class BusinessTagEditorComponent implements OnInit {
       });
   }
 
-  onBeforeDelete(tag: BusinessTagVo): Observable<boolean> {
-    return this.businessTagService.deleteBusinessTagById({ id: tag.id })
-      .pipe(map(({ success }) => success));
-  };
-
   onTagDelete(tag: BusinessTagVo) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
@@ -142,12 +137,9 @@ export class BusinessTagEditorComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       this.businessTagService.deleteBusinessTagById({ id: tag.id })
         .subscribe(() => {
-          this.toastService.open({
-            value: [ { severity: 'success', summary: 'Success', content: 'Delete Success' } ],
-            life: 2000,
-          });
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.queryBusinessTagByBusiness();
         });
     });
-  }
+  };
 }

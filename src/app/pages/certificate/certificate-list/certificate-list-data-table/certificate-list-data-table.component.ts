@@ -5,11 +5,12 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { DataTableComponent } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
-import { TagVo } from '../../../../@core/data/tag';
+import { TagVO } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
 import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -23,7 +24,7 @@ export class CertificateListDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
   };
-  limit = 3 * 12 * 30 * 24 * 60 * 60;   // three years
+  limit = RELATIVE_TIME_LIMIT;   // three years
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVo> = {
@@ -92,8 +93,8 @@ export class CertificateListDataTableComponent implements OnInit {
 
   onRowNew() {
     const dialogDate = {
-      title: 'New Certificate',
       ...this.dialogDate.editorData,
+      title: 'New Certificate',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -102,8 +103,8 @@ export class CertificateListDataTableComponent implements OnInit {
 
   onRowEdit(rowItem: CertificateVo) {
     const dialogDate = {
-      title: 'Edit Certificate',
       ...this.dialogDate.editorData,
+      title: 'Edit Certificate',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -137,9 +138,8 @@ export class CertificateListDataTableComponent implements OnInit {
       content: this.dialogDate.content.batchValid,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of checkedRows) {
+      for (let row of this.datatable.getCheckedRows()) {
         obList.push(this.certificateService.setCertificateValidById({ id: row.id }));
       }
       zip(obList)
@@ -156,9 +156,8 @@ export class CertificateListDataTableComponent implements OnInit {
       content: this.dialogDate.content.batchDelete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of checkedRows) {
+      for (let row of this.datatable.getCheckedRows()) {
         obList.push(this.certificateService.deleteCertificateById({ id: row.id }));
       }
       zip(obList)

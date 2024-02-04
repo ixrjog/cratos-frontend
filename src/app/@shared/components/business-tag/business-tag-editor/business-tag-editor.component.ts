@@ -3,8 +3,8 @@ import { FormLayout } from 'ng-devui/form';
 import { DValidateRules, SplitterOrientation, ToastService } from 'ng-devui';
 import { TagService } from '../../../../@core/services/tag.service';
 import { BusinessTagService } from '../../../../@core/services/business-tag.service';
-import { TagPageQuery, TagVo } from '../../../../@core/data/tag';
-import { BusinessTagEdit, BusinessTagVo, GetByBusiness, ListValue } from '../../../../@core/data/business-tag';
+import { TagPageQuery, TagVO } from '../../../../@core/data/tag';
+import { BusinessTagEdit, BusinessTagVO, GetByBusiness, ListValue } from '../../../../@core/data/business-tag';
 import { map } from 'rxjs/operators';
 import { DIALOG_DATA, DialogUtil } from '../../../utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../utils/toast.util';
@@ -21,7 +21,7 @@ export class BusinessTagEditorComponent implements OnInit {
   maxSize = '60%';
   loading: boolean = false;
 
-  businessTags: BusinessTagVo[];
+  businessTags: BusinessTagVO[];
   orientation: SplitterOrientation = 'horizontal';
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
@@ -89,7 +89,7 @@ export class BusinessTagEditorComponent implements OnInit {
       );
   };
 
-  onTagChange(tag: TagVo) {
+  onTagChange(tag: TagVO) {
     this.formData.tagValue = '';
     this.onSearchTagValue('');
   }
@@ -129,7 +129,7 @@ export class BusinessTagEditorComponent implements OnInit {
       });
   }
 
-  onTagDelete(tag: BusinessTagVo) {
+  onTagDelete(tag: BusinessTagVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,

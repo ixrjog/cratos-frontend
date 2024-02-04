@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
-import { DataTable } from '../data/base-data';
-import { CredentialData, CredentialPageQuery, CredentialVo } from '../data/credential';
+import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
+import { CredentialData, CredentialEdit, CredentialPageQuery, CredentialVO } from '../data/credential';
 
 @Injectable()
 export class CredentialService extends CredentialData {
@@ -11,8 +11,20 @@ export class CredentialService extends CredentialData {
     super();
   }
 
-  queryCredentialPage(param: CredentialPageQuery): Observable<DataTable<CredentialVo>> {
+  queryCredentialPage(param: CredentialPageQuery): Observable<DataTable<CredentialVO>> {
     return this.apiService.post('/credential/page/query', param);
+  }
+
+  getCredentialOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get('/credential/options/get', {});
+  }
+
+  setCredentialValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam('/credential/valid/set', param);
+  }
+
+  addCredential(param: CredentialEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.post('/credential/add', param);
   }
 
 }

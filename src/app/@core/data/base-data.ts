@@ -22,13 +22,13 @@ export interface PageQuery {
 }
 
 export interface BaseVO {
-  createTim: Date;
+  createTime: Date;
   updateTime: Date;
 }
 
 export interface ValidVO {
   valid: boolean;
-  createTim: Date;
+  createTime: Date;
   updateTime: Date;
 }
 
@@ -42,6 +42,14 @@ export interface Table<T> {
   }
 }
 
+export interface OptionsVO {
+  options: {
+    label: string;
+    value: any;
+    comment: any;
+  }[]
+}
+
 export const TABLE_DATA: Table<any> = {
   loading: false,
   data: [],
@@ -51,3 +59,4 @@ export const TABLE_DATA: Table<any> = {
     total: 0,
   },
 };
+

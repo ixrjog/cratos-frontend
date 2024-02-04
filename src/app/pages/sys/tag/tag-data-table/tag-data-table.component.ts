@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
-import { TagEdit, TagPageQuery, TagVo } from '../../../../@core/data/tag';
+import { TagEdit, TagPageQuery, TagVO } from '../../../../@core/data/tag';
 import { DataTableComponent } from 'ng-devui';
 import { TagEditorComponent } from './tag-editor/tag-editor.component';
 import { Observable, zip } from 'rxjs';
@@ -22,7 +22,7 @@ export class TagDataTableComponent implements OnInit {
     tagKey: '',
   };
 
-  table: Table<TagVo> = {
+  table: Table<TagVO> = {
     ...TABLE_DATA
   };
 
@@ -80,25 +80,25 @@ export class TagDataTableComponent implements OnInit {
 
   onRowNew() {
     const dialogDate = {
-      title: 'New Tag',
       ...this.dialogDate.editorData,
+      title: 'New Tag',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
     }, this.newTag);
   }
 
-  onRowEdit(rowItem: TagVo) {
+  onRowEdit(rowItem: TagVO) {
     const dialogDate = {
-      title: 'Edit Tag',
       ...this.dialogDate.editorData,
+      title: 'Edit Tag',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
   }
 
-  onRowDelete(rowItem: TagVo) {
+  onRowDelete(rowItem: TagVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
@@ -118,9 +118,8 @@ export class TagDataTableComponent implements OnInit {
       content: this.dialogDate.content.batchValid,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of checkedRows) {
+      for (let row of this.datatable.getCheckedRows()) {
         obList.push(this.tagService.setTagValidById({ id: row.id }));
       }
       zip(obList)
@@ -137,9 +136,8 @@ export class TagDataTableComponent implements OnInit {
       content: this.dialogDate.content.batchDelete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      const checkedRows: TagVo[] = this.datatable.getCheckedRows();
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of checkedRows) {
+      for (let row of this.datatable.getCheckedRows()) {
         obList.push(this.tagService.deleteTagById({ id: row.id }));
       }
       zip(obList)

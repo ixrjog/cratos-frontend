@@ -83,9 +83,5 @@ export class CertificateEditorComponent implements OnInit {
     return this.certificateService.updateCertificate(param);
   }
 
-  submitForm({ valid, directive }) {
-    console.log(valid);
-    console.log(directive);
-  }
 }
 

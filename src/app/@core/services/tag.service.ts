@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
-import { TagData, TagEdit, TagPageQuery, TagVo } from '../data/tag';
+import { TagData, TagEdit, TagPageQuery, TagVO } from '../data/tag';
 import { DataTable, HttpResult } from '../data/base-data';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class TagService extends TagData {
     super();
   }
 
-  queryTagPage(param: TagPageQuery): Observable<DataTable<TagVo>> {
+  queryTagPage(param: TagPageQuery): Observable<DataTable<TagVO>> {
     return this.apiService.post('/tag/page/query', param);
   }
 

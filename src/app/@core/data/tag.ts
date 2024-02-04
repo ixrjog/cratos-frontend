@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 
-export interface TagVo extends ValidVO{
+export interface TagVO extends ValidVO{
   id: number;
   tagType: string;
   tagKey: string;
@@ -31,7 +31,7 @@ export interface TagEdit {
 
 export abstract class TagData {
 
-  abstract queryTagPage(param: TagPageQuery): Observable<DataTable<TagVo>>;
+  abstract queryTagPage(param: TagPageQuery): Observable<DataTable<TagVO>>;
 
   abstract updateTag(param: TagEdit): Observable<HttpResult<Boolean>>;
 

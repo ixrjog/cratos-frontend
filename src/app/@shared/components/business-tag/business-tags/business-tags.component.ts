@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BusinessTagVo } from '../../../../@core/data/business-tag';
+import { BusinessTagVO } from '../../../../@core/data/business-tag';
 
 
 @Component({
@@ -10,6 +10,6 @@ import { BusinessTagVo } from '../../../../@core/data/business-tag';
 export class BusinessTagsComponent {
 
   @Input()
-  businessTags: BusinessTagVo[];
+  businessTags: BusinessTagVO[];
 
 }

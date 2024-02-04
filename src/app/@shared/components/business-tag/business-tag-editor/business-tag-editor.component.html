@@ -15,7 +15,7 @@
             ngForm
             [dValidateRules]="formRules['rule']"
             [layout]="layoutDirection"
-            #userForm="dValidateRules"
+            #businessTagForm="dValidateRules"
             (dSubmit)="submitForm($event)"
           >
             <d-form-item>
@@ -51,7 +51,7 @@
               </d-form-control>
             </d-form-item>
             <d-form-operation>
-              <d-button class="mr-element-spacing" [title]="userForm.errorMessage || ''" circled="true" style="margin-right: 8px" dFormSubmit
+              <d-button class="mr-element-spacing" [title]="businessTagForm.errorMessage || ''" circled="true" style="margin-right: 8px" dFormSubmit
               >Bind
               </d-button>
               <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>

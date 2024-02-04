@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TagService } from '../../../../../@core/services/tag.service';
-import { TagEdit, TagVo } from '../../../../../@core/data/tag';
+import { TagEdit, TagVO } from '../../../../../@core/data/tag';
 
 @Component({
   selector: 'app-tag-editor',
@@ -14,7 +14,7 @@ export class TagEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
   data: any;
-  formData: TagVo;
+  formData: TagVO;
   tagFormGroup: FormGroup;
   operationType: boolean;
 

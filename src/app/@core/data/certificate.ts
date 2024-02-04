@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import {  DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
-import { BusinessTagVo } from './business-tag';
+import { BusinessTagVO } from './business-tag';
 
 export interface CertificateVo extends ValidVO {
   id: number;
@@ -12,7 +12,7 @@ export interface CertificateVo extends ValidVO {
   notBefore: Date;
   notAfter: Date;
   comment: string;
-  businessTags: BusinessTagVo[];
+  businessTags: BusinessTagVO[];
 }
 export interface CertificatePageQuery extends PageQuery {
   queryName?: string;

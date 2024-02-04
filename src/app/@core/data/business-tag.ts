@@ -1,14 +1,14 @@
-import { TagVo } from './tag';
+import { TagVO } from './tag';
 import { Observable } from 'rxjs';
 import { HttpResult } from './base-data';
 
-export interface BusinessTagVo {
+export interface BusinessTagVO {
   id: number;
   businessType: string;
   businessId: number;
   tagId: number;
   tagValue: string;
-  tag: TagVo;
+  tag: TagVO;
 }
 
 export interface GetByBusiness {
@@ -31,7 +31,7 @@ export interface ListValue {
 
 export abstract class BusinessTagData {
 
-  abstract queryBusinessTagByBusiness(param: GetByBusiness): Observable<HttpResult<Array<BusinessTagVo>>>;
+  abstract queryBusinessTagByBusiness(param: GetByBusiness): Observable<HttpResult<Array<BusinessTagVO>>>;
 
   abstract addBusinessTag(param: BusinessTagEdit): Observable<HttpResult<Boolean>>;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BusinessTagData, BusinessTagEdit, BusinessTagVo, GetByBusiness, ListValue } from '../data/business-tag';
+import { BusinessTagData, BusinessTagEdit, BusinessTagVO, GetByBusiness, ListValue } from '../data/business-tag';
 import { Observable } from 'rxjs';
 import { HttpResult } from '../data/base-data';
 
@@ -23,7 +23,7 @@ export class BusinessTagService extends BusinessTagData {
     return this.apiService.delete('/business/tag/del', param);
   }
 
-  queryBusinessTagByBusiness(param: GetByBusiness): Observable<HttpResult<Array<BusinessTagVo>>> {
+  queryBusinessTagByBusiness(param: GetByBusiness): Observable<HttpResult<Array<BusinessTagVO>>> {
     return this.apiService.post('/business/tag/query', param);
   }
 

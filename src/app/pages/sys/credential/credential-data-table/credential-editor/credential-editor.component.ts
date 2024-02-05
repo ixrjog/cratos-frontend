@@ -3,7 +3,6 @@ import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
 import { CredentialEdit, CredentialTypeEnum, CredentialVO } from '../../../../../@core/data/credential';
 import { CredentialService } from '../../../../../@core/services/credential.service';
-import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-credential-editor',
@@ -16,7 +15,6 @@ export class CredentialEditorComponent implements OnInit {
   @Input()
   data: any;
   formData: CredentialVO;
-  credentialFormGroup: FormGroup;
   operationType: boolean;
   credentialTypeOptions = [];
   minDate: Date = new Date();
@@ -39,10 +37,6 @@ export class CredentialEditorComponent implements OnInit {
       // }],
     },
     username: { validators: [ { required: true } ] },
-    credentialType: {
-      validators: [ { required: true } ],
-      message: 'Enter a value that contains 1 to 15 digits and letters.',
-    },
     credential: { validators: [ { required: true } ] },
   };
 
@@ -52,26 +46,8 @@ export class CredentialEditorComponent implements OnInit {
   ngOnInit(): void {
     this.formData = this.data['formData'];
     this.operationType = this.data['operationType'];
-    this.resetCredentialFormGroup();
-    this.warpCredentialData(this.credentialFormGroup.get('credentialType').value);
+    this.warpCredentialData(this.formData.credentialType);
     this.getCredentialOptions();
-  }
-
-  resetCredentialFormGroup() {
-    this.credentialFormGroup = new UntypedFormGroup({
-      id: new UntypedFormControl(this.formData.id ? this.formData.id : null),
-      title: new UntypedFormControl(this.formData.title),
-      credentialType: new UntypedFormControl(this.formData.credentialType),
-      username: new UntypedFormControl(this.formData.username),
-      fingerprint: new UntypedFormControl(this.formData.fingerprint),
-      credential: new UntypedFormControl(this.formData.credential),
-      credential2: new UntypedFormControl(this.formData.credential2),
-      valid: new UntypedFormControl(this.formData.valid),
-      passphrase: new UntypedFormControl(this.formData.passphrase),
-      expiredTime: new UntypedFormControl(this.formData.expiredTime),
-      comment: new UntypedFormControl(this.formData.comment),
-      privateCredential: new UntypedFormControl(false),
-    });
   }
 
   onCredentialTypeChange(credentialType: any) {
@@ -79,41 +55,40 @@ export class CredentialEditorComponent implements OnInit {
   }
 
   warpCredentialData(credentialType: string) {
-    this.resetCredentialFormGroup();
     switch (credentialType) {
       case CredentialTypeEnum.USERNAME_WITH_PASSWORD:
         this.credentialData = {
           showPassphrase: false,
-          credential: '凭据(密码)',
+          credential: 'Password',
           credential2: '',
         };
         break;
       case CredentialTypeEnum.SSH_USERNAME_WITH_PRIVATE_KEY:
         this.credentialData = {
           showPassphrase: true,
-          credential: '凭据(私钥)',
+          credential: 'Private Key',
           credential2: '',
         };
         break;
       case CredentialTypeEnum.SSH_USERNAME_WITH_KEY_PAIR:
         this.credentialData = {
           showPassphrase: true,
-          credential: '凭据(私钥)',
-          credential2: '公钥',
+          credential: 'Private Key',
+          credential2: 'Public Key',
         };
         break;
       case CredentialTypeEnum.TOKEN:
         this.credentialData = {
           showPassphrase: false,
-          credential: '凭据(令牌)',
+          credential: 'Token',
           credential2: '',
         };
         break;
       case CredentialTypeEnum.ACCESS_KEY:
         this.credentialData = {
           showPassphrase: false,
-          credential: 'AccessKey',
-          credential2: 'SecretKey',
+          credential: 'AccessKey ID',
+          credential2: 'AccessKey Secret',
         };
         break;
       case CredentialTypeEnum.KUBE_CONFIG:
@@ -141,16 +116,18 @@ export class CredentialEditorComponent implements OnInit {
   }
 
   getCredentialOptions() {
-    return this.credentialService.getCredentialOptions()
+    this.credentialService.getCredentialOptions()
       .subscribe(({ body }) => {
         this.credentialTypeOptions = body.options;
       });
   };
 
   addForm() {
+    // console.log(this.formData.expiredTime.toString())
     const param: CredentialEdit = {
-      ...this.credentialFormGroup.value,
-      expiredTime: Date.parse(this.credentialFormGroup.get('expiredTime').value),
+      ...this.formData,
+      // expiredTime: Date.parse(),
+
     };
     return this.credentialService.addCredential(param);
   }

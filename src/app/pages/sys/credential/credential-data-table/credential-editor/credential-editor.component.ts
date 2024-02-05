@@ -51,7 +51,6 @@ export class CredentialEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
-    // this.getCredentialOptions();
     this.operationType = this.data['operationType'];
     this.resetCredentialFormGroup();
     this.warpCredentialData(this.credentialFormGroup.get('credentialType').value);

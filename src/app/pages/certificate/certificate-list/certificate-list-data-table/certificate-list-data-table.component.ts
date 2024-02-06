@@ -38,7 +38,7 @@ export class CertificateListDataTableComponent implements OnInit {
     keyAlgorithm: '',
     name: '',
     notAfter: null,
-    notBefore: null,
+    notBefore: new Date(),
     valid: true,
     comment: '',
   };
@@ -108,7 +108,11 @@ export class CertificateListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, rowItem);
+    }, {
+      ...rowItem,
+      notAfter: new Date(rowItem.notAfter),
+      notBefore: new Date(rowItem.notBefore),
+    });
   }
 
   onRowValid(rowItem: any) {

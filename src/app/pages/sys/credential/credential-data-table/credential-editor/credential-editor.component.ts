@@ -123,11 +123,9 @@ export class CredentialEditorComponent implements OnInit {
   };
 
   addForm() {
-    // console.log(this.formData.expiredTime.toString())
     const param: CredentialEdit = {
       ...this.formData,
-      // expiredTime: Date.parse(),
-
+      expiredTime: Date.parse(this.formData.expiredTime.toString()),
     };
     return this.credentialService.addCredential(param);
   }

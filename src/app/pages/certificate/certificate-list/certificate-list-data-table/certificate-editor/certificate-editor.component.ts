@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DFormGroupRuleDirective, FormLayout } from 'ng-devui/form';
 import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CertificateEdit, CertificateVo } from 'src/app/@core/data/certificate';
 import { CertificateService } from '../../../../../@core/services/certificate.service';
 import { DatePipe, DValidateRules } from 'ng-devui';
-import * as ace from "ace-builds";
 
 @Component({
   selector: 'app-certificate-editor',

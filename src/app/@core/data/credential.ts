@@ -13,6 +13,7 @@ export interface CredentialVO extends ValidVO {
   passphrase: string;
   comment: string;
   expiredTime: Date;
+  privateCredential: boolean;
   businessTags: BusinessTagVO[];
 }
 
@@ -32,7 +33,8 @@ export interface CredentialEdit {
   passphrase?: string;
   valid: boolean;
   comment: string;
-  expiredTime: Date;
+  expiredTime: any;
+  privateCredential: boolean;
 }
 
 export abstract class CredentialData {

@@ -52,10 +52,11 @@ export class CredentialDataTableComponent implements OnInit {
     credential2: '',
     credentialType: CredentialTypeEnum.USERNAME_WITH_PASSWORD,
     fingerprint: '',
-    passphrase: '',
+    passphrase: null,
     title: '',
     username: '',
     valid: true,
+    privateCredential: false,
     expiredTime: new Date(),
   };
 
@@ -115,7 +116,7 @@ export class CredentialDataTableComponent implements OnInit {
   onRowValid(rowItem: any) {
     this.credentialService.setCredentialValidById({ id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
         this.fetchData();
       });
   }

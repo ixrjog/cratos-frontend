@@ -53,8 +53,7 @@ export class BusinessTagEditorComponent implements OnInit {
       // }],
     },
     tagValue: {
-      validators: [ { required: true }, { minlength: 1 }, { maxlength: 150 }, { pattern: /^[a-zA-Z0-9]+(\s+[a-zA-Z0-9]+)*$/ } ],
-      message: 'Enter a value that contains 1 to 15 digits and letters.',
+      validators: [ { required: true }],
     },
   };
 
@@ -88,6 +87,10 @@ export class BusinessTagEditorComponent implements OnInit {
         ),
       );
   };
+
+  valueParser($event) {
+    return $event['label'];
+  }
 
   onTagChange(tag: TagVO) {
     this.formData.tagValue = '';

@@ -30,6 +30,19 @@ export class TagDataTableComponent implements OnInit {
     color: '#000000', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
   };
 
+  dialogDate = {
+    editorData: {
+      ...DIALOG_DATA.editorData,
+      content: TagEditorComponent,
+    },
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
   constructor(
     private tagService: TagService,
     private dialogUtil: DialogUtil,
@@ -38,17 +51,12 @@ export class TagDataTableComponent implements OnInit {
   }
 
   fetchData() {
-    this.table.data = [];
-    this.table.loading = true;
     const param: TagPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    this.tagService.queryTagPage(param)
-      .subscribe(res => {
-        onFetchValidData(this.table, res);
-      });
+    onFetchValidData(this.table, this.tagService.queryTagPage(param));
   }
 
   ngOnInit() {
@@ -63,19 +71,6 @@ export class TagDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
-  }
-
-  dialogDate = {
-    editorData: {
-      ...DIALOG_DATA.editorData,
-      content: TagEditorComponent,
-    },
-    warningOperateData: {
-      ...DIALOG_DATA.warningOperateData,
-    },
-    content: {
-      ...DIALOG_DATA.content,
-    }
   }
 
   onRowNew() {
@@ -119,14 +114,13 @@ export class TagDataTableComponent implements OnInit {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of this.datatable.getCheckedRows()) {
+      this.datatable.getCheckedRows().map(row => {
         obList.push(this.tagService.setTagValidById({ id: row.id }));
-      }
-      zip(obList)
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
-          this.fetchData();
-        });
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+        this.fetchData();
+      });
     });
   }
 
@@ -137,14 +131,13 @@ export class TagDataTableComponent implements OnInit {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of this.datatable.getCheckedRows()) {
+      this.datatable.getCheckedRows().map(row => {
         obList.push(this.tagService.deleteTagById({ id: row.id }));
-      }
-      zip(obList)
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
-          this.fetchData();
-        });
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
+        this.fetchData();
+      });
     });
   }
 

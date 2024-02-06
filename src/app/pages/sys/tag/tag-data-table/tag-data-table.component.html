@@ -33,13 +33,6 @@
       </d-cell>
     </d-column>
     <d-column field="seq" header="Seq" [sortable]="true" [width]="'80px'"></d-column>
-    <d-column
-      [width]="'120px'"
-      field="createTime"
-      header="Create Time"
-      [fieldType]="'date'"
-      [extraOptions]="{ dateFormat: 'yyyy/MM/dd' }"
-    ></d-column>
     <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

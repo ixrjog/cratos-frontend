@@ -8,12 +8,13 @@ import {
   CredentialVO,
 } from '../../../../@core/data/credential';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CredentialEditorComponent } from './credential-editor/credential-editor.component';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { Observable, zip } from 'rxjs';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -23,6 +24,7 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 export class CredentialDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   limit = RELATIVE_TIME_LIMIT;
+  businessType: string = BusinessTypeEnum.CREDENTIAL;
   @Input()
   queryParam = {
     queryName: '',
@@ -66,17 +68,12 @@ export class CredentialDataTableComponent implements OnInit {
   }
 
   fetchData() {
-    this.table.data = [];
-    this.table.loading = true;
     const param: CredentialPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    this.credentialService.queryCredentialPage(param)
-      .subscribe(res => {
-        onFetchValidData(this.table, res);
-      });
+    onFetchValidData(this.table, this.credentialService.queryCredentialPage(param));
   }
 
   ngOnInit() {
@@ -106,11 +103,20 @@ export class CredentialDataTableComponent implements OnInit {
   }
 
   onRowEdit(rowItem: any) {
-
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit Credential',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, {
+      ...rowItem,
+      expiredTime: new Date(rowItem.expiredTime),
+    });
   }
 
   onRowBusinessTag(rowItem: any) {
-
+    this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
   onRowValid(rowItem: any) {
@@ -122,7 +128,17 @@ export class CredentialDataTableComponent implements OnInit {
   }
 
   onRowDelete(rowItem: any) {
-
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.credentialService.deleteCredentialById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
   }
 
   onBatchValid() {
@@ -132,18 +148,30 @@ export class CredentialDataTableComponent implements OnInit {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of this.datatable.getCheckedRows()) {
+      this.datatable.getCheckedRows().map(row => {
         obList.push(this.credentialService.setCredentialValidById({ id: row.id }));
-      }
-      zip(obList)
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
-          this.fetchData();
-        });
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+        this.fetchData();
+      });
     });
   }
 
   onBatchDelete() {
-
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchDelete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.credentialService.deleteCredentialById({ id: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
+        this.fetchData();
+      });
+    });
   }
 }

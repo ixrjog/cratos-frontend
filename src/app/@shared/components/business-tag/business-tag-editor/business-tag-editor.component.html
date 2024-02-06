@@ -40,6 +40,9 @@
               <d-form-control>
                 <input
                   dTextInput
+                  [allowEmptyValueSearch]="true"
+                  [delay]="1000"
+                  [valueParser]="valueParser"
                   [appendToBody]="true"
                   name="tagValue"
                   [(ngModel)]="formData.tagValue"

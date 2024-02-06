@@ -5,7 +5,6 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { DataTableComponent } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
-import { TagVO } from '../../../../@core/data/tag';
 import { Observable, zip } from 'rxjs';
 import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
@@ -64,17 +63,12 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   fetchData() {
-    this.table.data = [];
-    this.table.loading = true;
     const param: CertificatePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    this.certificateService.queryCertificatePage(param)
-      .subscribe(res => {
-        onFetchValidData(this.table, res);
-      });
+    onFetchValidData(this.table, this.certificateService.queryCertificatePage(param));
   }
 
   ngOnInit() {
@@ -143,14 +137,13 @@ export class CertificateListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of this.datatable.getCheckedRows()) {
+      this.datatable.getCheckedRows().map(row => {
         obList.push(this.certificateService.setCertificateValidById({ id: row.id }));
-      }
-      zip(obList)
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
-          this.fetchData();
-        });
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+        this.fetchData();
+      });
     });
   }
 
@@ -161,13 +154,13 @@ export class CertificateListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      for (let row of this.datatable.getCheckedRows()) {
+      this.datatable.getCheckedRows().map(row => {
         obList.push(this.certificateService.deleteCertificateById({ id: row.id }));
-      }
-      zip(obList)
-        .subscribe(() => {
-          this.fetchData();
-        });
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
+        this.fetchData();
+      });
     });
   }
 

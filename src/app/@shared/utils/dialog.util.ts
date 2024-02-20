@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DialogService } from 'ng-devui';
 import { Observable } from 'rxjs';
-import {
-  BusinessTagEditorComponent,
-} from '../components/business-tag/business-tag-editor/business-tag-editor.component';
 import { TOAST_CONTENT, ToastUtil } from './toast.util';
+import {
+  BusinessTagEditorComponent
+} from '../components/common/business-tag/business-tag-editor/business-tag-editor.component';
+import { BusinessDocsComponent } from '../components/common/business-doc/business-docs/business-docs.component';
 
 @Injectable()
 export class DialogUtil {
@@ -98,6 +99,22 @@ export class DialogUtil {
           },
         },
       ],
+      data: {
+        businessType: businessType,
+        businessObject: businessObject,
+      },
+    });
+  }
+
+  onBusinessDocsEditDialog(businessType: string, businessObject: any, onFetch: Function) {
+    const results = this.dialogService.open({
+      id: 'business-docs-edit',
+      width: '70%',
+      maxHeight: '1000px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      content: BusinessDocsComponent,
+      buttons: [],
       data: {
         businessType: businessType,
         businessObject: businessObject,

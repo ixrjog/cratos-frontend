@@ -6,10 +6,10 @@ import { DataTableComponent } from 'ng-devui';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
 import { Observable, zip } from 'rxjs';
-import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -166,6 +166,10 @@ export class CertificateListDataTableComponent implements OnInit {
 
   onRowBusinessTag(rowItem: CertificateVo) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onRowBusinessDoc(rowItem: CertificateVo) {
+    this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
   protected readonly getRowColor = getRowColor;

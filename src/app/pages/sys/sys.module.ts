@@ -6,7 +6,7 @@ import { TagComponent } from './tag/tag.component';
 import { CredentialComponent } from './credential/credential.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TagDataTableComponent } from './tag/tag-data-table/tag-data-table.component';
-import { ButtonModule, DataTableModule, LoadingModule, PaginationModule, TextInputModule } from 'ng-devui';
+import { ButtonModule, DataTableModule, LoadingModule, PaginationModule } from 'ng-devui';
 import { I18nModule } from 'ng-devui/i18n';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BasicFormModule } from '../getting-started/sample/basic-form/basic-form.module';

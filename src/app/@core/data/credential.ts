@@ -22,8 +22,7 @@ export interface CredentialPageQuery extends PageQuery {
   credentialType?: string;
 }
 
-export interface CredentialEdit {
-  id?: number;
+export interface CredentialAdd {
   title: string;
   credentialType: string;
   username: string;
@@ -37,6 +36,14 @@ export interface CredentialEdit {
   privateCredential: boolean;
 }
 
+export interface CredentialUpdate {
+  id: number;
+  title?: string;
+  username?: string;
+  comment?: string;
+  valid: boolean;
+}
+
 export abstract class CredentialData {
 
   abstract queryCredentialPage(param: CredentialPageQuery): Observable<DataTable<CredentialVO>>;
@@ -45,9 +52,11 @@ export abstract class CredentialData {
 
   abstract setCredentialValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
-  abstract addCredential(param: CredentialEdit): Observable<HttpResult<Boolean>>;
+  abstract addCredential(param: CredentialAdd): Observable<HttpResult<Boolean>>;
 
   abstract deleteCredentialById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract updateCredential(param: CredentialUpdate): Observable<HttpResult<Boolean>>;
 
 }
 

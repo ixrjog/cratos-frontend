@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
-import { LogData, LoginParam, LoginVo } from '../data/log';
+import { LogData, LoginParam, LoginVO } from '../data/log';
 
 @Injectable()
 export class LogService extends LogData {
@@ -11,7 +11,7 @@ export class LogService extends LogData {
     super();
   }
 
-  login(param: LoginParam): Observable<HttpResult<LoginVo>> {
+  login(param: LoginParam): Observable<HttpResult<LoginVO>> {
     return this.apiService.post('/log/login', param);
   }
 
@@ -23,7 +23,7 @@ export class LogService extends LogData {
   }
 
 
-  setSession(userInfo: LoginVo) {
+  setSession(userInfo: LoginVO) {
     localStorage.setItem('id_token', userInfo.token);
     localStorage.setItem('userinfo', JSON.stringify(userInfo));
     localStorage.setItem('expires_at', '120');

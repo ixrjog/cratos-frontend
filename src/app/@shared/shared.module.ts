@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { AlertModule, DatePipe, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
+import { AlertModule, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
 import { IconModule } from 'ng-devui/icon';
 import { I18nModule } from 'ng-devui/i18n';
 import { TranslateModule } from '@ngx-translate/core';
@@ -19,10 +19,12 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SafePipe } from './pipe/safePipe';
 import { DialogUtil } from './utils/dialog.util';
-import { BusinessTagEditorComponent } from './components/business-tag/business-tag-editor/business-tag-editor.component';
-import { BusinessTagsComponent } from './components/business-tag/business-tags/business-tags.component';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
 import { ToastUtil } from './utils/toast.util';
+import { AceEditorComponent } from './components/common/ace-editor/ace-editor.component';
+import { BusinessTagEditorComponent } from './components/common/business-tag/business-tag-editor/business-tag-editor.component';
+import { BusinessTagsComponent } from './components/common/business-tag/business-tags/business-tags.component';
+import { BusinessDocsComponent } from './components/common/business-doc/business-docs/business-docs.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -42,7 +44,9 @@ const PIPES = [
 
 const CRATOS_COMPONENTS = [
   BusinessTagEditorComponent,
-  BusinessTagsComponent
+  BusinessTagsComponent,
+  AceEditorComponent,
+  BusinessDocsComponent
 ];
 
 const CRATOS_UTILS = [
@@ -61,6 +65,8 @@ const CRATOS_UTILS = [
     ...CRATOS_COMPONENTS,
     BusinessTagEditorComponent,
     BusinessTagsComponent,
+    AceEditorComponent,
+    BusinessDocsComponent,
   ],
   imports: [
     CommonModule,

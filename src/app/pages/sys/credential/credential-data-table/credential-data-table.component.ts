@@ -2,19 +2,20 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { CredentialService } from '../../../../@core/services/credential.service';
 import {
-  CredentialEdit,
+  CredentialAdd,
   CredentialPageQuery,
   CredentialTypeEnum,
+  CredentialUpdate,
   CredentialVO,
 } from '../../../../@core/data/credential';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { CredentialEditorComponent } from './credential-editor/credential-editor.component';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
-import { Observable, zip } from 'rxjs';
+import { finalize, Observable, zip } from 'rxjs';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
-import { BusinessTypeEnum } from '../../../../@core/data/business-tag';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -48,7 +49,7 @@ export class CredentialDataTableComponent implements OnInit {
     },
   };
 
-  newCredential: CredentialEdit = {
+  newCredential: CredentialAdd = {
     comment: '',
     credential: '',
     credential2: '',
@@ -74,6 +75,20 @@ export class CredentialDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.credentialService.queryCredentialPage(param));
+  }
+
+  onCellEditEnd(event) {
+    const param: CredentialUpdate = {
+      id: event.rowItem.id,
+      title: event.rowItem.title,
+      username: event.rowItem.username,
+      comment: event.rowItem.comment,
+      valid: event.rowItem.valid,
+    };
+    this.credentialService.updateCredential(param)
+      .pipe(
+        finalize(() => this.fetchData()),
+      ).subscribe();
   }
 
   ngOnInit() {

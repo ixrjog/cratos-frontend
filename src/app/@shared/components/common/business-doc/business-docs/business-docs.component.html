@@ -1,0 +1,82 @@
+<section>
+  <d-button bsStyle="primary" (click)="onAddBusinessDoc()">New</d-button>
+  <ng-container *ngIf="JSON.stringify(businessDocs) !== '[]'; else noBusinessDoc">
+    <ng-template [ngTemplateOutlet]="showBusinessDoc"></ng-template>
+  </ng-container>
+</section>
+
+<ng-template #noBusinessDoc>
+  <h3 dLoading [loading]="loading">No Document</h3>
+</ng-template>
+
+<ng-template #showBusinessDoc>
+  <div
+    dAnchorBox
+    class="my-main"
+    style="position: relative"
+    [defaultAnchor]="'doc-0'"
+  >
+    <div class="my-sidebar">
+      <d-sticky>
+        <ul class="step-nav">
+          <li
+            *ngFor="let businessDoc of businessDocs;index as i"
+            [dAnchorLink]="'doc-'+i"
+            anchorActive="active"
+          >
+            <section>
+              <div>
+                <d-icon
+                  [icon]="'icon-edit'"
+                  dIconHover
+                  [operable]="true"
+                  (click)="onCanEdit(businessDoc)"
+                  *ngIf="!businessDoc['$edit']">
+                  <span iconPrefix>{{ businessDoc.name }}</span>
+                </d-icon>
+              </div>
+              <div *ngIf="businessDoc['$edit']">
+                <input dTextInput [(ngModel)]="businessDoc.name" (keyup)="onUpdateBusinessDoc(businessDoc)" />
+              </div>
+            </section>
+          </li>
+        </ul>
+      </d-sticky>
+    </div>
+    <div class="my-content">
+      <div
+        *ngFor="let businessDoc of businessDocs;index as i"
+        [dAnchor]="'doc-'+i"
+        class="section-block"
+      >
+        <section>
+          <h3 class="devui-h3-title" style="display: inline-block">{{ businessDoc.name }}</h3>
+          <section style="float: right; padding: 3px 0">
+            <d-button
+              style="margin-right: 5px"
+              bsStyle="text"
+              type="submit"
+              (btnClick)="onUpdateBusinessDoc(businessDoc)">
+              <strong>Save</strong>
+            </d-button>
+            <d-button
+              bsStyle="text"
+              type="submit"
+              (btnClick)="onDeleteBusinessDoc(businessDoc)">
+              <strong>Delete</strong>
+            </d-button>
+          </section>
+        </section>
+        <section>
+          <span>Created by {{ businessDoc.author }}</span>
+          <span *ngIf="businessDoc.lastEditor "> last modified by {{ businessDoc.lastEditor }}</span>
+        </section>
+        <textarea
+          dTextarea
+          resize="vertical"
+          [(ngModel)]="businessDoc.content"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</ng-template>

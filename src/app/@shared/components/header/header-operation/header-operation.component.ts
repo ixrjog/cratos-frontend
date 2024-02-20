@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/@core/services/auth.service';
 import { LANGUAGES } from 'src/config/language-config';
 import { User } from '../../../models/user';
 import { I18nService } from 'ng-devui/i18n';
-import { LoginVo } from '../../../../@core/data/log';
+import { LoginVO } from '../../../../@core/data/log';
 import { LogService } from '../../../../@core/services/log.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { LogService } from '../../../../@core/services/log.service';
   styleUrls: ['./header-operation.component.scss'],
 })
 export class HeaderOperationComponent implements OnInit {
-  user: LoginVo;
+  user: LoginVO;
   languages = LANGUAGES;
   language: string;
   haveLoggedIn = false;

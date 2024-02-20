@@ -1,7 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
-import { CredentialEdit, CredentialTypeEnum, CredentialVO } from '../../../../../@core/data/credential';
+import {
+  CredentialAdd,
+  CredentialTypeEnum,
+  CredentialUpdate,
+  CredentialVO,
+} from '../../../../../@core/data/credential';
 import { CredentialService } from '../../../../../@core/services/credential.service';
 
 @Component({
@@ -123,7 +128,7 @@ export class CredentialEditorComponent implements OnInit {
   };
 
   addForm() {
-    const param: CredentialEdit = {
+    const param: CredentialAdd = {
       ...this.formData,
       expiredTime: Date.parse(this.formData.expiredTime.toString()),
     };
@@ -131,7 +136,14 @@ export class CredentialEditorComponent implements OnInit {
   }
 
   updateForm() {
-
+    const param: CredentialUpdate = {
+      id: this.formData.id,
+      title: this.formData.title,
+      username: this.formData.username,
+      comment: this.formData.comment,
+      valid: this.formData.valid,
+    };
+    return this.credentialService.updateCredential(param);
   }
 
   protected readonly JSON = JSON;

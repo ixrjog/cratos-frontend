@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BusinessTagVO } from '../../../../@core/data/business-tag';
+import { BusinessTagVO } from '../../../../../@core/data/business-tag';
 
 
 @Component({

@@ -33,9 +33,20 @@
               "src/styles.scss",
               "src/styles.less",
               "node_modules/ng-devui/devui.min.css",
-              "node_modules/@devui-design/icons/icomoon/devui-icon.css"
+              "node_modules/@devui-design/icons/icomoon/devui-icon.css",
+              "node_modules/prismjs/themes/prism-okaidia.css",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
+              "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
+              "node_modules/prismjs/plugins/command-line/prism-command-line.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-csharp.min.js",
+              "node_modules/prismjs/components/prism-css.min.js",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
+              "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js",
+              "node_modules/prismjs/plugins/command-line/prism-command-line.js"
+            ]
           },
           "configurations": {
             "production": {

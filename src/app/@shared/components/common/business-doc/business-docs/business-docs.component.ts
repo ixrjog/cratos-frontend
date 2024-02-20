@@ -5,6 +5,7 @@ import { DIALOG_DATA, DialogUtil } from '../../../../utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../utils/toast.util';
 import { GetByBusiness } from '../../../../../@core/data/business';
 import { finalize } from 'rxjs';
+import { SplitterOrientation } from 'ng-devui';
 
 @Component({
   selector: 'app-business-docs',
@@ -73,7 +74,8 @@ export class BusinessDocsComponent implements OnInit {
     };
     this.businessDocService.updateBusinessDoc(param)
       .subscribe(() => {
-        businessDoc['$edit'] = false;
+        businessDoc['$name'] = false;
+        businessDoc['$content'] = false;
         this.queryBusinessDocByBusiness();
         this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
       });
@@ -93,9 +95,17 @@ export class BusinessDocsComponent implements OnInit {
     });
   }
 
-  onCanEdit(businessDoc: BusinessDocVO) {
-    businessDoc['$edit'] = true;
+  onNameEdit(businessDoc: BusinessDocVO) {
+    businessDoc['$name'] = true;
+  }
+
+  onContentEdit(businessDoc: BusinessDocVO) {
+    businessDoc['$content'] = true;
   }
 
   protected readonly JSON = JSON;
+
+  onContentChange(content: string, businessDoc: BusinessDocVO) {
+    businessDoc.content = content;
+  }
 }

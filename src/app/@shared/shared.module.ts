@@ -25,6 +25,7 @@ import { AceEditorComponent } from './components/common/ace-editor/ace-editor.co
 import { BusinessTagEditorComponent } from './components/common/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessTagsComponent } from './components/common/business-tag/business-tags/business-tags.component';
 import { BusinessDocsComponent } from './components/common/business-doc/business-docs/business-docs.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -80,6 +81,7 @@ const CRATOS_UTILS = [
     I18nModule,
     IconModule,
     DaGridModule,
+    MarkdownModule.forChild(),
     ...DEVUI_MODULES,
   ],
   exports: [

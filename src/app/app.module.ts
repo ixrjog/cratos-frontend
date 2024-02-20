@@ -12,6 +12,7 @@ import { DatePipe, DevUIModule } from 'ng-devui';
 import { I18N } from '../config/language-config';
 import { DefaultInterceptor } from './@core/services/default.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { MarkdownModule } from 'ngx-markdown';
 
 class I18NLoader implements TranslateLoader {
   getTranslation(lang: 'zh-cn' | 'en-us'): Observable<Object> {
@@ -27,6 +28,7 @@ class I18NLoader implements TranslateLoader {
     HttpClientModule,
     AppRoutingModule,
     DevUIModule,
+    MarkdownModule.forRoot(),
     CoreModule.forRoot(),
     SharedModule.forRoot(),
     TranslateModule.forRoot({

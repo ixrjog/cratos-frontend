@@ -25,17 +25,16 @@
             anchorActive="active"
           >
             <section>
-              <div>
+              <div *ngIf="!businessDoc['$name']">
                 <d-icon
                   [icon]="'icon-edit'"
                   dIconHover
                   [operable]="true"
-                  (click)="onCanEdit(businessDoc)"
-                  *ngIf="!businessDoc['$edit']">
+                  (click)="onNameEdit(businessDoc)">
                   <span iconPrefix>{{ businessDoc.name }}</span>
                 </d-icon>
               </div>
-              <div *ngIf="businessDoc['$edit']">
+              <div *ngIf="businessDoc['$name']">
                 <input dTextInput [(ngModel)]="businessDoc.name" (keyup)="onUpdateBusinessDoc(businessDoc)" />
               </div>
             </section>
@@ -50,14 +49,23 @@
         class="section-block"
       >
         <section>
-          <h3 class="devui-h3-title" style="display: inline-block">{{ businessDoc.name }}</h3>
+          <h1 class="devui-h3-title" style="display: inline-block">{{ businessDoc.name }}</h1>
           <section style="float: right; padding: 3px 0">
             <d-button
+              *ngIf="businessDoc['$content']"
               style="margin-right: 5px"
               bsStyle="text"
               type="submit"
               (btnClick)="onUpdateBusinessDoc(businessDoc)">
               <strong>Save</strong>
+            </d-button>
+            <d-button
+              *ngIf="!businessDoc['$content']"
+              style="margin-right: 5px"
+              bsStyle="text"
+              type="submit"
+              (btnClick)="onContentEdit(businessDoc)">
+              <strong>Edit</strong>
             </d-button>
             <d-button
               bsStyle="text"
@@ -71,11 +79,20 @@
           <span>Created by {{ businessDoc.author }}</span>
           <span *ngIf="businessDoc.lastEditor "> last modified by {{ businessDoc.lastEditor }}</span>
         </section>
-        <textarea
-          dTextarea
-          resize="vertical"
-          [(ngModel)]="businessDoc.content"
-        ></textarea>
+        <section>
+          <div *ngIf="businessDoc['$content']">
+            <app-ace-editor
+              [maxLines]="30"
+              [aceValue]="businessDoc.content"
+              (onChange)="onContentChange($event,businessDoc)"
+            >
+            </app-ace-editor>
+          </div>
+          <div *ngIf="!businessDoc['$content']">
+            <markdown lineHighlight [data]="businessDoc.content"></markdown>
+          </div>
+        </section>
+        <div style="height: 5px"></div>
       </div>
     </div>
   </div>

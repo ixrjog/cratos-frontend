@@ -1,49 +1,124 @@
-@import "ng-devui/styles-var/devui-var.scss";
-@import "src/app/@shared/styles/common.scss";
+@import 'ng-devui/styles-var/devui-var.scss';
 
-.da-basic-form {
-  padding: 48px;
-  background-color: $devui-base-bg;
-  border-radius: $devui-border-radius-card;
-  box-shadow: $devui-shadow-length-base $devui-light-shadow;
+/* 序号 */
+.step-nav {
+  padding-top: 8px;
+  width: 240px;
 }
 
-form {
-  margin: 0 auto;
-  max-width: 50%;
-}
-
-@media only screen and (max-width: 1023px) {
-  form {
-    max-width: 80%;
-  }
-}
-
-.devui-input-group-addon {
-  width: 1%;
-  vertical-align: middle;
-
-  &:hover {
-    color: $devui-brand-active;
-  }
-}
-
-.devui-input-group {
-  max-width: 250px;
-}
-
-.close-icon-wrapper {
+.step-nav > li {
+  list-style: none;
+  counter-increment: stepli;
   padding: 0;
-}
-
-.icon-close {
-  border-right: 1px solid $devui-dividing-line;
-  padding-right: 10px;
   cursor: pointer;
+  height: 30px;
+  line-height: 1.5;
+  font-size: $devui-font-size;
+  color: $devui-text-weak;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-:host ::ng-deep .devui-select-placeholder {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.step-nav > li:hover {
+  color: $devui-brand-active;
+}
+
+.step-nav > li.active {
+  color: $devui-brand-active;
+}
+
+.step-nav > li.active::before {
+  border-color: $devui-brand-active;
+}
+
+.step-nav > li::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  line-height: 26px;
+  border-radius: 50%;
+  background-color: $devui-base-bg;
+  margin-right: 20px;
+  border: 2px solid $devui-dividing-line;
+}
+
+/* 左侧线 */
+.step-nav > li:not(:first-of-type) {
+  margin-top: 32px;
+}
+
+.step-nav > li:not(:first-of-type)::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -32px;
+  left: 5px;
+  width: 1px;
+  height: 32px;
+  border-left: 2px solid $devui-dividing-line;
+}
+
+.mymain {
+  position: relative;
+}
+
+.mysidebar {
+  width: 240px;
+  border-right: 1px solid $devui-dividing-line;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+}
+
+.mycontent {
+  padding: 8px;
+  margin-left: 240px;
+}
+
+.section-block {
+  min-height: 200px;
+  border-bottom: 1px dashed $devui-line;
+}
+
+.section-block.active.anchor-active-by-anchor-link {
+  animation: hightlight-and-disapear 1 3s linear;
+}
+
+@keyframes hightlight-and-disapear {
+  0% {
+    outline: invert none medium;
+  }
+
+  2% {
+    outline: 0 none rgba(255, 255, 255, 0);
+  }
+
+  10% {
+    outline: 1px solid $devui-brand;
+  }
+
+  50% {
+    outline: 1px solid $devui-brand;
+  }
+
+  90% {
+    outline: 1px solid rgba(255, 255, 255, 0);
+  }
+
+  99% {
+    outline: 0 none rgba(255, 255, 255, 0);
+  }
+
+  100% {
+    outline: invert none medium;
+  }
+}
+
+.container {
+  height: 450px;
+  overflow-y: auto;
 }

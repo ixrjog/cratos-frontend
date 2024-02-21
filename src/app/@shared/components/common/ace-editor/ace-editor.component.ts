@@ -7,19 +7,27 @@ import * as ace from 'ace-builds';
   styleUrls: [ './ace-editor.component.less' ],
 })
 export class AceEditorComponent implements AfterViewInit {
-
+  /**
+   * @see <a href="https://ace.c9.io/#nav=howto">ace 文档</a>
+   */
   @ViewChild('editor') private editor: ElementRef<HTMLElement>;
   @Input() aceValue: string;
   @Input() readonly: boolean = false;
   @Input() minLines: number = 5;
   @Input() maxLines: number = 50 ;
+  /**
+   * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/theme">theme 列表</a>
+   */
+  @Input() theme: string = 'ace/theme/chrome';
+  /**
+   * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/mode">mode 列表</a>
+   */
+  @Input() mode: string = 'ace/mode/markdown';
+
   @Output() onChange = new EventEmitter<string>();
 
   ngAfterViewInit(): void {
-    ace.config.set(
-      "basePath",
-      "https://unpkg.com/ace-builds@1.4.12/src-noconflict"
-    );
+    ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
     let fontSize: string;
     switch (localStorage.getItem('font')) {
       case 'normal':
@@ -41,8 +49,8 @@ export class AceEditorComponent implements AfterViewInit {
     const aceEditor = ace.edit(this.editor.nativeElement);
     aceEditor.setReadOnly(this.readonly);
     aceEditor.session.setValue(this.aceValue);
-    aceEditor.setTheme('ace/theme/twilight');
-    aceEditor.session.setMode('ace/mode/markdown');
+    aceEditor.setTheme(this.theme);
+    aceEditor.session.setMode(this.mode);
     aceEditor.on('change', () => {
       this.onChange.emit(aceEditor.getValue())
     });

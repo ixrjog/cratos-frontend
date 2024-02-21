@@ -1,9 +1,13 @@
 @import "../../../../../../styles";
 
+.pane-content {
+  padding: 0 12px;
+}
+
 /* 序号 */
 .step-nav {
   padding-top: 8px;
-  width: 240px;
+  //width: 240px;
 
   > li {
     list-style: none;
@@ -68,7 +72,7 @@
 
 .my-sidebar {
   width: 240px;
-  border-right: 1px solid @devui-line;
+  //border-right: 1px solid @devui-line;
   position: absolute;
   top: 0;
   left: 0;
@@ -80,11 +84,12 @@
   margin-left: 240px;
 }
 
+.doc-name {
+  display: inline-block;
+  margin: 16px 0 0 0;
+}
+
 .section-block {
   min-height: 200px;
   border-bottom: 1px dashed @devui-line;
-}
-
-.devui-card {
-  padding: 5px 5px;
 }

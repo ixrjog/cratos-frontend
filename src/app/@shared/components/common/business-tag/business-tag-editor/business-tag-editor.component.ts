@@ -20,10 +20,10 @@ export class BusinessTagEditorComponent implements OnInit {
   size = '30%';
   minSize = '20%';
   maxSize = '60%';
-  loading: boolean = false;
-
-  businessTags: BusinessTagVO[];
   orientation: SplitterOrientation = 'horizontal';
+
+  loading: boolean = false;
+  businessTags: BusinessTagVO[];
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
   data: any;

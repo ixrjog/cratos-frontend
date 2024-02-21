@@ -5,7 +5,6 @@ import { DIALOG_DATA, DialogUtil } from '../../../../utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../utils/toast.util';
 import { GetByBusiness } from '../../../../../@core/data/business';
 import { finalize } from 'rxjs';
-import { SplitterOrientation } from 'ng-devui';
 
 @Component({
   selector: 'app-business-docs',
@@ -15,9 +14,11 @@ import { SplitterOrientation } from 'ng-devui';
 export class BusinessDocsComponent implements OnInit {
 
   loading: boolean = false;
+  editing: boolean = false;
   data: any;
   businessType: string;
   businessDocs: BusinessDocVO[];
+  selectBusinessDoc: BusinessDocVO;
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -51,6 +52,9 @@ export class BusinessDocsComponent implements OnInit {
       )
       .subscribe(({ body }) => {
         this.businessDocs = body;
+        if (JSON.stringify(this.businessDocs) !== '[]') {
+          this.selectBusinessDoc = this.businessDocs[0];
+        }
       });
   }
 
@@ -58,7 +62,7 @@ export class BusinessDocsComponent implements OnInit {
     const param: BusinessDocEdit = {
       businessId: this.data.businessObject.id,
       businessType: this.businessType,
-      comment: 'emmmmm',
+      comment: '',
       content: 'Nothing written',
       documentType: 'MARKDOWN',
       name: 'New doc',
@@ -74,8 +78,7 @@ export class BusinessDocsComponent implements OnInit {
     };
     this.businessDocService.updateBusinessDoc(param)
       .subscribe(() => {
-        businessDoc['$name'] = false;
-        businessDoc['$content'] = false;
+        this.editing = false;
         this.queryBusinessDocByBusiness();
         this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
       });
@@ -95,12 +98,14 @@ export class BusinessDocsComponent implements OnInit {
     });
   }
 
-  onNameEdit(businessDoc: BusinessDocVO) {
-    businessDoc['$name'] = true;
+  onSelectDoc(businessDoc: BusinessDocVO) {
+    if(!this.editing) {
+      this.selectBusinessDoc = businessDoc;
+    }
   }
 
-  onContentEdit(businessDoc: BusinessDocVO) {
-    businessDoc['$content'] = true;
+  onEdit() {
+    this.editing = true;
   }
 
   protected readonly JSON = JSON;

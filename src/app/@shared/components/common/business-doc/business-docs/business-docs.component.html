@@ -19,80 +19,62 @@
     <div class="my-sidebar">
       <d-sticky>
         <ul class="step-nav">
-          <li
-            *ngFor="let businessDoc of businessDocs;index as i"
-            [dAnchorLink]="'doc-'+i"
-            anchorActive="active"
-          >
-            <section>
-              <div *ngIf="!businessDoc['$name']">
-                <d-icon
-                  [icon]="'icon-edit'"
-                  dIconHover
-                  [operable]="true"
-                  (click)="onNameEdit(businessDoc)">
-                  <span iconPrefix>{{ businessDoc.name }}</span>
-                </d-icon>
-              </div>
-              <div *ngIf="businessDoc['$name']">
-                <input dTextInput [(ngModel)]="businessDoc.name" (keyup)="onUpdateBusinessDoc(businessDoc)" />
-              </div>
-            </section>
+          <li *ngFor="let businessDoc of businessDocs;index as i" (click)="onSelectDoc(businessDoc)">
+            {{ businessDoc.name }}
           </li>
         </ul>
       </d-sticky>
     </div>
     <div class="my-content">
-      <div
-        *ngFor="let businessDoc of businessDocs;index as i"
-        [dAnchor]="'doc-'+i"
-        class="section-block"
-      >
+      <div>
         <section>
-          <h1 class="devui-h3-title" style="display: inline-block">{{ businessDoc.name }}</h1>
           <section style="float: right; padding: 3px 0">
             <d-button
-              *ngIf="businessDoc['$content']"
+              *ngIf="editing"
               style="margin-right: 5px"
               bsStyle="text"
               type="submit"
-              (btnClick)="onUpdateBusinessDoc(businessDoc)">
+              (btnClick)="onUpdateBusinessDoc(selectBusinessDoc)">
               <strong>Save</strong>
             </d-button>
             <d-button
-              *ngIf="!businessDoc['$content']"
+              *ngIf="!editing"
               style="margin-right: 5px"
               bsStyle="text"
               type="submit"
-              (btnClick)="onContentEdit(businessDoc)">
+              (btnClick)="onEdit()">
               <strong>Edit</strong>
             </d-button>
             <d-button
               bsStyle="text"
               type="submit"
-              (btnClick)="onDeleteBusinessDoc(businessDoc)">
+              (btnClick)="onDeleteBusinessDoc(selectBusinessDoc)">
               <strong>Delete</strong>
             </d-button>
           </section>
+          <section>
+            <h1 class="font-color-name doc-name" *ngIf="!editing">{{ selectBusinessDoc.name }}</h1>
+            <input dTextInput [(ngModel)]="selectBusinessDoc.name" *ngIf="editing" style="width: 40%" />
+          </section>
+        </section>
+        <section style="margin-bottom: 10px">
+          <span class="font-color-comment">Created by {{ selectBusinessDoc.author }}</span>
+          <span class="font-color-comment"
+                *ngIf="selectBusinessDoc.lastEditor"> last modified by {{ selectBusinessDoc.lastEditor }}</span>
         </section>
         <section>
-          <span>Created by {{ businessDoc.author }}</span>
-          <span *ngIf="businessDoc.lastEditor "> last modified by {{ businessDoc.lastEditor }}</span>
-        </section>
-        <section>
-          <div *ngIf="businessDoc['$content']">
+          <div *ngIf="editing">
             <app-ace-editor
               [maxLines]="30"
-              [aceValue]="businessDoc.content"
-              (onChange)="onContentChange($event,businessDoc)"
+              [aceValue]="selectBusinessDoc.content"
+              (onChange)="onContentChange($event,selectBusinessDoc)"
             >
             </app-ace-editor>
           </div>
-          <div *ngIf="!businessDoc['$content']">
-            <markdown lineHighlight [data]="businessDoc.content"></markdown>
+          <div *ngIf="!editing">
+            <markdown lineNumbers lineHighlight mermaid [data]="selectBusinessDoc.content"></markdown>
           </div>
         </section>
-        <div style="height: 5px"></div>
       </div>
     </div>
   </div>

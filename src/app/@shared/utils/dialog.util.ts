@@ -3,7 +3,7 @@ import { DialogService } from 'ng-devui';
 import { Observable } from 'rxjs';
 import { TOAST_CONTENT, ToastUtil } from './toast.util';
 import {
-  BusinessTagEditorComponent
+  BusinessTagEditorComponent,
 } from '../components/common/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessDocsComponent } from '../components/common/business-doc/business-docs/business-docs.component';
 
@@ -88,17 +88,8 @@ export class DialogUtil {
       backdropCloseable: false,
       dialogtype: 'standard',
       content: BusinessTagEditorComponent,
-      buttons: [
-        {
-          id: 'btn-cancel',
-          cssClass: 'common',
-          text: 'Confirm',
-          handler: ($event: Event) => {
-            onFetch();
-            results.modalInstance.hide();
-          },
-        },
-      ],
+      onClose: () => onFetch(),
+      buttons: [],
       data: {
         businessType: businessType,
         businessObject: businessObject,
@@ -114,6 +105,7 @@ export class DialogUtil {
       backdropCloseable: false,
       dialogtype: 'standard',
       content: BusinessDocsComponent,
+      onClose: () => onFetch(),
       buttons: [],
       data: {
         businessType: businessType,

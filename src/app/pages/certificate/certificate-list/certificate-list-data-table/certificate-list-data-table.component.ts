@@ -109,7 +109,7 @@ export class CertificateListDataTableComponent implements OnInit {
     });
   }
 
-  onRowValid(rowItem: any) {
+  onRowValid(rowItem: CertificateVO) {
     this.certificateService.setCertificateValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();

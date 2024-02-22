@@ -141,7 +141,7 @@ export class TagDataTableComponent implements OnInit {
     });
   }
 
-  onRowValid(rowItem: any) {
+  onRowValid(rowItem: TagVO) {
     this.tagService.setTagValidById({ id: rowItem.id })
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);

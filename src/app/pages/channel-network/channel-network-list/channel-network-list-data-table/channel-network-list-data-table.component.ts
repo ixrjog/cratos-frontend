@@ -107,7 +107,7 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
     }, rowItem);
   }
 
-  onRowValid(rowItem: any) {
+  onRowValid(rowItem: ChannelNetworkVO) {
     this.channelNetworkService.setChannelNetworkValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();

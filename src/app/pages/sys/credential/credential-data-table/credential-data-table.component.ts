@@ -16,6 +16,7 @@ import { finalize, Observable, zip } from 'rxjs';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { ChannelNetworkVO } from '../../../../@core/data/channel-network';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -117,7 +118,7 @@ export class CredentialDataTableComponent implements OnInit {
     }, this.newCredential);
   }
 
-  onRowEdit(rowItem: any) {
+  onRowEdit(rowItem: CredentialVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
       title: 'Edit Credential',
@@ -130,11 +131,15 @@ export class CredentialDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: any) {
+  onRowBusinessTag(rowItem: CredentialVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowValid(rowItem: any) {
+  onRowBusinessDoc(rowItem: CredentialVO) {
+    this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onRowValid(rowItem: CredentialVO) {
     this.credentialService.setCredentialValidById({ id: rowItem.id })
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
@@ -142,7 +147,7 @@ export class CredentialDataTableComponent implements OnInit {
       });
   }
 
-  onRowDelete(rowItem: any) {
+  onRowDelete(rowItem: CredentialVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,

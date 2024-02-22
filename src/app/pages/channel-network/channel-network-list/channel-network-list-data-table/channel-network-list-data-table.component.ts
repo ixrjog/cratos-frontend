@@ -1,22 +1,27 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { CertificateService } from '../../../../@core/services/certificate.service';
-import { CertificateEdit, CertificatePageQuery, CertificateVO } from '../../../../@core/data/certificate';
-import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { DataTableComponent } from 'ng-devui';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import { CertificateEditorComponent } from './certificate-editor/certificate-editor.component';
-import { Observable, zip } from 'rxjs';
-import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
+import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
+import { finalize, Observable, zip } from 'rxjs';
+import {
+  ChannelAvailableStatusEnum,
+  ChannelNetworkEdit,
+  ChannelNetworkPageQuery,
+  ChannelNetworkVO,
+} from '../../../../@core/data/channel-network';
+import { ChannelNetworkEditorComponent } from './channel-network-editor/channel-network-editor.component';
+import { ChannelNetworkService } from '../../../../@core/services/channel-network.service';
 
 @Component({
-  selector: 'app-certificate-list-data-table',
-  templateUrl: './certificate-list-data-table.component.html',
-  styleUrls: [ './certificate-list-data-table.component.less' ],
+  selector: 'app-channel-network-list-data-table',
+  templateUrl: './channel-network-list-data-table.component.html',
+  styleUrls: [ './channel-network-list-data-table.component.less' ],
 })
-export class CertificateListDataTableComponent implements OnInit {
+export class ChannelNetworkListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   @Input()
@@ -24,28 +29,25 @@ export class CertificateListDataTableComponent implements OnInit {
     queryName: '',
   };
   limit = RELATIVE_TIME_LIMIT;   // three years
-  businessType: string = BusinessTypeEnum.CERTIFICATE;
+  businessType: string = BusinessTypeEnum.CHANNEL_NETWORK;
 
-  table: Table<CertificateVO> = {
+  table: Table<ChannelNetworkVO> = {
     ...TABLE_DATA,
   };
 
-  newCertificate: CertificateEdit = {
-    certificateId: '',
-    certificateType: '',
-    domainName: '',
-    keyAlgorithm: '',
-    name: '',
-    notAfter: null,
-    notBefore: new Date(),
-    valid: true,
+  newChannelNetwork: ChannelNetworkEdit = {
+    availableStatus: '',
+    channelKey: '',
+    channelStatus: ChannelAvailableStatusEnum.DOWN,
     comment: '',
+    name: '',
+    valid: true,
   };
 
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
-      content: CertificateEditorComponent,
+      content: ChannelNetworkEditorComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -56,19 +58,19 @@ export class CertificateListDataTableComponent implements OnInit {
   };
 
   constructor(
-    private certificateService: CertificateService,
+    private channelNetworkService: ChannelNetworkService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
   }
 
   fetchData() {
-    const param: CertificatePageQuery = {
+    const param: ChannelNetworkPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.certificateService.queryCertificatePage(param));
+    onFetchValidData(this.table, this.channelNetworkService.queryChannelNetworkPage(param));
   }
 
   ngOnInit() {
@@ -88,41 +90,37 @@ export class CertificateListDataTableComponent implements OnInit {
   onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'New Certificate',
+      title: 'New Channel Network',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newCertificate);
+    }, this.newChannelNetwork);
   }
 
-  onRowEdit(rowItem: CertificateVO) {
+  onRowEdit(rowItem: ChannelNetworkVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Certificate',
+      title: 'Edit Channel Network',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, {
-      ...rowItem,
-      notAfter: new Date(rowItem.notAfter),
-      notBefore: new Date(rowItem.notBefore),
-    });
+    }, rowItem);
   }
 
   onRowValid(rowItem: any) {
-    this.certificateService.setCertificateValidById({ id: rowItem.id })
+    this.channelNetworkService.setChannelNetworkValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();
       });
   }
 
-  onRowDelete(rowItem: CertificateVO) {
+  onRowDelete(rowItem: ChannelNetworkVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.certificateService.deleteCertificateById({ id: rowItem.id })
+      this.channelNetworkService.deleteChannelNetworkById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
@@ -138,7 +136,7 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.certificateService.setCertificateValidById({ id: row.id }));
+        obList.push(this.channelNetworkService.setChannelNetworkValidById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
@@ -155,7 +153,7 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.certificateService.deleteCertificateById({ id: row.id }));
+        obList.push(this.channelNetworkService.deleteChannelNetworkById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
@@ -164,12 +162,28 @@ export class CertificateListDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: CertificateVO) {
+  onRowBusinessTag(rowItem: ChannelNetworkVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: CertificateVO) {
+  onRowBusinessDoc(rowItem: ChannelNetworkVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onCellEditEnd(event) {
+    const param: ChannelNetworkEdit = {
+      id: event.rowItem.id,
+      name: event.rowItem.name,
+      channelKey: event.rowItem.channelKey,
+      channelStatus: event.rowItem.channelStatus,
+      availableStatus: event.rowItem.availableStatus,
+      comment: event.rowItem.comment,
+      valid: event.rowItem.valid,
+    };
+    this.channelNetworkService.updateChannelNetwork(param)
+      .pipe(
+        finalize(() => this.fetchData()),
+      ).subscribe();
   }
 
   protected readonly getRowColor = getRowColor;

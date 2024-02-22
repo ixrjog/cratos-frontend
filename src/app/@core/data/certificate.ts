@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import {  DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { BusinessTagVO } from './business-tag';
 
-export interface CertificateVo extends ValidVO {
+export interface CertificateVO extends ValidVO {
   id: number;
   certificateId: string;
   name: string;
@@ -33,7 +33,7 @@ export interface CertificateEdit {
 
 export abstract class CertificateData {
 
-  abstract queryCertificatePage(param: CertificatePageQuery): Observable<DataTable<CertificateVo>>;
+  abstract queryCertificatePage(param: CertificatePageQuery): Observable<DataTable<CertificateVO>>;
 
   abstract addCertificate(param: CertificateEdit): Observable<HttpResult<Boolean>>;
 

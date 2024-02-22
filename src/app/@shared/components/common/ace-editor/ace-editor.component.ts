@@ -9,6 +9,7 @@ import * as ace from 'ace-builds';
 export class AceEditorComponent implements AfterViewInit {
   /**
    * @see <a href="https://ace.c9.io/#nav=howto">ace 文档</a>
+   * @see <a href="https://jfcere.github.io/ngx-markdown/get-started">ngx-markdown 文档</a>
    */
   @ViewChild('editor') private editor: ElementRef<HTMLElement>;
   @Input() aceValue: string;

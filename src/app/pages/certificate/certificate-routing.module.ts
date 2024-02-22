@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     component: CertificateComponent,
     children: [
-      { path: 'manage', component: CertificateListComponent }
+      { path: 'list', component: CertificateListComponent }
     ],
   },
 ];

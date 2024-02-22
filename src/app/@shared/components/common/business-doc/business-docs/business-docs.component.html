@@ -59,8 +59,10 @@
         </section>
         <section style="margin-bottom: 10px">
           <span class="font-color-comment">Created by {{ selectBusinessDoc.author }}</span>
-          <span class="font-color-comment"
-                *ngIf="selectBusinessDoc.lastEditor"> last modified by {{ selectBusinessDoc.lastEditor }}</span>
+          <span
+            class="font-color-comment"
+                *ngIf="selectBusinessDoc.lastEditor && selectBusinessDoc.author !== selectBusinessDoc.lastEditor"
+          > last modified by {{ selectBusinessDoc.lastEditor }}</span>
         </section>
         <section>
           <div *ngIf="editing">

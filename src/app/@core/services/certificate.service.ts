@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { CertificateData, CertificateEdit, CertificatePageQuery, CertificateVo } from '../data/certificate';
+import { CertificateData, CertificateEdit, CertificatePageQuery, CertificateVO } from '../data/certificate';
 import { DataTable, HttpResult } from '../data/base-data';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class CertificateService extends CertificateData {
     super();
   }
 
-  queryCertificatePage(param: CertificatePageQuery): Observable<DataTable<CertificateVo>> {
+  queryCertificatePage(param: CertificatePageQuery): Observable<DataTable<CertificateVO>> {
     return this.apiService.post('/certificate/page/query', param);
   }
 

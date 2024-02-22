@@ -2,7 +2,7 @@ export function getMenu(values: any): any[] {
   return [
     {
       title: values['gettingStarted']['title'],
-      open: true,
+      open: false,
       children: [
         {
           title: values['gettingStarted']['sample'],
@@ -33,11 +33,23 @@ export function getMenu(values: any): any[] {
       open: true,
       children: [
         {
-          title: values['certificate']['manage'],
-          link: '/pages/certificate/manage',
+          title: values['certificate']['list'],
+          link: '/pages/certificate/list',
         },
       ],
       link: '/pages/certificate',
+      menuIcon: 'icon icon-console',
+    },
+    {
+      title: values['channelNetwork']['title'],
+      open: true,
+      children: [
+        {
+          title: values['channelNetwork']['list'],
+          link: '/pages/channel-network/list',
+        },
+      ],
+      link: '/pages/channel-network',
       menuIcon: 'icon icon-console',
     },
   ];

@@ -11,7 +11,11 @@ export default {
     },
     certificate: {
       title: 'Certificate',
-      manage: 'List',
+      list: 'List',
+    },
+    channelNetwork: {
+      title: 'Channel Network',
+      list: 'List',
     }
   },
 };

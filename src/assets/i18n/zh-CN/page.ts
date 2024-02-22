@@ -11,7 +11,11 @@ export default {
     },
     certificate: {
       title: '证书管理',
-      manage: '清单',
+      list: '清单',
+    },
+    channelNetwork: {
+      title: '渠道网络',
+      list: '清单',
     }
   },
 };

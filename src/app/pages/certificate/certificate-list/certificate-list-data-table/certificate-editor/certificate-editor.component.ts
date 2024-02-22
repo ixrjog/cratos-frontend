@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DFormGroupRuleDirective, FormLayout } from 'ng-devui/form';
 import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { CertificateEdit, CertificateVo } from 'src/app/@core/data/certificate';
+import { CertificateEdit, CertificateVO } from 'src/app/@core/data/certificate';
 import { CertificateService } from '../../../../../@core/services/certificate.service';
 import { DatePipe, DValidateRules } from 'ng-devui';
 
@@ -17,7 +17,7 @@ export class CertificateEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input()
   data: any;
-  formData: CertificateVo;
+  formData: CertificateVO;
   certificateFormGroup: FormGroup;
   operationType: boolean;
 

@@ -20,9 +20,12 @@ const routes: Routes = [
         path: 'sys',
         loadChildren: () => import('./sys/sys.module').then(m => m.SysModule),
       },
+      {
+        path: 'channel-network',
+        loadChildren: () => import('./channel-network/channel-network.module').then(m => m.ChannelNetworkModule),
+      },
     ],
-  },
-
+  }
 ];
 
 @NgModule({

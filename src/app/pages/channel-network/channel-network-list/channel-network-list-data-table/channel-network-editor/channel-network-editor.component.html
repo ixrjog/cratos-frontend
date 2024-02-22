@@ -1,0 +1,62 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="name"
+          [(ngModel)]="formData.name"
+          [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Channel Key</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="channelKey"
+          [(ngModel)]="formData.channelKey"
+          [dValidateRules]="formRules['channelKey']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Channel Status</d-form-label>
+      <d-form-control>
+        <d-radio-group name="channelStatus" [direction]="'row'" [(ngModel)]="formData.channelStatus">
+          <d-radio *ngFor="let item of channelStatusOptions" [name]="'channelStatus'" [value]="item">
+            {{ item }}
+          </d-radio>
+        </d-radio-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Available Status</d-form-label>
+      <d-form-control>
+        <d-radio-group name="availableStatus" [direction]="'row'" [(ngModel)]="formData.availableStatus">
+          <d-radio *ngFor="let item of availableStatusOptions" [name]="'availableStatus'" [value]="item">
+            {{ item }}
+          </d-radio>
+        </d-radio-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

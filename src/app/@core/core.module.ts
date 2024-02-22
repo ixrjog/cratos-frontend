@@ -15,6 +15,7 @@ import { ToastModule } from 'ng-devui';
 import { LogService } from './services/log.service';
 import { BusinessTagService } from './services/business-tag.service';
 import { BusinessDocService } from './services/business-doc.service';
+import { ChannelNetworkService } from './services/channel-network.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -35,6 +36,7 @@ export const CRATOS_PROVIDERS = [
   LogService,
   BusinessTagService,
   BusinessDocService,
+  ChannelNetworkService
 ];
 
 @NgModule({

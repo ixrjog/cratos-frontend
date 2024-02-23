@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BusinessTagData, BusinessTagEdit, BusinessTagVO, ListValue } from '../data/business-tag';
+import { BusinessTagData, BusinessTagEdit, BusinessTagsVO, BusinessTagVO, ListValue } from '../data/business-tag';
 import { Observable } from 'rxjs';
 import { HttpResult } from '../data/base-data';
 import { GetByBusiness } from '../data/business';
@@ -37,3 +37,8 @@ export class BusinessTagService extends BusinessTagData {
   }
 
 }
+
+export function getBusinessTagLength<T extends BusinessTagsVO>(businessObject: T): number {
+  return businessObject.businessTags.length;
+}
+

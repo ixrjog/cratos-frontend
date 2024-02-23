@@ -1,15 +1,15 @@
-import { DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
-import { BusinessTagVO } from './business-tag';
+import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
+import { BusinessDocsVO } from './business-doc';
 
-export interface ChannelNetworkVO extends ValidVO {
+export interface ChannelNetworkVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
   name: string;
   channelKey: string;
   channelStatus: string;
   availableStatus: string;
   comment: string;
-  businessTags: BusinessTagVO[];
 }
 
 export interface ChannelNetworkPageQuery extends PageQuery {

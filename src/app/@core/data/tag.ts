@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 
-export interface TagVO extends ValidVO{
+export interface TagVO extends BaseVO, ValidVO {
   id: number;
   tagType: string;
   tagKey: string;

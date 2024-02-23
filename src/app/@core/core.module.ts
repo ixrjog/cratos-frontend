@@ -1,6 +1,5 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { PersonalizeService } from './services/personalize.service';
 import { CustomThemeService } from './services/custom-theme.service';

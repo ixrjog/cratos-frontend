@@ -1,15 +1,19 @@
 import { TagVO } from './tag';
 import { Observable } from 'rxjs';
-import { HttpResult } from './base-data';
+import { BaseVO, HttpResult } from './base-data';
 import { GetByBusiness } from './business';
 
-export interface BusinessTagVO {
+export interface BusinessTagVO extends BaseVO {
   id: number;
   businessType: string;
   businessId: number;
   tagId: number;
   tagValue: string;
   tag: TagVO;
+}
+
+export interface BusinessTagsVO {
+  businessTags: BusinessTagVO[];
 }
 
 export interface BusinessTagEdit {

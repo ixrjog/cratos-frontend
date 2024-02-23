@@ -28,8 +28,6 @@ export interface BaseVO {
 
 export interface ValidVO {
   valid: boolean;
-  createTime: Date;
-  updateTime: Date;
 }
 
 export interface Table<T> {

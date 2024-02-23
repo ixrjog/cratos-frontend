@@ -15,6 +15,10 @@ export interface BusinessDocVO extends BaseVO {
   lastEditor: string;
 }
 
+export interface BusinessDocsVO {
+  businessDocs: BusinessDocVO[]
+}
+
 export interface BusinessDocEdit {
   id?: number;
   businessType: string;

@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpResult } from '../data/base-data';
 import { GetByBusiness } from '../data/business';
 import { Injectable } from '@angular/core';
-import { BusinessDocData, BusinessDocEdit, BusinessDocVO } from '../data/business-doc';
-
+import { BusinessDocData, BusinessDocEdit, BusinessDocsVO, BusinessDocVO } from '../data/business-doc';
 
 @Injectable()
 export class BusinessDocService extends BusinessDocData {
@@ -29,4 +28,8 @@ export class BusinessDocService extends BusinessDocData {
     return this.apiService.post('/business/doc/query', param);
   }
 
+}
+
+export function getBusinessDocLength<T extends BusinessDocsVO>(businessObject: T): number {
+  return businessObject.businessDocs.length;
 }

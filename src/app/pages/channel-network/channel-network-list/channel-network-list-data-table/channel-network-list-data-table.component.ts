@@ -15,6 +15,7 @@ import {
 } from '../../../../@core/data/channel-network';
 import { ChannelNetworkEditorComponent } from './channel-network-editor/channel-network-editor.component';
 import { ChannelNetworkService } from '../../../../@core/services/channel-network.service';
+import { getBusinessDocLength } from '../../../../@core/services/business-doc.service';
 
 @Component({
   selector: 'app-channel-network-list-data-table',
@@ -187,4 +188,5 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+  protected readonly getBusinessDocLength = getBusinessDocLength;
 }

@@ -10,6 +10,7 @@ import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-ta
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { getBusinessDocLength } from '../../../../@core/services/business-doc.service';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -173,4 +174,5 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+  protected readonly getBusinessDocLength = getBusinessDocLength;
 }

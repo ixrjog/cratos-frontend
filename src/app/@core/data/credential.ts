@@ -1,8 +1,9 @@
-import { DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
-import { BusinessTagVO } from './business-tag';
+import { BusinessTagsVO } from './business-tag';
+import { BusinessDocsVO } from './business-doc';
 
-export interface CredentialVO extends ValidVO {
+export interface CredentialVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
   title: string;
   credentialType: string;
@@ -14,7 +15,6 @@ export interface CredentialVO extends ValidVO {
   comment: string;
   expiredTime: Date;
   privateCredential: boolean;
-  businessTags: BusinessTagVO[];
 }
 
 export interface CredentialPageQuery extends PageQuery {

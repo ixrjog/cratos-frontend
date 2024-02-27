@@ -24,6 +24,14 @@ const routes: Routes = [
         path: 'channel-network',
         loadChildren: () => import('./channel-network/channel-network.module').then(m => m.ChannelNetworkModule),
       },
+      {
+        path: 'user',
+        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+      },
+      {
+        path: 'rbac',
+        loadChildren: () => import('./rbac/rbac.module').then(m => m.RbacModule),
+      },
     ],
   }
 ];

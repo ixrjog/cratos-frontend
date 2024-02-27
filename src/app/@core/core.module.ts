@@ -15,6 +15,8 @@ import { LogService } from './services/log.service';
 import { BusinessTagService } from './services/business-tag.service';
 import { BusinessDocService } from './services/business-doc.service';
 import { ChannelNetworkService } from './services/channel-network.service';
+import { UserService } from './services/user.service';
+import { RbacService } from './services/rbac.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -35,7 +37,9 @@ export const CRATOS_PROVIDERS = [
   LogService,
   BusinessTagService,
   BusinessDocService,
-  ChannelNetworkService
+  ChannelNetworkService,
+  UserService,
+  RbacService
 ];
 
 @NgModule({

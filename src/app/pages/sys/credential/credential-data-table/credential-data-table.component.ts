@@ -27,7 +27,6 @@ export class CredentialDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CREDENTIAL;
-  @Input()
   queryParam = {
     queryName: '',
     credentialType: '',

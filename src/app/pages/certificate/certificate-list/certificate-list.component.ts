@@ -1,15 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 
 @Component({
   selector: 'app-certificate-list',
   templateUrl: './certificate-list.component.html',
   styleUrls: [ './certificate-list.component.less' ],
 })
-export class CertificateListComponent implements OnInit, AfterViewInit {
+export class CertificateListComponent implements AfterViewInit {
   constructor() {
-  }
-
-  ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {

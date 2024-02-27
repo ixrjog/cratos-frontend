@@ -134,8 +134,10 @@ export const DIALOG_DATA = {
   },
   content: {
     delete: '<strong>Confirm delete this row ?</strong>',
+    inactive: '<strong>Confirm inactive this row ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',
     batchValid: '<strong>Confirm update these rows ?</strong>',
+    batchInactive: '<strong>Confirm inactive these rows ?</strong>',
   }
 }
 

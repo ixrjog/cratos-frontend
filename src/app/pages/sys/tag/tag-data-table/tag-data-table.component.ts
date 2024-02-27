@@ -17,7 +17,6 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 export class TagDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  @Input()
   queryParam = {
     tagKey: '',
   };

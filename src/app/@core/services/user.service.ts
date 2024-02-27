@@ -30,4 +30,9 @@ export class UserService extends UserData {
   updateUser(param: UserEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put('/user/update', param);
   }
+
+  inactiveUser(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return undefined;
+  }
+
 }

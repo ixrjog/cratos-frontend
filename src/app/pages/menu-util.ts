@@ -52,6 +52,38 @@ export function getMenu(values: any): any[] {
       link: '/pages/channel-network',
       menuIcon: 'icon icon-console',
     },
+    {
+      title: values['user']['title'],
+      open: true,
+      children: [
+        {
+          title: values['user']['list'],
+          link: '/pages/user/list',
+        },
+      ],
+      link: '/pages/user',
+      menuIcon: 'icon icon-console',
+    },
+    {
+      title: values['rbac']['title'],
+      open: true,
+      children: [
+        {
+          title: values['rbac']['resource'],
+          link: '/pages/rbac/resource',
+        },
+        {
+          title: values['rbac']['role'],
+          link: '/pages/rbac/role',
+        },
+        {
+          title: values['rbac']['userRole'],
+          link: '/pages/rbac/user-role',
+        },
+      ],
+      link: '/pages/rbac',
+      menuIcon: 'icon icon-console',
+    },
   ];
 }
 

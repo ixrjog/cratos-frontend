@@ -20,6 +20,8 @@ export const TOAST_CONTENT = {
   ADD: 'Add success',
   UPDATE: 'Update success',
   DELETE: 'Delete success',
+  INACTIVE: 'Inactive success',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
+  BATCH_INACTIVE: 'Batch inactive success',
 };

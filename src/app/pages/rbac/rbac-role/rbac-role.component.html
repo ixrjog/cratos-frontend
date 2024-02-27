@@ -1,0 +1,16 @@
+<da-layout-row [daGutter]="[24, 24]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+      <d-tab [id]="'role'" [title]="'Role'">
+        <div class="app-data-table">
+         <app-rbac-role-data-table #rbacRoleDataTable></app-rbac-role-data-table>
+        </div>
+      </d-tab>
+      <d-tab [id]="'authorize'" [title]="'Authorize'">
+        <div class="app-data-table">
+          <app-rbac-role-authorize #rbacRoleAuthorize></app-rbac-role-authorize>
+        </div>
+      </d-tab>
+    </d-tabs>
+  </da-col-item>
+</da-layout-row>

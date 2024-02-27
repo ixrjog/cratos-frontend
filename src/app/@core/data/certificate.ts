@@ -16,7 +16,7 @@ export interface CertificateVO extends BaseVO, ValidVO, BusinessDocsVO, Business
 }
 
 export interface CertificatePageQuery extends PageQuery {
-  queryName?: string;
+  queryName: string;
 }
 
 export interface CertificateEdit {

@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -15,7 +14,6 @@ import {
 } from '../../../../@core/data/channel-network';
 import { ChannelNetworkEditorComponent } from './channel-network-editor/channel-network-editor.component';
 import { ChannelNetworkService } from '../../../../@core/services/channel-network.service';
-import { getBusinessDocLength } from '../../../../@core/services/business-doc.service';
 
 @Component({
   selector: 'app-channel-network-list-data-table',
@@ -25,11 +23,9 @@ import { getBusinessDocLength } from '../../../../@core/services/business-doc.se
 export class ChannelNetworkListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  @Input()
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;   // three years
   businessType: string = BusinessTypeEnum.CHANNEL_NETWORK;
 
   table: Table<ChannelNetworkVO> = {
@@ -188,5 +184,4 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
-  protected readonly getBusinessDocLength = getBusinessDocLength;
 }

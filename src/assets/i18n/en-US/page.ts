@@ -16,6 +16,16 @@ export default {
     channelNetwork: {
       title: 'Channel Network',
       list: 'List',
-    }
+    },
+    user: {
+      title: 'User',
+      list: 'List',
+    },
+    rbac: {
+      title: 'RBAC',
+      resource: 'Resource',
+      role: 'Role',
+      userRole: 'User Role',
+    },
   },
 };

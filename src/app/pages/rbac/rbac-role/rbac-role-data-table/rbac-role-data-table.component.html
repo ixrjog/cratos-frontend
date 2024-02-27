@@ -1,0 +1,63 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.roleName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column field="roleName" header="Role Name"></d-column>
+    <d-column field="accessLevel" header="Access Level"></d-column>
+    <d-column field="workOrderVisible" header="WorkOrder Visible"></d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column field="createTime" header="Create Time" [fieldType]="'date'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

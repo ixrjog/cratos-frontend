@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CertificateService } from '../../../../@core/services/certificate.service';
 import { CertificateEdit, CertificatePageQuery, CertificateVO } from '../../../../@core/data/certificate';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
@@ -10,7 +10,6 @@ import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-ta
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
-import { getBusinessDocLength } from '../../../../@core/services/business-doc.service';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -20,11 +19,10 @@ import { getBusinessDocLength } from '../../../../@core/services/business-doc.se
 export class CertificateListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  @Input()
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;   // three years
+  limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVO> = {
@@ -174,5 +172,5 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
-  protected readonly getBusinessDocLength = getBusinessDocLength;
+
 }

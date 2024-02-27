@@ -23,7 +23,7 @@ export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO 
 }
 
 export interface UserPageQuery extends PageQuery {
-  queryName?: string;
+  queryName: string;
 }
 
 export interface UserEdit {
@@ -36,6 +36,7 @@ export interface UserEdit {
   otp: number;
   comment: string;
   expiredTime: Date;
+  valid: boolean;
 }
 
 export interface ResetPassword {
@@ -59,5 +60,6 @@ export abstract class UserData {
 
   abstract resetUserPassword(param: ResetPassword): Observable<HttpResult<Boolean>>;
 
+  abstract inactiveUser(param: { id: number }): Observable<HttpResult<Boolean>>;
 
 }

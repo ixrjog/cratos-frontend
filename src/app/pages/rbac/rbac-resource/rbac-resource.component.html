@@ -1,0 +1,16 @@
+<da-layout-row [daGutter]="[24, 24]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+      <d-tab [id]="'resource'" [title]="'Resource'">
+        <div class="app-data-table">
+          <app-rbac-resource-data-table #rbacResourceDataTable></app-rbac-resource-data-table>
+        </div>
+      </d-tab>
+      <d-tab [id]="'group'" [title]="'Group'">
+        <div class="app-data-table">
+          <app-rbac-group-data-table #rbacGroupDataTable></app-rbac-group-data-table>
+        </div>
+      </d-tab>
+    </d-tabs>
+  </da-col-item>
+</da-layout-row>

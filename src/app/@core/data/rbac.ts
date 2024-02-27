@@ -1,4 +1,5 @@
-import { BaseVO, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { Observable } from 'rxjs';
 
 export interface RbacUserRoleVO extends BaseVO {
   id: number;
@@ -30,4 +31,33 @@ export interface RbacResourceVO extends BaseVO, ValidVO {
   uiPoint: boolean;
   rbacGroup: RbacGroupVO;
   comment: string;
+}
+
+export interface RolePageQuery extends PageQuery {
+  roleName: string;
+}
+
+export interface GroupPageQuery extends PageQuery {
+  queryName: string;
+}
+
+export interface ResourcePageQuery extends PageQuery {
+  queryName: string;
+  valid: boolean;
+  groupId: number;
+}
+
+
+export abstract class RbacData {
+
+  abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;
+
+  abstract queryResourcePage(param: ResourcePageQuery): Observable<DataTable<RbacResourceVO>>;
+
+  abstract queryGroupPage(param: GroupPageQuery): Observable<DataTable<RbacGroupVO>>;
+
+  abstract deleteResourceById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract deleteGroupById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
 }

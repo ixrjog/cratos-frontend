@@ -21,6 +21,11 @@ export default {
       title: 'User',
       list: 'List',
     },
+    eds: {
+      title: 'Ext Datasource',
+      instance: 'instance',
+      config: 'config',
+    },
     rbac: {
       title: 'RBAC',
       resource: 'Resource',

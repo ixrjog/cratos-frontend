@@ -47,7 +47,6 @@ export interface ResourcePageQuery extends PageQuery {
   groupId: number;
 }
 
-
 export abstract class RbacData {
 
   abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;

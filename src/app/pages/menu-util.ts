@@ -65,6 +65,22 @@ export function getMenu(values: any): any[] {
       menuIcon: 'icon icon-console',
     },
     {
+      title: values['eds']['title'],
+      open: true,
+      children: [
+        {
+          title: values['eds']['instance'],
+          link: '/pages/eds/instance',
+        },
+        {
+          title: values['eds']['config'],
+          link: '/pages/eds/config',
+        },
+      ],
+      link: '/pages/eds',
+      menuIcon: 'icon icon-console',
+    },
+    {
       title: values['rbac']['title'],
       open: true,
       children: [

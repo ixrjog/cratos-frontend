@@ -21,6 +21,11 @@ export default {
       title: '用户',
       list: '清单',
     },
+    eds: {
+      title: '外部数据源',
+      instance: '实例',
+      config: '配置',
+    },
     rbac: {
       title: 'RBAC',
       resource: '资源',

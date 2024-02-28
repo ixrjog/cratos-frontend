@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: () => import('./user/user.module').then(m => m.UserModule),
       },
       {
+        path: 'eds',
+        loadChildren: () => import('./ext-datasource/ext-datasource.module').then(m => m.ExtDatasourceModule),
+      },
+      {
         path: 'rbac',
         loadChildren: () => import('./rbac/rbac.module').then(m => m.RbacModule),
       },

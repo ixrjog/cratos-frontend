@@ -12,13 +12,17 @@ import {
   RegisterInstance,
 } from '../data/ext-datasource';
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult } from '../data/base-data';
+import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
 
 @Injectable()
 export class EdsService extends EdsData {
 
   constructor(private apiService: ApiService) {
     super();
+  }
+
+  getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get('/eds/instance/type/options/get', {});
   }
 
   addEdsConfig(param: EdsConfigEdit): Observable<HttpResult<Boolean>> {

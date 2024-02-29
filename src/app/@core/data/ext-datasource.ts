@@ -1,5 +1,6 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
+import { CredentialVO } from './credential';
 
 export interface EdsInstanceVO extends BaseVO, ValidVO {
   id: number;
@@ -24,6 +25,7 @@ export interface EdsConfigVO extends BaseVO, ValidVO {
   url: string;
   configContent: string;
   comment: string;
+  credential: CredentialVO;
 }
 
 export interface InstancePageQuery extends PageQuery {
@@ -79,6 +81,8 @@ export interface importInstanceAsset {
 }
 
 export abstract class EdsData {
+
+  abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
 
   abstract queryEdsInstancePage(param: InstancePageQuery): Observable<DataTable<EdsInstanceVO>>;
 

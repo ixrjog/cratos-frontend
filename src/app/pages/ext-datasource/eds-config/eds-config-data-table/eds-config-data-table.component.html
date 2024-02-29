@@ -68,6 +68,7 @@
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="OnRowRegister(rowItem)">Register</li>
                 <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
               </ul>
             </span>

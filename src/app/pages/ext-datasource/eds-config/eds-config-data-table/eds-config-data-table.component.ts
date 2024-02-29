@@ -7,7 +7,12 @@ import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { finalize, Observable, zip } from 'rxjs';
-import { EdsConfigEdit, EdsConfigPageQuery, EdsConfigVO } from '../../../../@core/data/ext-datasource';
+import {
+  EdsConfigEdit,
+  EdsConfigPageQuery,
+  EdsConfigVO,
+  RegisterInstance,
+} from '../../../../@core/data/ext-datasource';
 import { EdsConfigEditorComponent } from './eds-config-editor/eds-config-editor.component';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
@@ -89,6 +94,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     const dialogDate = {
       ...this.dialogDate.editorData,
       title: 'New Eds Config',
+      width: '50%',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -99,6 +105,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     const dialogDate = {
       ...this.dialogDate.editorData,
       title: 'Edit Channel Network',
+      width: '50%',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -124,6 +131,10 @@ export class EdsConfigDataTableComponent implements OnInit {
           this.fetchData();
         });
     });
+  }
+
+  OnRowRegister(rowItem: EdsConfigVO) {
+
   }
 
   onBatchValid() {

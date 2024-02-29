@@ -23,8 +23,8 @@ export default {
     },
     eds: {
       title: 'Ext Datasource',
-      instance: 'instance',
-      config: 'config',
+      instance: 'Instance',
+      config: 'Config',
     },
     rbac: {
       title: 'RBAC',

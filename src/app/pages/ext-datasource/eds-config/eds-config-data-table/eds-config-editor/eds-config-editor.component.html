@@ -1,1 +1,109 @@
-<p>eds-config-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <section>
+      <d-splitter [orientation]="orientation">
+        <d-splitter-pane
+          [size]="size"
+          [minSize]="minSize"
+          [maxSize]="maxSize"
+          [collapsible]="true"
+        >
+          <div class="pane-content">
+            <h3>Info</h3>
+            <div>
+              <d-form-item>
+                <d-form-label [required]="true">Name</d-form-label>
+                <d-form-control>
+                  <input
+                    dTextInput
+                    name="name"
+                    [(ngModel)]="formData.name"
+                    [dValidateRules]="formRules['name']" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item *ngIf="JSON.stringify(edsTypeOptions) !== '[]'">
+                <d-form-label [required]="true">Credential Type</d-form-label>
+                <d-form-control>
+                  <d-select
+                    name="credentialType"
+                    [options]="edsTypeOptions"
+                    [filterKey]="'label'"
+                    [valueKey]="'value'"
+                    [appendToBody]="true"
+                    [(ngModel)]="formData.edsType"
+                  >
+                  </d-select>
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label>Version</d-form-label>
+                <d-form-control>
+                  <input dTextInput name="version" [(ngModel)]="formData.version" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label>Url</d-form-label>
+                <d-form-control>
+                  <input dTextInput name="url" [(ngModel)]="formData.url" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label>Description</d-form-label>
+                <d-form-control>
+                <textarea
+                  dTextarea
+                  name="comment"
+                  maxlength="200"
+                  style="height: 80px"
+                  [(ngModel)]="formData.comment"
+                ></textarea>
+                </d-form-control>
+              </d-form-item>
+            </div>
+          </div>
+        </d-splitter-pane>
+        <d-splitter-pane minSize="15%">
+          <div class="pane-content">
+            <h3>Config</h3>
+            <div style="padding-left: 10px">
+              <d-form-item>
+                <d-form-label [required]="true">Credential</d-form-label>
+                <d-form-control>
+                  <d-select
+                    name="credential"
+                    [filterKey]="'title'"
+                    [appendToBody]="true"
+                    [(ngModel)]="formData.credential"
+                    [searchFn]="onSearchCredential"
+                    [isSearch]="true"
+                    placeholder="Select credential"
+                    (valueChange)="onCredentialChange($event)"
+                  >
+                  </d-select>
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label [required]="true">Config Content</d-form-label>
+                <d-form-control>
+                  <app-ace-editor
+                    [minLines]="10"
+                    [maxLines]="30"
+                    [aceValue]="formData.configContent"
+                    (onChange)="onContentChange($event,formData)"
+                  >
+                  </app-ace-editor>
+                </d-form-control>
+              </d-form-item>
+            </div>
+          </div>
+        </d-splitter-pane>
+      </d-splitter>
+    </section>
+  </form>
+</section>
+

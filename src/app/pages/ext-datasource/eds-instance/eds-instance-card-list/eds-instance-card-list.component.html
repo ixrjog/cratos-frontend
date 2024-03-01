@@ -1,0 +1,38 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+  >
+  </d-search>
+  <d-select
+    class="select"
+    [options]="edsTypeOptions"
+    [filterKey]="'label'"
+    [valueKey]="'value'"
+    [appendToBody]="true"
+    [(ngModel)]="queryParam.edsType"
+  >
+  </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table da-list-content" dLoading [loading]="table.loading">
+  <app-eds-instance-card
+    *ngFor="let instance of table.data"
+    class="card-item"
+    [edsInstance]="instance"
+  ></app-eds-instance-card>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+  >
+  </d-pagination>
+</div>

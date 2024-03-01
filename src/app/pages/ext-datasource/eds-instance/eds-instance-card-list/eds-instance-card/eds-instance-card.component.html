@@ -1,0 +1,41 @@
+<div (click)="onclick()">
+  <d-card>
+    <d-card-header>
+      <d-avatar
+        dCardAvatar
+        [name]="edsInstance.instanceName"
+        [isRound]="true"
+        [width]="28"
+        [height]="28"
+      ></d-avatar>
+      <d-card-title>{{ edsInstance.instanceName }}</d-card-title>
+    </d-card-header>
+    <d-card-content>
+      {{ edsInstance.comment }}
+    </d-card-content>
+    <d-card-actions [align]="'end'">
+      <div>
+        <d-icon-group>
+          <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowInstanceEdit(edsInstance)"></d-icon>
+          <d-icon [icon]="'icon-setting'" [operable]="true" (click)="onRowConfigEdit(edsInstance)"></d-icon>
+          <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(edsInstance)"></d-icon>
+          <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(edsInstance)"></d-icon>
+          <d-icon
+            [icon]="'icon-priority'"
+            [operable]="true"
+            [color]="getRowColor(edsInstance.valid)"
+            (click)="onRowValid(edsInstance)"
+          >
+          </d-icon>
+          <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+<!--                <li class="devui-dropdown-item" (click)="OnRowRegister(edsInstance)">Register</li>-->
+                <li class="devui-dropdown-item" (click)="onRowDelete(edsInstance)">Delete</li>
+              </ul>
+            </span>
+        </d-icon-group>
+      </div>
+    </d-card-actions>
+  </d-card>
+</div>

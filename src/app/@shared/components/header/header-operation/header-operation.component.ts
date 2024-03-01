@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/@core/services/auth.service';
 import { LANGUAGES } from 'src/config/language-config';
-import { User } from '../../../models/user';
 import { I18nService } from 'ng-devui/i18n';
 import { LoginVO } from '../../../../@core/data/log';
 import { LogService } from '../../../../@core/services/log.service';

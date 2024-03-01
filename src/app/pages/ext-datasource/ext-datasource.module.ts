@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ExtDatasourceRoutingModule } from './ext-datasource-routing.module';
 import { ExtDatasourceComponent } from './ext-datasource.component';
 import { EdsInstanceComponent } from './eds-instance/eds-instance.component';
@@ -18,6 +17,13 @@ import {
   SearchModule,
 } from 'ng-devui';
 import { SharedModule } from '../../@shared/shared.module';
+import { EdsInstanceCardListComponent } from './eds-instance/eds-instance-card-list/eds-instance-card-list.component';
+import {
+  EdsInstanceEditorComponent
+} from './eds-instance/eds-instance-card-list/eds-instance-editor/eds-instance-editor.component';
+import {
+  EdsInstanceCardComponent
+} from './eds-instance/eds-instance-card-list/eds-instance-card/eds-instance-card.component';
 
 
 @NgModule({
@@ -26,7 +32,10 @@ import { SharedModule } from '../../@shared/shared.module';
     EdsInstanceComponent,
     EdsConfigComponent,
     EdsConfigDataTableComponent,
-    EdsConfigEditorComponent
+    EdsConfigEditorComponent,
+    EdsInstanceEditorComponent,
+    EdsInstanceCardComponent,
+    EdsInstanceCardListComponent
   ],
   imports: [
     CommonModule,

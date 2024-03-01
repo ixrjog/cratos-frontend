@@ -27,10 +27,10 @@
                 </d-form-control>
               </d-form-item>
               <d-form-item *ngIf="JSON.stringify(edsTypeOptions) !== '[]'">
-                <d-form-label [required]="true">Credential Type</d-form-label>
+                <d-form-label [required]="true">Eds Type</d-form-label>
                 <d-form-control>
                   <d-select
-                    name="credentialType"
+                    name="edsType"
                     [options]="edsTypeOptions"
                     [filterKey]="'label'"
                     [valueKey]="'value'"
@@ -72,10 +72,11 @@
             <h3>Config</h3>
             <div style="padding-left: 10px">
               <d-form-item>
-                <d-form-label [required]="true">Credential</d-form-label>
+                <d-form-label>Credential</d-form-label>
                 <d-form-control>
                   <d-select
                     name="credential"
+                    [allowClear]="true"
                     [filterKey]="'title'"
                     [appendToBody]="true"
                     [(ngModel)]="formData.credential"
@@ -91,8 +92,9 @@
                 <d-form-label [required]="true">Config Content</d-form-label>
                 <d-form-control>
                   <app-ace-editor
-                    [minLines]="10"
-                    [maxLines]="30"
+                    [minLines]="19"
+                    [maxLines]="19"
+                    [mode]="'ace/mode/yaml'"
                     [aceValue]="formData.configContent"
                     (onChange)="onContentChange($event,formData)"
                   >

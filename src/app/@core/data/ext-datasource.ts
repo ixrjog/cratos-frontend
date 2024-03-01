@@ -98,10 +98,13 @@ export abstract class EdsData {
 
   abstract updateEdsConfig(param: EdsConfigEdit): Observable<HttpResult<Boolean>>;
 
+  abstract deleteEdsInstanceById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
   abstract deleteEdsConfigById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract importEdsInstanceAsset(param: importInstanceAsset): Observable<HttpResult<Boolean>>;
 
   abstract setEdsConfigValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract setEdsInstanceValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 }

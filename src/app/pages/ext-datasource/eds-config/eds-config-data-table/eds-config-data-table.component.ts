@@ -16,6 +16,9 @@ import {
 import { EdsConfigEditorComponent } from './eds-config-editor/eds-config-editor.component';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+import {
+  EdsInstanceEditorComponent
+} from '../../eds-instance/eds-instance-card-list/eds-instance-editor/eds-instance-editor.component';
 
 @Component({
   selector: 'app-eds-config-data-table',
@@ -47,10 +50,24 @@ export class EdsConfigDataTableComponent implements OnInit {
     valid: true,
   };
 
+  registerEdsInstance: RegisterInstance = {
+    comment: '',
+    configId: 0,
+    instanceName: '',
+    kind: '',
+    url: '',
+    valid: true,
+    version: '',
+  };
+
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
       content: EdsConfigEditorComponent,
+    },
+    editorInstanceData: {
+      ...DIALOG_DATA.editorData,
+      content: EdsInstanceEditorComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -104,7 +121,7 @@ export class EdsConfigDataTableComponent implements OnInit {
   onRowEdit(rowItem: EdsConfigVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Channel Network',
+      title: 'Edit Eds Config',
       width: '50%',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
@@ -134,7 +151,17 @@ export class EdsConfigDataTableComponent implements OnInit {
   }
 
   OnRowRegister(rowItem: EdsConfigVO) {
-
+    const dialogDate = {
+      ...this.dialogDate.editorInstanceData,
+      title: 'Register Eds Instance',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, {
+      ...this.registerEdsInstance,
+      configId: rowItem.id,
+      edsType: rowItem.edsType,
+    });
   }
 
   onBatchValid() {
@@ -171,11 +198,11 @@ export class EdsConfigDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: ChannelNetworkVO) {
+  onRowBusinessTag(rowItem: EdsConfigVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: ChannelNetworkVO) {
+  onRowBusinessDoc(rowItem: EdsConfigVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 

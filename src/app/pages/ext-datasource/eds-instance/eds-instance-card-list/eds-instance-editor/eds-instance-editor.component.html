@@ -1,0 +1,56 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">InstanceName</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="instanceName"
+          [(ngModel)]="formData.instanceName"
+          [dValidateRules]="formRules['instanceName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Eds Type</d-form-label>
+      <d-form-control>
+        <span>{{ formData.edsType }}</span>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Kind</d-form-label>
+      <d-form-control>
+        <input dTextInput name="kind" [(ngModel)]="formData.kind" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Version</d-form-label>
+      <d-form-control>
+        <input dTextInput name="version" [(ngModel)]="formData.version" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Url</d-form-label>
+      <d-form-control>
+        <input dTextInput name="url" [(ngModel)]="formData.url" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

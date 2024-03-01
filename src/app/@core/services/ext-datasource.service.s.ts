@@ -33,6 +33,10 @@ export class EdsService extends EdsData {
     return this.apiService.delete('/eds/config/del', param);
   }
 
+  deleteEdsInstanceById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete('/eds/instance/del', param);
+  }
+
   getEdsConfigById(param: { configId: number }): Observable<HttpResult<EdsConfigVO>> {
     return this.apiService.get('/eds/config/get', param);
   }
@@ -63,6 +67,10 @@ export class EdsService extends EdsData {
 
   setEdsConfigValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam('/eds/config/valid/set', param);
+  }
+
+  setEdsInstanceValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam('/eds/instance/valid/set', param);
   }
 
 }

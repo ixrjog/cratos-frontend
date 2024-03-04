@@ -104,8 +104,9 @@ export class EdsInstanceCardComponent {
 
   protected readonly getRowColor = getRowColor;
 
-  onclick() {
-    this.route.navigate(['/pages/sys/tag',]);
+  onRouteInstanceAsset(instanceId: number) {
+    // https://www.cnblogs.com/wolfocme110/p/13457531.html
+    this.route.navigate([ '/pages/eds/asset' ], { queryParams: { instanceId: instanceId } });
   }
 
 }

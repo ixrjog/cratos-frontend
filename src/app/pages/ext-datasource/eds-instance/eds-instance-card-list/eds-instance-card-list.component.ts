@@ -69,6 +69,5 @@ export class EdsInstanceCardListComponent implements OnInit {
     this.fetchData();
   }
 
-
   protected readonly limit = RELATIVE_TIME_LIMIT;
 }

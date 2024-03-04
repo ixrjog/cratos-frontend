@@ -24,6 +24,9 @@ import {
 import {
   EdsInstanceCardComponent
 } from './eds-instance/eds-instance-card-list/eds-instance-card/eds-instance-card.component';
+import { EdsAssetComponent } from './eds-instance/eds-asset/eds-asset.component';
+import { EdsAssetDataTableComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-data-table.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 @NgModule({
@@ -35,7 +38,9 @@ import {
     EdsConfigEditorComponent,
     EdsInstanceEditorComponent,
     EdsInstanceCardComponent,
-    EdsInstanceCardListComponent
+    EdsInstanceCardListComponent,
+    EdsAssetComponent,
+    EdsAssetDataTableComponent
   ],
   imports: [
     CommonModule,
@@ -49,6 +54,7 @@ import {
     PaginationModule,
     SearchModule,
     SharedModule,
+    MarkdownModule,
   ],
 })
 export class ExtDatasourceModule { }

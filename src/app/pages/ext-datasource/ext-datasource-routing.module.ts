@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ExtDatasourceComponent } from './ext-datasource.component';
 import { EdsConfigComponent } from './eds-config/eds-config.component';
 import { EdsInstanceComponent } from './eds-instance/eds-instance.component';
+import { EdsAssetComponent } from './eds-instance/eds-asset/eds-asset.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,7 @@ const routes: Routes = [
     children: [
       { path: 'instance', component: EdsInstanceComponent },
       { path: 'config', component: EdsConfigComponent },
+      { path: 'asset', component: EdsAssetComponent },
     ],
   },
 ];

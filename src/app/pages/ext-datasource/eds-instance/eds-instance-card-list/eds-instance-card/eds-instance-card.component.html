@@ -1,6 +1,6 @@
-<div (click)="onclick()">
+<div>
   <d-card>
-    <d-card-header>
+    <d-card-header (click)="onRouteInstanceAsset(edsInstance.id)">
       <d-avatar
         dCardAvatar
         [name]="edsInstance.instanceName"
@@ -30,7 +30,6 @@
           <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
-<!--                <li class="devui-dropdown-item" (click)="OnRowRegister(edsInstance)">Register</li>-->
                 <li class="devui-dropdown-item" (click)="onRowDelete(edsInstance)">Delete</li>
               </ul>
             </span>

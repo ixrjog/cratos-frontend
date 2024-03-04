@@ -1,0 +1,26 @@
+<da-layout-row [daGutter]="[24, 24]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <ng-container *ngIf="JSON.stringify(edsInstance) !== '{}'; else noInstanceAsset">
+      <ng-template [ngTemplateOutlet]="edsInstanceAsset"></ng-template>
+    </ng-container>
+  </da-col-item>
+</da-layout-row>
+
+<ng-template #noInstanceAsset>
+  <h3 dLoading [loading]="loading">Fetch Eds Instance Asset</h3>
+</ng-template>
+
+<ng-template #edsInstanceAsset>
+  <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+    <d-tab *ngFor="let item of assetTypes" [id]="item" [title]="item">
+      <div class="app-data-table">
+        <app-eds-asset-data-table
+          #edsAssetDataTable
+          [instanceId]="edsInstance.id"
+          [currentType]="item"
+          [assetType]="assetType"
+        ></app-eds-asset-data-table>
+      </div>
+    </d-tab>
+  </d-tabs>
+</ng-template>

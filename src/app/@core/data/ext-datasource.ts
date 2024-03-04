@@ -13,6 +13,7 @@ export interface EdsInstanceVO extends BaseVO, ValidVO {
   comment: string;
   registered: boolean;
   edsConfig: EdsConfigVO;
+  assetTypes: string[];
 }
 
 export interface EdsConfigVO extends BaseVO, ValidVO {
@@ -28,6 +29,27 @@ export interface EdsConfigVO extends BaseVO, ValidVO {
   credential: CredentialVO;
 }
 
+export interface EdsAssetVO extends BaseVO, ValidVO {
+  id: number;
+  parentId: number;
+  instanceId: number;
+  name: string;
+  assetId: string;
+  assetKey: string;
+  assetType: string;
+  kind: string;
+  version: string;
+  region: string;
+  zone: string;
+  assetStatus: string;
+  createdTime: Date;
+  expiredTime: Date;
+  description: string;
+  originalModel: string;
+  originalAsset: any;
+}
+
+
 export interface InstancePageQuery extends PageQuery {
   queryName: string;
   edsType: string;
@@ -36,6 +58,13 @@ export interface InstancePageQuery extends PageQuery {
 export interface EdsConfigPageQuery extends PageQuery {
   queryName: string;
   edsType: string;
+  valid: boolean;
+}
+
+export interface AssetPageQuery extends PageQuery {
+  instanceId: number;
+  queryName: string;
+  assetType: string;
   valid: boolean;
 }
 
@@ -86,6 +115,8 @@ export abstract class EdsData {
 
   abstract queryEdsInstancePage(param: InstancePageQuery): Observable<DataTable<EdsInstanceVO>>;
 
+  abstract getEdsInstanceById(param: { instanceId: number }): Observable<HttpResult<EdsInstanceVO>>;
+
   abstract registerEdsInstance(param: RegisterInstance): Observable<HttpResult<Boolean>>;
 
   abstract updateEdsInstance(param: InstanceEdit): Observable<HttpResult<Boolean>>;
@@ -102,9 +133,16 @@ export abstract class EdsData {
 
   abstract deleteEdsConfigById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract deleteEdsInstanceAssetById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
   abstract importEdsInstanceAsset(param: importInstanceAsset): Observable<HttpResult<Boolean>>;
 
   abstract setEdsConfigValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract setEdsInstanceValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract setEdsInstanceAssetValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>>;
+
 }

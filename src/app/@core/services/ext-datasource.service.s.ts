@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
+  AssetPageQuery,
+  EdsAssetVO,
   EdsConfigEdit,
   EdsConfigPageQuery,
   EdsConfigVO,
@@ -37,6 +39,10 @@ export class EdsService extends EdsData {
     return this.apiService.delete('/eds/instance/del', param);
   }
 
+  deleteEdsInstanceAssetById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete('/eds/instance/asset/del', param);
+  }
+
   getEdsConfigById(param: { configId: number }): Observable<HttpResult<EdsConfigVO>> {
     return this.apiService.get('/eds/config/get', param);
   }
@@ -51,6 +57,10 @@ export class EdsService extends EdsData {
 
   queryEdsInstancePage(param: InstancePageQuery): Observable<DataTable<EdsInstanceVO>> {
     return this.apiService.post('/eds/instance/page/query', param);
+  }
+
+  getEdsInstanceById(param: { instanceId: number }): Observable<HttpResult<EdsInstanceVO>> {
+    return this.apiService.get('/eds/instance/get', param);
   }
 
   registerEdsInstance(param: RegisterInstance): Observable<HttpResult<Boolean>> {
@@ -71,6 +81,14 @@ export class EdsService extends EdsData {
 
   setEdsInstanceValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam('/eds/instance/valid/set', param);
+  }
+
+  setEdsInstanceAssetValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam('/eds/instance/asset/valid/set', param);
+  }
+
+  queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>> {
+    return this.apiService.post('/eds/instance/asset/query', param);
   }
 
 }

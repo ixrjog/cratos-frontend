@@ -39,7 +39,12 @@
           >
           </d-icon>
           <ng-template #customTemplate>
-            <app-ace-editor [mode]="'ace/mode/yaml'" [aceValue]="cellItem"></app-ace-editor>
+            <app-ace-editor
+              [readonly]="true"
+              [showLineNumbers]="false"
+              [mode]="'ace/mode/yaml'"
+              [aceValue]="cellItem"
+            ></app-ace-editor>
           </ng-template>
         </ng-template>
       </d-cell>

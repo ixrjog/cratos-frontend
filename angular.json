@@ -46,7 +46,33 @@
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js",
               "node_modules/prismjs/plugins/command-line/prism-command-line.js",
-              "node_modules/mermaid/dist/mermaid.min.js"
+              "node_modules/mermaid/dist/mermaid.min.js",
+              "node_modules/ace-builds/src-min/ace.js",
+              "node_modules/ace-builds/src-min/mode-markdown.js",
+              "node_modules/ace-builds/src-min/mode-yaml.js",
+              "node_modules/ace-builds/src-min/mode-html.js",
+              "node_modules/ace-builds/src-min/mode-json.js",
+              "node_modules/ace-builds/src-min/theme-chrome.js",
+              "node_modules/ace-builds/src-min/theme-tomorrow.js",
+              "node_modules/ace-builds/src-min/snippets/markdown.js",
+              "node_modules/ace-builds/src-min/snippets/yaml.js",
+              "node_modules/ace-builds/src-min/snippets/xml.js",
+              "node_modules/ace-builds/src-min/snippets/html.js",
+              "node_modules/ace-builds/src-min/ext-beautify.js",
+              "node_modules/ace-builds/src-min/ext-searchbox.js",
+              "node_modules/ace-builds/src-min/ext-language_tools.js",
+              {
+                "bundleName": "worker-html",
+                "input": "node_modules/ace-builds/src-min/worker-html.js"
+              },
+              {
+                "bundleName": "worker-yaml",
+                "input": "node_modules/ace-builds/src-min/worker-yaml.js"
+              },
+              {
+                "bundleName": "worker-json",
+                "input": "node_modules/ace-builds/src-min/worker-json.js"
+              }
             ]
           },
           "configurations": {

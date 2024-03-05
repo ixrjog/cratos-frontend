@@ -17,15 +17,18 @@ import { DaGridModule } from './layouts/da-grid';
 import { HeaderLogoComponent } from './components/header/header-logo/header-logo.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { RegisterComponent } from './components/register/register.component';
-import { SafePipe } from './pipe/safePipe';
+import { SafePipe } from './pipe/safe.pipe';
 import { DialogUtil } from './utils/dialog.util';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
 import { ToastUtil } from './utils/toast.util';
 import { AceEditorComponent } from './components/common/ace-editor/ace-editor.component';
-import { BusinessTagEditorComponent } from './components/common/business-tag/business-tag-editor/business-tag-editor.component';
+import {
+  BusinessTagEditorComponent,
+} from './components/common/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessTagsComponent } from './components/common/business-tag/business-tags/business-tags.component';
 import { BusinessDocsComponent } from './components/common/business-doc/business-docs/business-docs.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -41,6 +44,7 @@ const COMPONENTS = [
 
 const PIPES = [
   SafePipe,
+  EdsAssetTypePipe,
 ];
 
 const CRATOS_COMPONENTS = [

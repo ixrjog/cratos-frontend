@@ -12,7 +12,10 @@
 
 <ng-template #edsInstanceAsset>
   <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
-    <d-tab *ngFor="let item of assetTypes" [id]="item" [title]="item">
+    <d-tab *ngFor="let item of assetTypes" [id]="item">
+      <ng-template dTabTitle>
+        {{ item | edsAssetType }}
+      </ng-template>
       <div class="app-data-table">
         <app-eds-asset-data-table
           #edsAssetDataTable

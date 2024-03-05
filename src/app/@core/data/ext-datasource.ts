@@ -146,3 +146,10 @@ export abstract class EdsData {
   abstract queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>>;
 
 }
+
+export enum EdsAssetTypeEnum {
+  ALIYUN_CERT = 'ALIYUN_CERT',
+  AWS_CERT = 'AWS_CERT',
+  CLOUDFLARE_CER = 'CLOUDFLARE_CER',
+}
+

@@ -23,13 +23,14 @@
     <d-column field="assetId" header="Asset Id"></d-column>
     <d-column field="name" header="Name"></d-column>
     <d-column field="assetKey" header="Asset Key"></d-column>
+    <d-column field="region" header="Region"></d-column>
     <d-column field="description" header="Description"></d-column>
     <d-column field="originalModel" header="OriginalModel">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-icon
             dPopover
-            [icon]="'icon-go-document'"
+            [icon]="'icon-base-info'"
             [content]="customTemplate"
             [position]="'right'"
             [trigger]="'hover'"
@@ -41,7 +42,6 @@
           <ng-template #customTemplate>
             <app-ace-editor
               [readonly]="true"
-              [showLineNumbers]="false"
               [mode]="'ace/mode/yaml'"
               [aceValue]="cellItem"
             ></app-ace-editor>
@@ -49,15 +49,29 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="createdTime" header="Created Time" [fieldType]="'date'">
+    <d-column header="Time">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
+        <ng-template let-rowItem="rowItem">
+          <span class="font-color-name" style="margin-right: 5px">Created</span>
+          <span>{{ rowItem['createdTime'] | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <strong style="margin-left: 5px">{{ rowItem['createdTime'] | dRelativeTime: limit | async }}</strong>
           <br>
-          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+          <span class="font-color-name" style="margin-right: 5px">Expired</span>
+          <span>{{ rowItem['expiredTime'] | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
         </ng-template>
       </d-cell>
     </d-column>
+
+    <!--    <d-column field="createdTime" header="Created Time" [fieldType]="'date'">-->
+    <!--      <d-cell>-->
+    <!--        <ng-template let-cellItem="cellItem">-->
+    <!--          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>-->
+    <!--          <br>-->
+    <!--          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>-->
+    <!--        </ng-template>-->
+    <!--      </d-cell>-->
+    <!--    </d-column>-->
     <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

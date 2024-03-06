@@ -37,9 +37,12 @@
               "node_modules/prismjs/themes/prism-okaidia.css",
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
-              "node_modules/prismjs/plugins/command-line/prism-command-line.css",
+              "node_modules/prismjs/plugins/command-line/prism-command-line.css"
             ],
             "scripts": [
+              "src/assets/fontawesome/js/brands.js",
+              "src/assets/fontawesome/js/solid.js",
+              "src/assets/fontawesome/js/fontawesome.js",
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-css.min.js",

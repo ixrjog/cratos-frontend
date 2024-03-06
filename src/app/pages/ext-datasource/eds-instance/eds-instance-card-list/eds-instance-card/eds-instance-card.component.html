@@ -11,7 +11,10 @@
       <d-card-title>{{ edsInstance.instanceName }}</d-card-title>
     </d-card-header>
     <d-card-content>
-      {{ edsInstance.comment }}
+      <div>{{ edsInstance.comment }}</div>
+      <div>
+        <app-business-tags [businessTags]="edsInstance.businessTags"></app-business-tags>
+      </div>
     </d-card-content>
     <d-card-actions [align]="'end'">
       <div>

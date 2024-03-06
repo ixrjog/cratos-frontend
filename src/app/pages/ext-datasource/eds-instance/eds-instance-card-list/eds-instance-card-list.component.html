@@ -12,6 +12,7 @@
     [filterKey]="'label'"
     [valueKey]="'value'"
     [appendToBody]="true"
+    [allowClear]="true"
     [(ngModel)]="queryParam.edsType"
   >
   </d-select>
@@ -22,6 +23,7 @@
     *ngFor="let instance of table.data"
     class="card-item"
     [edsInstance]="instance"
+    (onFetchData)="fetchData()"
   ></app-eds-instance-card>
 </div>
 <div class="spacing-pagination">

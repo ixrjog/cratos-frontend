@@ -1,8 +1,9 @@
 import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 import { CredentialVO } from './credential';
+import { BusinessTagsVO } from './business-tag';
 
-export interface EdsInstanceVO extends BaseVO, ValidVO {
+export interface EdsInstanceVO extends BaseVO, ValidVO, BusinessTagsVO {
   id: number;
   instanceName: string;
   edsType: string;

@@ -26,7 +26,6 @@ export class EdsInstanceCardComponent {
   @Output()
   onFetchData = new EventEmitter<string>();
 
-
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,

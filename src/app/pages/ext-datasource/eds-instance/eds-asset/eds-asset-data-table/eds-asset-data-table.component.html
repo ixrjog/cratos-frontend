@@ -32,7 +32,7 @@
             dPopover
             [icon]="'icon-base-info'"
             [content]="customTemplate"
-            [position]="'right'"
+            [position]="'right-top'"
             [trigger]="'hover'"
             [controlled]="true"
             [mouseEnterDelay]="500"
@@ -40,11 +40,7 @@
           >
           </d-icon>
           <ng-template #customTemplate>
-            <app-ace-editor
-              [readonly]="true"
-              [mode]="'ace/mode/yaml'"
-              [aceValue]="cellItem"
-            ></app-ace-editor>
+            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>
           </ng-template>
         </ng-template>
       </d-cell>

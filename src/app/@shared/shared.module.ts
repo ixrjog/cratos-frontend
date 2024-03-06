@@ -29,6 +29,7 @@ import { BusinessTagsComponent } from './components/common/business-tag/business
 import { BusinessDocsComponent } from './components/common/business-doc/business-docs/business-docs.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
+import { HighlightJsModule } from 'ngx-highlight-js';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -85,6 +86,7 @@ const CRATOS_UTILS = [
     I18nModule,
     IconModule,
     DaGridModule,
+    HighlightJsModule,
     MarkdownModule.forChild(),
     ...DEVUI_MODULES,
   ],
@@ -98,6 +100,7 @@ const CRATOS_UTILS = [
     IconModule,
     DaGridModule,
     SideMenuComponent,
+    HighlightJsModule,
     ...DEVUI_MODULES,
     ...COMPONENTS,
     ...PIPES,

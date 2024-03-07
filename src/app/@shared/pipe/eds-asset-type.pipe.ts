@@ -8,10 +8,12 @@ export class EdsAssetTypePipe implements PipeTransform {
     switch (edsAssetType) {
       case EdsAssetTypeEnum.ALIYUN_CERT:
       case EdsAssetTypeEnum.AWS_CERT:
-      case EdsAssetTypeEnum.CLOUDFLARE_CER:
+      case EdsAssetTypeEnum.CLOUDFLARE_CERT:
         return 'Certificate';
       case EdsAssetTypeEnum.AWS_STS_VPN:
         return 'Site-to-Site VPN';
+      case EdsAssetTypeEnum.KUBERNETES_DEPLOYMENT:
+        return 'Deployment';
       default:
         return edsAssetType;
     }

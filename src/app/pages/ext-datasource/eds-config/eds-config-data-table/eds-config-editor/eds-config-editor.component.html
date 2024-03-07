@@ -86,7 +86,7 @@
                     (valueChange)="onCredentialChange($event)"
                   >
                   </d-select>
-                  <d-alert style="margin-top: 10px" [type]="'info'" [closeable]="false"> {{ formData.credential?.tips }}</d-alert>
+                  <d-alert style="margin-top: 10px" [type]="'info'"> {{ formData.credential?.tips }}</d-alert>
                 </d-form-control>
               </d-form-item>
               <d-form-item>
@@ -94,7 +94,7 @@
                 <d-form-control>
                   <app-ace-editor
                     [minLines]="19"
-                    [maxLines]="19"
+                    [maxLines]="50"
                     [mode]="'ace/mode/yaml'"
                     [aceValue]="formData.configContent"
                     (onChange)="onContentChange($event,formData)"

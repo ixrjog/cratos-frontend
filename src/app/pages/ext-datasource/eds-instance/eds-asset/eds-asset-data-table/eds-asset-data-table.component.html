@@ -39,7 +39,13 @@
           >
           </d-icon>
           <ng-template #customTemplate>
-            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>
+<!--            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>-->
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
           </ng-template>
         </ng-template>
       </d-cell>

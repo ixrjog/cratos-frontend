@@ -18,10 +18,10 @@ export class AceEditorComponent implements AfterViewInit {
   @Input() minLines: number = 5;
   @Input() maxLines: number = 50 ;
   @Input() showLineNumbers: boolean = true;
-
   /**
    * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/theme">theme 列表</a>
    */
+  // ace/theme/tomorrow_night
   @Input() theme: string = 'ace/theme/tomorrow';
   /**
    * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/mode">mode 列表</a>
@@ -35,7 +35,6 @@ export class AceEditorComponent implements AfterViewInit {
   };
 
   @Output() onChange = new EventEmitter<string>();
-
 
   ngAfterViewInit(): void {
     let fontSize: string;

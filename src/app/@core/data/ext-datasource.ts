@@ -152,5 +152,6 @@ export enum EdsAssetTypeEnum {
   ALIYUN_CERT = 'ALIYUN_CERT',
   AWS_CERT = 'AWS_CERT',
   CLOUDFLARE_CER = 'CLOUDFLARE_CER',
+  AWS_STS_VPN = 'AWS_STS_VPN',
 }
 

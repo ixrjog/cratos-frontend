@@ -15,6 +15,7 @@ export interface CredentialVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessT
   comment: string;
   expiredTime: Date;
   privateCredential: boolean;
+  tips: string;
 }
 
 export interface CredentialPageQuery extends PageQuery {

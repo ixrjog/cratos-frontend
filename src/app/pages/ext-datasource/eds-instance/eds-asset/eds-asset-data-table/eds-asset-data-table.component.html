@@ -1,4 +1,5 @@
 <div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onAssetImport()">Import</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -20,22 +21,20 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="assetId" header="Asset Id"></d-column>
+    <d-column field="assetId" header="Asset ID"></d-column>
     <d-column field="name" header="Name"></d-column>
     <d-column field="assetKey" header="Asset Key"></d-column>
     <d-column field="region" header="Region"></d-column>
     <d-column field="description" header="Description"></d-column>
-    <d-column field="originalModel" header="OriginalModel">
+    <d-column field="originalModel" header="Model" [width]="'80px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-icon
             dPopover
             [icon]="'icon-base-info'"
             [content]="customTemplate"
-            [position]="'right-top'"
-            [trigger]="'hover'"
+            [position]="'left-top'"
             [controlled]="true"
-            [mouseEnterDelay]="500"
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' }"
           >
           </d-icon>
@@ -45,20 +44,20 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Time">
+    <d-column header="Time" [width]="'260px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span class="font-color-name" style="margin-right: 5px">Created</span>
-          <span>{{ rowItem['createdTime'] | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <span>{{ rowItem['createdTime'] | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
           <strong style="margin-left: 5px">{{ rowItem['createdTime'] | dRelativeTime: limit | async }}</strong>
           <br>
           <span class="font-color-name" style="margin-right: 5px">Expired</span>
-          <span>{{ rowItem['expiredTime'] | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <span>{{ rowItem['expiredTime'] | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
           <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'100px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

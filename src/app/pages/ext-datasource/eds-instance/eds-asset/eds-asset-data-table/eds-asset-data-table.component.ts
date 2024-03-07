@@ -7,7 +7,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.uti
 import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
-import { AssetPageQuery, EdsAssetVO } from '../../../../../@core/data/ext-datasource';
+import { AssetPageQuery, EdsAssetVO, importInstanceAsset } from '../../../../../@core/data/ext-datasource';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -50,9 +50,18 @@ export class EdsAssetDataTableComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['currentType']?.currentValue === changes['assetType']?.currentValue) {
+    if (this.assetType === this.currentType) {
       this.fetchData();
     }
+  }
+
+  onAssetImport() {
+    const param: importInstanceAsset = {
+      instanceId: this.instanceId,
+      assetType: this.assetType,
+    };
+    this.edsService.importEdsInstanceAsset(param)
+      .subscribe(() => this.toastUtil.onSuccessToast(TOAST_CONTENT.IMPORT));
   }
 
   fetchData() {

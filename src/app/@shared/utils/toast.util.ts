@@ -21,6 +21,7 @@ export const TOAST_CONTENT = {
   UPDATE: 'Update success',
   DELETE: 'Delete success',
   INACTIVE: 'Inactive success',
+  IMPORT: 'Importing, please wait',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
   BATCH_INACTIVE: 'Batch inactive success',

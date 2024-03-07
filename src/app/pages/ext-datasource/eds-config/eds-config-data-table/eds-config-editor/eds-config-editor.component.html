@@ -86,6 +86,7 @@
                     (valueChange)="onCredentialChange($event)"
                   >
                   </d-select>
+                  <d-alert style="margin-top: 10px" [type]="'info'" [closeable]="false"> {{ formData.credential?.tips }}</d-alert>
                 </d-form-control>
               </d-form-item>
               <d-form-item>

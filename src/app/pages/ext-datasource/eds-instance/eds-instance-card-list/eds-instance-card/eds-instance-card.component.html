@@ -10,10 +10,12 @@
       ></d-avatar>
       <d-card-title>{{ edsInstance.instanceName }}</d-card-title>
     </d-card-header>
-    <d-card-content>
-      <div>{{ edsInstance.comment }}</div>
-      <div>
-        <app-business-tags [businessTags]="edsInstance.businessTags"></app-business-tags>
+    <d-card-content (click)="onRouteInstanceAsset(edsInstance.id)">
+      <div class="spacing-card-content">
+        <div class="card-content-comment font-color-comment">{{ edsInstance.comment | dSafeNullPipe }}</div>
+        <div class="card-content-tags">
+          <app-business-tags [businessTags]="edsInstance.businessTags"></app-business-tags>
+        </div>
       </div>
     </d-card-content>
     <d-card-actions [align]="'end'">

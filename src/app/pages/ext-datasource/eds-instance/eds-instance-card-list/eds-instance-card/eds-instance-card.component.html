@@ -8,7 +8,12 @@
         [width]="28"
         [height]="28"
       ></d-avatar>
-      <d-card-title>{{ edsInstance.instanceName }}</d-card-title>
+      <d-card-title>
+        <h3 class="font-color-name" style="margin: 0">{{ edsInstance.instanceName }}</h3>
+      </d-card-title>
+      <d-card-subtitle>
+        <span class="font-color-comment">{{ edsInstance.edsType }}</span>
+      </d-card-subtitle>
     </d-card-header>
     <d-card-content (click)="onRouteInstanceAsset(edsInstance.id)">
       <div class="spacing-card-content">

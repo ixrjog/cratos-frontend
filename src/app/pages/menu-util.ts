@@ -26,7 +26,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/certificate',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-system',
     },
     {
       title: values['certificate']['title'],
@@ -38,7 +38,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/certificate',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-safe-setting',
     },
     {
       title: values['channelNetwork']['title'],
@@ -50,7 +50,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/channel-network',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-unarchived-item',
     },
     {
       title: values['user']['title'],
@@ -62,7 +62,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/user',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-member',
     },
     {
       title: values['eds']['title'],
@@ -78,7 +78,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/eds',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-module',
     },
     {
       title: values['rbac']['title'],
@@ -98,7 +98,7 @@ export function getMenu(values: any): any[] {
         },
       ],
       link: '/pages/rbac',
-      menuIcon: 'icon icon-console',
+      menuIcon: 'icon icon-license',
     },
   ];
 }

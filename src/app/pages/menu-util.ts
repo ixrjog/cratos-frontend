@@ -1,18 +1,6 @@
 export function getMenu(values: any): any[] {
   return [
     {
-      title: values['gettingStarted']['title'],
-      open: false,
-      children: [
-        {
-          title: values['gettingStarted']['sample'],
-          link: '/pages/getting-started/sample',
-        },
-      ],
-      link: '/pages/getting-started',
-      menuIcon: 'icon icon-console',
-    },
-    {
       title: values['sys']['title'],
       open: true,
       children: [

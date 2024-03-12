@@ -12,7 +12,6 @@ import { EdsAssetDataTableComponent } from './eds-asset-data-table/eds-asset-dat
 })
 export class EdsAssetComponent implements AfterViewInit {
 
-  @ViewChild('edsAssetDataTable') private edsAssetDataTable: EdsAssetDataTableComponent;
   instanceId: number = null;
   edsInstance: EdsInstanceVO;
   assetTypes: string[];

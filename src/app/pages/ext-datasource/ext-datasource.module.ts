@@ -27,6 +27,7 @@ import {
 import { EdsAssetComponent } from './eds-instance/eds-asset/eds-asset.component';
 import { EdsAssetDataTableComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-data-table.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { EdsInstanceScheduleComponent } from './eds-instance/eds-instance-card-list/eds-instance-schedule/eds-instance-schedule.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { MarkdownModule } from 'ngx-markdown';
     EdsInstanceCardComponent,
     EdsInstanceCardListComponent,
     EdsAssetComponent,
-    EdsAssetDataTableComponent
+    EdsAssetDataTableComponent,
+    EdsInstanceScheduleComponent
   ],
   imports: [
     CommonModule,

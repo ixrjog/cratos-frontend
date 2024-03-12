@@ -10,6 +10,9 @@ import { EdsInstanceEditorComponent } from '../eds-instance-editor/eds-instance-
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { getRowColor } from '../../../../../@shared/utils/data-table.utli';
 import { Router } from '@angular/router';
+import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.util';
+import { EdsInstanceScheduleComponent } from '../eds-instance-schedule/eds-instance-schedule.component';
+import { AddScheduleJob } from '../../../../../@core/data/ext-datasource-schedule';
 
 @Component({
   selector: 'app-eds-instance-card',
@@ -18,13 +21,9 @@ import { Router } from '@angular/router';
 })
 export class EdsInstanceCardComponent {
 
-  @Input()
-  edsInstance: EdsInstanceVO;
-
+  @Input() edsInstance: EdsInstanceVO;
+  @Output() onFetchData = new EventEmitter<string>();
   businessType: string = BusinessTypeEnum.EDS_INSTANCE;
-
-  @Output()
-  onFetchData = new EventEmitter<string>();
 
   dialogDate = {
     editorData: {
@@ -43,10 +42,18 @@ export class EdsInstanceCardComponent {
     },
   };
 
+  drawerDate = {
+    editorData: {
+      ...DRAWER_DATA.editorData,
+      drawerContentComponent: EdsInstanceScheduleComponent,
+    },
+  };
+
   constructor(
     private route: Router,
     private edsService: EdsService,
     private dialogUtil: DialogUtil,
+    private drawerUtil: DrawerUtil,
     private toastUtil: ToastUtil,
   ) {
   }
@@ -72,6 +79,25 @@ export class EdsInstanceCardComponent {
     }, rowItem);
   }
 
+  onRowInstanceSchedule(rowItem: EdsInstanceVO) {
+    const formData: AddScheduleJob = {
+      assetType: rowItem.assetTypes[0],
+      instanceId: rowItem.id,
+      jobDescription: '',
+      jobTime: '',
+      jobType: 'IMPORT_ASSET_JOB',
+    };
+    const drawerDate = {
+      ...this.drawerDate.editorData,
+    };
+    this.drawerUtil.onDrawer(drawerDate, formData,
+      () => this.onFetchData.emit(),
+      {
+        assetTypeOptions: rowItem.assetTypes,
+        instanceName: rowItem.instanceName,
+        instanceId: rowItem.id,
+      });
+  }
   onRowValid(rowItem: EdsInstanceVO) {
     this.edsService.setEdsInstanceValidById({ id: rowItem.id })
       .subscribe(() => {

@@ -15,8 +15,7 @@ export class CertificateEditorComponent implements OnInit {
   @ViewChild('certificateEditorForm') userFormDir: DFormGroupRuleDirective;
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: CertificateVO;
   certificateFormGroup: FormGroup;
   operationType: boolean;

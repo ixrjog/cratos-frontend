@@ -1,0 +1,163 @@
+<div class="drawer-menu">
+  <h2 class="font-color-name" style="margin: 8px 12px;">{{ instanceName }}</h2>
+  <div [style.margin]="'20px 20px 0 0'" [style.text-align]="'right'" [style.cursor]="'pointer'">
+    <span
+      [style.margin-right]="'12px'"
+      title="Add"
+      class="icon-op-add"
+      (click)="addSchedule()"
+    >
+    </span>
+    <span
+      [style.margin-right]="'8px'"
+      title="Fullscreen"
+      (click)="toggleFullScreen()"
+      class="icon"
+      [ngClass]="{ 'icon-maxmize': !isFullScreen, 'icon-minimize': isFullScreen }"
+    >
+    </span>
+    <span (click)="close($event)" title="Close" class="icon icon-close"></span>
+  </div>
+  <div class="operation-area">
+    <ng-container *ngIf="showAddSchedule">
+      <ng-template [ngTemplateOutlet]="showScheduleForm"></ng-template>
+    </ng-container>
+    <div class="spacing-table">
+      <d-data-table
+        dLoading
+        [dataSource]="table.data"
+        [tableOverflowType]="'overlay'"
+        [backdrop]="true"
+        [scrollable]="true"
+        [loadingStyle]="'infinity'"
+        [loading]="table.loading"
+      >
+        <d-column field="name" header="Name"></d-column>
+        <d-column field="status" header="Status"></d-column>
+        <d-column header="Cron">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <span style="margin-right: 5px">{{ rowItem['cronExpression'] }}</span>
+              <d-icon
+                dPopover
+                style="font-size: 12px"
+                [icon]="'icon-info-o'"
+                [content]="customTemplate"
+                [position]="'left-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [popoverStyle]="{ backgroundColor: 'white' }"
+              >
+              </d-icon>
+              <ng-template #customTemplate>
+                <div>
+                  <d-alert
+                    [showIcon]="false"
+                    [closeable]="false"
+                    style="margin-top: 10px"
+                    [type]="'info'">
+                    <div style="font-size: 1.2em">Last five execution times</div>
+                    <div *ngFor="let time of rowItem['executionTime']">{{ time }}</div>
+                  </d-alert>
+                </div>
+              </ng-template>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column field="description" header="Description"></d-column>
+        <d-column header="Actions" [width]="'200px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <d-icon-group>
+                <d-icon
+                  *ngIf="rowItem['status'] === 'NORMAL'"
+                  [icon]="'icon-stop'"
+                  [operable]="true"
+                  (click)="onRowPause(rowItem)"
+                ></d-icon>
+                <d-icon
+                  *ngIf="rowItem['status'] === 'PAUSED'"
+                  [icon]="'icon-run'"
+                  [operable]="true"
+                  (click)="onRowResume(rowItem)"
+                ></d-icon>
+                <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
+              </d-icon-group>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <ng-template #noResultTemplateRef>
+          <div class="no-data">Fetch Data</div>
+        </ng-template>
+      </d-data-table>
+    </div>
+  </div>
+</div>
+
+<ng-template #showScheduleForm>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+    #scheduleForm="dValidateRules"
+    (dSubmit)="submitForm($event)"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Job Type</d-form-label>
+      <d-form-control>
+        <d-select name="jobType" [options]="jobTypeOptions" [(ngModel)]="formData.jobType"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Asset Type</d-form-label>
+      <d-form-control>
+        <d-select name="assetType" [options]="assetTypeOptions" [(ngModel)]="formData.assetType"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="'https://tool.lu/crontab/'">Cron</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="jobTime"
+          style="width: 100%"
+          [(ngModel)]="formData.jobTime"
+          [dValidateRules]="formRules['jobTime']" />
+        <div *ngIf="JSON.stringify(executionTime) !== '[]'">
+          <d-alert
+            [showIcon]="false"
+            [closeable]="false"
+            style="margin-top: 10px"
+            [type]="'info'">
+            <div style="font-size: 1.2em">Last five execution times</div>
+            <div *ngFor="let time of executionTime">{{ time }}</div>
+          </d-alert>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="jobDescription"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.jobDescription"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button
+        class="mr-element-spacing"
+        [title]="scheduleForm.errorMessage || ''" circled="true"
+        style="margin-right: 8px"
+        dFormSubmit
+      >New
+      </d-button>
+      <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>

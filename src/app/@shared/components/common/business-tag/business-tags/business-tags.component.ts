@@ -9,7 +9,6 @@ import { BusinessTagVO } from '../../../../../@core/data/business-tag';
 })
 export class BusinessTagsComponent {
 
-  @Input()
-  businessTags: BusinessTagVO[];
+  @Input() businessTags: BusinessTagVO[];
 
 }

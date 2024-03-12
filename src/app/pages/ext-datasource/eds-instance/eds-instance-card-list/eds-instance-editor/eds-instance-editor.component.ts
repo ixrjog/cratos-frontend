@@ -12,8 +12,7 @@ import { EdsService } from '../../../../../@core/services/ext-datasource.service
 export class EdsInstanceEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: EdsInstanceVO;
 
   formRules: { [key: string]: DValidateRules } = {
@@ -29,7 +28,6 @@ export class EdsInstanceEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
-    console.log(this.formData)
   }
 
   addForm() {

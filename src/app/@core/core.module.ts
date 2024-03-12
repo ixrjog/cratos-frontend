@@ -18,6 +18,7 @@ import { ChannelNetworkService } from './services/channel-network.service';
 import { UserService } from './services/user.service';
 import { RbacService } from './services/rbac.service';
 import { EdsService } from './services/ext-datasource.service.s';
+import { EdsScheduleService } from './services/ext-datasource-schedule.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -42,6 +43,7 @@ export const CRATOS_PROVIDERS = [
   UserService,
   RbacService,
   EdsService,
+  EdsScheduleService,
 ];
 
 @NgModule({

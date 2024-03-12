@@ -25,8 +25,7 @@ export class BusinessTagEditorComponent implements OnInit {
   loading: boolean = false;
   businessTags: BusinessTagVO[];
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   businessType: string;
 
   dialogDate = {

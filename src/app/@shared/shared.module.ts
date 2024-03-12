@@ -30,6 +30,7 @@ import { BusinessDocsComponent } from './components/common/business-doc/business
 import { MarkdownModule } from 'ngx-markdown';
 import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 import { HighlightJsModule } from 'ngx-highlight-js';
+import { DrawerUtil } from './utils/drawer.util';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -57,6 +58,7 @@ const CRATOS_COMPONENTS = [
 
 const CRATOS_UTILS = [
   DialogUtil,
+  DrawerUtil,
   ToastUtil,
 ];
 @NgModule({

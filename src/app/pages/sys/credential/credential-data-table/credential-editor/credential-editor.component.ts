@@ -17,8 +17,7 @@ import { CredentialService } from '../../../../../@core/services/credential.serv
 export class CredentialEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: CredentialVO;
   operationType: boolean;
   credentialTypeOptions = [];

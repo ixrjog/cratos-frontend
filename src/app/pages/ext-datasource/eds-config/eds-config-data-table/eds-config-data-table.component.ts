@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { ChannelNetworkVO } from '../../../../@core/data/channel-network';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
@@ -17,7 +16,7 @@ import { EdsConfigEditorComponent } from './eds-config-editor/eds-config-editor.
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import {
-  EdsInstanceEditorComponent
+  EdsInstanceEditorComponent,
 } from '../../eds-instance/eds-instance-card-list/eds-instance-editor/eds-instance-editor.component';
 
 @Component({

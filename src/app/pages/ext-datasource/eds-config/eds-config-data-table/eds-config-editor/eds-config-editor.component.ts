@@ -19,8 +19,7 @@ export class EdsConfigEditorComponent implements OnInit {
   maxSize = '60%';
   orientation: SplitterOrientation = 'horizontal';
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: EdsConfigVO;
   edsTypeOptions = [];
 

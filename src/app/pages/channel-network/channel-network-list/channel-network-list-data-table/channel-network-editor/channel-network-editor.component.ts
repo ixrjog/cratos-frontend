@@ -17,8 +17,7 @@ import { ChannelNetworkService } from '../../../../../@core/services/channel-net
 export class ChannelNetworkEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: ChannelNetworkVO;
   channelStatusOptions = [
     ChannelStatusEnum.DEBUG,

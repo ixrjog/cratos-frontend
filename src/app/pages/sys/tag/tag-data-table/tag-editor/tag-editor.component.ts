@@ -12,8 +12,7 @@ import { TagEdit, TagVO } from '../../../../../@core/data/tag';
 export class TagEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input()
-  data: any;
+  @Input() data: any;
   formData: TagVO;
   tagFormGroup: FormGroup;
   operationType: boolean;

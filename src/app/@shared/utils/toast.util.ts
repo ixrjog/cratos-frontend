@@ -14,6 +14,13 @@ export class ToastUtil {
     });
   }
 
+  onErrorToast(content: string) {
+    this.toastService.open({
+      value: [ { severity: 'error', summary: 'Error', content: content } ],
+      life: 2000,
+    });
+  }
+
 }
 
 export const TOAST_CONTENT = {

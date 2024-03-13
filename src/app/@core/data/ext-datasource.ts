@@ -48,8 +48,8 @@ export interface EdsAssetVO extends BaseVO, ValidVO {
   description: string;
   originalModel: string;
   originalAsset: any;
+  toBusiness: ToBusiness;
 }
-
 
 export interface InstancePageQuery extends PageQuery {
   queryName: string;
@@ -105,9 +105,21 @@ export interface RegisterInstance {
   comment: string;
 }
 
-export interface importInstanceAsset {
+export interface ImportInstanceAsset {
   instanceId: number;
   assetType: string;
+}
+
+export interface ToBusiness {
+  businessType: string;
+  businessId: number;
+  assetId: number;
+  bind: boolean;
+}
+
+export interface AssetToBusiness {
+  toBusiness: ToBusiness;
+  target: any;
 }
 
 export abstract class EdsData {
@@ -136,7 +148,7 @@ export abstract class EdsData {
 
   abstract deleteEdsInstanceAssetById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
-  abstract importEdsInstanceAsset(param: importInstanceAsset): Observable<HttpResult<Boolean>>;
+  abstract importEdsInstanceAsset(param: ImportInstanceAsset): Observable<HttpResult<Boolean>>;
 
   abstract setEdsConfigValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
@@ -145,6 +157,8 @@ export abstract class EdsData {
   abstract setEdsInstanceAssetValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>>;
+
+  abstract getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>>
 
 }
 

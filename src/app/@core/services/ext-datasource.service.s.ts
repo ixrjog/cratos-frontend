@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
   AssetPageQuery,
+  AssetToBusiness,
   EdsAssetVO,
   EdsConfigEdit,
   EdsConfigPageQuery,
   EdsConfigVO,
   EdsData,
   EdsInstanceVO,
-  importInstanceAsset,
+  ImportInstanceAsset,
   InstanceEdit,
   InstancePageQuery,
   RegisterInstance,
@@ -47,7 +48,7 @@ export class EdsService extends EdsData {
     return this.apiService.get('/eds/config/get', param);
   }
 
-  importEdsInstanceAsset(param: importInstanceAsset): Observable<HttpResult<Boolean>> {
+  importEdsInstanceAsset(param: ImportInstanceAsset): Observable<HttpResult<Boolean>> {
     return this.apiService.post('/eds/instance/asset/import', param);
   }
 
@@ -89,6 +90,10 @@ export class EdsService extends EdsData {
 
   queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>> {
     return this.apiService.post('/eds/instance/asset/query', param);
+  }
+
+  getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>> {
+    return this.apiService.get('/eds/asset/to/business/target/get', param);
   }
 
 }

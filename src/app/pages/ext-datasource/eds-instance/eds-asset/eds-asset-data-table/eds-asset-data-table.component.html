@@ -63,10 +63,17 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'100px'">
+    <d-column header="Actions" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
+            <d-icon
+              *ngIf="rowItem['toBusiness'] !== null && !rowItem['toBusiness']['bind']"
+              [icon]="'icon-import'"
+              [operable]="true"
+              (click)="onRowImport(rowItem)"
+            >
+            </d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"

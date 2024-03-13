@@ -45,4 +45,5 @@ Thumbs.db
 yarn.lock
 package-lock.json
 
+ossutil_output/
 *.report

@@ -15,7 +15,7 @@
     <a
       class="devui-dropdown-item"
       [routerLink]="['/pages', 'eds', 'instance']"
-    ><i class="icon icon-module"></i>{{ edsInstance?.instanceName }}</a>
+    ><i class="icon icon-module" style="margin-right: 5px"></i>{{ edsInstance?.instanceName }}</a>
   </h2>
   <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
     <d-tab *ngFor="let item of assetTypes" [id]="item">

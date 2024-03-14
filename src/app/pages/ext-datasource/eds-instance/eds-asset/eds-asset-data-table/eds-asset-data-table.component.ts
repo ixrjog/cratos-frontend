@@ -11,7 +11,7 @@ import { AssetPageQuery, EdsAssetVO, ImportInstanceAsset } from '../../../../../
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { UserEditorComponent } from '../../../../user/user-list/user-list-data-table/user-editor/user-editor.component';
 import {
-  CertificateEditorComponent
+  CertificateEditorComponent,
 } from '../../../../certificate/certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
 
 @Component({
@@ -128,7 +128,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
         }
         this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
-        }, body.target);
+        }, body.target, { fromAssetId: rowItem.id });
       });
   }
 

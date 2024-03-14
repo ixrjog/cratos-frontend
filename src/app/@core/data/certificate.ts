@@ -29,7 +29,8 @@ export interface CertificateEdit {
   notBefore: Date;
   notAfter: Date;
   valid: boolean;
-  comment?: string;
+  comment: string;
+  fromAssetId?: number;
 }
 
 export abstract class CertificateData {

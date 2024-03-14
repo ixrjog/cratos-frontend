@@ -37,6 +37,7 @@ export interface UserEdit {
   comment: string;
   expiredTime: Date;
   valid: boolean;
+  fromAssetId?: number;
 }
 
 export interface ResetPassword {

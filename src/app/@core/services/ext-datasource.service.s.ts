@@ -41,7 +41,7 @@ export class EdsService extends EdsData {
   }
 
   deleteEdsInstanceAssetById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete('/eds/instance/asset/del', param);
+    return this.apiService.delete('/eds/asset/del', param);
   }
 
   getEdsConfigById(param: { configId: number }): Observable<HttpResult<EdsConfigVO>> {

@@ -3,7 +3,7 @@ import { DFormGroupRuleDirective, FormLayout } from 'ng-devui/form';
 import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CertificateEdit, CertificateVO } from 'src/app/@core/data/certificate';
 import { CertificateService } from '../../../../../@core/services/certificate.service';
-import { DatePipe, DValidateRules } from 'ng-devui';
+import { DValidateRules } from 'ng-devui';
 
 @Component({
   selector: 'app-certificate-editor',
@@ -17,6 +17,7 @@ export class CertificateEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
   formData: CertificateVO;
+  fromAssetId: number;
   certificateFormGroup: FormGroup;
   operationType: boolean;
 
@@ -43,13 +44,13 @@ export class CertificateEditorComponent implements OnInit {
   };
 
   constructor(
-    private certificateService: CertificateService,
-    private datePipe: DatePipe) {
+    private certificateService: CertificateService) {
   }
 
   ngOnInit(): void {
     this.operationType = this.data['operationType'];
     this.formData = this.data['formData'];
+    this.fromAssetId = this.data['fromAssetId'];
     this.certificateFormGroup = new UntypedFormGroup({
       id: new UntypedFormControl(this.formData.id ? this.formData.id : null),
       certificateId: new UntypedFormControl(this.formData.certificateId),
@@ -69,6 +70,7 @@ export class CertificateEditorComponent implements OnInit {
       ...this.certificateFormGroup.value,
       notBefore: Date.parse(this.certificateFormGroup.get('notBefore').value),
       notAfter: Date.parse(this.certificateFormGroup.get('notAfter').value),
+      fromAssetId: this.fromAssetId,
     };
     return this.certificateService.addCertificate(param);
   }

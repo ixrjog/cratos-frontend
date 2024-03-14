@@ -7,6 +7,7 @@ import {
   RbacGroupVO,
   RbacResourceEdit,
   RbacResourceVO,
+  RbacRoleEdit,
   RbacRoleVO,
   ResourcePageQuery,
   RolePageQuery,
@@ -41,6 +42,10 @@ export class RbacService extends RbacData {
     return this.apiService.delete('/rbac/group/del', param);
   }
 
+  deleteRoleById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete('/rbac/role/del', param);
+  }
+
   updateResource(param: RbacResourceEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put('/rbac/resource/update', param);
   }
@@ -51,4 +56,13 @@ export class RbacService extends RbacData {
   setResourceValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam('/rbac/resource/valid/set', param);
   }
+
+  addRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put('/rbac/role/update', param);
+  }
+
+  updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.post('/rbac/role/add', param);
+  }
+
 }

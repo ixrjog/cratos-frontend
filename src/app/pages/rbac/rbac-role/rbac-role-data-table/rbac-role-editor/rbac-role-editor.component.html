@@ -1,1 +1,51 @@
-<p>rbac-role-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Role Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="groupName"
+          [(ngModel)]="formData.roleName"
+          [dValidateRules]="formRules['roleName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Access Level</d-form-label>
+      <d-form-control>
+        <d-input-number
+          name="accessLevel"
+          [min]="1"
+          [max]="99"
+          [allowEmpty]="false"
+          [(ngModel)]="formData.accessLevel"
+          class="input-number"
+        ></d-input-number>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>WorkOrder Visible</d-form-label>
+      <d-form-control>
+        <d-toggle name="workOrderVisible" [(ngModel)]="formData.workOrderVisible"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

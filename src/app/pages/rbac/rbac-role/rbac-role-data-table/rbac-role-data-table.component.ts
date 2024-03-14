@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
-import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { CertificateVO } from '../../../../@core/data/certificate';
-import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
-import { Observable, zip } from 'rxjs';
-import { RbacRoleVO, RolePageQuery } from '../../../../@core/data/rbac';
+import { RbacRoleEdit, RbacRoleVO, RolePageQuery } from '../../../../@core/data/rbac';
 import { RbacRoleEditorComponent } from './rbac-role-editor/rbac-role-editor.component';
 import { RbacService } from '../../../../@core/services/rbac.service';
 
@@ -28,8 +26,6 @@ export class RbacRoleDataTableComponent implements OnInit {
     ...TABLE_DATA,
   };
 
-
-
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
@@ -41,6 +37,10 @@ export class RbacRoleDataTableComponent implements OnInit {
     content: {
       ...DIALOG_DATA.content,
     },
+  };
+
+  newRbacRole: RbacRoleEdit = {
+    accessLevel: 1, comment: '', roleName: '', workOrderVisible: false,
   };
 
   constructor(
@@ -73,60 +73,38 @@ export class RbacRoleDataTableComponent implements OnInit {
     this.fetchData();
   }
 
-  // onRowNew() {
-  //   const dialogDate = {
-  //     ...this.dialogDate.editorData,
-  //     title: 'New Certificate',
-  //   };
-  //   this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
-  //     this.fetchData();
-  //   }, this.newCertificate);
-  // }
-
-  onRowEdit(rowItem: CertificateVO) {
+  onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Certificate',
+      title: 'New RBAC Role',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, this.newRbacRole);
+  }
+
+  onRowEdit(rowItem: RbacRoleVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit RBAC Role',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, {
-      ...rowItem,
-      notAfter: new Date(rowItem.notAfter),
-      notBefore: new Date(rowItem.notBefore),
-    });
+    }, rowItem);
   }
 
-
-  // onRowDelete(rowItem: CertificateVO) {
-  //   const dialogDate = {
-  //     ...this.dialogDate.warningOperateData,
-  //     content: this.dialogDate.content.delete,
-  //   };
-  //   this.dialogUtil.onDialog(dialogDate, () => {
-  //     this.certificateService.deleteCertificateById({ id: rowItem.id })
-  //       .subscribe(() => {
-  //         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-  //         this.fetchData();
-  //       });
-  //   });
-  // }
-
-  // onBatchDelete() {
-  //   const dialogDate = {
-  //     ...this.dialogDate.warningOperateData,
-  //     content: this.dialogDate.content.batchDelete,
-  //   };
-  //   this.dialogUtil.onDialog(dialogDate, () => {
-  //     let obList: Observable<HttpResult<Boolean>>[] = [];
-  //     this.datatable.getCheckedRows().map(row => {
-  //       obList.push(this.certificateService.deleteCertificateById({ id: row.id }));
-  //     });
-  //     zip(obList).subscribe(() => {
-  //       this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
-  //       this.fetchData();
-  //     });
-  //   });
-  // }
+  onRowDelete(rowItem: RbacRoleVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.rbacService.deleteRoleById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
+  }
 
 }

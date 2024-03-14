@@ -48,6 +48,14 @@ export interface RbacGroupEdit {
   comment: string;
 }
 
+export interface RbacRoleEdit {
+  id?: number;
+  roleName: string;
+  accessLevel: number;
+  workOrderVisible: boolean;
+  comment: string;
+}
+
 export interface RolePageQuery extends PageQuery {
   roleName: string;
 }
@@ -74,9 +82,16 @@ export abstract class RbacData {
 
   abstract deleteGroupById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract deleteRoleById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
   abstract updateResource(param: RbacResourceEdit): Observable<HttpResult<Boolean>>;
 
   abstract updateGroup(param: RbacGroupEdit): Observable<HttpResult<Boolean>>;
 
   abstract setResourceValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract addRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>>;
+
+  abstract updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>>;
+
 }

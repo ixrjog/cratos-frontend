@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { TagService } from '../../../../@core/services/tag.service';
 import { TagEdit, TagPageQuery, TagVO } from '../../../../@core/data/tag';
@@ -26,7 +26,13 @@ export class TagDataTableComponent implements OnInit {
   };
 
   newTag: TagEdit = {
-    color: '#000000', promptColor: 'BLACK', seq: 1, tagKey: '', tagType: 'CUSTOM', valid: true,
+    color: '#000000',
+    promptColor: 'BLACK',
+    seq: 1,
+    tagKey: '',
+    tagType: 'CUSTOM',
+    valid: true,
+    comment: '',
   };
 
   dialogDate = {

@@ -33,6 +33,21 @@ export interface RbacResourceVO extends BaseVO, ValidVO {
   comment: string;
 }
 
+export interface RbacResourceEdit {
+  id: number;
+  groupId: number;
+  resourceName: string;
+  uiPoint: boolean;
+  comment: string;
+}
+
+export interface RbacGroupEdit {
+  id: number;
+  groupName: string;
+  base: string;
+  comment: string;
+}
+
 export interface RolePageQuery extends PageQuery {
   roleName: string;
 }
@@ -59,4 +74,9 @@ export abstract class RbacData {
 
   abstract deleteGroupById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract updateResource(param: RbacResourceEdit): Observable<HttpResult<Boolean>>;
+
+  abstract updateGroup(param: RbacGroupEdit): Observable<HttpResult<Boolean>>;
+
+  abstract setResourceValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 }

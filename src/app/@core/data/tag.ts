@@ -26,7 +26,7 @@ export interface TagEdit {
   promptColor: string;
   seq: number;
   valid: boolean;
-  comment?: string;
+  comment: string;
 }
 
 export abstract class TagData {

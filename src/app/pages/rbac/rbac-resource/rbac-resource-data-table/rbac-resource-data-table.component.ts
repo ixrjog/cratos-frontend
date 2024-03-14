@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { RbacResourceVO, ResourcePageQuery } from '../../../../@core/data/rbac';
+import { GroupPageQuery, RbacGroupVO, RbacResourceVO, ResourcePageQuery } from '../../../../@core/data/rbac';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { RbacService } from '../../../../@core/services/rbac.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
-import { onFetchData } from '../../../../@shared/utils/data-table.utli';
+import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import { RbacResourceEditorComponent } from './rbac-resource-editor/rbac-resource-editor.component';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rbac-resource-data-table',
@@ -23,6 +24,7 @@ export class RbacResourceDataTableComponent implements OnInit {
     valid: null,
     groupId: null,
   };
+  group: RbacGroupVO = null;
   limit = RELATIVE_TIME_LIMIT;
   table: Table<RbacResourceVO> = {
     ...TABLE_DATA,
@@ -57,6 +59,22 @@ export class RbacResourceDataTableComponent implements OnInit {
     onFetchData(this.table, this.rbacService.queryResourcePage(param));
   }
 
+  onSearchRbacGroup = (term: string) => {
+    const param: GroupPageQuery = {
+      length: 20, page: 1, queryName: term,
+    };
+    return this.rbacService.queryGroupPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((group, index) => ({ id: index, option: group })),
+        ),
+      );
+  };
+
+  onRbacGroupChange(rbacGroupVO: RbacGroupVO) {
+    this.queryParam.groupId = rbacGroupVO.id;
+  }
+
   ngOnInit() {
     this.fetchData();
   }
@@ -79,6 +97,13 @@ export class RbacResourceDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
+  }
+
+  onRowValid(rowItem: RbacResourceVO) {
+    this.rbacService.setResourceValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
   }
 
   onRowDelete(rowItem: RbacResourceVO) {
@@ -112,4 +137,5 @@ export class RbacResourceDataTableComponent implements OnInit {
     });
   }
 
+  protected readonly getRowColor = getRowColor;
 }

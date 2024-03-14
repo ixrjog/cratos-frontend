@@ -1,1 +1,42 @@
-<p>rbac-group-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Group Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="groupName"
+          [(ngModel)]="formData.groupName"
+          [dValidateRules]="formRules['groupName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Base URL</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="base"
+          [(ngModel)]="formData.base"
+          [dValidateRules]="formRules['base']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

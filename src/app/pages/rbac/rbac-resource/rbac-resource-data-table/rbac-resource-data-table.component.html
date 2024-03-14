@@ -4,9 +4,20 @@
     [(ngModel)]="queryParam.queryName"
     [iconPosition]="'left'"
     (searchFn)="fetchData()"
-    (change)="fetchData()"
   >
   </d-search>
+  <d-select
+    class="select"
+    [allowClear]="true"
+    [filterKey]="'groupName'"
+    [appendToBody]="true"
+    [(ngModel)]="group"
+    [searchFn]="onSearchRbacGroup"
+    [isSearch]="true"
+    placeholder="Select rbacGroup"
+    (valueChange)="onRbacGroupChange($event)"
+  >
+  </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
@@ -45,6 +56,13 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
             <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
           </d-icon-group>
         </ng-template>

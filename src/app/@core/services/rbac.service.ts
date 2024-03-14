@@ -3,7 +3,9 @@ import { ApiService } from './api.service';
 import {
   GroupPageQuery,
   RbacData,
+  RbacGroupEdit,
   RbacGroupVO,
+  RbacResourceEdit,
   RbacResourceVO,
   RbacRoleVO,
   ResourcePageQuery,
@@ -39,4 +41,14 @@ export class RbacService extends RbacData {
     return this.apiService.delete('/rbac/group/del', param);
   }
 
+  updateResource(param: RbacResourceEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put('/rbac/resource/update', param);
+  }
+  updateGroup(param: RbacGroupEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put('/rbac/group/update', param);
+  }
+
+  setResourceValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam('/rbac/resource/valid/set', param);
+  }
 }

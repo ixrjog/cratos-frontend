@@ -1,1 +1,64 @@
-<p>rbac-resource-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label>RBAC Group</d-form-label>
+      <d-form-control>
+        <d-select
+          name="rbacGroup"
+          [allowClear]="true"
+          [filterKey]="'groupName'"
+          [appendToBody]="true"
+          [(ngModel)]="formData.rbacGroup"
+          [searchFn]="onSearchRbacGroup"
+          [isSearch]="true"
+          placeholder="Select rbacGroup"
+          (valueChange)="onRbacGroupChange($event)"
+        >
+        </d-select>
+        <d-alert
+          style="margin-top: 10px"
+          [type]="'info'"
+          [closeable]="false"
+        >
+          <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="formData.rbacGroup?.base" [position]="'right'">
+            <span iconPrefix>{{ formData.rbacGroup?.base }}</span>
+          </d-icon>
+        </d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Resource Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="resourceName"
+          [(ngModel)]="formData.resourceName"
+          [dValidateRules]="formRules['resourceName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>UI Point</d-form-label>
+      <d-form-control>
+        <d-toggle name="uiPoint" [(ngModel)]="formData.uiPoint"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -1,1 +1,62 @@
-<p>rbac-role-config works!</p>
+<div class="spacing-search">
+  <d-select
+    class="select"
+    [allowClear]="true"
+    [filterKey]="'roleName'"
+    [appendToBody]="true"
+    [(ngModel)]="role"
+    [searchFn]="onSearchRbacRole"
+    [isSearch]="true"
+    placeholder="Select rbacRole"
+    (valueChange)="onRbacRoleChange($event)"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    [allowClear]="true"
+    [filterKey]="'groupName'"
+    [appendToBody]="true"
+    [(ngModel)]="group"
+    [searchFn]="onSearchRbacGroup"
+    [isSearch]="true"
+    placeholder="Select rbacGroup"
+    (valueChange)="onRbacGroupChange($event)"
+  >
+  </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!(role &&group)">Filter</d-button>
+</div>
+
+<div style="height: 100%">
+  <d-transfer
+    [customSourceCheckedLen]="sourceCheckedLen"
+    [customTargetCheckedLen]="targetCheckedLen"
+    (transferToTarget)="transferToTarget()"
+    (transferToSource)="transferToSource()"
+    [titles]="{ source: 'Source', target: 'Target' }"
+  >
+    <ng-template #sourceTemplate>
+      <div class="title font-color-name">Unauthorized</div>
+      <div class="line"></div>
+      <div class="content" style="height: 320px; overflow: auto">
+        <app-rbac-role-resource-data-table
+          #sourceTable
+          [groupId]="queryParam.groupId"
+          [roleId]="queryParam.roleId"
+          [inRole]="false"
+        ></app-rbac-role-resource-data-table>
+      </div>
+    </ng-template>
+    <ng-template #targetTemplate>
+      <div class="title font-color-name">Authorized</div>
+      <div class="line"></div>
+      <div class="content" style="height: 320px; overflow: auto">
+        <app-rbac-role-resource-data-table
+          #targetTable
+          [groupId]="queryParam.groupId"
+          [roleId]="queryParam.roleId"
+          [inRole]="true"
+        ></app-rbac-role-resource-data-table>
+      </div>
+    </ng-template>
+  </d-transfer>
+</div>

@@ -10,7 +10,7 @@ import {
   RbacRoleEdit,
   RbacRoleVO,
   ResourcePageQuery,
-  RolePageQuery,
+  RolePageQuery, RoleResourcePageQuery,
 } from '../data/rbac';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -63,6 +63,10 @@ export class RbacService extends RbacData {
 
   updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post('/rbac/role/add', param);
+  }
+
+  queryRoleResourcePage(param: RoleResourcePageQuery): Observable<DataTable<RbacResourceVO>> {
+    return this.apiService.post('/rbac/role/resource/page/query', param);
   }
 
 }

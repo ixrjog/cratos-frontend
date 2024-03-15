@@ -1,0 +1,39 @@
+<div class="spacing-search">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column header="RBAC Group">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem.rbacGroup?.groupName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="resourceName" header="Resource Name"></d-column>
+    <d-column field="valid" header="Valid"></d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <ng-template #noResultTemplateRef>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

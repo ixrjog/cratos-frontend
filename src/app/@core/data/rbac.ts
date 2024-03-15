@@ -70,6 +70,12 @@ export interface ResourcePageQuery extends PageQuery {
   groupId: number;
 }
 
+export interface RoleResourcePageQuery extends PageQuery {
+  groupId: number;
+  roleId: number;
+  inRole: boolean;
+}
+
 export abstract class RbacData {
 
   abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;
@@ -93,5 +99,7 @@ export abstract class RbacData {
   abstract addRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>>;
 
   abstract updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>>;
+
+  abstract queryRoleResourcePage(param: RoleResourcePageQuery): Observable<DataTable<RbacResourceVO>>;
 
 }

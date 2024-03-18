@@ -25,9 +25,7 @@ export class UserListDataTableComponent implements OnInit {
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
 
-  table: Table<UserVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newUser: UserEdit = {
     comment: '',

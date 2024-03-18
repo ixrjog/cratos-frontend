@@ -37,25 +37,85 @@
     <ng-template #sourceTemplate>
       <div class="title font-color-name">Unauthorized</div>
       <div class="line"></div>
-      <div class="content" style="height: 320px; overflow: auto">
-        <app-rbac-role-resource-data-table
-          #sourceTable
-          [groupId]="queryParam.groupId"
-          [roleId]="queryParam.roleId"
-          [inRole]="false"
-        ></app-rbac-role-resource-data-table>
+      <div class="content" style="height: 100%; overflow: auto">
+        <div class="spacing-search">
+          <d-data-table
+            dLoading
+            #sourceTable
+            [dataSource]="sourceTableData.data"
+            [tableOverflowType]="'overlay'"
+            [backdrop]="true"
+            [scrollable]="true"
+            [loadingStyle]="'infinity'"
+            [loading]="sourceTableData.loading"
+            [checkable]="true"
+            (rowCheckChange)="sourceRowCheckChange($event)"
+            (checkAllChange)="sourceCheckAllChange()"
+          >
+            <d-column field="resourceName" header="Resource Name"></d-column>
+            <d-column field="valid" header="Valid"></d-column>
+            <d-column field="comment" header="Comment"></d-column>
+            <ng-template #noResultTemplateRef>
+              <div class="no-data"></div>
+            </ng-template>
+          </d-data-table>
+        </div>
+        <div class="spacing-pagination">
+          <d-pagination
+            class="pagination"
+            [total]="sourceTableData.pager.total"
+            [(pageSize)]="sourceTableData.pager.pageSize"
+            [(pageIndex)]="sourceTableData.pager.pageIndex"
+            [canViewTotal]="true"
+            [canChangePageSize]="true"
+            [maxItems]="5"
+            (pageIndexChange)="sourcePageIndexChange($event)"
+            (pageSizeChange)="sourcePageSizeChange($event)"
+          >
+          </d-pagination>
+        </div>
       </div>
     </ng-template>
     <ng-template #targetTemplate>
       <div class="title font-color-name">Authorized</div>
       <div class="line"></div>
-      <div class="content" style="height: 320px; overflow: auto">
-        <app-rbac-role-resource-data-table
-          #targetTable
-          [groupId]="queryParam.groupId"
-          [roleId]="queryParam.roleId"
-          [inRole]="true"
-        ></app-rbac-role-resource-data-table>
+      <div class="content" style="height: 100%; overflow: auto">
+        <div class="spacing-search">
+          <d-data-table
+            dLoading
+            #targetTable
+            [dataSource]="targetTableData.data"
+            [tableOverflowType]="'overlay'"
+            [backdrop]="true"
+            [scrollable]="true"
+            [loadingStyle]="'infinity'"
+            [loading]="targetTableData.loading"
+            [checkable]="true"
+            (rowCheckChange)="targetRowCheckChange($event)"
+            (checkAllChange)="targetCheckAllChange()"
+          >
+            <d-column field="resourceName" header="Resource Name"></d-column>
+            <d-column field="valid" header="Valid"></d-column>
+            <d-column field="comment" header="Comment"></d-column>
+            <ng-template #noResultTemplateRef>
+              <div class="no-data"></div>
+            </ng-template>
+          </d-data-table>
+        </div>
+        <div class="spacing-pagination">
+          <d-pagination
+            class="pagination"
+            [total]="targetTableData.pager.total"
+            [(pageSize)]="targetTableData.pager.pageSize"
+            [(pageIndex)]="targetTableData.pager.pageIndex"
+            [canViewTotal]="true"
+            [canChangePageSize]="true"
+            [maxItems]="5"
+            (pageIndexChange)="targetPageIndexChange($event)"
+            (pageSizeChange)="targetPageSizeChange($event)"
+          >
+          </d-pagination>
+        </div>
       </div>
     </ng-template>
   </d-transfer>

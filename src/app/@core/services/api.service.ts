@@ -31,6 +31,10 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}${url}` + this.initGetParams(params), { headers: this.headers });
   }
 
+  deleteByBody(url: string, data: object = {}): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${url}`, { body: JSON.stringify(data), headers: this.headers });
+  }
+
   get headers(): HttpHeaders {
     const headersConfig: any = {
       'Content-Type': 'application/json',

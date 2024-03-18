@@ -28,9 +28,7 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
   };
   businessType: string = BusinessTypeEnum.CHANNEL_NETWORK;
 
-  table: Table<ChannelNetworkVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<ChannelNetworkVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newChannelNetwork: ChannelNetworkEdit = {
     availableStatus: '',

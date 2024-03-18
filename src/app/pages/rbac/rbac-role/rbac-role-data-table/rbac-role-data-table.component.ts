@@ -22,9 +22,7 @@ export class RbacRoleDataTableComponent implements OnInit {
   };
   limit = RELATIVE_TIME_LIMIT;
 
-  table: Table<RbacRoleVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<RbacRoleVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
     editorData: {

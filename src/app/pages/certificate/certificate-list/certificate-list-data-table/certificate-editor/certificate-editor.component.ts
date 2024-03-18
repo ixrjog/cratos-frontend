@@ -22,7 +22,7 @@ export class CertificateEditorComponent implements OnInit {
   operationType: boolean;
 
   certificateTypeOptions = [
-    'AWS', 'ALIYUN',
+    'AWS_CERT', 'ALIYUN_CERT', 'CLOUDFLARE_CERT', 'CUSTOM_CERT',
   ];
 
   formRules: { [key: string]: DValidateRules } = {

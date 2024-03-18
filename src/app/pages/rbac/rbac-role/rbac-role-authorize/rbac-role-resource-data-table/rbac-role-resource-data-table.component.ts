@@ -18,9 +18,7 @@ export class RbacRoleResourceDataTableComponent {
   @Input() roleId: number;
   @Input() inRole: boolean;
 
-  table: Table<RbacResourceVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<RbacResourceVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   constructor(private rbacService: RbacService) {
   }
@@ -44,10 +42,6 @@ export class RbacRoleResourceDataTableComponent {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
-  }
-
-  getCheckedRows(): any[] {
-    return this.datatable.getCheckedRows();
   }
 
 }

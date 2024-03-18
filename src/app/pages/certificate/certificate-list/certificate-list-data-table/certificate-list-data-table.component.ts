@@ -25,9 +25,7 @@ export class CertificateListDataTableComponent implements OnInit {
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
-  table: Table<CertificateVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<CertificateVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newCertificate: CertificateEdit = {
     certificateId: '',

@@ -21,9 +21,7 @@ export class TagDataTableComponent implements OnInit {
     tagKey: '',
   };
 
-  table: Table<TagVO> = {
-    ...TABLE_DATA
-  };
+  table: Table<TagVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newTag: TagEdit = {
     color: '#000000',

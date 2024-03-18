@@ -32,9 +32,7 @@ export class CredentialDataTableComponent implements OnInit {
     credentialType: '',
   };
 
-  table: Table<CredentialVO> = {
-    ...TABLE_DATA
-  };
+  table: Table<CredentialVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
     editorData: {

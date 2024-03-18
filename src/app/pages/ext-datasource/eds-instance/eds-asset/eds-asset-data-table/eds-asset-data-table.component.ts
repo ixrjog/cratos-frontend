@@ -34,9 +34,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
 
   limit = RELATIVE_TIME_LIMIT;
 
-  table: Table<EdsAssetVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<EdsAssetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
     editorData: {

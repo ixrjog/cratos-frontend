@@ -24,9 +24,7 @@ export class RbacGroupDataTableComponent implements OnInit {
   };
   limit = RELATIVE_TIME_LIMIT;
 
-  table: Table<RbacGroupVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<RbacGroupVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
     editorData: {

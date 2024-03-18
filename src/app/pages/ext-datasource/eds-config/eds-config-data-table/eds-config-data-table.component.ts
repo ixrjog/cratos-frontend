@@ -34,9 +34,7 @@ export class EdsConfigDataTableComponent implements OnInit {
   };
   businessType: string = BusinessTypeEnum.EDS_CONFIG;
 
-  table: Table<EdsConfigVO> = {
-    ...TABLE_DATA,
-  };
+  table: Table<EdsConfigVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newEdsConfig: EdsConfigEdit = {
     comment: '',

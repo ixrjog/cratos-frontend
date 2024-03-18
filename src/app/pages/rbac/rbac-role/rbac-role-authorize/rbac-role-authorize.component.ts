@@ -1,10 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { GroupPageQuery, RbacGroupVO, RbacRoleVO, RolePageQuery } from '../../../../@core/data/rbac';
+import {
+  GroupPageQuery,
+  RbacGroupVO,
+  RbacResourceVO,
+  RbacRoleVO,
+  RolePageQuery,
+  RoleResourceEdit,
+  RoleResourcePageQuery,
+} from '../../../../@core/data/rbac';
 import { map } from 'rxjs/operators';
 import { RbacService } from '../../../../@core/services/rbac.service';
-import {
-  RbacRoleResourceDataTableComponent,
-} from './rbac-role-resource-data-table/rbac-role-resource-data-table.component';
+import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { onFetchData } from '../../../../@shared/utils/data-table.utli';
+import { DataTableComponent } from 'ng-devui';
 
 @Component({
   selector: 'app-rbac-role-authorize',
@@ -18,21 +26,56 @@ export class RbacRoleAuthorizeComponent {
     roleId: null,
   };
 
+  sourceTableData: Table<RbacResourceVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  targetTableData: Table<RbacResourceVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
   group: RbacGroupVO;
   role: RbacRoleVO;
 
   sourceCheckedLen = 0;
   targetCheckedLen = 0;
 
-  @ViewChild('sourceTable') sourceTable: RbacRoleResourceDataTableComponent;
-  @ViewChild('targetTable') targetTable: RbacRoleResourceDataTableComponent;
+  @ViewChild('sourceTable') sourceTable: DataTableComponent;
+  @ViewChild('targetTable') targetTable: DataTableComponent;
 
   constructor(private rbacService: RbacService) {
   }
 
   fetchData() {
-    this.sourceTable.fetchData();
-    this.targetTable.fetchData();
+    if ((this.role && this.group)) {
+      this._fetchData(false, this.sourceTableData);
+      this._fetchData(true, this.targetTableData);
+    }
+  }
+
+  _fetchData(inRole: boolean, table: Table<RbacResourceVO>) {
+    const param: RoleResourcePageQuery = {
+      ...this.queryParam,
+      inRole: inRole,
+      page: table.pager.pageIndex,
+      length: table.pager.pageSize,
+    };
+    onFetchData(table, this.rbacService.queryRoleResourcePage(param));
+  }
+
+  sourcePageIndexChange(pageIndex) {
+    this.sourceTableData.pager.pageIndex = pageIndex;
+    this.fetchData();
+  }
+
+  sourcePageSizeChange(pageSize) {
+    this.sourceTableData.pager.pageSize = pageSize;
+    this.fetchData();
+  }
+
+  targetPageIndexChange(pageIndex) {
+    this.targetTableData.pager.pageIndex = pageIndex;
+    this.fetchData();
+  }
+
+  targetPageSizeChange(pageSize) {
+    this.targetTableData.pager.pageSize = pageSize;
+    this.fetchData();
   }
 
   onSearchRbacGroup = (term: string) => {
@@ -67,18 +110,48 @@ export class RbacRoleAuthorizeComponent {
     this.queryParam.roleId = rbacRoleVO.id;
   }
 
+  sourceRowCheckChange(event: any) {
+    this.sourceCheckedLen = this.sourceTable.getCheckedRows().length;
+  }
+
+  targetRowCheckChange(event: any) {
+    this.targetCheckedLen = this.targetTable.getCheckedRows().length;
+  }
+
+  sourceCheckAllChange() {
+    this.sourceCheckedLen = this.sourceTable.getCheckedRows().length;
+  }
+
+  targetCheckAllChange() {
+    this.targetCheckedLen = this.targetTable.getCheckedRows().length;
+  }
+
   transferToTarget() {
-    const checkedRows = this.sourceTable.getCheckedRows();
-    this.targetCheckedLen = checkedRows.length;
-    // Set this parameter to 0.
-    this.sourceCheckedLen = 0;
+    const checkedRows: RbacResourceVO[] = this.sourceTable.getCheckedRows();
+    const param: RoleResourceEdit = {
+      roleId: this.role.id,
+      resourceIds: checkedRows.map(resource => resource.id),
+    };
+    this.rbacService.addRoleResource(param)
+      .subscribe(() => {
+        this.fetchData();
+        this.targetCheckedLen = 0;
+        this.sourceCheckedLen = 0;
+      });
   }
 
   transferToSource() {
-    const checkedRows = this.targetTable.getCheckedRows();
-    this.sourceCheckedLen = checkedRows.length;
-    // Set this parameter to 0.
-    this.targetCheckedLen = 0;
+    const checkedRows: RbacResourceVO[] = this.targetTable.getCheckedRows();
+    const param: RoleResourceEdit = {
+      roleId: this.role.id,
+      resourceIds: checkedRows.map(resource => resource.id),
+    };
+    this.rbacService.deleteRoleResource(param)
+      .subscribe(() => {
+        this.fetchData();
+        this.targetCheckedLen = 0;
+        this.sourceCheckedLen = 0;
+      });
   }
 
 }

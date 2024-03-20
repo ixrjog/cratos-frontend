@@ -54,12 +54,26 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span class="font-color-name" style="margin-right: 5px">Last Login</span>
-          <span>{{ rowItem['lastLogin'] }}</span>
+          <span>{{ rowItem['lastLogin'] | dSafeNullPipe }}</span>
           <strong style="margin-left: 5px">{{ rowItem['lastLogin'] | dRelativeTime: limit | async }}</strong>
           <br>
           <span class="font-color-name" style="margin-right: 5px">Create Time</span>
           <span>{{ rowItem['createTime'] }}</span>
           <strong style="margin-left: 5px">{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="RBAC" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div [style.width.px]="180">
+            <d-tags
+              [tags]="rowItem['rbacRoles']"
+              [displayProperty]="'roleName'"
+              [titleProperty]="'accessLevel'"
+              [hideBeyondTags]="true"
+            ></d-tags>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

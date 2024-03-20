@@ -35,4 +35,8 @@ export class UserService extends UserData {
     return undefined;
   }
 
+  getUserByUsername(param: { username: string }): Observable<HttpResult<UserVO>> {
+    return this.apiService.get('/user/username/get', param);
+  }
+
 }

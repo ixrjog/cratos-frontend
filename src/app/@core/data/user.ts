@@ -63,4 +63,6 @@ export abstract class UserData {
 
   abstract inactiveUser(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract getUserByUsername(param: { username: string }): Observable<HttpResult<UserVO>>;
+
 }

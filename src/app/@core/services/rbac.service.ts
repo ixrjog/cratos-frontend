@@ -13,6 +13,7 @@ import {
   RolePageQuery,
   RoleResourceEdit,
   RoleResourcePageQuery,
+  UserRoleEdit,
 } from '../data/rbac';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -77,6 +78,14 @@ export class RbacService extends RbacData {
 
   deleteRoleResource(param: RoleResourceEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.deleteByBody('/rbac/role/resource/del', param);
+  }
+
+  addUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.post('/rbac/user/role/add', param);
+  }
+
+  deleteUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.deleteByBody('/rbac/user/role/del', param);
   }
 
 }

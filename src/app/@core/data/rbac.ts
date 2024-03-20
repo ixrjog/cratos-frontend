@@ -81,6 +81,11 @@ export interface RoleResourceEdit {
   resourceIds: number[];
 }
 
+export interface UserRoleEdit {
+  username: string;
+  roleId: number;
+}
+
 export abstract class RbacData {
 
   abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;
@@ -110,4 +115,9 @@ export abstract class RbacData {
   abstract addRoleResource(param: RoleResourceEdit): Observable<HttpResult<Boolean>>;
 
   abstract deleteRoleResource(param: RoleResourceEdit): Observable<HttpResult<Boolean>>;
+
+  abstract addUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>>;
+
+  abstract deleteUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>>;
+
 }

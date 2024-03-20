@@ -113,20 +113,22 @@ export class EdsAssetDataTableComponent implements OnChanges {
         };
         switch (body.toBusiness.businessType) {
           case BusinessTypeEnum.USER:
-            dialogDate['content'] = UserEditorComponent;
             dialogDate['title'] = 'New User';
+            this.dialogUtil.onUserEditDialog(ADD_OPERATION, dialogDate, () => {
+              this.fetchData();
+            }, body.target, { fromAssetId: rowItem.id });
             break;
           case BusinessTypeEnum.CERTIFICATE:
             dialogDate['content'] = CertificateEditorComponent;
             dialogDate['title'] = 'New Certificate';
+            this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+              this.fetchData();
+            }, body.target, { fromAssetId: rowItem.id });
             break;
           default:
             this.toastUtil.onErrorToast('nonsupport convert');
             throw new Error('nonsupport convert');
         }
-        this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
-          this.fetchData();
-        }, body.target, { fromAssetId: rowItem.id });
       });
   }
 

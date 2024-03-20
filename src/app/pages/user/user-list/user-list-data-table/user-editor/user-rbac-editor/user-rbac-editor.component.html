@@ -1,0 +1,10 @@
+<div style="width: 100%">
+  <d-transfer
+    (transferToTarget)="transferToTarget($event)"
+    (transferToSource)="transferToSource($event)"
+    [sourceOption]="sourceOption"
+    [targetOption]="targetOption"
+    [titles]="{ source: 'Source', target: 'Target' }"
+  >
+  </d-transfer>
+</div>

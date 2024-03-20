@@ -1,1 +1,13 @@
-<p>user-editor works!</p>
+<d-tabs [(activeTab)]="tabActiveId" type="pills">
+  <d-tab id="info" title="Info">
+    <app-user-info-editor
+      [formData]="formData"
+      [fromAssetId]="fromAssetId"
+      [operationType]="operationType"
+      (onUserAdded)="onUserAdded($event)"
+    ></app-user-info-editor>
+  </d-tab>
+  <d-tab id="rbac" title="RBAC" [disabled]="!formData.id">
+    <app-user-rbac-editor [formData]="formData" *ngIf="formData.id"></app-user-rbac-editor>
+  </d-tab>
+</d-tabs>

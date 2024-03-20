@@ -18,6 +18,8 @@ import {
 } from 'ng-devui';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../@shared/shared.module';
+import { UserInfoEditorComponent } from './user-list/user-list-data-table/user-editor/user-info-editor/user-info-editor.component';
+import { UserRbacEditorComponent } from './user-list/user-list-data-table/user-editor/user-rbac-editor/user-rbac-editor.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { SharedModule } from '../../@shared/shared.module';
     UserComponent,
     UserListComponent,
     UserListDataTableComponent,
-    UserEditorComponent
+    UserEditorComponent,
+    UserInfoEditorComponent,
+    UserRbacEditorComponent
   ],
   imports: [
     CommonModule,

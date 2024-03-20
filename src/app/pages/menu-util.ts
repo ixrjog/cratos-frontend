@@ -80,10 +80,6 @@ export function getMenu(values: any): any[] {
           title: values['rbac']['role'],
           link: '/pages/rbac/role',
         },
-        {
-          title: values['rbac']['userRole'],
-          link: '/pages/rbac/user-role',
-        },
       ],
       link: '/pages/rbac',
       menuIcon: 'icon icon-license',

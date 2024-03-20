@@ -30,7 +30,6 @@ export default {
       title: 'RBAC',
       resource: '资源',
       role: '角色',
-      userRole: '用户角色',
     },
   },
 };

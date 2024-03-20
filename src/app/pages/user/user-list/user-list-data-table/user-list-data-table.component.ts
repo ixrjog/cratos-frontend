@@ -31,7 +31,7 @@ export class UserListDataTableComponent implements OnInit {
     comment: '',
     displayName: '',
     email: '',
-    expiredTime: undefined,
+    expiredTime: null,
     mobilePhone: '',
     name: '',
     otp: 0,
@@ -40,10 +40,6 @@ export class UserListDataTableComponent implements OnInit {
   };
 
   dialogDate = {
-    editorData: {
-      ...DIALOG_DATA.editorData,
-      content: UserEditorComponent,
-    },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
     },
@@ -84,20 +80,18 @@ export class UserListDataTableComponent implements OnInit {
 
   onRowNew() {
     const dialogDate = {
-      ...this.dialogDate.editorData,
       title: 'New User',
     };
-    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+    this.dialogUtil.onUserEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
     }, this.newUser);
   }
 
   onRowEdit(rowItem: UserVO) {
     const dialogDate = {
-      ...this.dialogDate.editorData,
       title: 'Edit User',
     };
-    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+    this.dialogUtil.onUserEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
   }

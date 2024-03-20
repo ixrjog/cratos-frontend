@@ -6,6 +6,7 @@ import {
   BusinessTagEditorComponent,
 } from '../components/common/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessDocsComponent } from '../components/common/business-doc/business-docs/business-docs.component';
+import { UserEditorComponent } from '../../pages/user/user-list/user-list-data-table/user-editor/user-editor.component';
 
 @Injectable()
 export class DialogUtil {
@@ -113,6 +114,25 @@ export class DialogUtil {
       },
     });
   }
+
+  onUserEditDialog(operationType: boolean, dialogDate: any, onFetch: Function, data: any, extend?: any) {
+    const results = this.dialogService.open({
+      ...dialogDate,
+      id: 'user-edit',
+      width: '40%',
+      maxHeight: '1000px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      content: UserEditorComponent,
+      onClose: () => onFetch(),
+      buttons: [],
+      data: {
+        formData: data,
+        operationType: operationType,
+        ...extend
+      },
+    });
+  }
 }
 
 export const DIALOG_DATA = {
@@ -135,7 +155,6 @@ export const DIALOG_DATA = {
   content: {
     delete: '<strong>Confirm delete this row ?</strong>',
     inactive: '<strong>Confirm inactive this row ?</strong>',
-
     batchDelete: '<strong>Confirm delete these rows ?</strong>',
     batchValid: '<strong>Confirm update these rows ?</strong>',
     batchInactive: '<strong>Confirm inactive these rows ?</strong>',

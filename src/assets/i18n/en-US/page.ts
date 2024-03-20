@@ -30,7 +30,6 @@ export default {
       title: 'RBAC',
       resource: 'Resource',
       role: 'Role',
-      userRole: 'User Role',
     },
   },
 };

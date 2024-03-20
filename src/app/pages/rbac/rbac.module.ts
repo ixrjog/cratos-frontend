@@ -5,7 +5,6 @@ import { RbacRoutingModule } from './rbac-routing.module';
 import { RbacComponent } from './rbac.component';
 import { RbacResourceComponent } from './rbac-resource/rbac-resource.component';
 import { RbacRoleComponent } from './rbac-role/rbac-role.component';
-import { RbacUserRoleComponent } from './rbac-user-role/rbac-user-role.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { SharedModule } from '../../@shared/shared.module';
 import { RbacResourceDataTableComponent } from './rbac-resource/rbac-resource-data-table/rbac-resource-data-table.component';
@@ -23,7 +22,6 @@ import { RbacRoleResourceDataTableComponent } from './rbac-role/rbac-role-author
     RbacComponent,
     RbacResourceComponent,
     RbacRoleComponent,
-    RbacUserRoleComponent,
     RbacResourceDataTableComponent,
     RbacGroupDataTableComponent,
     RbacGroupEditorComponent,

@@ -51,7 +51,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'240px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
@@ -65,10 +65,15 @@
               (click)="onRowValid(rowItem)"
             >
             </d-icon>
+            <d-icon
+              *ngIf="!rowItem['instanceId']"
+              [icon]="'icon-run'"
+              [operable]="true"
+              (click)="OnRowRegister(rowItem)"
+            ></d-icon>
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
-                <li class="devui-dropdown-item" (click)="OnRowRegister(rowItem)">Register</li>
                 <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
               </ul>
             </span>

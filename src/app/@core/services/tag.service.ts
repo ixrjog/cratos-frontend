@@ -7,28 +7,30 @@ import { DataTable, HttpResult } from '../data/base-data';
 @Injectable()
 export class TagService extends TagData {
 
+  baseUrl = '/tag';
+
   constructor(private apiService: ApiService) {
     super();
   }
 
   queryTagPage(param: TagPageQuery): Observable<DataTable<TagVO>> {
-    return this.apiService.post('/tag/page/query', param);
+    return this.apiService.post(this.baseUrl, '/page/query', param);
   }
 
   updateTag(param: TagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.put('/tag/update', param);
+    return this.apiService.put(this.baseUrl, '/update', param);
   }
 
   addTag(param: TagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/tag/add', param);
+    return this.apiService.post(this.baseUrl, '/add', param);
   }
 
   deleteTagById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete('/tag/del', param);
+    return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
   setTagValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.putByParam('/tag/valid/set', param);
+    return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
   }
 
 }

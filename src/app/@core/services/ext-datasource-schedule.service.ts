@@ -14,32 +14,33 @@ import { HttpResult } from '../data/base-data';
 @Injectable()
 export class EdsScheduleService extends EdsScheduleData {
 
+  baseUrl = '/eds/instance/schedule';
   constructor(private apiService: ApiService) {
     super();
   }
 
   addSchedule(param: AddScheduleJob): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/eds/instance/schedule/add', param);
+    return this.apiService.post(this.baseUrl, '/add', param);
   }
 
   checkCron(param: CheckCron): Observable<HttpResult<Array<string>>> {
-    return this.apiService.post('/eds/instance/schedule/cron/check', param);
+    return this.apiService.post(this.baseUrl, '/cron/check', param);
   }
 
   deleteSchedule(param: DeleteScheduleJob): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/eds/instance/schedule/delete', param);
+    return this.apiService.post(this.baseUrl, '/delete', param);
   }
 
   pauseSchedule(param: UpdateScheduleJob): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/eds/instance/schedule/pause', param);
+    return this.apiService.post(this.baseUrl, '/pause', param);
   }
 
   queryScheduleById(param: { id: number }): Observable<HttpResult<Array<ScheduleVO>>> {
-    return this.apiService.get('/eds/instance/schedule/get', param);
+    return this.apiService.get(this.baseUrl, '/get', param);
   }
 
   resumeSchedule(param: UpdateScheduleJob): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/eds/instance/schedule/resume', param);
+    return this.apiService.post(this.baseUrl, '/resume', param);
   }
 
 }

@@ -8,32 +8,34 @@ import { GetByBusiness } from '../data/business';
 @Injectable()
 export class BusinessTagService extends BusinessTagData {
 
+  baseUrl = '/business/tag';
+
   constructor(private apiService: ApiService) {
     super();
   }
 
   addBusinessTag(param: BusinessTagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/business/tag/add', param);
+    return this.apiService.post(this.baseUrl, '/add', param);
   }
 
   saveBusinessTag(param: BusinessTagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/business/tag/save', param);
+    return this.apiService.post(this.baseUrl, '/save', param);
   }
 
   deleteBusinessTagById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete('/business/tag/del', param);
+    return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
   queryBusinessTagByBusiness(param: GetByBusiness): Observable<HttpResult<Array<BusinessTagVO>>> {
-    return this.apiService.post('/business/tag/query', param);
+    return this.apiService.post(this.baseUrl, '/query', param);
   }
 
   updateBusinessTag(param: BusinessTagEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.put('/business/tag/update', param);
+    return this.apiService.put(this.baseUrl, '/update', param);
   }
 
   queryBusinessTagByValue(param: ListValue): Observable<HttpResult<Array<String>>> {
-    return this.apiService.post('/business/tag/query/by/value', param);
+    return this.apiService.post(this.baseUrl, '/query/by/value', param);
   }
 
 }

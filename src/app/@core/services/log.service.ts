@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult } from '../data/base-data';
+import { HttpResult } from '../data/base-data';
 import { LogData, LoginParam, LoginVO } from '../data/log';
 
 @Injectable()
 export class LogService extends LogData {
+
+  baseUrl = '/log';
 
   constructor(private apiService: ApiService) {
     super();
   }
 
   login(param: LoginParam): Observable<HttpResult<LoginVO>> {
-    return this.apiService.post('/log/login', param);
+    return this.apiService.post(this.baseUrl, '/login', param);
   }
 
   logout(): Observable<HttpResult<Boolean>> {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
     localStorage.removeItem('userinfo');
-    return this.apiService.put('/log/login');
+    return this.apiService.put(this.baseUrl, '/login');
   }
 
 

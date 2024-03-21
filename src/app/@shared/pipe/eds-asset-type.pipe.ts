@@ -15,9 +15,15 @@ export class EdsAssetTypePipe implements PipeTransform {
       case EdsAssetTypeEnum.KUBERNETES_DEPLOYMENT:
         return 'Deployment';
       case EdsAssetTypeEnum.LDAP_PERSON:
-        return 'Person';
+      case EdsAssetTypeEnum.GITLAB_USER:
+        return 'User';
       case EdsAssetTypeEnum.LDAP_GROUP:
+      case EdsAssetTypeEnum.GITLAB_GROUP:
         return 'Group';
+      case EdsAssetTypeEnum.GITLAB_PROJECT:
+        return 'Project';
+      case EdsAssetTypeEnum.GITLAB_SSHKEY:
+        return 'SSH Key';
       default:
         return edsAssetType;
     }

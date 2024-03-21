@@ -7,28 +7,30 @@ import { DataTable, HttpResult } from '../data/base-data';
 @Injectable()
 export class UserService extends UserData {
 
+  baseUrl = '/user';
+
   constructor(private apiService: ApiService) {
     super();
   }
 
   addUser(param: UserEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/user/add', param);
+    return this.apiService.post(this.baseUrl, '/add', param);
   }
 
   queryUserPage(param: UserPageQuery): Observable<DataTable<UserVO>> {
-    return this.apiService.post('/user/page/query', param);
+    return this.apiService.post(this.baseUrl, '/page/query', param);
   }
 
   resetUserPassword(param: ResetPassword): Observable<HttpResult<Boolean>> {
-    return this.apiService.post('/user/password/reset', param);
+    return this.apiService.post(this.baseUrl, '/password/reset', param);
   }
 
   setUserValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.putByParam('/user/valid/set', param);
+    return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
   }
 
   updateUser(param: UserEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.put('/user/update', param);
+    return this.apiService.put(this.baseUrl, '/update', param);
   }
 
   inactiveUser(param: { id: number }): Observable<HttpResult<Boolean>> {
@@ -36,7 +38,7 @@ export class UserService extends UserData {
   }
 
   getUserByUsername(param: { username: string }): Observable<HttpResult<UserVO>> {
-    return this.apiService.get('/user/username/get', param);
+    return this.apiService.get(this.baseUrl, '/username/get', param);
   }
 
 }

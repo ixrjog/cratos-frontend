@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import {
   AssetPageQuery,
   AssetToBusiness,
+  DeleteInstanceAsset,
   EdsAssetVO,
   EdsConfigEdit,
   EdsConfigPageQuery,
@@ -96,5 +97,10 @@ export class EdsService extends EdsData {
   getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>> {
     return this.apiService.get(this.baseUrl, '/asset/to/business/target/get', param);
   }
+
+  deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>> {
+    return this.apiService.deleteByBody(this.baseUrl, '/instance/asset/del', param);
+  }
+
 
 }

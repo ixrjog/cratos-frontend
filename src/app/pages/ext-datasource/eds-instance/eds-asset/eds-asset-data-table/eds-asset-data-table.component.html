@@ -9,6 +9,9 @@
   >
   </d-search>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <span class="right-button">
+    <d-button bsStyle="danger" (click)="onInstanceAssetDelete()">Delete</d-button>
+  </span>
 </div>
 <div class="spacing-table">
   <d-data-table

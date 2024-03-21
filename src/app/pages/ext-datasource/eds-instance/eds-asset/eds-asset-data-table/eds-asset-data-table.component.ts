@@ -7,9 +7,13 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.uti
 import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
-import { AssetPageQuery, EdsAssetVO, ImportInstanceAsset } from '../../../../../@core/data/ext-datasource';
+import {
+  AssetPageQuery,
+  DeleteInstanceAsset,
+  EdsAssetVO,
+  ImportInstanceAsset,
+} from '../../../../../@core/data/ext-datasource';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
-import { UserEditorComponent } from '../../../../user/user-list/user-list-data-table/user-editor/user-editor.component';
 import {
   CertificateEditorComponent,
 } from '../../../../certificate/certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
@@ -79,6 +83,24 @@ export class EdsAssetDataTableComponent implements OnChanges {
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.edsService.queryEdsInstanceAssetPage(param));
+  }
+
+  onInstanceAssetDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.deleteAll,
+    };
+    const param: DeleteInstanceAsset = {
+      assetType: this.assetType,
+      instanceId: this.instanceId,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.edsService.deleteEdsInstanceAsset(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
   }
 
   pageIndexChange(pageIndex) {

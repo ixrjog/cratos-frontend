@@ -122,6 +122,11 @@ export interface AssetToBusiness {
   target: any;
 }
 
+export interface DeleteInstanceAsset {
+  instanceId: number;
+  assetType: string;
+}
+
 export abstract class EdsData {
 
   abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
@@ -159,6 +164,8 @@ export abstract class EdsData {
   abstract queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>>;
 
   abstract getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>>
+
+  abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
 
 }
 

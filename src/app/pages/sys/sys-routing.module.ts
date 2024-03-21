@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SysComponent } from './sys.component';
 import { TagComponent } from './tag/tag.component';
 import { CredentialComponent } from './credential/credential.component';
+import { EnvComponent } from './env/env.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
     component: SysComponent,
     children: [
       { path: 'tag', component: TagComponent },
+      { path: 'env', component: EnvComponent },
       { path: 'credential', component: CredentialComponent }
     ],
   },

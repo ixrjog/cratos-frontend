@@ -14,6 +14,9 @@ import { SharedModule } from '../../@shared/shared.module';
 import { CredentialDataTableComponent } from './credential/credential-data-table/credential-data-table.component';
 import { TagEditorComponent } from './tag/tag-data-table/tag-editor/tag-editor.component';
 import { CredentialEditorComponent } from './credential/credential-data-table/credential-editor/credential-editor.component';
+import { EnvComponent } from './env/env.component';
+import { EnvDataTableComponent } from './env/env-data-table/env-data-table.component';
+import { EnvEditorComponent } from './env/env-data-table/env-editor/env-editor.component';
 
 
 @NgModule({
@@ -25,6 +28,9 @@ import { CredentialEditorComponent } from './credential/credential-data-table/cr
     CredentialDataTableComponent,
     TagEditorComponent,
     CredentialEditorComponent,
+    EnvComponent,
+    EnvDataTableComponent,
+    EnvEditorComponent,
   ],
   imports: [
     CommonModule,

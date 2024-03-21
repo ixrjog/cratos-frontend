@@ -7,6 +7,7 @@ export default {
     sys: {
       title: 'System',
       tag: 'Tag',
+      env: 'Env',
       credential: 'Credential'
     },
     certificate: {

@@ -19,6 +19,7 @@ import { UserService } from './services/user.service';
 import { RbacService } from './services/rbac.service';
 import { EdsService } from './services/ext-datasource.service.s';
 import { EdsScheduleService } from './services/ext-datasource-schedule.service';
+import { EnvService } from './services/env.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -44,6 +45,7 @@ export const CRATOS_PROVIDERS = [
   RbacService,
   EdsService,
   EdsScheduleService,
+  EnvService,
 ];
 
 @NgModule({

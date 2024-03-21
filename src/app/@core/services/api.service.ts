@@ -24,7 +24,7 @@ export class ApiService {
   }
 
   putByParam(url: string, params: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}${url}` + this.initGetParams(params), { headers: this.headers });
+    return this.http.put(`${this.apiUrl}${url}` + this.initGetParams(params), {}, { headers: this.headers });
   }
 
   delete(url: string, params: any): Observable<any> {

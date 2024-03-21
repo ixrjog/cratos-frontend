@@ -9,6 +9,10 @@ export function getMenu(values: any): any[] {
           link: '/pages/sys/tag',
         },
         {
+          title: values['sys']['env'],
+          link: '/pages/sys/env',
+        },
+        {
           title: values['sys']['credential'],
           link: '/pages/sys/credential',
         },

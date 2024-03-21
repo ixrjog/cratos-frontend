@@ -7,6 +7,7 @@ export default {
     sys: {
       title: '系统管理',
       tag: '标签',
+      env: '环境',
       credential: '凭据'
     },
     certificate: {

@@ -1,0 +1,50 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Env Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="envName"
+          [(ngModel)]="formData.envName"
+          [dValidateRules]="formRules['envName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Color</d-form-label>
+      <d-form-control>
+        <input type="color" name="color"  [(ngModel)]="formData.color"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Prompt Color</d-form-label>
+      <d-form-control>
+        <d-select [options]="promptColorOptions" [(ngModel)]="formData.promptColor"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Valid</d-form-label>
+      <d-form-control>
+        <d-toggle name="valid" [(ngModel)]="formData.valid"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { HttpResult } from './base-data';
 
 export interface LoginVO {
+  username: string;
   name: string;
   uuid: string;
   token: string;

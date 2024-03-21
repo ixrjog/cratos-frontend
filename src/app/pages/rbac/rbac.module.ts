@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { RbacRoutingModule } from './rbac-routing.module';
 import { RbacComponent } from './rbac.component';
 import { RbacResourceComponent } from './rbac-resource/rbac-resource.component';
@@ -15,7 +14,6 @@ import { RbacRoleDataTableComponent } from './rbac-role/rbac-role-data-table/rba
 import { RbacRoleEditorComponent } from './rbac-role/rbac-role-data-table/rbac-role-editor/rbac-role-editor.component';
 import { RbacRoleAuthorizeComponent } from './rbac-role/rbac-role-authorize/rbac-role-authorize.component';
 import { RbacRoleResourceDataTableComponent } from './rbac-role/rbac-role-authorize/rbac-role-resource-data-table/rbac-role-resource-data-table.component';
-
 
 @NgModule({
   declarations: [

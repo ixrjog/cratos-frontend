@@ -31,6 +31,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
+import { DemoGraphComponent } from './components/antv-g6/demo-graph/demo-graph.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -75,6 +76,7 @@ const CRATOS_UTILS = [
     BusinessTagsComponent,
     AceEditorComponent,
     BusinessDocsComponent,
+    DemoGraphComponent,
   ],
   imports: [
     CommonModule,
@@ -107,6 +109,7 @@ const CRATOS_UTILS = [
     ...COMPONENTS,
     ...PIPES,
     ...CRATOS_COMPONENTS,
+    DemoGraphComponent,
   ],
 })
 export class SharedModule {

@@ -49,6 +49,7 @@ export interface EdsAssetVO extends BaseVO, ValidVO {
   originalModel: string;
   originalAsset: any;
   toBusiness: ToBusiness;
+  resourceCount: Map<string, number>;
 }
 
 export interface InstancePageQuery extends PageQuery {
@@ -127,6 +128,15 @@ export interface DeleteInstanceAsset {
   assetType: string;
 }
 
+export interface EdsAssetIndexVO extends BaseVO {
+  id: number;
+  instanceId: number;
+  assetId: number;
+  name: string;
+  value: string;
+  comment: string;
+}
+
 export abstract class EdsData {
 
   abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
@@ -163,6 +173,8 @@ export abstract class EdsData {
 
   abstract queryEdsInstanceAssetPage(param: AssetPageQuery): Observable<DataTable<EdsAssetVO>>;
 
+  abstract queryAssetIndexByAssetId(param: { assetId: number }): Observable<HttpResult<Array<EdsAssetIndexVO>>>;
+
   abstract getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>>
 
   abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
@@ -172,9 +184,10 @@ export abstract class EdsData {
 export enum EdsAssetTypeEnum {
   ALIYUN_CERT = 'ALIYUN_CERT',
   AWS_CERT = 'AWS_CERT',
-  CLOUDFLARE_CERT = 'CLOUDFLARE_CERT',
   AWS_STS_VPN = 'AWS_STS_VPN',
+  CLOUDFLARE_CERT = 'CLOUDFLARE_CERT',
   KUBERNETES_DEPLOYMENT = 'KUBERNETES_DEPLOYMENT',
+  KUBERNETES_INGRESS= 'KUBERNETES_INGRESS',
   LDAP_PERSON = 'LDAP_PERSON',
   LDAP_GROUP = 'LDAP_GROUP',
   GITLAB_PROJECT = 'GITLAB_PROJECT',

@@ -35,13 +35,13 @@
           <d-icon
             dPopover
             [icon]="'icon-view'"
-            [content]="customTemplate"
+            [content]="originalModelTemplate"
             [position]="'left-top'"
             [controlled]="true"
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '800px' }"
           >
           </d-icon>
-          <ng-template #customTemplate>
+          <ng-template #originalModelTemplate>
 <!--            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>-->
             <app-ace-editor
               [readonly]="true"
@@ -49,6 +49,26 @@
               [mode]="'ace/mode/yaml'"
               [theme]="'ace/theme/tomorrow_night'"
             ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Index" [width]="'80px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-star'"
+            [content]="assetIndexTemplate"
+            [position]="'left-top'"
+            [color]="getResourceCountColor(rowItem['resourceCount'])"
+            (click)="onQueryAssetIndex(rowItem)"
+            [disabled]="!parseResourceCount(rowItem['resourceCount'])"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+          ></d-icon>
+          <ng-template #assetIndexTemplate>
+            <app-eds-asset-index-data-table [dataTable]="assetIndexTable"></app-eds-asset-index-data-table>
           </ng-template>
         </ng-template>
       </d-cell>

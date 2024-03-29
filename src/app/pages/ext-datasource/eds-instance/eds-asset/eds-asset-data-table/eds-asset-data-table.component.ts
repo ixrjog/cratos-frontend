@@ -10,6 +10,7 @@ import { EdsService } from '../../../../../@core/services/ext-datasource.service
 import {
   AssetPageQuery,
   DeleteInstanceAsset,
+  EdsAssetIndexVO,
   EdsAssetVO,
   ImportInstanceAsset,
 } from '../../../../../@core/data/ext-datasource';
@@ -17,6 +18,7 @@ import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import {
   CertificateEditorComponent,
 } from '../../../../certificate/certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
+import { getResourceCountColor, parseResourceCount } from '../../../../../@shared/utils/resource-count.util';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -30,6 +32,8 @@ export class EdsAssetDataTableComponent implements OnChanges {
   @Input() instanceId: number;
   @Input() assetType: string;
   @Input() currentType: string;
+
+  assetIndexTable: EdsAssetIndexVO[] = [];
 
   queryParam = {
     queryName: '',
@@ -195,6 +199,17 @@ export class EdsAssetDataTableComponent implements OnChanges {
     });
   }
 
-  protected readonly getRowColor = getRowColor;
+  onQueryAssetIndex(rowItem: EdsAssetVO) {
+    this.assetIndexTable = [];
+    if (!parseResourceCount(rowItem['resourceCount'])) {
+      return;
+    }
+    this.edsService.queryAssetIndexByAssetId({ assetId: rowItem.id })
+      .subscribe(({ body }) => this.assetIndexTable = body);
+  }
 
+  protected readonly getRowColor = getRowColor;
+  protected readonly getResourceCountColor = getResourceCountColor;
+  protected readonly JSON = JSON;
+  protected readonly parseResourceCount = parseResourceCount;
 }

@@ -14,6 +14,8 @@ export class EdsAssetTypePipe implements PipeTransform {
         return 'Site-to-Site VPN';
       case EdsAssetTypeEnum.KUBERNETES_DEPLOYMENT:
         return 'Deployment';
+      case EdsAssetTypeEnum.KUBERNETES_INGRESS:
+        return 'Ingress'
       case EdsAssetTypeEnum.LDAP_PERSON:
       case EdsAssetTypeEnum.GITLAB_USER:
         return 'User';

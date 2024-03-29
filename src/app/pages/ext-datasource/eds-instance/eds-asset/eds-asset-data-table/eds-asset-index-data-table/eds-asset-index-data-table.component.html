@@ -1,0 +1,12 @@
+<div class="spacing-table">
+  <d-data-table dLoading [loading]="loading"  [dataSource]="dataTable" [scrollable]="true"
+                [tableOverflowType]="'overlay'">
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="value" header="Value"></d-column>
+<!--    <d-column field="comment" header="Comment"></d-column>-->
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+

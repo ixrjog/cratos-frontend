@@ -1,0 +1,52 @@
+<div class="spacing-search" *ngIf="JSON.stringify(envItems) !=='[]'">
+  <d-tabs class="tabs" type="slider" [(activeTab)]="tabActiveId" (activeTabChange)="activeTabChange($event)">
+    <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName"></d-tab>
+  </d-tabs>
+  <d-select
+    class="select"
+    [filterKey]="'domain'"
+    [appendToBody]="true"
+    [(ngModel)]="trafficLayerDomain"
+    [searchFn]="onSearchTrafficLayerDomain"
+    [isSearch]="true"
+    placeholder="Select domain"
+    (valueChange)="onTrafficLayerDomainChange($event)"
+  >
+  </d-select>
+  <d-button
+    [disabled]="queryParam.domainId === null"
+    class="button"
+    bsStyle="common"
+    (click)="fetchData()"
+  >Filter
+  </d-button>
+</div>
+<div class="spacing-table" *ngIf="showRecord">
+  <div dLoading [loading]="loading">
+    <div *ngIf="!loading && showRecord">
+      <h3>Record Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.recordTable"
+        [mode]="'ace/mode/text'"
+        [theme]="'ace/theme/tomorrow'"
+      ></app-ace-editor>
+      <br />
+      <h3>Load Balancer Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.lbTable"
+        [mode]="'ace/mode/text'"
+        [theme]="'ace/theme/tomorrow'"
+      ></app-ace-editor>
+      <br />
+      <h3>Ingress Rule Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.ingressRuleTable"
+        [mode]="'ace/mode/text'"
+        [theme]="'ace/theme/tomorrow'"
+      ></app-ace-editor>
+    </div>
+  </div>
+</div>

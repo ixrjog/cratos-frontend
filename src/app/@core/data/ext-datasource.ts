@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ResourceCountVO, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 import { CredentialVO } from './credential';
 import { BusinessTagsVO } from './business-tag';
@@ -30,7 +30,7 @@ export interface EdsConfigVO extends BaseVO, ValidVO {
   credential: CredentialVO;
 }
 
-export interface EdsAssetVO extends BaseVO, ValidVO {
+export interface EdsAssetVO extends BaseVO, ValidVO, ResourceCountVO {
   id: number;
   parentId: number;
   instanceId: number;
@@ -49,7 +49,6 @@ export interface EdsAssetVO extends BaseVO, ValidVO {
   originalModel: string;
   originalAsset: any;
   toBusiness: ToBusiness;
-  resourceCount: Map<string, number>;
 }
 
 export interface InstancePageQuery extends PageQuery {

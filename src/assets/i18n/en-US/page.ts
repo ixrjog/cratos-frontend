@@ -18,6 +18,11 @@ export default {
       title: 'Channel Network',
       list: 'List',
     },
+    trafficLayer: {
+      title: 'Traffic Layer',
+      domain: 'Domain',
+      recordDetail: 'Record Detail',
+    },
     user: {
       title: 'User',
       list: 'List',

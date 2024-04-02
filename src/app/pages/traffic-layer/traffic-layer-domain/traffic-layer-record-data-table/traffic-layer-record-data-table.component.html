@@ -1,0 +1,145 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    (cellEditEnd)="onCellEditEnd($event)"
+    [checkable]="true"
+  >
+    <d-column field="envName" header="Env Name">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          {{ cellItem.label }}
+        </ng-template>
+      </d-cell>
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <d-select
+              [options]="envOptions"
+              [isSearch]="true"
+              [filterKey]="'label'"
+              [autoFocus]="true"
+              [toggleOnFocus]="true"
+              [(ngModel)]="rowItem[column.field]"
+              (ngModelChange)="finishEdit()"
+            >
+              <ng-template let-option="option" let-filterKey="filterKey"> gender:{{ option[filterKey] }} </ng-template>
+            </d-select>
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column field="recordName" header="Record Name">
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column field="routeTrafficTo" header="Route Traffic To">
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column field="originServer" header="Origin Server">
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>
+

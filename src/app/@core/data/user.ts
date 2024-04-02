@@ -1,10 +1,10 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
 import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { RbacRoleVO } from './rbac';
 import { Observable } from 'rxjs';
 
-export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
+export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO, ResourceCountVO {
   id: number;
   uuid: string;
   username: string;
@@ -19,7 +19,6 @@ export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO 
   comment: string;
   expiredTime: Date;
   rbacRoles: RbacRoleVO[];
-  resourceCount: Map<string, number>;
 }
 
 export interface UserPageQuery extends PageQuery {

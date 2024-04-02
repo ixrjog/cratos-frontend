@@ -61,9 +61,9 @@
             [icon]="'icon-star'"
             [content]="assetIndexTemplate"
             [position]="'left-top'"
-            [color]="getResourceCountColor(rowItem['resourceCount'])"
+            [color]="getResourceCountColor(rowItem)"
             (click)="onQueryAssetIndex(rowItem)"
-            [disabled]="!parseResourceCount(rowItem['resourceCount'])"
+            [disabled]="!parseResourceCount(rowItem)"
             [controlled]="true"
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
           ></d-icon>

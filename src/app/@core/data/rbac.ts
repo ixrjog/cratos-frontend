@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 
 export interface RbacUserRoleVO extends BaseVO {
@@ -16,12 +16,11 @@ export interface RbacRoleVO extends BaseVO {
   comment: string;
 }
 
-export interface RbacGroupVO extends BaseVO {
+export interface RbacGroupVO extends BaseVO, ResourceCountVO {
   id: number;
   groupName: string;
   base: string;
   comment: string;
-  resourceCount: Map<string, number>;
 }
 
 export interface RbacResourceVO extends BaseVO, ValidVO {

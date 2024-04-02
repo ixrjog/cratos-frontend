@@ -45,6 +45,22 @@ export function getMenu(values: any): any[] {
       menuIcon: 'icon icon-unarchived-item',
     },
     {
+      title: values['trafficLayer']['title'],
+      open: true,
+      children: [
+        {
+          title: values['trafficLayer']['domain'],
+          link: '/pages/traffic-layer/domain',
+        },
+        {
+          title: values['trafficLayer']['recordDetail'],
+          link: '/pages/traffic-layer/record-detail',
+        },
+      ],
+      link: '/pages/traffic-layer',
+      menuIcon: 'icon icon-domain',
+    },
+    {
       title: values['user']['title'],
       open: true,
       children: [

@@ -18,6 +18,11 @@ export default {
       title: '渠道网络',
       list: '清单',
     },
+    trafficLayer: {
+      title: '流量层',
+      domain: '域名',
+      recordDetail: '记录详情',
+    },
     user: {
       title: '用户',
       list: '清单',

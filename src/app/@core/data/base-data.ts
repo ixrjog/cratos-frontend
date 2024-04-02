@@ -30,6 +30,10 @@ export interface ValidVO {
   valid: boolean;
 }
 
+export interface ResourceCountVO {
+  resourceCount: Map<String, number>;
+}
+
 export interface Table<T> {
   loading: boolean,
   data: Array<T>,

@@ -62,11 +62,11 @@ export class RbacService extends RbacData {
     return this.apiService.putByParam(this.baseUrl, '/resource/valid/set', param);
   }
 
-  addRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
+  updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/role/update', param);
   }
 
-  updateRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
+  addRole(param: RbacRoleEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/role/add', param);
   }
 

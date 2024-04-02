@@ -201,7 +201,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
 
   onQueryAssetIndex(rowItem: EdsAssetVO) {
     this.assetIndexTable = [];
-    if (!parseResourceCount(rowItem['resourceCount'])) {
+    if (!parseResourceCount(rowItem)) {
       return;
     }
     this.edsService.queryAssetIndexByAssetId({ assetId: rowItem.id })

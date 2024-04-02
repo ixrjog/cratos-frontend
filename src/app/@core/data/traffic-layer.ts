@@ -3,6 +3,7 @@ import { BusinessTagVO } from './business-tag';
 import { EdsAssetIndexVO, EdsAssetVO } from './ext-datasource';
 import { Observable } from 'rxjs';
 import { BusinessDocVO } from './business-doc';
+import { EnvVO } from './env';
 
 export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagVO, BusinessDocVO {
   id: number;
@@ -19,6 +20,7 @@ export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagVO, Bu
   routeTrafficTo: string;
   originServer: string;
   comment: string;
+  env: EnvVO;
 }
 
 export interface TrafficLayerRecordOriginServerVO {

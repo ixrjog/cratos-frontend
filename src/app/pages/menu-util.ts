@@ -53,8 +53,8 @@ export function getMenu(values: any): any[] {
           link: '/pages/traffic-layer/domain',
         },
         {
-          title: values['trafficLayer']['recordDetail'],
-          link: '/pages/traffic-layer/record-detail',
+          title: values['trafficLayer']['recordDetails'],
+          link: '/pages/traffic-layer/record-details',
         },
       ],
       link: '/pages/traffic-layer',

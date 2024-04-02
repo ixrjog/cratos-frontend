@@ -10,7 +10,7 @@ const routes: Routes = [
     component: RbacComponent,
     children: [
       { path: 'domain', component: TrafficLayerDomainComponent },
-      { path: 'record-detail', component: TrafficLayerRecordComponent },
+      { path: 'record-details', component: TrafficLayerRecordComponent },
     ],
   },
 ];

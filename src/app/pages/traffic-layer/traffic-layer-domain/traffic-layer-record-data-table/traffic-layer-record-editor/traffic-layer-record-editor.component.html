@@ -1,1 +1,85 @@
-<p>traffic-layer-record-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Domain</d-form-label>
+      <d-form-control>
+        <d-select
+          name="domain"
+          [filterKey]="'domain'"
+          [appendToBody]="true"
+          [(ngModel)]="domain"
+          [searchFn]="onSearchDomain"
+          [isSearch]="true"
+          placeholder="Select Domain"
+          [searchPlaceholder]="'search domain'"
+          (valueChange)="onDomainChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Env</d-form-label>
+      <d-form-control>
+        <d-select
+          name="env"
+          [filterKey]="'envName'"
+          [appendToBody]="true"
+          [(ngModel)]="env"
+          [searchFn]="onSearchEnv"
+          [isSearch]="true"
+          placeholder="Select Env"
+          [searchPlaceholder]="'search env'"
+          (valueChange)="onEnvChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Record Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="recordName"
+          [(ngModel)]="formData.recordName"
+          [dValidateRules]="formRules['recordName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Route Traffic To</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="routeTrafficTo"
+          [(ngModel)]="formData.routeTrafficTo" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Origin Server</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="originServer"
+          [(ngModel)]="formData.originServer"
+          [dValidateRules]="formRules['originServer']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

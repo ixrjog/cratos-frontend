@@ -88,7 +88,6 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
 
   onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
     this.queryParam.domainId = domainVO.id;
-    this.fetchData();
   }
 
   protected readonly JSON = JSON;

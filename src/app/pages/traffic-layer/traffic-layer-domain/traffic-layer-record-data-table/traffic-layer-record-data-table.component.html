@@ -22,10 +22,19 @@
     (cellEditEnd)="onCellEditEnd($event)"
     [checkable]="true"
   >
-    <d-column field="envName" header="Env Name">
+    <d-column field="recordName" header="Record Name" [editable]="true">
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column field="envName" header="Env Name" [editable]="true">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          {{ cellItem.label }}
+          {{ cellItem }}
         </ng-template>
       </d-cell>
       <d-cell-edit>
@@ -34,19 +43,19 @@
             <d-select
               [options]="envOptions"
               [isSearch]="true"
-              [filterKey]="'label'"
-              [autoFocus]="true"
+              [filterKey]="'envName'"
+              [valueKey]="'envName'"
               [toggleOnFocus]="true"
               [(ngModel)]="rowItem[column.field]"
               (ngModelChange)="finishEdit()"
             >
-              <ng-template let-option="option" let-filterKey="filterKey"> gender:{{ option[filterKey] }} </ng-template>
+              <ng-template let-option="option" let-filterKey="filterKey"> {{ option[filterKey] }}</ng-template>
             </d-select>
           </div>
         </ng-template>
       </d-cell-edit>
     </d-column>
-    <d-column field="recordName" header="Record Name">
+    <d-column field="routeTrafficTo" header="Route Traffic To" [editable]="true">
       <d-cell-edit>
         <ng-template let-rowItem="rowItem" let-column="column">
           <div class="customized-editor edit-padding-fix">
@@ -55,16 +64,7 @@
         </ng-template>
       </d-cell-edit>
     </d-column>
-    <d-column field="routeTrafficTo" header="Route Traffic To">
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
-          </div>
-        </ng-template>
-      </d-cell-edit>
-    </d-column>
-    <d-column field="originServer" header="Origin Server">
+    <d-column field="originServer" header="Origin Server" [editable]="true">
       <d-cell-edit>
         <ng-template let-rowItem="rowItem" let-column="column">
           <div class="customized-editor edit-padding-fix">

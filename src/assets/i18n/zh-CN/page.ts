@@ -21,7 +21,7 @@ export default {
     trafficLayer: {
       title: '流量层',
       domain: '域名',
-      recordDetail: '记录详情',
+      recordDetails: '记录详情',
     },
     user: {
       title: '用户',

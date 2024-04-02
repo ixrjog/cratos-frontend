@@ -21,7 +21,7 @@ export default {
     trafficLayer: {
       title: 'Traffic Layer',
       domain: 'Domain',
-      recordDetail: 'Record Detail',
+      recordDetails: 'Record Details',
     },
     user: {
       title: 'User',

@@ -13,7 +13,9 @@
     [valueKey]="'value'"
     [appendToBody]="true"
     [allowClear]="true"
+    placeholder="Select EdsType"
     [(ngModel)]="queryParam.edsType"
+    (valueChange)="onEdsTypeChange($event)"
   >
   </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>

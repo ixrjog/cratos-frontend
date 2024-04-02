@@ -15,6 +15,7 @@ export interface EdsInstanceVO extends BaseVO, ValidVO, BusinessTagsVO {
   registered: boolean;
   edsConfig: EdsConfigVO;
   assetTypes: string[];
+  instanceAssetTypes: { type: string, displayName: string }[];
 }
 
 export interface EdsConfigVO extends BaseVO, ValidVO {

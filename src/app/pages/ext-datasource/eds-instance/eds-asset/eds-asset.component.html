@@ -18,14 +18,14 @@
     ><i class="icon icon-module" style="margin-right: 5px"></i>{{ edsInstance?.instanceName }}</a>
   </h2>
   <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
-    <d-tab *ngFor="let item of assetTypes" [id]="item">
+    <d-tab *ngFor="let item of instanceAssetTypes" [id]="item.type">
       <ng-template dTabTitle>
         {{ item | edsAssetType }}
       </ng-template>
       <div class="app-data-table">
         <app-eds-asset-data-table
           [instanceId]="edsInstance.id"
-          [currentType]="item"
+          [currentType]="item.type"
           [assetType]="assetType"
         ></app-eds-asset-data-table>
       </div>

@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { ActivatedRoute } from '@angular/router';
 import { EdsInstanceVO } from '../../../../@core/data/ext-datasource';
 import { finalize } from 'rxjs';
-import { EdsAssetDataTableComponent } from './eds-asset-data-table/eds-asset-data-table.component';
 
 @Component({
   selector: 'app-eds-asset',
@@ -14,7 +13,7 @@ export class EdsAssetComponent implements AfterViewInit {
 
   instanceId: number = null;
   edsInstance: EdsInstanceVO;
-  assetTypes: string[];
+  instanceAssetTypes: { type: string, displayName: string }[] = [];
   assetType: string;
   tabActiveId: string | number = '';
   loading: boolean = false;
@@ -41,9 +40,9 @@ export class EdsAssetComponent implements AfterViewInit {
       )
       .subscribe(({ body }) => {
         this.edsInstance = body;
-        this.assetTypes = body.assetTypes;
-        this.assetType = this.assetTypes[0];
-        this.tabActiveId = this.assetTypes[0];
+        this.instanceAssetTypes = body.instanceAssetTypes;
+        this.assetType = this.instanceAssetTypes[0].type;
+        this.tabActiveId = this.instanceAssetTypes[0].type;
       });
   }
 

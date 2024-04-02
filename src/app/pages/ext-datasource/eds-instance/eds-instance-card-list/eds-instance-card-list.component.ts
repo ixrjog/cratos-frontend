@@ -2,16 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table } from '../../../../@core/data/base-data';
-import { EdsConfigVO, EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import {
-  EdsConfigEditorComponent,
-} from '../../eds-config/eds-config-data-table/eds-config-editor/eds-config-editor.component';
-import { EdsInstanceEditorComponent } from './eds-instance-editor/eds-instance-editor.component';
+import { EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
-import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { ChannelNetworkVO } from '../../../../@core/data/channel-network';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 
 @Component({
@@ -66,6 +59,10 @@ export class EdsInstanceCardListComponent implements OnInit {
 
   pageIndexChange(pageIndex) {
     this.table.pager.pageIndex = pageIndex;
+    this.fetchData();
+  }
+
+  onEdsTypeChange(edsType: string) {
     this.fetchData();
   }
 

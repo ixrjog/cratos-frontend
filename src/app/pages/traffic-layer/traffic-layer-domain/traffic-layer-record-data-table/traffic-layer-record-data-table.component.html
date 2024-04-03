@@ -8,6 +8,17 @@
     (change)="fetchData()"
   >
   </d-search>
+  <d-select
+    class="select"
+    [filterKey]="'domain'"
+    [appendToBody]="true"
+    [(ngModel)]="trafficLayerDomain"
+    [searchFn]="onSearchTrafficLayerDomain"
+    [isSearch]="true"
+    placeholder="Select domain"
+    (valueChange)="onTrafficLayerDomainChange($event)"
+  >
+  </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

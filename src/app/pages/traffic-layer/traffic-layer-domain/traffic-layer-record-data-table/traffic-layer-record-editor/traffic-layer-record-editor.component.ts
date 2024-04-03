@@ -22,7 +22,7 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
   formData: TrafficLayerRecordVO;
-  domain: TrafficLayerDomainVO;
+  trafficLayerDomain: TrafficLayerDomainVO;
   env: EnvVO;
 
   formRules: { [key: string]: DValidateRules } = {
@@ -44,6 +44,8 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
+    this.trafficLayerDomain = this.data['trafficLayerDomain'];
+    this.formData.domainId = this.trafficLayerDomain?.id;
   }
 
   addForm() {

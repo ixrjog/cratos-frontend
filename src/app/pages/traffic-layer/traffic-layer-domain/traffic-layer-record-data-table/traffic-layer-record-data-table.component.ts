@@ -7,6 +7,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import {
+  TrafficLayerDomainPageQuery,
   TrafficLayerDomainVO,
   TrafficLayerRecordEdit,
   TrafficLayerRecordPageQuery,
@@ -18,7 +19,7 @@ import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { EnvService } from '../../../../@core/services/env.service';
 import { EnvPageQuery } from '../../../../@core/data/env';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-traffic-layer-record-data-table',
@@ -31,7 +32,9 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   businessType: string = BusinessTypeEnum.TRAFFIC_LAYER_RECORD;
   queryParam = {
     queryName: '',
+    domainId: null,
   };
+  trafficLayerDomain: TrafficLayerDomainVO;
   envOptions = [];
 
   table: Table<TrafficLayerRecordVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -132,7 +135,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newTrafficLayerRecord);
+    }, this.newTrafficLayerRecord, { trafficLayerDomain: this.trafficLayerDomain });
   }
 
   onRowValid(rowItem: TrafficLayerDomainVO) {
@@ -197,6 +200,22 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
 
   onRowBusinessDoc(rowItem: CertificateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onSearchTrafficLayerDomain = (term: string) => {
+    const param: TrafficLayerDomainPageQuery = {
+      length: 20, page: 1, queryName: term,
+    };
+    return this.trafficLayerService.queryTrafficLayerDomainPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((group, index) => ({ id: index, option: group })),
+        ),
+      );
+  };
+
+  onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
+    this.queryParam.domainId = domainVO.id;
   }
 
   protected readonly getRowColor = getRowColor;

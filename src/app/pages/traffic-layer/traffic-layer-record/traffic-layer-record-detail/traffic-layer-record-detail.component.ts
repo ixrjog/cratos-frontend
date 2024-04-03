@@ -48,7 +48,7 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
       .subscribe(({ body }) => {
         this.envItems = body.data;
         this.queryParam.envName = this.envItems[0].envName;
-        this.tabActiveId = this.envItems[0].envName;
+        this.tabActiveId = this.envItems[this.envItems.length - 1].envName;
       });
   }
 

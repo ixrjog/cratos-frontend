@@ -4,7 +4,7 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { finalize, Observable, zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import {
   TrafficLayerDomainEdit,
   TrafficLayerDomainPageQuery,

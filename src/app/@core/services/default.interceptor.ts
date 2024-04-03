@@ -75,7 +75,6 @@ export class DefaultInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler):
     Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
-
     // 统一加上服务端前缀
     const url = req.url;
     // if (!url.startsWith('https://') && !url.startsWith('http://')) {

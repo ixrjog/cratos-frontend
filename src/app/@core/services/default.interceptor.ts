@@ -66,9 +66,9 @@ export class DefaultInterceptor implements HttpInterceptor {
           value: [ { severity: 'error', summary: 'Error', content: event.message } ],
           ...this.toastData,
         });
-        break;
+        throw new Error('something error');
       default:
-        break;
+        throw new Error('something error');
     }
     return of(event);
   }

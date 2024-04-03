@@ -17,6 +17,7 @@ import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { ChannelNetworkVO } from '../../../../@core/data/channel-network';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -85,8 +86,12 @@ export class CredentialDataTableComponent implements OnInit {
     };
     this.credentialService.updateCredential(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   ngOnInit() {

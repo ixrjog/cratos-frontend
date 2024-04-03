@@ -41,6 +41,7 @@
         <ng-template let-rowItem="rowItem" let-column="column">
           <div class="customized-editor edit-padding-fix">
             <d-select
+              [appendToBody]="true"
               [options]="envOptions"
               [isSearch]="true"
               [filterKey]="'envName'"

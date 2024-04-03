@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { RbacGroupVO } from '../../../../@core/data/rbac';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { finalize, Observable, zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import {
   TrafficLayerDomainVO,
   TrafficLayerRecordEdit,
@@ -18,6 +18,7 @@ import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { EnvService } from '../../../../@core/services/env.service';
 import { EnvPageQuery } from '../../../../@core/data/env';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-traffic-layer-record-data-table',
@@ -98,8 +99,12 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     };
     this.trafficLayerService.updateTrafficLayerRecord(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   finishEdit() {

@@ -10,6 +10,7 @@ import { finalize, Observable, zip } from 'rxjs';
 import { UserEdit, UserPageQuery, UserVO } from '../../../../@core/data/user';
 import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserService } from '../../../../@core/services/user.service';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -174,8 +175,12 @@ export class UserListDataTableComponent implements OnInit {
     };
     this.userService.updateUser(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   protected readonly getRowColor = getRowColor;

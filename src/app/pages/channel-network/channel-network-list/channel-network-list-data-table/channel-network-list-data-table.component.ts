@@ -14,6 +14,7 @@ import {
 } from '../../../../@core/data/channel-network';
 import { ChannelNetworkEditorComponent } from './channel-network-editor/channel-network-editor.component';
 import { ChannelNetworkService } from '../../../../@core/services/channel-network.service';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-channel-network-list-data-table',
@@ -177,8 +178,12 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
     };
     this.channelNetworkService.updateChannelNetwork(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   protected readonly getRowColor = getRowColor;

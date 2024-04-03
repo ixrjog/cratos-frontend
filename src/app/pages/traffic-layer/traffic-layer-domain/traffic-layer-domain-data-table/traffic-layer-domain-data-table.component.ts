@@ -14,6 +14,7 @@ import { TrafficLayerDomainEditorComponent } from './traffic-layer-domain-editor
 import { TrafficLayerService } from '../../../../@core/services/traffic-layer.service';
 import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-traffic-layer-domain-data-table',
@@ -75,8 +76,12 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
     };
     this.trafficLayerService.updateTrafficLayerDomain(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   ngOnInit() {

@@ -18,6 +18,7 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import {
   EdsInstanceEditorComponent,
 } from '../../eds-instance/eds-instance-card-list/eds-instance-editor/eds-instance-editor.component';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-eds-config-data-table',
@@ -217,8 +218,12 @@ export class EdsConfigDataTableComponent implements OnInit {
     };
     this.edsService.updateEdsConfig(param)
       .pipe(
-        finalize(() => this.fetchData()),
-      ).subscribe();
+        catchError((error: any) => {
+          this.fetchData();
+          return new error();
+        }),
+      )
+      .subscribe();
   }
 
   protected readonly getRowColor = getRowColor;

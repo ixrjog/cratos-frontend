@@ -38,7 +38,7 @@ export class MenuService extends MenuData {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
-  deleteMenuById(param: { id: number }): Observable<HttpResult<Boolean>> {
+  deleteMenuById(param: { menuId: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/del', param);
   }
 }

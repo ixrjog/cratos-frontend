@@ -82,6 +82,7 @@ export class MenuConfigComponent implements OnInit {
         body.items.map(item => this.deleteProperty(item));
         this.menuData = body.items;
         this.rootMenu[0].children = this.menuData;
+        this.selectMenu = null;
       });
   }
 
@@ -159,7 +160,7 @@ export class MenuConfigComponent implements OnInit {
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.menuService.deleteMenuById({ id: this.selectMenu.id })
+      this.menuService.deleteMenuById({ menuId: this.selectMenu.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.getNavMenu();
@@ -170,13 +171,4 @@ export class MenuConfigComponent implements OnInit {
   onMenuTitleChange(content: string) {
     this.menuTitleJson = content;
   }
-
-
-  getMenuById(menuId: number) {
-    this.menuService.getMenuById({ id: menuId })
-      .subscribe(({ body }) => {
-        this.selectMenu = body;
-      });
-  }
-
 }

@@ -68,7 +68,7 @@ export abstract class MenuData {
 
   abstract updateMenu(param: MenuEdit): Observable<HttpResult<Boolean>>;
 
-  abstract deleteMenuById(param: { id: number }): Observable<HttpResult<Boolean>>;
+  abstract deleteMenuById(param: { menuId: number }): Observable<HttpResult<Boolean>>;
 
 }
 

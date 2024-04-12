@@ -39,6 +39,7 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowMenu(rowItem)"></d-icon>
             <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
           </d-icon-group>
         </ng-template>

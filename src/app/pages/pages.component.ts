@@ -97,9 +97,8 @@ export class PagesComponent implements OnInit {
   }
 
   updateMenu(values: any) {
-    // let langCode = localStorage.getItem('lang');
-    // this.menuService.queryMyMenu({ lang: langCode })
-    //   .subscribe(res => console.log(res));
+    // this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
+    //   .subscribe(res => this.menu = res);
     this.menu = getMenu(values);
   }
 

@@ -28,6 +28,14 @@ export interface NavMenuVO {
   items: MenuVO[];
 }
 
+export interface RoleMenuVO {
+  id: number,
+  name: string
+  open: boolean
+  isChecked: boolean
+  items: RoleMenuVO[]
+}
+
 export interface MenuPageQuery extends PageQuery {
   queryName: string;
   menuType: string;
@@ -69,6 +77,10 @@ export abstract class MenuData {
   abstract updateMenu(param: MenuEdit): Observable<HttpResult<Boolean>>;
 
   abstract deleteMenuById(param: { menuId: number }): Observable<HttpResult<Boolean>>;
+
+  abstract getRoleMenuByRoleId(param: { roleId: number, lang: string }): Observable<HttpResult<{
+    items: RoleMenuVO[]
+  }>>;
 
 }
 

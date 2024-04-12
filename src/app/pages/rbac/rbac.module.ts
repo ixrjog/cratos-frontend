@@ -14,6 +14,7 @@ import { RbacRoleDataTableComponent } from './rbac-role/rbac-role-data-table/rba
 import { RbacRoleEditorComponent } from './rbac-role/rbac-role-data-table/rbac-role-editor/rbac-role-editor.component';
 import { RbacRoleAuthorizeComponent } from './rbac-role/rbac-role-authorize/rbac-role-authorize.component';
 import { RbacRoleResourceDataTableComponent } from './rbac-role/rbac-role-authorize/rbac-role-resource-data-table/rbac-role-resource-data-table.component';
+import { RbacRoleMenuComponent } from './rbac-role/rbac-role-data-table/rbac-role-menu/rbac-role-menu.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { RbacRoleResourceDataTableComponent } from './rbac-role/rbac-role-author
     RbacRoleEditorComponent,
     RbacRoleAuthorizeComponent,
     RbacRoleResourceDataTableComponent,
+    RbacRoleMenuComponent,
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { MenuData, MenuEdit, MenuPageQuery, MenuVO, NavMenuVO, QueryMenu } from '../data/menu';
+import { MenuData, MenuEdit, MenuPageQuery, MenuVO, NavMenuVO, QueryMenu, RoleMenuVO } from '../data/menu';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
 
@@ -41,4 +41,9 @@ export class MenuService extends MenuData {
   deleteMenuById(param: { menuId: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/del', param);
   }
+
+  getRoleMenuByRoleId(param: { roleId: number; lang: string }): Observable<HttpResult<{ items: RoleMenuVO[] }>> {
+    return this.apiService.get(this.baseUrl, '/role/get', param);
+  }
+
 }

@@ -1,6 +1,6 @@
 export default {
   loginPage: {
-    coperation: 'DevUI Design Presented',
+    coperation: 'A watched pot never boils.',
     loginWays: {
       account: 'Account Login',
       email: 'Email Login',

@@ -32,6 +32,13 @@
       </d-cell-edit>
     </d-column>
     <d-column field="domain" header="Domain"></d-column>
+    <d-column header="Record">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ countResource(rowItem) }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="comment" header="Comment"></d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>

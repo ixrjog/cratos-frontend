@@ -21,6 +21,7 @@ import { EdsService } from './services/ext-datasource.service.s';
 import { EdsScheduleService } from './services/ext-datasource-schedule.service';
 import { EnvService } from './services/env.service';
 import { TrafficLayerService } from './services/traffic-layer.service';
+import { MenuService } from './services/menu.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -47,7 +48,8 @@ export const CRATOS_PROVIDERS = [
   EdsService,
   EdsScheduleService,
   EnvService,
-  TrafficLayerService
+  TrafficLayerService,
+  MenuService,
 ];
 
 @NgModule({

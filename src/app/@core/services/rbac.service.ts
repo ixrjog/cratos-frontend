@@ -13,6 +13,7 @@ import {
   RolePageQuery,
   RoleResourceEdit,
   RoleResourcePageQuery,
+  SaveRoleMenu,
   UserRoleEdit,
 } from '../data/rbac';
 import { Observable } from 'rxjs';
@@ -88,6 +89,10 @@ export class RbacService extends RbacData {
 
   deleteUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.deleteByBody(this.baseUrl, '/user/role/del', param);
+  }
+
+  saveRoleMenu(param: SaveRoleMenu): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/role/menu/save', param);
   }
 
 }

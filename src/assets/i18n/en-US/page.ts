@@ -8,6 +8,7 @@ export default {
       title: 'System',
       tag: 'Tag',
       env: 'Env',
+      menu: 'Menu',
       credential: 'Credential'
     },
     certificate: {

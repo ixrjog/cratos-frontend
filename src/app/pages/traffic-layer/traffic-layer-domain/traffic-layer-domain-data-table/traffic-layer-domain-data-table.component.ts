@@ -15,6 +15,7 @@ import { TrafficLayerService } from '../../../../@core/services/traffic-layer.se
 import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { catchError } from 'rxjs/operators';
+import { countResource } from '../../../../@shared/utils/resource-count.util';
 
 @Component({
   selector: 'app-traffic-layer-domain-data-table',
@@ -181,4 +182,6 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
   onRowBusinessDoc(rowItem: CertificateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
+
+  protected readonly countResource = countResource;
 }

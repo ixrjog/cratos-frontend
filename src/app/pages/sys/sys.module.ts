@@ -17,6 +17,8 @@ import { CredentialEditorComponent } from './credential/credential-data-table/cr
 import { EnvComponent } from './env/env.component';
 import { EnvDataTableComponent } from './env/env-data-table/env-data-table.component';
 import { EnvEditorComponent } from './env/env-data-table/env-editor/env-editor.component';
+import { MenuComponent } from './menu/menu.component';
+import { MenuConfigComponent } from './menu/menu-config/menu-config.component';
 
 
 @NgModule({
@@ -31,6 +33,8 @@ import { EnvEditorComponent } from './env/env-data-table/env-editor/env-editor.c
     EnvComponent,
     EnvDataTableComponent,
     EnvEditorComponent,
+    MenuComponent,
+    MenuConfigComponent,
   ],
   imports: [
     CommonModule,

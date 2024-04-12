@@ -8,6 +8,7 @@ export default {
       title: '系统管理',
       tag: '标签',
       env: '环境',
+      menu: '菜单',
       credential: '凭据'
     },
     certificate: {

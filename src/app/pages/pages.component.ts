@@ -11,6 +11,7 @@ import { DaScreenMediaQueryService } from '../@shared/layouts/da-grid';
 import { SideMenuComponent } from '../@shared/components/side-menu/side-menu.component';
 import { Theme } from 'ng-devui/theme';
 import { getMenu } from './menu-util';
+import { MenuService } from '../@core/services/menu.service';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class PagesComponent implements OnInit {
     private mediaQueryService: DaScreenMediaQueryService,
     private render2: Renderer2,
     private translate: TranslateService,
+    private menuService: MenuService,
   ) {
     this.personalizeService.initTheme();
     this.layoutService
@@ -95,6 +97,9 @@ export class PagesComponent implements OnInit {
   }
 
   updateMenu(values: any) {
+    // let langCode = localStorage.getItem('lang');
+    // this.menuService.queryMyMenu({ lang: langCode })
+    //   .subscribe(res => console.log(res));
     this.menu = getMenu(values);
   }
 

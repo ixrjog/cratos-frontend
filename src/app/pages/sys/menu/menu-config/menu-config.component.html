@@ -1,0 +1,150 @@
+<section>
+  <d-splitter class="splitter-border" [orientation]="orientation" [splitBarSize]="splitBarSize"
+              [showCollapseButton]="true">
+    <d-splitter-pane
+      [size]="size"
+      [minSize]="minSize"
+      [maxSize]="maxSize"
+      [collapsible]="true"
+    >
+      <div class="pane-content">
+        <h2>Menu Nav</h2>
+        <d-accordion
+          [data]="rootMenu"
+          [itemTemplate]="itemtemplate"
+          [menuItemTemplate]="menutemplate"
+          (itemClick)="itemClick($event)"
+          (menuToggle)="menuToggle($event)"
+        >
+        </d-accordion>
+        <ng-template #menutemplate let-item="item">
+          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
+        </ng-template>
+        <ng-template #itemtemplate let-item="item">
+          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
+        </ng-template>
+      </div>
+    </d-splitter-pane>
+    <d-splitter-pane minSize="15%">
+      <div class="pane-content">
+        <h2>Menu Item</h2>
+        <div style="min-height: 400px">
+          <div class="spacing-search">
+            <d-button
+              class="button"
+              bsStyle="primary"
+              (click)="onRowNew()"
+              [disabled]="selectMenu === null"
+            >New
+            </d-button>
+          </div>
+          <div style="height: 100%" *ngIf="selectMenu">
+            <form
+              dForm
+              ngForm
+              [dValidateRules]="formRules['rule']"
+              [layout]="layoutDirection"
+              #menuForm="dValidateRules"
+              (dSubmit)="submitForm($event)"
+            >
+              <d-form-item>
+                <d-form-label [required]="true">Menu Type</d-form-label>
+                <d-form-control>
+                  <d-radio-group
+                    name="menuType"
+                    [direction]="'row'"
+                    [(ngModel)]="selectMenu.menuType"
+                  >
+                    <d-radio
+                      *ngFor="let option of menuTypeOptions"
+                      [name]="'menuType'"
+                      [value]="option"
+                      [disabled]="true"
+                    >
+                      {{ option }}
+                    </d-radio>
+                  </d-radio-group>
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label [required]="true">Name</d-form-label>
+                <d-form-control>
+                  <input
+                    [disabled]="selectMenu.id === 0"
+                    dTextInput
+                    name="name"
+                    [(ngModel)]="selectMenu.name"
+                    [dValidateRules]="formRules['name']" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label [required]="true">Link</d-form-label>
+                <d-form-control>
+                  <input
+                    [disabled]="selectMenu.id === 0"
+                    dTextInput
+                    name="link"
+                    [(ngModel)]="selectMenu.link"
+                    [dValidateRules]="formRules['link']" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item *ngIf="selectMenu?.menuType === MenuTypeEnum.MAIN">
+                <d-form-label>Icon</d-form-label>
+                <d-form-control>
+                  <input
+                    dTextInput
+                    name="icon"
+                    [(ngModel)]="selectMenu.icon" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label [required]="true">Seq</d-form-label>
+                <d-form-control>
+                  <d-input-number
+                    [disabled]="selectMenu.id === 0"
+                    [min]="1"
+                    name="seq"
+                    [(ngModel)]="selectMenu.seq"
+                    [dValidateRules]="formRules['sep']" />
+                </d-form-control>
+              </d-form-item>
+              <d-form-item>
+                <d-form-label>
+                  Support Lang
+                  <span
+                    *ngFor="let lang of langOptions"
+                    style="margin-right: 5px"
+                    class="font-color-comment"
+                  >{{ lang.code }}</span>
+                </d-form-label>
+                <d-form-control>
+                  <app-ace-editor
+                    *ngIf="menuTitleJson !== ''"
+                    [minLines]="15"
+                    [maxLines]="20"
+                    [mode]="'ace/mode/json'"
+                    [aceValue]="menuTitleJson"
+                    (onChange)="onMenuTitleChange($event)"
+                  >
+                  </app-ace-editor>
+                </d-form-control>
+              </d-form-item>
+              <d-form-operation>
+                <d-button
+                  [disabled]="selectMenu.id === 0"
+                  class="mr-element-spacing"
+                  [title]="menuForm.errorMessage || ''" circled="true"
+                  style="margin-right: 8px"
+                  dFormSubmit
+                >Save
+                </d-button>
+                <d-button bsStyle="danger" (click)="onRowDelete()" [disabled]="selectMenu.id === 0">Delete
+                </d-button>
+              </d-form-operation>
+            </form>
+          </div>
+        </div>
+      </div>
+    </d-splitter-pane>
+  </d-splitter>
+</section>

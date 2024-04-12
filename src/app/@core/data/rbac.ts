@@ -85,6 +85,11 @@ export interface UserRoleEdit {
   roleId: number;
 }
 
+export interface SaveRoleMenu {
+  roleId: number;
+  menuIds: number[];
+}
+
 export abstract class RbacData {
 
   abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;
@@ -118,5 +123,7 @@ export abstract class RbacData {
   abstract addUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>>;
 
   abstract deleteUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>>;
+
+  abstract saveRoleMenu(param: SaveRoleMenu): Observable<HttpResult<Boolean>>;
 
 }

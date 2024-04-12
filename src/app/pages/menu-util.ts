@@ -13,11 +13,15 @@ export function getMenu(values: any): any[] {
           link: '/pages/sys/env',
         },
         {
+          title: values['sys']['menu'],
+          link: '/pages/sys/menu',
+        },
+        {
           title: values['sys']['credential'],
           link: '/pages/sys/credential',
         },
       ],
-      link: '/pages/certificate',
+      link: '/pages/sys',
       menuIcon: 'icon icon-system',
     },
     {
@@ -106,4 +110,3 @@ export function getMenu(values: any): any[] {
     },
   ];
 }
-

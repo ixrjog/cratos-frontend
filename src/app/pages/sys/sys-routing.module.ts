@@ -4,6 +4,7 @@ import { SysComponent } from './sys.component';
 import { TagComponent } from './tag/tag.component';
 import { CredentialComponent } from './credential/credential.component';
 import { EnvComponent } from './env/env.component';
+import { MenuComponent } from './menu/menu.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
     children: [
       { path: 'tag', component: TagComponent },
       { path: 'env', component: EnvComponent },
+      { path: 'menu', component: MenuComponent },
       { path: 'credential', component: CredentialComponent }
     ],
   },

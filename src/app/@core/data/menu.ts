@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, HttpResult, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 
 export interface MenuVO extends BaseVO, ValidVO {
@@ -36,13 +36,6 @@ export interface RoleMenuVO {
   items: RoleMenuVO[]
 }
 
-export interface MenuPageQuery extends PageQuery {
-  queryName: string;
-  menuType: string;
-  parentId: number;
-  lang: string;
-}
-
 export interface QueryMenu {
   lang: string;
 }
@@ -63,8 +56,6 @@ export interface MenuEdit {
 }
 
 export abstract class MenuData {
-
-  abstract queryMenuPage(param: MenuPageQuery): Observable<DataTable<MenuVO>>;
 
   abstract queryMyMenu(param: QueryMenu): Observable<HttpResult<Array<MenuVO>>>;
 

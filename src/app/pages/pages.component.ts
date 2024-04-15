@@ -10,8 +10,8 @@ import { DaLayoutConfig, DaLayoutService } from '../@shared/layouts/da-layout';
 import { DaScreenMediaQueryService } from '../@shared/layouts/da-grid';
 import { SideMenuComponent } from '../@shared/components/side-menu/side-menu.component';
 import { Theme } from 'ng-devui/theme';
-import { getMenu } from './menu-util';
 import { MenuService } from '../@core/services/menu.service';
+import { MenuVO } from '../@core/data/menu';
 
 
 @Component({
@@ -21,7 +21,7 @@ import { MenuService } from '../@core/services/menu.service';
 })
 export class PagesComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
-  menu: any;
+  menu: any[] = [];
 
   layoutConfig: DaLayoutConfig;
   isSidebarShrink: boolean = false;
@@ -96,10 +96,51 @@ export class PagesComponent implements OnInit {
     });
   }
 
+  // updateMenu() {
+  //   this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
+  //     .subscribe(({ body }) => this.menu = body);
+  // }
+
   updateMenu(values: any) {
-    // this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
-    //   .subscribe(res => this.menu = res);
-    this.menu = getMenu(values);
+    this.menu = [];
+    this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
+      .subscribe(({ body }) => {
+        body.map(item => {
+          let menuItem = {
+            title: item.title,
+            open: true,
+            link: item.link,
+            menuIcon: item.icon,
+          };
+          if (this.buildChildren(item) === null) {
+            this.menu.push(menuItem);
+          } else {
+            menuItem['children'] = this.buildChildren(item);
+            this.menu.push(menuItem);
+          }
+        });
+      });
+  }
+
+  buildChildren(menu: MenuVO) {
+    if (!menu.children) {
+      return null;
+    } else {
+      let childrenMenu = [];
+      menu.children.map(item => {
+        let menuItem = {
+          title: item.title,
+          link: item.link,
+        };
+        if (this.buildChildren(item) === null) {
+          childrenMenu.push(menuItem);
+        } else {
+          menuItem['children'] = this.buildChildren(item);
+          childrenMenu.push(menuItem);
+        }
+      });
+      return childrenMenu;
+    }
   }
 
   openSideMenuDrawer() {

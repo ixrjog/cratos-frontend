@@ -1,0 +1,137 @@
+<div class="drawer-menu">
+  <h2 class="font-color-name" style="margin: 8px 12px;">{{ riskEventName }}</h2>
+  <div [style.margin]="'20px 20px 0 0'" [style.text-align]="'right'" [style.cursor]="'pointer'">
+    <span
+      [style.margin-right]="'12px'"
+      [className]="showRiskEventImpactEdit? 'icon-chevron-up':'icon-chevron-down'"
+      (click)="showRiskEventImpact()"
+    >
+    </span>
+    <span
+      [style.margin-right]="'8px'"
+      title="Fullscreen"
+      (click)="toggleFullScreen()"
+      class="icon"
+      [ngClass]="{ 'icon-maxmize': !isFullScreen, 'icon-minimize': isFullScreen }"
+    >
+    </span>
+    <span (click)="close($event)" title="Close" class="icon icon-close"></span>
+  </div>
+  <div class="operation-area">
+    <div *ngIf="showRiskEventImpactEdit">
+      <form
+        style="margin-bottom: 10px"
+        dForm
+        ngForm
+        [dValidateRules]="formRules['rule']"
+        [layout]="layoutDirection"
+        #scheduleForm="dValidateRules"
+        (dSubmit)="submitForm($event)"
+      >
+        <d-form-item>
+          <d-form-label [required]="true">SLA</d-form-label>
+          <d-form-control>
+            <d-toggle name="sla" [(ngModel)]="formData.sla"></d-toggle>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]="true">Time</d-form-label>
+          <d-form-control>
+            <d-range-datepicker-pro
+              name="impactTIme"
+              [appendToBody]="false"
+              [(ngModel)]="impactTime"
+              [showTime]="true"
+              (ngModelChange)="onTimeChange($event)"
+            ></d-range-datepicker-pro>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]="true">Content</d-form-label>
+          <d-form-control>
+            <app-ace-editor
+              [minLines]="19"
+              [maxLines]="50"
+              [mode]="'ace/mode/text'"
+              [aceValue]="formData.content"
+              (onChange)="onContentChange($event)"
+            >
+            </app-ace-editor>
+          </d-form-control>
+        </d-form-item>
+        <d-form-operation>
+          <d-button
+            class="mr-element-spacing"
+            [title]="scheduleForm.errorMessage || ''" circled="true"
+            style="margin-right: 8px"
+            dFormSubmit
+          >Save
+          </d-button>
+        </d-form-operation>
+      </form>
+    </div>
+    <div class="spacing-search">
+      <d-button class="button" bsStyle="primary" (click)="onRowNew()" *ngIf="!showRiskEventImpactEdit">New</d-button>
+    </div>
+    <div class="spacing-table">
+      <d-data-table
+        dLoading
+        [dataSource]="table.data"
+        [tableOverflowType]="'overlay'"
+        [backdrop]="true"
+        [scrollable]="true"
+        [loadingStyle]="'infinity'"
+        [loading]="table.loading"
+      >
+        <d-column field="content" header="Content"></d-column>
+        <d-column header="Time" [width]="'250px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <span class="font-color-name" style="margin-right: 5px">Start Time</span>
+              <strong style="margin-left: 5px">{{ rowItem['startTime'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</strong>
+              <br>
+              <span class="font-color-name" style="margin-right: 5px">End Time</span>
+              <strong style="margin-left: 5px">{{ rowItem['endTime'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</strong>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column field="cost" header="Cost (s)" [width]="'120px'"></d-column>
+        <d-column header="Tags" [width]="'250px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column header="Actions" [width]="'200px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <d-icon-group>
+                <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+                <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+                <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+                <d-icon
+                  [icon]="'icon-priority'"
+                  [operable]="true"
+                  [color]="getRowColor(rowItem['valid'])"
+                  (click)="onRowValid(rowItem)"
+                >
+                </d-icon>
+                <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+              </d-icon-group>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <ng-template #noResultTemplateRef>
+          <div class="no-data">Fetch Data</div>
+        </ng-template>
+      </d-data-table>
+    </div>
+  </div>
+</div>
+

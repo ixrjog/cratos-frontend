@@ -1,0 +1,56 @@
+<div>
+  <d-card>
+    <d-card-header (click)="onRouteRiskEventDetail(riskEvent.id)">
+      <d-avatar
+        dCardAvatar
+        [name]="riskEvent.name"
+        [isRound]="true"
+        [width]="28"
+        [height]="28"
+      ></d-avatar>
+      <d-card-title>
+        <h3 class="font-color-name" style="margin: 0">{{ riskEvent.name }}</h3>
+      </d-card-title>
+      <d-card-subtitle>
+        <span class="font-color-comment">{{ riskEvent.eventTime | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+        <d-tag
+          style="margin-left: 10px"
+          *ngIf="riskEvent?.totalCost?.costDesc"
+          [tag]="'SLA: ' + riskEvent.totalCost.costDesc"
+          [labelStyle]="'red-w98'"
+        ></d-tag>
+      </d-card-subtitle>
+    </d-card-header>
+    <d-card-content>
+      <div class="spacing-card-content">
+        <app-risk-event-impact style="overflow: auto" [riskImpacts]="riskEvent.impacts"></app-risk-event-impact>
+        <div class="card-content-tags">
+          <app-business-tags [businessTags]="riskEvent.businessTags"></app-business-tags>
+        </div>
+      </div>
+    </d-card-content>
+    <d-card-actions [align]="'end'">
+      <div>
+        <d-icon-group>
+          <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(riskEvent)"></d-icon>
+          <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowImpact(riskEvent)"></d-icon>
+          <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(riskEvent)"></d-icon>
+          <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(riskEvent)"></d-icon>
+          <d-icon
+            [icon]="'icon-priority'"
+            [operable]="true"
+            [color]="getRowColor(riskEvent.valid)"
+            (click)="onRowValid(riskEvent)"
+          >
+          </d-icon>
+          <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(riskEvent)">Delete</li>
+              </ul>
+            </span>
+        </d-icon-group>
+      </div>
+    </d-card-actions>
+  </d-card>
+</div>

@@ -32,6 +32,7 @@ import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
 import { DnsUtil } from './utils/dns.util';
+import { ClipPipe } from './pipe/clip.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -48,6 +49,7 @@ const COMPONENTS = [
 const PIPES = [
   SafePipe,
   EdsAssetTypePipe,
+  ClipPipe,
 ];
 
 const CRATOS_COMPONENTS = [

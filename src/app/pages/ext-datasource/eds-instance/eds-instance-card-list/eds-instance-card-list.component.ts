@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableComponent } from 'ng-devui';
+import { Component, OnInit } from '@angular/core';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table } from '../../../../@core/data/base-data';
 import { EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
@@ -14,7 +13,6 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 })
 export class EdsInstanceCardListComponent implements OnInit {
 
-  @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
     edsType: '',

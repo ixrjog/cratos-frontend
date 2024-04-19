@@ -25,6 +25,10 @@ const routes: Routes = [
         loadChildren: () => import('./channel-network/channel-network.module').then(m => m.ChannelNetworkModule),
       },
       {
+        path: 'risk-event',
+        loadChildren: () => import('./risk-event/risk-event.module').then(m => m.RiskEventModule)
+      },
+      {
         path: 'traffic-layer',
         loadChildren: () => import('./traffic-layer/traffic-layer.module').then(m => m.TrafficLayerModule),
       },

@@ -27,7 +27,6 @@ export class ChannelNetworkEditorComponent implements OnInit {
     ChannelAvailableStatusEnum.HA,
     ChannelAvailableStatusEnum.UNSTABLE,
     ChannelAvailableStatusEnum.DOWN,
-
   ];
 
   formRules: { [key: string]: DValidateRules } = {

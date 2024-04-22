@@ -9,6 +9,7 @@ import { RiskEventImpactEdit, RiskEventVO } from '../../../../../@core/data/risk
 import { RiskEventEditorComponent } from '../risk-event-editor/risk-event-editor.component';
 import { RiskEventService } from '../../../../../@core/services/risk-event.service';
 import { RiskEventImpactEditorComponent } from '../risk-event-impact-editor/risk-event-impact-editor.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-risk-event-card',
@@ -20,6 +21,11 @@ export class RiskEventCardComponent {
   @Input() riskEvent: RiskEventVO;
   @Output() onFetchData = new EventEmitter<string>();
   businessType: string = BusinessTypeEnum.RISK_EVENT;
+
+  stickyView = {
+    top: 10,
+    bottom: 0,
+  };
 
   dialogDate = {
     editorData: {
@@ -116,9 +122,16 @@ export class RiskEventCardComponent {
 
   protected readonly getRowColor = getRowColor;
 
-  onRouteRiskEventDetail(riskEventId: number) {
-    // this.route.navigate([ '/pages/risk-event/detail' ], { queryParams: { riskEventId: riskEventId } });
+  protected readonly JSON = JSON;
+
+  getSla(riskEventVO: RiskEventVO): string {
+    let result = 'SLA: ';
+    if (riskEventVO.totalCost.cost === 0) {
+      return result + '不影响'
+    }
+    return result + riskEventVO.totalCost.costDesc
   }
 
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 }
 

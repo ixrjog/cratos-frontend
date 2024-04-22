@@ -70,7 +70,7 @@ export class RiskEventCardListComponent implements OnInit {
     eventTime: undefined,
     name: '',
     states: '',
-    valid: false,
+    valid: true,
   };
 
   constructor(private riskEventService: RiskEventService,

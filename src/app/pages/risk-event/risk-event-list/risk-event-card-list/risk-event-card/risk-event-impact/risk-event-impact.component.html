@@ -1,16 +1,17 @@
 <section>
-  <d-status
-    style="height: 50px;margin-top: 10px"
-    *ngFor="let impact of riskImpacts"
-    [type]="impact.sla? 'error':'invalid'">
-    <div style="margin-left: 10px">
-      <span class="impact-title">
-        {{ impact.startTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
-        - {{ impact.endTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
+  <div *ngFor="let impact of riskImpacts" style="margin-bottom: 10px">
+    <d-status
+      [type]="impact.sla? 'error':'invalid'">
+       <span class="impact-title">
+        {{ impact.startTime | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?'}}
+         - {{ impact.endTime | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
       </span>
-      <app-business-tags [businessTags]="impact.businessTags"></app-business-tags>
-      <br>
-      <span class="impact-content">{{ impact.content | clip:50 }}</span>
-    </div>
-  </d-status>
+    </d-status>
+    <app-business-tags
+      style="margin-left: 15px"
+      [businessTags]="impact.businessTags"
+    ></app-business-tags>
+    <br>
+    <div class="impact-content">{{ impact.content | clip:50 }}</div>
+  </div>
 </section>

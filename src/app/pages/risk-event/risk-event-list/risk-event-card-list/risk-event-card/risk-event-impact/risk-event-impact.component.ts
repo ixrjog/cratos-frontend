@@ -11,4 +11,5 @@ export class RiskEventImpactComponent {
   @Input() riskImpacts: RiskEventImpactVO[];
 
 
+  protected readonly JSON = JSON;
 }

@@ -96,8 +96,8 @@ export class RiskEventImpactEditorComponent implements OnInit {
     if (valid) {
       const param: RiskEventImpactEdit = {
         ...this.formData,
-        startTime: this.formData.startTime.getTime(),
-        endTime: this.formData.endTime.getTime(),
+        startTime: this.formData.startTime ? this.formData.startTime.getTime() : null,
+        endTime: this.formData.endTime ? this.formData.endTime.getTime() : null,
       };
       if (this.formData.id) {
         this.riskEventService.addRiskEventImpact(param)

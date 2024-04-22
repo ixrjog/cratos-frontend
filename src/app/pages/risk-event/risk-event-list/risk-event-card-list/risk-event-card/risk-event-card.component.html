@@ -1,6 +1,6 @@
-<div>
+<div class="risk-event-card">
   <d-card>
-    <d-card-header (click)="onRouteRiskEventDetail(riskEvent.id)">
+    <d-card-header>
       <d-avatar
         dCardAvatar
         [name]="riskEvent.name"
@@ -13,18 +13,37 @@
       </d-card-title>
       <d-card-subtitle>
         <span class="font-color-comment">{{ riskEvent.eventTime | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+        <strong style="margin-left: 10px">{{ riskEvent.eventTime | dRelativeTime: limit | async }}</strong>
         <d-tag
           style="margin-left: 10px"
           *ngIf="riskEvent?.totalCost?.costDesc"
-          [tag]="'SLA: ' + riskEvent.totalCost.costDesc"
+          [tag]="getSla(riskEvent)"
           [labelStyle]="'red-w98'"
         ></d-tag>
       </d-card-subtitle>
     </d-card-header>
     <d-card-content>
       <div class="spacing-card-content">
-        <app-risk-event-impact style="overflow: auto" [riskImpacts]="riskEvent.impacts"></app-risk-event-impact>
-        <div class="card-content-tags">
+        <d-row [dGutter]="[10,10]">
+          <d-col [dSpan]="12">
+            <div class="impact">
+              <app-risk-event-impact [riskImpacts]="riskEvent.impacts"></app-risk-event-impact>
+            </div>
+          </d-col>
+          <d-col [dSpan]="12">
+            <div class="tips" *ngIf="JSON.stringify(riskEvent.businessDocs) !=='[]'">
+              <d-sticky [view]="stickyView" *ngFor="let doc of riskEvent.businessDocs">
+                <div class="tip-content">
+                  <h4 style="margin: 10px 0 5px 0">{{ doc.name }}</h4>
+                  <div style="text-indent: 2em">
+                    {{ doc.content }}
+                  </div>
+                </div>
+              </d-sticky>
+            </div>
+          </d-col>
+        </d-row>
+        <div class="card-tags">
           <app-business-tags [businessTags]="riskEvent.businessTags"></app-business-tags>
         </div>
       </div>

@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RiskEventRoutingModule } from './risk-event-routing.module';
 import { RiskEventComponent } from './risk-event.component';
 import { RiskEventListComponent } from './risk-event-list/risk-event-list.component';
-import { RiskEventDetailComponent } from './risk-event-detail/risk-event-detail.component';
 import { RiskEventCardListComponent } from './risk-event-list/risk-event-card-list/risk-event-card-list.component';
 import { SharedModule } from '../../@shared/shared.module';
 import { RiskEventCardComponent } from './risk-event-list/risk-event-card-list/risk-event-card/risk-event-card.component';
@@ -20,7 +19,6 @@ import {
   declarations: [
     RiskEventComponent,
     RiskEventListComponent,
-    RiskEventDetailComponent,
     RiskEventCardListComponent,
     RiskEventCardComponent,
     RiskEventEditorComponent,

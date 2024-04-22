@@ -1,15 +1,40 @@
-.spacing-card-content {
-  height: 300px;
-  display: flex;
+@import 'ng-devui/styles-var/devui-var.less';
+
+d-card.devui-card {
+  min-width: 740px;
+}
+
+.risk-event-card {
   position: relative;
 
-  .card-content-comment {
-  }
-
-  .card-content-tags {
+  .card-tags {
     position: absolute;
-    bottom: 5%;
-    right: 0;
+    top: 20px;
+    right: 20px;
     opacity: 0.8;
   }
 }
+
+.spacing-card-content {
+  @card-content-height: 300px;
+  height: @card-content-height;
+
+  .tips {
+    height: @card-content-height;
+    border: 1px dashed @devui-dividing-line;
+    overflow: auto;
+  }
+
+  .tip-content {
+    padding: 5px;
+  }
+
+  .impact {
+    height: @card-content-height;
+    overflow: auto;
+  }
+}
+
+
+
+

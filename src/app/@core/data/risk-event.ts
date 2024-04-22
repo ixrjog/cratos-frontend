@@ -1,9 +1,9 @@
 import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
-import { BusinessDocVO } from './business-doc';
+import { BusinessDocsVO, BusinessDocVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
 
-export interface RiskEventVO extends BaseVO, ValidVO, BusinessDocVO, BusinessTagsVO {
+export interface RiskEventVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
   name: string;
   eventTime: Date;

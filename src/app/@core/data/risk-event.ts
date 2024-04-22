@@ -28,6 +28,10 @@ export interface RiskEventImpactVO extends BaseVO, ValidVO, BusinessTagsVO {
   sla: boolean;
   cost: number;
   comment: string;
+  costDetail: {
+    cost: number
+    costDesc: string
+  };
 }
 
 export interface RiskEventPageQuery extends PageQuery {

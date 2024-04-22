@@ -34,7 +34,7 @@
             <div class="tips" *ngIf="JSON.stringify(riskEvent.businessDocs) !=='[]'">
               <d-sticky [view]="stickyView" *ngFor="let doc of riskEvent.businessDocs">
                 <div class="tip-content">
-                  <h4 style="margin: 10px 0 5px 0">{{ doc.name }}</h4>
+                  <h4 style="margin: 10px 0 5px 0" class="font-color-name">{{ doc.name }}</h4>
                   <div style="text-indent: 2em">
                     {{ doc.content }}
                   </div>

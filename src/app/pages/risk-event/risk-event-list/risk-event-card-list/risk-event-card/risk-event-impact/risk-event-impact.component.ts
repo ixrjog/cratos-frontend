@@ -9,7 +9,13 @@ import { RiskEventImpactVO } from '../../../../../../@core/data/risk-event';
 export class RiskEventImpactComponent {
 
   @Input() riskImpacts: RiskEventImpactVO[];
-
-
   protected readonly JSON = JSON;
+
+  getSla(riskEventImpactVO: RiskEventImpactVO): string {
+    let result = 'SLA: ';
+    if (riskEventImpactVO.costDetail?.cost === 0) {
+      return result + '不影响';
+    }
+    return result + riskEventImpactVO.costDetail.costDesc;
+  }
 }

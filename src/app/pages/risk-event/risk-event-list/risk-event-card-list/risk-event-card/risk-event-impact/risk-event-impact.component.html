@@ -7,10 +7,14 @@
          - {{ impact.endTime | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
       </span>
     </d-status>
+    <d-tag
+      style="margin-left: 15px;margin-right: 5px;"
+      *ngIf="impact.costDetail?.costDesc"
+      [tag]="getSla(impact)"
+      [labelStyle]="'red-w98'"
+    ></d-tag>
     <app-business-tags
-      style="margin-left: 15px"
-      [businessTags]="impact.businessTags"
-    ></app-business-tags>
+      [businessTags]="impact.businessTags"></app-business-tags>
     <br>
     <div class="impact-content">{{ impact.content | clip:50 }}</div>
   </div>

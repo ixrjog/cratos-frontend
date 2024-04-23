@@ -14,8 +14,13 @@
       [labelStyle]="'red-w98'"
     ></d-tag>
     <app-business-tags
+      *ngIf="!impact.sla"
+      style="margin-left: 15px"
+      [businessTags]="impact.businessTags"></app-business-tags>
+    <app-business-tags
+      *ngIf="impact.sla"
       [businessTags]="impact.businessTags"></app-business-tags>
     <br>
-    <div class="impact-content">{{ impact.content | clip:50 }}</div>
+    <div class="impact-content">{{ impact.content }}</div>
   </div>
 </section>

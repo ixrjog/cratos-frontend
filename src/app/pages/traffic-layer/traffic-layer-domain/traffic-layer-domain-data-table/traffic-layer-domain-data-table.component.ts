@@ -106,7 +106,7 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newTrafficLayerDomain);
+    }, JSON.parse(JSON.stringify(this.newTrafficLayerDomain)));
   }
 
   onRowEdit(rowItem: TrafficLayerDomainVO) {

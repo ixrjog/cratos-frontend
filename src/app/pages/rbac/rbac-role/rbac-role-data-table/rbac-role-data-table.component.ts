@@ -83,7 +83,7 @@ export class RbacRoleDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newRbacRole);
+    }, JSON.parse(JSON.stringify(this.newRbacRole)));
   }
 
   onRowEdit(rowItem: RbacRoleVO) {

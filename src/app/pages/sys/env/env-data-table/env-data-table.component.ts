@@ -82,7 +82,7 @@ export class EnvDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newEnv);
+    }, JSON.parse(JSON.stringify(this.newEnv)));
   }
 
   onRowEdit(rowItem: EnvVO) {

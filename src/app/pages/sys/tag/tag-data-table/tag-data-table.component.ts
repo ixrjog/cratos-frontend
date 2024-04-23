@@ -83,7 +83,7 @@ export class TagDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newTag);
+    }, JSON.parse(JSON.stringify(this.newTag)));
   }
 
   onRowEdit(rowItem: TagVO) {

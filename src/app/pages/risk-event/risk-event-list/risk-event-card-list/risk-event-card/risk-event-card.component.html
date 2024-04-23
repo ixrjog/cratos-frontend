@@ -25,17 +25,17 @@
     <d-card-content>
       <div class="spacing-card-content">
         <d-row [dGutter]="[10,10]">
-          <d-col [dSpan]="12">
+          <d-col [dSpan]="14">
             <div class="impact">
               <app-risk-event-impact [riskImpacts]="riskEvent.impacts"></app-risk-event-impact>
             </div>
           </d-col>
-          <d-col [dSpan]="12">
+          <d-col [dSpan]="10">
             <div class="tips" *ngIf="JSON.stringify(riskEvent.businessDocs) !=='[]'">
               <d-sticky [view]="stickyView" *ngFor="let doc of riskEvent.businessDocs">
                 <div class="tip-content">
                   <h4 style="margin: 10px 0 5px 0" class="font-color-name">{{ doc.name }}</h4>
-                  <div style="text-indent: 2em">
+                  <div style="white-space: pre-wrap">
                     {{ doc.content }}
                   </div>
                 </div>

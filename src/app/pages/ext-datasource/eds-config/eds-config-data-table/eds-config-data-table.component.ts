@@ -113,7 +113,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newEdsConfig);
+    }, JSON.parse(JSON.stringify(this.newEdsConfig)));
   }
 
   onRowEdit(rowItem: EdsConfigVO) {

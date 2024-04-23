@@ -116,7 +116,7 @@ export class CredentialDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newCredential);
+    }, JSON.parse(JSON.stringify(this.newCredential)));
   }
 
   onRowEdit(rowItem: CredentialVO) {

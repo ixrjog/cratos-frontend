@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
@@ -6,9 +6,8 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { finalize, Observable, zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { UserEdit, UserPageQuery, UserVO } from '../../../../@core/data/user';
-import { UserEditorComponent } from './user-editor/user-editor.component';
 import { UserService } from '../../../../@core/services/user.service';
 import { catchError } from 'rxjs/operators';
 
@@ -85,7 +84,7 @@ export class UserListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onUserEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newUser);
+    }, JSON.parse(JSON.stringify(this.newUser)));
   }
 
   onRowEdit(rowItem: UserVO) {

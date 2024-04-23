@@ -89,7 +89,7 @@ export class CertificateListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newCertificate);
+    }, JSON.parse(JSON.stringify(this.newCertificate)));
   }
 
   onRowEdit(rowItem: CertificateVO) {

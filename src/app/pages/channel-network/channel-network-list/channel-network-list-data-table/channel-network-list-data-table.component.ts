@@ -90,7 +90,7 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newChannelNetwork);
+    }, JSON.parse(JSON.stringify(this.newChannelNetwork)));
   }
 
   onRowEdit(rowItem: ChannelNetworkVO) {

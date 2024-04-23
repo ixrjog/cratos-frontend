@@ -105,7 +105,7 @@ export class RiskEventCardListComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, this.newRiskEvent);
+    }, JSON.parse(JSON.stringify(this.newRiskEvent)));
   }
 
   finalSearchItems: any;

@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { RiskEventData, RiskEventEdit, RiskEventImpactEdit, RiskEventPageQuery, RiskEventVO } from '../data/risk-event';
+import {
+  RiskEventData,
+  RiskEventEdit,
+  RiskEventGraphQuery, RiskEventGraphVO,
+  RiskEventImpactEdit,
+  RiskEventPageQuery,
+  RiskEventVO,
+} from '../data/risk-event';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
 
@@ -57,4 +64,7 @@ export class RiskEventService extends RiskEventData {
     return this.apiService.get(this.baseUrl, '/report/year/options/get', {});
   }
 
+  queryRiskEventGraph(param: RiskEventGraphQuery): Observable<HttpResult<RiskEventGraphVO>> {
+    return this.apiService.post(this.baseUrl, '/graph/query', param);
+  }
 }

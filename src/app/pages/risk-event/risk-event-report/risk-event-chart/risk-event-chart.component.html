@@ -1,0 +1,43 @@
+<div class="spacing-search">
+    <d-select
+      class="select"
+      [filterKey]="'value'"
+      [appendToBody]="true"
+      [(ngModel)]="queryParam.year"
+      [searchFn]="onSearchYear"
+      [isSearch]="true"
+      placeholder="Select Year"
+      (valueChange)="onYearChange($event)"
+    >
+    </d-select>
+    <d-select
+      class="select"
+      [options]="quarterOptions"
+      [filterKey]="'name'"
+      [valueKey]="'value'"
+      [appendToBody]="true"
+      [(ngModel)]="queryParam.quarter"
+      [allowClear]="true"
+      placeholder="Select quarter"
+    >
+    </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div>
+  <d-row [dSpace]="[12, 12]">
+    <d-col [dSpan]="24">
+      <app-risk-event-pie-chart
+        [riskEventGraph]="riskEventGraph"
+        *ngIf="showChart"
+      >
+      </app-risk-event-pie-chart>
+    </d-col>
+    <d-col [dSpan]="24">
+      <app-risk-event-impact-bar-chart
+        [riskEventGraph]="riskEventGraph"
+        *ngIf="showChart && JSON.stringify(riskEventGraph.monthlySlaCostBarGraph.data) !== '[]'"
+      >
+      </app-risk-event-impact-bar-chart>
+    </d-col>
+  </d-row>
+</div>

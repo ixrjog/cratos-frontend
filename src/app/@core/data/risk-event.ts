@@ -1,5 +1,5 @@
 import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
-import { BusinessDocsVO, BusinessDocVO } from './business-doc';
+import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
 
@@ -35,12 +35,6 @@ export interface RiskEventImpactVO extends BaseVO, ValidVO, BusinessTagsVO {
 }
 
 export interface RiskEventPageQuery extends PageQuery {
-  // queryName: string;
-  // states: string;
-  // year: string;
-  // quarter: string;
-  // weeks: string;
-  // valid: boolean;
 }
 
 export interface RiskEventEdit {
@@ -61,6 +55,24 @@ export interface RiskEventImpactEdit {
   sla: boolean;
   valid: boolean;
   comment: string;
+}
+
+export interface RiskEventGraphVO {
+  slaPieGraph: {
+    total: number
+    cost: number
+  };
+  monthlySlaCostBarGraph: {
+    data: {
+      cname: string
+      value: number
+    }[]
+  };
+}
+
+export interface RiskEventGraphQuery {
+  year: string;
+  quarter: string;
 }
 
 export abstract class RiskEventData {
@@ -86,6 +98,8 @@ export abstract class RiskEventData {
   abstract getRiskEventById(param: { id: number }): Observable<HttpResult<RiskEventVO>>;
 
   abstract getYearOptions(): Observable<HttpResult<OptionsVO>>;
+
+  abstract queryRiskEventGraph(param: RiskEventGraphQuery): Observable<HttpResult<RiskEventGraphVO>>;
 
 
 }

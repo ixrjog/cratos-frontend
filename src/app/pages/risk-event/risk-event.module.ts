@@ -12,8 +12,10 @@ import { RiskEventImpactComponent } from './risk-event-list/risk-event-card-list
 import {
   RiskEventImpactEditorComponent
 } from './risk-event-list/risk-event-card-list/risk-event-impact-editor/risk-event-impact-editor.component';
-
-
+import { RiskEventReportComponent } from './risk-event-report/risk-event-report.component';
+import { RiskEventChartComponent } from './risk-event-report/risk-event-chart/risk-event-chart.component';
+import { RiskEventPieChartComponent } from './risk-event-report/risk-event-chart/risk-event-pie-chart/risk-event-pie-chart.component';
+import { RiskEventImpactBarChartComponent } from './risk-event-report/risk-event-chart/risk-event-impact-bar-chart/risk-event-impact-bar-chart.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,10 @@ import {
     RiskEventEditorComponent,
     RiskEventImpactEditorComponent,
     RiskEventImpactComponent,
+    RiskEventReportComponent,
+    RiskEventChartComponent,
+    RiskEventPieChartComponent,
+    RiskEventImpactBarChartComponent,
   ],
   imports: [
     CommonModule,

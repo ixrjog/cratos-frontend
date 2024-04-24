@@ -1,5 +1,5 @@
 <div class="spacing-search">
-    <d-select
+  <d-select
       class="select"
       [filterKey]="'value'"
       [appendToBody]="true"
@@ -8,9 +8,9 @@
       [isSearch]="true"
       placeholder="Select Year"
       (valueChange)="onYearChange($event)"
-    >
-    </d-select>
-    <d-select
+  >
+  </d-select>
+  <d-select
       class="select"
       [options]="quarterOptions"
       [filterKey]="'name'"
@@ -19,8 +19,21 @@
       [(ngModel)]="queryParam.quarter"
       [allowClear]="true"
       placeholder="Select quarter"
-    >
-    </d-select>
+  >
+  </d-select>
+  <d-cascader
+    class="cascader"
+    *ngIf="JSON.stringify(tagOptions) !== '[]'"
+    [options]="tagOptions"
+    [placeholder]="'please tag'"
+    [(ngModel)]="tags"
+    (ngModelChange)="onTagChanges($event)"
+    [trigger]="'click'"
+    [allowClear]="true"
+    [canSelectParent]="true"
+    [appendToBody]="true"
+  >
+  </d-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div>

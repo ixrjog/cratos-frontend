@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import * as echarts from 'echarts';
 import { RiskEventGraphVO } from '../../../../../@core/data/risk-event';
 
@@ -58,23 +58,12 @@ export class RiskEventPieChartComponent implements OnChanges {
             length: 30
           },
           label: {
-            formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+            formatter: '  {b|{b}：}{c}  {per|{d}%}  ',
             backgroundColor: '#F6F8FC',
             borderColor: '#8C8D8E',
             borderWidth: 1,
             borderRadius: 4,
             rich: {
-              a: {
-                color: '#6E7079',
-                lineHeight: 22,
-                align: 'center'
-              },
-              hr: {
-                borderColor: '#8C8D8E',
-                width: '100%',
-                borderWidth: 1,
-                height: 0
-              },
               b: {
                 color: '#4C5058',
                 fontSize: 14,

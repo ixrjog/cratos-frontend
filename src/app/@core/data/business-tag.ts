@@ -27,6 +27,7 @@ export interface BusinessTagEdit {
 export interface ListValue {
   tagId: number;
   queryTagValue?: string
+  tagValue?: string;
 }
 
 export abstract class BusinessTagData {

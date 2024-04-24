@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { RiskEventGraphVO } from '../../../../../@core/data/risk-event';
 import * as echarts from 'echarts';
 
@@ -32,6 +32,7 @@ export class RiskEventImpactBarChartComponent implements OnChanges {
         subtext: 'Unavailability Duration (s)',
         left: 'left',
       },
+      color: [ '#f66f6a' ],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -71,7 +72,6 @@ export class RiskEventImpactBarChartComponent implements OnChanges {
         },
       ],
     };
-
     option && myChart.setOption(option, true);
   }
 

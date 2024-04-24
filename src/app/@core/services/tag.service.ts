@@ -33,4 +33,8 @@ export class TagService extends TagData {
     return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
   }
 
+  queryTagByBusinessType(param: { businessType: string }): Observable<HttpResult<Array<TagVO>>> {
+    return this.apiService.post(this.baseUrl, '/business/type/query', param);
+  }
+
 }

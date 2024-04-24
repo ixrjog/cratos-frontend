@@ -41,4 +41,6 @@ export abstract class TagData {
 
   abstract setTagValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract queryTagByBusinessType(param: { businessType: string }): Observable<HttpResult<Array<TagVO>>>;
+
 }

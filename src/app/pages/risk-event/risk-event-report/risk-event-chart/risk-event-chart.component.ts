@@ -3,6 +3,9 @@ import { RiskEventService } from '../../../../@core/services/risk-event.service'
 import { RiskEventGraphQuery, RiskEventGraphVO } from '../../../../@core/data/risk-event';
 import { TagPageQuery } from '../../../../@core/data/tag';
 import { map } from 'rxjs/operators';
+import { TagService } from '../../../../@core/services/tag.service';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { BusinessTagService } from '../../../../@core/services/business-tag.service';
 
 @Component({
   selector: 'app-risk-event-chart',
@@ -11,13 +14,22 @@ import { map } from 'rxjs/operators';
 })
 export class RiskEventChartComponent implements OnInit {
 
-  constructor(private riskEventService: RiskEventService) {
+  constructor(private riskEventService: RiskEventService,
+              private tagService: TagService,
+              private businessTagService: BusinessTagService) {
   }
 
   queryParam = {
     year: '',
     quarter: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
+
+  tagOptions = [];
+  tags = [];
 
   riskEventGraph: RiskEventGraphVO = null;
   showChart = false;
@@ -31,6 +43,7 @@ export class RiskEventChartComponent implements OnInit {
 
   ngOnInit() {
     this.queryParam.year = new Date().getFullYear().toString();
+    this.getTagOptions();
     this.fetchData();
   }
 
@@ -50,6 +63,36 @@ export class RiskEventChartComponent implements OnInit {
     this.queryParam.year = year.value;
   }
 
+  queryBusinessTagByValue(tagId: number) {
+    return new Promise(() => {
+      this.businessTagService.queryBusinessTagByValue({ tagId: tagId })
+        .subscribe();
+    });
+  }
+
+  getTagOptions() {
+    this.tagService.queryTagByBusinessType({ businessType: BusinessTypeEnum.RISK_EVENT_IMPACT })
+      .subscribe(({ body }) => {
+        body.map(tag => {
+          this.businessTagService.queryBusinessTagByValue({ tagId: tag.id })
+            .subscribe(({ body }) => {
+              let child = [];
+              body.map(value => {
+                child.push({
+                  label: tag.tagKey + ': ' + value,
+                  value: value,
+                });
+              });
+              this.tagOptions.push({
+                label: tag.tagKey,
+                value: tag.id,
+                children: child,
+              });
+            });
+        });
+      });
+  }
+
   fetchData() {
     const param: RiskEventGraphQuery = {
       ...this.queryParam,
@@ -59,6 +102,17 @@ export class RiskEventChartComponent implements OnInit {
         this.riskEventGraph = body;
         this.showChart = true;
       });
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag.tagId = null;
+    this.queryParam.queryByTag.tagValue = null;
+    if (value[0]) {
+      this.queryParam.queryByTag.tagId = value[0];
+    }
+    if (value[1]) {
+      this.queryParam.queryByTag.tagValue = value[1];
+    }
   }
 
   protected readonly JSON = JSON;

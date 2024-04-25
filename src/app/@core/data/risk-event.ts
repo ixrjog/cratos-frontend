@@ -68,6 +68,9 @@ export interface RiskEventGraphVO {
       value: number
     }[]
   };
+  finLosses: {
+    data: Map<string, number>
+  };
 }
 
 export interface RiskEventGraphQuery {

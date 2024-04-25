@@ -19,6 +19,11 @@ export class RiskEventChartComponent implements OnInit {
               private businessTagService: BusinessTagService) {
   }
 
+  stickyView = {
+    top: 160,
+    bottom: 0,
+  };
+
   queryParam = {
     year: '',
     quarter: '',
@@ -30,6 +35,8 @@ export class RiskEventChartComponent implements OnInit {
 
   tagOptions = [];
   tags = [];
+
+  finLosses: Map<string, number> = null;
 
   riskEventGraph: RiskEventGraphVO = null;
   showChart = false;
@@ -94,6 +101,7 @@ export class RiskEventChartComponent implements OnInit {
   }
 
   fetchData() {
+    this.finLosses = null;
     const param: RiskEventGraphQuery = {
       ...this.queryParam,
     };
@@ -101,6 +109,10 @@ export class RiskEventChartComponent implements OnInit {
       .subscribe(({ body }) => {
         this.riskEventGraph = body;
         this.showChart = true;
+        if (this.riskEventGraph.finLosses.data) {
+          this.finLosses = new Map<string, number>(Object.entries(this.riskEventGraph.finLosses.data));
+          console.log(this.finLosses)
+        }
       });
   }
 

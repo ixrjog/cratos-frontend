@@ -37,13 +37,30 @@
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div>
-  <d-row [dSpace]="[12, 12]">
-    <d-col [dSpan]="24">
+  <d-row [dSpace]="12">
+    <d-col [dSpan]="18">
       <app-risk-event-pie-chart
         [riskEventGraph]="riskEventGraph"
         *ngIf="showChart"
       >
       </app-risk-event-pie-chart>
+    </d-col>
+    <d-col [dSpan]="6">
+      <div class="tips" *ngIf="JSON.stringify(finLosses) !== '{}'">
+        <d-sticky [view]="stickyView">
+          <div class="tip-content">
+            <h3>Fin Losses</h3>
+            <li *ngFor="let loss of finLosses | keyvalue">
+              <strong style="font-family: monospace">
+                {{ loss.key }}:
+              </strong>
+              <span>
+                {{ loss.value | number: '3.0-2' }}
+              </span>
+            </li>
+          </div>
+        </d-sticky>
+      </div>
     </d-col>
     <d-col [dSpan]="24">
       <app-risk-event-impact-bar-chart

@@ -16,7 +16,16 @@ import { ICategorySearchTagItem } from 'ng-devui';
 })
 export class RiskEventCardListComponent implements OnInit {
 
-  queryParam: any;
+  queryParam = {
+    queryName: '',
+    year: '',
+    quarter: '',
+    sla: null,
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
+  };
 
   selectedTags: ICategorySearchTagItem[] = [];
   show = false;
@@ -26,6 +35,15 @@ export class RiskEventCardListComponent implements OnInit {
       field: 'queryName',
       type: 'textInput',
       group: 'Basic',
+    },
+    {
+      label: 'SLA',
+      field: 'sla',
+      type: 'radio',
+      group: 'Status',
+      options: [
+        { label: 'true', value: true }, { label: 'false', value: false },
+      ],
     },
     {
       label: 'Quarter',
@@ -38,8 +56,8 @@ export class RiskEventCardListComponent implements OnInit {
       ],
     },
   ];
-  groupOrderConfig = [ 'Basic', 'Time Related', 'Status' ];
 
+  groupOrderConfig = [ 'Basic', 'Status', 'Time Related' ];
   businessType: string = BusinessTypeEnum.RISK_EVENT;
 
   table: Table<RiskEventVO> = {
@@ -118,7 +136,10 @@ export class RiskEventCardListComponent implements OnInit {
   }
 
   selectedTagsChange(event) {
-    this.queryParam = {};
+    this.queryParam.sla = null;
+    this.queryParam.quarter = '';
+    this.queryParam.year = '';
+    this.queryParam.queryName = '';
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':
@@ -149,5 +170,9 @@ export class RiskEventCardListComponent implements OnInit {
         this.category.push(yearItem);
         this.show = true;
       });
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
   }
 }

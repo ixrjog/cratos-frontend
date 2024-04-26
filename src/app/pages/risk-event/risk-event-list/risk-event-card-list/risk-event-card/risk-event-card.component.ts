@@ -126,9 +126,6 @@ export class RiskEventCardComponent {
 
   getSla(riskEventVO: RiskEventVO): string {
     let result = 'SLA: ';
-    if (riskEventVO.totalCost.cost === 0) {
-      return result + '不影响'
-    }
     return result + riskEventVO.totalCost.costDesc
   }
 

@@ -1,0 +1,12 @@
+<d-cascader
+  *ngIf="tagOptions.length === tagOptionsLength"
+  [options]="tagOptions"
+  placeholder="Select tag"
+  [(ngModel)]="tags"
+  (ngModelChange)="onChanges($event)"
+  [trigger]="'click'"
+  [allowClear]="true"
+  [canSelectParent]="true"
+  [appendToBody]="true"
+>
+</d-cascader>

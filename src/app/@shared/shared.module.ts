@@ -33,6 +33,7 @@ import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
 import { DnsUtil } from './utils/dns.util';
 import { ClipPipe } from './pipe/clip.pipe';
+import { BusinessDocCascaderComponent } from './components/common/business-doc/business-doc-cascader/business-doc-cascader.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -79,6 +80,7 @@ const CRATOS_UTILS = [
     BusinessTagsComponent,
     AceEditorComponent,
     BusinessDocsComponent,
+    BusinessDocCascaderComponent,
   ],
   imports: [
     CommonModule,
@@ -111,6 +113,7 @@ const CRATOS_UTILS = [
     ...COMPONENTS,
     ...PIPES,
     ...CRATOS_COMPONENTS,
+    BusinessDocCascaderComponent,
   ],
 })
 export class SharedModule {

@@ -16,7 +16,7 @@
         <strong style="margin-left: 10px">{{ riskEvent.eventTime | dRelativeTime: limit | async }}</strong>
         <d-tag
           style="margin-left: 10px"
-          *ngIf="riskEvent?.totalCost?.costDesc"
+          *ngIf="riskEvent?.totalCost?.costDesc && riskEvent?.totalCost?.cost !== 0"
           [tag]="getSla(riskEvent)"
           [labelStyle]="'red-w98'"
         ></d-tag>

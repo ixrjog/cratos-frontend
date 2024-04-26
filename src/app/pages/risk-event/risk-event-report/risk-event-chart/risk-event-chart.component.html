@@ -6,7 +6,7 @@
       [(ngModel)]="queryParam.year"
       [searchFn]="onSearchYear"
       [isSearch]="true"
-      placeholder="Select Year"
+      placeholder="Select year"
       (valueChange)="onYearChange($event)"
   >
   </d-select>
@@ -21,19 +21,12 @@
       placeholder="Select quarter"
   >
   </d-select>
-  <d-cascader
+  <app-business-doc-cascader
     class="cascader"
-    *ngIf="JSON.stringify(tagOptions) !== '[]'"
-    [options]="tagOptions"
-    [placeholder]="'please tag'"
-    [(ngModel)]="tags"
-    (ngModelChange)="onTagChanges($event)"
-    [trigger]="'click'"
-    [allowClear]="true"
-    [canSelectParent]="true"
-    [appendToBody]="true"
+    [businessType]="businessType"
+    (onChange)="onTagChanges($event)"
   >
-  </d-cascader>
+  </app-business-doc-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div>
@@ -46,7 +39,7 @@
       </app-risk-event-pie-chart>
     </d-col>
     <d-col [dSpan]="6">
-      <div class="tips" *ngIf="JSON.stringify(finLosses) !== '{}'">
+      <div class="tips" *ngIf="JSON.stringify(riskEventGraph?.finLosses?.data) !== '{}'">
         <d-sticky [view]="stickyView">
           <div class="tip-content">
             <h3>Fin Losses</h3>

@@ -73,7 +73,7 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   onSearchEnv = (term: string) => {
     const param: EnvPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.envService.queryEnvPage(param)
       .pipe(
@@ -85,5 +85,13 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   onEnvChange(env: EnvVO) {
     this.formData.envName = env.envName;
+    if (this.formData.domainId) {
+      let recordName = this.trafficLayerDomain.domain;
+      if (env.envName === 'prod') {
+        this.formData.recordName = recordName;
+        return;
+      }
+      this.formData.recordName = recordName.replace('.', '-' + env.envName + '.');
+    }
   }
 }

@@ -131,7 +131,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'New Traffic Layer Domain',
+      title: 'New Traffic Layer Record',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();

@@ -19,6 +19,9 @@ import {
   CertificateEditorComponent,
 } from '../../../../certificate/certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
 import { getResourceCountColor, parseResourceCount } from '../../../../../@shared/utils/resource-count.util';
+import {
+  DomainEditorComponent
+} from '../../../../domain/domain-list/domain-list-data-table/domain-editor/domain-editor.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -147,6 +150,13 @@ export class EdsAssetDataTableComponent implements OnChanges {
           case BusinessTypeEnum.CERTIFICATE:
             dialogDate['content'] = CertificateEditorComponent;
             dialogDate['title'] = 'New Certificate';
+            this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+              this.fetchData();
+            }, body.target, { fromAssetId: rowItem.id });
+            break;
+          case BusinessTypeEnum.DOMAIN:
+            dialogDate['content'] = DomainEditorComponent;
+            dialogDate['title'] = 'New Domain';
             this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
               this.fetchData();
             }, body.target, { fromAssetId: rowItem.id });

@@ -1,0 +1,49 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daXs]="6" [daOrder]="2">
+      <form dForm [layout]="verticalLayout" autocomplete="off">
+        <d-form-item>
+          <d-form-label>Username</d-form-label>
+          <d-form-control>
+            <input dTextInput name="username" [readonly]="true" [(ngModel)]="fromData.username"/>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Name</d-form-label>
+          <d-form-control>
+            <input dTextInput name="name" [(ngModel)]="fromData.name"/>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Display Name</d-form-label>
+          <d-form-control>
+            <input dTextInput name="displayName" [(ngModel)]="fromData.displayName"/>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Email</d-form-label>
+          <d-form-control>
+            <input dTextInput name="email" [(ngModel)]="fromData.email"/>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Mobile Phone</d-form-label>
+          <d-form-control>
+            <input dTextInput name="mobilePhone" [(ngModel)]="fromData.mobilePhone"/>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Comment</d-form-label>
+          <d-form-control>
+            <textarea name="comment" dTextarea maxlength="200" [(ngModel)]="fromData.comment"></textarea>
+          </d-form-control>
+        </d-form-item>
+        <d-form-operation>
+          <d-button style="margin-right: 8px" dFormSubmit>Save</d-button>
+        </d-form-operation>
+      </form>
+    </da-col-item>
+    <da-col-item [daSpan]="24" [daXs]="18" [daOrder]="1" [daOrderXs]="3">
+    </da-col-item>
+  </da-layout-row>
+</div>

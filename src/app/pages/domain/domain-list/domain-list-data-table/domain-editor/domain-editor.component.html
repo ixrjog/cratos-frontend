@@ -1,0 +1,69 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" [dValidateRules]="formRules['name']"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Domain Type</d-form-label>
+      <d-form-control>
+        <d-select name="domainType" [options]="domainTypeOptions" [(ngModel)]="formData.domainType"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Registration Time</d-form-label>
+      <d-form-control>
+        <div class="devui-input-group devui-dropdown-origin" dActiveFormControl>
+          <input
+            name="registrationTime"
+            appendToBody
+            class="devui-input devui-form-control"
+            placeholder="yyyy/MM/dd"
+            (click)="datePicker.toggle()"
+            [(ngModel)]="formData.registrationTime"
+            autocomplete="off"
+            dDatepicker
+            #datePicker="datepicker"
+          />
+          <div class="devui-input-group-addon" (click)="datePicker.toggle()">
+            <i class="icon icon-calendar"></i>
+          </div>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Expiry</d-form-label>
+      <d-form-control>
+        <div class="devui-input-group devui-dropdown-origin" dActiveFormControl>
+          <input
+            name="expiry"
+            appendToBody
+            class="devui-input devui-form-control"
+            placeholder="yyyy/MM/dd"
+            (click)="datePicker1.toggle()"
+            [(ngModel)]="formData.expiry"
+            autocomplete="off"
+            dDatepicker
+            #datePicker1="datepicker"
+          />
+          <div class="devui-input-group-addon" (click)="datePicker1.toggle()">
+            <i class="icon icon-calendar"></i>
+          </div>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px"  [(ngModel)]="formData.comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

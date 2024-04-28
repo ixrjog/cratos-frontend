@@ -21,6 +21,8 @@ import { SharedModule } from '../../@shared/shared.module';
 import { UserInfoEditorComponent } from './user-list/user-list-data-table/user-editor/user-info-editor/user-info-editor.component';
 import { UserRbacEditorComponent } from './user-list/user-list-data-table/user-editor/user-rbac-editor/user-rbac-editor.component';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { UserBaseSettingsComponent } from './user-settings/user-base-settings/user-base-settings.component';
+import { UserSecuritySettingsComponent } from './user-settings/user-security-settings/user-security-settings.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { UserSettingsComponent } from './user-settings/user-settings.component';
     UserEditorComponent,
     UserInfoEditorComponent,
     UserRbacEditorComponent,
-    UserSettingsComponent
+    UserSettingsComponent,
+    UserBaseSettingsComponent,
+    UserSecuritySettingsComponent
   ],
   imports: [
     CommonModule,

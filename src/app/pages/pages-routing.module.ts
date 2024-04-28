@@ -44,8 +44,12 @@ const routes: Routes = [
         path: 'rbac',
         loadChildren: () => import('./rbac/rbac.module').then(m => m.RbacModule),
       },
+      {
+        path: 'domain',
+        loadChildren: () => import('./domain/domain.module').then(m => m.DomainModule),
+      },
     ],
-  }
+  },
 ];
 
 @NgModule({

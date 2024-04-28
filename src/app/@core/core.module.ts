@@ -23,6 +23,7 @@ import { EnvService } from './services/env.service';
 import { TrafficLayerService } from './services/traffic-layer.service';
 import { MenuService } from './services/menu.service';
 import { RiskEventService } from './services/risk-event.service';
+import { DomainService } from './services/domain.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -52,6 +53,7 @@ export const CRATOS_PROVIDERS = [
   TrafficLayerService,
   MenuService,
   RiskEventService,
+  DomainService
 ];
 
 @NgModule({

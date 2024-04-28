@@ -1,6 +1,5 @@
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
-import { TagEdit, TagPageQuery, TagVO } from './tag';
 
 export interface EnvVO extends BaseVO, ValidVO {
   id: number;

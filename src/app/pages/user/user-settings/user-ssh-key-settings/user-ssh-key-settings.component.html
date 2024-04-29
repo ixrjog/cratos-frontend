@@ -5,7 +5,13 @@
         <d-form-item>
           <d-form-label>Public Key</d-form-label>
           <d-form-control>
-            <textarea dTextarea placeholder="Please enter ssh key" resize="vertical" [(ngModel)]="sshKey"></textarea>
+            <textarea
+              style="height: 200px"
+              dTextarea
+              placeholder="Please enter public key"
+              resize="vertical"
+              [(ngModel)]="sshKey"
+            ></textarea>
           </d-form-control>
         </d-form-item>
         <d-form-operation>
@@ -26,13 +32,6 @@
         <d-card-content>
           <div class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</div>
         </d-card-content>
-        <!--        <d-card-actions [align]="'spaceBetween'">-->
-        <!--          <div>-->
-        <!--            <d-icon-group>-->
-
-        <!--            </d-icon-group>-->
-        <!--          </div>-->
-        <!--        </d-card-actions>-->
       </d-card>
     </da-col-item>
   </da-layout-row>

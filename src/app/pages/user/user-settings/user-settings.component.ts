@@ -15,11 +15,11 @@ export class UserSettingsComponent implements OnInit {
   menus = [
     {
       isActive: true,
-      title: 'Base Setting',
+      title: 'Base',
     },
     {
       isActive: false,
-      title: 'Security Setting',
+      title: 'SSH Key',
     },
   ];
 
@@ -28,6 +28,10 @@ export class UserSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username');
+    this.fetchData()
+  }
+
+  fetchData() {
     this.userService.getUserByUsername({ username: this.username })
       .subscribe(({ body }) => this.user = body);
   }
@@ -38,4 +42,6 @@ export class UserSettingsComponent implements OnInit {
     });
     clickedItem.isActive = true;
   }
+
+  protected readonly fetch = fetch;
 }

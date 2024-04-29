@@ -1,0 +1,39 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daXs]="10" [daOrder]="2">
+      <form dForm [layout]="verticalLayout" autocomplete="off" (dSubmit)="submitForm($event)">
+        <d-form-item>
+          <d-form-label>Public Key</d-form-label>
+          <d-form-control>
+            <textarea dTextarea placeholder="Please enter ssh key" resize="vertical" [(ngModel)]="sshKey"></textarea>
+          </d-form-control>
+        </d-form-item>
+        <d-form-operation>
+          <d-button style="margin-right: 8px" dFormSubmit>Save</d-button>
+        </d-form-operation>
+      </form>
+    </da-col-item>
+    <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
+      <d-card *ngFor="let key of sshKeyList">
+        <span style="float: right; padding: 3px 0">
+          <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(key)"></d-icon>
+        </span>
+        <d-card-header>
+          <d-card-title>
+            <h4 style="margin: 0">{{ key.title }}</h4>
+          </d-card-title>
+        </d-card-header>
+        <d-card-content>
+          <div class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</div>
+        </d-card-content>
+        <!--        <d-card-actions [align]="'spaceBetween'">-->
+        <!--          <div>-->
+        <!--            <d-icon-group>-->
+
+        <!--            </d-icon-group>-->
+        <!--          </div>-->
+        <!--        </d-card-actions>-->
+      </d-card>
+    </da-col-item>
+  </da-layout-row>
+</div>

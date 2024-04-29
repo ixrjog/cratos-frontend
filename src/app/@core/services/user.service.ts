@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { ResetPassword, UserData, UserEdit, UserPageQuery, UserVO } from '../data/user';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
+import { CredentialVO } from '../data/credential';
 
 @Injectable()
 export class UserService extends UserData {
@@ -39,6 +40,10 @@ export class UserService extends UserData {
 
   getUserByUsername(param: { username: string }): Observable<HttpResult<UserVO>> {
     return this.apiService.get(this.baseUrl, '/username/get', param);
+  }
+
+  queryMySshKey(): Observable<HttpResult<Array<CredentialVO>>> {
+    return this.apiService.post(this.baseUrl, '/my/sshkey/query', {});
   }
 
 }

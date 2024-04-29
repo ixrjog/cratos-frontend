@@ -3,6 +3,7 @@ import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { RbacRoleVO } from './rbac';
 import { Observable } from 'rxjs';
+import { CredentialVO } from './credential';
 
 export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO, ResourceCountVO {
   id: number;
@@ -63,5 +64,7 @@ export abstract class UserData {
   abstract inactiveUser(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract getUserByUsername(param: { username: string }): Observable<HttpResult<UserVO>>;
+
+  abstract queryMySshKey(): Observable<HttpResult<Array<CredentialVO>>>;
 
 }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DValidateRules } from 'ng-devui';
 import { FormLayout } from 'ng-devui/form';
-import { EdsInstanceVO, RegisterInstance } from '../../../../../@core/data/ext-datasource';
+import { EdsInstanceVO, InstanceEdit, RegisterInstance } from '../../../../../@core/data/ext-datasource';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 
 @Component({

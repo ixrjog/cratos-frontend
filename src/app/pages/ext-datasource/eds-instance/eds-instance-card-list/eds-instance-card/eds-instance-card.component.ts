@@ -22,7 +22,7 @@ import { AddScheduleJob } from '../../../../../@core/data/ext-datasource-schedul
 export class EdsInstanceCardComponent {
 
   @Input() edsInstance: EdsInstanceVO;
-  @Output() onFetchData = new EventEmitter<string>();
+  @Output() onFetchData = new EventEmitter<any>();
   businessType: string = BusinessTypeEnum.EDS_INSTANCE;
 
   dialogDate = {
@@ -74,7 +74,7 @@ export class EdsInstanceCardComponent {
       ...this.dialogDate.editorInstanceData,
       title: 'Edit Eds Instance',
     };
-    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.onFetchData.emit();
     }, rowItem);
   }

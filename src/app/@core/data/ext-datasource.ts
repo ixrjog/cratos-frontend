@@ -76,10 +76,10 @@ export interface InstanceEdit {
   edsType: string;
   version: string;
   valid: boolean;
-  credentialId: number;
-  instanceId: number;
-  url: string;
-  configContent: string;
+  credentialId?: number;
+  instanceId?: number;
+  url?: string;
+  configContent?: string;
   comment: string;
 }
 

@@ -22,7 +22,7 @@ import { UserInfoEditorComponent } from './user-list/user-list-data-table/user-e
 import { UserRbacEditorComponent } from './user-list/user-list-data-table/user-editor/user-rbac-editor/user-rbac-editor.component';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { UserBaseSettingsComponent } from './user-settings/user-base-settings/user-base-settings.component';
-import { UserSecuritySettingsComponent } from './user-settings/user-security-settings/user-security-settings.component';
+import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settings/user-ssh-key-settings.component';
 
 
 @NgModule({
@@ -35,7 +35,7 @@ import { UserSecuritySettingsComponent } from './user-settings/user-security-set
     UserRbacEditorComponent,
     UserSettingsComponent,
     UserBaseSettingsComponent,
-    UserSecuritySettingsComponent
+    UserSshKeySettingsComponent,
   ],
   imports: [
     CommonModule,

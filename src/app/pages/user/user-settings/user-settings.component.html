@@ -19,16 +19,16 @@
             </da-col-item>
             <da-col-item [daMl]="20" [daMm]="18">
               <div class="da-user-settings-content" *ngIf="user !== null">
+
                 <div *ngIf="menus[0].isActive">
-                  <div class="da-settings-header">Base Setting</div>
-                  <app-user-base-settings [user]="user"></app-user-base-settings>
+                  <div class="da-settings-header">{{ menus[0].title }}</div>
+                  <app-user-base-settings [user]="user" (onFetchData)="fetchData()"></app-user-base-settings>
                 </div>
 
                 <div *ngIf="menus[1].isActive">
-                  <div class="da-settings-header">Security Setting</div>
-                  <app-user-security-settings></app-user-security-settings>
+                  <div class="da-settings-header">{{ menus[1].title }}</div>
+                  <app-user-ssh-key-settings [username]="username"></app-user-ssh-key-settings>
                 </div>
-
 
               </div>
             </da-col-item>

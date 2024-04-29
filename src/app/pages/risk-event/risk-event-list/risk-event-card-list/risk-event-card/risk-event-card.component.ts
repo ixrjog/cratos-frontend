@@ -19,7 +19,7 @@ import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
 export class RiskEventCardComponent {
 
   @Input() riskEvent: RiskEventVO;
-  @Output() onFetchData = new EventEmitter<string>();
+  @Output() onFetchData = new EventEmitter<any>();
   businessType: string = BusinessTypeEnum.RISK_EVENT;
 
   stickyView = {

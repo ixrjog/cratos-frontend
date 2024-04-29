@@ -16,6 +16,7 @@ import { RiskEventReportComponent } from './risk-event-report/risk-event-report.
 import { RiskEventChartComponent } from './risk-event-report/risk-event-chart/risk-event-chart.component';
 import { RiskEventPieChartComponent } from './risk-event-report/risk-event-chart/risk-event-pie-chart/risk-event-pie-chart.component';
 import { RiskEventImpactBarChartComponent } from './risk-event-report/risk-event-chart/risk-event-impact-bar-chart/risk-event-impact-bar-chart.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { RiskEventImpactBarChartComponent } from './risk-event-report/risk-event
     CommonModule,
     RiskEventRoutingModule,
     SharedModule,
+    MarkdownModule,
   ],
 })
 export class RiskEventModule { }

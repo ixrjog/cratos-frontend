@@ -55,6 +55,8 @@ export abstract class UserData {
 
   abstract updateUser(param: UserEdit): Observable<HttpResult<Boolean>>;
 
+  abstract updateMy(param: UserEdit): Observable<HttpResult<Boolean>>;
+
   abstract addUser(param: UserEdit): Observable<HttpResult<Boolean>>;
 
   abstract setUserValidById(param: { id: number }): Observable<HttpResult<Boolean>>;

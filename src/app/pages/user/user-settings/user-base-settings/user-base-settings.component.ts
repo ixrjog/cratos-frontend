@@ -27,7 +27,7 @@ export class UserBaseSettingsComponent implements OnChanges {
       const param: UserEdit = {
         ...this.fromData,
       };
-      this.userService.updateUser(param)
+      this.userService.updateMy(param)
         .subscribe(() => this.onFetchData.emit());
     } else {
       console.log(directive);

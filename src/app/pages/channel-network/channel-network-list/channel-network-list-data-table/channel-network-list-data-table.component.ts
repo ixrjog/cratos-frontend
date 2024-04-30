@@ -5,7 +5,7 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { finalize, Observable, zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import {
   ChannelAvailableStatusEnum,
   ChannelNetworkEdit,
@@ -26,6 +26,10 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
   businessType: string = BusinessTypeEnum.CHANNEL_NETWORK;
 
@@ -184,6 +188,10 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
   }
 
   protected readonly getRowColor = getRowColor;

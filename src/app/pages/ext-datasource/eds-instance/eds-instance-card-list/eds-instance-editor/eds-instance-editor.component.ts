@@ -38,6 +38,16 @@ export class EdsInstanceEditorComponent implements OnInit {
   }
 
   updateForm() {
+    const param: InstanceEdit = {
+      id: this.formData.id,
+      instanceName: this.formData.instanceName,
+      comment: this.formData.comment,
+      kind: this.formData.kind,
+      url: this.formData.url,
+      valid: this.formData.valid,
+      version: this.formData.version,
+    };
+    return this.edsService.updateEdsInstance(param);
   }
 
   protected readonly JSON = JSON;

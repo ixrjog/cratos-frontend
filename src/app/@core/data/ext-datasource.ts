@@ -71,15 +71,12 @@ export interface AssetPageQuery extends PageQuery {
 }
 
 export interface InstanceEdit {
-  id?: number;
-  name: string;
-  edsType: string;
+  id: number;
+  instanceName: string;
+  kind: string;
   version: string;
   valid: boolean;
-  credentialId?: number;
-  instanceId?: number;
-  url?: string;
-  configContent?: string;
+  url: string;
   comment: string;
 }
 

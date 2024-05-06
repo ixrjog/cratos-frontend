@@ -26,7 +26,7 @@ export class EdsInstanceCardListComponent implements OnInit {
     data: [],
     pager: {
       pageIndex: 1,
-      pageSize: 9,
+      pageSize: 12,
       total: 0,
     },
   };

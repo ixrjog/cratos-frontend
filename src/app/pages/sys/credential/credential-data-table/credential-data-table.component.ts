@@ -58,7 +58,7 @@ export class CredentialDataTableComponent implements OnInit {
     username: '',
     valid: true,
     privateCredential: false,
-    expiredTime: new Date(),
+    expiredTime: undefined,
   };
 
   constructor(private credentialService: CredentialService,

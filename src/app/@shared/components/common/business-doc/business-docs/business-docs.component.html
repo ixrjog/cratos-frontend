@@ -34,6 +34,14 @@
               style="margin-right: 5px"
               bsStyle="text"
               type="submit"
+              (btnClick)="onCancelEdit()">
+              <strong>Cancel</strong>
+            </d-button>
+            <d-button
+              *ngIf="editing"
+              style="margin-right: 5px"
+              bsStyle="text"
+              type="submit"
               (btnClick)="onUpdateBusinessDoc(selectBusinessDoc)">
               <strong>Save</strong>
             </d-button>

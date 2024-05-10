@@ -15,6 +15,7 @@ export class BusinessDocsComponent implements OnInit {
 
   loading: boolean = false;
   editing: boolean = false;
+  unSaveContent: string;
   data: any;
   businessType: string;
   businessDocs: BusinessDocVO[];
@@ -36,10 +37,10 @@ export class BusinessDocsComponent implements OnInit {
 
   ngOnInit(): void {
     this.businessType = this.data.businessType;
-    this.queryBusinessDocByBusiness();
+    this.queryBusinessDocByBusiness(0);
   }
 
-  queryBusinessDocByBusiness() {
+  queryBusinessDocByBusiness(index: number) {
     this.loading = true
     this.businessDocs = [];
     const param: GetByBusiness = {
@@ -53,7 +54,7 @@ export class BusinessDocsComponent implements OnInit {
       .subscribe(({ body }) => {
         this.businessDocs = body;
         if (JSON.stringify(this.businessDocs) !== '[]') {
-          this.selectBusinessDoc = this.businessDocs[0];
+          this.selectBusinessDoc = this.businessDocs[index];
         }
       });
   }
@@ -69,7 +70,7 @@ export class BusinessDocsComponent implements OnInit {
       seq: 0,
     };
     this.businessDocService.addBusinessDoc(param)
-      .subscribe(() => this.queryBusinessDocByBusiness());
+      .subscribe(() => this.queryBusinessDocByBusiness(this.businessDocs.length));
   }
 
   onUpdateBusinessDoc(businessDoc: BusinessDocVO) {
@@ -79,7 +80,7 @@ export class BusinessDocsComponent implements OnInit {
     this.businessDocService.updateBusinessDoc(param)
       .subscribe(() => {
         this.editing = false;
-        this.queryBusinessDocByBusiness();
+        // this.queryBusinessDocByBusiness();
         this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
       });
   }
@@ -93,19 +94,25 @@ export class BusinessDocsComponent implements OnInit {
       this.businessDocService.deleteBusinessDocById({ id: businessDoc.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-          this.queryBusinessDocByBusiness();
+          this.queryBusinessDocByBusiness(0);
         });
     });
   }
 
   onSelectDoc(businessDoc: BusinessDocVO) {
     if(!this.editing) {
+      this.unSaveContent = businessDoc.content;
       this.selectBusinessDoc = businessDoc;
     }
   }
 
   onEdit() {
     this.editing = true;
+  }
+
+  onCancelEdit() {
+    this.editing = false;
+    this.selectBusinessDoc.content = this.unSaveContent;
   }
 
   protected readonly JSON = JSON;

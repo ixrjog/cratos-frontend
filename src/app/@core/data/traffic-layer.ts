@@ -1,18 +1,18 @@
 import { BaseVO, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
-import { BusinessTagVO } from './business-tag';
+import { BusinessTagsVO } from './business-tag';
 import { EdsAssetIndexVO, EdsAssetVO } from './ext-datasource';
 import { Observable } from 'rxjs';
-import { BusinessDocVO } from './business-doc';
+import { BusinessDocsVO } from './business-doc';
 import { EnvVO } from './env';
 
-export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagVO, BusinessDocVO {
+export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagsVO, BusinessDocsVO {
   id: number;
   name: string;
   domain: string;
   comment: string;
 }
 
-export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagVO, BusinessDocVO {
+export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagsVO, BusinessDocsVO {
   id: number;
   domainId: number;
   envName: string;

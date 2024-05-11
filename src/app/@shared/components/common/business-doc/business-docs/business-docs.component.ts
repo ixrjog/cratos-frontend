@@ -83,7 +83,7 @@ export class BusinessDocsComponent implements OnInit {
     this.businessDocService.updateBusinessDoc(param)
       .subscribe(() => {
         this.editing = false;
-        // this.queryBusinessDocByBusiness();
+        this.onSelectDoc(businessDoc)
         this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
       });
   }

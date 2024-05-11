@@ -54,6 +54,7 @@
               <strong>Edit</strong>
             </d-button>
             <d-button
+              *ngIf="!editing"
               bsStyle="text"
               type="submit"
               (btnClick)="onDeleteBusinessDoc(selectBusinessDoc)">

@@ -31,7 +31,6 @@ import { MarkdownModule } from 'ngx-markdown';
 import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
-import { DnsUtil } from './utils/dns.util';
 import { ClipPipe } from './pipe/clip.pipe';
 import { BusinessDocCascaderComponent } from './components/common/business-doc/business-doc-cascader/business-doc-cascader.component';
 
@@ -64,7 +63,6 @@ const CRATOS_UTILS = [
   DialogUtil,
   DrawerUtil,
   ToastUtil,
-  DnsUtil
 ];
 @NgModule({
   declarations: [

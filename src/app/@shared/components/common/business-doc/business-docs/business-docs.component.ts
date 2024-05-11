@@ -16,6 +16,7 @@ export class BusinessDocsComponent implements OnInit {
   loading: boolean = false;
   editing: boolean = false;
   unSaveContent: string;
+  unSaveName: string;
   data: any;
   businessType: string;
   businessDocs: BusinessDocVO[];
@@ -102,6 +103,7 @@ export class BusinessDocsComponent implements OnInit {
   onSelectDoc(businessDoc: BusinessDocVO) {
     if(!this.editing) {
       this.unSaveContent = businessDoc.content;
+      this.unSaveName = businessDoc.name
       this.selectBusinessDoc = businessDoc;
     }
   }
@@ -113,6 +115,7 @@ export class BusinessDocsComponent implements OnInit {
   onCancelEdit() {
     this.editing = false;
     this.selectBusinessDoc.content = this.unSaveContent;
+    this.selectBusinessDoc.name = this.unSaveName;
   }
 
   protected readonly JSON = JSON;

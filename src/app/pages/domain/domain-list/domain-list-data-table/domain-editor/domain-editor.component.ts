@@ -57,8 +57,4 @@ export class DomainEditorComponent implements OnInit {
     return this.domainService.updateDomain(param);
   }
 
-  getRegistrationTime(value) {
-    console.log(value);
-  }
-
 }

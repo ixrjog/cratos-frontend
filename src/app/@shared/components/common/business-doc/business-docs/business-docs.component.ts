@@ -56,6 +56,8 @@ export class BusinessDocsComponent implements OnInit {
         this.businessDocs = body;
         if (JSON.stringify(this.businessDocs) !== '[]') {
           this.selectBusinessDoc = this.businessDocs[index];
+          this.unSaveContent = this.selectBusinessDoc.content;
+          this.unSaveName = this.selectBusinessDoc.name
         }
       });
   }

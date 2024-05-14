@@ -24,6 +24,7 @@ import { TrafficLayerService } from './services/traffic-layer.service';
 import { MenuService } from './services/menu.service';
 import { RiskEventService } from './services/risk-event.service';
 import { DomainService } from './services/domain.service';
+import { WebSocketApiService } from './services/ws.api.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -56,6 +57,10 @@ export const CRATOS_PROVIDERS = [
   DomainService
 ];
 
+export const WS_CRATOS_PROVIDERS = [
+  WebSocketApiService,
+];
+
 @NgModule({
   declarations: [],
   imports: [ CommonModule,ToastModule ],
@@ -71,6 +76,7 @@ export class CoreModule {
       providers: [
         ...DEVUI_CORE_PROVIDERS,
         ...CRATOS_PROVIDERS,
+        ...WS_CRATOS_PROVIDERS,
       ],
     };
   }

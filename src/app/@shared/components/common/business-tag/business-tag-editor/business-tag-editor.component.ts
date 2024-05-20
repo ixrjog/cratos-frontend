@@ -51,10 +51,7 @@ export class BusinessTagEditorComponent implements OnInit {
       //     'en-us': 'Duplicate name.'
       //   }
       // }],
-    },
-    tagValue: {
-      validators: [ { required: true }],
-    },
+    }
   };
 
   constructor(

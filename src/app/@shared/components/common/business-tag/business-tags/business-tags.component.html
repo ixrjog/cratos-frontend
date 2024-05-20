@@ -9,5 +9,6 @@
 </d-tag>
 
 <ng-template #customTag let-tag="tag">
-  <span>{{ tag.tag.tagKey }}:{{ tag.tagValue }}</span>
+  <span>{{ tag.tag.tagKey }}</span>
+  <span *ngIf="tag.tagValue !==''">:{{ tag.tagValue }}</span>
 </ng-template>

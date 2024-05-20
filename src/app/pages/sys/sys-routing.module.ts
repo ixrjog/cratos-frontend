@@ -5,6 +5,7 @@ import { TagComponent } from './tag/tag.component';
 import { CredentialComponent } from './credential/credential.component';
 import { EnvComponent } from './env/env.component';
 import { MenuComponent } from './menu/menu.component';
+import { ServerAccountComponent } from './server-account/server-account.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
       { path: 'tag', component: TagComponent },
       { path: 'env', component: EnvComponent },
       { path: 'menu', component: MenuComponent },
-      { path: 'credential', component: CredentialComponent }
+      { path: 'credential', component: CredentialComponent },
+      { path: 'server-account', component: ServerAccountComponent },
     ],
   },
 ];

@@ -14,14 +14,21 @@ export class RbacRoleComponent {
 
   tabActiveId: string | number = 'role';
 
+  roleSelect: boolean = true;
+  roleAuthorizeSelect: boolean = false;
+
   constructor() {
   }
 
   onActiveTabChange(tab) {
     switch (tab) {
       case 'role':
+        this.roleSelect = true;
+        this.roleAuthorizeSelect = false;
         break;
       case 'authorize':
+        this.roleSelect = false;
+        this.roleAuthorizeSelect = true;
         break;
       default:
         break;

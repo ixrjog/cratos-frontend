@@ -25,6 +25,7 @@ import { MenuService } from './services/menu.service';
 import { RiskEventService } from './services/risk-event.service';
 import { DomainService } from './services/domain.service';
 import { WebSocketApiService } from './services/ws.api.service';
+import { ServerAccountService } from './services/server-account.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -54,7 +55,8 @@ export const CRATOS_PROVIDERS = [
   TrafficLayerService,
   MenuService,
   RiskEventService,
-  DomainService
+  DomainService,
+  ServerAccountService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

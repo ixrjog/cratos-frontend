@@ -19,6 +19,9 @@ import { EnvDataTableComponent } from './env/env-data-table/env-data-table.compo
 import { EnvEditorComponent } from './env/env-data-table/env-editor/env-editor.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuConfigComponent } from './menu/menu-config/menu-config.component';
+import { ServerAccountComponent } from './server-account/server-account.component';
+import { ServerAccountDataTableComponent } from './server-account/server-account-data-table/server-account-data-table.component';
+import { ServerAccountEditorComponent } from './server-account/server-account-data-table/server-account-editor/server-account-editor.component';
 
 
 @NgModule({
@@ -35,6 +38,9 @@ import { MenuConfigComponent } from './menu/menu-config/menu-config.component';
     EnvEditorComponent,
     MenuComponent,
     MenuConfigComponent,
+    ServerAccountComponent,
+    ServerAccountDataTableComponent,
+    ServerAccountEditorComponent,
   ],
   imports: [
     CommonModule,

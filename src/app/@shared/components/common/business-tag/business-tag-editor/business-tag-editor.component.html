@@ -36,7 +36,7 @@
               </d-form-control>
             </d-form-item>
             <d-form-item>
-              <d-form-label [required]="true">Tag Value</d-form-label>
+              <d-form-label>Tag Value</d-form-label>
               <d-form-control>
                 <input
                   dTextInput
@@ -46,8 +46,7 @@
                   [appendToBody]="true"
                   name="tagValue"
                   [(ngModel)]="formData.tagValue"
-                  placeholder="Enter a value of 1 to 15 characters"
-                  [dValidateRules]="formRules['tagValue']"
+                  placeholder="Enter a value of 0 to 15 characters"
                   dAutoComplete
                   [searchFn]="onSearchTagValue.bind(this)"
                 />
@@ -86,6 +85,7 @@
   </d-splitter>
 </section>
 <ng-template #customTag let-tag="tag">
-  <span>{{ tag.tag.tagKey }}:{{ tag.tagValue }}</span>
+  <span>{{ tag.tag.tagKey }}</span>
+  <span *ngIf="tag.tagValue !==''">:{{ tag.tagValue }}</span>
   <span class="icon-close" style="vertical-align: center; padding-left: 4px" (click)="onTagDelete(tag)"></span>
 </ng-template>

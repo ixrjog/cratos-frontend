@@ -31,7 +31,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/styles.less",
+              "src/styles.less",·
+              "src/assets/styles/atom-one-dark.min.css",
               "node_modules/ng-devui/devui.min.css",
               "node_modules/@devui-design/icons/icomoon/devui-icon.css",
               "node_modules/prismjs/themes/prism-okaidia.css",
@@ -44,6 +45,7 @@
               "src/assets/fontawesome/js/brands.js",
               "src/assets/fontawesome/js/solid.js",
               "src/assets/fontawesome/js/fontawesome.js",
+              "src/assets/scripts/highlight.min.js",
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-css.min.js",

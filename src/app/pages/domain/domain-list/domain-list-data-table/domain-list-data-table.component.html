@@ -8,6 +8,12 @@
     (change)="fetchData()"
   >
   </d-search>
+  <app-business-doc-cascader
+    class="cascader"
+    [businessType]="businessType"
+    (onChange)="onTagChanges($event)"
+  >
+  </app-business-doc-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SampleComponent } from './sample/sample.component';
 import { GettingStartedComponent } from './getting-started.component';
+import { WebsocketTestComponent } from './websocket-test/websocket-test.component';
 
 const routes: Routes = [
   {
@@ -9,6 +10,7 @@ const routes: Routes = [
     component: GettingStartedComponent,
     children: [
       { path: 'sample', component: SampleComponent },
+      { path: 'ws', component: WebsocketTestComponent },
       { path: '', redirectTo: 'sample', pathMatch: 'full' },
     ],
   },

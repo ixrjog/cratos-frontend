@@ -21,6 +21,10 @@ export class DomainListDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.DOMAIN;
@@ -165,6 +169,10 @@ export class DomainListDataTableComponent implements OnInit {
 
   onRowBusinessDoc(rowItem: DomainVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
   }
 
 }

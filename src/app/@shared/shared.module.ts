@@ -32,7 +32,7 @@ import { EdsAssetTypePipe } from './pipe/eds-asset-type.pipe';
 import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
 import { ClipPipe } from './pipe/clip.pipe';
-import { BusinessDocCascaderComponent } from './components/common/business-doc/business-doc-cascader/business-doc-cascader.component';
+import { BusinessCascaderComponent } from './components/common/business-cascader/business-cascader.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -78,7 +78,7 @@ const CRATOS_UTILS = [
     BusinessTagsComponent,
     AceEditorComponent,
     BusinessDocsComponent,
-    BusinessDocCascaderComponent,
+    BusinessCascaderComponent,
   ],
   imports: [
     CommonModule,
@@ -111,7 +111,7 @@ const CRATOS_UTILS = [
     ...COMPONENTS,
     ...PIPES,
     ...CRATOS_COMPONENTS,
-    BusinessDocCascaderComponent,
+    BusinessCascaderComponent,
   ],
 })
 export class SharedModule {

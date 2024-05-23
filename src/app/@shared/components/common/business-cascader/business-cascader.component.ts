@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TagService } from '../../../../../@core/services/tag.service';
-import { BusinessTagService } from '../../../../../@core/services/business-tag.service';
+import { TagService } from '../../../../@core/services/tag.service';
+import { BusinessTagService } from '../../../../@core/services/business-tag.service';
 
 interface QueryByTag {
   tagId: number,
@@ -8,11 +8,11 @@ interface QueryByTag {
 }
 
 @Component({
-  selector: 'app-business-doc-cascader',
-  templateUrl: './business-doc-cascader.component.html',
-  styleUrls: [ './business-doc-cascader.component.less' ],
+  selector: 'app-business-cascader',
+  templateUrl: './business-cascader.component.html',
+  styleUrls: [ './business-cascader.component.less' ],
 })
-export class BusinessDocCascaderComponent implements OnInit {
+export class BusinessCascaderComponent implements OnInit {
 
   constructor(private tagService: TagService,
               private businessTagService: BusinessTagService) {
@@ -61,7 +61,7 @@ export class BusinessDocCascaderComponent implements OnInit {
     if (value[0]) {
       queryByTag.tagId = value[0];
     }
-    if (value[1]) {
+    if (value[1] && value[1] !== '') {
       queryByTag.tagValue = value[1];
     }
     this.onChange.emit(queryByTag);

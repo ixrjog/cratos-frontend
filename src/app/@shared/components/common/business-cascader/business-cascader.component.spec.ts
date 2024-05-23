@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BusinessDocCascaderComponent } from './business-doc-cascader.component';
+import { BusinessCascaderComponent } from './business-cascader.component';
 
 describe('BusinessDocCascaderComponent', () => {
-  let component: BusinessDocCascaderComponent;
-  let fixture: ComponentFixture<BusinessDocCascaderComponent>;
+  let component: BusinessCascaderComponent;
+  let fixture: ComponentFixture<BusinessCascaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BusinessDocCascaderComponent ]
+      declarations: [ BusinessCascaderComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BusinessDocCascaderComponent);
+    fixture = TestBed.createComponent(BusinessCascaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

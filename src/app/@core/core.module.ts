@@ -26,6 +26,7 @@ import { RiskEventService } from './services/risk-event.service';
 import { DomainService } from './services/domain.service';
 import { WebSocketApiService } from './services/ws.api.service';
 import { ServerAccountService } from './services/server-account.service';
+import { SshSessionService } from './services/ssh-session.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -57,6 +58,7 @@ export const CRATOS_PROVIDERS = [
   RiskEventService,
   DomainService,
   ServerAccountService,
+  SshSessionService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

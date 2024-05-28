@@ -24,7 +24,7 @@ export class DefaultInterceptor implements HttpInterceptor {
 
   toastData = {
     style: { width: '600px', color: 'red' },
-    life: 5000,
+    life: 3000,
     lifeMode: 'global',
   };
 

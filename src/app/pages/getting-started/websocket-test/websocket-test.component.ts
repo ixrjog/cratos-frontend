@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { WebSocketApiService } from '../../../@core/services/ws.api.service';
 import { Subscription, timer } from 'rxjs';
 
@@ -33,10 +33,16 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
       });
   }
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.message = event.key
+  }
+
+
   fetchData() {
     this.ws.send(this.wsMsg);
     this.ws.onmessage = (event) => {
-      this.message = this.message + event.data;
+      // this.message = event.data;
     };
     // this.ws.onerror = (event) => {
     //   console.log('onerror');

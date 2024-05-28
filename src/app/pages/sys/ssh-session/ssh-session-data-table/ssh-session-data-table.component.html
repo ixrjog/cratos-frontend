@@ -1,0 +1,110 @@
+<div class="spacing-search">
+  <d-select
+    class="select"
+    [filterKey]="'username'"
+    [appendToBody]="true"
+    [(ngModel)]="user"
+    [searchFn]="onSearchUser"
+    [isSearch]="true"
+    placeholder="Select user"
+    (valueChange)="onUserChange($event)"
+    [allowClear]="true"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    [options]="sessionTypeOptions"
+    [appendToBody]="true"
+    [(ngModel)]="queryParam.sessionType"
+    [allowClear]="true"
+    placeholder="Select protocol"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    [options]="sessionStatusOptions"
+    [appendToBody]="true"
+    [(ngModel)]="queryParam.sessionStatus"
+    [allowClear]="true"
+    placeholder="Select session status"
+  >
+  </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column header="Session">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div>
+            <strong>{{ rowItem['sessionId'] }}</strong>
+          </div>
+          <div class="font-color-comment">
+            <span>{{ rowItem['startTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}</span>
+            -
+            <span>{{ rowItem['endTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}</span>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="username" header="Username"></d-column>
+    <d-column field="serverHostname" header="Server Hostname"></d-column>
+    <d-column field="sessionStatus" header="Session Status"></d-column>
+    <d-column header="Instance Audit" [width]="'600px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <ul class="menu">
+            <li class="menu-item" *ngFor="let instance of rowItem['sessionInstances']" (click)="onRowClick(instance)">
+              <d-row>
+                <div class="item-left">
+                  <d-tag [tag]=instance.instanceType></d-tag>
+                  <br/>
+                  <d-icon [icon]="'icon-refresh'" [rotate]="'infinite'" *ngIf="!instance['instanceClosed']">
+                    <span iconSuffix class="item-title">{{ instance | sshInstance }}</span>
+                  </d-icon>
+                  <span style="width: 255px" *ngIf="instance['instanceClosed']">
+                    {{ instance | sshInstance }}
+                  </span>
+                </div>
+              </d-row>
+              <d-row>
+                <div class="item-right">
+                  <span>{{ instance.destIp }}</span>
+                  <br/>
+                  <d-icon [icon]="'icon-date'">
+                    <span iconSuffix>{{ instance.outputSize | dNumberTrans: 'flow':0 }}</span>
+                  </d-icon>
+                </div>
+              </d-row>
+            </li>
+          </ul>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

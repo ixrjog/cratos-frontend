@@ -6,6 +6,7 @@ import { CredentialComponent } from './credential/credential.component';
 import { EnvComponent } from './env/env.component';
 import { MenuComponent } from './menu/menu.component';
 import { ServerAccountComponent } from './server-account/server-account.component';
+import { SshSessionComponent } from './ssh-session/ssh-session.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       { path: 'env', component: EnvComponent },
       { path: 'menu', component: MenuComponent },
       { path: 'credential', component: CredentialComponent },
+      { path: 'ssh-session', component: SshSessionComponent },
       { path: 'server-account', component: ServerAccountComponent },
     ],
   },

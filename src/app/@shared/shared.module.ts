@@ -33,11 +33,15 @@ import { HighlightJsModule } from 'ngx-highlight-js';
 import { DrawerUtil } from './utils/drawer.util';
 import { ClipPipe } from './pipe/clip.pipe';
 import { BusinessCascaderComponent } from './components/common/business-cascader/business-cascader.component';
+import { XtermLogsComponent } from './components/common/xterm-logs/xterm-logs.component';
+import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
+import { NumberTransModule } from 'ng-devui/number-translation';
 
 const DEVUI_MODULES = [
   DevUIModule,
   RelativeTimeModule,
   ReactiveFormsModule,
+  NumberTransModule,
 ];
 const COMPONENTS = [
   HeaderComponent,
@@ -50,13 +54,15 @@ const PIPES = [
   SafePipe,
   EdsAssetTypePipe,
   ClipPipe,
+  SshInstancePipe
 ];
 
 const CRATOS_COMPONENTS = [
   BusinessTagEditorComponent,
   BusinessTagsComponent,
   AceEditorComponent,
-  BusinessDocsComponent
+  BusinessDocsComponent,
+  XtermLogsComponent
 ];
 
 const CRATOS_UTILS = [
@@ -79,6 +85,7 @@ const CRATOS_UTILS = [
     AceEditorComponent,
     BusinessDocsComponent,
     BusinessCascaderComponent,
+    XtermLogsComponent,
   ],
   imports: [
     CommonModule,

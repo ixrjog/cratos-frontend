@@ -39,7 +39,8 @@
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css",
               "node_modules/prismjs/plugins/command-line/prism-command-line.css",
-              "node_modules/katex/dist/katex.min.css"
+              "node_modules/katex/dist/katex.min.css",
+              "node_modules/@xterm/xterm/css/xterm.css"
             ],
             "scripts": [
               "src/assets/fontawesome/js/brands.js",
@@ -86,6 +87,7 @@
               "node_modules/ace-builds/src-min/ext-beautify.js",
               "node_modules/ace-builds/src-min/ext-searchbox.js",
               "node_modules/ace-builds/src-min/ext-language_tools.js",
+              "node_modules/@xterm/xterm/lib/xterm.js",
               {
                 "bundleName": "worker-html",
                 "input": "node_modules/ace-builds/src-min/worker-html.js"

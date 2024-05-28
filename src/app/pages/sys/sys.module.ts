@@ -22,6 +22,10 @@ import { MenuConfigComponent } from './menu/menu-config/menu-config.component';
 import { ServerAccountComponent } from './server-account/server-account.component';
 import { ServerAccountDataTableComponent } from './server-account/server-account-data-table/server-account-data-table.component';
 import { ServerAccountEditorComponent } from './server-account/server-account-data-table/server-account-editor/server-account-editor.component';
+import { SshSessionComponent } from './ssh-session/ssh-session.component';
+import { SshSessionDataTableComponent } from './ssh-session/ssh-session-data-table/ssh-session-data-table.component';
+import { NumberTransModule } from 'ng-devui/number-translation';
+import { SshSessionInstanceCommandComponent } from './ssh-session/ssh-session-data-table/ssh-session-instance-command/ssh-session-instance-command.component';
 
 
 @NgModule({
@@ -41,6 +45,9 @@ import { ServerAccountEditorComponent } from './server-account/server-account-da
     ServerAccountComponent,
     ServerAccountDataTableComponent,
     ServerAccountEditorComponent,
+    SshSessionComponent,
+    SshSessionDataTableComponent,
+    SshSessionInstanceCommandComponent,
   ],
   imports: [
     CommonModule,

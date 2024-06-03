@@ -13,7 +13,7 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
   @Input() enableFitLines = true;
   feedLines = 1;
 
-  @Input() logs: string;
+  @Input() logs: string = '';
 
   @ViewChild('terminal', { static: true })
   terminalWrapper: ElementRef;
@@ -21,7 +21,6 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
-
   baseTerminalOptions: ITerminalOptions = {
     allowTransparency: true,
     fontSize: 12,
@@ -45,16 +44,17 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
     this.terminal.open(this.terminalWrapper.nativeElement);
     window.dispatchEvent(new Event('resize'));
     if (this.enableFitLines) {
-      const defaultRows = this.terminal.rows;
-      const defaultCols = this.terminal.cols;
-      this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
-      this.terminal.onLineFeed(() => {
-        this.feedLines++;
-        this.terminal.resize(
-          defaultCols,
-          Math.min(defaultRows, this.feedLines),
-        );
-      });
+      this.fitAddon.fit();
+      // const defaultRows = this.terminal.rows;
+      // const defaultCols = this.terminal.cols;
+      // this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
+      // this.terminal.onLineFeed(() => {
+      //   this.feedLines++;
+      //   this.terminal.resize(
+      //     defaultCols,
+      //     Math.min(defaultRows, this.feedLines),
+      //   );
+      // });
     }
     if (this.terminal && this.terminal.write) {
       this.terminal.write(this.logs);
@@ -65,6 +65,10 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
     if (this.terminal) {
       this.terminal.dispose();
     }
+  }
+
+  onWrite(message: string) {
+    this.terminal.write(message);
   }
 
 }

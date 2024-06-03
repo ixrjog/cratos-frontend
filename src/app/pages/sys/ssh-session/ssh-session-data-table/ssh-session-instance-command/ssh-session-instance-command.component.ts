@@ -1,34 +1,40 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { SplitterOrientation } from 'ng-devui';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SshSessionService } from '../../../../../@core/services/ssh-session.service';
 import { Table, TABLE_DATA } from '../../../../../@core/data/base-data';
-import { SshCommandPageQuery, SshCommandVO } from '../../../../../@core/data/ssh-session';
+import { SshAuditPlayMessage, SshCommandPageQuery, SshCommandVO } from '../../../../../@core/data/ssh-session';
 import { onFetchData } from '../../../../../@shared/utils/data-table.utli';
+import { WebSocketApiService } from '../../../../../@core/services/ws.api.service';
+import { Subscription, timer } from 'rxjs';
+import { XtermLogsComponent } from '../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
 
 @Component({
   selector: 'app-ssh-session-instance-command',
   templateUrl: './ssh-session-instance-command.component.html',
   styleUrls: [ './ssh-session-instance-command.component.less' ],
 })
-export class SshSessionInstanceCommandComponent implements OnInit {
+export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
-  size = '50%';
-  minSize = '40%';
-  maxSize = '60%';
-  orientation: SplitterOrientation = 'vertical';
-  playLoading: boolean = false;
+  @ViewChild('sshAuditPlayTerm') private sshAuditPlayTerm: XtermLogsComponent;
 
+  collapsed: boolean = true;
   queryParam = {
     sshSessionInstanceId: null,
     inputFormatted: '',
   };
-
+  instanceId: string;
+  sessionId: string;
   @Input() data: any;
+  table: Table<SshCommandVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  ws: WebSocket;
+  timerRequest: Subscription;
 
-  constructor(private sessionService: SshSessionService) {
+  constructor(private sessionService: SshSessionService,
+              private wsApiService: WebSocketApiService) {
   }
 
-  table: Table<SshCommandVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  wsOnInit() {
+    this.ws = this.wsApiService.createWsClient('/ssh/audit');
+  }
 
   fetchData() {
     const param: SshCommandPageQuery = {
@@ -40,8 +46,22 @@ export class SshSessionInstanceCommandComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.wsOnInit();
+    this.wsOnOpen();
+    this.wsOnMessage();
     this.queryParam.sshSessionInstanceId = this.data['sshSessionInstanceId'];
+    this.instanceId = this.data['instanceId'];
+    this.sessionId = this.data['sessionId'];
     this.fetchData();
+    this.initInterval();
+  }
+
+  ngOnDestroy(): void {
+    try {
+      this.timerRequest.unsubscribe();
+      this.ws.close();
+    } catch (error) {
+    }
   }
 
   pageIndexChange(pageIndex) {
@@ -52,6 +72,44 @@ export class SshSessionInstanceCommandComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  initInterval() {
+    this.timerRequest = timer(1000, 1000)
+      .subscribe(num => {
+        if (this.ws?.readyState !== 1) {
+          this.wsOnInit();
+          if (!this.collapsed) {
+            this.wsOnOpen();
+            this.wsOnMessage();
+          }
+        }
+      });
+  }
+
+  wsOnOpen() {
+    this.ws.onopen = (event) => {
+      try {
+        this.wsOnSend();
+      } catch (error) {
+      }
+    };
+  }
+
+  wsOnSend() {
+    const param: SshAuditPlayMessage = {
+      state: 'PLAY',
+      sessionId: this.sessionId,
+      instanceId: this.instanceId,
+    };
+    this.ws.send(JSON.stringify(param));
+  }
+
+  wsOnMessage() {
+    this.ws.onmessage = (event) => {
+      let msg = JSON.parse(event.data);
+      this.sshAuditPlayTerm.onWrite(msg['output']);
+    };
   }
 
 }

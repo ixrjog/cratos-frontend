@@ -67,11 +67,14 @@
                 <div class="item-left">
                   <d-tag [tag]=instance.instanceType></d-tag>
                   <br/>
-                  <d-icon [icon]="'icon-refresh'" [rotate]="'infinite'" *ngIf="!instance['instanceClosed']">
-                    <span iconSuffix class="item-title">{{ instance | sshInstance }}</span>
-                  </d-icon>
-                  <span style="width: 255px" *ngIf="instance['instanceClosed']">
-                    {{ instance | sshInstance }}
+                  <span *ngIf="!instance['instanceClosed']">
+                    <d-icon [icon]="'icon-refresh'" [rotate]="'infinite'">
+                      <span iconSuffix class="item-title">{{ instance | sshInstance }}</span>
+                    </d-icon>
+                  </span>
+                  <span *ngIf="instance['instanceClosed']">
+                    <span style="width: 255px;margin-right: 5px">{{ instance | sshInstance }}</span>
+                    <d-badge [count]=countResource(instance) status="common"></d-badge>
                   </span>
                 </div>
               </d-row>
@@ -79,7 +82,7 @@
                 <div class="item-right">
                   <span>{{ instance.destIp }}</span>
                   <br/>
-                  <d-icon [icon]="'icon-date'">
+                  <d-icon [icon]="'icon-date'" *ngIf="instance['instanceClosed']">
                     <span iconSuffix>{{ instance.outputSize | dNumberTrans: 'flow':0 }}</span>
                   </d-icon>
                 </div>

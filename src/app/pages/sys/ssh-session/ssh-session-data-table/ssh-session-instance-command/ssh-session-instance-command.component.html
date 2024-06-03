@@ -1,7 +1,27 @@
 <section>
   <h2>SSH Session Audit</h2>
-  <d-splitter class="splitter-border" orientation="vertical" style="height: 1000px">
-    <d-splitter-pane [collapsed]="false" [collapsible]="true">
+  <d-splitter class="splitter-border" orientation="vertical" style="height: 800px">
+    <d-splitter-pane
+      [collapsed]="collapsed"
+      [collapsible]="true"
+      size="800px"
+    >
+      <div class="pane-content">
+        <h3>Play</h3>
+        <div>
+          <d-card style="padding: 5px 10px">
+            <d-card-header style="margin-bottom: 2px">
+              <d-card-subtitle>{{ instanceId }}</d-card-subtitle>
+            </d-card-header>
+            <d-card-content>
+              <app-xterm-logs #sshAuditPlayTerm></app-xterm-logs>
+
+            </d-card-content>
+          </d-card>
+        </div>
+      </div>
+    </d-splitter-pane>
+    <d-splitter-pane style="overflow: hidden">
       <div class="pane-content">
         <h3>Command</h3>
         <div>
@@ -58,81 +78,5 @@
         </div>
       </div>
     </d-splitter-pane>
-    <d-splitter-pane style="overflow: hidden">
-      <div class="pane-content">
-        <h3>Play</h3>
-        <div dLoading [loadingStyle]="'infinity'" [loading]="playLoading">
-          height: auto
-        </div>
-      </div>
-    </d-splitter-pane>
   </d-splitter>
-
-
-<!--  <d-splitter [orientation]="orientation">-->
-<!--    <d-splitter-pane style="overflow: hidden" [collapsed]="true" [collapsible]="true">-->
-<!--      <div class="pane-content">-->
-<!--        <h3>Command</h3>-->
-<!--        <div>-->
-<!--          <div class="spacing-search">-->
-<!--            <d-search-->
-<!--              class="search"-->
-<!--              [(ngModel)]="queryParam.inputFormatted"-->
-<!--              [iconPosition]="'left'"-->
-<!--              (searchFn)="fetchData()"-->
-<!--              (change)="fetchData()"-->
-<!--            >-->
-<!--            </d-search>-->
-<!--            <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>-->
-<!--          </div>-->
-<!--          <div class="spacing-table">-->
-<!--            <d-data-table-->
-<!--              dLoading-->
-<!--              [dataSource]="table.data"-->
-<!--              [tableOverflowType]="'overlay'"-->
-<!--              [backdrop]="true"-->
-<!--              [scrollable]="true"-->
-<!--              [loadingStyle]="'infinity'"-->
-<!--              [loading]="table.loading"-->
-<!--            >-->
-<!--              <d-column field="id" header="ID" [width]="'80px'"></d-column>-->
-<!--              <d-column header="Input/Output">-->
-<!--                <d-cell>-->
-<!--                  <ng-template let-rowItem="rowItem">-->
-<!--                    <span>{{ rowItem['input'] }}</span>-->
-<!--                    <br />-->
-<!--                    <app-xterm-logs [logs]="rowItem['output']"></app-xterm-logs>-->
-<!--                  </ng-template>-->
-<!--                </d-cell>-->
-<!--              </d-column>-->
-<!--              <ng-template #noResultTemplateRef>-->
-<!--                <div class="no-data">Fetch Data</div>-->
-<!--              </ng-template>-->
-<!--            </d-data-table>-->
-<!--          </div>-->
-<!--          <div class="spacing-pagination">-->
-<!--            <d-pagination-->
-<!--              class="pagination"-->
-<!--              [total]="table.pager.total"-->
-<!--              [(pageSize)]="table.pager.pageSize"-->
-<!--              [(pageIndex)]="table.pager.pageIndex"-->
-<!--              [canViewTotal]="true"-->
-<!--              [canChangePageSize]="true"-->
-<!--              [maxItems]="5"-->
-<!--              (pageIndexChange)="pageIndexChange($event)"-->
-<!--              (pageSizeChange)="pageSizeChange($event)"-->
-<!--            >-->
-<!--            </d-pagination>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </d-splitter-pane>-->
-<!--    <d-splitter-pane style="overflow: hidden">-->
-<!--      <div class="pane-content">-->
-<!--        <h3>Play</h3>-->
-<!--        <div dLoading [loadingStyle]="'infinity'" [loading]="playLoading" style="height: 800px">-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </d-splitter-pane>-->
-<!--  </d-splitter>-->
-<!--</section>-->
+</section>

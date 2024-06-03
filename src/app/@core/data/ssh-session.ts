@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, PageQuery } from './base-data';
+import { BaseVO, DataTable, PageQuery, ResourceCountVO } from './base-data';
 import { Observable } from 'rxjs';
 
 export interface SshSessionVO extends BaseVO {
@@ -15,7 +15,7 @@ export interface SshSessionVO extends BaseVO {
   sessionInstances: SshInstanceVO[];
 }
 
-export interface SshInstanceVO extends BaseVO {
+export interface SshInstanceVO extends BaseVO, ResourceCountVO {
   id: number;
   sessionId: string;
   instanceId: string;
@@ -49,6 +49,12 @@ export interface SshSessionPageQuery extends PageQuery {
 export interface SshCommandPageQuery extends PageQuery {
   sshSessionInstanceId: number;
   inputFormatted: string;
+}
+
+export interface SshAuditPlayMessage {
+  state: string;
+  sessionId: string;
+  instanceId: string;
 }
 
 export abstract class SshSessionData {

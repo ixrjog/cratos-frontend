@@ -4,7 +4,6 @@ import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import {
-  SshCommandPageQuery,
   SshInstanceVO,
   SshSessionPageQuery,
   SshSessionTypeEnum,
@@ -15,11 +14,11 @@ import { SshSessionService } from '../../../../@core/services/ssh-session.servic
 import { UserPageQuery, UserVO } from '../../../../@core/data/user';
 import { map } from 'rxjs/operators';
 import { UserService } from '../../../../@core/services/user.service';
-import { UserEditorComponent } from '../../../user/user-list/user-list-data-table/user-editor/user-editor.component';
 import { DialogService } from 'ng-devui';
 import {
-  SshSessionInstanceCommandComponent
+  SshSessionInstanceCommandComponent,
 } from './ssh-session-instance-command/ssh-session-instance-command.component';
+import { countResource } from '../../../../@shared/utils/resource-count.util';
 
 @Component({
   selector: 'app-ssh-session-data-table',
@@ -93,18 +92,23 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   onRowClick(row: SshInstanceVO) {
-    const results = this.dialogService.open({
-      id: 'ssh-session-audit',
-      width: '60%',
-      maxHeight: '1000px',
-      backdropCloseable: true,
-      dialogtype: 'standard',
-      content: SshSessionInstanceCommandComponent,
-      buttons: [],
-      data: {
-        sshSessionInstanceId: row.id,
-      },
-    });
+    if (row.instanceClosed) {
+      const results = this.dialogService.open({
+        id: 'ssh-session-audit',
+        width: '60%',
+        maxHeight: '1000px',
+        backdropCloseable: true,
+        dialogtype: 'standard',
+        content: SshSessionInstanceCommandComponent,
+        buttons: [],
+        data: {
+          instanceId: row.instanceId,
+          sshSessionInstanceId: row.id,
+          sessionId: row.sessionId,
+        },
+      });
+    }
   }
 
+  protected readonly countResource = countResource;
 }

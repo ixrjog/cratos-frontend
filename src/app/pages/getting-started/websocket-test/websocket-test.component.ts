@@ -19,11 +19,12 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initWs();
-    this.initInterval();
+    // this.initInterval();
   }
 
   initWs() {
     this.ws = this.wsApi.createWsClient('/test');
+    console.log(this.ws)
   }
 
   initInterval() {
@@ -61,6 +62,8 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
     this.timerRequest.unsubscribe();
     this.ws.close();
   }
+
+
 
 
 }

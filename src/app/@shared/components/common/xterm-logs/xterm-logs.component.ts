@@ -45,16 +45,16 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
     window.dispatchEvent(new Event('resize'));
     if (this.enableFitLines) {
       this.fitAddon.fit();
-      // const defaultRows = this.terminal.rows;
-      // const defaultCols = this.terminal.cols;
-      // this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
-      // this.terminal.onLineFeed(() => {
-      //   this.feedLines++;
-      //   this.terminal.resize(
-      //     defaultCols,
-      //     Math.min(defaultRows, this.feedLines),
-      //   );
-      // });
+      const defaultRows = this.terminal.rows;
+      const defaultCols = this.terminal.cols;
+      this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
+      this.terminal.onLineFeed(() => {
+        this.feedLines++;
+        this.terminal.resize(
+          defaultCols,
+          Math.min(defaultRows, this.feedLines),
+        );
+      });
     }
     if (this.terminal && this.terminal.write) {
       this.terminal.write(this.logs);

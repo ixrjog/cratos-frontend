@@ -49,8 +49,9 @@ export class DefaultInterceptor implements HttpInterceptor {
         return of(event);
       case 401: // 未登录状态码
         this.toastService.open({
-          value: [ { severity: 'error', summary: 'Error', content: 'Token Invalid' } ],
+          value: [ { severity: 'warn', content: 'Token Expired, Logout' } ],
           ...this.toastData,
+          style: { width: '300px', color: 'red' },
         });
         this.route.navigate([ 'login' ]);
         break;

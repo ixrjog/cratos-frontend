@@ -92,22 +92,22 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   onRowClick(row: SshInstanceVO) {
-    if (row.instanceClosed) {
-      const results = this.dialogService.open({
-        id: 'ssh-session-audit',
-        width: '60%',
-        maxHeight: '1000px',
-        backdropCloseable: true,
-        dialogtype: 'standard',
-        content: SshSessionInstanceCommandComponent,
-        buttons: [],
-        data: {
-          instanceId: row.instanceId,
-          sshSessionInstanceId: row.id,
-          sessionId: row.sessionId,
-        },
+    // if (row.instanceClosed) {
+    this.dialogService.open({
+      id: 'ssh-session-audit',
+      width: '60%',
+      maxHeight: '1000px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      content: SshSessionInstanceCommandComponent,
+      buttons: [],
+      data: {
+        instanceId: row.instanceId,
+        sshSessionInstanceId: row.id,
+        sessionId: row.sessionId,
+      },
       });
-    }
+    // }
   }
 
   protected readonly countResource = countResource;

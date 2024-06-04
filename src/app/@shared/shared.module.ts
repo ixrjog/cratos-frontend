@@ -36,6 +36,7 @@ import { BusinessCascaderComponent } from './components/common/business-cascader
 import { XtermLogsComponent } from './components/common/xterm-logs/xterm-logs.component';
 import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
 import { NumberTransModule } from 'ng-devui/number-translation';
+import { FlowUnitPipe } from './pipe/flowUnit.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -54,7 +55,8 @@ const PIPES = [
   SafePipe,
   EdsAssetTypePipe,
   ClipPipe,
-  SshInstancePipe
+  SshInstancePipe,
+  FlowUnitPipe
 ];
 
 const CRATOS_COMPONENTS = [

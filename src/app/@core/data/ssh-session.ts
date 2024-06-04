@@ -57,6 +57,13 @@ export interface SshAuditPlayMessage {
   instanceId: string;
 }
 
+export interface OutputMessage {
+  instanceId: string;
+  output: string;
+  error: string;
+  code: number;
+}
+
 export abstract class SshSessionData {
 
   abstract querySshSessionPage(param: SshSessionPageQuery): Observable<DataTable<SshSessionVO>>;

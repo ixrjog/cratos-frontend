@@ -1,11 +1,17 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SshSessionService } from '../../../../../@core/services/ssh-session.service';
 import { Table, TABLE_DATA } from '../../../../../@core/data/base-data';
-import { SshAuditPlayMessage, SshCommandPageQuery, SshCommandVO } from '../../../../../@core/data/ssh-session';
+import {
+  OutputMessage,
+  SshAuditPlayMessage,
+  SshCommandPageQuery,
+  SshCommandVO,
+} from '../../../../../@core/data/ssh-session';
 import { onFetchData } from '../../../../../@shared/utils/data-table.utli';
 import { WebSocketApiService } from '../../../../../@core/services/ws.api.service';
 import { Subscription, timer } from 'rxjs';
 import { XtermLogsComponent } from '../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
+import { ToastUtil } from '../../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-ssh-session-instance-command',
@@ -29,7 +35,8 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   timerRequest: Subscription;
 
   constructor(private sessionService: SshSessionService,
-              private wsApiService: WebSocketApiService) {
+              private wsApiService: WebSocketApiService,
+              private toastUtil: ToastUtil) {
   }
 
   wsOnInit() {
@@ -107,8 +114,12 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
   wsOnMessage() {
     this.ws.onmessage = (event) => {
-      let msg = JSON.parse(event.data);
-      this.sshAuditPlayTerm.onWrite(msg['output']);
+      let msg: OutputMessage = JSON.parse(event.data);
+      if (msg.code === 0) {
+        this.sshAuditPlayTerm.onWrite(msg.output);
+        return;
+      }
+      this.toastUtil.onErrorToast(msg.error, { width: '600px' });
     };
   }
 

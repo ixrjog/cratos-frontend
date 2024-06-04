@@ -7,17 +7,19 @@ export class ToastUtil {
   constructor(private toastService: ToastService) {
   }
 
-  onSuccessToast(content: string) {
+  onSuccessToast(content: string, style?: any) {
     this.toastService.open({
       value: [ { severity: 'success', summary: 'Success', content: content } ],
       life: 2000,
+      style: style,
     });
   }
 
-  onErrorToast(content: string) {
+  onErrorToast(content: string, style?: any) {
     this.toastService.open({
       value: [ { severity: 'error', summary: 'Error', content: content } ],
       life: 2000,
+      style: style,
     });
   }
 

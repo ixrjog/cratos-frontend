@@ -10,10 +10,11 @@ import { FitAddon } from '@xterm/addon-fit';
 })
 export class XtermLogsComponent implements AfterViewInit, OnDestroy {
 
-  @Input() enableFitLines = true;
   feedLines = 1;
 
   @Input() logs: string = '';
+  @Input() rows: number = 24;
+
 
   @ViewChild('terminal', { static: true })
   terminalWrapper: ElementRef;
@@ -43,19 +44,17 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.terminal.open(this.terminalWrapper.nativeElement);
     window.dispatchEvent(new Event('resize'));
-    if (this.enableFitLines) {
-      this.fitAddon.fit();
-      const defaultRows = this.terminal.rows;
-      const defaultCols = this.terminal.cols;
-      this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
-      this.terminal.onLineFeed(() => {
-        this.feedLines++;
-        this.terminal.resize(
-          defaultCols,
-          Math.min(defaultRows, this.feedLines),
-        );
-      });
-    }
+    this.fitAddon.fit();
+    const defaultRows = this.rows;
+    const defaultCols = this.terminal.cols;
+    this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
+    this.terminal.onLineFeed(() => {
+      this.feedLines++;
+      this.terminal.resize(
+        defaultCols,
+        Math.min(defaultRows, this.feedLines),
+      );
+    });
     if (this.terminal && this.terminal.write) {
       this.terminal.write(this.logs);
     }

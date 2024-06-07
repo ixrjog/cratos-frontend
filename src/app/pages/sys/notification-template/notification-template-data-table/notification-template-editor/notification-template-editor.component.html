@@ -1,0 +1,75 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label>Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="name"
+          [(ngModel)]="formData.name"
+        />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Key</d-form-label>
+      <d-form-control>
+        <input dTextInput name="notificationTemplateKey" [(ngModel)]="formData.notificationTemplateKey"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Type</d-form-label>
+      <d-form-control>
+        <input dTextInput name="notificationTemplateType" [(ngModel)]="formData.notificationTemplateType"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Title</d-form-label>
+      <d-form-control>
+        <input dTextInput name="title" [(ngModel)]="formData.title"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Consumer</d-form-label>
+      <d-form-control>
+        <input dTextInput name="consumer" [(ngModel)]="formData.consumer"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Lang</d-form-label>
+      <d-form-control>
+        <input dTextInput name="lang" [(ngModel)]="formData.lang"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Content</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="19"
+          [maxLines]="50"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.content"
+          (onChange)="onContentChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -7,6 +7,7 @@ import { EnvComponent } from './env/env.component';
 import { MenuComponent } from './menu/menu.component';
 import { ServerAccountComponent } from './server-account/server-account.component';
 import { SshSessionComponent } from './ssh-session/ssh-session.component';
+import { NotificationTemplateComponent } from './notification-template/notification-template.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'credential', component: CredentialComponent },
       { path: 'ssh-session', component: SshSessionComponent },
       { path: 'server-account', component: ServerAccountComponent },
+      { path: 'notification-template', component: NotificationTemplateComponent },
     ],
   },
 ];

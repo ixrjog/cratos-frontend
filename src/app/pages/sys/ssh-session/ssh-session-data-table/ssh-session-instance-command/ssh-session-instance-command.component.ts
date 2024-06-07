@@ -67,6 +67,7 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
     try {
       this.timerRequest.unsubscribe();
       this.ws.close();
+      this.ws = null;
     } catch (error) {
     }
   }
@@ -84,12 +85,10 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   initInterval() {
     this.timerRequest = timer(1000, 1000)
       .subscribe(num => {
-        if (this.ws?.readyState !== 1) {
+        if (this.ws?.readyState !== WebSocket.OPEN) {
           this.wsOnInit();
-          if (!this.collapsed) {
-            this.wsOnOpen();
-            this.wsOnMessage();
-          }
+          this.wsOnOpen();
+          this.wsOnMessage();
         }
       });
   }

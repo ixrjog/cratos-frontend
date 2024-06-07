@@ -1,0 +1,78 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="notificationTemplateKey" header="Key"></d-column>
+    <d-column field="notificationTemplateType" header="Type"></d-column>
+    <d-column field="title" header="Title"></d-column>
+    <d-column field="consumer" header="Consumer"></d-column>
+    <d-column field="content" header="Content">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="contentTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+          >
+          </d-icon>
+          <ng-template #contentTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="lang" header="Lang"></d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

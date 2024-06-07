@@ -26,6 +26,9 @@ import { SshSessionComponent } from './ssh-session/ssh-session.component';
 import { SshSessionDataTableComponent } from './ssh-session/ssh-session-data-table/ssh-session-data-table.component';
 import { NumberTransModule } from 'ng-devui/number-translation';
 import { SshSessionInstanceCommandComponent } from './ssh-session/ssh-session-data-table/ssh-session-instance-command/ssh-session-instance-command.component';
+import { NotificationTemplateComponent } from './notification-template/notification-template.component';
+import { NotificationTemplateDataTableComponent } from './notification-template/notification-template-data-table/notification-template-data-table.component';
+import { NotificationTemplateEditorComponent } from './notification-template/notification-template-data-table/notification-template-editor/notification-template-editor.component';
 
 
 @NgModule({
@@ -48,6 +51,9 @@ import { SshSessionInstanceCommandComponent } from './ssh-session/ssh-session-da
     SshSessionComponent,
     SshSessionDataTableComponent,
     SshSessionInstanceCommandComponent,
+    NotificationTemplateComponent,
+    NotificationTemplateDataTableComponent,
+    NotificationTemplateEditorComponent,
   ],
   imports: [
     CommonModule,

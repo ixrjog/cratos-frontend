@@ -1,6 +1,6 @@
 export default {
   loginPage: {
-    coperation: '路漫漫 ？？？',
+    coperation: '山中习静观朝槿，松下清斋折露葵',
     loginWays: {
       account: '账号密码登录',
       email: '邮箱登录',

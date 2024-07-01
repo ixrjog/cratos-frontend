@@ -14,7 +14,7 @@ export interface NotificationTemplateVO extends BaseVO {
 }
 
 export interface NotificationTemplateEdit {
-  id: number;
+  id?: number;
   name: string;
   notificationTemplateKey: string;
   notificationTemplateType: string;
@@ -34,5 +34,7 @@ export abstract class NotificationTemplateData {
   abstract queryNotificationTemplatePage(param: NotificationTemplatePageQuery): Observable<DataTable<NotificationTemplateVO>>;
 
   abstract updateNotificationTemplate(param: NotificationTemplateEdit): Observable<HttpResult<Boolean>>;
+
+  abstract addNotificationTemplate(param: NotificationTemplateEdit): Observable<HttpResult<Boolean>>;
 
 }

@@ -26,4 +26,8 @@ export class NotificationTemplateService extends NotificationTemplateData {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
+  addNotificationTemplate(param: NotificationTemplateEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/add', param);
+  }
+
 }

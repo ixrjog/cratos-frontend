@@ -3,7 +3,6 @@ import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
 import { NotificationTemplateEdit, NotificationTemplateVO } from '../../../../../@core/data/notification-template';
 import { NotificationTemplateService } from '../../../../../@core/services/notification-template.service';
-import { EdsConfigVO } from '../../../../../@core/data/ext-datasource';
 
 @Component({
   selector: 'app-notification-template-editor',
@@ -36,6 +35,13 @@ export class NotificationTemplateEditorComponent implements OnInit {
       ...this.formData,
     };
     return this.notificationTemplateService.updateNotificationTemplate(param);
+  }
+
+  addForm() {
+    const param: NotificationTemplateEdit = {
+      ...this.formData,
+    };
+    return this.notificationTemplateService.addNotificationTemplate(param);
   }
 
   onContentChange(content: string, notificationTemplateVO: NotificationTemplateVO) {

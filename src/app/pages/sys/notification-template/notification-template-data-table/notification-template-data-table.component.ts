@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { RbacResourceVO } from '../../../../@core/data/rbac';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import { ToastUtil } from '../../../../@shared/utils/toast.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
-import { NotificationTemplatePageQuery, NotificationTemplateVO } from '../../../../@core/data/notification-template';
+import {
+  NotificationTemplateEdit,
+  NotificationTemplatePageQuery,
+  NotificationTemplateVO,
+} from '../../../../@core/data/notification-template';
 import {
   NotificationTemplateEditorComponent,
 } from './notification-template-editor/notification-template-editor.component';
 import { NotificationTemplateService } from '../../../../@core/services/notification-template.service';
+import { EnvEdit } from '../../../../@core/data/env';
 
 @Component({
   selector: 'app-notification-template-data-table',
@@ -22,6 +26,17 @@ export class NotificationTemplateDataTableComponent implements OnInit {
   };
 
   table: Table<NotificationTemplateVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
+  newNotificationTemplate: NotificationTemplateEdit = {
+    comment: '',
+    consumer: '',
+    content: '',
+    lang: '',
+    name: '',
+    notificationTemplateKey: '',
+    notificationTemplateType: '',
+    title: ''
+  };
 
   dialogDate = {
     editorData: {
@@ -65,6 +80,16 @@ export class NotificationTemplateDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  onRowNew() {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'New Notification Template',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, JSON.parse(JSON.stringify(this.newNotificationTemplate)));
   }
 
   onRowEdit(rowItem: RbacResourceVO) {

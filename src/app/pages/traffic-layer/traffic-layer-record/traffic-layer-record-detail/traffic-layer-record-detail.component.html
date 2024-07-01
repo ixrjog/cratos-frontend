@@ -6,12 +6,17 @@
     class="select"
     [filterKey]="'domain'"
     [appendToBody]="true"
+    [width]="580"
     [(ngModel)]="trafficLayerDomain"
     [searchFn]="onSearchTrafficLayerDomain"
     [isSearch]="true"
     placeholder="Select domain"
     (valueChange)="onTrafficLayerDomainChange($event)"
   >
+    <ng-template let-option="option">
+      <span>{{ option.domain }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.name}}</span>
+    </ng-template>
   </d-select>
   <d-button
     [disabled]="queryParam.domainId === null"

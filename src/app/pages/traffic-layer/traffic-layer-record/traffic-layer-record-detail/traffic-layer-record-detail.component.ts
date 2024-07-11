@@ -6,9 +6,6 @@ import {
   TrafficLayerDomainVO,
   TrafficLayerRecordQueryDetails,
 } from '../../../../@core/data/traffic-layer';
-
-import { EnvService } from '../../../../@core/services/env.service';
-import { EnvPageQuery, EnvVO } from '../../../../@core/data/env';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -31,25 +28,11 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
     envName: '',
   };
 
-  constructor(private trafficLayerService: TrafficLayerService,
-              private envService: EnvService) {
+  constructor(private trafficLayerService: TrafficLayerService) {
   }
 
   ngOnInit(): void {
     this.showRecord = false;
-    this.getEnvItems();
-  }
-
-  getEnvItems() {
-    const param: EnvPageQuery = {
-      length: 20, page: 1, queryName: '',
-    };
-    this.envService.queryEnvPage(param)
-      .subscribe(({ body }) => {
-        this.envItems = body.data;
-        this.queryParam.envName = this.envItems[this.envItems.length - 1].envName;
-        this.tabActiveId = this.envItems[this.envItems.length - 1].envName;
-      });
   }
 
   fetchData() {
@@ -68,7 +51,7 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
   }
 
   tabActiveId: string | number = '';
-  envItems: EnvVO[] = [];
+  envItems = [];
 
   activeTabChange(tab) {
     this.queryParam.envName = tab;
@@ -86,8 +69,28 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
       );
   };
 
+  getEnvItems(domainId: number) {
+    this.envItems = [];
+    this.trafficLayerService.queryTrafficLayerDomainEnv({ domainId: domainId })
+      .subscribe(({ body }) => {
+        this.envItems = body;
+        if (this.envItems.length > 0) {
+          let list = JSON.parse(JSON.stringify(this.envItems));
+          for (; ;) {
+            let env = list.pop();
+            if (env.valid) {
+              this.queryParam.envName = env.envName;
+              this.tabActiveId = env.envName;
+              break;
+            }
+          }
+        }
+      });
+  }
+
   onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
     this.queryParam.domainId = domainVO.id;
+    this.getEnvItems(domainVO.id);
   }
 
   protected readonly JSON = JSON;

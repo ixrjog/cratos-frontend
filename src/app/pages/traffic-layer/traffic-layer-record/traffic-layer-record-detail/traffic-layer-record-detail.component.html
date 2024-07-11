@@ -1,7 +1,4 @@
-<div class="spacing-search" *ngIf="JSON.stringify(envItems) !=='[]'">
-  <d-tabs class="tabs" type="slider" [(activeTab)]="tabActiveId" (activeTabChange)="activeTabChange($event)">
-    <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName"></d-tab>
-  </d-tabs>
+<div class="spacing-search">
   <d-select
     class="select"
     [filterKey]="'domain'"
@@ -18,8 +15,17 @@
       <span style="float: right; padding: 3px 0">{{ option.name}}</span>
     </ng-template>
   </d-select>
+  <d-tabs
+    class="tabs"
+    type="options"
+    [(activeTab)]="tabActiveId"
+    (activeTabChange)="activeTabChange($event)"
+    *ngIf="JSON.stringify(envItems) !== '[]'"
+  >
+    <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName" [disabled]="!item.valid"></d-tab>
+  </d-tabs>
   <d-button
-    [disabled]="queryParam.domainId === null"
+    [disabled]="queryParam.domainId === null || queryParam.envName === ''"
     class="button"
     bsStyle="common"
     (click)="fetchData()"

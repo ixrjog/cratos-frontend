@@ -3,10 +3,14 @@ import { ApiService } from './api.service';
 import {
   TrafficLayerData,
   TrafficLayerDomainEdit,
-  TrafficLayerDomainPageQuery, TrafficLayerRecordDetails,
+  TrafficLayerDomainEnvVO,
+  TrafficLayerDomainPageQuery,
+  TrafficLayerDomainVO,
+  TrafficLayerRecordDetails,
   TrafficLayerRecordEdit,
+  TrafficLayerRecordPageQuery,
   TrafficLayerRecordQueryDetails,
-  TrafficLayerDomainVO, TrafficLayerRecordPageQuery, TrafficLayerRecordVO,
+  TrafficLayerRecordVO,
 } from '../data/traffic-layer';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -64,4 +68,7 @@ export class TrafficLayerService extends TrafficLayerData {
     return this.apiService.post(this.baseUrl, '/record/page/query', param);
   }
 
+  queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>> {
+    return this.apiService.post(this.baseUrl, '/domain/env/query', param);
+  }
 }

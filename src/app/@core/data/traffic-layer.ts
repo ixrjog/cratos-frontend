@@ -72,6 +72,12 @@ export interface TrafficLayerRecordQueryDetails {
   envName: string;
 }
 
+export interface TrafficLayerDomainEnvVO {
+  envName: string;
+  valid: boolean;
+  seq: number;
+}
+
 export abstract class TrafficLayerData {
 
   abstract queryTrafficLayerDomainPage(param: TrafficLayerDomainPageQuery): Observable<DataTable<TrafficLayerDomainVO>>;
@@ -95,4 +101,6 @@ export abstract class TrafficLayerData {
   abstract deleteTrafficLayerRecord(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract queryRecordDetails(param: TrafficLayerRecordQueryDetails): Observable<HttpResult<TrafficLayerRecordDetails>>;
+
+  abstract queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>>;
 }

@@ -34,11 +34,6 @@ export class CredentialEditorComponent implements OnInit {
     title: {
       validators: [ { required: true } ],
       message: 'title can not be null.',
-      // asyncValidators: [{ sameName: this.checkName.bind(this), message: {
-      //     'zh-cn': '用户名重名',
-      //     'en-us': 'Duplicate name.'
-      //   }
-      // }],
     },
     username: { validators: [ { required: true } ] },
     credential: { validators: [ { required: true } ] },
@@ -59,6 +54,7 @@ export class CredentialEditorComponent implements OnInit {
   }
 
   warpCredentialData(credentialType: string) {
+    console.log(credentialType);
     switch (credentialType) {
       case CredentialTypeEnum.USERNAME_WITH_PASSWORD:
         this.credentialData = {
@@ -107,6 +103,13 @@ export class CredentialEditorComponent implements OnInit {
           showPassphrase: true,
           credential: 'Certificate File',
           credential2: 'Certificate Key',
+        };
+        break;
+      case CredentialTypeEnum.GOOGLE_ADC:
+        this.credentialData = {
+          showPassphrase: false,
+          credential: 'Service Account Key',
+          credential2: '',
         };
         break;
       default:

@@ -71,4 +71,5 @@ export enum CredentialTypeEnum {
   SSL_CERTIFICATES = 'SSL_CERTIFICATES',
   OTP = 'OTP',
   DICTIONARY = 'DICTIONARY',
+  GOOGLE_ADC = 'GOOGLE_ADC'
 }

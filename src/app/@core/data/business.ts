@@ -16,6 +16,8 @@ export enum BusinessTypeEnum {
   USER = 'USER',
   DOMAIN= 'DOMAIN',
 
+  ASSET_MATURITY = 'ASSET_MATURITY',
+
   // RBAC
   RBAC_ROLE = 'RBAC_ROLE',
   RBAC_GROUP = 'RBAC_GROUP',

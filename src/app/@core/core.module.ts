@@ -28,6 +28,7 @@ import { WebSocketApiService } from './services/ws.api.service';
 import { ServerAccountService } from './services/server-account.service';
 import { SshSessionService } from './services/ssh-session.service';
 import { NotificationTemplateService } from './services/notification-template.service';
+import { AssetMaturityService } from './services/asset-maturity.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -61,6 +62,7 @@ export const CRATOS_PROVIDERS = [
   ServerAccountService,
   SshSessionService,
   NotificationTemplateService,
+  AssetMaturityService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

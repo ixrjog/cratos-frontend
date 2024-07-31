@@ -29,6 +29,9 @@ import { SshSessionInstanceCommandComponent } from './ssh-session/ssh-session-da
 import { NotificationTemplateComponent } from './notification-template/notification-template.component';
 import { NotificationTemplateDataTableComponent } from './notification-template/notification-template-data-table/notification-template-data-table.component';
 import { NotificationTemplateEditorComponent } from './notification-template/notification-template-data-table/notification-template-editor/notification-template-editor.component';
+import { AssetMaturityComponent } from './asset-maturity/asset-maturity.component';
+import { AssetMaturityDataTableComponent } from './asset-maturity/asset-maturity-data-table/asset-maturity-data-table.component';
+import { AssetMaturityEditorComponent } from './asset-maturity/asset-maturity-data-table/asset-maturity-editor/asset-maturity-editor.component';
 
 
 @NgModule({
@@ -54,6 +57,9 @@ import { NotificationTemplateEditorComponent } from './notification-template/not
     NotificationTemplateComponent,
     NotificationTemplateDataTableComponent,
     NotificationTemplateEditorComponent,
+    AssetMaturityComponent,
+    AssetMaturityDataTableComponent,
+    AssetMaturityEditorComponent,
   ],
   imports: [
     CommonModule,

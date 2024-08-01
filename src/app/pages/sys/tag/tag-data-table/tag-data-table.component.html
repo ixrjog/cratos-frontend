@@ -25,14 +25,14 @@
     <d-column field="tagValue" header="Tag Value"></d-column>
     <d-column field="tagType" header="Tag Type"></d-column>
     <d-column field="promptColor" header="Prompt Color"></d-column>
-    <d-column field="color" header="Color" [width]="'80px'">
+    <d-column field="color" header="Color">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <input type="color" [value]="cellItem" disabled="true" />
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="seq" header="Seq" [sortable]="true" [width]="'80px'"></d-column>
+    <d-column field="seq" header="Seq" [sortable]="true"></d-column>
     <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

@@ -28,6 +28,10 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
 
   queryParam = {
     queryName: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
 
   table: Table<TrafficLayerDomainVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -181,6 +185,10 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
 
   onRowBusinessDoc(rowItem: CertificateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
   }
 
   protected readonly countResource = countResource;

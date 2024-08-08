@@ -89,6 +89,7 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
   }
 
   onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
+    this.showRecord = false;
     this.queryParam.domainId = domainVO.id;
     this.queryParam.envName = '';
     this.getEnvItems(domainVO.id);

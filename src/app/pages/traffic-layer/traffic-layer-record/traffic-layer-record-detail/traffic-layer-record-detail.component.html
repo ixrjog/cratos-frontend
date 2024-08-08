@@ -12,7 +12,7 @@
   >
     <ng-template let-option="option">
       <span>{{ option.domain }}</span>
-      <span style="float: right; padding: 3px 0">{{ option.name}}</span>
+      <span style="float: right; padding: 3px 0">{{ option.name }}</span>
     </ng-template>
   </d-select>
   <d-tabs
@@ -35,6 +35,11 @@
 <div class="spacing-table" *ngIf="showRecord">
   <div dLoading [loading]="loading">
     <div *ngIf="!loading && showRecord">
+      <span *ngIf="JSON.stringify(trafficLayerDomain.businessTags) !=='[]'">
+        <h3>Domain Tags</h3>
+         <app-business-tags [businessTags]="trafficLayerDomain.businessTags"></app-business-tags>
+      </span>
+      <app-business-tags [businessTags]="trafficLayerDomain.businessTags"></app-business-tags>
       <h3>Record Table</h3>
       <app-ace-editor
         [readonly]="true"

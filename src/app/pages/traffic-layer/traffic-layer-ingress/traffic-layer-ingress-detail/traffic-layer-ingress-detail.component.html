@@ -1,0 +1,38 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    placeholder="Entry host"
+    [(ngModel)]="queryParam.queryHost"
+    [iconPosition]="'left'"
+  >
+  </d-search>
+  <d-select
+    class="select"
+    style="width: 300px;max-width: 300px"
+    [placeholder]="'Select ingress name'"
+    [allowClear]="true"
+    [options]="nameOptions"
+    [(ngModel)]="queryParam.name"
+  >
+  </d-select>
+  <d-button
+    [disabled]="queryParam.queryHost ==='' && queryParam.name ===''"
+    class="button"
+    bsStyle="common"
+    (click)="fetchData()"
+  >Fetch
+  </d-button>
+</div>
+<div class="spacing-table" *ngIf="showRecord">
+  <div dLoading [loading]="loading">
+    <div *ngIf="!loading && showRecord">
+      <h3>Ingress Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails"
+        [mode]="'ace/mode/text'"
+        [theme]="'ace/theme/tomorrow'"
+      ></app-ace-editor>
+    </div>
+  </div>
+</div>

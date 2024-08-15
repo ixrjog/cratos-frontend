@@ -39,6 +39,11 @@ export interface TrafficLayerRecordDetails {
   };
 }
 
+export interface TrafficLayerIngressVO {
+  ingressTable: string;
+  names: string[];
+}
+
 export interface TrafficLayerDomainEdit {
   id?: number;
   name: string;
@@ -103,4 +108,9 @@ export abstract class TrafficLayerData {
   abstract queryRecordDetails(param: TrafficLayerRecordQueryDetails): Observable<HttpResult<TrafficLayerRecordDetails>>;
 
   abstract queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>>;
+
+  abstract queryIngressHostDetails(param: { queryHost: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
+
+  abstract queryIngressDetails(param: { name: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
+
 }

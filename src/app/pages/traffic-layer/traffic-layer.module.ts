@@ -35,6 +35,8 @@ import {
 import {
   TrafficLayerRecordEditorComponent,
 } from './traffic-layer-domain/traffic-layer-record-data-table/traffic-layer-record-editor/traffic-layer-record-editor.component';
+import { TrafficLayerIngressComponent } from './traffic-layer-ingress/traffic-layer-ingress.component';
+import { TrafficLayerIngressDetailComponent } from './traffic-layer-ingress/traffic-layer-ingress-detail/traffic-layer-ingress-detail.component';
 
 
 @NgModule({
@@ -47,6 +49,8 @@ import {
     TrafficLayerRecordDetailComponent,
     TrafficLayerRecordDataTableComponent,
     TrafficLayerRecordEditorComponent,
+    TrafficLayerIngressComponent,
+    TrafficLayerIngressDetailComponent,
   ],
   imports: [
     CommonModule,

@@ -6,6 +6,7 @@ import {
   TrafficLayerDomainEnvVO,
   TrafficLayerDomainPageQuery,
   TrafficLayerDomainVO,
+  TrafficLayerIngressVO,
   TrafficLayerRecordDetails,
   TrafficLayerRecordEdit,
   TrafficLayerRecordPageQuery,
@@ -70,5 +71,13 @@ export class TrafficLayerService extends TrafficLayerData {
 
   queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>> {
     return this.apiService.post(this.baseUrl, '/domain/env/query', param);
+  }
+
+  queryIngressHostDetails(param: { queryHost: string }): Observable<HttpResult<TrafficLayerIngressVO>> {
+    return this.apiService.post(this.baseUrl, '/ingress/host/details/query', param);
+  }
+
+  queryIngressDetails(param: { name: string }): Observable<HttpResult<TrafficLayerIngressVO>> {
+    return this.apiService.post(this.baseUrl, '/ingress/details/query', param);
   }
 }

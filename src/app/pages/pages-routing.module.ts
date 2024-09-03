@@ -48,6 +48,10 @@ const routes: Routes = [
         path: 'domain',
         loadChildren: () => import('./domain/domain.module').then(m => m.DomainModule),
       },
+      {
+        path: 'global-network',
+        loadChildren: () => import('./global-network/global-network.module').then(m => m.GlobalNetworkModule),
+      },
     ],
   },
 ];

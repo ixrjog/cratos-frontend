@@ -12,7 +12,7 @@ import { DomainService } from '../../../../../@core/services/domain.service';
 export class DomainEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
-  @Input() data: any;
+@Input() data: any;
   formData: DomainVO;
   fromAssetId: number;
   operationType: boolean;

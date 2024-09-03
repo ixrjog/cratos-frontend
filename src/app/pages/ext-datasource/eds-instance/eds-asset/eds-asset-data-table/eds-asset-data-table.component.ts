@@ -22,6 +22,9 @@ import { getResourceCountColor, parseResourceCount } from '../../../../../@share
 import {
   DomainEditorComponent
 } from '../../../../domain/domain-list/domain-list-data-table/domain-editor/domain-editor.component';
+import {
+  GlobalNetworkSubnetEditorComponent
+} from '../../../../global-network/global-network-subnet/global-network-subnet-data-table/global-network-subnet-editor/global-network-subnet-editor.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -157,6 +160,13 @@ export class EdsAssetDataTableComponent implements OnChanges {
           case BusinessTypeEnum.DOMAIN:
             dialogDate['content'] = DomainEditorComponent;
             dialogDate['title'] = 'New Domain';
+            this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+              this.fetchData();
+            }, body.target, { fromAssetId: rowItem.id });
+            break;
+          case BusinessTypeEnum.GLOBAL_NETWORK_SUBNET:
+            dialogDate['content'] = GlobalNetworkSubnetEditorComponent;
+            dialogDate['title'] = 'New Global Network Subnet';
             this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
               this.fetchData();
             }, body.target, { fromAssetId: rowItem.id });

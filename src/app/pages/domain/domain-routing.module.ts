@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DomainListComponent } from './domain-list/domain-list.component';
-import { CertificateComponent } from '../certificate/certificate.component';
+import { DomainComponent } from './domain.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CertificateComponent,
+    component: DomainComponent,
     children: [
       { path: 'list', component: DomainListComponent },
     ],

@@ -1,0 +1,47 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Network</d-form-label>
+      <d-select
+        name="network"
+        class="select"
+        [filterKey]="'name'"
+        [width]="580"
+        [appendToBody]="true"
+        [(ngModel)]="formData.network"
+        [searchFn]="onSearchNetwork"
+        [isSearch]="true"
+        placeholder="Select network"
+        (valueChange)="onNetworkChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.name }}</span>
+          <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" [dValidateRules]="formRules['name']"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">CIDR</d-form-label>
+      <d-form-control>
+        <input dTextInput name="cidrBlock" [(ngModel)]="formData.cidrBlock"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px"  [(ngModel)]="formData.comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

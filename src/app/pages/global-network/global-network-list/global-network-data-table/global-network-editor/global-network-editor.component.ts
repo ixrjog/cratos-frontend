@@ -1,20 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
+import { GlobalNetworkEdit, GlobalNetworkVO } from '../../../../../@core/data/global-network';
 import { DValidateRules } from 'ng-devui';
-import { GlobalNetworkSubnetEdit, GlobalNetworkSubnetVO } from '../../../../../@core/data/global-network';
 import { GlobalNetworkService } from '../../../../../@core/services/global-network.service';
 
 @Component({
-  selector: 'app-global-network-subnet-editor',
-  templateUrl: './global-network-subnet-editor.component.html',
-  styleUrls: [ './global-network-subnet-editor.component.less' ],
+  selector: 'app-global-network-editor',
+  templateUrl: './global-network-editor.component.html',
+  styleUrls: [ './global-network-editor.component.less' ],
 })
-export class GlobalNetworkSubnetEditorComponent implements OnInit {
+export class GlobalNetworkEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
-  formData: GlobalNetworkSubnetVO;
-  fromAssetId: number;
+  formData: GlobalNetworkVO;
   operationType: boolean;
 
   formRules: { [key: string]: DValidateRules } = {
@@ -30,22 +29,20 @@ export class GlobalNetworkSubnetEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
-    this.fromAssetId = this.data['fromAssetId'];
   }
 
   addForm() {
-    const param: GlobalNetworkSubnetEdit = {
+    const param: GlobalNetworkEdit = {
       ...this.formData,
-      fromAssetId: this.fromAssetId,
     };
-    return this.globalNetworkService.addGlobalNetworkSubnet(param);
+    return this.globalNetworkService.addGlobalNetwork(param);
   }
 
   updateForm() {
-    const param: GlobalNetworkSubnetEdit = {
+    const param: GlobalNetworkEdit = {
       ...this.formData,
     };
-    return this.globalNetworkService.updateGlobalNetworkSubnet(param);
+    return this.globalNetworkService.updateGlobalNetwork(param);
   }
 
 }

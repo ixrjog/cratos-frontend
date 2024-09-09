@@ -20,6 +20,17 @@ import { SharedModule } from '../../@shared/shared.module';
 import {
   GlobalNetworkSubnetEditorComponent
 } from './global-network-subnet/global-network-subnet-data-table/global-network-subnet-editor/global-network-subnet-editor.component';
+import { GlobalNetworkPlanningComponent } from './global-network-planning/global-network-planning.component';
+import { GlobalNetworkListComponent } from './global-network-list/global-network-list.component';
+import { GlobalNetworkDataTableComponent } from './global-network-list/global-network-data-table/global-network-data-table.component';
+import { GlobalNetworkEditorComponent } from './global-network-list/global-network-data-table/global-network-editor/global-network-editor.component';
+import {
+  GlobalNetworkPlanningDataTableComponent
+} from './global-network-planning/global-network-planning-data-table/global-network-planning-data-table.component';
+import {
+  GlobalNetworkPlanningEditorComponent
+} from './global-network-planning/global-network-planning-data-table/global-network-planning-editor/global-network-planning-editor.component';
+import { GlobalNetworkDetailsComponent } from './global-network-list/global-network-data-table/global-network-details/global-network-details.component';
 
 
 @NgModule({
@@ -27,7 +38,14 @@ import {
     GlobalNetworkComponent,
     GlobalNetworkSubnetComponent,
     GlobalNetworkSubnetDataTableComponent,
-    GlobalNetworkSubnetEditorComponent
+    GlobalNetworkSubnetEditorComponent,
+    GlobalNetworkPlanningDataTableComponent,
+    GlobalNetworkPlanningEditorComponent,
+    GlobalNetworkPlanningComponent,
+    GlobalNetworkListComponent,
+    GlobalNetworkDataTableComponent,
+    GlobalNetworkEditorComponent,
+    GlobalNetworkDetailsComponent
   ],
   imports: [
     CommonModule,

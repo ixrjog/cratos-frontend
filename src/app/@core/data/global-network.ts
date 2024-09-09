@@ -20,6 +20,7 @@ export interface GlobalNetworkPlanningVO extends BaseVO, ValidVO, BusinessDocsVO
   cidrBlock: string;
   resourceTotal: number;
   comment: string;
+  network: GlobalNetworkVO;
 }
 
 export interface GlobalNetworkSubnetVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
@@ -79,6 +80,22 @@ export interface GlobalNetworkSubnetEdit {
   fromAssetId?: number;
 }
 
+export interface NetworkDetails {
+  networkId: number;
+  network: GlobalNetworkVO;
+  planningDetails: PlanningDetails[];
+}
+
+export interface PlanningDetails extends ValidVO {
+  id: number;
+  networkId: number;
+  name: string;
+  cidrBlock: string;
+  resourceTotal: number;
+  comment: string;
+  subnetTable: string;
+}
+
 export abstract class GlobalNetworkData {
 
   abstract queryGlobalNetworkPage(param: GlobalNetworkPageQuery): Observable<DataTable<GlobalNetworkVO>>;
@@ -87,6 +104,8 @@ export abstract class GlobalNetworkData {
 
   abstract updateGlobalNetwork(param: GlobalNetworkEdit): Observable<HttpResult<Boolean>>;
 
+  abstract setGlobalNetworkValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
   abstract deleteGlobalNetworkById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract queryGlobalNetworkPlanningPage(param: GlobalNetworkPlanningPageQuery): Observable<DataTable<GlobalNetworkPlanningVO>>;
@@ -94,6 +113,8 @@ export abstract class GlobalNetworkData {
   abstract addGlobalNetworkPlanning(param: GlobalNetworkPlanningEdit): Observable<HttpResult<Boolean>>;
 
   abstract updateGlobalNetworkPlanning(param: GlobalNetworkPlanningEdit): Observable<HttpResult<Boolean>>;
+
+  abstract setGlobalNetworkPlanningValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract deleteGlobalNetworkPlanningById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
@@ -107,5 +128,6 @@ export abstract class GlobalNetworkData {
 
   abstract setGlobalNetworkSubnetValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract queryGlobalNetworkDetails(param: { id: number }): Observable<HttpResult<NetworkDetails>>;
 
 }

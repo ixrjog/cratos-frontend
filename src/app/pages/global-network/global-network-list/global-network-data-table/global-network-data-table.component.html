@@ -1,0 +1,104 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <app-business-cascader
+    [businessType]="businessType"
+    (onChange)="onTagChanges($event)"
+  >
+  </app-business-cascader>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="mainName" header="Main Name"></d-column>
+    <d-column field="cidrBlock" header="CRID"></d-column>
+    <d-column field="resourceTotal" header="Resource Total"></d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <d-icon [icon]="'icon-list-view'" [operable]="true" (click)="onRouteGlobalNetworkDetails(rowItem)"></d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

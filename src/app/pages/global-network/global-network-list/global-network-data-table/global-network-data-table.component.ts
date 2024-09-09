@@ -3,22 +3,21 @@ import { DataTableComponent } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { GlobalNetworkEdit, GlobalNetworkPageQuery, GlobalNetworkVO } from '../../../../@core/data/global-network';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
-import { GlobalNetworkSubnetEdit, GlobalNetworkSubnetPageQuery, GlobalNetworkSubnetVO } from '../../../../@core/data/global-network';
-import {
-  GlobalNetworkSubnetEditorComponent,
-} from './global-network-subnet-editor/global-network-subnet-editor.component';
-import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
+import { GlobalNetworkEditorComponent } from './global-network-editor/global-network-editor.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-global-network-subnet-data-table',
-  templateUrl: './global-network-subnet-data-table.component.html',
-  styleUrls: [ './global-network-subnet-data-table.component.less' ],
+  selector: 'app-global-network-data-table',
+  templateUrl: './global-network-data-table.component.html',
+  styleUrls: [ './global-network-data-table.component.less' ],
 })
-export class GlobalNetworkSubnetDataTableComponent implements OnInit {
+export class GlobalNetworkDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
@@ -29,14 +28,12 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     },
   };
   limit = RELATIVE_TIME_LIMIT;
-  businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_SUBNET;
+  businessType: string = BusinessTypeEnum.GLOBAL_NETWORK;
 
-  table: Table<GlobalNetworkSubnetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  table: Table<GlobalNetworkVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
-  newGlobalNetworkSubnet: GlobalNetworkSubnetEdit = {
+  newGlobalNetwork: GlobalNetworkEdit = {
     mainName: '',
-    mainType: '',
-    mainId: null,
     cidrBlock: '',
     resourceTotal: 0,
     name: '',
@@ -47,7 +44,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
-      content: GlobalNetworkSubnetEditorComponent,
+      content: GlobalNetworkEditorComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -62,16 +59,17 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     private globalNetworkService: GlobalNetworkService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
+    private route: Router,
   ) {
   }
 
   fetchData() {
-    const param: GlobalNetworkSubnetPageQuery = {
+    const param: GlobalNetworkPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.globalNetworkService.queryGlobalNetworkSubnetPage(param));
+    onFetchValidData(this.table, this.globalNetworkService.queryGlobalNetworkPage(param));
   }
 
   ngOnInit() {
@@ -91,42 +89,46 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'New Global Network Subnet',
+      title: 'New Global Network',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, JSON.parse(JSON.stringify(this.newGlobalNetworkSubnet)));
+    }, JSON.parse(JSON.stringify(this.newGlobalNetwork)));
   }
 
-  onRowEdit(rowItem: GlobalNetworkSubnetVO) {
+  onRowEdit(rowItem: GlobalNetworkVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Global Network Subnet',
+      title: 'Edit Global Network',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
   }
 
-  onRowValid(rowItem: GlobalNetworkSubnetVO) {
-    this.globalNetworkService.setGlobalNetworkSubnetValidById({ id: rowItem.id })
+  onRowValid(rowItem: GlobalNetworkVO) {
+    this.globalNetworkService.setGlobalNetworkValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();
       });
   }
 
-  onRowDelete(rowItem: GlobalNetworkSubnetVO) {
+  onRowDelete(rowItem: GlobalNetworkVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.globalNetworkService.deleteGlobalNetworkSubnetById({ id: rowItem.id })
+      this.globalNetworkService.deleteGlobalNetworkById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
         });
     });
+  }
+
+  onRouteGlobalNetworkDetails(rowItem: GlobalNetworkVO) {
+    this.route.navigate([ '/pages/global-network/details' ], { queryParams: { networkId: rowItem.id } });
   }
 
   onBatchValid() {
@@ -137,7 +139,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.globalNetworkService.setGlobalNetworkSubnetValidById({ id: row.id }));
+        obList.push(this.globalNetworkService.setGlobalNetworkValidById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
@@ -154,7 +156,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.globalNetworkService.deleteGlobalNetworkSubnetById({ id: row.id }));
+        obList.push(this.globalNetworkService.deleteGlobalNetworkById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
@@ -163,11 +165,11 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: GlobalNetworkSubnetVO) {
+  onRowBusinessTag(rowItem: GlobalNetworkVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: GlobalNetworkSubnetVO) {
+  onRowBusinessDoc(rowItem: GlobalNetworkVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 

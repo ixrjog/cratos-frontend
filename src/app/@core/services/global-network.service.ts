@@ -12,7 +12,7 @@ import {
   GlobalNetworkSubnetEdit,
   GlobalNetworkSubnetPageQuery,
   GlobalNetworkSubnetVO,
-  GlobalNetworkVO,
+  GlobalNetworkVO, NetworkDetails,
 } from '../data/global-network';
 
 @Injectable()
@@ -36,6 +36,10 @@ export class GlobalNetworkService extends GlobalNetworkData {
     return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
+  setGlobalNetworkValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
+  }
+
   deleteGlobalNetworkPlanningById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/planning/del', param);
   }
@@ -54,6 +58,10 @@ export class GlobalNetworkService extends GlobalNetworkData {
 
   updateGlobalNetworkPlanning(param: GlobalNetworkPlanningEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/planning/update', param);
+  }
+
+  setGlobalNetworkPlanningValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/planning/valid/set', param);
   }
 
   addGlobalNetworkSubnet(param: GlobalNetworkSubnetEdit): Observable<HttpResult<Boolean>> {
@@ -75,4 +83,9 @@ export class GlobalNetworkService extends GlobalNetworkData {
   updateGlobalNetworkSubnet(param: GlobalNetworkSubnetEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/subnet/update', param);
   }
+
+  queryGlobalNetworkDetails(param: { id: number }): Observable<HttpResult<NetworkDetails>> {
+    return this.apiService.post(this.baseUrl, '/details/query', param);
+  }
+
 }

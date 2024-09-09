@@ -1,42 +1,49 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableComponent } from 'ng-devui';
+import { DataTableComponent, DialogService } from 'ng-devui';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import {
+  GlobalNetworkPlanningEdit,
+  GlobalNetworkPlanningPageQuery,
+  GlobalNetworkPlanningVO,
+  GlobalNetworkVO,
+} from '../../../../@core/data/global-network';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
-import { GlobalNetworkSubnetEdit, GlobalNetworkSubnetPageQuery, GlobalNetworkSubnetVO } from '../../../../@core/data/global-network';
 import {
-  GlobalNetworkSubnetEditorComponent,
-} from './global-network-subnet-editor/global-network-subnet-editor.component';
-import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
+  GlobalNetworkPlanningEditorComponent,
+} from './global-network-planning-editor/global-network-planning-editor.component';
+import { TrafficLayerDomainPageQuery } from '../../../../@core/data/traffic-layer';
+import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-global-network-subnet-data-table',
-  templateUrl: './global-network-subnet-data-table.component.html',
-  styleUrls: [ './global-network-subnet-data-table.component.less' ],
+  selector: 'app-global-network-planning-data-table',
+  templateUrl: './global-network-planning-data-table.component.html',
+  styleUrls: [ './global-network-planning-data-table.component.less' ],
 })
-export class GlobalNetworkSubnetDataTableComponent implements OnInit {
+export class GlobalNetworkPlanningDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    networkId: null,
     queryByTag: {
       tagId: null,
       tagValue: null,
     },
   };
   limit = RELATIVE_TIME_LIMIT;
-  businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_SUBNET;
+  businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_PLANNING;
+  network: GlobalNetworkVO;
 
-  table: Table<GlobalNetworkSubnetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  table: Table<GlobalNetworkPlanningVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
-  newGlobalNetworkSubnet: GlobalNetworkSubnetEdit = {
-    mainName: '',
-    mainType: '',
-    mainId: null,
+  newGlobalNetworkPlanning: GlobalNetworkPlanningEdit = {
+    networkId: null,
     cidrBlock: '',
     resourceTotal: 0,
     name: '',
@@ -47,7 +54,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
-      content: GlobalNetworkSubnetEditorComponent,
+      content: GlobalNetworkPlanningEditorComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -66,12 +73,12 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   }
 
   fetchData() {
-    const param: GlobalNetworkSubnetPageQuery = {
+    const param: GlobalNetworkPlanningPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.globalNetworkService.queryGlobalNetworkSubnetPage(param));
+    onFetchValidData(this.table, this.globalNetworkService.queryGlobalNetworkPlanningPage(param));
   }
 
   ngOnInit() {
@@ -91,37 +98,37 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'New Global Network Subnet',
+      title: 'New Global Network Planning',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, JSON.parse(JSON.stringify(this.newGlobalNetworkSubnet)));
+    }, JSON.parse(JSON.stringify(this.newGlobalNetworkPlanning)));
   }
 
-  onRowEdit(rowItem: GlobalNetworkSubnetVO) {
+  onRowEdit(rowItem: GlobalNetworkPlanningVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Global Network Subnet',
+      title: 'Edit Global Network Planning',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
   }
 
-  onRowValid(rowItem: GlobalNetworkSubnetVO) {
-    this.globalNetworkService.setGlobalNetworkSubnetValidById({ id: rowItem.id })
+  onRowValid(rowItem: GlobalNetworkPlanningVO) {
+    this.globalNetworkService.setGlobalNetworkPlanningValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();
       });
   }
 
-  onRowDelete(rowItem: GlobalNetworkSubnetVO) {
+  onRowDelete(rowItem: GlobalNetworkPlanningVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.globalNetworkService.deleteGlobalNetworkSubnetById({ id: rowItem.id })
+      this.globalNetworkService.deleteGlobalNetworkPlanningById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
@@ -137,7 +144,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.globalNetworkService.setGlobalNetworkSubnetValidById({ id: row.id }));
+        obList.push(this.globalNetworkService.setGlobalNetworkPlanningValidById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
@@ -154,7 +161,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.globalNetworkService.deleteGlobalNetworkSubnetById({ id: row.id }));
+        obList.push(this.globalNetworkService.deleteGlobalNetworkPlanningById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
@@ -163,16 +170,32 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: GlobalNetworkSubnetVO) {
+  onRowBusinessTag(rowItem: GlobalNetworkPlanningVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: GlobalNetworkSubnetVO) {
+  onRowBusinessDoc(rowItem: GlobalNetworkPlanningVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
+  }
+
+  onSearchNetwork = (term: string) => {
+    const param: TrafficLayerDomainPageQuery = {
+      length: 20, page: 1, queryName: term,
+    };
+    return this.globalNetworkService.queryGlobalNetworkPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((network, index) => ({ id: index, option: network })),
+        ),
+      );
+  };
+
+  onNetworkChange(network: GlobalNetworkVO) {
+    this.queryParam.networkId = network?.id;
   }
 
 }

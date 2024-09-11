@@ -29,7 +29,13 @@
     <d-column field="name" header="Name"></d-column>
     <d-column field="mainName" header="Main Name"></d-column>
     <d-column field="cidrBlock" header="CRID"></d-column>
-    <d-column field="resourceTotal" header="Resource Total"></d-column>
+    <d-column field="resourceTotal" header="Resource Total">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{cellItem | number: '1.0-2'}}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="comment" header="Comment"></d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>

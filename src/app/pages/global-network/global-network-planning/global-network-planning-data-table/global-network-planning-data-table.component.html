@@ -44,6 +44,13 @@
     [checkable]="true"
   >
     <d-column field="name" header="Name"></d-column>
+    <d-column header="Network">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem.network.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="cidrBlock" header="CRID"></d-column>
     <d-column field="resourceTotal" header="Resource Total"></d-column>
     <d-column field="comment" header="Comment"></d-column>

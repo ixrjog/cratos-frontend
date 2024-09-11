@@ -16,9 +16,9 @@
         <div *ngIf="!loading && showRecord">
           <div *ngFor="let planningDetail of globalNetworkDetails.planningDetails">
             <h3 style="margin-bottom: 5px">
-              <d-tag [tag]="planningDetail.cidrBlock" style="padding: 0;margin-right: 5px"></d-tag>
               <span class="font-color-name" style="margin-right: 5px">{{ planningDetail.name }}</span>
-              <span class="font-color-comment">{{ planningDetail.comment }}</span>
+              <span class="font-color-comment" style="margin-right: 5px">{{ planningDetail.comment }}</span>
+              <d-tag [tag]="planningDetail.cidrBlock" style="padding: 0;margin-right: 5px"></d-tag>
             </h3>
             <app-ace-editor
               [readonly]="true"

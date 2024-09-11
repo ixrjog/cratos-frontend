@@ -29,6 +29,9 @@ export interface GlobalNetworkSubnetVO extends BaseVO, ValidVO, BusinessDocsVO, 
   mainName: string;
   mainType: string;
   mainId: number;
+  subnetKey: string;
+  region: string;
+  zone: string;
   cidrBlock: string;
   resourceTotal: number;
   comment: string;
@@ -73,6 +76,9 @@ export interface GlobalNetworkSubnetEdit {
   mainName: string;
   mainType: string;
   mainId: number;
+  subnetKey: string;
+  region: string;
+  zone: string;
   cidrBlock: string;
   resourceTotal: number;
   valid: boolean;

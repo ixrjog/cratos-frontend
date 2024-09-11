@@ -24,6 +24,24 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label [required]="true">Subnet Key</d-form-label>
+      <d-form-control>
+        <input dTextInput name="subnetKey" [(ngModel)]="formData.subnetKey"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">region</d-form-label>
+      <d-form-control>
+        <input dTextInput name="region" [(ngModel)]="formData.region"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">zone</d-form-label>
+      <d-form-control>
+        <input dTextInput name="zone" [(ngModel)]="formData.zone"/>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label [required]="true">CIDR</d-form-label>
       <d-form-control>
         <input dTextInput name="cidrBlock" [(ngModel)]="formData.cidrBlock"/>

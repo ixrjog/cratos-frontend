@@ -37,16 +37,20 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
     mainName: '',
     mainType: '',
     mainId: null,
+    region: '',
+    subnetKey: '',
+    zone: '',
     cidrBlock: '',
     resourceTotal: 0,
     name: '',
     valid: true,
-    comment: '',
+    comment: ''
   };
 
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
+      maxHeight: '800px',
       content: GlobalNetworkSubnetEditorComponent,
     },
     warningOperateData: {

@@ -143,7 +143,6 @@ export class CredentialDataTableComponent implements OnInit {
   onRowValid(rowItem: CredentialVO) {
     this.credentialService.setCredentialValidById({ id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
         this.fetchData();
       });
   }

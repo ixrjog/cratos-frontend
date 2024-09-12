@@ -146,7 +146,6 @@ export class EnvDataTableComponent implements OnInit {
   onRowValid(rowItem: EnvVO) {
     this.envService.setEnvValidById({ id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
         this.fetchData();
       });
   }

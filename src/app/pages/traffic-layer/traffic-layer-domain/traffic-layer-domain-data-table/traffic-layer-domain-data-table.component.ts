@@ -126,7 +126,6 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
   onRowValid(rowItem: TrafficLayerDomainVO) {
     this.trafficLayerService.setTrafficLayerDomainValidById({ id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
         this.fetchData();
       });
   }

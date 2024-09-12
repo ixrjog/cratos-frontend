@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { RbacGroupVO } from '../../../../@core/data/rbac';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
@@ -15,7 +14,6 @@ import {
 } from '../../../../@core/data/traffic-layer';
 import { TrafficLayerRecordEditorComponent } from './traffic-layer-record-editor/traffic-layer-record-editor.component';
 import { TrafficLayerService } from '../../../../@core/services/traffic-layer.service';
-import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { EnvService } from '../../../../@core/services/env.service';
 import { EnvPageQuery } from '../../../../@core/data/env';
@@ -138,15 +136,14 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     }, JSON.parse(JSON.stringify(this.newTrafficLayerRecord)), { trafficLayerDomain: this.trafficLayerDomain });
   }
 
-  onRowValid(rowItem: TrafficLayerDomainVO) {
+  onRowValid(rowItem: TrafficLayerRecordVO) {
     this.trafficLayerService.setTrafficLayerRecordValidById({ id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
         this.fetchData();
       });
   }
 
-  onRowDelete(rowItem: RbacGroupVO) {
+  onRowDelete(rowItem: TrafficLayerRecordVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
@@ -194,11 +191,11 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: CertificateVO) {
+  onRowBusinessTag(rowItem: TrafficLayerRecordVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: CertificateVO) {
+  onRowBusinessDoc(rowItem: TrafficLayerRecordVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 

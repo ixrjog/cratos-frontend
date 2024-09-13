@@ -42,7 +42,7 @@ export class ApiService {
     };
     let token = localStorage.getItem('id_token');
     if (token) {
-      headersConfig['Authorization'] = token
+      headersConfig['Authorization'] = 'Bearer ' + token;
     }
     return new HttpHeaders(headersConfig);
   }

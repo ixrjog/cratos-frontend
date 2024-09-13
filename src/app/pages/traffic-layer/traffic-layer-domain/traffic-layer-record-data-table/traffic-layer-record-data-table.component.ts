@@ -68,7 +68,6 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   ) {
   }
 
-
   getEnvOptions() {
     const param: EnvPageQuery = {
       length: 20, page: 1, queryName: '',

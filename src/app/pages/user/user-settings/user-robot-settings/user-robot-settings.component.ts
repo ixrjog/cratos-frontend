@@ -80,18 +80,21 @@ $ curl -X 'GET' \\
   }
 
   onRowRevoke(rowItem: RobotVO) {
-    const dialogDate = {
-      ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.revoke,
-    };
-    this.dialogUtil.onDialog(dialogDate, () => {
-      this.robotService.revokeRobot({ id: rowItem.id })
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.REVOKE);
-          this.fetchData();
-        });
-    });
+    if (rowItem.valid) {
+      const dialogDate = {
+        ...this.dialogDate.warningOperateData,
+        content: this.dialogDate.content.revoke,
+      };
+      this.dialogUtil.onDialog(dialogDate, () => {
+        this.robotService.revokeRobot({ id: rowItem.id })
+          .subscribe(() => {
+            this.toastUtil.onSuccessToast(TOAST_CONTENT.REVOKE);
+            this.fetchData();
+          });
+      });
+    }
   }
 
   protected readonly getRowColor = getRowColor;
+
 }

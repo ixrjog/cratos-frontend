@@ -79,17 +79,19 @@ export class RobotDataTableComponent implements OnInit {
   }
 
   onRowRevoke(rowItem: RobotVO) {
-    const dialogDate = {
-      ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.revoke,
-    };
-    this.dialogUtil.onDialog(dialogDate, () => {
-      this.robotService.revokeRobot({ id: rowItem.id })
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.REVOKE);
-          this.fetchData();
-        });
-    });
+    if (rowItem.valid) {
+      const dialogDate = {
+        ...this.dialogDate.warningOperateData,
+        content: this.dialogDate.content.revoke,
+      };
+      this.dialogUtil.onDialog(dialogDate, () => {
+        this.robotService.revokeRobot({ id: rowItem.id })
+          .subscribe(() => {
+            this.toastUtil.onSuccessToast(TOAST_CONTENT.REVOKE);
+            this.fetchData();
+          });
+      });
+    }
   }
 
   onBatchValid() {
@@ -100,7 +102,9 @@ export class RobotDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.robotService.revokeRobot({ id: row.id }));
+        if (row.valid) {
+          obList.push(this.robotService.revokeRobot({ id: row.id }));
+        }
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_REVOKE);

@@ -30,6 +30,11 @@
                   <app-user-ssh-key-settings [username]="username"></app-user-ssh-key-settings>
                 </div>
 
+                <div *ngIf="menus[2].isActive">
+                  <div class="da-settings-header">{{ menus[2].title }}</div>
+                  <app-user-robot-settings [username]="username"></app-user-robot-settings>
+                </div>
+
               </div>
             </da-col-item>
           </da-layout-row>

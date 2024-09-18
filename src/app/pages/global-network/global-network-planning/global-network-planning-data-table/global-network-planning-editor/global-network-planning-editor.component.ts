@@ -35,7 +35,7 @@ export class GlobalNetworkPlanningEditorComponent implements OnInit {
 
   onSearchNetwork = (term: string) => {
     const param: GlobalNetworkPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.globalNetworkService.queryGlobalNetworkPage(param)
       .pipe(

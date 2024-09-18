@@ -70,7 +70,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
 
   getEnvOptions() {
     const param: EnvPageQuery = {
-      length: 20, page: 1, queryName: '',
+      length: 10, page: 1, queryName: '',
 
     };
     this.envService.queryEnvPage(param)
@@ -200,7 +200,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
 
   onSearchTrafficLayerDomain = (term: string) => {
     const param: TrafficLayerDomainPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.trafficLayerService.queryTrafficLayerDomainPage(param)
       .pipe(

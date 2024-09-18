@@ -23,6 +23,8 @@ import { UserRbacEditorComponent } from './user-list/user-list-data-table/user-e
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { UserBaseSettingsComponent } from './user-settings/user-base-settings/user-base-settings.component';
 import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settings/user-ssh-key-settings.component';
+import { UserRobotSettingsComponent } from './user-settings/user-robot-settings/user-robot-settings.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 @NgModule({
@@ -36,6 +38,7 @@ import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settin
     UserSettingsComponent,
     UserBaseSettingsComponent,
     UserSshKeySettingsComponent,
+    UserRobotSettingsComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +53,7 @@ import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settin
     PaginationModule,
     SearchModule,
     SharedModule,
+    MarkdownModule,
   ],
 })
 export class UserModule { }

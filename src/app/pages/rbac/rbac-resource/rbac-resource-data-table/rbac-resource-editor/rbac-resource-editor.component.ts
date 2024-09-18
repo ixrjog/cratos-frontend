@@ -33,7 +33,7 @@ export class RbacResourceEditorComponent implements OnInit {
 
   onSearchRbacGroup = (term: string) => {
     const param: GroupPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.rbacService.queryGroupPage(param)
       .pipe(

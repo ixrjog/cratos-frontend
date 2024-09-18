@@ -80,7 +80,7 @@ export class RbacRoleAuthorizeComponent {
 
   onSearchRbacGroup = (term: string) => {
     const param: GroupPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.rbacService.queryGroupPage(param)
       .pipe(
@@ -96,7 +96,7 @@ export class RbacRoleAuthorizeComponent {
 
   onSearchRbacRole = (term: string) => {
     const param: RolePageQuery = {
-      length: 20, page: 1, roleName: term,
+      length: 10, page: 1, roleName: term,
     };
     return this.rbacService.queryRolePage(param)
       .pipe(

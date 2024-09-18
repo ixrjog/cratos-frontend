@@ -1,0 +1,90 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daXs]="10" [daOrder]="2">
+      <div *ngIf="robotToken">
+        <d-alert [type]="'info'" [closeable]="false">
+          当前窗口关闭后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。
+        </d-alert>
+        <h3>Token:
+          <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="robotToken.token" [position]="'right'">
+            <span iconPrefix>{{ robotToken.token }}</span>
+          </d-icon>
+        </h3>
+        <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
+      </div>
+      <form
+        dForm
+        ngForm
+        [layout]="verticalLayout"
+        (dSubmit)="submitForm($event)"
+        *ngIf="!robotToken"
+      >
+        <d-form-item>
+          <d-form-label [required]="true">Name</d-form-label>
+          <d-form-control>
+            <input
+              dTextInput
+              name="name"
+              [(ngModel)]="formData.name" />
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]="true">Expired Time</d-form-label>
+          <d-form-control>
+            <d-datepicker-pro
+              name="expiredTime"
+              [format]="'y/M/d HH:mm:ss'"
+              [appendToBody]="true"
+              [(ngModel)]="formData.expiredTime"
+              [minDate]="minDate"
+              [showTime]="true"
+            >
+            </d-datepicker-pro>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Description</d-form-label>
+          <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+          </d-form-control>
+        </d-form-item>
+        <d-form-operation>
+          <d-button style="margin-right: 8px" dFormSubmit>Submit
+          </d-button>
+          <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>
+        </d-form-operation>
+      </form>
+    </da-col-item>
+    <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
+      <d-card *ngFor="let token of robotTokenList" style="margin: 10px">
+        <span style="float: right; padding: 3px 0">
+          <d-icon
+            [icon]="'icon-priority'"
+            [operable]="true"
+            [color]="getRowColor(token.valid)"
+            (click)="onRowRevoke(token)"
+          >
+            </d-icon>
+        </span>
+        <d-card-header>
+          <d-card-title>
+            <h4 style="margin: 0">{{ token.name }}</h4>
+          </d-card-title>
+        </d-card-header>
+        <d-card-content>
+          <div class="card-content-comment font-color-comment">{{ token.comment | dSafeNullPipe }}</div>
+          <div>
+            <span style="margin-right: 10px">{{ token.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+            <strong>{{ token.expiredTime | dRelativeTime: limit | async }}</strong>
+          </div>
+        </d-card-content>
+      </d-card>
+    </da-col-item>
+  </da-layout-row>
+</div>

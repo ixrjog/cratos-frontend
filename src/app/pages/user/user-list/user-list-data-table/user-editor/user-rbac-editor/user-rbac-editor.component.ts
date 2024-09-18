@@ -26,9 +26,7 @@ export class UserRbacEditorComponent implements OnInit {
     this.sourceOption = [];
     this.targetOption = [];
     const param: RolePageQuery = {
-      roleName: '',
-      page: 1,
-      length: 20,
+      roleName: '', page: 1, length: 10,
     };
     this.rbacService.queryRolePage(param)
       .subscribe(({ body }) => {

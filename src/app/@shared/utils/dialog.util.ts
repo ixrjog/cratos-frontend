@@ -7,6 +7,7 @@ import {
 } from '../components/common/business-tag/business-tag-editor/business-tag-editor.component';
 import { BusinessDocsComponent } from '../components/common/business-doc/business-docs/business-docs.component';
 import { UserEditorComponent } from '../../pages/user/user-list/user-list-data-table/user-editor/user-editor.component';
+import { RobotEditorComponent } from '../../pages/sys/robot/robot-data-table/robot-editor/robot-editor.component';
 
 @Injectable()
 export class DialogUtil {
@@ -133,6 +134,23 @@ export class DialogUtil {
       },
     });
   }
+
+  onRobotDialog(onFetch: Function, data: any) {
+    const results = this.dialogService.open({
+      title: 'New Robot',
+      id: 'robot-edit',
+      width: '70%',
+      maxHeight: '800px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      content: RobotEditorComponent,
+      onClose: () => onFetch(),
+      buttons: [],
+      data: {
+        formData: data,
+      },
+    });
+  }
 }
 
 export const DIALOG_DATA = {
@@ -155,9 +173,11 @@ export const DIALOG_DATA = {
   content: {
     delete: '<strong>Confirm delete this row ?</strong>',
     inactive: '<strong>Confirm inactive this row ?</strong>',
+    revoke: '<strong>Confirm revoke this row ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',
     batchValid: '<strong>Confirm update these rows ?</strong>',
     batchInactive: '<strong>Confirm inactive these rows ?</strong>',
+    batchRevoke: '<strong>Confirm revoke these rows ?</strong>',
     deleteAll:  '<strong>Confirm delete all rows ?</strong>',
   }
 }

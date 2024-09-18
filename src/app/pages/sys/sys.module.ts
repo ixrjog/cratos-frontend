@@ -13,25 +13,44 @@ import { BasicFormModule } from '../getting-started/sample/basic-form/basic-form
 import { SharedModule } from '../../@shared/shared.module';
 import { CredentialDataTableComponent } from './credential/credential-data-table/credential-data-table.component';
 import { TagEditorComponent } from './tag/tag-data-table/tag-editor/tag-editor.component';
-import { CredentialEditorComponent } from './credential/credential-data-table/credential-editor/credential-editor.component';
+import {
+  CredentialEditorComponent,
+} from './credential/credential-data-table/credential-editor/credential-editor.component';
 import { EnvComponent } from './env/env.component';
 import { EnvDataTableComponent } from './env/env-data-table/env-data-table.component';
 import { EnvEditorComponent } from './env/env-data-table/env-editor/env-editor.component';
 import { MenuComponent } from './menu/menu.component';
 import { MenuConfigComponent } from './menu/menu-config/menu-config.component';
 import { ServerAccountComponent } from './server-account/server-account.component';
-import { ServerAccountDataTableComponent } from './server-account/server-account-data-table/server-account-data-table.component';
-import { ServerAccountEditorComponent } from './server-account/server-account-data-table/server-account-editor/server-account-editor.component';
+import {
+  ServerAccountDataTableComponent,
+} from './server-account/server-account-data-table/server-account-data-table.component';
+import {
+  ServerAccountEditorComponent,
+} from './server-account/server-account-data-table/server-account-editor/server-account-editor.component';
 import { SshSessionComponent } from './ssh-session/ssh-session.component';
 import { SshSessionDataTableComponent } from './ssh-session/ssh-session-data-table/ssh-session-data-table.component';
-import { NumberTransModule } from 'ng-devui/number-translation';
-import { SshSessionInstanceCommandComponent } from './ssh-session/ssh-session-data-table/ssh-session-instance-command/ssh-session-instance-command.component';
+import {
+  SshSessionInstanceCommandComponent,
+} from './ssh-session/ssh-session-data-table/ssh-session-instance-command/ssh-session-instance-command.component';
 import { NotificationTemplateComponent } from './notification-template/notification-template.component';
-import { NotificationTemplateDataTableComponent } from './notification-template/notification-template-data-table/notification-template-data-table.component';
-import { NotificationTemplateEditorComponent } from './notification-template/notification-template-data-table/notification-template-editor/notification-template-editor.component';
+import {
+  NotificationTemplateDataTableComponent,
+} from './notification-template/notification-template-data-table/notification-template-data-table.component';
+import {
+  NotificationTemplateEditorComponent,
+} from './notification-template/notification-template-data-table/notification-template-editor/notification-template-editor.component';
 import { AssetMaturityComponent } from './asset-maturity/asset-maturity.component';
-import { AssetMaturityDataTableComponent } from './asset-maturity/asset-maturity-data-table/asset-maturity-data-table.component';
-import { AssetMaturityEditorComponent } from './asset-maturity/asset-maturity-data-table/asset-maturity-editor/asset-maturity-editor.component';
+import {
+  AssetMaturityDataTableComponent,
+} from './asset-maturity/asset-maturity-data-table/asset-maturity-data-table.component';
+import {
+  AssetMaturityEditorComponent,
+} from './asset-maturity/asset-maturity-data-table/asset-maturity-editor/asset-maturity-editor.component';
+import { RobotComponent } from './robot/robot.component';
+import { RobotDataTableComponent } from './robot/robot-data-table/robot-data-table.component';
+import { RobotEditorComponent } from './robot/robot-data-table/robot-editor/robot-editor.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 @NgModule({
@@ -60,6 +79,9 @@ import { AssetMaturityEditorComponent } from './asset-maturity/asset-maturity-da
     AssetMaturityComponent,
     AssetMaturityDataTableComponent,
     AssetMaturityEditorComponent,
+    RobotComponent,
+    RobotDataTableComponent,
+    RobotEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -73,6 +95,7 @@ import { AssetMaturityEditorComponent } from './asset-maturity/asset-maturity-da
     ReactiveFormsModule,
     BasicFormModule,
     SharedModule,
+    MarkdownModule,
   ],
 })
 export class SysModule { }

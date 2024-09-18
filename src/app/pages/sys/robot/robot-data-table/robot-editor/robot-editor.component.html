@@ -1,0 +1,89 @@
+<section>
+  <div *ngIf="robotToken">
+    <d-alert [type]="'info'" [closeable]="false">
+      当前窗口关闭后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。
+    </d-alert>
+    <h3>Token:
+      <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="robotToken.token" [position]="'right'">
+        <span iconPrefix>{{ robotToken.token }}</span>
+      </d-icon>
+    </h3>
+    <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
+  </div>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+    #robotForm="dValidateRules"
+    (dSubmit)="submitForm($event)"
+    *ngIf="!robotToken"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">User</d-form-label>
+      <d-form-control>
+        <d-select
+          name="user"
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [(ngModel)]="user"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          placeholder="Select user"
+          (valueChange)="onUserChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }} : {{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="name"
+          [(ngModel)]="formData.name"
+          [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Expired Time</d-form-label>
+      <d-form-control>
+        <d-datepicker-pro
+          name="expiredTime"
+          [format]="'y/M/d HH:mm:ss'"
+          [appendToBody]="true"
+          [(ngModel)]="formData.expiredTime"
+          [minDate]="minDate"
+          [showTime]="true"
+        >
+        </d-datepicker-pro>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button
+        class="mr-element-spacing"
+        [title]="robotForm.errorMessage || ''" circled="true"
+        style="margin-right: 8px"
+        dFormSubmit
+      >Submit
+      </d-button>
+      <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>
+    </d-form-operation>
+  </form>
+</section>

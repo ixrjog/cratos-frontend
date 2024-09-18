@@ -9,6 +9,7 @@ import { ServerAccountComponent } from './server-account/server-account.componen
 import { SshSessionComponent } from './ssh-session/ssh-session.component';
 import { NotificationTemplateComponent } from './notification-template/notification-template.component';
 import { AssetMaturityComponent } from './asset-maturity/asset-maturity.component';
+import { RobotComponent } from './robot/robot.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       { path: 'server-account', component: ServerAccountComponent },
       { path: 'asset-maturity', component: AssetMaturityComponent },
       { path: 'notification-template', component: NotificationTemplateComponent },
+      { path: 'robot', component: RobotComponent },
     ],
   },
 ];

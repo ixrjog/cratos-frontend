@@ -57,7 +57,7 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   onSearchDomain = (term: string) => {
     const param: TrafficLayerDomainPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.trafficLayerService.queryTrafficLayerDomainPage(param)
       .pipe(

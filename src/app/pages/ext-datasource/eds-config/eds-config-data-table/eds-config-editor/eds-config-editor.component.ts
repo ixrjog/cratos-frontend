@@ -49,7 +49,7 @@ export class EdsConfigEditorComponent implements OnInit {
 
   onSearchCredential = (term: string) => {
     const param: CredentialPageQuery = {
-      length: 20, page: 1, queryName: term,
+      length: 10, page: 1, queryName: term,
     };
     return this.credentialService.queryCredentialPage(param)
       .pipe(

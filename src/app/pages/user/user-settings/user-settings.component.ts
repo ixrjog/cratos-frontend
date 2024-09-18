@@ -21,6 +21,10 @@ export class UserSettingsComponent implements OnInit {
       isActive: false,
       title: 'SSH Key',
     },
+    {
+      isActive: false,
+      title: 'Robot',
+    },
   ];
 
   constructor(private userService: UserService) {

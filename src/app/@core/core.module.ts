@@ -30,6 +30,7 @@ import { SshSessionService } from './services/ssh-session.service';
 import { NotificationTemplateService } from './services/notification-template.service';
 import { AssetMaturityService } from './services/asset-maturity.service';
 import { GlobalNetworkService } from './services/global-network.service';
+import { RobotService } from './services/robot.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -64,7 +65,8 @@ export const CRATOS_PROVIDERS = [
   SshSessionService,
   NotificationTemplateService,
   AssetMaturityService,
-  GlobalNetworkService
+  GlobalNetworkService,
+  RobotService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

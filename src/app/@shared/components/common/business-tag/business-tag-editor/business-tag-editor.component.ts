@@ -63,7 +63,7 @@ export class BusinessTagEditorComponent implements OnInit {
 
   onSearchTag = (term: string) => {
     const param: TagPageQuery = {
-      length: 20, page: 1, tagKey: term,
+      length: 10, page: 1, tagKey: term,
     };
     return this.tagService.queryTagPage(param)
       .pipe(

@@ -29,9 +29,11 @@ export const TOAST_CONTENT = {
   ADD: 'Add success',
   UPDATE: 'Update success',
   DELETE: 'Delete success',
+  REVOKE: 'Revoke success',
   INACTIVE: 'Inactive success',
   IMPORT: 'Importing, please wait',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
   BATCH_INACTIVE: 'Batch inactive success',
+  BATCH_REVOKE: 'Batch revoke success',
 };

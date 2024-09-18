@@ -1,7 +1,7 @@
 <section>
   <div *ngIf="robotToken">
     <d-alert [type]="'info'" [closeable]="false">
-      当前窗口关闭后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。
+      当前页面刷新后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。
     </d-alert>
     <h3>Token:
       <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="robotToken.token" [position]="'right'">

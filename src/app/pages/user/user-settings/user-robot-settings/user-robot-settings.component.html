@@ -7,7 +7,7 @@
         </d-alert>
         <h3>Token:
           <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="robotToken.token" [position]="'right'">
-            <span iconPrefix>{{ robotToken.token }}</span>
+            <span iconPrefix class="font-color-comment">{{ robotToken.token }}</span>
           </d-icon>
         </h3>
         <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>

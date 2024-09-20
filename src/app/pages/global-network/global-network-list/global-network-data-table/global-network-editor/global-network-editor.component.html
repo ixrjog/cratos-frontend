@@ -19,9 +19,17 @@
     </d-form-item>
     <d-form-item>
       <d-form-label [required]="true">CIDR</d-form-label>
-      <d-form-control>
+      <d-form-control [suffixTemplate]="suffixTemplate">
         <input dTextInput name="cidrBlock" [(ngModel)]="formData.cidrBlock"/>
       </d-form-control>
+      <app-global-network-check-cidr
+        *ngIf="JSON.stringify(this.globalNetworkList) !== '[]'"
+        [globalNetworkList]="globalNetworkList"
+        style="margin-top: 10px">
+      </app-global-network-check-cidr>
+      <ng-template #suffixTemplate>
+        <i class="icon icon-search" (click)="onCheckCidrBlock()"></i>
+      </ng-template>
     </d-form-item>
     <d-form-item>
       <d-form-label>Description</d-form-label>

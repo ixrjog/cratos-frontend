@@ -136,4 +136,8 @@ export abstract class GlobalNetworkData {
 
   abstract queryGlobalNetworkDetails(param: { id: number }): Observable<HttpResult<NetworkDetails>>;
 
+  abstract checkGlobalNetworkById(param: { id: number }): Observable<HttpResult<Array<GlobalNetworkVO>>>;
+
+  abstract checkGlobalNetworkByCidrBlock(param: { cidrBlock: string }): Observable<HttpResult<Array<GlobalNetworkVO>>>;
+
 }

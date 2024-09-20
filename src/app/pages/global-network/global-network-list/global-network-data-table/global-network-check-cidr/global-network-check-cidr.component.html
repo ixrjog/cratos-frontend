@@ -1,0 +1,8 @@
+<section>
+  <d-alert [type]="'warning'" [showIcon]="false" [closeable]="false">
+    <h3 class="devui-h3-title">当前 CIDR 与以下网络冲突</h3>
+    <li *ngFor="let network of globalNetworkList">
+      {{ network.name }} | {{ network.comment }} | {{ network.cidrBlock }}
+    </li>
+  </d-alert>
+</section>

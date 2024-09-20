@@ -31,6 +31,7 @@ import {
   GlobalNetworkPlanningEditorComponent
 } from './global-network-planning/global-network-planning-data-table/global-network-planning-editor/global-network-planning-editor.component';
 import { GlobalNetworkDetailsComponent } from './global-network-list/global-network-data-table/global-network-details/global-network-details.component';
+import { GlobalNetworkCheckCidrComponent } from './global-network-list/global-network-data-table/global-network-check-cidr/global-network-check-cidr.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { GlobalNetworkDetailsComponent } from './global-network-list/global-netw
     GlobalNetworkListComponent,
     GlobalNetworkDataTableComponent,
     GlobalNetworkEditorComponent,
-    GlobalNetworkDetailsComponent
+    GlobalNetworkDetailsComponent,
+    GlobalNetworkCheckCidrComponent
   ],
   imports: [
     CommonModule,

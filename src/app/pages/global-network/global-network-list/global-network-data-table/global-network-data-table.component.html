@@ -28,7 +28,15 @@
   >
     <d-column field="name" header="Name"></d-column>
     <d-column field="mainName" header="Main Name"></d-column>
-    <d-column field="cidrBlock" header="CIDR"></d-column>
+    <d-column field="cidrBlock" header="CIDR">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon [icon]="'icon-search'" dIconHover [operable]="true" (click)="onCheckCidrBlock(rowItem)">
+            <span iconPrefix>{{ rowItem.cidrBlock }}</span>
+          </d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="resourceTotal" header="Resource Total">
       <d-cell>
         <ng-template let-cellItem="cellItem">

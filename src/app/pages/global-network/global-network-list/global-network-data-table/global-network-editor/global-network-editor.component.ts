@@ -15,6 +15,7 @@ export class GlobalNetworkEditorComponent implements OnInit {
   @Input() data: any;
   formData: GlobalNetworkVO;
   operationType: boolean;
+  globalNetworkList: GlobalNetworkVO[] = [];
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -45,4 +46,15 @@ export class GlobalNetworkEditorComponent implements OnInit {
     return this.globalNetworkService.updateGlobalNetwork(param);
   }
 
+  onCheckCidrBlock() {
+    if (this.formData.cidrBlock) {
+      this.globalNetworkList = [];
+      this.globalNetworkService.checkGlobalNetworkByCidrBlock({ cidrBlock: this.formData.cidrBlock })
+        .subscribe(({ body }) => {
+          this.globalNetworkList = body
+        });
+    }
+  }
+
+  protected readonly JSON = JSON;
 }

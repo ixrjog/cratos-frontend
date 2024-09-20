@@ -11,6 +11,8 @@ import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-ta
 import { Observable, zip } from 'rxjs';
 import { GlobalNetworkEditorComponent } from './global-network-editor/global-network-editor.component';
 import { Router } from '@angular/router';
+import { GlobalNetworkCheckCidrComponent } from './global-network-check-cidr/global-network-check-cidr.component';
+import { DialogService } from 'ng-devui/modal';
 
 @Component({
   selector: 'app-global-network-data-table',
@@ -58,6 +60,7 @@ export class GlobalNetworkDataTableComponent implements OnInit {
   constructor(
     private globalNetworkService: GlobalNetworkService,
     private dialogUtil: DialogUtil,
+    private dialogService: DialogService,
     private toastUtil: ToastUtil,
     private route: Router,
   ) {
@@ -175,6 +178,29 @@ export class GlobalNetworkDataTableComponent implements OnInit {
 
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
+  }
+
+  onCheckCidrBlock(rowItem: GlobalNetworkVO) {
+    this.globalNetworkService.checkGlobalNetworkById({ id: rowItem.id })
+      .subscribe(({ body }) => {
+        if (JSON.stringify(body) === '[]') {
+          return;
+        }
+        const config = {
+          id: 'check-cidr-block',
+          width: '346px',
+          maxHeight: '600px',
+          dialogtype: 'warning',
+          showAnimation: true,
+          content: GlobalNetworkCheckCidrComponent,
+          backdropCloseable: true,
+          data: { globalNetworkList: body },
+        };
+        this.dialogService.open({
+          ...config,
+          buttons: [],
+        });
+      });
   }
 
 }

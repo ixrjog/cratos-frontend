@@ -88,4 +88,12 @@ export class GlobalNetworkService extends GlobalNetworkData {
     return this.apiService.post(this.baseUrl, '/details/query', param);
   }
 
+  checkGlobalNetworkByCidrBlock(param: { cidrBlock: string }): Observable<HttpResult<Array<GlobalNetworkVO>>> {
+    return this.apiService.get(this.baseUrl, '/cidr-block/check', param);
+  }
+
+  checkGlobalNetworkById(param: { id: number }): Observable<HttpResult<Array<GlobalNetworkVO>>> {
+    return this.apiService.get(this.baseUrl, '/id/check', param);
+  }
+
 }

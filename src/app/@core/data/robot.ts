@@ -6,6 +6,7 @@ export interface RobotVO extends BaseVO, ValidVO {
   name: string;
   username: string;
   token: string;
+  trail: boolean;
   createdBy: string;
   expiredTime: Date;
   comment: string;
@@ -17,6 +18,7 @@ export interface RobotEdit {
   valid: boolean;
   comment: string;
   expiredTime: any;
+  trail: boolean;
 }
 
 

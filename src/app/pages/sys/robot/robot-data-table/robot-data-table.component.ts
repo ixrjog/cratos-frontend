@@ -29,6 +29,7 @@ export class RobotDataTableComponent implements OnInit {
     username: '',
     name: '',
     valid: true,
+    trail: true,
     comment: '',
   };
 

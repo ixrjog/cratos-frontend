@@ -29,6 +29,7 @@ export class UserRobotSettingsComponent implements OnInit {
     expiredTime: null,
     name: '',
     valid: true,
+    trail: true,
     comment: '',
   };
   robotToken: RobotTokenVO = null;

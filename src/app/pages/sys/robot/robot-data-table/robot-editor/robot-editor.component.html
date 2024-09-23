@@ -64,6 +64,12 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label [required]="true">Trail</d-form-label>
+      <d-form-control>
+        <d-toggle name="trail" [(ngModel)]="formData.trail"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Description</d-form-label>
       <d-form-control>
         <textarea

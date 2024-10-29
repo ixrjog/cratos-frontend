@@ -41,20 +41,33 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column header="Session">
+    <d-column header="Session Time">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <strong>{{ rowItem['sessionId'] }}</strong>
-          </div>
-          <div class="font-color-comment">
-            <span>{{ rowItem['startTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}</span>
-            -
-            <span>{{ rowItem['endTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}</span>
+            <div>
+              <strong style="margin-right: 5px">Start</strong>
+              <span class="font-color-comment">
+                {{ rowItem['startTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
+              </span>
+            </div>
+            <div>
+              <strong style="margin-right: 5px">End</strong>
+              <span class="font-color-comment">
+                {{ rowItem['endTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
+              </span>
+            </div>
+            <div>
+              <strong style="margin-right: 5px">Duration</strong>
+              <span class="font-color-comment" c>
+                {{ rowItem['durationTime'] }}
+              </span>
+            </div>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
+    <d-column field="sessionId" header="Session"></d-column>
     <d-column field="username" header="Username"></d-column>
     <d-column field="serverHostname" header="Server Hostname"></d-column>
     <d-column field="sessionStatus" header="Session Status"></d-column>

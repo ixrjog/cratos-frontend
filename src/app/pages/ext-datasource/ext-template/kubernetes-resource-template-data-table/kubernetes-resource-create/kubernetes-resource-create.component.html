@@ -1,0 +1,57 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label>Namespaces</d-form-label>
+      <d-form-control>
+        <d-checkbox-group
+          name="namespaces"
+          [options]="namespaceOptions"
+          [(ngModel)]="formData.namespaces"
+          [direction]="'row'"
+        ></d-checkbox-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Kinds</d-form-label>
+      <d-form-control>
+        <d-checkbox-group
+          name="kinds"
+          [options]="kindOptions"
+          [(ngModel)]="formData.kinds"
+          [direction]="'row'"
+        ></d-checkbox-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Custom</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="20"
+          [maxLines]="40"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.custom"
+          (onChange)="onCustomChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -1,0 +1,23 @@
+<da-layout-row [daGutter]="[24, 24]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+      <d-tab [id]="'kubernetes-resource-template'" [title]="'Kubernetes Resource Template'">
+        <div class="app-data-table">
+          <app-kubernetes-resource-template-data-table
+            #kubernetesResourceTemplateDataTable></app-kubernetes-resource-template-data-table>
+        </div>
+      </d-tab>
+      <d-tab [id]="'kubernetes-resource-member'" [title]="'Kubernetes Resource Member'">
+        <div class="app-data-table">
+          <app-kubernetes-resource-member-data-table
+            #kubernetesResourceMemberDataTable></app-kubernetes-resource-member-data-table>
+        </div>
+      </d-tab>
+      <d-tab [id]="'kubernetes-resource'" [title]="'Kubernetes Resource'">
+        <div class="app-data-table">
+          <app-kubernetes-resource-data-table #kubernetesResourceDataTable></app-kubernetes-resource-data-table>
+        </div>
+      </d-tab>
+    </d-tabs>
+  </da-col-item>
+</da-layout-row>

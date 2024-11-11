@@ -5,27 +5,24 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { finalize, Observable, zip } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import {
-  EdsConfigEdit,
-  EdsConfigPageQuery,
-  EdsConfigVO,
-  RegisterInstance,
-} from '../../../../@core/data/ext-datasource';
-import { EdsConfigEditorComponent } from './eds-config-editor/eds-config-editor.component';
-import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+  KubernetesResourceTemplateEdit,
+  KubernetesResourceTemplatePageQuery,
+  KubernetesResourceTemplateVO,
+} from '../../../../@core/data/kubernetes-resource';
 import {
-  EdsInstanceEditorComponent,
-} from '../../eds-instance/eds-instance-card-list/eds-instance-editor/eds-instance-editor.component';
-import { catchError } from 'rxjs/operators';
+  KubernetesResourceTemplateEditorComponent,
+} from './kubernetes-resource-template-editor/kubernetes-resource-template-editor.component';
+import { KubernetesResourceService } from '../../../../@core/services/kubernetes-resource.service';
+import { KubernetesResourceCreateComponent } from './kubernetes-resource-create/kubernetes-resource-create.component';
 
 @Component({
-  selector: 'app-eds-config-data-table',
-  templateUrl: './eds-config-data-table.component.html',
-  styleUrls: [ './eds-config-data-table.component.less' ],
+  selector: 'app-kubernetes-resource-template-data-table',
+  templateUrl: './kubernetes-resource-template-data-table.component.html',
+  styleUrls: [ './kubernetes-resource-template-data-table.component.less' ],
 })
-export class EdsConfigDataTableComponent implements OnInit {
+export class KubernetesResourceTemplateDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
@@ -33,39 +30,28 @@ export class EdsConfigDataTableComponent implements OnInit {
     edsType: '',
     valid: null,
   };
-  businessType: string = BusinessTypeEnum.EDS_CONFIG;
+  businessType: string = BusinessTypeEnum.KUBERNETES_RESOURCE_TEMPLATE;
 
-  table: Table<EdsConfigVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  table: Table<KubernetesResourceTemplateVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
-  newEdsConfig: EdsConfigEdit = {
-    comment: '',
-    configContent: '',
-    credentialId: null,
-    edsType: '',
+  newKubernetesResourceTemplate: KubernetesResourceTemplateEdit = {
     name: '',
-    url: '',
-    version: '',
+    templateKey: '',
+    apiVersion: '',
     valid: true,
-  };
-
-  registerEdsInstance: RegisterInstance = {
+    custom: '',
     comment: '',
-    configId: 0,
-    instanceName: '',
-    kind: '',
-    url: '',
-    valid: true,
-    version: '',
   };
 
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
-      content: EdsConfigEditorComponent,
+      content: KubernetesResourceTemplateEditorComponent,
+      maxHeight: '1000px',
     },
-    editorInstanceData: {
+    createResourceData: {
       ...DIALOG_DATA.editorData,
-      content: EdsInstanceEditorComponent,
+      content: KubernetesResourceCreateComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -76,23 +62,19 @@ export class EdsConfigDataTableComponent implements OnInit {
   };
 
   constructor(
-    private edsService: EdsService,
+    private kubernetesResourceService: KubernetesResourceService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
   }
 
   fetchData() {
-    const param: EdsConfigPageQuery = {
+    const param: KubernetesResourceTemplatePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.edsService.queryEdsConfigPage(param));
-  }
-
-  ngOnInit() {
-    this.fetchData();
+    onFetchValidData(this.table, this.kubernetesResourceService.queryTemplatePage(param));
   }
 
   pageIndexChange(pageIndex) {
@@ -108,18 +90,18 @@ export class EdsConfigDataTableComponent implements OnInit {
   onRowNew() {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'New Eds Config',
+      title: 'New Kubernetes Resource',
       width: '50%',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, JSON.parse(JSON.stringify(this.newEdsConfig)));
+    }, JSON.parse(JSON.stringify(this.newKubernetesResourceTemplate)));
   }
 
-  onRowEdit(rowItem: EdsConfigVO) {
+  onRowEdit(rowItem: KubernetesResourceTemplateVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Edit Eds Config',
+      title: 'Edit Kubernetes Resource',
       width: '50%',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
@@ -127,38 +109,35 @@ export class EdsConfigDataTableComponent implements OnInit {
     }, rowItem);
   }
 
-  onRowValid(rowItem: EdsConfigVO) {
-    this.edsService.setEdsConfigValidById({ id: rowItem.id })
+  onRowCreate(rowItem: KubernetesResourceTemplateVO) {
+    const dialogDate = {
+      ...this.dialogDate.createResourceData,
+      title: 'Create Kubernetes Resource',
+      width: '50%',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
+
+  onRowValid(rowItem: KubernetesResourceTemplateVO) {
+    this.kubernetesResourceService.setTemplateValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();
       });
   }
 
-  onRowDelete(rowItem: EdsConfigVO) {
+  onRowDelete(rowItem: KubernetesResourceTemplateVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.edsService.deleteEdsConfigById({ id: rowItem.id })
+      this.kubernetesResourceService.deleteTemplateById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
         });
-    });
-  }
-
-  onRowRegister(rowItem: EdsConfigVO) {
-    const dialogDate = {
-      ...this.dialogDate.editorInstanceData,
-      title: 'Register Eds Instance',
-    };
-    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
-      this.fetchData();
-    }, {
-      ...this.registerEdsInstance,
-      configId: rowItem.id,
-      edsType: rowItem.edsType,
     });
   }
 
@@ -170,7 +149,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.edsService.setEdsConfigValidById({ id: row.id }));
+        obList.push(this.kubernetesResourceService.setTemplateValidById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
@@ -187,7 +166,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.edsService.deleteEdsConfigById({ id: row.id }));
+        obList.push(this.kubernetesResourceService.deleteTemplateById({ id: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
@@ -196,37 +175,18 @@ export class EdsConfigDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: EdsConfigVO) {
+  onRowBusinessTag(rowItem: KubernetesResourceTemplateVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: EdsConfigVO) {
+  onRowBusinessDoc(rowItem: KubernetesResourceTemplateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onCellEditEnd(event) {
-    const param: EdsConfigEdit = {
-      id: event.rowItem.id,
-      name: event.rowItem.name,
-      credentialId: event.rowItem.credentialId,
-      configContent: event.rowItem.configContent,
-      edsType: event.rowItem.edsType,
-      url: event.rowItem.url,
-      comment: event.rowItem.comment,
-      version: event.rowItem.version,
-      valid: event.rowItem.valid,
-    };
-    this.edsService.updateEdsConfig(param)
-      .pipe(
-        catchError((error: any) => {
-          this.fetchData();
-          return new error();
-        }),
-      )
-      .subscribe();
+  protected readonly getRowColor = getRowColor;
+
+  ngOnInit(): void {
+    this.fetchData();
   }
 
-  protected readonly getRowColor = getRowColor;
-  protected readonly limit = RELATIVE_TIME_LIMIT;
 }
-

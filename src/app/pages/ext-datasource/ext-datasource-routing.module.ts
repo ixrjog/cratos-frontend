@@ -4,6 +4,7 @@ import { ExtDatasourceComponent } from './ext-datasource.component';
 import { EdsConfigComponent } from './eds-config/eds-config.component';
 import { EdsInstanceComponent } from './eds-instance/eds-instance.component';
 import { EdsAssetComponent } from './eds-instance/eds-asset/eds-asset.component';
+import { EdsTemplateComponent } from './ext-template/eds-template.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
       { path: 'instance', component: EdsInstanceComponent },
       { path: 'config', component: EdsConfigComponent },
       { path: 'asset', component: EdsAssetComponent },
+      { path: 'template', component: EdsTemplateComponent },
     ],
   },
 ];

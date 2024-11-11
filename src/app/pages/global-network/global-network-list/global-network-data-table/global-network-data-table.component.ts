@@ -189,7 +189,7 @@ export class GlobalNetworkDataTableComponent implements OnInit {
         const config = {
           id: 'check-cidr-block',
           width: '346px',
-          maxHeight: '600px',
+          maxHeight: '800px',
           dialogtype: 'warning',
           showAnimation: true,
           content: GlobalNetworkCheckCidrComponent,

@@ -1,14 +1,30 @@
 <div class="spacing-search">
   <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
-  <d-search
-    class="search"
-    [(ngModel)]="queryParam.queryName"
-    [iconPosition]="'left'"
-    (searchFn)="fetchData()"
-    (change)="fetchData()"
+  <d-select
+    class="select"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [(ngModel)]="kubernetesResourceTemplate"
+    [searchFn]="onSearchResourceTemplate"
+    [isSearch]="true"
+    placeholder="Select template"
+    (valueChange)="onResourceTemplateChange($event)"
   >
-  </d-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  </d-select>
+  <d-category-search
+    *ngIf="show"
+    class="category-search"
+    [category]="category"
+    [selectedTags]="selectedTags"
+    [tagMaxWidth]="200"
+    [extendedConfig]="extendedConfig"
+    [groupOrderConfig]="groupOrderConfig"
+    [toggleScrollToTail]="true"
+    [categoryInGroup]="true"
+    (searchEvent)="searchEvent($event)"
+    (selectedTagsChange)="selectedTagsChange($event)"
+  ></d-category-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!queryParam.templateId">Filter</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -20,44 +36,43 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
     [checkable]="true"
-    (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column field="name" header="Name" [editable]="true">
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
-          </div>
-        </ng-template>
-      </d-cell-edit>
-    </d-column>
-    <d-column field="edsType" header="Eds Type"></d-column>
-    <d-column field="version" header="Version"></d-column>
-    <d-column field="url" header="Url"></d-column>
-    <d-column field="createTime" header="Create Time" [fieldType]="'date'">
+    <d-column field="namespace" header="Namespace"></d-column>
+    <d-column field="kind" header="Kind"></d-column>
+    <d-column field="content" header="Content" [width]="'650px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
-          <br>
-          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+          <app-ace-editor
+            [readonly]="true"
+            [minLines]="10"
+            [maxLines]="10"
+            [mode]="'ace/mode/yaml'"
+            [aceValue]="cellItem"
+          >
+          </app-ace-editor>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="custom" header="Custom" [width]="'650px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <app-ace-editor
+            [readonly]="true"
+            [minLines]="10"
+            [maxLines]="10"
+            [mode]="'ace/mode/yaml'"
+            [aceValue]="cellItem"
+          >
+          </app-ace-editor>
         </ng-template>
       </d-cell>
     </d-column>
     <d-column field="comment" header="Comment"></d-column>
-    <d-column header="Tags" [width]="'250px'">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
-        </ng-template>
-      </d-cell>
-    </d-column>
     <d-column header="Actions" [width]="'240px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"
@@ -65,12 +80,6 @@
               (click)="onRowValid(rowItem)"
             >
             </d-icon>
-            <d-icon
-              *ngIf="!rowItem['instanceId']"
-              [icon]="'icon-run'"
-              [operable]="true"
-              (click)="onRowRegister(rowItem)"
-            ></d-icon>
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>

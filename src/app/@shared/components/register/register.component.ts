@@ -79,7 +79,7 @@ export class RegisterComponent implements OnInit {
       const results = this.dialogService.open({
         id: 'register-result',
         width: '350px',
-        maxHeight: '600px',
+        maxHeight: '800px',
         title: this.i18nValues.resultMessage.title,
         content: this.i18nValues.resultMessage.content,
         backdropCloseable: false,

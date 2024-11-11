@@ -1,0 +1,65 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="groupName"
+          [(ngModel)]="formData.name"
+          [dValidateRules]="formRules['groupName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Template Key</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="base"
+          [(ngModel)]="formData.templateKey"
+          [dValidateRules]="formRules['base']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Api Version</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="base"
+          [(ngModel)]="formData.apiVersion"
+          [dValidateRules]="formRules['base']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Custom</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="20"
+          [maxLines]="40"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.custom"
+          (onChange)="onCustomChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -86,7 +86,7 @@ export class DialogUtil {
     const results = this.dialogService.open({
       id: 'business-tag-edit',
       width: '50%',
-      maxHeight: '600px',
+      maxHeight: '800px',
       backdropCloseable: false,
       dialogtype: 'standard',
       content: BusinessTagEditorComponent,
@@ -157,14 +157,14 @@ export const DIALOG_DATA = {
   editorData: {
     id: 'editor-data',
     width: '30%',
-    maxHeight: '600px',
+    maxHeight: '800px',
     backdropCloseable: false,
     dialogtype: 'standard',
   },
   warningOperateData: {
     id: 'warning-operate',
     width: '346px',
-    maxHeight: '600px',
+    maxHeight: '800px',
     zIndex: 1050,
     backdropCloseable: true,
     html: true,

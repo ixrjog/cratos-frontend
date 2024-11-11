@@ -1,0 +1,97 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Template</d-form-label>
+      <d-form-control>
+        <d-select
+          name="template"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="kubernetesResourceTemplate"
+          [searchFn]="onSearchResourceTemplate"
+          [isSearch]="true"
+          placeholder="Select resource template"
+          (valueChange)="onResourceTemplateChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-row [dGutter]="12" [dGutterNoOuter]="true">
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Namespace</d-form-label>
+          <d-form-control>
+            <input
+              dTextInput
+              name="namespace"
+              [(ngModel)]="formData.namespace"
+              [dValidateRules]="formRules['namespace']" />
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Kind</d-form-label>
+          <d-form-control>
+            <d-select
+              name="kind"
+              class="select"
+              [options]="resourceKindOptions"
+              [filterKey]="'label'"
+              [valueKey]="'value'"
+              [appendToBody]="true"
+              [allowClear]="true"
+              placeholder="Select resource kind"
+              [(ngModel)]="formData.kind"
+            >
+            </d-select>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+    </d-row>
+    <d-form-item>
+      <d-form-label>Content</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="30"
+          [maxLines]="40"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.content"
+          (onChange)="onContentChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Custom</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="10"
+          [maxLines]="20"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.custom"
+          (onChange)="onCustomChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

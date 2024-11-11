@@ -31,6 +31,7 @@ import { NotificationTemplateService } from './services/notification-template.se
 import { AssetMaturityService } from './services/asset-maturity.service';
 import { GlobalNetworkService } from './services/global-network.service';
 import { RobotService } from './services/robot.service';
+import { KubernetesResourceService } from './services/kubernetes-resource.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -67,6 +68,7 @@ export const CRATOS_PROVIDERS = [
   AssetMaturityService,
   GlobalNetworkService,
   RobotService,
+  KubernetesResourceService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

@@ -36,6 +36,8 @@ export class KubernetesResourceTemplateCloneComponent implements OnInit {
   ngOnInit(): void {
     this.kubernetesResourceTemplate = this.data['formData'];
     this.formData.templateId = this.kubernetesResourceTemplate.id;
+    this.formData.templateName = '';
+    this.formData.templateKey = '';
   }
 
   addForm() {

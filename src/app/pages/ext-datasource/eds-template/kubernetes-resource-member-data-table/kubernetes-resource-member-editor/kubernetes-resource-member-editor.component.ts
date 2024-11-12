@@ -25,6 +25,10 @@ export class KubernetesResourceMemberEditorComponent implements OnInit {
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
+    name: {
+      validators: [ { required: true } ],
+      message: 'name can not be null.',
+    },
     namespace: {
       validators: [ { required: true } ],
       message: 'namespace can not be null.',
@@ -41,6 +45,7 @@ export class KubernetesResourceMemberEditorComponent implements OnInit {
   ngOnInit(): void {
     this.formData = this.data['formData'];
     this.kubernetesResourceTemplate = this.data['kubernetesResourceTemplate'];
+    this.formData.templateId = this.kubernetesResourceTemplate?.id;
     this.resourceKindOptions = this.data['resourceKindOptions'];
   }
 
@@ -80,6 +85,7 @@ export class KubernetesResourceMemberEditorComponent implements OnInit {
 
   onResourceTemplateChange(templateVO: KubernetesResourceTemplateVO) {
     this.kubernetesResourceTemplate = templateVO;
+    this.formData.templateId = templateVO.id;
   }
 
 }

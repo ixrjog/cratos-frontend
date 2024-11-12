@@ -6,7 +6,7 @@
     [layout]="layoutDirection"
   >
     <d-form-item>
-      <d-form-label>Namespaces</d-form-label>
+      <d-form-label [required]="true">Namespaces</d-form-label>
       <d-form-control>
         <d-checkbox-group
           name="namespaces"
@@ -17,7 +17,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Kinds</d-form-label>
+      <d-form-label [required]="true">Kinds</d-form-label>
       <d-form-control>
         <d-checkbox-group
           name="kinds"
@@ -28,7 +28,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Custom</d-form-label>
+      <d-form-label [required]="true">Custom</d-form-label>
       <d-form-control>
         <app-ace-editor
           [minLines]="20"

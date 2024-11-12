@@ -19,6 +19,7 @@ export interface KubernetesResourceTemplateVO extends BaseVO, ValidVO, BusinessD
 export interface KubernetesResourceTemplateMemberVO extends BaseVO, ValidVO {
   id: number;
   templateId: number;
+  name: string;
   namespace: string;
   kind: string;
   domainType: string;

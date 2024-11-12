@@ -22,7 +22,19 @@
       </d-form-control>
     </d-form-item>
     <d-row [dGutter]="12" [dGutterNoOuter]="true">
-      <d-col [dSpan]="12">
+      <d-col [dSpan]="8">
+        <d-form-item>
+          <d-form-label [required]="true">Name</d-form-label>
+          <d-form-control>
+            <input
+              dTextInput
+              name="name"
+              [(ngModel)]="formData.name"
+              [dValidateRules]="formRules['name']" />
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+      <d-col [dSpan]="8">
         <d-form-item>
           <d-form-label [required]="true">Namespace</d-form-label>
           <d-form-control>
@@ -34,7 +46,7 @@
           </d-form-control>
         </d-form-item>
       </d-col>
-      <d-col [dSpan]="12">
+      <d-col [dSpan]="8">
         <d-form-item>
           <d-form-label [required]="true">Kind</d-form-label>
           <d-form-control>

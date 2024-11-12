@@ -16,6 +16,9 @@ import {
 } from './kubernetes-resource-template-editor/kubernetes-resource-template-editor.component';
 import { KubernetesResourceService } from '../../../../@core/services/kubernetes-resource.service';
 import { KubernetesResourceCreateComponent } from './kubernetes-resource-create/kubernetes-resource-create.component';
+import {
+  KubernetesResourceTemplateCloneComponent
+} from './kubernetes-resource-template-clone/kubernetes-resource-template-clone.component';
 
 @Component({
   selector: 'app-kubernetes-resource-template-data-table',
@@ -52,6 +55,10 @@ export class KubernetesResourceTemplateDataTableComponent implements OnInit {
     createResourceData: {
       ...DIALOG_DATA.editorData,
       content: KubernetesResourceCreateComponent,
+    },
+    cloneResourceTemplateData: {
+      ...DIALOG_DATA.editorData,
+      content: KubernetesResourceTemplateCloneComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -139,6 +146,17 @@ export class KubernetesResourceTemplateDataTableComponent implements OnInit {
           this.fetchData();
         });
     });
+  }
+
+  onRowClone(rowItem: KubernetesResourceTemplateVO) {
+    const dialogDate = {
+      ...this.dialogDate.cloneResourceTemplateData,
+      title: 'Clone Kubernetes Resource Template',
+      width: '30%',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
   }
 
   onBatchValid() {

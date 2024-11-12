@@ -253,6 +253,7 @@ export class KubernetesResourceMemberDataTableComponent {
 
   onResourceTemplateChange(templateVO: KubernetesResourceTemplateVO) {
     this.queryParam.templateId = templateVO.id;
+    this.fetchData();
   }
 
   protected readonly getRowColor = getRowColor;

@@ -29,13 +29,14 @@ import { EdsAssetDataTableComponent } from './eds-instance/eds-asset/eds-asset-d
 import { MarkdownModule } from 'ngx-markdown';
 import { EdsInstanceScheduleComponent } from './eds-instance/eds-instance-card-list/eds-instance-schedule/eds-instance-schedule.component';
 import { EdsAssetIndexDataTableComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-index-data-table/eds-asset-index-data-table.component';
-import { EdsTemplateComponent } from './ext-template/eds-template.component';
-import { KubernetesResourceTemplateDataTableComponent } from './ext-template/kubernetes-resource-template-data-table/kubernetes-resource-template-data-table.component';
-import { KubernetesResourceTemplateEditorComponent } from './ext-template/kubernetes-resource-template-data-table/kubernetes-resource-template-editor/kubernetes-resource-template-editor.component';
-import { KubernetesResourceMemberDataTableComponent } from './ext-template/kubernetes-resource-member-data-table/kubernetes-resource-member-data-table.component';
-import { KubernetesResourceMemberEditorComponent } from './ext-template/kubernetes-resource-member-data-table/kubernetes-resource-member-editor/kubernetes-resource-member-editor.component';
-import { KubernetesResourceDataTableComponent } from './ext-template/kubernetes-resource-data-table/kubernetes-resource-data-table.component';
-import { KubernetesResourceCreateComponent } from './ext-template/kubernetes-resource-template-data-table/kubernetes-resource-create/kubernetes-resource-create.component';
+import { EdsTemplateComponent } from './eds-template/eds-template.component';
+import { KubernetesResourceTemplateDataTableComponent } from './eds-template/kubernetes-resource-template-data-table/kubernetes-resource-template-data-table.component';
+import { KubernetesResourceTemplateEditorComponent } from './eds-template/kubernetes-resource-template-data-table/kubernetes-resource-template-editor/kubernetes-resource-template-editor.component';
+import { KubernetesResourceMemberDataTableComponent } from './eds-template/kubernetes-resource-member-data-table/kubernetes-resource-member-data-table.component';
+import { KubernetesResourceMemberEditorComponent } from './eds-template/kubernetes-resource-member-data-table/kubernetes-resource-member-editor/kubernetes-resource-member-editor.component';
+import { KubernetesResourceDataTableComponent } from './eds-template/kubernetes-resource-data-table/kubernetes-resource-data-table.component';
+import { KubernetesResourceCreateComponent } from './eds-template/kubernetes-resource-template-data-table/kubernetes-resource-create/kubernetes-resource-create.component';
+import { KubernetesResourceTemplateCloneComponent } from './eds-template/kubernetes-resource-template-data-table/kubernetes-resource-template-clone/kubernetes-resource-template-clone.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { KubernetesResourceCreateComponent } from './ext-template/kubernetes-res
     KubernetesResourceMemberEditorComponent,
     KubernetesResourceDataTableComponent,
     KubernetesResourceCreateComponent,
+    KubernetesResourceTemplateCloneComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,16 @@
 <div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-select
+    class="select"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [(ngModel)]="kubernetesResourceTemplate"
+    [searchFn]="onSearchResourceTemplate"
+    [isSearch]="true"
+    placeholder="Select template"
+    (valueChange)="onResourceTemplateChange($event)"
+  >
+  </d-select>
   <d-category-search
     *ngIf="show"
     class="category-search"
@@ -12,7 +24,7 @@
     (searchEvent)="searchEvent($event)"
     (selectedTagsChange)="selectedTagsChange($event)"
   ></d-category-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!queryParam.templateId">Filter</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -28,17 +40,26 @@
     <d-column field="name" header="Name"></d-column>
     <d-column field="namespace" header="Namespace"></d-column>
     <d-column field="kind" header="Kind"></d-column>
-    <d-column field="content" header="Content" [width]="'650px'">
+    <d-column field="content" header="Content">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <app-ace-editor
-            [readonly]="true"
-            [minLines]="10"
-            [maxLines]="10"
-            [mode]="'ace/mode/yaml'"
-            [aceValue]="cellItem"
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="contentTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
           >
-          </app-ace-editor>
+          </d-icon>
+          <ng-template #contentTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
         </ng-template>
       </d-cell>
     </d-column>
@@ -47,8 +68,8 @@
         <ng-template let-cellItem="cellItem">
           <app-ace-editor
             [readonly]="true"
-            [minLines]="10"
-            [maxLines]="10"
+            [minLines]="5"
+            [maxLines]="5"
             [mode]="'ace/mode/yaml'"
             [aceValue]="cellItem"
           >
@@ -61,7 +82,20 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
           </d-icon-group>
         </ng-template>
       </d-cell>
@@ -80,6 +114,11 @@
       </d-button>
     </d-button-group>
     <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
       <li role="menuitem" (click)="onBatchDelete()">
         <a dDropDownMenuItem>
           <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>

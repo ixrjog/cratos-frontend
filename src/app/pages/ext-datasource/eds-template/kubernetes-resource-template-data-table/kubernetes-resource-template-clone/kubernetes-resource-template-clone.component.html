@@ -1,0 +1,30 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Template Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="templateName"
+          [(ngModel)]="formData.templateName"
+          [dValidateRules]="formRules['templateName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Template Key</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="templateKey"
+          [(ngModel)]="formData.templateKey"
+          [dValidateRules]="formRules['base']" />
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

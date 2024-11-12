@@ -10,7 +10,7 @@ import {
 } from './kubernetes-resource-data-table/kubernetes-resource-data-table.component';
 
 @Component({
-  selector: 'app-ext-template',
+  selector: 'app-eds-template',
   templateUrl: './eds-template.component.html',
   styleUrls: [ './eds-template.component.less' ],
 })

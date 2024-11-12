@@ -1,0 +1,119 @@
+<div class="spacing-search">
+  <d-category-search
+    *ngIf="show"
+    class="category-search"
+    [category]="category"
+    [selectedTags]="selectedTags"
+    [tagMaxWidth]="200"
+    [extendedConfig]="extendedConfig"
+    [groupOrderConfig]="groupOrderConfig"
+    [toggleScrollToTail]="true"
+    [categoryInGroup]="true"
+    (searchEvent)="searchEvent($event)"
+    (selectedTagsChange)="selectedTagsChange($event)"
+  ></d-category-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="namespace" header="Namespace"></d-column>
+    <d-column field="kind" header="Kind"></d-column>
+    <d-column field="asset" header="Asset">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="assetTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+          >
+          </d-icon>
+          <ng-template #assetTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem.originalModel"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="custom" header="Custom">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="customTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+          >
+          </d-icon>
+          <ng-template #customTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'240px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

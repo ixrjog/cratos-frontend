@@ -61,7 +61,7 @@ export class KubernetesResourceService extends KubernetesResourceData {
   }
 
   deleteMemberById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.put(this.baseUrl, '/member/del', param);
+    return this.apiService.delete(this.baseUrl, '/member/del', param);
   }
 
   queryMemberPage(param: KubernetesResourceMemberPageQuery): Observable<DataTable<KubernetesResourceTemplateMemberVO>> {
@@ -77,7 +77,7 @@ export class KubernetesResourceService extends KubernetesResourceData {
   }
 
   deleteResourceById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.put(this.baseUrl, '/del', param);
+    return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
   queryResourcePage(param: KubernetesResourcePageQuery): Observable<DataTable<KubernetesResourceVO>> {

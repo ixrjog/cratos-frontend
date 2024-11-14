@@ -2,7 +2,7 @@ import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './
 import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
-import { EdsAssetVO } from './ext-datasource';
+import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
 
 export interface KubernetesResourceTemplateVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
@@ -85,6 +85,7 @@ export interface KubernetesResourceVO extends BaseVO {
   createdBy: string;
   custom: string;
   comment: string;
+  edsInstance: EdsInstanceVO;
   asset: EdsAssetVO;
 }
 

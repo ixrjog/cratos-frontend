@@ -26,6 +26,13 @@
     [checkable]="true"
   >
     <d-column field="name" header="Name"></d-column>
+    <d-column field="edsInstance" header="Asset Instance">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="namespace" header="Namespace"></d-column>
     <d-column field="kind" header="Kind"></d-column>
     <d-column field="asset" header="Asset">

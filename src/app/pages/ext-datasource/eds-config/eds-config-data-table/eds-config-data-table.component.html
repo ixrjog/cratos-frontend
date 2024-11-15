@@ -31,6 +31,15 @@
         </ng-template>
       </d-cell-edit>
     </d-column>
+    <d-column field="credential" header="Credential">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span class="font-color-name">{{ cellItem.credentialType }}</span>
+          <br/>
+          <span class="font-color-comment">{{ cellItem.title }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="edsType" header="Eds Type"></d-column>
     <d-column field="version" header="Version"></d-column>
     <d-column field="url" header="Url"></d-column>

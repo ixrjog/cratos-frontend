@@ -19,7 +19,7 @@ export class ApplicationResourcesComponent {
     return this._resources;
   }
 
-  showDisplayName(value) {
+  onShowName(value) {
     switch (value.resourceType) {
       case 'GITLAB_PROJECT':
         return value.displayName;

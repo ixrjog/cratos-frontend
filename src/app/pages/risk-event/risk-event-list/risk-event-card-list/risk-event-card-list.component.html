@@ -13,11 +13,7 @@
     (searchEvent)="searchEvent($event)"
     (selectedTagsChange)="selectedTagsChange($event)"
   ></d-category-search>
-  <app-business-cascader
-    [businessType]="businessType"
-    (onChange)="onTagChanges($event)"
-  >
-  </app-business-cascader>
+  <app-business-cascader [businessType]="businessType" (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table da-list-content" dLoading [loading]="table.loading">

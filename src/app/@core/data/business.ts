@@ -4,6 +4,7 @@ export interface GetByBusiness {
 }
 
 export enum BusinessTypeEnum {
+  APPLICATION = 'APPLICATION',
   BUSINESS_PROPERTY = 'BUSINESS_PROPERTY',
   BUSINESS_DOC = 'BUSINESS_DOC',
   // 证书

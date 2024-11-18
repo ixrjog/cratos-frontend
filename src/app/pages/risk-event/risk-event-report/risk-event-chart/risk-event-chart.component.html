@@ -21,11 +21,7 @@
       placeholder="Select quarter"
   >
   </d-select>
-  <app-business-cascader
-    [businessType]="businessType"
-    (onChange)="onTagChanges($event)"
-  >
-  </app-business-cascader>
+  <app-business-cascader [businessType]="businessType" (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div>

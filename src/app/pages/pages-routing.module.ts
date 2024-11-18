@@ -52,6 +52,10 @@ const routes: Routes = [
         path: 'global-network',
         loadChildren: () => import('./global-network/global-network.module').then(m => m.GlobalNetworkModule),
       },
+      {
+        path: 'application',
+        loadChildren: () => import('./application/application.module').then(m => m.ApplicationModule),
+      },
     ],
   },
 ];

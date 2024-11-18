@@ -23,6 +23,14 @@ export class ToastUtil {
     });
   }
 
+  onCommonToast(content: string, style?: any) {
+    this.toastService.open({
+      value: [ { severity: 'common', content: content } ],
+      life: 2000,
+      style: style,
+    });
+  }
+
 }
 
 export const TOAST_CONTENT = {
@@ -32,6 +40,8 @@ export const TOAST_CONTENT = {
   REVOKE: 'Revoke success',
   INACTIVE: 'Inactive success',
   IMPORT: 'Importing, please wait',
+  OPERATION: 'Operation in progress, please wait',
+  SCAN: 'Scan success',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
   BATCH_INACTIVE: 'Batch inactive success',

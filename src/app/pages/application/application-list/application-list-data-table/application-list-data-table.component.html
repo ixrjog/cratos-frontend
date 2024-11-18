@@ -21,21 +21,27 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
     [checkable]="true"
-    (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column field="name" header="Name" [editable]="true">
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+    <d-column header="Name" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <strong>{{ rowItem['name'] }}</strong>
+          <br />
+          <span>{{ rowItem['comment'] }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="resources" header="Resources">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <div *ngFor="let resource of cellItem | keyvalue">
+            <strong>{{ resource.key }}</strong>
+            <br />
+            <app-application-resources [resources]="resource.value"></app-application-resources>
           </div>
         </ng-template>
-      </d-cell-edit>
+      </d-cell>
     </d-column>
-    <d-column field="channelKey" header="Channel Key"></d-column>
-    <d-column field="channelStatus" header="Channel Status"></d-column>
-    <d-column field="availableStatus" header="Available Status"></d-column>
-    <d-column field="comment" header="Comment"></d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -48,6 +54,13 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon
+              [disabled]="rowItem['$scan']"
+              [icon]="'icon-synchronize'"
+              [operable]="true"
+              (click)="onRowScan(rowItem)"
+            >
+            </d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
             <d-icon

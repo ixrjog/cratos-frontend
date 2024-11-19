@@ -25,9 +25,26 @@
     <d-column header="Name" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <strong>{{ rowItem['name'] }}</strong>
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="configTemplate"
+            [position]="'right-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '800px' }"
+          >
+            <span iconPrefix>{{ rowItem['name'] }}</span>
+          </d-icon>
+          <ng-template #configTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="rowItem['config']"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
           <br />
-          <span>{{ rowItem['comment'] }}</span>
+          <span class="font-color-comment">{{ rowItem['comment'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>

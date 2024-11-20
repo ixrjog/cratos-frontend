@@ -54,7 +54,11 @@
           <div *ngFor="let resource of cellItem | keyvalue">
             <strong>{{ resource.key }}</strong>
             <br />
-            <app-application-resources [resources]="resource.value"></app-application-resources>
+            <app-application-resources
+              [resources]="resource.value"
+              (onFetchData)="fetchData()"
+            >
+            </app-application-resources>
           </div>
         </ng-template>
       </d-cell>
@@ -66,7 +70,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

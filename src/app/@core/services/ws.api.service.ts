@@ -15,6 +15,10 @@ export class WebSocketApiService {
     return new WebSocket(environment.wsUrl + this.wsUrl + url + '/' + username, token);
   }
 
+  onPing(ws: WebSocket) {
+    ws.send('');
+  }
+
   // onSend(data: string) {
   //   this.ws.send(data);
   // };

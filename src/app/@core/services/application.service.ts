@@ -43,4 +43,8 @@ export class ApplicationService extends ApplicationData {
     return this.apiService.post(this.baseUrl, '/scan', param);
   }
 
+  deleteApplicationResourceById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/resource/del', param);
+  }
+
 }

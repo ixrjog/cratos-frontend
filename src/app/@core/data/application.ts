@@ -53,4 +53,7 @@ export abstract class ApplicationData {
 
   abstract scanApplicationResource(param: ScanResource): Observable<HttpResult<Boolean>>;
 
+  abstract deleteApplicationResourceById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+
 }

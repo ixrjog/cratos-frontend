@@ -33,6 +33,7 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   table: Table<SshCommandVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   ws: WebSocket;
   timerRequest: Subscription;
+  wsHeartbeatTimerRequest: Subscription;
 
   constructor(private sessionService: SshSessionService,
               private wsApiService: WebSocketApiService,
@@ -41,6 +42,15 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
   wsOnInit() {
     this.ws = this.wsApiService.createWsClient('/ssh/audit');
+  }
+
+  onWsHeartbeat() {
+    this.timerRequest = timer(5000, 10000)
+      .subscribe(num => {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+          this.wsApiService.onPing(this.ws);
+        }
+      });
   }
 
   fetchData() {
@@ -61,11 +71,13 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
     this.sessionId = this.data['sessionId'];
     this.fetchData();
     this.initInterval();
+    this.onWsHeartbeat();
   }
 
   ngOnDestroy(): void {
     try {
       this.timerRequest.unsubscribe();
+      this.wsHeartbeatTimerRequest.unsubscribe();
       this.ws.close();
       this.ws = null;
     } catch (error) {

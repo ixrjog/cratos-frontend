@@ -1,5 +1,22 @@
 <section>
   <span *ngFor="let item of resources" style="margin: 0 5px 5px 0">
-    <d-tag [tag]="onShowName(item)" [labelStyle]="'blue-w98'"></d-tag>
+    <d-tag
+      [tag]="item"
+      [customViewTemplate]="customTag"
+      [labelStyle]="'blue-w98'"
+    >
+    </d-tag>
+<!--    <d-tag-->
+    <!--      [tag]="onShowName(item)"-->
+    <!--      [mode]="'closeable'"-->
+    <!--      [labelStyle]="'blue-w98'"-->
+    <!--      (tagDelete)="onDeleteTag($event)"-->
+    <!--    >-->
+    <!--    </d-tag>-->
   </span>
+  <ng-template #customTag let-tag="tag">
+    <span>{{ onShowName(tag) }}</span>
+<!--    <span *ngIf="tag.tagValue !==''">:{{ tag.tagValue }}</span>-->
+    <span class="icon-close" style="vertical-align: center; padding-left: 4px" (click)="onDeleteTag(tag)"></span>
+  </ng-template>
 </section>

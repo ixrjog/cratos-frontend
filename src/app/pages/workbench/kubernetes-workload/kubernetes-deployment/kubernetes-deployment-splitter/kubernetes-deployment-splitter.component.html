@@ -1,0 +1,33 @@
+<section>
+  <d-splitter class="splitter-border" orientation="vertical">
+    <d-splitter-pane size="30px" [resizable]="false">
+      <div class="pane-content">
+        <h2 style="margin: 0">{{ kubernetesDeployment.metadata.name }}</h2>
+      </div>
+    </d-splitter-pane>
+    <d-splitter-pane>
+      <d-splitter orientation="horizontal">
+        <d-splitter-pane [resizable]="false" size="10%">
+          <div class="pane-content">
+            <h3 class="h3-deployment">Replicas</h3>
+            <p>{{ kubernetesDeployment.spec.replicas }}</p>
+            <h3 class="h3-deployment">{{ kubernetesDeployment.spec.strategy.type }}</h3>
+            <p>MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge }}</p>
+            <p>MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable }}</p>
+          </div>
+        </d-splitter-pane>
+        <d-splitter-pane>
+          <div class="pane-content">
+            <div class="da-list-content">
+              <app-kubernetes-pod-card
+                *ngFor="let pod of kubernetesDeployment.pods"
+                [kubernetesPod]="pod"
+                class="card-item"
+              ></app-kubernetes-pod-card>
+            </div>
+          </div>
+        </d-splitter-pane>
+      </d-splitter>
+    </d-splitter-pane>
+  </d-splitter>
+</section>

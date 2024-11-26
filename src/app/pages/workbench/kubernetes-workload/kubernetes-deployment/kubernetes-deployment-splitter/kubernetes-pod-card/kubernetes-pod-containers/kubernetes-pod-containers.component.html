@@ -1,0 +1,23 @@
+<section>
+  <div class="btn-group" dDropDown (toggleEvent)="onToggle($event)" *ngIf="show" appendToBody>
+    <d-icon dDropDownToggle [icon]="'icon-select-arrow'" [operable]="true" [rotate]="rotateDegrees">
+      <span iconPrefix>{{ container.name }}</span>
+    </d-icon>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" *ngFor="let item of menuitem" (click)="onRowSelect(item)">
+        <a dDropDownMenuItem>{{ item }}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <span class="name">Image:</span>
+    <span class="value">{{ container.image | dSafeNullPipe }}</span>
+  </div>
+
+  <div>
+    <span class="name">Restart Count:</span>
+    <span class="value">{{ container.restartCount | dSafeNullPipe }}</span>
+  </div>
+
+</section>

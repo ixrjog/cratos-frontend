@@ -108,7 +108,7 @@ export class PagesComponent implements OnInit {
         body.map(item => {
           let menuItem = {
             title: item.title,
-            open: true,
+            open: false,
             link: item.link,
             menuIcon: item.icon,
           };

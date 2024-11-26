@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult } from '../data/base-data';
+import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
 import {
   ApplicationData,
   ApplicationEdit,
@@ -45,6 +45,10 @@ export class ApplicationService extends ApplicationData {
 
   deleteApplicationResourceById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/resource/del', param);
+  }
+
+  getResourceNamespaceOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get(this.baseUrl, '/resource/namespace/options/get', {});
   }
 
 }

@@ -5,6 +5,11 @@ export interface HttpResult<T> {
   code: number;
 }
 
+export interface MessageResponse<T> {
+  body: T;
+  topic: string;
+}
+
 export interface DataTable<T> {
   body: {
     data: Array<T>,
@@ -61,4 +66,5 @@ export const TABLE_DATA: Table<any> = {
     total: 0,
   },
 };
+
 

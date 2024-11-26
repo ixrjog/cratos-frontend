@@ -56,6 +56,10 @@ const routes: Routes = [
         path: 'application',
         loadChildren: () => import('./application/application.module').then(m => m.ApplicationModule),
       },
+      {
+        path: 'workbench',
+        loadChildren: () => import('./workbench/workbench.module').then(m => m.WorkbenchModule),
+      },
     ],
   },
 ];

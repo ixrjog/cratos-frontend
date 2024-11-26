@@ -22,9 +22,11 @@
         </ng-template>
       </d-card-title>
       <d-card-subtitle>
-        <span class="font-color-comment">Worker IP: {{ kubernetesPod.status.hostIP }}</span>
+        <span class="font-color-comment" dClipboard [content]="kubernetesPod.status.hostIP">
+          Worker IP: {{ kubernetesPod.status.hostIP }}
+        </span>
         <span class="font-color-comment" style="float: right">
-          <span class="font-color-comment">
+          <span>
             {{ kubernetesPod.status.startTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
           </span>
           <strong style="margin-left: 5px">
@@ -44,7 +46,7 @@
     <d-card-actions [align]="'end'" style="margin: 0">
       <div>
         <d-button bsStyle="text" style="margin-right: 8px">Login</d-button>
-        <d-button bsStyle="text" style="margin-right: 8px">Log</d-button>
+        <d-button bsStyle="text">Log</d-button>
       </div>
     </d-card-actions>
   </d-card>

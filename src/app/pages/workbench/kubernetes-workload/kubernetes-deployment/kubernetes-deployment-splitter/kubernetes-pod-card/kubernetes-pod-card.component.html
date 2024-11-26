@@ -2,7 +2,9 @@
   <d-card style="padding: 8px 10px">
     <d-card-header class="spacing-card-header">
       <d-card-title>
-        <h3 class="font-color-name" style="margin: 0">{{ kubernetesPod.metadata.name }}</h3>
+        <h3 class="font-color-name" dClipboard [content]="kubernetesPod.metadata.name">
+          {{ kubernetesPod.metadata.name }}
+        </h3>
         <d-button
           bsStyle="text"
           class="pod-status"
@@ -20,37 +22,29 @@
         </ng-template>
       </d-card-title>
       <d-card-subtitle>
-        <span class="font-color-comment">{{ kubernetesPod.status.podIP }}</span>
+        <span class="font-color-comment">Worker IP: {{ kubernetesPod.status.hostIP }}</span>
+        <span class="font-color-comment" style="float: right">
+          <span class="font-color-comment">
+            {{ kubernetesPod.status.startTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
+          </span>
+          <strong style="margin-left: 5px">
+            {{ kubernetesPod.status.startTime | dRelativeTime: limit | async }}
+          </strong>
+        </span>
       </d-card-subtitle>
     </d-card-header>
-    <d-card-content>
+    <d-card-content style="margin: 0">
       <div class="spacing-card-content">
         <app-kubernetes-pod-containers
-          [containerStatuses]="kubernetesPod.containerStatuses"></app-kubernetes-pod-containers>
+          [containerStatuses]="kubernetesPod.containerStatuses"
+          [podStatus]="kubernetesPod.status"
+        ></app-kubernetes-pod-containers>
       </div>
     </d-card-content>
-    <d-card-actions [align]="'end'">
+    <d-card-actions [align]="'end'" style="margin: 0">
       <div>
-        <!--        <d-icon-group>-->
-        <!--          <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowInstanceEdit(edsInstance)"></d-icon>-->
-        <!--          <d-icon [icon]="'icon-op-task'" [operable]="true" (click)="onRowInstanceSchedule(edsInstance)"></d-icon>-->
-        <!--          <d-icon [icon]="'icon-setting'" [operable]="true" (click)="onRowConfigEdit(edsInstance)"></d-icon>-->
-        <!--          <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(edsInstance)"></d-icon>-->
-        <!--          <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(edsInstance)"></d-icon>-->
-        <!--          <d-icon-->
-        <!--            [icon]="'icon-priority'"-->
-        <!--            [operable]="true"-->
-        <!--            [color]="getRowColor(edsInstance.valid)"-->
-        <!--            (click)="onRowValid(edsInstance)"-->
-        <!--          >-->
-        <!--          </d-icon>-->
-        <!--          <span dDropDown appendToBody>-->
-        <!--              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>-->
-        <!--              <ul dDropDownMenu>-->
-        <!--                <li class="devui-dropdown-item" (click)="onRowDelete(edsInstance)">Delete</li>-->
-        <!--              </ul>-->
-        <!--            </span>-->
-        <!--        </d-icon-group>-->
+        <d-button bsStyle="text" style="margin-right: 8px">Login</d-button>
+        <d-button bsStyle="text" style="margin-right: 8px">Log</d-button>
       </div>
     </d-card-actions>
   </d-card>

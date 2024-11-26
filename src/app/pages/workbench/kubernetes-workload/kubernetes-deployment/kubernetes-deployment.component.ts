@@ -65,6 +65,7 @@ export class KubernetesDeploymentComponent implements OnInit {
 
   onApplicationChange(application: ApplicationVO) {
     this.queryParam.applicationName = application?.name;
+    this.fetchData();
   }
 
   onResourceNamespaceChange(edsType: string) {

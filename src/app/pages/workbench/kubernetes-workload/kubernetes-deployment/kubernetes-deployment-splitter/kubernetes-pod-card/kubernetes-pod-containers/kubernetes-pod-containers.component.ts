@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KubernetesContainerVO } from '../../../../../../../@core/data/kubernetes';
+import { KubernetesContainerVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
 
 @Component({
@@ -10,6 +10,8 @@ import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.uti
 export class KubernetesPodContainersComponent implements OnInit {
 
   @Input() containerStatuses: KubernetesContainerVO[];
+  @Input() podStatus: PodStatusVO;
+
   container: KubernetesContainerVO;
   rotateDegrees = 0;
   containerMap: Map<string, KubernetesContainerVO> = new Map<string, KubernetesContainerVO>();

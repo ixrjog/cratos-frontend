@@ -11,8 +11,13 @@
   </div>
 
   <div>
+    <span class="name">Pod IP:</span>
+    <span class="value" dClipboard [content]="podStatus.podIP">{{ podStatus.podIP | dSafeNullPipe }}</span>
+  </div>
+
+  <div>
     <span class="name">Image:</span>
-    <span class="value">{{ container.image | dSafeNullPipe }}</span>
+    <span class="value" dClipboard [content]="container.image">{{ container.image | dSafeNullPipe }}</span>
   </div>
 
   <div>

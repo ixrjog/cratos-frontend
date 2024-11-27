@@ -20,10 +20,10 @@ import {
 } from '../../../../certificate/certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
 import { getResourceCountColor, parseResourceCount } from '../../../../../@shared/utils/resource-count.util';
 import {
-  DomainEditorComponent
+  DomainEditorComponent,
 } from '../../../../domain/domain-list/domain-list-data-table/domain-editor/domain-editor.component';
 import {
-  GlobalNetworkSubnetEditorComponent
+  GlobalNetworkSubnetEditorComponent,
 } from '../../../../global-network/global-network-subnet/global-network-subnet-data-table/global-network-subnet-editor/global-network-subnet-editor.component';
 
 @Component({
@@ -40,6 +40,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
   @Input() currentType: string;
 
   assetIndexTable: EdsAssetIndexVO[] = [];
+  businessType: string = BusinessTypeEnum.EDS_ASSET;
 
   queryParam = {
     queryName: '',
@@ -121,6 +122,10 @@ export class EdsAssetDataTableComponent implements OnChanges {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  onRowBusinessTag(rowItem: EdsAssetVO) {
+    this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
   onRowDelete(rowItem: EdsAssetVO) {

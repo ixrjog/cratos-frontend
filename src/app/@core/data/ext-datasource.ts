@@ -125,7 +125,7 @@ export interface DeleteInstanceAsset {
   assetType: string;
 }
 
-export interface EdsAssetIndexVO extends BaseVO {
+export interface EdsAssetIndexVO extends BaseVO, BusinessTagsVO {
   id: number;
   instanceId: number;
   assetId: number;
@@ -177,19 +177,3 @@ export abstract class EdsData {
   abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
 
 }
-
-export enum EdsAssetTypeEnum {
-  ALIYUN_CERT = 'ALIYUN_CERT',
-  AWS_CERT = 'AWS_CERT',
-  AWS_STS_VPN = 'AWS_STS_VPN',
-  CLOUDFLARE_CERT = 'CLOUDFLARE_CERT',
-  KUBERNETES_DEPLOYMENT = 'KUBERNETES_DEPLOYMENT',
-  KUBERNETES_INGRESS= 'KUBERNETES_INGRESS',
-  LDAP_PERSON = 'LDAP_PERSON',
-  LDAP_GROUP = 'LDAP_GROUP',
-  GITLAB_PROJECT = 'GITLAB_PROJECT',
-  GITLAB_GROUP = 'GITLAB_GROUP',
-  GITLAB_USER = 'GITLAB_USER',
-  GITLAB_SSHKEY = 'GITLAB_SSHKEY',
-}
-

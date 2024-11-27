@@ -1,6 +1,6 @@
 <div>
   <d-card>
-    <d-card-header (click)="onRouteInstanceAsset(edsInstance.id)">
+    <d-card-header (click)="onRouteInstanceAsset(edsInstance.id)" class="spacing-card-header">
       <d-avatar
         dCardAvatar
         [name]="edsInstance.instanceName"
@@ -10,6 +10,12 @@
       ></d-avatar>
       <d-card-title>
         <h3 class="font-color-name" style="margin: 0">{{ edsInstance.instanceName }}</h3>
+        <d-tag
+          *ngIf="edsInstance.version"
+          [tag]=edsInstance.version
+          [labelStyle]="'blue-w98'"
+          class="version-tag"
+        ></d-tag>
       </d-card-title>
       <d-card-subtitle>
         <span class="font-color-comment">{{ edsInstance.edsType }}</span>

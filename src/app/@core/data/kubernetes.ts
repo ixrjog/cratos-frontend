@@ -9,9 +9,14 @@ export interface KubernetesDetailsVO {
 }
 
 export interface KubernetesDeploymentVO {
+  kubernetesCluster: KubernetesClusterVO;
   metadata: KubernetesMetadataVO;
   spec: DeploymentSpecVO;
   pods: KubernetesPodVO[];
+}
+
+export interface KubernetesClusterVO {
+  name: string;
 }
 
 export interface KubernetesMetadataVO {

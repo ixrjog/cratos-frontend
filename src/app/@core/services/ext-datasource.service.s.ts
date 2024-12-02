@@ -38,8 +38,8 @@ export class EdsService extends EdsData {
     return this.apiService.delete(this.baseUrl, '/config/del', param);
   }
 
-  deleteEdsInstanceById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete(this.baseUrl, '/instance/del', param);
+  unregisterEdsInstance(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/instance/unregister', param);
   }
 
   deleteEdsInstanceAssetById(param: { id: number }): Observable<HttpResult<Boolean>> {

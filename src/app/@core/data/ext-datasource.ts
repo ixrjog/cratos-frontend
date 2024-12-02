@@ -154,7 +154,7 @@ export abstract class EdsData {
 
   abstract updateEdsConfig(param: EdsConfigEdit): Observable<HttpResult<Boolean>>;
 
-  abstract deleteEdsInstanceById(param: { id: number }): Observable<HttpResult<Boolean>>;
+  abstract unregisterEdsInstance(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract deleteEdsConfigById(param: { id: number }): Observable<HttpResult<Boolean>>;
 

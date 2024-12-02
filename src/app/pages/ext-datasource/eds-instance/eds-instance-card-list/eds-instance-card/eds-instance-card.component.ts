@@ -105,15 +105,15 @@ export class EdsInstanceCardComponent {
       });
   }
 
-  onRowDelete(rowItem: EdsInstanceVO) {
+  onRowUnregister(rowItem: EdsInstanceVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.delete,
+      content: this.dialogDate.content.unregister,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.edsService.deleteEdsInstanceById({ id: rowItem.id })
+      this.edsService.unregisterEdsInstance({ id: rowItem.id })
         .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.UNREGISTER);
           this.onFetchData.emit();
         });
     });

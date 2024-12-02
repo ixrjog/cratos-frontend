@@ -34,9 +34,11 @@
     <d-column field="credential" header="Credential">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span class="font-color-name">{{ cellItem.credentialType }}</span>
-          <br/>
-          <span class="font-color-comment">{{ cellItem.title }}</span>
+          <span *ngIf="cellItem">
+            <span class="font-color-name">{{ cellItem.credentialType }}</span>
+            <br/>
+            <span class="font-color-comment">{{ cellItem.title }}</span>
+          </span>
         </ng-template>
       </d-cell>
     </d-column>

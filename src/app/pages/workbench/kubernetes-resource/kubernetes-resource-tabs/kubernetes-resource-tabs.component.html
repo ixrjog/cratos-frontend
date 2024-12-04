@@ -33,7 +33,7 @@
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
     <d-tabs type="pills" [(activeTab)]="tabActiveId">
-      <d-tab [id]="'workload'" [title]="'Workload'">
+      <d-tab [id]="'workloads'" [title]="'Workloads'">
         <div>
           <app-kubernetes-workload [deploymentList]="deploymentList"></app-kubernetes-workload>
         </div>

@@ -9,6 +9,7 @@ import { finalize, Observable, zip } from 'rxjs';
 import { ApplicationEdit, ApplicationPageQuery, ApplicationVO, ScanResource } from '../../../../@core/data/application';
 import { ApplicationEditorComponent } from './application-editor/application-editor.component';
 import { ApplicationService } from '../../../../@core/services/application.service';
+import { DeleteInstanceAsset } from '../../../../@core/data/ext-datasource';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -180,6 +181,20 @@ export class ApplicationListDataTableComponent implements OnInit {
 
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
+  }
+
+  onScanAll() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.scanAll,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.applicationService.scanAllApplicationResource()
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.SCAN);
+          this.fetchData();
+        });
+    });
   }
 
   protected readonly getRowColor = getRowColor;

@@ -1,8 +1,7 @@
-import { BaseVO, DataTable, HttpResult, MessageResponse, OptionsVO, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ValidVO } from './base-data';
 import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
-import { KubernetesDetailsVO } from './kubernetes';
 
 export interface ApplicationVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
@@ -53,6 +52,8 @@ export abstract class ApplicationData {
   abstract setApplicationValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract scanApplicationResource(param: ScanResource): Observable<HttpResult<Boolean>>;
+
+  abstract scanAllApplicationResource(): Observable<HttpResult<Boolean>>;
 
   abstract deleteApplicationResourceById(param: { id: number }): Observable<HttpResult<Boolean>>;
 

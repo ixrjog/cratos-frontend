@@ -10,6 +10,9 @@
   </d-search>
   <app-business-cascader [businessType]="businessType" (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <span class="right-button">
+    <d-button bsStyle="danger" (click)="onScanAll()">Scan All</d-button>
+  </span>
 </div>
 <div class="spacing-table">
   <d-data-table

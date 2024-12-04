@@ -19,7 +19,7 @@ export class KubernetesResourceTabsComponent implements OnInit {
     namespace: '',
   };
 
-  tabActiveId: string | number = 'workload';
+  tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
   loading = false;
   kubernetesDetails: KubernetesDetailsVO = null;
@@ -42,11 +42,12 @@ export class KubernetesResourceTabsComponent implements OnInit {
       this.show = false;
       this.kubernetesDetails = null;
       this.loading = true;
-      this.applicationResourceService.queryApplicationResourceKubernetesDetails(param).pipe(
-        finalize(() => {
+      this.applicationResourceService.queryApplicationResourceKubernetesDetails(param)
+        .pipe(
+          finalize(() => {
           this.loading = false;
-        }),
-      ).subscribe(
+          }),
+        ).subscribe(
         ({ body }) => {
           this.kubernetesDetails = body.body;
           this.deploymentList = this.kubernetesDetails.workloads.deployments;

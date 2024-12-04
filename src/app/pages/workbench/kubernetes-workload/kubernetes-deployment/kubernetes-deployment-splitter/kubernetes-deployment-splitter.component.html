@@ -9,8 +9,19 @@
     </d-splitter-pane>
     <d-splitter-pane>
       <d-splitter orientation="horizontal">
-        <d-splitter-pane [resizable]="false" size="15%">
+        <d-splitter-pane [resizable]="false" size="300px">
           <div class="pane-content">
+            <h3>Containers</h3>
+            <d-radio-group
+              [name]="'container-name-radio'"
+              [values]="kubernetesDeployment['$containers']"
+              [direction]="'row'"
+              [(ngModel)]="kubernetesDeployment['$chosenItem']"
+              (change)="valueChange($event)"
+            >
+            </d-radio-group>
+            <h3 class="h3-deployment" dClipboard [content]="kubernetesDeployment['$chosenItemImage']">Image</h3>
+            <p style="overflow: auto">{{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}</p>
             <h3 class="h3-deployment">Replicas</h3>
             <p>{{ kubernetesDeployment.spec.replicas }}</p>
             <h3 class="h3-deployment">{{ kubernetesDeployment.spec.strategy.type }}</h3>
@@ -22,8 +33,10 @@
           <div class="pane-content">
             <div class="da-list-content">
               <app-kubernetes-pod-card
+                [containerName]="kubernetesDeployment['$chosenItem']"
                 *ngFor="let pod of kubernetesDeployment.pods"
                 [kubernetesPod]="pod"
+                [kubernetesDeployment]="kubernetesDeployment"
                 class="card-item"
               ></app-kubernetes-pod-card>
             </div>

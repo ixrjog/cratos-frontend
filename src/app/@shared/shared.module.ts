@@ -38,6 +38,7 @@ import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
 import { NumberTransModule } from 'ng-devui/number-translation';
 import { FlowUnitPipe } from './pipe/flow-unit.pipe';
 import { ArrayLengthPipe } from './pipe/array-length.pipe';
+import { ContainerImageTagPipe } from './pipe/container-image.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -58,7 +59,8 @@ const PIPES = [
   ClipPipe,
   SshInstancePipe,
   FlowUnitPipe,
-  ArrayLengthPipe
+  ArrayLengthPipe,
+  ContainerImageTagPipe
 ];
 
 const CRATOS_COMPONENTS = [

@@ -24,6 +24,7 @@ export class KubernetesDeploymentComponent implements OnInit {
   cardDate: KubernetesDetailsVO = null;
   deploymentList = [];
   resourceNamespaceOptions = [];
+  show = false
 
   constructor(
     private applicationResourceService: ApplicationResourceService,
@@ -36,6 +37,7 @@ export class KubernetesDeploymentComponent implements OnInit {
       const param: QueryApplicationResourceKubernetesDetails = {
         ...this.queryParam,
       };
+      this.show = false
       this.cardDate = null;
       this.loading = true;
       this.applicationResourceService.queryApplicationResourceKubernetesDetails(param).pipe(
@@ -45,7 +47,8 @@ export class KubernetesDeploymentComponent implements OnInit {
       ).subscribe(
         ({ body }) => {
           this.cardDate = body.body;
-          this.deploymentList = this.cardDate.deployments;
+          this.deploymentList = this.cardDate.workloads.deployments;
+          this.show = true
         },
       );
     }
@@ -65,7 +68,6 @@ export class KubernetesDeploymentComponent implements OnInit {
 
   onApplicationChange(application: ApplicationVO) {
     this.queryParam.applicationName = application?.name;
-    this.fetchData();
   }
 
   onResourceNamespaceChange(edsType: string) {

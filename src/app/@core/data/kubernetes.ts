@@ -5,7 +5,35 @@ export interface KubernetesDetailsVO {
   success: boolean;
   message: string;
   namespace: string;
+  workloads: KubernetesWorkloadsVO;
+  network: KubernetesNetworkVO;
+}
+
+export interface KubernetesWorkloadsVO {
   deployments: KubernetesDeploymentVO[];
+}
+
+export interface KubernetesNetworkVO {
+  services: KubernetesServiceVO[];
+}
+
+export interface KubernetesServiceVO {
+  metadata: KubernetesMetadataVO;
+  spec: KubernetesServiceSpecVO;
+}
+
+export interface KubernetesServiceSpecVO {
+  selector: Map<string, string>;
+  ports: KubernetesServicePortVO[];
+}
+
+export interface KubernetesServicePortVO {
+  appProtocol: string;
+  name: string;
+  nodePort: number;
+  port: number;
+  protocol: string;
+  targetPort: number;
 }
 
 export interface KubernetesDeploymentVO {
@@ -13,11 +41,24 @@ export interface KubernetesDeploymentVO {
   metadata: KubernetesMetadataVO;
   spec: DeploymentSpecVO;
   pods: KubernetesPodVO[];
+  topologyDetails: KubernetesTopologyDetails;
 }
 
 export interface KubernetesClusterVO {
   name: string;
 }
+
+export interface KubernetesTopologyDetails {
+  nodeTopology: Map<string, Map<string, KubernetesNodeVo>>;
+}
+
+export interface KubernetesNodeVo {
+  name: string;
+  hostIP: string;
+  region: string;
+  zone: string;
+}
+
 
 export interface KubernetesMetadataVO {
   namespace: string;
@@ -29,11 +70,26 @@ export interface KubernetesMetadataVO {
 export interface DeploymentSpecVO {
   replicas: number;
   strategy: DeploymentStrategyVO;
+  template: DeploymentSpecTemplateVO;
 }
 
 export interface DeploymentStrategyVO {
   type: string;
   rollingUpdate: RollingUpdateDeploymentVO;
+}
+
+export interface DeploymentSpecTemplateVO {
+  spec: DeploymentTemplateSpecVO;
+}
+
+export interface DeploymentTemplateSpecVO {
+  containers: DeploymentTemplateSpecContainerVO[];
+}
+
+export interface DeploymentTemplateSpecContainerVO {
+  main: boolean;
+  name: string;
+  image: string;
 }
 
 export interface RollingUpdateDeploymentVO {

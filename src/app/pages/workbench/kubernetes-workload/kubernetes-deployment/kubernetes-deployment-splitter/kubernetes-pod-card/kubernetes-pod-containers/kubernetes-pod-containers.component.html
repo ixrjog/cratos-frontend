@@ -1,14 +1,4 @@
 <section>
-  <div class="btn-group" dDropDown (toggleEvent)="onToggle($event)" *ngIf="show" appendToBody>
-    <d-icon dDropDownToggle [icon]="'icon-select-arrow'" [operable]="true" [rotate]="rotateDegrees">
-      <span iconPrefix>{{ container.name }}</span>
-    </d-icon>
-    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
-      <li role="menuitem" *ngFor="let item of menuitem" (click)="onRowSelect(item)">
-        <a dDropDownMenuItem>{{ item }}</a>
-      </li>
-    </ul>
-  </div>
 
   <div>
     <span class="name">Pod IP:</span>
@@ -16,8 +6,10 @@
   </div>
 
   <div>
-    <span class="name">Image:</span>
-    <span class="value" dClipboard [content]="container.image">{{ container.image | dSafeNullPipe }}</span>
+    <span class="name">Image Tag:</span>
+    <span class="value">
+      {{ container.image | containerImageTag | dSafeNullPipe }}
+    </span>
   </div>
 
   <div>

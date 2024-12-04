@@ -1,5 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { KubernetesPodVO } from '../../../../../../@core/data/kubernetes';
+import {
+  KubernetesContainerVO,
+  KubernetesDeploymentVO,
+  KubernetesPodVO,
+} from '../../../../../../@core/data/kubernetes';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/utils/data.util';
 
 @Component({
@@ -10,6 +14,13 @@ import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/utils/data.util';
 export class KubernetesPodCardComponent {
 
   @Input() kubernetesPod: KubernetesPodVO;
+  @Input() kubernetesDeployment: KubernetesDeploymentVO;
+  @Input() containerName: string;
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
+
+  subPodName(): string {
+    return this.kubernetesPod.metadata.name
+      .substring(this.kubernetesDeployment.metadata.name.length + 1, this.kubernetesPod.metadata.name.length);
+  }
 }

@@ -32,6 +32,9 @@
 </div>
 <div class="spacing-table" dLoading [loading]="loading">
   <div style="margin-bottom: 20px" *ngFor="let deployment of deploymentList">
-    <app-kubernetes-deployment-splitter [kubernetesDeployment]="deployment"></app-kubernetes-deployment-splitter>
+    <app-kubernetes-deployment-splitter
+      [kubernetesDeployment]="deployment" *ngIf="show"
+    >
+    </app-kubernetes-deployment-splitter>
   </div>
 </div>

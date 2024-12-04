@@ -25,6 +25,8 @@ export interface KubernetesServiceVO {
 export interface KubernetesServiceSpecVO {
   selector: Map<string, string>;
   ports: KubernetesServicePortVO[];
+  clusterIP: string;
+  type: string;
 }
 
 export interface KubernetesServicePortVO {

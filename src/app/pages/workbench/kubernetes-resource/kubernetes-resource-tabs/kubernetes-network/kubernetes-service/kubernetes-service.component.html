@@ -1,0 +1,39 @@
+<d-data-table
+  dLoading
+  [dataSource]="tableData"
+  [tableOverflowType]="'overlay'"
+  [backdrop]="true"
+  [scrollable]="true"
+  [loadingStyle]="'infinity'"
+>
+  <d-column field="name" header="Name"></d-column>
+  <d-column field="selector" header="Selector">
+    <d-cell>
+      <ng-template let-cellItem="cellItem">
+        <p *ngFor="let item of cellItem | keyvalue">
+          <span>{{ item.key }}: {{ item.value }}</span>
+        </p>
+      </ng-template>
+    </d-cell>
+  </d-column>
+  <d-column field="type" header="Type"></d-column>
+  <d-column field="clusterIP" header="Cluster IP">
+    <d-cell>
+      <ng-template let-cellItem="cellItem">
+        <span>{{ cellItem | dSafeNullPipe: 'null' }}</span>
+      </ng-template>
+    </d-cell>
+  </d-column>
+  <d-column field="ports" header="Ports">
+    <d-cell>
+      <ng-template let-cellItem="cellItem">
+        <p *ngFor="let port of cellItem ">
+          <span>{{ port.port }}:{{ port.targetPort }}/{{port.protocol}}</span>
+        </p>
+      </ng-template>
+    </d-cell>
+  </d-column>
+  <ng-template #noResultTemplateRef>
+    <div class="no-data">No Data</div>
+  </ng-template>
+</d-data-table>

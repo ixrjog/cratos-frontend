@@ -31,10 +31,25 @@
   </d-button>
 </div>
 <div class="spacing-table" dLoading [loading]="loading">
-  <div style="margin-bottom: 20px" *ngFor="let deployment of deploymentList">
-    <app-kubernetes-deployment-splitter
-      [kubernetesDeployment]="deployment" *ngIf="show"
-    >
-    </app-kubernetes-deployment-splitter>
+  <div *ngIf="show">
+    <d-tabs type="pills" [(activeTab)]="tabActiveId">
+      <d-tab [id]="'workload'" [title]="'Workload'">
+        <div>
+          <app-kubernetes-workload [deploymentList]="deploymentList"></app-kubernetes-workload>
+        </div>
+      </d-tab>
+      <d-tab [id]="'network'" [title]="'Network'">
+        <div>
+          <app-kubernetes-network [serviceList]="serviceList"></app-kubernetes-network>
+        </div>
+      </d-tab>
+    </d-tabs>
   </div>
+
 </div>
+
+
+
+
+
+

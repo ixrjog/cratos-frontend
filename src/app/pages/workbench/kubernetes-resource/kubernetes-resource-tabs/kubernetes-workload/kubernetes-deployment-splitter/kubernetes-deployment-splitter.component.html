@@ -1,7 +1,7 @@
 <section>
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
-      <div class="pane-content">
+      <div>
         <h2 style="margin: 0">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
@@ -10,7 +10,7 @@
     <d-splitter-pane>
       <d-splitter orientation="horizontal">
         <d-splitter-pane [resizable]="false" size="300px">
-          <div class="pane-content">
+          <div>
             <h3>Containers</h3>
             <d-radio-group
               [name]="'container-name-radio'"
@@ -30,16 +30,14 @@
           </div>
         </d-splitter-pane>
         <d-splitter-pane>
-          <div class="pane-content">
-            <div class="da-list-content">
-              <app-kubernetes-pod-card
-                [containerName]="kubernetesDeployment['$chosenItem']"
-                *ngFor="let pod of kubernetesDeployment.pods"
-                [kubernetesPod]="pod"
-                [kubernetesDeployment]="kubernetesDeployment"
-                class="card-item"
-              ></app-kubernetes-pod-card>
-            </div>
+          <div class="da-list-content">
+            <app-kubernetes-pod-card
+              [containerName]="kubernetesDeployment['$chosenItem']"
+              *ngFor="let pod of kubernetesDeployment.pods"
+              [kubernetesPod]="pod"
+              [kubernetesDeployment]="kubernetesDeployment"
+              class="card-item"
+            ></app-kubernetes-pod-card>
           </div>
         </d-splitter-pane>
       </d-splitter>

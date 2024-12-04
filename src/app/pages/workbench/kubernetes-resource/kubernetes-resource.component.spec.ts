@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KubernetesWorkloadComponent } from './kubernetes-workload.component';
+import { KubernetesResourceComponent } from './kubernetes-resource.component';
 
 describe('KubernetesWorkloadComponent', () => {
-  let component: KubernetesWorkloadComponent;
-  let fixture: ComponentFixture<KubernetesWorkloadComponent>;
+  let component: KubernetesResourceComponent;
+  let fixture: ComponentFixture<KubernetesResourceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ KubernetesWorkloadComponent ]
+      declarations: [ KubernetesResourceComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(KubernetesWorkloadComponent);
+    fixture = TestBed.createComponent(KubernetesResourceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

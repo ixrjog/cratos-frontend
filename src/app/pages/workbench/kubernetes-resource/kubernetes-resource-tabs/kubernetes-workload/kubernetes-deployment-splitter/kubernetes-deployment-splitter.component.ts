@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KubernetesDeploymentVO } from '../../../../../@core/data/kubernetes';
+import { KubernetesDeploymentVO } from '../../../../../../@core/data/kubernetes';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',

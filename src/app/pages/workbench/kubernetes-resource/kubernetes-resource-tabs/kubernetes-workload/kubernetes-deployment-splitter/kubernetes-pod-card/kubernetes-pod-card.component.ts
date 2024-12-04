@@ -1,10 +1,6 @@
 import { Component, Input } from '@angular/core';
-import {
-  KubernetesContainerVO,
-  KubernetesDeploymentVO,
-  KubernetesPodVO,
-} from '../../../../../../@core/data/kubernetes';
-import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/utils/data.util';
+import { KubernetesDeploymentVO, KubernetesPodVO } from '../../../../../../../@core/data/kubernetes';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-kubernetes-pod-card',

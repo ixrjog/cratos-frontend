@@ -1,0 +1,5 @@
+<section>
+  <div style="margin-bottom: 20px" *ngFor="let deployment of deploymentList">
+    <app-kubernetes-deployment-splitter [kubernetesDeployment]="deployment"></app-kubernetes-deployment-splitter>
+  </div>
+</section>

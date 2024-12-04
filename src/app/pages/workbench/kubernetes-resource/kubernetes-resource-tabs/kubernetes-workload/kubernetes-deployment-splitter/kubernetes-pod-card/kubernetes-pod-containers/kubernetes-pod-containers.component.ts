@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { KubernetesContainerVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
-import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
+import { KubernetesContainerVO, PodStatusVO } from '../../../../../../../../@core/data/kubernetes';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-kubernetes-pod-containers',

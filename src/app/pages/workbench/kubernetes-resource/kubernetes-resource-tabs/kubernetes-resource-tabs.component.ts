@@ -1,30 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
+import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
 import { ApplicationService } from '../../../../@core/services/application.service';
-import { map } from 'rxjs/operators';
 import { QueryApplicationResourceKubernetesDetails } from '../../../../@core/data/application-resource';
 import { finalize } from 'rxjs';
-import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
+import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-kubernetes-deployment',
-  templateUrl: './kubernetes-deployment.component.html',
-  styleUrls: [ './kubernetes-deployment.component.less' ],
+  selector: 'app-kubernetes-resource-tabs',
+  templateUrl: './kubernetes-resource-tabs.component.html',
+  styleUrls: [ './kubernetes-resource-tabs.component.less' ],
 })
-export class KubernetesDeploymentComponent implements OnInit {
+export class KubernetesResourceTabsComponent implements OnInit {
 
   queryParam = {
     applicationName: '',
     namespace: '',
   };
 
+  tabActiveId: string | number = 'workload';
   application: ApplicationVO;
   loading = false;
-  cardDate: KubernetesDetailsVO = null;
+  kubernetesDetails: KubernetesDetailsVO = null;
   deploymentList = [];
+  serviceList = [];
   resourceNamespaceOptions = [];
-  show = false
+  show = false;
 
   constructor(
     private applicationResourceService: ApplicationResourceService,
@@ -37,8 +39,8 @@ export class KubernetesDeploymentComponent implements OnInit {
       const param: QueryApplicationResourceKubernetesDetails = {
         ...this.queryParam,
       };
-      this.show = false
-      this.cardDate = null;
+      this.show = false;
+      this.kubernetesDetails = null;
       this.loading = true;
       this.applicationResourceService.queryApplicationResourceKubernetesDetails(param).pipe(
         finalize(() => {
@@ -46,9 +48,10 @@ export class KubernetesDeploymentComponent implements OnInit {
         }),
       ).subscribe(
         ({ body }) => {
-          this.cardDate = body.body;
-          this.deploymentList = this.cardDate.workloads.deployments;
-          this.show = true
+          this.kubernetesDetails = body.body;
+          this.deploymentList = this.kubernetesDetails.workloads.deployments;
+          this.serviceList = this.kubernetesDetails.network.services;
+          this.show = true;
         },
       );
     }

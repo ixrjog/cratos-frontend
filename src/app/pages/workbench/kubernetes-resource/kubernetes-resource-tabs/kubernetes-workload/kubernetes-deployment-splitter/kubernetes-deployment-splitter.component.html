@@ -1,10 +1,17 @@
 <section>
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
-      <div>
-        <h2 style="margin: 0">
+      <div style="display: flex">
+        <h2 style="margin: 0 20px 0 0">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
+        <span style="vertical-align: bottom;align-items: end;display: flex">
+          <strong style="margin-right: 3px">Replicas {{kubernetesDeployment.spec.replicas}}</strong>
+          <span *ngFor="let i of Array(kubernetesDeployment.spec.replicas).fill('');let n=index">
+            <i class="fa-brands fa-codepen"></i>
+            <span *ngIf="(n+1) % 5 === 0" style="margin-right: 5px"></span>
+          </span>
+        </span>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>
@@ -24,8 +31,6 @@
             <p style="overflow: auto" dClipboard [content]="kubernetesDeployment['$chosenItemImage']">
               {{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}
             </p>
-            <h3 class="h3-deployment">Replicas</h3>
-            <p>{{ kubernetesDeployment.spec.replicas }}</p>
             <h3 class="h3-deployment">{{ kubernetesDeployment.spec.strategy.type }}</h3>
             <p>
               MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge }} /

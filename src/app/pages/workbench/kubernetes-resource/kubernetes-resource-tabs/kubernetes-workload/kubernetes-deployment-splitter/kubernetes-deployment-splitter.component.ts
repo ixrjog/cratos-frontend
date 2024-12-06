@@ -30,4 +30,5 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  protected readonly Array = Array;
 }

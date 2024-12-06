@@ -55,4 +55,8 @@ export class ApplicationService extends ApplicationData {
     return this.apiService.get(this.baseUrl, '/resource/namespace/options/get', {});
   }
 
+  getMyResourceNamespaceOptions(param: { applicationName: string }): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get(this.baseUrl, '/resource/namespace/my/options/get', param);
+  }
+
 }

@@ -16,6 +16,8 @@
     </ng-template>
   </d-select>
   <d-select
+    dLoading
+    [loading]="nameSpaceLoading"
     class="select"
     [options]="resourceNamespaceOptions"
     [filterKey]="'label'"
@@ -24,6 +26,7 @@
     placeholder="Select namespace"
     [(ngModel)]="queryParam.namespace"
     (valueChange)="onResourceNamespaceChange($event)"
+    [disabled]="nameSpaceDisabled"
   >
   </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"

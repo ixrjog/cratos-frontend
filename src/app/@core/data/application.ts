@@ -59,4 +59,6 @@ export abstract class ApplicationData {
 
   abstract getResourceNamespaceOptions(): Observable<HttpResult<OptionsVO>>;
 
+  abstract getMyResourceNamespaceOptions(param: { applicationName: string }): Observable<HttpResult<OptionsVO>>;
+
 }

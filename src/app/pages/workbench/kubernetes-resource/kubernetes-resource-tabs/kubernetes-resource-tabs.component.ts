@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
 import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
   templateUrl: './kubernetes-resource-tabs.component.html',
   styleUrls: [ './kubernetes-resource-tabs.component.less' ],
 })
-export class KubernetesResourceTabsComponent implements OnInit {
+export class KubernetesResourceTabsComponent {
 
   queryParam = {
     applicationName: '',
@@ -21,6 +21,8 @@ export class KubernetesResourceTabsComponent implements OnInit {
 
   tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
+  nameSpaceLoading = false;
+  nameSpaceDisabled = true;
   loading = false;
   kubernetesDetails: KubernetesDetailsVO = null;
   deploymentList = [];
@@ -72,6 +74,10 @@ export class KubernetesResourceTabsComponent implements OnInit {
 
   onApplicationChange(application: ApplicationVO) {
     this.queryParam.applicationName = application?.name;
+    this.queryParam.namespace = ''
+    if (this.queryParam.applicationName) {
+      this.getResourceNamespaceOptions();
+    }
   }
 
   onResourceNamespaceChange(edsType: string) {
@@ -79,14 +85,26 @@ export class KubernetesResourceTabsComponent implements OnInit {
   }
 
   getResourceNamespaceOptions() {
-    this.applicationService.getResourceNamespaceOptions()
-      .subscribe(({ body }) => {
+    // this.applicationService.getResourceNamespaceOptions()
+    //   .subscribe(({ body }) => {
+    //     this.resourceNamespaceOptions = body.options;
+    //   });
+    this.nameSpaceLoading = true;
+    this.applicationService.getMyResourceNamespaceOptions({ applicationName: this.application.name })
+      .pipe(
+        finalize(() => {
+          this.nameSpaceLoading = false;
+        }),
+      ).subscribe(
+      ({ body }) => {
         this.resourceNamespaceOptions = body.options;
+        this.nameSpaceDisabled = false;
       });
   };
 
-  ngOnInit() {
-    this.getResourceNamespaceOptions();
-  }
+
+  // ngOnInit() {
+  //   this.getResourceNamespaceOptions();
+  // }
 
 }

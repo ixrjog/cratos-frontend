@@ -53,6 +53,7 @@ export interface OptionsVO {
   options: {
     label: string;
     value: any;
+    disabled: boolean;
     comment: any;
   }[]
 }

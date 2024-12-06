@@ -5,13 +5,20 @@
         <h2 style="margin: 0 20px 0 0">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
-        <span style="vertical-align: bottom;align-items: end;display: flex">
-          <strong style="margin-right: 3px">Replicas {{kubernetesDeployment.spec.replicas}}</strong>
-          <span *ngFor="let i of Array(kubernetesDeployment.spec.replicas).fill('');let n=index">
+        <d-tag
+          style="vertical-align: bottom;align-items: end;display: flex"
+          [tag]="kubernetesDeployment.spec.replicas"
+          [customViewTemplate]="replicasTag"
+          [labelStyle]="'blue-w98'"
+        >
+        </d-tag>
+        <ng-template #replicasTag let-tag="tag">
+          <strong style="margin-right: 3px">Replicas {{tag}}</strong>
+          <span *ngFor="let i of Array(tag).fill('');let n=index">
             <i class="fa-brands fa-codepen"></i>
             <span *ngIf="(n+1) % 5 === 0" style="margin-right: 5px"></span>
           </span>
-        </span>
+        </ng-template>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>

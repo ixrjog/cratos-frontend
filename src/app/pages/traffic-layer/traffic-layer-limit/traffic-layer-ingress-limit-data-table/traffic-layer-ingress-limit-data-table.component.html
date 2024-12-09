@@ -52,7 +52,8 @@
     <d-column field="trafficLimitQps" header="QPS">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span>{{cellItem.name}}: {{ cellItem.value }}</span>
+          <span *ngIf="cellItem">{{cellItem.name}}: {{ cellItem.value }}</span>
+          <d-tag *ngIf="!cellItem" [tag]="'UNLIMITED'" [labelStyle]="'green-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>
@@ -76,6 +77,15 @@
               [theme]="'ace/theme/tomorrow_night'"
             ></app-ace-editor>
           </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+          </d-icon-group>
         </ng-template>
       </d-cell>
     </d-column>

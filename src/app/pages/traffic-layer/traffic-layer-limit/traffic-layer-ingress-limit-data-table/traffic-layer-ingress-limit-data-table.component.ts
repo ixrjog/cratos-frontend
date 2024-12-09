@@ -4,6 +4,11 @@ import { KubernetesResourceTemplatePageQuery } from '../../../../@core/data/kube
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { TrafficLayerService } from '../../../../@core/services/traffic-layer.service';
 import { TrafficLayerIngressTrafficLimitVO } from '../../../../@core/data/traffic-layer';
+import { TagVO } from '../../../../@core/data/tag';
+import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import {
+  TrafficLayerIngressLimitEditorComponent,
+} from './traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
 
 @Component({
   selector: 'app-traffic-layer-ingress-limit-data-table',
@@ -18,8 +23,16 @@ export class TrafficLayerIngressLimitDataTableComponent implements OnInit {
 
   table: Table<TrafficLayerIngressTrafficLimitVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
+  dialogDate = {
+    editorData: {
+      ...DIALOG_DATA.editorData,
+      content: TrafficLayerIngressLimitEditorComponent,
+    },
+  };
+
   constructor(
     private trafficLayerService: TrafficLayerService,
+    private dialogUtil: DialogUtil,
   ) {
   }
 
@@ -44,6 +57,16 @@ export class TrafficLayerIngressLimitDataTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchData();
+  }
+
+  onRowEdit(rowItem: TrafficLayerIngressTrafficLimitVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit Ingress Traffic Limit',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
   }
 
 }

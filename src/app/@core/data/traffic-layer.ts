@@ -92,6 +92,11 @@ export interface TrafficLayerIngressTrafficLimitVO extends BaseVO{
   sourceIp: EdsAssetIndexVO;
 }
 
+export interface UpdateTrafficLayerIngressTrafficLimit {
+  assetId: number;
+  limitQps: number;
+}
+
 export interface TrafficLayerIngressTrafficLimitPageQuery extends PageQuery {
   queryName: string;
 }
@@ -128,4 +133,5 @@ export abstract class TrafficLayerData {
 
   abstract queryIngressTrafficLimitPage(param: TrafficLayerIngressTrafficLimitPageQuery): Observable<DataTable<TrafficLayerIngressTrafficLimitVO>>;
 
+  abstract updateIngressTrafficLimit(param: UpdateTrafficLayerIngressTrafficLimit): Observable<HttpResult<Boolean>>;
 }

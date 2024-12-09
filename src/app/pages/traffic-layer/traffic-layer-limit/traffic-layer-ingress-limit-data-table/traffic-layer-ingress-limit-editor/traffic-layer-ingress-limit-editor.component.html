@@ -1,0 +1,56 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label>Ingress Name</d-form-label>
+      <d-form-control>
+        <span>{{ formData.asset.name }}</span>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Load Balancer</d-form-label>
+      <d-form-control>
+        <span>{{ formData.loadBalancer.value }}</span>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Namespace</d-form-label>
+      <d-form-control>
+        <span>{{ formData.namespace.value }}</span>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Rules</d-form-label>
+      <d-form-control>
+        <div *ngFor="let rule of formData.rules">
+          {{ rule.name }}{{ rule.value }}
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Traffic Limit (QPS)</d-form-label>
+      <d-form-control>
+        <div class="composite-slider slider-wrapper">
+          <d-slider name="limit" [(ngModel)]="limitQps" [min]="min" [max]="max" class="slider"></d-slider>
+          <div class="snapshot-value">
+            <d-input-number
+              name="limit"
+              [min]="min"
+              [max]="max"
+              [allowEmpty]="false"
+              [(ngModel)]="limitQps"
+              class="input-number"
+            ></d-input-number>
+          </div>
+          <span style="margin-top: 15px">UNLIMITED</span>
+          <span style="margin:15px 10px 0 0">{{ max }}</span>
+        </div>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

@@ -13,7 +13,7 @@ import {
   TrafficLayerRecordEdit,
   TrafficLayerRecordPageQuery,
   TrafficLayerRecordQueryDetails,
-  TrafficLayerRecordVO,
+  TrafficLayerRecordVO, UpdateTrafficLayerIngressTrafficLimit,
 } from '../data/traffic-layer';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -85,6 +85,10 @@ export class TrafficLayerService extends TrafficLayerData {
 
   queryIngressTrafficLimitPage(param: TrafficLayerIngressTrafficLimitPageQuery): Observable<DataTable<TrafficLayerIngressTrafficLimitVO>> {
     return this.apiService.post(this.baseUrl, '/ingress/traffic-limit/query', param);
+  }
+
+  updateIngressTrafficLimit(param: UpdateTrafficLayerIngressTrafficLimit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/ingress/traffic-limit/update', param);
   }
 
 }

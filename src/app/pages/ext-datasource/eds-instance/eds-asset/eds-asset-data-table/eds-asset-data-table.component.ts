@@ -25,6 +25,9 @@ import {
 import {
   GlobalNetworkSubnetEditorComponent,
 } from '../../../../global-network/global-network-subnet/global-network-subnet-data-table/global-network-subnet-editor/global-network-subnet-editor.component';
+import {
+  BusinessCascaderComponent,
+} from '../../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -33,6 +36,7 @@ import {
 })
 export class EdsAssetDataTableComponent implements OnChanges {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
 
   @Input() instanceId: number;
@@ -45,6 +49,10 @@ export class EdsAssetDataTableComponent implements OnChanges {
   queryParam = {
     queryName: '',
     valid: null,
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
 
   limit = RELATIVE_TIME_LIMIT;
@@ -72,6 +80,9 @@ export class EdsAssetDataTableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.assetType === this.currentType) {
+      setTimeout(() => {
+        this.businessCascader.getTagOptions();
+      }, 500);
       this.fetchData();
     }
   }
@@ -237,4 +248,8 @@ export class EdsAssetDataTableComponent implements OnChanges {
   protected readonly getResourceCountColor = getResourceCountColor;
   protected readonly JSON = JSON;
   protected readonly parseResourceCount = parseResourceCount;
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
+  }
 }

@@ -10,6 +10,9 @@ import { Observable, zip } from 'rxjs';
 import { AssetMaturityEdit, AssetMaturityPageQuery, AssetMaturityVO } from '../../../../@core/data/asset-maturity';
 import { AssetMaturityEditorComponent } from './asset-maturity-editor/asset-maturity-editor.component';
 import { AssetMaturityService } from '../../../../@core/services/asset-maturity.service';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-asset-maturity-data-table',
@@ -18,6 +21,7 @@ import { AssetMaturityService } from '../../../../@core/services/asset-maturity.
 })
 export class AssetMaturityDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -72,6 +76,9 @@ export class AssetMaturityDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

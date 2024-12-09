@@ -12,14 +12,10 @@ interface QueryByTag {
   templateUrl: './business-cascader.component.html',
   styleUrls: [ './business-cascader.component.less' ],
 })
-export class BusinessCascaderComponent implements OnInit {
+export class BusinessCascaderComponent {
 
   constructor(private tagService: TagService,
               private businessTagService: BusinessTagService) {
-  }
-
-  ngOnInit(): void {
-    this.getTagOptions();
   }
 
   tagOptions = [];

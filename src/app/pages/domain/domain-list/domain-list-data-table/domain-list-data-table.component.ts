@@ -10,6 +10,9 @@ import { Observable, zip } from 'rxjs';
 import { DomainEdit, DomainPageQuery, DomainVO } from '../../../../@core/data/domian';
 import { DomainEditorComponent } from './domain-editor/domain-editor.component';
 import { DomainService } from '../../../../@core/services/domain.service';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-domain-list-data-table',
@@ -18,6 +21,7 @@ import { DomainService } from '../../../../@core/services/domain.service';
 })
 export class DomainListDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -71,6 +75,9 @@ export class DomainListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

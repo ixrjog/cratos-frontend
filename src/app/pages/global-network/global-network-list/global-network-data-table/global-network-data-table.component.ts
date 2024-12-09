@@ -13,6 +13,9 @@ import { GlobalNetworkEditorComponent } from './global-network-editor/global-net
 import { Router } from '@angular/router';
 import { GlobalNetworkCheckCidrComponent } from './global-network-check-cidr/global-network-check-cidr.component';
 import { DialogService } from 'ng-devui/modal';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-global-network-data-table',
@@ -21,6 +24,7 @@ import { DialogService } from 'ng-devui/modal';
 })
 export class GlobalNetworkDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -76,6 +80,9 @@ export class GlobalNetworkDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

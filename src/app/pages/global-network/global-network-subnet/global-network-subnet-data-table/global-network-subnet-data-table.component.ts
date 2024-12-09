@@ -12,6 +12,9 @@ import {
   GlobalNetworkSubnetEditorComponent,
 } from './global-network-subnet-editor/global-network-subnet-editor.component';
 import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-global-network-subnet-data-table',
@@ -20,6 +23,7 @@ import { GlobalNetworkService } from '../../../../@core/services/global-network.
 })
 export class GlobalNetworkSubnetDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -30,9 +34,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   };
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_SUBNET;
-
   table: Table<GlobalNetworkSubnetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
-
   newGlobalNetworkSubnet: GlobalNetworkSubnetEdit = {
     mainName: '',
     mainType: '',
@@ -79,6 +81,9 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

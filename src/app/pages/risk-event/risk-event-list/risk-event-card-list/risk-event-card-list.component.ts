@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table } from '../../../../@core/data/base-data';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
@@ -8,6 +8,9 @@ import { RiskEventEdit, RiskEventPageQuery, RiskEventVO } from '../../../../@cor
 import { RiskEventEditorComponent } from './risk-event-editor/risk-event-editor.component';
 import { RiskEventService } from '../../../../@core/services/risk-event.service';
 import { ICategorySearchTagItem } from 'ng-devui';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-risk-event-card-list',
@@ -15,6 +18,8 @@ import { ICategorySearchTagItem } from 'ng-devui';
   styleUrls: [ './risk-event-card-list.component.less' ],
 })
 export class RiskEventCardListComponent implements OnInit {
+
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
 
   queryParam = {
     queryName: '',
@@ -105,6 +110,9 @@ export class RiskEventCardListComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.getYearOptions();
     this.fetchData();
   }

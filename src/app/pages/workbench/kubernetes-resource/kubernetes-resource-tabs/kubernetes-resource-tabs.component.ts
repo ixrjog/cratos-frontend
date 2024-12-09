@@ -85,10 +85,6 @@ export class KubernetesResourceTabsComponent {
   }
 
   getResourceNamespaceOptions() {
-    // this.applicationService.getResourceNamespaceOptions()
-    //   .subscribe(({ body }) => {
-    //     this.resourceNamespaceOptions = body.options;
-    //   });
     this.nameSpaceLoading = true;
     this.applicationService.getMyResourceNamespaceOptions({ applicationName: this.application.name })
       .pipe(
@@ -101,10 +97,5 @@ export class KubernetesResourceTabsComponent {
         this.nameSpaceDisabled = false;
       });
   };
-
-
-  // ngOnInit() {
-  //   this.getResourceNamespaceOptions();
-  // }
 
 }

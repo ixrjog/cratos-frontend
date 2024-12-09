@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RiskEventService } from '../../../../@core/services/risk-event.service';
 import { RiskEventGraphQuery, RiskEventGraphVO } from '../../../../@core/data/risk-event';
 import { map } from 'rxjs/operators';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-risk-event-chart',
@@ -10,6 +13,8 @@ import { BusinessTypeEnum } from '../../../../@core/data/business';
   styleUrls: [ './risk-event-chart.component.less' ],
 })
 export class RiskEventChartComponent implements OnInit {
+
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
 
   constructor(private riskEventService: RiskEventService) {
   }
@@ -20,7 +25,6 @@ export class RiskEventChartComponent implements OnInit {
   };
 
   businessType = BusinessTypeEnum.RISK_EVENT_IMPACT;
-
   queryParam = {
     year: '',
     quarter: '',
@@ -29,12 +33,9 @@ export class RiskEventChartComponent implements OnInit {
       tagValue: null,
     },
   };
-
   finLosses: Map<string, number> = null;
-
   riskEventGraph: RiskEventGraphVO = null;
   showChart = false;
-
   quarterOptions = [
     { name: 'Q1', value: '1' },
     { name: 'Q2', value: '2' },
@@ -43,6 +44,9 @@ export class RiskEventChartComponent implements OnInit {
   ];
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.queryParam.year = new Date().getFullYear().toString();
     this.fetchData();
   }

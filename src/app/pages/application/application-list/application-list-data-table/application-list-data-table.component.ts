@@ -10,6 +10,9 @@ import { ApplicationEdit, ApplicationPageQuery, ApplicationVO, ScanResource } fr
 import { ApplicationEditorComponent } from './application-editor/application-editor.component';
 import { ApplicationService } from '../../../../@core/services/application.service';
 import { DeleteInstanceAsset } from '../../../../@core/data/ext-datasource';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -18,6 +21,7 @@ import { DeleteInstanceAsset } from '../../../../@core/data/ext-datasource';
 })
 export class ApplicationListDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -66,6 +70,9 @@ export class ApplicationListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

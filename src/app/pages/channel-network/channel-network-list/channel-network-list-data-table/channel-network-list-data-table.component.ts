@@ -15,6 +15,9 @@ import {
 import { ChannelNetworkEditorComponent } from './channel-network-editor/channel-network-editor.component';
 import { ChannelNetworkService } from '../../../../@core/services/channel-network.service';
 import { catchError } from 'rxjs/operators';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-channel-network-list-data-table',
@@ -23,6 +26,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ChannelNetworkListDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -32,7 +36,6 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
     },
   };
   businessType: string = BusinessTypeEnum.CHANNEL_NETWORK;
-
   table: Table<ChannelNetworkVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newChannelNetwork: ChannelNetworkEdit = {
@@ -74,6 +77,9 @@ export class ChannelNetworkListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

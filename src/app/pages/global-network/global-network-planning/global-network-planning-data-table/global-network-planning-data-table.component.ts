@@ -19,6 +19,9 @@ import {
 } from './global-network-planning-editor/global-network-planning-editor.component';
 import { TrafficLayerDomainPageQuery } from '../../../../@core/data/traffic-layer';
 import { map } from 'rxjs/operators';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-global-network-planning-data-table',
@@ -27,6 +30,7 @@ import { map } from 'rxjs/operators';
 })
 export class GlobalNetworkPlanningDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -82,6 +86,9 @@ export class GlobalNetworkPlanningDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

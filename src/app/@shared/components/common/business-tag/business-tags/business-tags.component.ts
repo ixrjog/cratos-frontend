@@ -11,4 +11,10 @@ export class BusinessTagsComponent {
 
   @Input() businessTags: BusinessTagVO[];
 
+  getTagValue(businessTag: BusinessTagVO) {
+    if (businessTag.tagValue !== '') {
+      return businessTag.tag.tagKey + ':' + businessTag.tagValue;
+    }
+    return businessTag.tag.tagKey;
+  }
 }

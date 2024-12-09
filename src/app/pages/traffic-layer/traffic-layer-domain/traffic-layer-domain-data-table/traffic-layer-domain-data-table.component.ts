@@ -16,6 +16,9 @@ import { CertificateVO } from '../../../../@core/data/certificate';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { catchError } from 'rxjs/operators';
 import { countResource } from '../../../../@shared/utils/resource-count.util';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-traffic-layer-domain-data-table',
@@ -23,6 +26,8 @@ import { countResource } from '../../../../@shared/utils/resource-count.util';
   styleUrls: [ './traffic-layer-domain-data-table.component.less' ],
 })
 export class TrafficLayerDomainDataTableComponent implements OnInit {
+
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   businessType: string = BusinessTypeEnum.TRAFFIC_LAYER_DOMAIN;
 
@@ -90,6 +95,9 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

@@ -6,6 +6,8 @@ import {
   TrafficLayerDomainEnvVO,
   TrafficLayerDomainPageQuery,
   TrafficLayerDomainVO,
+  TrafficLayerIngressTrafficLimitPageQuery,
+  TrafficLayerIngressTrafficLimitVO,
   TrafficLayerIngressVO,
   TrafficLayerRecordDetails,
   TrafficLayerRecordEdit,
@@ -80,4 +82,9 @@ export class TrafficLayerService extends TrafficLayerData {
   queryIngressDetails(param: { name: string }): Observable<HttpResult<TrafficLayerIngressVO>> {
     return this.apiService.post(this.baseUrl, '/ingress/details/query', param);
   }
+
+  queryIngressTrafficLimitPage(param: TrafficLayerIngressTrafficLimitPageQuery): Observable<DataTable<TrafficLayerIngressTrafficLimitVO>> {
+    return this.apiService.post(this.baseUrl, '/ingress/traffic-limit/query', param);
+  }
+
 }

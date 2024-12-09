@@ -83,6 +83,19 @@ export interface TrafficLayerDomainEnvVO {
   seq: number;
 }
 
+export interface TrafficLayerIngressTrafficLimitVO extends BaseVO{
+  asset: EdsAssetVO;
+  rules: EdsAssetIndexVO[];
+  namespace: EdsAssetIndexVO;
+  loadBalancer: EdsAssetIndexVO;
+  trafficLimitQps: EdsAssetIndexVO;
+  sourceIp: EdsAssetIndexVO;
+}
+
+export interface TrafficLayerIngressTrafficLimitPageQuery extends PageQuery {
+  queryName: string;
+}
+
 export abstract class TrafficLayerData {
 
   abstract queryTrafficLayerDomainPage(param: TrafficLayerDomainPageQuery): Observable<DataTable<TrafficLayerDomainVO>>;
@@ -112,5 +125,7 @@ export abstract class TrafficLayerData {
   abstract queryIngressHostDetails(param: { queryHost: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
 
   abstract queryIngressDetails(param: { name: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
+
+  abstract queryIngressTrafficLimitPage(param: TrafficLayerIngressTrafficLimitPageQuery): Observable<DataTable<TrafficLayerIngressTrafficLimitVO>>;
 
 }

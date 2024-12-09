@@ -37,6 +37,10 @@ import {
 } from './traffic-layer-domain/traffic-layer-record-data-table/traffic-layer-record-editor/traffic-layer-record-editor.component';
 import { TrafficLayerIngressComponent } from './traffic-layer-ingress/traffic-layer-ingress.component';
 import { TrafficLayerIngressDetailComponent } from './traffic-layer-ingress/traffic-layer-ingress-detail/traffic-layer-ingress-detail.component';
+import { TrafficLayerLimitComponent } from './traffic-layer-limit/traffic-layer-limit.component';
+import {
+  TrafficLayerIngressLimitDataTableComponent
+} from './traffic-layer-limit/traffic-layer-ingress-limit-data-table/traffic-layer-ingress-limit-data-table.component';
 
 
 @NgModule({
@@ -51,6 +55,8 @@ import { TrafficLayerIngressDetailComponent } from './traffic-layer-ingress/traf
     TrafficLayerRecordEditorComponent,
     TrafficLayerIngressComponent,
     TrafficLayerIngressDetailComponent,
+    TrafficLayerLimitComponent,
+    TrafficLayerIngressLimitDataTableComponent,
   ],
   imports: [
     CommonModule,

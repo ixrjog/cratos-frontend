@@ -1,0 +1,12 @@
+<da-layout-row [daGutter]="[24, 24]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+      <d-tab [id]="'ingress'" [title]="'Ingress'">
+        <div class="app-data-table">
+          <app-traffic-layer-ingress-limit-data-table
+            #ingressLimitDataTable></app-traffic-layer-ingress-limit-data-table>
+        </div>
+      </d-tab>
+    </d-tabs>
+  </da-col-item>
+</da-layout-row>

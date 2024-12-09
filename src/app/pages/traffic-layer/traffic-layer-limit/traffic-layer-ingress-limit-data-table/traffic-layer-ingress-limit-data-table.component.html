@@ -1,0 +1,100 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="asset" header="Ingress Name">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="loadBalancer" header="Load Balancer">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.value }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="namespace" header="Namespace">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.value }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="rules" header="Rules">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <div *ngFor="let rule of cellItem">
+            {{ rule.name }}{{ rule.value }}
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="trafficLimitQps" header="QPS">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{cellItem.name}}: {{ cellItem.value }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="asset" header="Asset">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="assetTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+          >
+          </d-icon>
+          <ng-template #assetTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem.originalModel"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

@@ -18,6 +18,7 @@ export class TrafficLayerIngressLimitEditorComponent implements OnInit {
   @Input() data: any;
   formData: TrafficLayerIngressTrafficLimitVO;
   limitQps: number;
+  commitMsg: string;
   min: number = 0;
   max: number = 100000;
   step: number = 100;
@@ -46,6 +47,9 @@ export class TrafficLayerIngressLimitEditorComponent implements OnInit {
     const param: UpdateTrafficLayerIngressTrafficLimit = {
       assetId: this.formData.asset.id,
       limitQps: this.limitQps,
+      commit: {
+        message: this.commitMsg,
+      },
     };
     return this.trafficLayerService.updateIngressTrafficLimit(param);
   }

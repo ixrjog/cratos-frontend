@@ -51,6 +51,16 @@
         </div>
       </d-form-control>
     </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Commit</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="commit"
+          [(ngModel)]="commitMsg"
+          [dValidateRules]="formRules['commit']" />
+      </d-form-control>
+    </d-form-item>
   </form>
 </section>
 

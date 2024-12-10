@@ -68,4 +68,12 @@ export const TABLE_DATA: Table<any> = {
   },
 };
 
+export interface CommitParam {
+  businessId?: number
+  businessType?: string
+  username?: string
+  message: string
+  content?: string
+}
+
 

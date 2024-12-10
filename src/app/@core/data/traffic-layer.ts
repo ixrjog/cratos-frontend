@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
+import { BaseVO, CommitParam, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
 import { BusinessTagsVO } from './business-tag';
 import { EdsAssetIndexVO, EdsAssetVO } from './ext-datasource';
 import { Observable } from 'rxjs';
@@ -96,6 +96,7 @@ export interface TrafficLayerIngressTrafficLimitVO extends BaseVO{
 export interface UpdateTrafficLayerIngressTrafficLimit {
   assetId: number;
   limitQps: number;
+  commit: CommitParam;
 }
 
 export interface TrafficLayerIngressTrafficLimitPageQuery extends PageQuery {

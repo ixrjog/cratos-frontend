@@ -88,6 +88,7 @@ export interface TrafficLayerIngressTrafficLimitVO extends BaseVO{
   rules: EdsAssetIndexVO[];
   namespace: EdsAssetIndexVO;
   loadBalancer: EdsAssetIndexVO;
+  loadBalancerUrl: EdsAssetIndexVO;
   trafficLimitQps: EdsAssetIndexVO;
   sourceIp: EdsAssetIndexVO;
 }

@@ -28,8 +28,11 @@
     </d-column>
     <d-column field="loadBalancer" header="Load Balancer">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem.value }}</span>
+        <ng-template let-rowItem="rowItem">
+          <a class="devui-link"
+             [href]="rowItem.loadBalancerUrl.value"
+             target="_blank"
+          >{{ rowItem.loadBalancer.value }}</a>
         </ng-template>
       </d-cell>
     </d-column>

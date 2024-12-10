@@ -4,7 +4,6 @@ import { KubernetesResourceTemplatePageQuery } from '../../../../@core/data/kube
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { TrafficLayerService } from '../../../../@core/services/traffic-layer.service';
 import { TrafficLayerIngressTrafficLimitVO } from '../../../../@core/data/traffic-layer';
-import { TagVO } from '../../../../@core/data/tag';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import {
   TrafficLayerIngressLimitEditorComponent,

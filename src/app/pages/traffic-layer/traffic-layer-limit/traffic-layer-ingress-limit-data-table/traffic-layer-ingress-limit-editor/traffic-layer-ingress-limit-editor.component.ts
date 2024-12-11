@@ -21,7 +21,6 @@ export class TrafficLayerIngressLimitEditorComponent implements OnInit {
   commitMsg: string;
   min: number = 0;
   max: number = 100000;
-  step: number = 100;
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },

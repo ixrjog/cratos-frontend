@@ -6,10 +6,11 @@ import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data'
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { Observable, zip } from 'rxjs';
+import { finalize, Observable, zip } from 'rxjs';
 import { UserEdit, UserPageQuery, UserVO } from '../../../../@core/data/user';
 import { UserService } from '../../../../@core/services/user.service';
 import { catchError } from 'rxjs/operators';
+import { UserPermissionService } from '../../../../@core/services/user-permission.service';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -24,7 +25,6 @@ export class UserListDataTableComponent implements OnInit {
   };
   limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
-
   table: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   newUser: UserEdit = {
@@ -50,6 +50,7 @@ export class UserListDataTableComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private userPermissionService: UserPermissionService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
@@ -180,6 +181,18 @@ export class UserListDataTableComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  onUserPermission(rowItem: UserVO) {
+    rowItem['$userPermission'] = null;
+    rowItem['$loading'] = true;
+    this.userPermissionService.getUserPermissionDetailsByUsername({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$loading'] = false),
+      )
+      .subscribe(({ body }) => {
+        rowItem['$userPermission'] = body;
+      });
   }
 
   protected readonly getRowColor = getRowColor;

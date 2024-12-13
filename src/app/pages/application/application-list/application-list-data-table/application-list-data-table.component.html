@@ -70,7 +70,10 @@
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <pre><span *ngIf="rowItem['$show']">{{ rowItem['$applicationPermission'] | json }}</span></pre>
+          <app-business-permissions
+            *ngIf="rowItem['$show']"
+            [permissions]="rowItem['$permission']"
+          ></app-business-permissions>
           <d-icon
             *ngIf="!rowItem['$show']"
             [icon]="'icon-refresh'"

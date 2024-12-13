@@ -208,7 +208,7 @@ export class ApplicationListDataTableComponent implements OnInit {
 
   onApplicationPermission(rowItem: ApplicationVO) {
     rowItem['$show'] = false;
-    rowItem['$applicationPermission'] = null;
+    rowItem['$permission'] = null;
     rowItem['$loading'] = true;
     const param: QueryBusinessUserPermissionDetails = {
       businessType: this.businessType,
@@ -219,7 +219,7 @@ export class ApplicationListDataTableComponent implements OnInit {
         finalize(() => rowItem['$loading'] = false),
       )
       .subscribe(({ body }) => {
-        rowItem['$applicationPermission'] = body
+        rowItem['$permission'] = body
         rowItem['$show'] = true;
       });
   }

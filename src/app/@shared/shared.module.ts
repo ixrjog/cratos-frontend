@@ -39,6 +39,7 @@ import { NumberTransModule } from 'ng-devui/number-translation';
 import { FlowUnitPipe } from './pipe/flow-unit.pipe';
 import { ArrayLengthPipe } from './pipe/array-length.pipe';
 import { ContainerImageTagPipe } from './pipe/container-image.pipe';
+import { BusinessPermissionsComponent } from './components/common/business-permissions/business-permissions.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -92,6 +93,7 @@ const CRATOS_UTILS = [
     BusinessDocsComponent,
     BusinessCascaderComponent,
     XtermLogsComponent,
+    BusinessPermissionsComponent,
   ],
   imports: [
     CommonModule,
@@ -125,6 +127,7 @@ const CRATOS_UTILS = [
     ...PIPES,
     ...CRATOS_COMPONENTS,
     BusinessCascaderComponent,
+    BusinessPermissionsComponent,
   ],
 })
 export class SharedModule {

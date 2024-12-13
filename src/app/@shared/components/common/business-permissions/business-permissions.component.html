@@ -1,4 +1,10 @@
 <section>
+  <ng-container *ngIf="JSON.stringify(permissions.permissionByUser) !== '{}' ; else noPermissionsTemplate">
+    <ng-template [ngTemplateOutlet]="permissionsTemplate"></ng-template>
+  </ng-container>
+</section>
+
+<ng-template #permissionsTemplate>
   <div *ngIf="switch">
     <h3 style="margin: 5px 0" class="font-color-comment" (click)="onLabelSwitch()">By User</h3>
     <pre><span>{{ permissions.permissionByUser | json }}</span></pre>
@@ -8,4 +14,8 @@
     <h3 style="margin: 5px 0" class="font-color-comment" (click)="onLabelSwitch()">By Role</h3>
     <pre><span>{{ permissions.permissionByRole | json }}</span></pre>
   </div>
-</section>
+</ng-template>
+
+<ng-template #noPermissionsTemplate>
+  <d-tag [tag]="'No permissions'"></d-tag>
+</ng-template>

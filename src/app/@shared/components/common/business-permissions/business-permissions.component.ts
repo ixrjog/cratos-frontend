@@ -16,4 +16,5 @@ export class BusinessPermissionsComponent {
     this.switch = !this.switch;
   }
 
+  protected readonly JSON = JSON;
 }

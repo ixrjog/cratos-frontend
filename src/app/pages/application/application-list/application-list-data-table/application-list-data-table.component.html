@@ -67,6 +67,21 @@
         </ng-template>
       </d-cell>
     </d-column>
+    <d-column header="Permissions">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <pre><span *ngIf="rowItem['$show']">{{ rowItem['$applicationPermission'] | json }}</span></pre>
+          <d-icon
+            *ngIf="!rowItem['$show']"
+            [icon]="'icon-refresh'"
+            (click)="onApplicationPermission(rowItem)"
+            dLoading
+            [loading]="rowItem['$loading']"
+          >
+          </d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

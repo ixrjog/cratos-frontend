@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { UserPageQuery } from '../data/user';
 import { ApiService } from './api.service';
 import {
+  BusinessUserPermissionDetailsVO,
   GrantUserPermission,
+  QueryBusinessUserPermissionDetails,
   RevokeUserPermission,
   UserPermissionData,
   UserPermissionDetailsVO,
@@ -38,6 +40,10 @@ export class UserPermissionService extends UserPermissionData {
 
   revokeUserPermissionById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam(this.baseUrl, '/revoke/by/id', param);
+  }
+
+  queryBusinessUserPermissionDetails(param: QueryBusinessUserPermissionDetails): Observable<HttpResult<BusinessUserPermissionDetailsVO>> {
+    return this.apiService.post(this.baseUrl, '/business/details/query', param);
   }
 
 }

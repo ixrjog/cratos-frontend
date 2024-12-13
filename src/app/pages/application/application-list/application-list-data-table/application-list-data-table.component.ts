@@ -9,10 +9,11 @@ import { finalize, Observable, zip } from 'rxjs';
 import { ApplicationEdit, ApplicationPageQuery, ApplicationVO, ScanResource } from '../../../../@core/data/application';
 import { ApplicationEditorComponent } from './application-editor/application-editor.component';
 import { ApplicationService } from '../../../../@core/services/application.service';
-import { DeleteInstanceAsset } from '../../../../@core/data/ext-datasource';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { UserPermissionService } from '../../../../@core/services/user-permission.service';
+import { QueryBusinessUserPermissionDetails } from '../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -57,6 +58,7 @@ export class ApplicationListDataTableComponent implements OnInit {
     private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
+    private userPermissionService: UserPermissionService,
   ) {
   }
 
@@ -202,6 +204,24 @@ export class ApplicationListDataTableComponent implements OnInit {
           this.fetchData();
         });
     });
+  }
+
+  onApplicationPermission(rowItem: ApplicationVO) {
+    rowItem['$show'] = false;
+    rowItem['$applicationPermission'] = null;
+    rowItem['$loading'] = true;
+    const param: QueryBusinessUserPermissionDetails = {
+      businessType: this.businessType,
+      businessId: rowItem.id,
+    };
+    this.userPermissionService.queryBusinessUserPermissionDetails(param)
+      .pipe(
+        finalize(() => rowItem['$loading'] = false),
+      )
+      .subscribe(({ body }) => {
+        rowItem['$applicationPermission'] = body
+        rowItem['$show'] = true;
+      });
   }
 
   protected readonly getRowColor = getRowColor;

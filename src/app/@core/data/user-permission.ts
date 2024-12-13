@@ -17,7 +17,7 @@ export interface UserPermissionVO extends BaseVO, ValidVO {
 }
 
 export interface UserPermissionDetailsVO {
-  permissions: Map<string, Map<number, UserMergedPermissionsVO>>;
+  permissions: Map<string, UserMergedPermissionsVO[]>;
 }
 
 export interface UserMergedPermissionsVO {
@@ -61,6 +61,16 @@ export interface RevokeUserPermission {
   role: string;
 }
 
+export interface BusinessUserPermissionDetailsVO {
+  permissionByUser: Map<string, string[]>;
+  permissionByRole: Map<string, string[]>;
+}
+
+export interface QueryBusinessUserPermissionDetails {
+  businessType: string;
+  businessId: number;
+}
+
 export abstract class UserPermissionData {
 
   abstract queryUserPermissionPage(param: UserPageQuery): Observable<DataTable<UserPermissionVO>>;
@@ -73,4 +83,5 @@ export abstract class UserPermissionData {
 
   abstract getUserPermissionDetailsByUsername(param: { username: string }): Observable<HttpResult<UserPermissionDetailsVO>>;
 
+  abstract queryBusinessUserPermissionDetails(param: QueryBusinessUserPermissionDetails): Observable<HttpResult<BusinessUserPermissionDetailsVO>>;
 }

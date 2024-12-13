@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { KubernetesDeploymentVO, KubernetesPodVO } from '../../../../../../../@core/data/kubernetes';
+import { KubernetesDeploymentVO, KubernetesPodVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
 
 @Component({
@@ -19,4 +19,31 @@ export class KubernetesPodCardComponent {
     return this.kubernetesPod.metadata.name
       .substring(this.kubernetesDeployment.metadata.name.length + 1, this.kubernetesPod.metadata.name.length);
   }
+
+  getContainerPhase(status: PodStatusVO) {
+    if (!status.conditions) {
+      return 'Unknown';
+    }
+    if (status.conditions['ContainersReady']['status'] === 'False') {
+      return 'Failing';
+    }
+    if (status.conditions['Ready']['status'] === 'True') {
+      return 'Running';
+    }
+    return 'Waiting';
+  }
+
+  getContainerPhaseStyle(status: PodStatusVO) {
+    if (!status.conditions) {
+      return 'tag-danger';
+    }
+    if (status.conditions['ContainersReady']['status'] === 'False') {
+      return 'tag-danger';
+    }
+    if (status.conditions['Ready']['status'] === 'True') {
+      return 'tag-success';
+    }
+    return 'tag-initial';
+  }
+
 }

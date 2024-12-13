@@ -22,13 +22,11 @@
     [checkable]="true"
     (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column header="Name">
+    <d-column header="Name" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-row>
-            <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="rowItem['username']" [position]="'right'">
-              <span iconPrefix>{{ rowItem['username'] }}</span>
-            </d-icon>
+            <span dClipboard [content]="rowItem['username']">{{ rowItem['username'] }}</span>
           </d-row>
           <d-row>
             <span class="font-color-name">{{ rowItem['name'] }}</span>
@@ -40,51 +38,46 @@
             </span>
           </d-row>
           <d-row>
-            <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="rowItem['email']" [position]="'right'">
-              <span iconPrefix>{{ rowItem['email'] }}</span>
-            </d-icon>
+            <span dClipboard [content]="rowItem['email']">{{ rowItem['email'] }}</span>
           </d-row>
           <d-row>
-            <span>{{ rowItem['mobilePhone'] }}</span>
+            <span dClipboard [content]="rowItem['mobilePhone']">{{ rowItem['mobilePhone'] }}</span>
           </d-row>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Time">
+    <!--    <d-column header="Time">-->
+    <!--      <d-cell>-->
+    <!--        <ng-template let-rowItem="rowItem">-->
+    <!--          <span class="font-color-name" style="margin-right: 5px">Last Login</span>-->
+    <!--          <span>{{ rowItem['lastLogin'] | dSafeNullPipe }}</span>-->
+    <!--          <strong style="margin-left: 5px">{{ rowItem['lastLogin'] | dRelativeTime: limit | async }}</strong>-->
+    <!--          <br>-->
+    <!--          <span class="font-color-name" style="margin-right: 5px">Create Time</span>-->
+    <!--          <span>{{ rowItem['createTime'] }}</span>-->
+    <!--          <strong style="margin-left: 5px">{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>-->
+    <!--        </ng-template>-->
+    <!--      </d-cell>-->
+    <!--    </d-column>-->
+    <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span class="font-color-name" style="margin-right: 5px">Last Login</span>
-          <span>{{ rowItem['lastLogin'] | dSafeNullPipe }}</span>
-          <strong style="margin-left: 5px">{{ rowItem['lastLogin'] | dRelativeTime: limit | async }}</strong>
-          <br>
-          <span class="font-color-name" style="margin-right: 5px">Create Time</span>
-          <span>{{ rowItem['createTime'] }}</span>
-          <strong style="margin-left: 5px">{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Permissions" [width]="'200px'">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
+          <app-user-permissions
+            *ngIf="rowItem['$show']"
+            [userPermissions]="rowItem['$userPermission']"
+          ></app-user-permissions>
           <d-icon
-            dPopover
-            [icon]="'icon-view'"
-            [content]="permissionTemplate"
-            [position]="'left-top'"
-            [controlled]="true"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+            *ngIf="!rowItem['$show']"
+            [icon]="'icon-refresh'"
             (click)="onUserPermission(rowItem)"
+            dLoading
+            [loading]="rowItem['$loading']"
           >
           </d-icon>
-          <ng-template #permissionTemplate>
-            <span dLoading [loading]="rowItem['$loading']">
-              {{ rowItem['$userPermission'] | json }}
-            </span>
-          </ng-template>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="RBAC" [width]="'200px'">
+    <d-column header="RBAC" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-tags

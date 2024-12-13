@@ -14,10 +14,6 @@
         </d-tag>
         <ng-template #replicasTag let-tag="tag">
           <strong style="margin-right: 3px">Replicas {{tag}}</strong>
-          <span *ngFor="let i of Array(tag).fill('');let n=index">
-            <i class="fa-brands fa-codepen"></i>
-            <span *ngIf="(n+1) % 5 === 0" style="margin-right: 5px"></span>
-          </span>
         </ng-template>
       </div>
     </d-splitter-pane>

@@ -1,0 +1,22 @@
+<section>
+  <ng-container *ngIf="JSON.stringify(userPermissions) !== '{}' ; else noUserPermissionsTemplate">
+    <ng-template [ngTemplateOutlet]="userPermissionsTemplate"></ng-template>
+  </ng-container>
+</section>
+
+<ng-template #userPermissionsTemplate>
+  <span *ngFor="let permission of permissionMap| keyvalue">
+    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+    <span *ngFor="let item of permission.value">
+      {{ item.name }}:
+      <span *ngFor="let role of item.roles; let last = last" >
+        {{ role.role }}<span *ngIf="!last"> | </span>
+      </span>
+      <span style="margin-right: 10px"></span>
+    </span>
+  </span>
+</ng-template>
+
+<ng-template #noUserPermissionsTemplate>
+  <d-tag [tag]="'No permissions'"></d-tag>
+</ng-template>

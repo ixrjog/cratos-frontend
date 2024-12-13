@@ -184,6 +184,7 @@ export class UserListDataTableComponent implements OnInit {
   }
 
   onUserPermission(rowItem: UserVO) {
+    rowItem['$show'] = false;
     rowItem['$userPermission'] = null;
     rowItem['$loading'] = true;
     this.userPermissionService.getUserPermissionDetailsByUsername({ username: rowItem.username })
@@ -191,7 +192,8 @@ export class UserListDataTableComponent implements OnInit {
         finalize(() => rowItem['$loading'] = false),
       )
       .subscribe(({ body }) => {
-        rowItem['$userPermission'] = body;
+        rowItem['$userPermission'] = body.permissions;
+        rowItem['$show'] = true
       });
   }
 

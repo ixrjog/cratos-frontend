@@ -10,7 +10,7 @@
       <d-form-control>
         <input
           dTextInput
-          name="groupName"
+          name="name"
           [(ngModel)]="formData.name"
           [dValidateRules]="formRules['groupName']" />
       </d-form-control>
@@ -20,9 +20,9 @@
       <d-form-control>
         <input
           dTextInput
-          name="base"
+          name="templateKey"
           [(ngModel)]="formData.templateKey"
-          [dValidateRules]="formRules['base']" />
+          [dValidateRules]="formRules['templateKey']" />
       </d-form-control>
     </d-form-item>
     <d-form-item>
@@ -30,9 +30,8 @@
       <d-form-control>
         <input
           dTextInput
-          name="base"
-          [(ngModel)]="formData.apiVersion"
-          [dValidateRules]="formRules['base']" />
+          name="apiVersion"
+          [(ngModel)]="formData.apiVersion"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>

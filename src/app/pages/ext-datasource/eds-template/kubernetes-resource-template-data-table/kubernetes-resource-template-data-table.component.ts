@@ -10,6 +10,7 @@ import {
   KubernetesResourceTemplateEdit,
   KubernetesResourceTemplatePageQuery,
   KubernetesResourceTemplateVO,
+  LockTemplate,
 } from '../../../../@core/data/kubernetes-resource';
 import {
   KubernetesResourceTemplateEditorComponent,
@@ -41,6 +42,7 @@ export class KubernetesResourceTemplateDataTableComponent implements OnInit {
     name: '',
     templateKey: '',
     apiVersion: '',
+    locked: false,
     valid: true,
     custom: '',
     comment: '',
@@ -92,6 +94,19 @@ export class KubernetesResourceTemplateDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  onRowLock(rowItem) {
+    const param: LockTemplate = {
+      templateId: rowItem.id,
+      locked: !rowItem.locked,
+    };
+    this.kubernetesResourceService.lockTemplate(param).subscribe(
+      () => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+        rowItem.locked = !rowItem.locked
+      },
+    );
   }
 
   onRowNew() {

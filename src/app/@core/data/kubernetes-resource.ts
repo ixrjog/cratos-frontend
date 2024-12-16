@@ -9,6 +9,7 @@ export interface KubernetesResourceTemplateVO extends BaseVO, ValidVO, BusinessD
   name: string;
   templateKey: string;
   apiVersion: string;
+  locked: boolean;
   custom: string;
   comment: string;
   members: Map<string, Array<KubernetesResourceTemplateMemberVO>>;
@@ -51,6 +52,7 @@ export interface KubernetesResourceTemplateEdit {
   name: string;
   templateKey: string;
   apiVersion: string;
+  locked: boolean;
   valid: boolean;
   custom: string;
   comment: string;
@@ -103,6 +105,11 @@ export interface KubernetesResourcePageQuery extends PageQuery {
   kind: string;
 }
 
+export interface LockTemplate {
+  templateId: number;
+  locked: boolean;
+}
+
 export abstract class KubernetesResourceData {
 
   abstract getResourceKindOptions(): Observable<HttpResult<OptionsVO>>;
@@ -136,5 +143,7 @@ export abstract class KubernetesResourceData {
   abstract queryResourcePage(param: KubernetesResourcePageQuery): Observable<DataTable<KubernetesResourceVO>>;
 
   abstract deleteResourceById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract lockTemplate(param: LockTemplate): Observable<HttpResult<Boolean>>;
 
 }

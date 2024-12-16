@@ -21,7 +21,14 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="name" header="Name"></d-column>
+    <d-column header="Name">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem.name }}</span>
+          <i class="fa-solid fa-lock" *ngIf="rowItem.locked" style="margin-left: 5px"></i>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="templateKey" header="Template Key"></d-column>
     <d-column field="apiVersion" header="Api Version"></d-column>
     <d-column field="members" header="Members">
@@ -69,7 +76,12 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-edit'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+              [disabled]="rowItem.locked"
+            ></d-icon>
             <d-icon
               [disabled]="!onRowPreCreate(rowItem)"
               [icon]="'icon-run'"
@@ -88,6 +100,8 @@
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
+                <li class="devui-dropdown-item"
+                    (click)="onRowLock(rowItem)">{{ rowItem.locked ? 'Unlock' : 'Lock' }}</li>
                 <li class="devui-dropdown-item" (click)="onRowClone(rowItem)">Clone</li>
                 <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
               </ul>

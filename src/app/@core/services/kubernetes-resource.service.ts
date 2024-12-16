@@ -8,7 +8,7 @@ import {
   KubernetesResourceData, KubernetesResourceMemberEdit, KubernetesResourceMemberPageQuery, KubernetesResourcePageQuery,
   KubernetesResourceTemplateEdit, KubernetesResourceTemplateMemberVO,
   KubernetesResourceTemplatePageQuery,
-  KubernetesResourceTemplateVO, KubernetesResourceVO,
+  KubernetesResourceTemplateVO, KubernetesResourceVO, LockTemplate,
 } from '../data/kubernetes-resource';
 
 @Injectable()
@@ -82,6 +82,10 @@ export class KubernetesResourceService extends KubernetesResourceData {
 
   queryResourcePage(param: KubernetesResourcePageQuery): Observable<DataTable<KubernetesResourceVO>> {
     return this.apiService.post(this.baseUrl, '/page/query', param);
+  }
+
+  lockTemplate(param: LockTemplate): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/template/lock', param);
   }
 
 }

@@ -28,6 +28,18 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label [required]="true">Instances</d-form-label>
+      <d-form-control>
+        <d-checkbox-group
+          name="instances"
+          [options]="instanceOptions"
+          [(ngModel)]="selectedInstances"
+          [filterKey]="'name'"
+          [direction]="'row'"
+        ></d-checkbox-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label [required]="true">Custom</d-form-label>
       <d-form-control>
         <app-ace-editor

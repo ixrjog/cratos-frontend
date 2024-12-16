@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
-import { CreateResourceByTemplate, KubernetesResourceTemplateVO } from '../../../../../@core/data/kubernetes-resource';
+import {
+  CreateResourceByTemplate,
+  KubernetesResourceTemplateInstanceVO,
+  KubernetesResourceTemplateVO,
+} from '../../../../../@core/data/kubernetes-resource';
 import { DValidateRules } from 'ng-devui';
 import { KubernetesResourceService } from '../../../../../@core/services/kubernetes-resource.service';
 
@@ -16,6 +20,9 @@ export class KubernetesResourceCreateComponent implements OnInit {
   formData: KubernetesResourceTemplateVO;
   namespaceOptions = [];
   kindOptions = [];
+  instanceOptions: KubernetesResourceTemplateInstanceVO[] = [];
+  selectedInstances: KubernetesResourceTemplateInstanceVO[] = [];
+
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
     name: {
@@ -35,6 +42,9 @@ export class KubernetesResourceCreateComponent implements OnInit {
     this.formData = this.data['formData'];
     this.kindOptions = this.formData.kinds
     this.namespaceOptions = this.formData.namespaces
+    this.instanceOptions = this.formData.instances;
+    this.selectedInstances = this.instanceOptions
+      .filter((instance) => instance.selected);
   }
 
   addForm() {
@@ -43,6 +53,7 @@ export class KubernetesResourceCreateComponent implements OnInit {
       custom: this.formData.custom,
       namespaces: this.formData.namespaces,
       kinds: this.formData.kinds,
+      instances: this.selectedInstances.map(instance => instance.id),
     };
     return this.kubernetesResourceService.createResourceByTemplate(param);
   }

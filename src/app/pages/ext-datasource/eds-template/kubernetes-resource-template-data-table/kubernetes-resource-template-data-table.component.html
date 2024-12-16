@@ -34,17 +34,26 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="custom" header="Custom" [width]="'650px'">
+    <d-column field="custom" header="Custom">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <app-ace-editor
-            [readonly]="true"
-            [minLines]="5"
-            [maxLines]="15"
-            [mode]="'ace/mode/yaml'"
-            [aceValue]="cellItem"
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="customTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
           >
-          </app-ace-editor>
+          </d-icon>
+          <ng-template #customTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
         </ng-template>
       </d-cell>
     </d-column>
@@ -61,7 +70,12 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-run'" [operable]="true" (click)="onRowCreate(rowItem)"></d-icon>
+            <d-icon
+              [disabled]="!onRowPreCreate(rowItem)"
+              [icon]="'icon-run'"
+              [operable]="true"
+              (click)="onRowCreate(rowItem)"
+            ></d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
             <d-icon

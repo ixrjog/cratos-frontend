@@ -17,7 +17,7 @@ import {
 import { KubernetesResourceService } from '../../../../@core/services/kubernetes-resource.service';
 import { KubernetesResourceCreateComponent } from './kubernetes-resource-create/kubernetes-resource-create.component';
 import {
-  KubernetesResourceTemplateCloneComponent
+  KubernetesResourceTemplateCloneComponent,
 } from './kubernetes-resource-template-clone/kubernetes-resource-template-clone.component';
 
 @Component({
@@ -114,6 +114,13 @@ export class KubernetesResourceTemplateDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, rowItem);
+  }
+
+  onRowPreCreate(rowItem: KubernetesResourceTemplateVO): boolean {
+    if (rowItem.instances.length > 0 && rowItem.namespaces.length > 0 && rowItem.kinds.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   onRowCreate(rowItem: KubernetesResourceTemplateVO) {

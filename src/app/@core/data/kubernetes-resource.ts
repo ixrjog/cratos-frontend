@@ -12,8 +12,15 @@ export interface KubernetesResourceTemplateVO extends BaseVO, ValidVO, BusinessD
   custom: string;
   comment: string;
   members: Map<string, Array<KubernetesResourceTemplateMemberVO>>;
-  namespaces: [];
-  kinds: [];
+  namespaces: string[];
+  kinds: string[];
+  instances: KubernetesResourceTemplateInstanceVO[];
+}
+
+export interface KubernetesResourceTemplateInstanceVO {
+  name: string;
+  id: number;
+  selected: boolean;
 }
 
 export interface KubernetesResourceTemplateMemberVO extends BaseVO, ValidVO {
@@ -58,8 +65,9 @@ export interface CopyTemplate {
 export interface CreateResourceByTemplate {
   templateId: number;
   custom: string;
-  namespaces: [];
-  kinds: [];
+  namespaces: string[];
+  kinds: string[];
+  instances: number[];
 }
 
 export interface KubernetesResourceMemberEdit {

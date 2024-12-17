@@ -14,8 +14,11 @@
 
   <div>
     <span class="name">Restart Count:</span>
-    <span class="value" [style.color]="container.restartCount === 0 ? '':'#f66f6a'">
+    <span class="value">
       {{ container.restartCount | dSafeNullPipe }}
+      <i class="fa-solid fa-triangle-exclamation"
+         *ngIf="container.restartCount !== 0"
+         style="color: #f66f6a;margin-left: 5px"></i>
     </span>
   </div>
 

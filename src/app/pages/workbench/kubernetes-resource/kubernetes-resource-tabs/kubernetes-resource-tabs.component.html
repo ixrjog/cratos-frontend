@@ -15,20 +15,21 @@
       <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
     </ng-template>
   </d-select>
-  <d-select
+  <d-tabs
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.namespace"
+    (activeTabChange)="onResourceNamespaceChange($event)"
     dLoading
     [loading]="nameSpaceLoading"
-    class="select"
-    [options]="resourceNamespaceOptions"
-    [filterKey]="'label'"
-    [valueKey]="'value'"
-    [appendToBody]="true"
-    placeholder="Select namespace"
-    [(ngModel)]="queryParam.namespace"
-    (valueChange)="onResourceNamespaceChange($event)"
-    [disabled]="nameSpaceDisabled"
   >
-  </d-select>
+    <d-tab
+      *ngFor="let item of resourceNamespaceOptions"
+      [id]="item.value"
+      [title]="item.label"
+      [disabled]="item.disabled"
+    ></d-tab>
+  </d-tabs>
   <d-button class="button" bsStyle="common" (click)="fetchData()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter
   </d-button>

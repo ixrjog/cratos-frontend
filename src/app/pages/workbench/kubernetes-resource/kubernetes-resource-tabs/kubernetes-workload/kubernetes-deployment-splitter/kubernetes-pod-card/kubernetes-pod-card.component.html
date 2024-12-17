@@ -12,7 +12,7 @@
           [appendToBody]="true"
           [controlled]="true"
           class="pod-status"
-          [tag]="getContainerPhase(kubernetesPod.status)"
+          [tag]="kubernetesPod.status.phase"
           [labelStyle]="getContainerPhaseStyle(kubernetesPod.status)">
         </d-tag>
         <ng-template #podStatusTemplate>

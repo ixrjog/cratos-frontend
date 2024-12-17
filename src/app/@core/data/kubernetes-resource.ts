@@ -110,6 +110,13 @@ export interface LockTemplate {
   locked: boolean;
 }
 
+export interface ApplicationKubernetesDetailsRequest {
+  topic: string;
+  action: string;
+  applicationName?: string;
+  namespace?: string;
+}
+
 export abstract class KubernetesResourceData {
 
   abstract getResourceKindOptions(): Observable<HttpResult<OptionsVO>>;

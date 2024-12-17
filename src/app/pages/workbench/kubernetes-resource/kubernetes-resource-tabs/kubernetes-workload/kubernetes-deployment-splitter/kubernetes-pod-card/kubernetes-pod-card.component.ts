@@ -20,30 +20,17 @@ export class KubernetesPodCardComponent {
       .substring(this.kubernetesDeployment.metadata.name.length + 1, this.kubernetesPod.metadata.name.length);
   }
 
-  getContainerPhase(status: PodStatusVO) {
-    if (!status.conditions) {
-      return 'Unknown';
-    }
-    if (status.conditions['ContainersReady']['status'] === 'False') {
-      return 'Failing';
-    }
-    if (status.conditions['Ready']['status'] === 'True') {
-      return 'Running';
-    }
-    return 'Waiting';
-  }
-
   getContainerPhaseStyle(status: PodStatusVO) {
-    if (!status.conditions) {
+    if (status.phase === 'Failed')  {
       return 'tag-danger';
     }
-    if (status.conditions['ContainersReady']['status'] === 'False') {
-      return 'tag-danger';
+    if (status.phase === 'Pending')  {
+      return 'tag-initial';
     }
     if (status.conditions['Ready']['status'] === 'True') {
       return 'tag-success';
     }
-    return 'tag-initial';
+    return 'tag-wait';
   }
 
 }

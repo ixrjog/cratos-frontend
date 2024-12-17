@@ -26,7 +26,6 @@ export class EdsTemplateComponent {
   }
 
   onActiveTabChange(tab) {
-    console.log(tab)
     switch (tab) {
       case 'kubernetes-resource-template':
         this.kubernetesResourceTemplateDataTable.fetchData();

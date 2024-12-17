@@ -92,6 +92,12 @@ export interface DeploymentTemplateSpecContainerVO {
   main: boolean;
   name: string;
   image: string;
+  resources: DeploymentContainerResourcesVO;
+}
+
+export interface DeploymentContainerResourcesVO {
+  limits: Map<string, { amount: string, format: string }>;
+  requests: Map<string, { amount: string, format: string }>;
 }
 
 export interface RollingUpdateDeploymentVO {
@@ -140,5 +146,4 @@ export interface PodConditionVO {
   reason: string;
   status: string;
   type: string;
-
 }

@@ -33,3 +33,17 @@ export class WebSocketApiService {
   // }
 
 }
+
+
+export enum WsMessageTopicEnum {
+  HEARTBEAT = 'HEARTBEAT',
+  APPLICATION_KUBERNETES_DETAILS = 'APPLICATION_KUBERNETES_DETAILS',
+  PLAY_SSH_SESSION_AUDIT = 'PLAY_SSH_SESSION_AUDIT'
+
+}
+
+export enum WsMessageActionEnum {
+  QUERY = 'QUERY',
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  UNSUBSCRIBE = 'UNSUBSCRIBE'
+}

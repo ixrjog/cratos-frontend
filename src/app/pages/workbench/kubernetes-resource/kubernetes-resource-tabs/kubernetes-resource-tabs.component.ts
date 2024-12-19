@@ -13,6 +13,7 @@ import {
 } from '../../../../@core/services/ws.api.service';
 import { ApplicationKubernetesDetailsRequest } from '../../../../@core/data/kubernetes-resource';
 import { MessageResponse } from '../../../../@core/data/base-data';
+import { ToastUtil } from '../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-kubernetes-resource-tabs',
@@ -44,6 +45,7 @@ export class KubernetesResourceTabsComponent implements OnInit, OnDestroy {
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
     private wsApiService: WebSocketApiService,
+    private toastUtil: ToastUtil,
   ) {
   }
 
@@ -62,10 +64,14 @@ export class KubernetesResourceTabsComponent implements OnInit, OnDestroy {
           }),
         ).subscribe(
         ({ body }) => {
-          this.kubernetesDetails = body.body;
-          this.deploymentList = this.kubernetesDetails.workloads.deployments;
-          this.serviceList = this.kubernetesDetails.network.services;
-          this.show = true;
+          if (body.body.success) {
+            this.kubernetesDetails = body.body;
+            this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
+            this.serviceList = this.kubernetesDetails?.network?.services;
+            this.show = true;
+          } else {
+            this.toastUtil.onErrorToast(body.body.message, { width: '600px' });
+          }
         },
       );
       this.wsOnSubSend();
@@ -186,11 +192,15 @@ export class KubernetesResourceTabsComponent implements OnInit, OnDestroy {
     this.ws.onmessage = (event) => {
       const msg: MessageResponse<KubernetesDetailsVO> = JSON.parse(event.data);
       if (msg.topic === WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS) {
-        if (msg.body.application.name === this.queryParam.applicationName
-          && msg.body.namespace === this.queryParam.namespace) {
-          this.kubernetesDetails = msg.body;
-          this.deploymentList = this.kubernetesDetails.workloads.deployments;
-          this.serviceList = this.kubernetesDetails.network.services;
+        if (msg.body.success) {
+          if (msg.body.application.name === this.queryParam.applicationName
+            && msg.body.namespace === this.queryParam.namespace) {
+            this.kubernetesDetails = msg.body;
+            this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
+            this.serviceList = this.kubernetesDetails?.network?.services;
+          }
+        } else {
+          this.wsOnUnsubSend();
         }
       }
     };

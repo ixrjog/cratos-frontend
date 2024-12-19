@@ -2,7 +2,22 @@
 
   <div>
     <span class="name">Pod IP:</span>
-    <span class="value" dClipboard [content]="podStatus.podIP">{{ podStatus.podIP | dSafeNullPipe }}</span>
+    <span
+      class="value"
+      dClipboard
+      [content]="podStatus.podIP"
+    >
+      {{ podStatus.podIP | dSafeNullPipe }}
+      <span
+        dPopover
+        [trigger]="'hover'"
+        [controlled]="true"
+        [mouseEnterDelay]="500"
+        [content]="'Worker IP: ' + podStatus.hostIP"
+      >
+        <i class="fa-solid fa-location-dot"></i>
+      </span>
+    </span>
   </div>
 
   <div>

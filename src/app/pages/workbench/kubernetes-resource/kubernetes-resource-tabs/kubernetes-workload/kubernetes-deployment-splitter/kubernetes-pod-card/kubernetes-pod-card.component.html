@@ -2,35 +2,35 @@
   <d-card style="padding: 6px 8px">
     <d-card-header class="spacing-card-header">
       <d-card-title>
-        <h4 class="font-color-name" dClipboard [content]="kubernetesPod.metadata.name">
-          {{ subPodName() | dSafeNullPipe }}
-        </h4>
-        <d-tag
-          dPopover
-          [content]="podStatusTemplate"
-          [position]="'left-top'"
-          [appendToBody]="true"
-          [controlled]="true"
-          class="pod-status"
-          [tag]="kubernetesPod.status.phase"
-          [labelStyle]="getContainerPhaseStyle(kubernetesPod.status)">
-        </d-tag>
-        <ng-template #podStatusTemplate>
-          <div *ngFor="let condition of kubernetesPod.status.conditions | keyvalue">
-            <span>{{ condition.key }}: {{ condition.value.status }}</span>
-          </div>
-        </ng-template>
+        <div class="spacing-card-header-title">
+          <h4 class="font-color-name" dClipboard [content]="kubernetesPod.metadata.name">
+            {{ subPodName() | dSafeNullPipe }}
+          </h4>
+          <d-tag
+            dPopover
+            [content]="podStatusTemplate"
+            [position]="'left-top'"
+            [appendToBody]="true"
+            [controlled]="true"
+            class="pod-status"
+            [tag]="kubernetesPod.status.phase"
+            [labelStyle]="getContainerPhaseStyle(kubernetesPod.status)">
+          </d-tag>
+          <ng-template #podStatusTemplate>
+            <div *ngFor="let condition of kubernetesPod.status.conditions | keyvalue">
+              <span>{{ condition.key }}: {{ condition.value.status }}</span>
+            </div>
+          </ng-template>
+        </div>
       </d-card-title>
       <d-card-subtitle>
-        <div class="font-color-comment" dClipboard [content]="kubernetesPod.status.hostIP">
-          Working in {{ kubernetesPod.status.hostIP }}
-        </div>
-
-        <div class="font-color-comment">
-          {{ kubernetesPod.status.startTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
-          <strong style="margin-left: 3px">
-            {{ kubernetesPod.status.startTime | dRelativeTime: limit | async }}
-          </strong>
+        <div class="spacing-card-header-subtitle">
+          <div class="font-color-comment">
+            {{ kubernetesPod.status.startTime | dDatePipe: 'y/M/d HH:mm:ss z' }}
+            <strong style="margin-left: 3px">
+              {{ kubernetesPod.status.startTime | dRelativeTime: limit | async }}
+            </strong>
+          </div>
         </div>
       </d-card-subtitle>
     </d-card-header>

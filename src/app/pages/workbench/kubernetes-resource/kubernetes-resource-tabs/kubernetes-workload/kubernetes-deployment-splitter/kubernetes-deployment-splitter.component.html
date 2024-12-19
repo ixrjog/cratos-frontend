@@ -18,8 +18,8 @@
         <div class="layout-bottom">
           <strong style="margin-right: 2px">{{ kubernetesDeployment.spec.strategy.type }}:</strong>
           <span>
-            MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge }} /
-            MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable }}
+            MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge | dSafeNullPipe }} /
+            MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable | dSafeNullPipe }}
           </span>
         </div>
       </div>
@@ -42,9 +42,20 @@
               {{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}
             </p>
             <h3 class="h3-deployment">Resources</h3>
-            <p>
-              requests: {{ getResourcesRequests() }} / limits: {{ getResourcesLimits() }}
-            </p>
+            <span dPopover
+                  [trigger]="'hover'"
+                  [controlled]="true"
+                  [mouseEnterDelay]="500"
+                  [content]="resourcesTemplate"
+            >{{ getResourcesLimits() }}
+            </span>
+            <ng-template #resourcesTemplate>
+              <span>
+                Requests: {{ getResourcesRequests() }}
+                <br />
+                Limits:   {{ getResourcesLimits() }}
+              </span>
+            </ng-template>
           </div>
         </d-splitter-pane>
         <d-splitter-pane>

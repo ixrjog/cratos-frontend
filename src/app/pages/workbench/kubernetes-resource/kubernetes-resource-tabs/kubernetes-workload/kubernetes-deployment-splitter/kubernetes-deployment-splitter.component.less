@@ -44,6 +44,7 @@
 .splitter-header {
   display: flex;
   position: relative;
+  background: @devui-gray-5;
 
   .layout-bottom {
     vertical-align: bottom;
@@ -54,10 +55,14 @@
   .replicas-tag {
     position: absolute;
     bottom: 0;
-    right: 0;
+    top: 0;
+    right: 5px;
     opacity: 0.8;
+    margin: auto;
   }
 
+}
 
-
+.splitter-border {
+  border: 1px solid @devui-dividing-line;
 }

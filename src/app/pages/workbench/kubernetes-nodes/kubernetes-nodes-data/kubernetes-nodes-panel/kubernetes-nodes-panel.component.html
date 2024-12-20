@@ -1,0 +1,15 @@
+<d-panel [type]="'primary'" #panel [isCollapsed]="isCollapsed" [showAnimation]="true">
+  <d-panel-header>
+    <em class="icon icon-select-arrow" [ngClass]="{ open: panel.isCollapsed }"></em>
+    {{ zone }} ({{ kubernetesNodes.length }})
+  </d-panel-header>
+  <d-panel-body style="padding: 10px">
+    <div class="da-list-content">
+      <app-kubernetes-node-card
+        *ngFor="let node of kubernetesNodes"
+        [kubernetesNode]="node"
+        class="card-item"
+      ></app-kubernetes-node-card>
+    </div>
+  </d-panel-body>
+</d-panel>

@@ -1,0 +1,32 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.da-list-content {
+  display: flex;
+  flex-wrap: wrap;
+
+  .card-item {
+    margin: 8px 0 0 8px;
+    width: 265px;
+    background-color: @devui-base-bg;
+    cursor: pointer;
+
+    .card-icon {
+      cursor: pointer;
+      font-size: @devui-font-size-icon;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .card-icon + span {
+      vertical-align: middle;
+    }
+
+    .card-block {
+      margin-right: 16px;
+    }
+
+    &:hover {
+      box-shadow: @devui-shadow-length-hover @devui-light-shadow;
+    }
+  }
+}

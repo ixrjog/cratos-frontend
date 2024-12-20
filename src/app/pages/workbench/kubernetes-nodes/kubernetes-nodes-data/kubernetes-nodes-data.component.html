@@ -1,0 +1,38 @@
+<div class="spacing-search">
+  <d-select
+    class="select"
+    [filterKey]="'instanceName'"
+    [width]="580"
+    [appendToBody]="true"
+    [(ngModel)]="KubernetesInstance"
+    [searchFn]="onSearchKubernetesInstance"
+    [isSearch]="true"
+    placeholder="Select instance"
+    (valueChange)="onKubernetesInstanceChange($event)"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.instanceName }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+    </ng-template>
+  </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter
+  </d-button>
+</div>
+<div class="spacing-table" dLoading [loading]="loading">
+  <div *ngIf="show">
+    <div *ngFor="let item of kubernetesNodes | keyvalue; let first = first">
+      <app-kubernetes-nodes-panel
+        [zone]="item.key"
+        [kubernetesNodes]="item.value"
+        [isCollapsed]="first"
+      ></app-kubernetes-nodes-panel>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+

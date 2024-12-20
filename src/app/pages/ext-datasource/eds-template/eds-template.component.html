@@ -1,21 +1,21 @@
 <da-layout-row [daGutter]="[24, 24]">
   <da-col-item [daSpan]="24" [daXs]="24">
     <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
-      <d-tab [id]="'kubernetes-resource-template'" [title]="'Kubernetes Resource Template'">
+      <d-tab [id]="'kubernetes-resources-template'" [title]="'Kubernetes Resources Template'">
         <div class="app-data-table">
-          <app-kubernetes-resource-template-data-table
-            #kubernetesResourceTemplateDataTable></app-kubernetes-resource-template-data-table>
+          <app-kubernetes-resources-template-data-table
+            #kubernetesResourcesTemplateDataTable></app-kubernetes-resources-template-data-table>
         </div>
       </d-tab>
-      <d-tab [id]="'kubernetes-resource-member'" [title]="'Kubernetes Resource Member'">
+      <d-tab [id]="'kubernetes-resources-member'" [title]="'Kubernetes Resources Member'">
         <div class="app-data-table">
-          <app-kubernetes-resource-member-data-table
-            #kubernetesResourceMemberDataTable></app-kubernetes-resource-member-data-table>
+          <app-kubernetes-resources-member-data-table
+            #kubernetesResourcesMemberDataTable></app-kubernetes-resources-member-data-table>
         </div>
       </d-tab>
-      <d-tab [id]="'kubernetes-resource'" [title]="'Kubernetes Resource'">
+      <d-tab [id]="'kubernetes-resources'" [title]="'Kubernetes Resources'">
         <div class="app-data-table">
-          <app-kubernetes-resource-data-table #kubernetesResourceDataTable></app-kubernetes-resource-data-table>
+          <app-kubernetes-resources-data-table #kubernetesResourcesDataTable></app-kubernetes-resources-data-table>
         </div>
       </d-tab>
     </d-tabs>

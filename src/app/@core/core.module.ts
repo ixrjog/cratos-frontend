@@ -35,6 +35,7 @@ import { KubernetesResourceService } from './services/kubernetes-resource.servic
 import { ApplicationService } from './services/application.service';
 import { ApplicationResourceService } from './services/application-resource.service';
 import { UserPermissionService } from './services/user-permission.service';
+import { EdsKubernetesService } from './services/ext-datasource-kubernetes.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -74,7 +75,8 @@ export const CRATOS_PROVIDERS = [
   KubernetesResourceService,
   ApplicationService,
   ApplicationResourceService,
-  UserPermissionService
+  UserPermissionService,
+  EdsKubernetesService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

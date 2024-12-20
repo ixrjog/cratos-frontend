@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { HttpResult, MessageResponse } from './base-data';
 import { KubernetesDetailsVO } from './kubernetes';
 
-
 export interface QueryApplicationResourceKubernetesDetails {
   applicationName: string;
   namespace: string;

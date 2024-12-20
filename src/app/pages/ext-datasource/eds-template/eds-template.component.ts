@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  KubernetesResourceTemplateDataTableComponent,
-} from './kubernetes-resource-template-data-table/kubernetes-resource-template-data-table.component';
+  KubernetesResourcesTemplateDataTableComponent,
+} from './kubernetes-resources-template-data-table/kubernetes-resources-template-data-table.component';
 import {
-  KubernetesResourceMemberDataTableComponent,
-} from './kubernetes-resource-member-data-table/kubernetes-resource-member-data-table.component';
+  KubernetesResourcesMemberDataTableComponent,
+} from './kubernetes-resources-member-data-table/kubernetes-resources-member-data-table.component';
 import {
-  KubernetesResourceDataTableComponent
-} from './kubernetes-resource-data-table/kubernetes-resource-data-table.component';
+  KubernetesResourcesDataTableComponent
+} from './kubernetes-resources-data-table/kubernetes-resources-data-table.component';
 
 @Component({
   selector: 'app-eds-template',
@@ -16,25 +16,25 @@ import {
 })
 export class EdsTemplateComponent {
 
-  @ViewChild('kubernetesResourceTemplateDataTable') private kubernetesResourceTemplateDataTable: KubernetesResourceTemplateDataTableComponent;
-  @ViewChild('kubernetesResourceMemberDataTable') private kubernetesResourceMemberDataTable: KubernetesResourceMemberDataTableComponent;
-  @ViewChild('kubernetesResourceDataTable') private kubernetesResourceDataTable: KubernetesResourceDataTableComponent;
+  @ViewChild('kubernetesResourcesTemplateDataTable') private kubernetesResourcesTemplateDataTable: KubernetesResourcesTemplateDataTableComponent;
+  @ViewChild('kubernetesResourcesMemberDataTable') private kubernetesResourcesMemberDataTable: KubernetesResourcesMemberDataTableComponent;
+  @ViewChild('kubernetesResourcesDataTable') private kubernetesResourcesDataTable: KubernetesResourcesDataTableComponent;
 
-  tabActiveId: string | number = 'kubernetes-resource-template';
+  tabActiveId: string | number = 'kubernetes-resources-template';
 
   constructor() {
   }
 
   onActiveTabChange(tab) {
     switch (tab) {
-      case 'kubernetes-resource-template':
-        this.kubernetesResourceTemplateDataTable.fetchData();
+      case 'kubernetes-resources-template':
+        this.kubernetesResourcesTemplateDataTable.fetchData();
         break;
-      case 'kubernetes-resource-member':
-        this.kubernetesResourceMemberDataTable.getResourceKindOptions();
+      case 'kubernetes-resources-member':
+        this.kubernetesResourcesMemberDataTable.getResourceKindOptions();
         break;
-      case 'kubernetes-resource':
-        this.kubernetesResourceDataTable.init();
+      case 'kubernetes-resources':
+        this.kubernetesResourcesDataTable.init();
         break;
       default:
         break;

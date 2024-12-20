@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { KubernetesResourceComponent } from './kubernetes-resource/kubernetes-resource.component';
+import { KubernetesResourcesComponent } from './kubernetes-resources/kubernetes-resources.component';
 
 const routes: Routes = [
-  { path: 'kubernetes-resource', component: KubernetesResourceComponent },
+  { path: 'kubernetes-resources', component: KubernetesResourcesComponent },
 ];
 
 @NgModule({

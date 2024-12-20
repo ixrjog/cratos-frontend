@@ -1,4 +1,5 @@
 import { ApplicationVO } from './application';
+import { EdsInstanceVO } from './ext-datasource';
 
 export interface KubernetesDetailsVO {
   application: ApplicationVO;
@@ -67,6 +68,8 @@ export interface KubernetesMetadataVO {
   name: string;
   generateName: string;
   uid: string;
+  labels: Map<string, string>;
+  creationTimestamp: Date;
 }
 
 export interface DeploymentSpecVO {
@@ -140,6 +143,48 @@ export interface KubernetesContainerVO {
 }
 
 export interface PodConditionVO {
+  lastProbeTime: Date;
+  lastTransitionTime: Date;
+  message: string;
+  reason: string;
+  status: string;
+  type: string;
+}
+
+export interface KubernetesNodeDetailsVO {
+  success: boolean;
+  message: string;
+  kubernetesInstance: EdsInstanceVO;
+  nodes: Map<string, KubernetesNodeVO[]>;
+}
+
+export interface KubernetesNodeVO {
+  region: string;
+  zone: string;
+  metadata: KubernetesMetadataVO;
+  status: KubernetesNodeStatusVO;
+}
+
+export interface KubernetesNodeStatusVO {
+  addresses: Map<string, { address: string, type: string }>;
+  nodeInfo: KubernetesNodeSystemInfoVO;
+  conditions: Map<string, KubernetesNodeConditionVO>;
+}
+
+export interface KubernetesNodeSystemInfoVO {
+  architecture: string;
+  bootID: string;
+  containerRuntimeVersion: string;
+  kernelVersion: string;
+  kubeProxyVersion: string;
+  kubeletVersion: string;
+  machineID: string;
+  operatingSystem: string;
+  osImage: string;
+  systemUUID: string;
+}
+
+export interface KubernetesNodeConditionVO {
   lastProbeTime: Date;
   lastTransitionTime: Date;
   message: string;

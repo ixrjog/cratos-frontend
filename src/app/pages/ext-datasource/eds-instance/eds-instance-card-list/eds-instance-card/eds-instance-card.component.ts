@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { EdsInstanceVO } from '../../../../../@core/data/ext-datasource';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
+import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import {
@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.util';
 import { EdsInstanceScheduleComponent } from '../eds-instance-schedule/eds-instance-schedule.component';
 import { AddScheduleJob } from '../../../../../@core/data/ext-datasource-schedule';
+import { EdsKubernetesService } from '../../../../../@core/services/ext-datasource-kubernetes.service';
+import { QueryKubernetesNodeDetails } from '../../../../../@core/data/ext-datasource-kubernetes';
 
 @Component({
   selector: 'app-eds-instance-card',
@@ -51,10 +53,11 @@ export class EdsInstanceCardComponent {
 
   constructor(
     private route: Router,
-    private edsService: EdsService,
     private dialogUtil: DialogUtil,
     private drawerUtil: DrawerUtil,
     private toastUtil: ToastUtil,
+    private edsService: EdsService,
+    private edsKubernetesService: EdsKubernetesService,
   ) {
   }
 
@@ -134,4 +137,11 @@ export class EdsInstanceCardComponent {
     this.route.navigate([ '/pages/eds/asset' ], { queryParams: { instanceId: instanceId } });
   }
 
+  onSearchInstanceDetails(instanceName: string) {
+    const param: QueryKubernetesNodeDetails = {
+      instanceName: instanceName,
+    };
+    this.edsKubernetesService.queryKubernetesNodeDetails(param)
+      .subscribe(({ body }) => console.log(body));
+  }
 }

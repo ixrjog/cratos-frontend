@@ -10,6 +10,8 @@ export class KubernetesNodesPanelComponent {
 
   @Input() isCollapsed = true;
   @Input() zone: string;
+  @Input() kubeletVersion: string;
   @Input() kubernetesNodes: KubernetesNodeVO[];
+
 
 }

@@ -4,20 +4,79 @@
       <d-card-title>
         <div class="spacing-card-header-title">
           <h4 class="font-color-name" dClipboard [content]="kubernetesNode.metadata.name">
-            {{ kubernetesNode.metadata.name | dSafeNullPipe }}
+            {{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
           </h4>
+          <d-tag
+            dPopover
+            [content]="nodeStatusTemplate"
+            [position]="'left-top'"
+            [appendToBody]="true"
+            [controlled]="true"
+            class="node-status"
+            [tag]="getNodeStatus()"
+            [labelStyle]="getNodeStatusStyle()">
+          </d-tag>
+          <ng-template #nodeStatusTemplate>
+            <div *ngFor="let condition of kubernetesNode.status.conditions | keyvalue">
+              <span>{{ condition.key }}: {{ condition.value.message }}({{ condition.value.status }})</span>
+            </div>
+          </ng-template>
         </div>
       </d-card-title>
       <d-card-subtitle>
         <div class="spacing-card-header-subtitle">
-          <div class="font-color-comment">
-            {{kubernetesNode.status.addresses}}
-          </div>
+          <span class="font-color-comment">
+            {{ kubernetesNode.metadata.creationTimestamp | dDatePipe: 'y/M/d HH:mm:ss z' }}
+            <strong style="margin-left: 3px">
+              {{ kubernetesNode.metadata.creationTimestamp | dRelativeTime: limit | async }}
+            </strong>
+          </span>
+          <span
+            class="node-labels"
+            dPopover
+            [content]="nodeLabelsTemplate"
+            [position]="'right-top'"
+            [controlled]="true"
+          >
+            <i class="fa-solid fa-tags"></i>
+          </span>
+          <ng-template #nodeLabelsTemplate>
+            <div *ngFor="let label of kubernetesNode.metadata.labels | keyvalue">
+              <span>{{ label.key }}: {{ label.value }}</span>
+            </div>
+          </ng-template>
         </div>
       </d-card-subtitle>
     </d-card-header>
     <d-card-content style="margin: 0">
       <div class="spacing-card-content">
+        <div>
+          <span class="name">Node IP:</span>
+          <span class="value"
+                dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']"
+          >
+            {{ kubernetesNode.status.addresses['InternalIP']['address'] | dSafeNullPipe }}
+          </span>
+        </div>
+
+        <div>
+          <span class="name">OS Image:</span>
+          <span class="value">{{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
+        </div>
+
+        <div>
+          <span class="name">Kubelet Version:</span>
+          <span
+            class="value"
+            [style.color]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'var(--devui-danger)':''"
+          >{{ kubernetesNode.status.nodeInfo.kubeletVersion | dSafeNullPipe }}
+          </span>
+        </div>
+
+        <div>
+          <span class="name">Container Runtime:</span>
+          <span class="value">{{ kubernetesNode.status.nodeInfo.containerRuntimeVersion | dSafeNullPipe }}</span>
+        </div>
       </div>
     </d-card-content>
     <!--    <d-card-actions [align]="'end'" style="margin: 0">-->

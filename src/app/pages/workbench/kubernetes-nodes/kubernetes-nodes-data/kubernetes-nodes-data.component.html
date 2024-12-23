@@ -20,19 +20,25 @@
 </div>
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
-    <div *ngFor="let item of kubernetesNodes | keyvalue; let first = first">
-      <app-kubernetes-nodes-panel
-        [zone]="item.key"
-        [kubernetesNodes]="item.value"
-        [isCollapsed]="first"
-      ></app-kubernetes-nodes-panel>
-    </div>
-
+    <d-panel>
+      <d-panel-header>
+        <div>
+          <strong>
+            {{ kubernetesNodeDetailsVO.kubernetesInstance.instanceName }}
+            <{{kubernetesNodeDetailsVO.kubernetesInstance.version}}>
+          </strong>
+        </div>
+      </d-panel-header>
+      <d-panel-body style="padding: 0">
+        <div *ngFor="let item of kubernetesNodes | keyvalue; let first = first">
+          <app-kubernetes-nodes-panel
+            [zone]="item.key"
+            [kubernetesNodes]="item.value"
+            [kubeletVersion]="kubernetesNodeDetailsVO.kubernetesInstance.version"
+            [isCollapsed]="first"
+          ></app-kubernetes-nodes-panel>
+        </div>
+      </d-panel-body>
+    </d-panel>
   </div>
 </div>
-
-
-
-
-
-

@@ -8,6 +8,7 @@
       <app-kubernetes-node-card
         *ngFor="let node of kubernetesNodes"
         [kubernetesNode]="node"
+        [kubeletVersion]="kubeletVersion"
         class="card-item"
       ></app-kubernetes-node-card>
     </div>

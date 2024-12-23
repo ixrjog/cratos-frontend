@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { KubernetesNodeVO } from '../../../../../../@core/data/kubernetes';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-kubernetes-node-card',
@@ -8,4 +9,21 @@ import { KubernetesNodeVO } from '../../../../../../@core/data/kubernetes';
 })
 export class KubernetesNodeCardComponent {
   @Input() kubernetesNode: KubernetesNodeVO;
+  @Input() kubeletVersion: string;
+
+  protected readonly limit = RELATIVE_TIME_LIMIT;
+
+  getNodeStatusStyle(): string {
+    if (this.kubernetesNode.status.conditions['Ready']['status'] === 'True') {
+      return 'tag-success';
+    }
+    return 'tag-wait';
+  }
+
+  getNodeStatus(): string {
+    if (this.kubernetesNode.status.conditions['Ready']['status'] === 'True') {
+      return 'Ready';
+    }
+    return 'Not Ready';
+  }
 }

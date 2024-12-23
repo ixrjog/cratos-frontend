@@ -3,19 +3,22 @@
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
+          <d-badge [showDot]="true" [status]="getNodeStatus()" style="margin-right: 3px">
+          </d-badge>
           <h4 class="font-color-name" dClipboard [content]="kubernetesNode.metadata.name">
             {{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
           </h4>
-          <d-tag
+          <span
+            *ngIf="showNodeStatusConditions()"
             dPopover
             [content]="nodeStatusTemplate"
-            [position]="'left-top'"
+            [position]="'right-top'"
             [appendToBody]="true"
             [controlled]="true"
-            class="node-status"
-            [tag]="getNodeStatus()"
-            [labelStyle]="getNodeStatusStyle()">
-          </d-tag>
+            [style.color]="'#cc6414'"
+          >
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </span>
           <ng-template #nodeStatusTemplate>
             <div *ngFor="let condition of kubernetesNode.status.conditions | keyvalue">
               <span>{{ condition.key }}: {{ condition.value.message }}({{ condition.value.status }})</span>
@@ -60,16 +63,35 @@
         </div>
 
         <div>
+          <span class="name">Arch:</span>
+          <span class="value">
+            {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
+            &nbsp;{{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
+          </span>
+        </div>
+
+        <div>
+          <span class="name">Instance:</span>
+          <span class="value">
+            {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
+          </span>
+        </div>
+
+        <div>
           <span class="name">OS Image:</span>
           <span class="value">{{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
         </div>
 
-        <div>
+        <div style="line-height: 20px">
           <span class="name">Kubelet Version:</span>
           <span
             class="value"
             [style.color]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'var(--devui-danger)':''"
-          >{{ kubernetesNode.status.nodeInfo.kubeletVersion | dSafeNullPipe }}
+          >
+            <d-tag
+              [tag]="kubernetesNode.status.nodeInfo.kubeletVersion"
+              [labelStyle]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'red-w98':'green-w98'"
+            ></d-tag>
           </span>
         </div>
 
@@ -78,6 +100,7 @@
           <span class="value">{{ kubernetesNode.status.nodeInfo.containerRuntimeVersion | dSafeNullPipe }}</span>
         </div>
       </div>
+
     </d-card-content>
     <!--    <d-card-actions [align]="'end'" style="margin: 0">-->
     <!--      <div>-->

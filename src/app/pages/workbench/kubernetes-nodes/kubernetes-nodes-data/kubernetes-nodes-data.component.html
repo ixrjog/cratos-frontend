@@ -23,10 +23,13 @@
     <d-panel>
       <d-panel-header>
         <div>
-          <strong>
+          <strong style="margin-right: 5px">
             {{ kubernetesNodeDetailsVO.kubernetesInstance.instanceName }}
-            <{{kubernetesNodeDetailsVO.kubernetesInstance.version}}>
           </strong>
+          <d-tag
+            [tag]=kubernetesNodeDetailsVO.kubernetesInstance.version
+            [labelStyle]="'blue-w98'"
+          ></d-tag>
         </div>
       </d-panel-header>
       <d-panel-body style="padding: 0">

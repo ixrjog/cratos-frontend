@@ -13,17 +13,15 @@ export class KubernetesNodeCardComponent {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
-  getNodeStatusStyle(): string {
-    if (this.kubernetesNode.status.conditions['Ready']['status'] === 'True') {
-      return 'tag-success';
-    }
-    return 'tag-wait';
+  showNodeStatusConditions() {
+    return this.kubernetesNode.status.conditions['Ready']['status'] !== 'True';
+
   }
 
-  getNodeStatus(): string {
+  getNodeStatus() {
     if (this.kubernetesNode.status.conditions['Ready']['status'] === 'True') {
-      return 'Ready';
+      return 'success';
     }
-    return 'Not Ready';
+    return 'warning';
   }
 }

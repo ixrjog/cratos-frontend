@@ -13,5 +13,4 @@ export class KubernetesNodesPanelComponent {
   @Input() kubeletVersion: string;
   @Input() kubernetesNodes: KubernetesNodeVO[];
 
-
 }

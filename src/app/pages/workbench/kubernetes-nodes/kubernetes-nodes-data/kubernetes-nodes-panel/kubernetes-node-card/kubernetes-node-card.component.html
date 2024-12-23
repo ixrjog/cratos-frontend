@@ -73,7 +73,7 @@
         <div>
           <span class="name">Instance:</span>
           <span class="value">
-            {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
+            {{ kubernetesNode.metadata.labels['node.kubernetes.io/instance-type'] | dSafeNullPipe }}
           </span>
         </div>
 

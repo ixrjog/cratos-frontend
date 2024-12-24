@@ -31,7 +31,9 @@
     <d-column header="Info">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          name:&nbsp;{{ rowItem.name }}
+          applicationName:&nbsp;{{ rowItem.applicationName }}
+          <br/>
+          deploymentName:&nbsp;{{ rowItem.name }}
           <br/>
           namespace:&nbsp;{{ rowItem.namespace }}
           <br/>
@@ -158,7 +160,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'250px'">
+    <d-column header="Actions" [width]="'150px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

@@ -87,6 +87,7 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
     ).subscribe(
       ({ body }) => {
         this.table.data = body.data;
+        this.table.pager.total = body.totalNum;
         this.table.data.filter(row => !row.standard)
           .map(row => row['$rowClass'] = 'table-row-invalid');
       });
@@ -152,6 +153,5 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
 
 
   onRowFix(rowItem) {
-
   }
 }

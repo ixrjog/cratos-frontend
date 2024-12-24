@@ -40,7 +40,3 @@ export function onFetchValidData<T extends ValidVO>(table: Table<T>, ob: Observa
     res => _onFetchValidData(table, res),
   );
 }
-
-
-
-

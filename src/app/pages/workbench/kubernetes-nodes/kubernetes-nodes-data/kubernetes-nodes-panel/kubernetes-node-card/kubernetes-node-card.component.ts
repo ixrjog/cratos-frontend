@@ -15,7 +15,6 @@ export class KubernetesNodeCardComponent {
 
   showNodeStatusConditions() {
     return this.kubernetesNode.status.conditions['Ready']['status'] !== 'True';
-
   }
 
   getNodeStatus() {

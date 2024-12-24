@@ -3,10 +3,10 @@
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
-          <d-badge [showDot]="true" [status]="getNodeStatus()" style="margin-right: 3px">
+          <d-badge [showDot]="true" [status]="getNodeStatus()">
           </d-badge>
           <h4 class="font-color-name" dClipboard [content]="kubernetesNode.metadata.name">
-            {{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
+            &nbsp;{{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
           </h4>
           <span
             *ngIf="showNodeStatusConditions()"
@@ -66,12 +66,12 @@
           <span class="name">Arch:</span>
           <span class="value">
             {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
-            &nbsp;{{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
+            -{{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
           </span>
         </div>
 
         <div>
-          <span class="name">Instance:</span>
+          <span class="name">Instance Type:</span>
           <span class="value">
             {{ kubernetesNode.metadata.labels['node.kubernetes.io/instance-type'] | dSafeNullPipe }}
           </span>
@@ -102,11 +102,5 @@
       </div>
 
     </d-card-content>
-    <!--    <d-card-actions [align]="'end'" style="margin: 0">-->
-    <!--      <div>-->
-    <!--        <d-button bsStyle="text" style="margin-right: 8px">Login</d-button>-->
-    <!--        <d-button bsStyle="text">Log</d-button>-->
-    <!--      </div>-->
-    <!--    </d-card-actions>-->
   </d-card>
 </div>

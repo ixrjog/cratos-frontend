@@ -19,6 +19,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../@shared/shared.module';
 import { ApplicationResourcesComponent } from './application-list/application-list-data-table/application-resources/application-resources.component';
+import { ApplicationActuatorListComponent } from './application-actuator-list/application-actuator-list.component';
+import { ApplicationActuatorListDataTableComponent } from './application-actuator-list/application-actuator-list-data-table/application-actuator-list-data-table.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { ApplicationResourcesComponent } from './application-list/application-li
     ApplicationListComponent,
     ApplicationListDataTableComponent,
     ApplicationEditorComponent,
-    ApplicationResourcesComponent
+    ApplicationResourcesComponent,
+    ApplicationActuatorListComponent,
+    ApplicationActuatorListDataTableComponent
   ],
   imports: [
     CommonModule,

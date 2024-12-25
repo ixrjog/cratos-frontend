@@ -1,197 +1,184 @@
-<div class="spacing-search">
+<div class='spacing-search'>
   <d-category-search
-    style="width: 800px"
-    class="category-search"
-    [category]="category"
-    [selectedTags]="selectedTags"
-    [tagMaxWidth]="200"
-    [extendedConfig]="extendedConfig"
-    [groupOrderConfig]="groupOrderConfig"
-    [toggleScrollToTail]="true"
-    [categoryInGroup]="true"
-    (searchEvent)="searchEvent($event)"
-    (selectedTagsChange)="selectedTagsChange($event)"
+    style='width: 800px'
+    class='category-search'
+    [category]='category'
+    [selectedTags]='selectedTags'
+    [tagMaxWidth]='200'
+    [extendedConfig]='extendedConfig'
+    [groupOrderConfig]='groupOrderConfig'
+    [toggleScrollToTail]='true'
+    [categoryInGroup]='true'
+    (searchEvent)='searchEvent($event)'
+    (selectedTagsChange)='selectedTagsChange($event)'
   ></d-category-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
-  <span class="right-button">
-    <d-button bsStyle="danger" (click)="onScanAll()">Scan All</d-button>
+  <d-button class='button' bsStyle='common' (click)='fetchData()'>Filter</d-button>
+  <span class='right-button'>
+    <d-button bsStyle='danger' (click)='onScanAll()'>Scan All</d-button>
   </span>
 </div>
-<div class="spacing-table">
+<div class='spacing-table'>
   <d-data-table
     dLoading
-    [dataSource]="table.data"
+    [dataSource]='table.data'
     [tableOverflowType]="'overlay'"
-    [backdrop]="true"
-    [scrollable]="true"
+    [backdrop]='true'
+    [scrollable]='true'
     [loadingStyle]="'infinity'"
-    [loading]="table.loading"
+    [loading]='table.loading'
   >
-    <d-column header="Info">
+    <d-column field='applicationName' header='Appliction' />
+    <d-column header='Kubernetes Resource'>
       <d-cell>
-        <ng-template let-rowItem="rowItem">
-          applicationName:&nbsp;{{ rowItem.applicationName }}
-          <br/>
-          deploymentName:&nbsp;{{ rowItem.name }}
-          <br/>
-          namespace:&nbsp;{{ rowItem.namespace }}
-          <br/>
-          framework:&nbsp;{{ rowItem.framework }}
+        <ng-template let-rowItem='rowItem'>
+          Kubernetes:&nbsp;{{ rowItem.instanceName }}
+          <br />
+          Namespace:&nbsp;{{ rowItem.namespace }}
+          <br />
+          Deployment:&nbsp;{{ rowItem.name }}
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="standard" header="Standard"></d-column>
-    <d-column header="Asset@InstanceName">
+    <d-column field='framework' header='Framework' />
+    <d-column header='Probe'>
       <d-cell>
-        <ng-template let-rowItem="rowItem">
-          {{ rowItem.applicationName }}@{{ rowItem.instanceName }}
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Probe">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
+        <ng-template let-rowItem='rowItem'>
           <div>
-            <d-badge [showDot]="true"
+            <d-badge [showDot]='true'
                      [status]="rowItem['container'].startupProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Startup</span>
+            <span class='font-color-name' style='margin-right: 10px'>&nbsp;Startup</span>
             <d-icon
               dPopover
-              style="vertical-align: sub"
+              style='vertical-align: sub'
               [icon]="'icon-view'"
-              [content]="startupProbeTemplate"
+              [content]='startupProbeTemplate'
               [position]="'left-top'"
-              [controlled]="true"
+              [controlled]='true'
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"
             >
             </d-icon>
             <ng-template #startupProbeTemplate>
               <app-ace-editor
-                [readonly]="true"
+                [readonly]='true'
                 [aceValue]="rowItem['startupProbe']"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].startupProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].startupProbe.path }}</span>
+            <div style='margin-left: 2em'>
+              {{ rowItem['container'].startupProbe.path }} [:{{ rowItem['container'].startupProbe.port }}]
             </div>
           </div>
           <div>
-            <d-badge [showDot]="true"
+            <d-badge [showDot]='true'
                      [status]="rowItem['container'].livenessProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Liveness</span>
+            <span class='font-color-name' style='margin-right: 10px'>&nbsp;Liveness</span>
             <d-icon
               dPopover
-              style="vertical-align: sub"
+              style='vertical-align: sub'
               [icon]="'icon-view'"
-              [content]="livenessProbeTemplate"
+              [content]='livenessProbeTemplate'
               [position]="'left-top'"
-              [controlled]="true"
+              [controlled]='true'
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"
             >
             </d-icon>
             <ng-template #livenessProbeTemplate>
               <app-ace-editor
-                [readonly]="true"
+                [readonly]='true'
                 [aceValue]="rowItem['livenessProbe']"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].livenessProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].livenessProbe.path }}</span>
+            <div style='margin-left: 2em'>
+              {{ rowItem['container'].livenessProbe.path }} [:{{ rowItem['container'].livenessProbe.port }}]
             </div>
           </div>
           <div>
-            <d-badge [showDot]="true"
+            <d-badge [showDot]='true'
                      [status]="rowItem['container'].readinessProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Readiness</span>
+            <span class='font-color-name' style='margin-right: 10px'>&nbsp;Readiness</span>
             <d-icon
               dPopover
-              style="vertical-align: sub"
+              style='vertical-align: sub'
               [icon]="'icon-view'"
-              [content]="readinessProbeTemplate"
+              [content]='readinessProbeTemplate'
               [position]="'left-top'"
-              [controlled]="true"
+              [controlled]='true'
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"
             >
             </d-icon>
             <ng-template #readinessProbeTemplate>
               <app-ace-editor
-                [readonly]="true"
+                [readonly]='true'
                 [aceValue]="rowItem['readinessProbe']"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].readinessProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].readinessProbe.path }}</span>
+            <div style='margin-left: 2em'>
+              {{ rowItem['container'].readinessProbe.path }} [:{{ rowItem['container'].readinessProbe.port }}]
             </div>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Lifecycle">
+    <d-column header='Lifecycle'>
       <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <d-badge [showDot]="true" [status]="rowItem['container'].lifecycle.standard?'success':'warning'"></d-badge>
-          <span class="font-color-name" style="margin-right: 10px">&nbsp;PreStop:</span>
+        <ng-template let-rowItem='rowItem'>
+          <d-badge [showDot]='true' [status]="rowItem['container'].lifecycle.standard?'success':'warning'"></d-badge>
+          <span class='font-color-name' style='margin-right: 10px'>&nbsp;PreStop:</span>
           <d-icon
             dPopover
-            style="vertical-align: sub"
+            style='vertical-align: sub'
             [icon]="'icon-view'"
-            [content]="lifecycleTemplate"
+            [content]='lifecycleTemplate'
             [position]="'left-top'"
-            [controlled]="true"
+            [controlled]='true'
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"
           >
           </d-icon>
           <ng-template #lifecycleTemplate>
             <app-ace-editor
-              [readonly]="true"
+              [readonly]='true'
               [aceValue]="rowItem['lifecycle']"
               [mode]="'ace/mode/yaml'"
               [theme]="'ace/theme/tomorrow_night'"
             ></app-ace-editor>
           </ng-template>
-          <div style="margin-left: 2em">
+          <div style='margin-left: 2em'>
             <span>{{ rowItem['container'].lifecycle.preStopExecCommand }}</span>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'150px'">
+    <d-column field='standard' header='Standard' />
+    <d-column header='Actions' [width]="'150px'">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
+        <ng-template let-rowItem='rowItem'>
           <d-icon-group>
-            <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onRowFix(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-publish'" [operable]='true' (click)='onRowFix(rowItem)'></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class='no-data'>Fetch Data</div>
     </ng-template>
   </d-data-table>
 </div>
-<div class="spacing-pagination">
+<div class='spacing-pagination'>
   <d-pagination
-    class="pagination"
-    [total]="table.pager.total"
-    [(pageSize)]="table.pager.pageSize"
-    [(pageIndex)]="table.pager.pageIndex"
-    [canViewTotal]="true"
-    [canChangePageSize]="true"
-    [maxItems]="5"
-    (pageIndexChange)="pageIndexChange($event)"
-    (pageSizeChange)="pageSizeChange($event)"
+    class='pagination'
+    [total]='table.pager.total'
+    [(pageSize)]='table.pager.pageSize'
+    [(pageIndex)]='table.pager.pageIndex'
+    [canViewTotal]='true'
+    [canChangePageSize]='true'
+    [maxItems]='5'
+    (pageIndexChange)='pageIndexChange($event)'
+    (pageSizeChange)='pageSizeChange($event)'
   >
   </d-pagination>
 </div>

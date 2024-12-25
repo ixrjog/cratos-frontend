@@ -27,27 +27,19 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column header="Info">
+    <d-column field="applicationName" header="Appliction"></d-column>
+    <d-column header="Kubernetes Resource">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          applicationName:&nbsp;{{ rowItem.applicationName }}
-          <br/>
-          deploymentName:&nbsp;{{ rowItem.name }}
-          <br/>
-          namespace:&nbsp;{{ rowItem.namespace }}
-          <br/>
-          framework:&nbsp;{{ rowItem.framework }}
+          <span dClipboard [content]="rowItem.instanceName">Kubernetes:&nbsp;{{ rowItem.instanceName }}</span>
+          <br />
+          <span dClipboard [content]="rowItem.namespace">Namespace:&nbsp;{{ rowItem.namespace }}</span>
+          <br />
+          <span dClipboard [content]="rowItem.name">Deployment:&nbsp;{{ rowItem.name }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="standard" header="Standard"></d-column>
-    <d-column header="Asset@InstanceName">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          {{ rowItem.applicationName }}@{{ rowItem.instanceName }}
-        </ng-template>
-      </d-cell>
-    </d-column>
+    <d-column field="framework" header="Framework"></d-column>
     <d-column header="Probe">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -74,9 +66,7 @@
               ></app-ace-editor>
             </ng-template>
             <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].startupProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].startupProbe.path }}</span>
+              {{ rowItem['container'].startupProbe.path }} [:{{ rowItem['container'].startupProbe.port }}]
             </div>
           </div>
           <div>
@@ -102,9 +92,7 @@
               ></app-ace-editor>
             </ng-template>
             <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].livenessProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].livenessProbe.path }}</span>
+              {{ rowItem['container'].livenessProbe.path }} [:{{ rowItem['container'].livenessProbe.port }}]
             </div>
           </div>
           <div>
@@ -130,9 +118,7 @@
               ></app-ace-editor>
             </ng-template>
             <div style="margin-left: 2em">
-              <span>port:&nbsp;{{ rowItem['container'].readinessProbe.port }}</span>
-              <br />
-              <span>path:&nbsp;{{ rowItem['container'].readinessProbe.path }}</span>
+              {{ rowItem['container'].readinessProbe.path }} [:{{ rowItem['container'].readinessProbe.port }}]
             </div>
           </div>
         </ng-template>
@@ -164,6 +150,13 @@
           <div style="margin-left: 2em">
             <span>{{ rowItem['container'].lifecycle.preStopExecCommand }}</span>
           </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="standard" header="Standard">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag [tag]="cellItem?'Ture':'False'" [labelStyle]="cellItem?'green-w98':'red-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>

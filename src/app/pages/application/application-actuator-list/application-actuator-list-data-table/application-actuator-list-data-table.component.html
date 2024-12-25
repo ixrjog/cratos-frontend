@@ -26,7 +26,6 @@
     [scrollable]="true"
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
-    [checkable]="true"
   >
     <d-column header="Info">
       <d-cell>
@@ -41,7 +40,8 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Asset">
+    <d-column field="standard" header="Standard"></d-column>
+    <d-column header="Asset@InstanceName">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           {{ rowItem.applicationName }}@{{ rowItem.instanceName }}
@@ -52,7 +52,9 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <span class="font-color-name" style="margin-right: 10px">startupProbe:</span>
+            <d-badge [showDot]="true"
+                     [status]="rowItem['container'].startupProbe.standard?'success':'warning'"></d-badge>
+            <span class="font-color-name" style="margin-right: 10px">&nbsp;Startup</span>
             <d-icon
               dPopover
               style="vertical-align: sub"
@@ -78,7 +80,9 @@
             </div>
           </div>
           <div>
-            <span class="font-color-name" style="margin-right: 10px">livenessProbe:</span>
+            <d-badge [showDot]="true"
+                     [status]="rowItem['container'].livenessProbe.standard?'success':'warning'"></d-badge>
+            <span class="font-color-name" style="margin-right: 10px">&nbsp;Liveness</span>
             <d-icon
               dPopover
               style="vertical-align: sub"
@@ -104,7 +108,9 @@
             </div>
           </div>
           <div>
-            <span class="font-color-name" style="margin-right: 10px">readinessProbe:</span>
+            <d-badge [showDot]="true"
+                     [status]="rowItem['container'].readinessProbe.standard?'success':'warning'"></d-badge>
+            <span class="font-color-name" style="margin-right: 10px">&nbsp;Readiness</span>
             <d-icon
               dPopover
               style="vertical-align: sub"
@@ -135,7 +141,8 @@
     <d-column header="Lifecycle">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span class="font-color-name" style="margin-right: 10px">preStop:</span>
+          <d-badge [showDot]="true" [status]="rowItem['container'].lifecycle.standard?'success':'warning'"></d-badge>
+          <span class="font-color-name" style="margin-right: 10px">&nbsp;PreStop:</span>
           <d-icon
             dPopover
             style="vertical-align: sub"

@@ -2,7 +2,7 @@
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
       <div class="splitter-header">
-        <h2 style="margin: 0 20px 0 0">
+        <h2 style="margin: 0 10px">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
         <d-tag
@@ -26,9 +26,9 @@
     </d-splitter-pane>
     <d-splitter-pane>
       <d-splitter orientation="horizontal">
-        <d-splitter-pane [resizable]="false" size="300px">
-          <div>
-            <h3 class="h3-deployment">Containers</h3>
+        <d-splitter-pane [resizable]="false" size="400px">
+          <div style="padding: 5px" class="splitter-left">
+            <h3 class="name h3-deployment">Containers</h3>
             <d-radio-group
               [name]="'container-name-radio'"
               [values]="kubernetesDeployment['$containers']"
@@ -37,25 +37,56 @@
               (change)="valueChange($event)"
             >
             </d-radio-group>
-            <h3 class="h3-deployment">Image</h3>
-            <p style="overflow: auto" dClipboard [content]="kubernetesDeployment['$chosenItemImage']">
-              {{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}
-            </p>
-            <h3 class="h3-deployment">Resources</h3>
-            <span dPopover
-                  [trigger]="'hover'"
-                  [controlled]="true"
-                  [mouseEnterDelay]="500"
-                  [content]="resourcesTemplate"
-            >{{ getResourcesLimits() }}
-            </span>
-            <ng-template #resourcesTemplate>
-              <span>
-                Requests: {{ getResourcesRequests() }}
-                <br />
-                Limits:   {{ getResourcesLimits() }}
+
+            <div>
+              <h3 class="name h3-deployment">Image</h3>
+              <span class="value"
+                    dClipboard [content]="kubernetesDeployment['$chosenItemImage']"
+              >{{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}</span>
+            </div>
+
+            <div>
+              <h3 class="name h3-deployment">Resources</h3>
+              <span class="value">
+                <span dPopover
+                      [trigger]="'hover'"
+                      [controlled]="true"
+                      [mouseEnterDelay]="500"
+                      [content]="resourcesTemplate"
+                >
+                  <i class="fa-solid fa-microchip"></i>&nbsp;
+                  {{ getResourcesLimits() }}
+                </span>
+                <ng-template #resourcesTemplate>
+                  <span>
+                    Requests: {{ getResourcesRequests() }}
+                    <br />
+                    Limits:   {{ getResourcesLimits() }}
+                  </span>
+                </ng-template>
               </span>
-            </ng-template>
+            </div>
+            <!--            <h3 class="h3-deployment">Image</h3>-->
+            <!--            <p style="overflow: auto" dClipboard [content]="kubernetesDeployment['$chosenItemImage']">-->
+            <!--              {{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}-->
+            <!--            </p>-->
+            <!--            <h3 class="h3-deployment">Resources</h3>-->
+            <!--            <span dPopover-->
+            <!--                  [trigger]="'hover'"-->
+            <!--                  [controlled]="true"-->
+            <!--                  [mouseEnterDelay]="500"-->
+            <!--                  [content]="resourcesTemplate"-->
+            <!--            >-->
+            <!--              <i class="fa-solid fa-microchip"></i>&nbsp;-->
+            <!--              {{ getResourcesLimits() }}-->
+            <!--            </span>-->
+            <!--            <ng-template #resourcesTemplate>-->
+            <!--              <span>-->
+            <!--                Requests: {{ getResourcesRequests() }}-->
+            <!--                <br />-->
+            <!--                Limits:   {{ getResourcesLimits() }}-->
+            <!--              </span>-->
+            <!--            </ng-template>-->
           </div>
         </d-splitter-pane>
         <d-splitter-pane>

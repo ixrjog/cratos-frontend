@@ -36,10 +36,12 @@ import { BusinessCascaderComponent } from './components/common/business-cascader
 import { XtermLogsComponent } from './components/common/xterm-logs/xterm-logs.component';
 import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
 import { NumberTransModule } from 'ng-devui/number-translation';
-import { FlowUnitPipe } from './pipe/flow-unit.pipe';
+import { FlowUnitTranPipe } from './pipe/flow-unit-tran.pipe';
 import { ArrayLengthPipe } from './pipe/array-length.pipe';
 import { ContainerImageTagPipe } from './pipe/container-image.pipe';
 import { BusinessPermissionsComponent } from './components/common/business-permissions/business-permissions.component';
+import { UnitTranPipe } from './pipe/unit-tran.pipe';
+import { StringReplacePipe } from './pipe/string-replace.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -59,9 +61,11 @@ const PIPES = [
   EdsAssetTypePipe,
   ClipPipe,
   SshInstancePipe,
-  FlowUnitPipe,
+  FlowUnitTranPipe,
   ArrayLengthPipe,
-  ContainerImageTagPipe
+  ContainerImageTagPipe,
+  UnitTranPipe,
+  StringReplacePipe
 ];
 
 const CRATOS_COMPONENTS = [

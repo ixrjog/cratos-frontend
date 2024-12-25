@@ -163,6 +163,7 @@ export interface KubernetesNodeVO {
   zone: string;
   metadata: KubernetesMetadataVO;
   status: KubernetesNodeStatusVO;
+  attributes: Map<string, string>;
 }
 
 export interface KubernetesNodeStatusVO {

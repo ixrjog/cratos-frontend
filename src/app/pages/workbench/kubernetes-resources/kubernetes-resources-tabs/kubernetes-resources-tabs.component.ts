@@ -50,12 +50,14 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   }
 
   fetchData() {
+    this.show = false;
+    this.kubernetesDetails = null;
+    this.deploymentList = [];
+    this.serviceList = [];
     if (this.queryParam.applicationName !== '' && this.queryParam.namespace !== '') {
       const param: QueryApplicationResourceKubernetesDetails = {
         ...this.queryParam,
       };
-      this.show = false;
-      this.kubernetesDetails = null;
       this.loading = true;
       this.applicationResourceService.queryApplicationResourceKubernetesDetails(param)
         .pipe(
@@ -95,6 +97,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.queryParam.applicationName = application?.name;
     this.queryParam.namespace = ''
     this.wsOnUnsubSend();
+    this.fetchData()
     if (this.queryParam.applicationName) {
       this.getResourceNamespaceOptions();
     }

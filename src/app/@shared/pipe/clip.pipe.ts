@@ -10,5 +10,4 @@ export class ClipPipe implements PipeTransform {
     if (val.length > defaultLength) return val.slice(0, defaultLength) + '...';
     return val;
   }
-
 }

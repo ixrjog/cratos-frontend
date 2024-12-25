@@ -78,6 +78,17 @@
         </div>
 
         <div>
+          <span class="name">Instance Info:</span>
+          <span class="value">
+            <i class="fa-solid fa-microchip"></i>
+            cpu&nbsp;{{ kubernetesNode.attributes['status.capacity.cpu'] |stringReplace:'/':'' }}&nbsp;
+            mem&nbsp;{{ kubernetesNode.attributes['status.capacity.memory'] | unitTran }}&nbsp;
+            <i class="fa-solid fa-hard-drive"></i>
+            {{ kubernetesNode.attributes['status.capacity.ephemeral-storage'] | unitTran }}
+          </span>
+        </div>
+
+        <div>
           <span class="name">OS Image:</span>
           <span class="value">{{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
         </div>

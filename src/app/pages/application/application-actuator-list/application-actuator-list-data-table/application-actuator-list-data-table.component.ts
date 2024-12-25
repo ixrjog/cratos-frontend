@@ -6,7 +6,7 @@ import { ApplicationActuatorPageQuery, ApplicationActuatorVO } from '../../../..
 import { ApplicationActuatorService } from '../../../../@core/services/application-actuator.service';
 import { ICategorySearchTagItem } from 'ng-devui';
 import { finalize } from 'rxjs';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { getRowColor, onFetchData, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-application-actuator-list-data-table',
@@ -78,19 +78,7 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    this.table.data = [];
-    this.table.loading = true;
-    this.applicationActuatorService.queryApplicationActuatorPage(param).pipe(
-      finalize(() => {
-        this.table.loading = false;
-      }),
-    ).subscribe(
-      ({ body }) => {
-        this.table.data = body.data;
-        this.table.pager.total = body.totalNum;
-        this.table.data.filter(row => !row.standard)
-          .map(row => row['$rowClass'] = 'table-row-invalid');
-      });
+    onFetchData(this.table, this.applicationActuatorService.queryApplicationActuatorPage(param));
   }
 
   ngOnInit() {

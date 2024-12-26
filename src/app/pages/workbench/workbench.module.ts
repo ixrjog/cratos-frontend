@@ -29,6 +29,8 @@ import { KubernetesNodesComponent } from './kubernetes-nodes/kubernetes-nodes.co
 import { KubernetesNodesDataComponent } from './kubernetes-nodes/kubernetes-nodes-data/kubernetes-nodes-data.component';
 import { KubernetesNodesPanelComponent } from './kubernetes-nodes/kubernetes-nodes-data/kubernetes-nodes-panel/kubernetes-nodes-panel.component';
 import { KubernetesNodeCardComponent } from './kubernetes-nodes/kubernetes-nodes-data/kubernetes-nodes-panel/kubernetes-node-card/kubernetes-node-card.component';
+import { KubernetesContainerLifecycleComponent } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-container-lifecycle/kubernetes-container-lifecycle.component';
+import { KubernetesContainerProbeComponent } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-container-probe/kubernetes-container-probe.component';
 
 
 @NgModule({
@@ -46,6 +48,8 @@ import { KubernetesNodeCardComponent } from './kubernetes-nodes/kubernetes-nodes
     KubernetesNodesDataComponent,
     KubernetesNodesPanelComponent,
     KubernetesNodeCardComponent,
+    KubernetesContainerLifecycleComponent,
+    KubernetesContainerProbeComponent,
   ],
   imports: [
     CommonModule,

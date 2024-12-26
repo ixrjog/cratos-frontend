@@ -122,7 +122,7 @@ export interface ContainerProbeVO {
   successThreshold: number;
   terminationGracePeriodSeconds: number;
   timeoutSeconds: number;
-  isEmpty: boolean;
+  empty: boolean;
 }
 
 export interface ContainerHTTPGetActionVO {

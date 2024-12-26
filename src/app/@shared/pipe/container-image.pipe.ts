@@ -8,3 +8,13 @@ export class ContainerImageTagPipe implements PipeTransform {
     return val.substring(index + 1, val.length);
   }
 }
+
+@Pipe({ name: 'shortContainerImage' })
+export class ShortContainerImage implements PipeTransform {
+
+  transform(val: string) {
+    const index = val.indexOf('/');
+    return '{CR}' + val.substring(index, val.length);
+  }
+
+}

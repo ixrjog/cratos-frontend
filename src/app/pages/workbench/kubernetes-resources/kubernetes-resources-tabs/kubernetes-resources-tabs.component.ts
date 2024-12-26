@@ -25,10 +25,12 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   queryParam = {
     applicationName: '',
     namespace: '',
+    name: '',
   };
 
   tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
+  resourceNameOptions = [];
   nameSpaceLoading = false;
   loading = false;
   kubernetesDetails: KubernetesDetailsVO = null;
@@ -71,6 +73,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
             this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
             this.serviceList = this.kubernetesDetails?.network?.services;
             this.show = true;
+            this.resourceNameOptions = this.deploymentList.map(deployment => deployment.metadata.name);
           } else {
             this.toastUtil.onErrorToast(body.body.message, { width: '600px' });
           }
@@ -105,11 +108,14 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   onResourceNamespaceChange(tab) {
     this.queryParam.namespace = tab;
+    this.queryParam.name = '';
     this.fetchData();
   }
 
   getResourceNamespaceOptions() {
     this.nameSpaceLoading = true;
+    this.queryParam.name = '';
+    this.resourceNameOptions = [];
     this.applicationService.getMyResourceNamespaceOptions({ applicationName: this.application.name })
       .pipe(
         finalize(() => {
@@ -209,4 +215,5 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     };
   }
 
+  protected readonly JSON = JSON;
 }

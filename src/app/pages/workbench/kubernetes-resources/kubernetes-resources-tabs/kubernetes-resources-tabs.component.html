@@ -30,6 +30,12 @@
       [disabled]="item.disabled"
     ></d-tab>
   </d-tabs>
+  <d-select
+    class="select"
+    placeholder="Select resource name"
+    [options]="resourceNameOptions"
+    [(ngModel)]="queryParam.name"
+  ></d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter
   </d-button>

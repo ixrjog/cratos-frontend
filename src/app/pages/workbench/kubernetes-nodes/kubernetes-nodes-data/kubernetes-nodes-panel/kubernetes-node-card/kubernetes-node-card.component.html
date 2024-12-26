@@ -54,7 +54,7 @@
     <d-card-content style="margin: 0">
       <div class="spacing-card-content">
         <div>
-          <span class="name">Node IP:</span>
+          <span class="name">Node IP</span>
           <span class="value"
                 dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']"
           >
@@ -63,7 +63,7 @@
         </div>
 
         <div>
-          <span class="name">Arch:</span>
+          <span class="name">Arch</span>
           <span class="value">
             {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
             {{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
@@ -71,14 +71,14 @@
         </div>
 
         <div>
-          <span class="name">Instance Type:</span>
+          <span class="name">Instance Type</span>
           <span class="value">
             {{ kubernetesNode.metadata.labels['node.kubernetes.io/instance-type'] | dSafeNullPipe }}
           </span>
         </div>
 
         <div>
-          <span class="name">Instance Info:</span>
+          <span class="name">Instance Info</span>
           <span class="value">
             <i class="fa-solid fa-microchip"></i>
             cpu&nbsp;{{ kubernetesNode.attributes['status.capacity.cpu'] |stringReplace:'/':'' }}&nbsp;
@@ -89,14 +89,14 @@
         </div>
 
         <div>
-          <span class="name">OS Image:</span>
+          <span class="name">OS Image</span>
           <span class="value inline-value"
                 [title]="kubernetesNode.status.nodeInfo.osImage">
             {{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
         </div>
 
         <div style="line-height: 20px">
-          <span class="name">Kubelet Version:</span>
+          <span class="name">Kubelet Version</span>
           <span
             class="value"
             [style.color]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'var(--devui-danger)':''"
@@ -109,7 +109,7 @@
         </div>
 
         <div>
-          <span class="name">Container Runtime:</span>
+          <span class="name">Container Runtime</span>
           <span class="value">{{ kubernetesNode.status.nodeInfo.containerRuntimeVersion | dSafeNullPipe }}</span>
         </div>
       </div>

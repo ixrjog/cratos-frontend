@@ -50,12 +50,19 @@
     float: right;
     font-size: 12px;
   }
+
+  .inline-value {
+    text-align: right;
+    white-space: nowrap;
+    width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .splitter-header {
   display: flex;
   position: relative;
-  //background: @devui-gray-5;
 
   .layout-bottom {
     vertical-align: bottom;

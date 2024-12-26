@@ -31,20 +31,6 @@
               {{ kubernetesPod.status.startTime | dRelativeTime: limit | async }}
             </strong>
           </div>
-          <span
-            class="pod-labels"
-            dPopover
-            [content]="nodeLabelsTemplate"
-            [position]="'right-top'"
-            [controlled]="true"
-          >
-            <i class="fa-solid fa-tags"></i>
-          </span>
-          <ng-template #nodeLabelsTemplate>
-            <div *ngFor="let label of kubernetesDeployment.metadata.labels | keyvalue">
-              <span>{{ label.key }}: {{ label.value }}</span>
-            </div>
-          </ng-template>
         </div>
       </d-card-subtitle>
     </d-card-header>

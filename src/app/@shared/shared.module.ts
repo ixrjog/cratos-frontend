@@ -38,7 +38,7 @@ import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
 import { NumberTransModule } from 'ng-devui/number-translation';
 import { FlowUnitTranPipe } from './pipe/flow-unit-tran.pipe';
 import { ArrayLengthPipe } from './pipe/array-length.pipe';
-import { ContainerImageTagPipe } from './pipe/container-image.pipe';
+import { ContainerImageTagPipe, ShortContainerImage } from './pipe/container-image.pipe';
 import { BusinessPermissionsComponent } from './components/common/business-permissions/business-permissions.component';
 import { UnitTranPipe } from './pipe/unit-tran.pipe';
 import { StringReplacePipe } from './pipe/string-replace.pipe';
@@ -65,7 +65,8 @@ const PIPES = [
   ArrayLengthPipe,
   ContainerImageTagPipe,
   UnitTranPipe,
-  StringReplacePipe
+  StringReplacePipe,
+  ShortContainerImage
 ];
 
 const CRATOS_COMPONENTS = [

@@ -1,0 +1,32 @@
+<section>
+  <span
+    dPopover
+    [position]="'right-top'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="postStartTemplate"
+  >
+    PostStart
+  </span>
+  <ng-template #postStartTemplate>
+    <span>
+     {{ lifecycle.postStart?.exec?.command | dSafeNullPipe }}
+    </span>
+  </ng-template>
+  <span
+    dPopover
+    [position]="'right-top'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="preStopTemplate"
+  >
+    PreStop
+  </span>
+  <ng-template #preStopTemplate>
+    <span>
+    {{ lifecycle.preStop?.exec?.command | dSafeNullPipe }}
+    </span>
+  </ng-template>
+</section>

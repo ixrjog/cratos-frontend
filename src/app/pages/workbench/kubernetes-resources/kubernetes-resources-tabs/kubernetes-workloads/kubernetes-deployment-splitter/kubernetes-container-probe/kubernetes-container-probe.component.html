@@ -1,0 +1,91 @@
+<section>
+  <span
+    dPopover
+    [position]="'right-top'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="startupTemplate"
+  >
+    Startup
+  </span>
+  <ng-template #startupTemplate>
+    <div *ngIf="startupProbe.empty">None</div>
+    <div *ngIf="!startupProbe.empty">
+      <div>command:&nbsp;{{ startupProbe?.exec?.command | dSafeNullPipe }}</div>
+      <div>httpGet</div>
+      <div style="margin-left: 1em">
+        <div>httpHeaders:&nbsp;{{ startupProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>host:&nbsp;{{ startupProbe?.httpGet?.host | dSafeNullPipe }}</div>
+        <div>path:&nbsp;{{ startupProbe?.httpGet?.path | dSafeNullPipe }}</div>
+        <div>port:&nbsp;{{ startupProbe?.httpGet?.port | dSafeNullPipe }}</div>
+        <div>scheme:&nbsp;{{ startupProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+      </div>
+      <div>initialDelaySeconds:&nbsp;{{ startupProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+      <div>failureThreshold:&nbsp;{{ startupProbe.failureThreshold | dSafeNullPipe }}</div>
+      <div>periodSeconds:&nbsp;{{ startupProbe.periodSeconds | dSafeNullPipe }}</div>
+      <div>successThreshold:&nbsp;{{ startupProbe.successThreshold | dSafeNullPipe }}</div>
+      <div>timeoutSeconds:&nbsp;{{ startupProbe.timeoutSeconds | dSafeNullPipe }}</div>
+    </div>
+
+  </ng-template>
+  <span
+    dPopover
+    [position]="'right-top'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="livenessTemplate"
+  >
+    Liveness
+  </span>
+  <ng-template #livenessTemplate>
+    <div *ngIf="livenessProbe.empty">None</div>
+    <div *ngIf="!livenessProbe.empty">
+      <div>command:&nbsp;{{ livenessProbe?.exec?.command | dSafeNullPipe }}</div>
+      <div>httpGet</div>
+      <div style="margin-left: 1em">
+        <div>httpHeaders:&nbsp;{{ livenessProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>host:&nbsp;{{ livenessProbe?.httpGet?.host | dSafeNullPipe }}</div>
+        <div>path:&nbsp;{{ livenessProbe?.httpGet?.path | dSafeNullPipe }}</div>
+        <div>port:&nbsp;{{ livenessProbe?.httpGet?.port | dSafeNullPipe }}</div>
+        <div>scheme:&nbsp;{{ livenessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+      </div>
+      <div>initialDelaySeconds:&nbsp;{{ livenessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+      <div>failureThreshold:&nbsp;{{ livenessProbe.failureThreshold | dSafeNullPipe }}</div>
+      <div>periodSeconds:&nbsp;{{ livenessProbe.periodSeconds | dSafeNullPipe }}</div>
+      <div>successThreshold:&nbsp;{{ livenessProbe.successThreshold | dSafeNullPipe }}</div>
+      <div>timeoutSeconds:&nbsp;{{ livenessProbe.timeoutSeconds | dSafeNullPipe }}</div>
+    </div>
+  </ng-template>
+  <span
+    dPopover
+    [position]="'right-top'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="readinessTemplate"
+  >
+    Readiness
+  </span>
+  <ng-template #readinessTemplate>
+    <div *ngIf="readinessProbe.empty">None</div>
+    <div *ngIf="!readinessProbe.empty">
+      <div>command:&nbsp;{{ readinessProbe?.exec?.command | dSafeNullPipe }}</div>
+      <div>httpGet</div>
+      <div style="margin-left: 1em">
+        <div>httpHeaders:&nbsp;{{ readinessProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>host:&nbsp;{{ readinessProbe?.httpGet?.host | dSafeNullPipe }}</div>
+        <div>path:&nbsp;{{ readinessProbe?.httpGet?.path | dSafeNullPipe }}</div>
+        <div>port:&nbsp;{{ readinessProbe?.httpGet?.port | dSafeNullPipe }}</div>
+        <div>scheme:&nbsp;{{ readinessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+      </div>
+      <div>initialDelaySeconds:&nbsp;{{ readinessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+      <div>failureThreshold:&nbsp;{{ readinessProbe.failureThreshold | dSafeNullPipe }}</div>
+      <div>periodSeconds:&nbsp;{{ readinessProbe.periodSeconds | dSafeNullPipe }}</div>
+      <div>successThreshold:&nbsp;{{ readinessProbe.successThreshold | dSafeNullPipe }}</div>
+      <div>timeoutSeconds:&nbsp;{{ readinessProbe.timeoutSeconds | dSafeNullPipe }}</div>
+    </div>
+
+  </ng-template>
+</section>

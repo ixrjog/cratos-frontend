@@ -1,7 +1,7 @@
 <section>
 
   <div>
-    <span class="name">Pod IP:</span>
+    <span class="name">Pod IP</span>
     <span
       class="value"
       dClipboard
@@ -21,14 +21,14 @@
   </div>
 
   <div>
-    <span class="name">Image Tag:</span>
+    <span class="name">Image Tag</span>
     <span class="value">
       {{ container.image | containerImageTag | dSafeNullPipe }}
     </span>
   </div>
 
   <div>
-    <span class="name">Restart Count:</span>
+    <span class="name">Restart Count</span>
     <span class="value" *ngIf="container.restartCount !== 0">
       {{ container.restartCount | dSafeNullPipe }}
       <i class="fa-solid fa-triangle-exclamation"

@@ -2,9 +2,34 @@
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
       <div class="splitter-header">
+
         <h2 style="margin: 0 10px">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
+
+        <div class="layout-bottom" style="margin-left: 10px">
+          <span
+            dPopover
+            [content]="nodeLabelsTemplate"
+            [position]="'right-top'"
+            [controlled]="true">
+            <i class="fa-solid fa-tags"></i>
+          </span>
+          <ng-template #nodeLabelsTemplate>
+            <div *ngFor="let label of kubernetesDeployment.metadata.labels | keyvalue">
+              <span>{{ label.key }}: {{ label.value }}</span>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="layout-bottom" style="margin-left: 10px">
+          <strong>{{ kubernetesDeployment.spec.strategy.type }}:&nbsp;</strong>
+          <span>
+            MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge | dSafeNullPipe }} /
+            MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable | dSafeNullPipe }}
+          </span>
+        </div>
+
         <d-tag
           class="replicas-tag"
           [tag]="kubernetesDeployment.spec.replicas"
@@ -13,15 +38,8 @@
         >
         </d-tag>
         <ng-template #replicasTag let-tag="tag">
-          <span style="margin-right: 3px">replicas x{{tag}}</span>
+          <span style="margin-right: 3px">replicas x{{ tag }}</span>
         </ng-template>
-        <div class="layout-bottom">
-          <strong style="margin-right: 2px">{{ kubernetesDeployment.spec.strategy.type }}:</strong>
-          <span>
-            MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge | dSafeNullPipe }} /
-            MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable | dSafeNullPipe }}
-          </span>
-        </div>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>
@@ -40,19 +58,22 @@
 
             <div>
               <span class="name">Image</span>
-              <span class="value"
+              <span class="value inline-value"
+                    [title]="kubernetesDeployment['$container'].image"
                     dClipboard [content]="kubernetesDeployment['$container'].image"
-              >{{ kubernetesDeployment['$container'].image | dSafeNullPipe }}</span>
+              >{{ kubernetesDeployment['$container'].image | shortContainerImage | dSafeNullPipe }}</span>
             </div>
 
             <div>
               <span class="name">Resources</span>
               <span class="value">
-                <span dPopover
-                      [trigger]="'hover'"
-                      [controlled]="true"
-                      [mouseEnterDelay]="500"
-                      [content]="resourcesTemplate"
+                <span
+                  dPopover
+                  [position]="'right-top'"
+                  [trigger]="'hover'"
+                  [controlled]="true"
+                  [mouseEnterDelay]="500"
+                  [content]="resourcesTemplate"
                 >
                   <i class="fa-solid fa-microchip"></i>&nbsp;{{ getResourcesLimits() }}
                 </span>
@@ -66,23 +87,27 @@
               </span>
             </div>
 
-<!--            <div>-->
-<!--              <span class="name">Lifecycle</span>-->
-<!--              <span class="value">-->
-<!--                PostStart<span>{{ kubernetesDeployment['$container'].lifecycle.postStart | json }}</span>-->
-<!--                <br />-->
-<!--                PreStop<span>{{ kubernetesDeployment['$container'].lifecycle.preStop | json }}</span>-->
-<!--              </span>-->
-<!--            </div>-->
+            <div>
+              <span class="name">Lifecycle</span>
+              <span class="value">
+               <app-kubernetes-container-lifecycle
+                 [lifecycle]="kubernetesDeployment['$container'].lifecycle"
+               >
+               </app-kubernetes-container-lifecycle>
+              </span>
+            </div>
 
-<!--            <div>-->
-<!--              <span class="name">Probe</span>-->
-<!--              <span class="value">-->
-<!--                Startup{{ kubernetesDeployment['$container'].startupProbe | json }}-->
-<!--                Liveness{{ kubernetesDeployment['$container'].livenessProbe | json }}-->
-<!--                Readiness{{ kubernetesDeployment['$container'].readinessProbe | json }}-->
-<!--              </span>-->
-<!--            </div>-->
+            <div>
+              <span class="name">Probe</span>
+              <span class="value">
+                <app-kubernetes-container-probe
+                  [startupProbe]="kubernetesDeployment['$container'].startupProbe"
+                  [livenessProbe]="kubernetesDeployment['$container'].livenessProbe"
+                  [readinessProbe]="kubernetesDeployment['$container'].readinessProbe"
+                >
+                </app-kubernetes-container-probe>
+              </span>
+            </div>
 
           </div>
         </d-splitter-pane>

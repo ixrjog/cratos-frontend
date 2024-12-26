@@ -3,20 +3,17 @@
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
-          <d-badge [showDot]="true" [status]="getNodeStatus()">
-          </d-badge>
-          <h4 class="font-color-name" dClipboard [content]="kubernetesNode.metadata.name">
+          <span class="font-color-name node-name" dClipboard [content]="kubernetesNode.metadata.name">
+            <d-badge [showDot]="true" [status]="getNodeStatus()"/>
             &nbsp;{{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
-          </h4>
+          </span>
           <span
-            *ngIf="showNodeStatusConditions()"
             dPopover
             [content]="nodeStatusTemplate"
             [position]="'right-top'"
             [appendToBody]="true"
             [controlled]="true"
-            [style.color]="'#cc6414'"
-          >
+            [style.color]="'#cc6414'">
             <i class="fa-solid fa-triangle-exclamation"></i>
           </span>
           <ng-template #nodeStatusTemplate>

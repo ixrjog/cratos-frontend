@@ -7,7 +7,7 @@
     [mouseEnterDelay]="500"
     [content]="startupTemplate"
   >
-    Startup
+    startup
   </span>
   <ng-template #startupTemplate>
     <div *ngIf="startupProbe.empty">None</div>
@@ -37,7 +37,7 @@
     [mouseEnterDelay]="500"
     [content]="livenessTemplate"
   >
-    Liveness
+    liveness
   </span>
   <ng-template #livenessTemplate>
     <div *ngIf="livenessProbe.empty">None</div>
@@ -66,7 +66,7 @@
     [mouseEnterDelay]="500"
     [content]="readinessTemplate"
   >
-    Readiness
+    readiness
   </span>
   <ng-template #readinessTemplate>
     <div *ngIf="readinessProbe.empty">None</div>

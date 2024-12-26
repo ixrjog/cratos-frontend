@@ -24,9 +24,9 @@ export function onFetchData<T extends BaseVO>(table: Table<T>, ob: Observable<Da
 
 function _onFetchValidData<T extends ValidVO>(table: Table<T>, dataTable: DataTable<T>): void {
   _onFetchData(table, dataTable);
-  dataTable.body.data
-    .filter(row => !row.valid)
-    .map(row => row['$rowClass'] = 'table-row-invalid');
+  // dataTable.body.data
+  //   .filter(row => !row.valid)
+  //   .map(row => row['$rowClass'] = 'table-row-invalid');
 }
 
 export function onFetchValidData<T extends ValidVO>(table: Table<T>, ob: Observable<DataTable<T>>): void {

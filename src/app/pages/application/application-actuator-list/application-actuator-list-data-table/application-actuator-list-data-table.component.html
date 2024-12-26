@@ -1,6 +1,23 @@
 <div class="spacing-search">
+  <d-select
+    class="select"
+    [filterKey]="'name'"
+    [width]="580"
+    [appendToBody]="true"
+    [(ngModel)]="application"
+    [searchFn]="onSearchApplication"
+    [allowClear]="true"
+    [isSearch]="true"
+    placeholder="Select application"
+    (valueChange)="onApplicationChange($event)"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.name }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+    </ng-template>
+  </d-select>
   <d-category-search
-    style="width: 800px"
+    style="width: 800px;max-width: 800px"
     class="category-search"
     [category]="category"
     [selectedTags]="selectedTags"
@@ -153,10 +170,16 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="standard" header="Standard">
+    <d-column header="Standard">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <d-tag [tag]="cellItem?'Ture':'False'" [labelStyle]="cellItem?'green-w98':'red-w98'"></d-tag>
+        <ng-template let-rowItem="rowItem">
+          <d-badge [showDot]="true"
+                   [status]="rowItem['actuatorStandard']?'success':'warning'"></d-badge>
+          <span class="font-color-name" style="margin-right: 10px">&nbsp;Actuator</span>
+          <br />
+          <d-badge [showDot]="true"
+                   [status]="rowItem['lifecycleStandard']?'success':'warning'"></d-badge>
+          <span class="font-color-name" style="margin-right: 10px">&nbsp;Lifecycle</span>
         </ng-template>
       </d-cell>
     </d-column>

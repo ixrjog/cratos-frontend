@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KubernetesDeploymentVO } from '../../../../../../@core/data/kubernetes';
+import { DeploymentTemplateSpecContainerVO, KubernetesDeploymentVO } from '../../../../../../@core/data/kubernetes';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -13,48 +13,44 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   ngOnInit(): void {
     this.kubernetesDeployment['$chosenItem'] = '';
     this.kubernetesDeployment['$containers'] = [];
-    this.kubernetesDeployment['$containerImageMap'] = new Map<string, string>();
-    this.kubernetesDeployment['$containerResourcesMap'] = new Map<string, string>();
-    this.kubernetesDeployment['$chosenItemImage'] = '';
+    this.kubernetesDeployment['$container'] = null;
+    this.kubernetesDeployment['$containerMap'] = new Map<string, DeploymentTemplateSpecContainerVO>();
     this.kubernetesDeployment.spec.template.spec.containers.map(container => {
       if (container.main) {
+        this.kubernetesDeployment['$container'] = container
         this.kubernetesDeployment['$chosenItem'] = container.name;
-        this.kubernetesDeployment['$chosenItemImage'] = container.image;
-        this.kubernetesDeployment['$containerResources'] = container.resources;
       }
       this.kubernetesDeployment['$containers'].push(container.name);
-      this.kubernetesDeployment['$containerImageMap'].set(container.name, container.image);
-      this.kubernetesDeployment['$containerResourcesMap'].set(container.name, container.resources);
+      this.kubernetesDeployment['$containerMap'].set(container.name, container);
     });
   }
 
   valueChange(item: string): void {
-    this.kubernetesDeployment['$chosenItemImage'] = this.kubernetesDeployment['$containerImageMap'].get(item);
-    this.kubernetesDeployment['$containerResources'] = this.kubernetesDeployment['$containerResourcesMap'].get(item);
+    this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(item);
   }
 
   protected readonly JSON = JSON;
 
   getResourcesLimits(): string {
-    if (JSON.stringify(this.kubernetesDeployment['$containerResources'].limits) !== '{}') {
+    if (JSON.stringify(this.kubernetesDeployment['$container'].resources.limits) !== '{}') {
       return 'cpu '
-        + this.kubernetesDeployment['$containerResources'].limits.cpu.amount
-        + this.kubernetesDeployment['$containerResources'].limits.cpu.format
+        + this.kubernetesDeployment['$container'].resources.limits.cpu.amount
+        + this.kubernetesDeployment['$container'].resources.limits.cpu.format
         + ' mem '
-        + this.kubernetesDeployment['$containerResources'].limits.memory.amount
-        + this.kubernetesDeployment['$containerResources'].limits.memory.format;
+        + this.kubernetesDeployment['$container'].resources.limits.memory.amount
+        + this.kubernetesDeployment['$container'].resources.limits.memory.format;
     }
     return 'no limit';
   }
 
   getResourcesRequests(): string {
-    if (JSON.stringify(this.kubernetesDeployment['$containerResources'].requests) !== '{}') {
+    if (JSON.stringify(this.kubernetesDeployment['$container'].resources.requests) !== '{}') {
       return 'cpu '
-        + this.kubernetesDeployment['$containerResources'].requests.cpu.amount
-        + this.kubernetesDeployment['$containerResources'].requests.cpu.format
+        + this.kubernetesDeployment['$container'].resources.requests.cpu.amount
+        + this.kubernetesDeployment['$container'].resources.requests.cpu.format
         + ' mem '
-        + this.kubernetesDeployment['$containerResources'].requests.memory.amount
-        + this.kubernetesDeployment['$containerResources'].requests.memory.format;
+        + this.kubernetesDeployment['$container'].resources.requests.memory.amount
+        + this.kubernetesDeployment['$container'].resources.requests.memory.format;
     }
     return 'no request';
   }

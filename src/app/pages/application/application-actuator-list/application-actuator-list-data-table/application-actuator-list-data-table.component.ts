@@ -5,8 +5,10 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { ApplicationActuatorPageQuery, ApplicationActuatorVO } from '../../../../@core/data/application-actuator';
 import { ApplicationActuatorService } from '../../../../@core/services/application-actuator.service';
 import { ICategorySearchTagItem } from 'ng-devui';
-import { finalize } from 'rxjs';
-import { getRowColor, onFetchData, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
+import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.utli';
+import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
+import { map } from 'rxjs/operators';
+import { ApplicationService } from '../../../../@core/services/application.service';
 
 @Component({
   selector: 'app-application-actuator-list-data-table',
@@ -20,7 +22,10 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
     namespace: '',
     framework: '',
     standard: null,
+    actuatorStandard: null,
+    lifecycleStandard: null,
   };
+  application: ApplicationVO;
   table: Table<ApplicationActuatorVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
@@ -35,12 +40,6 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
   selectedTags: ICategorySearchTagItem[] = [];
 
   category: ICategorySearchTagItem[] = [
-    {
-      label: 'ApplicationName',
-      field: 'applicationName',
-      type: 'textInput',
-      group: 'Basic',
-    },
     {
       label: 'Namespace',
       field: 'namespace',
@@ -62,11 +61,30 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
         { label: 'true', value: true }, { label: 'false', value: false },
       ],
     },
+    {
+      label: 'ActuatorStandard',
+      field: 'actuatorStandard',
+      type: 'radio',
+      group: 'Status',
+      options: [
+        { label: 'true', value: true }, { label: 'false', value: false },
+      ],
+    },
+    {
+      label: 'LifecycleStandard',
+      field: 'lifecycleStandard',
+      type: 'radio',
+      group: 'Status',
+      options: [
+        { label: 'true', value: true }, { label: 'false', value: false },
+      ],
+    },
   ];
   groupOrderConfig = [ 'Basic', 'Status' ];
 
   constructor(
     private applicationActuatorService: ApplicationActuatorService,
+    private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
@@ -119,10 +137,11 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
   }
 
   selectedTagsChange(event) {
-    this.queryParam.applicationName = '';
     this.queryParam.namespace = '';
     this.queryParam.framework = '';
     this.queryParam.standard = null;
+    this.queryParam.actuatorStandard = null;
+    this.queryParam.lifecycleStandard = null;
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':
@@ -139,7 +158,22 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
 
-
   onRowFix(rowItem) {
+  }
+
+  onSearchApplication = (term: string) => {
+    const param: ApplicationPageQuery = {
+      length: 10, page: 1, queryName: term,
+    };
+    return this.applicationService.queryApplicationPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((application, index) => ({ id: index, option: application })),
+        ),
+      );
+  };
+
+  onApplicationChange(application: ApplicationVO) {
+    this.queryParam.applicationName = application?.name;
   }
 }

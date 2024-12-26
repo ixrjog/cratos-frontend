@@ -41,6 +41,8 @@ export interface ApplicationActuatorPageQuery extends PageQuery {
   namespace: string;
   framework: string;
   standard: boolean;
+  actuatorStandard: boolean;
+  lifecycleStandard: boolean;
 }
 
 export abstract class ApplicationActuatorData {

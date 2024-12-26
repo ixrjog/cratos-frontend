@@ -26,8 +26,8 @@
     </d-splitter-pane>
     <d-splitter-pane>
       <d-splitter orientation="horizontal">
-        <d-splitter-pane [resizable]="false" size="300px">
-          <div style="padding: 5px" class="splitter-left">
+        <d-splitter-pane [resizable]="false" size="350px">
+          <div style="padding: 8px" class="splitter-left">
             <span class="name">Containers</span>
             <d-radio-group
               [name]="'container-name-radio'"
@@ -41,8 +41,8 @@
             <div>
               <span class="name">Image</span>
               <span class="value"
-                    dClipboard [content]="kubernetesDeployment['$chosenItemImage']"
-              >{{ kubernetesDeployment['$chosenItemImage'] | dSafeNullPipe }}</span>
+                    dClipboard [content]="kubernetesDeployment['$container'].image"
+              >{{ kubernetesDeployment['$container'].image | dSafeNullPipe }}</span>
             </div>
 
             <div>
@@ -60,11 +60,30 @@
                   <span>
                     Requests:&nbsp;{{ getResourcesRequests() }}
                     <br />
-                    Limits:&nbsp;&nbsp;&nbsp;{{ getResourcesLimits() }}
+                    Limits:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ getResourcesLimits() }}
                   </span>
                 </ng-template>
               </span>
             </div>
+
+<!--            <div>-->
+<!--              <span class="name">Lifecycle</span>-->
+<!--              <span class="value">-->
+<!--                PostStart<span>{{ kubernetesDeployment['$container'].lifecycle.postStart | json }}</span>-->
+<!--                <br />-->
+<!--                PreStop<span>{{ kubernetesDeployment['$container'].lifecycle.preStop | json }}</span>-->
+<!--              </span>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--              <span class="name">Probe</span>-->
+<!--              <span class="value">-->
+<!--                Startup{{ kubernetesDeployment['$container'].startupProbe | json }}-->
+<!--                Liveness{{ kubernetesDeployment['$container'].livenessProbe | json }}-->
+<!--                Readiness{{ kubernetesDeployment['$container'].readinessProbe | json }}-->
+<!--              </span>-->
+<!--            </div>-->
+
           </div>
         </d-splitter-pane>
         <d-splitter-pane>

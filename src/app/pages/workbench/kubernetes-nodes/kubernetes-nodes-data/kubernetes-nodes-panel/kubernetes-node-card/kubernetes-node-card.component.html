@@ -66,7 +66,7 @@
           <span class="name">Arch:</span>
           <span class="value">
             {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
-            -{{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
+            {{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
           </span>
         </div>
 
@@ -90,7 +90,9 @@
 
         <div>
           <span class="name">OS Image:</span>
-          <span class="value">{{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
+          <span class="value inline-value"
+                [title]="kubernetesNode.status.nodeInfo.osImage">
+            {{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
         </div>
 
         <div style="line-height: 20px">

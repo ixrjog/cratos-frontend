@@ -62,7 +62,6 @@ export interface KubernetesNodeVo {
   zone: string;
 }
 
-
 export interface KubernetesMetadataVO {
   namespace: string;
   name: string;
@@ -95,10 +94,46 @@ export interface DeploymentTemplateSpecContainerVO {
   main: boolean;
   name: string;
   image: string;
-  resources: DeploymentContainerResourcesVO;
+  resources: ContainerResourcesVO;
+  lifecycle: ContainerLifecycleVO;
+  livenessProbe: ContainerProbeVO;
+  readinessProbe: ContainerProbeVO;
+  startupProbe: ContainerProbeVO;
 }
 
-export interface DeploymentContainerResourcesVO {
+export interface ContainerLifecycleVO {
+  postStart: ContainerLifecycleHandlerVO;
+  preStop: ContainerLifecycleHandlerVO;
+  isEmpty: boolean;
+}
+
+export interface ContainerLifecycleHandlerVO {
+  exec: { command: string };
+  httpGet: ContainerHTTPGetActionVO;
+  sleep: { seconds: number };
+}
+
+export interface ContainerProbeVO {
+  exec: { command: string };
+  failureThreshold: number;
+  httpGet: ContainerHTTPGetActionVO;
+  initialDelaySeconds: number;
+  periodSeconds: number;
+  successThreshold: number;
+  terminationGracePeriodSeconds: number;
+  timeoutSeconds: number;
+  isEmpty: boolean;
+}
+
+export interface ContainerHTTPGetActionVO {
+  host: string,
+  httpHeaders: { name: string, value: string }[],
+  path: string
+  port: string
+  scheme: string
+}
+
+export interface ContainerResourcesVO {
   limits: Map<string, { amount: string, format: string }>;
   requests: Map<string, { amount: string, format: string }>;
 }

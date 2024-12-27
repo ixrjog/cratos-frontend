@@ -2,12 +2,10 @@
 
   <div>
     <span class="name">Pod IP</span>
-    <span
-      class="value"
-      dClipboard
-      [content]="podStatus.podIP"
-    >
-      {{ podStatus.podIP | dSafeNullPipe }}
+    <span class="value">
+      <span dClipboard [content]="podStatus.podIP">
+        {{ podStatus.podIP | dSafeNullPipe }}
+      </span>
       <span
         dPopover
         [trigger]="'hover'"
@@ -22,7 +20,7 @@
 
   <div>
     <span class="name">Image Tag</span>
-    <span class="value">
+    <span class="value" dClipboard [content]="podStatus.podIP">
       {{ container.image | containerImageTag | dSafeNullPipe }}
     </span>
   </div>

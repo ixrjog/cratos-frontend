@@ -28,6 +28,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     name: '',
   };
 
+  first = false;
   tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
   resourceNameOptions = [];
@@ -97,6 +98,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   };
 
   onApplicationChange(application: ApplicationVO) {
+    if (!this.first) {
+      this.first = true;
+    }
     this.queryParam.applicationName = application?.name;
     this.queryParam.namespace = ''
     this.wsOnUnsubSend();

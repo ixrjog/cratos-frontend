@@ -15,16 +15,34 @@
           <span
             *ngIf="showNodeStatusConditions()"
             dPopover
-            [content]="nodeStatusTemplate"
             [position]="'right-top'"
-            [appendToBody]="true"
+            [trigger]="'hover'"
             [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="nodeStatusTemplate"
+            [appendToBody]="true"
             [style.color]="'#cc6414'">
             <i class="fa-solid fa-triangle-exclamation"></i>
           </span>
           <ng-template #nodeStatusTemplate>
             <div *ngFor="let condition of kubernetesNode.status.conditions | keyvalue">
               <span>{{ condition.key }}: {{ condition.value.message }}({{ condition.value.status }})</span>
+            </div>
+          </ng-template>
+          <span
+            class="node-labels"
+            dPopover
+            [position]="'right-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="nodeLabelsTemplate"
+          >
+            <i class="fa-solid fa-tags"></i>
+          </span>
+          <ng-template #nodeLabelsTemplate>
+            <div *ngFor="let label of kubernetesNode.metadata.labels | keyvalue">
+              <span>{{ label.key }}: {{ label.value }}</span>
             </div>
           </ng-template>
         </div>
@@ -37,20 +55,6 @@
               {{ kubernetesNode.metadata.creationTimestamp | dRelativeTime: limit | async }}
             </strong>
           </span>
-          <span
-            class="node-labels"
-            dPopover
-            [content]="nodeLabelsTemplate"
-            [position]="'right-top'"
-            [controlled]="true"
-          >
-            <i class="fa-solid fa-tags"></i>
-          </span>
-          <ng-template #nodeLabelsTemplate>
-            <div *ngFor="let label of kubernetesNode.metadata.labels | keyvalue">
-              <span>{{ label.key }}: {{ label.value }}</span>
-            </div>
-          </ng-template>
         </div>
       </d-card-subtitle>
     </d-card-header>
@@ -58,9 +62,7 @@
       <div class="spacing-card-content">
         <div>
           <span class="name">Node IP</span>
-          <span class="value"
-                dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']"
-          >
+          <span class="value" dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']">
             {{ kubernetesNode.status.addresses['InternalIP']['address'] | dSafeNullPipe }}
           </span>
         </div>
@@ -93,30 +95,28 @@
 
         <div>
           <span class="name">OS Image</span>
-          <span class="value inline-value"
-                [title]="kubernetesNode.status.nodeInfo.osImage">
-            {{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}</span>
+          <span class="value inline-value" [title]="kubernetesNode.status.nodeInfo.osImage">
+            {{ kubernetesNode.status.nodeInfo.osImage | dSafeNullPipe }}
+          </span>
         </div>
 
         <div style="line-height: 20px">
           <span class="name">Kubelet Version</span>
-          <span
-            class="value"
-            [style.color]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'var(--devui-danger)':''"
-          >
+          <span class="value">
             <d-tag
+              dPopover
+              [position]="'right-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="'Container Runtime: ' + kubernetesNode.status.nodeInfo.containerRuntimeVersion"
               [tag]="kubernetesNode.status.nodeInfo.kubeletVersion"
               [labelStyle]="kubernetesNode.status.nodeInfo.kubeletVersion !== kubeletVersion?'red-w98':'green-w98'"
             ></d-tag>
           </span>
         </div>
 
-        <div>
-          <span class="name">Container Runtime</span>
-          <span class="value">{{ kubernetesNode.status.nodeInfo.containerRuntimeVersion | dSafeNullPipe }}</span>
-        </div>
       </div>
-
     </d-card-content>
   </d-card>
 </div>

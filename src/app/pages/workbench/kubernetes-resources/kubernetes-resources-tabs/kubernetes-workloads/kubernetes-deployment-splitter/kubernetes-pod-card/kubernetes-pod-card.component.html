@@ -3,15 +3,22 @@
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
-          <h4 class="font-color-name" dClipboard [content]="kubernetesPod.metadata.name">
+          <h4
+            class="font-color-name"
+            dClipboard
+            [content]="kubernetesPod.metadata.name"
+            [title]="kubernetesPod.metadata.name"
+          >
             {{ subPodName() | dSafeNullPipe }}
           </h4>
           <d-tag
             dPopover
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
             [content]="podStatusTemplate"
             [position]="'left-top'"
             [appendToBody]="true"
-            [controlled]="true"
             class="pod-status"
             [tag]="kubernetesPod.status.phase"
             [labelStyle]="getContainerPhaseStyle(kubernetesPod.status)">

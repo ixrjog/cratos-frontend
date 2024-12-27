@@ -16,6 +16,7 @@
     </ng-template>
   </d-select>
   <d-tabs
+    *ngIf="first"
     class="tabs"
     type="options"
     [activeTab]="queryParam.namespace"
@@ -33,6 +34,7 @@
   <d-select
     class="select"
     placeholder="Select resource name"
+    [allowClear]="true"
     [options]="resourceNameOptions"
     [(ngModel)]="queryParam.name"
   ></d-select>

@@ -2,18 +2,19 @@
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
       <div class="splitter-header">
-
-        <h2 style="margin: 0 10px">
+        <h2 style="margin: 0 10px 0 8px">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
-
-        <div class="layout-bottom" style="margin-left: 10px">
+        <div class="layout-bottom" style="margin-right: 10px">
           <span
             dPopover
-            [content]="nodeLabelsTemplate"
             [position]="'right-top'"
-            [controlled]="true">
-            <i class="fa-solid fa-tags"></i>
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="nodeLabelsTemplate"
+          >
+            <i class="fa-solid fa-tags" style="font-size: 16px"></i>
           </span>
           <ng-template #nodeLabelsTemplate>
             <div *ngFor="let label of kubernetesDeployment.metadata.labels | keyvalue">
@@ -22,24 +23,31 @@
           </ng-template>
         </div>
 
-        <div class="layout-bottom" style="margin-left: 10px">
-          <strong>{{ kubernetesDeployment.spec.strategy.type }}:&nbsp;</strong>
-          <span>
-            MaxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge | dSafeNullPipe }} /
-            MaxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable | dSafeNullPipe }}
-          </span>
+        <div class="layout-bottom" style="margin-right: 5px">
+          <d-tag [tag]="'replicas x' + kubernetesDeployment.spec.replicas" [labelStyle]="'blue-w98'"></d-tag>
         </div>
 
-        <d-tag
-          class="replicas-tag"
-          [tag]="kubernetesDeployment.spec.replicas"
-          [customViewTemplate]="replicasTag"
-          [labelStyle]="'blue-w98'"
-        >
-        </d-tag>
-        <ng-template #replicasTag let-tag="tag">
-          <span style="margin-right: 3px">replicas x{{ tag }}</span>
-        </ng-template>
+        <div class="layout-bottom" style="margin-right: 5px">
+          <d-tag
+            dPopover
+            [position]="'right-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="strategyTemplate"
+            [tag]="'strategy'"
+            [labelStyle]="'blue-w98'"
+          >
+          </d-tag>
+          <ng-template #strategyTemplate>
+            <div>{{ kubernetesDeployment.spec.strategy.type }}</div>
+            <div style="margin-left: 1em">
+              maxSurge: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxSurge | dSafeNullPipe }}
+              <br />
+              maxUnavailable: {{ kubernetesDeployment.spec.strategy.rollingUpdate.maxUnavailable | dSafeNullPipe }}
+            </div>
+          </ng-template>
+        </div>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>

@@ -15,7 +15,7 @@
       <div>command:&nbsp;{{ startupProbe?.exec?.command | dSafeNullPipe }}</div>
       <div>httpGet</div>
       <div style="margin-left: 1em">
-        <div>httpHeaders:&nbsp;{{ startupProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>httpHeaders:&nbsp;{{ startupProbe?.httpGet?.httpHeaders | json }}</div>
         <div>host:&nbsp;{{ startupProbe?.httpGet?.host | dSafeNullPipe }}</div>
         <div>path:&nbsp;{{ startupProbe?.httpGet?.path | dSafeNullPipe }}</div>
         <div>port:&nbsp;{{ startupProbe?.httpGet?.port | dSafeNullPipe }}</div>
@@ -45,7 +45,7 @@
       <div>command:&nbsp;{{ livenessProbe?.exec?.command | dSafeNullPipe }}</div>
       <div>httpGet</div>
       <div style="margin-left: 1em">
-        <div>httpHeaders:&nbsp;{{ livenessProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>httpHeaders:&nbsp;{{ livenessProbe?.httpGet?.httpHeaders | json }}</div>
         <div>host:&nbsp;{{ livenessProbe?.httpGet?.host | dSafeNullPipe }}</div>
         <div>path:&nbsp;{{ livenessProbe?.httpGet?.path | dSafeNullPipe }}</div>
         <div>port:&nbsp;{{ livenessProbe?.httpGet?.port | dSafeNullPipe }}</div>
@@ -74,7 +74,7 @@
       <div>command:&nbsp;{{ readinessProbe?.exec?.command | dSafeNullPipe }}</div>
       <div>httpGet</div>
       <div style="margin-left: 1em">
-        <div>httpHeaders:&nbsp;{{ readinessProbe?.httpGet?.httpHeaders | dSafeNullPipe }}</div>
+        <div>httpHeaders:&nbsp;{{ readinessProbe?.httpGet?.httpHeaders | json }}</div>
         <div>host:&nbsp;{{ readinessProbe?.httpGet?.host | dSafeNullPipe }}</div>
         <div>path:&nbsp;{{ readinessProbe?.httpGet?.path | dSafeNullPipe }}</div>
         <div>port:&nbsp;{{ readinessProbe?.httpGet?.port | dSafeNullPipe }}</div>

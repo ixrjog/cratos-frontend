@@ -117,8 +117,7 @@ export class MenuConfigComponent implements OnInit {
       const param: MenuEdit = {
         ...this.selectMenu,
       };
-      let menuTitle: { title: string, lang: string }[] = JSON.parse(this.menuTitleJson);
-      param.titles = menuTitle;
+      param.titles = JSON.parse(this.menuTitleJson);
       if (param.id) {
         this.menuService.updateMenu(param)
           .subscribe(() => {

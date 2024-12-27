@@ -23,4 +23,11 @@ export class KubernetesNodeCardComponent {
     }
     return 'warning';
   }
+
+  circleGradientColor = [
+    { color: '#50d4ab', percentage: '0%' },
+    { color: '#fac20a', percentage: '40%' },
+    { color: '#f66f6a', percentage: '100%' },
+  ];
+
 }

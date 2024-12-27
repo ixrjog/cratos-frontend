@@ -11,16 +11,16 @@
         <h2>Menu Nav</h2>
         <d-accordion
           [data]="rootMenu"
-          [itemTemplate]="itemtemplate"
-          [menuItemTemplate]="menutemplate"
+          [itemTemplate]="itemTemplate"
+          [menuItemTemplate]="menuTemplate"
           (itemClick)="itemClick($event)"
           (menuToggle)="menuToggle($event)"
         >
         </d-accordion>
-        <ng-template #menutemplate let-item="item">
+        <ng-template #menuTemplate let-item="item">
           <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
         </ng-template>
-        <ng-template #itemtemplate let-item="item">
+        <ng-template #itemTemplate let-item="item">
           <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
         </ng-template>
       </div>

@@ -199,6 +199,11 @@ export interface KubernetesNodeVO {
   metadata: KubernetesMetadataVO;
   status: KubernetesNodeStatusVO;
   attributes: Map<string, string>;
+  usage: {
+    cpuPercentage: number
+    memoryPercentage: number
+    name: string
+  }
 }
 
 export interface KubernetesNodeStatusVO {

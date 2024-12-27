@@ -61,9 +61,11 @@
     <d-card-content style="margin: 0">
       <div class="spacing-card-content">
         <div>
-          <span class="name">Node IP</span>
-          <span class="value" dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']">
-            {{ kubernetesNode.status.addresses['InternalIP']['address'] | dSafeNullPipe }}
+          <span class="name">Node</span>
+          <span class="value" >
+            <span dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']">
+              {{ kubernetesNode.status.addresses['InternalIP']['address'] | dSafeNullPipe }}
+            </span>
           </span>
         </div>
 
@@ -72,24 +74,6 @@
           <span class="value">
             {{ kubernetesNode.metadata.labels['kubernetes.io/os'] | dSafeNullPipe }}
             {{ kubernetesNode.metadata.labels['kubernetes.io/arch'] | dSafeNullPipe }}
-          </span>
-        </div>
-
-        <div>
-          <span class="name">Instance Type</span>
-          <span class="value">
-            {{ kubernetesNode.metadata.labels['node.kubernetes.io/instance-type'] | dSafeNullPipe }}
-          </span>
-        </div>
-
-        <div>
-          <span class="name">Instance Info</span>
-          <span class="value">
-            <i class="fa-solid fa-microchip"></i>
-            cpu&nbsp;{{ kubernetesNode.attributes['status.capacity.cpu'] |stringReplace:'/':'' }}&nbsp;
-            mem&nbsp;{{ kubernetesNode.attributes['status.capacity.memory'] | unitTran }}&nbsp;
-            <i class="fa-solid fa-hard-drive"></i>
-            {{ kubernetesNode.attributes['status.capacity.ephemeral-storage'] | unitTran }}
           </span>
         </div>
 
@@ -116,6 +100,28 @@
           </span>
         </div>
 
+        <div>
+          <span class="name">Instance</span>
+          <span class="value">
+            {{ kubernetesNode.metadata.labels['node.kubernetes.io/instance-type'] | dSafeNullPipe }}
+          </span>
+        </div>
+
+        <div>
+          <span class="value progress-container circle-type">
+            <i class="fa-solid fa-microchip"></i>
+            cpu&nbsp;{{ kubernetesNode.attributes['status.capacity.cpu'] |stringReplace:'/':'' }}
+            <d-progress [type]="'circle'" [percentage]="kubernetesNode.usage.cpuPercentage" [strokeWidth]="18"
+                        [strokeColor]="'#50d4ab'" [showContent]="false"
+                        style="display: inline-block"></d-progress>
+            mem&nbsp;{{ kubernetesNode.attributes['status.capacity.memory'] | unitTran }}
+            <d-progress [type]="'circle'" [percentage]="kubernetesNode.usage.memoryPercentage" [strokeWidth]="18"
+                        [strokeColor]="'#50d4ab'" [showContent]="false"
+                        style="display: inline-block"></d-progress>
+            &nbsp;<i class="fa-solid fa-hard-drive"></i>
+            {{ kubernetesNode.attributes['status.capacity.ephemeral-storage'] | unitTran }}
+          </span>
+        </div>
       </div>
     </d-card-content>
   </d-card>

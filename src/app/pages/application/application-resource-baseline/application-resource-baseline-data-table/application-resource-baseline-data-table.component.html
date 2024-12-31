@@ -90,10 +90,17 @@
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
             >&nbsp;Startup</span>
             <ng-template #startupProbeTemplate>
-              Baseline
+              Current
               <app-ace-editor
                 [readonly]="true"
                 [aceValue]="rowItem['container'].startupProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].startupProbe.baseline.content"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
@@ -116,10 +123,17 @@
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
             >&nbsp;Liveness</span>
             <ng-template #livenessProbeTemplate>
-              Baseline
+              Current
               <app-ace-editor
                 [readonly]="true"
                 [aceValue]="rowItem['container'].livenessProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].livenessProbe.baseline.content"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
@@ -142,10 +156,17 @@
               [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
             >&nbsp;Readiness</span>
             <ng-template #readinessProbeTemplate>
-              Baseline
+              Current
               <app-ace-editor
                 [readonly]="true"
                 [aceValue]="rowItem['container'].readinessProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].readinessProbe.baseline.content"
                 [mode]="'ace/mode/yaml'"
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
@@ -172,10 +193,17 @@
             class="font-color-name"
           >&nbsp;PreStop</span>
           <ng-template #lifecycleTemplate>
-            Baseline
+            Current
             <app-ace-editor
               [readonly]="true"
               [aceValue]="rowItem['container'].lifecycle.content"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+            Baseline
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="rowItem['container'].lifecycle.baseline.content"
               [mode]="'ace/mode/yaml'"
               [theme]="'ace/theme/tomorrow_night'"
             ></app-ace-editor>
@@ -197,12 +225,12 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onRowFix(rowItem)"></d-icon>
             <d-icon
               [disabled]="rowItem['$rescan']"
               [icon]="'icon-synchronize'"
               [operable]="true"
               (click)="onRowRescan(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onRowFix(rowItem)"></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>

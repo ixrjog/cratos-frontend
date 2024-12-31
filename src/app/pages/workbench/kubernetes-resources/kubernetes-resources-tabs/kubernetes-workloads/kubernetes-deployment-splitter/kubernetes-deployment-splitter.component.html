@@ -54,6 +54,7 @@
       <d-splitter orientation="horizontal">
         <d-splitter-pane [resizable]="false" size="350px">
           <div style="padding: 8px" class="splitter-left">
+
             <span class="name">Containers</span>
             <d-radio-group
               [name]="'container-name-radio'"
@@ -95,26 +96,42 @@
               </span>
             </div>
 
+            <div class="drawer" style="margin: 3px 0"></div>
             <div>
-              <span class="name">Lifecycle</span>
-              <span class="value">
-               <app-kubernetes-container-lifecycle
-                 [lifecycle]="kubernetesDeployment['$container'].lifecycle"
-               >
-               </app-kubernetes-container-lifecycle>
-              </span>
-            </div>
+              <d-tag
+                dPopover
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="lifecycleTemplate"
+                [tag]="'lifecycle'"
+                [labelStyle]="'blue-w98'"
+              ></d-tag>
+              <ng-template #lifecycleTemplate>
+                <app-kubernetes-container-lifecycle
+                  [lifecycle]="kubernetesDeployment['$container'].lifecycle"
+                ></app-kubernetes-container-lifecycle>
+              </ng-template>
 
-            <div>
-              <span class="name">Probe</span>
-              <span class="value">
+              <d-tag
+                dPopover
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="probeTemplate"
+                [tag]="'probe'"
+                [labelStyle]="'blue-w98'"
+              ></d-tag>
+              <ng-template #probeTemplate>
                 <app-kubernetes-container-probe
                   [startupProbe]="kubernetesDeployment['$container'].startupProbe"
                   [livenessProbe]="kubernetesDeployment['$container'].livenessProbe"
                   [readinessProbe]="kubernetesDeployment['$container'].readinessProbe"
                 >
                 </app-kubernetes-container-probe>
-              </span>
+              </ng-template>
             </div>
 
           </div>

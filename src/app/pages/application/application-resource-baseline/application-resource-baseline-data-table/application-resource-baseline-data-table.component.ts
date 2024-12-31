@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
-import { ApplicationActuatorPageQuery, ApplicationActuatorVO } from '../../../../@core/data/application-actuator';
-import { ApplicationActuatorService } from '../../../../@core/services/application-actuator.service';
+import {
+  ApplicationResourceBaselinePageQuery,
+  ApplicationResourceBaselineVO,
+} from '../../../../@core/data/application-resource-baseline';
+import { ApplicationResourceBaselineService } from '../../../../@core/services/application-resource-baseline.service';
 import { ICategorySearchTagItem } from 'ng-devui';
 import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
@@ -11,23 +14,25 @@ import { map } from 'rxjs/operators';
 import { ApplicationService } from '../../../../@core/services/application.service';
 
 @Component({
-  selector: 'app-application-actuator-list-data-table',
-  templateUrl: './application-actuator-list-data-table.component.html',
-  styleUrls: [ './application-actuator-list-data-table.component.less' ],
+  selector: 'app-application-resource-baseline-data-table',
+  templateUrl: './application-resource-baseline-data-table.component.html',
+  styleUrls: [ './application-resource-baseline-data-table.component.less' ],
 })
-export class ApplicationActuatorListDataTableComponent implements OnInit {
+export class ApplicationResourceBaselineDataTableComponent implements OnInit {
 
   queryParam = {
     applicationName: '',
     namespace: '',
     framework: '',
     standard: null,
-    actuatorStandard: null,
-    lifecycleStandard: null,
   };
+  memberType: {
+    baselineType: string;
+    standard: boolean;
+  } = null;
+  show: boolean = false;
   application: ApplicationVO;
-  table: Table<ApplicationActuatorVO> = JSON.parse(JSON.stringify(TABLE_DATA));
-
+  table: Table<ApplicationResourceBaselineVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -36,7 +41,7 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
       ...DIALOG_DATA.content,
     },
   };
-
+  baselineTypeOptions = [];
   selectedTags: ICategorySearchTagItem[] = [];
 
   category: ICategorySearchTagItem[] = [
@@ -61,29 +66,11 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
         { label: 'true', value: true }, { label: 'false', value: false },
       ],
     },
-    {
-      label: 'ActuatorStandard',
-      field: 'actuatorStandard',
-      type: 'radio',
-      group: 'Status',
-      options: [
-        { label: 'true', value: true }, { label: 'false', value: false },
-      ],
-    },
-    {
-      label: 'LifecycleStandard',
-      field: 'lifecycleStandard',
-      type: 'radio',
-      group: 'Status',
-      options: [
-        { label: 'true', value: true }, { label: 'false', value: false },
-      ],
-    },
   ];
   groupOrderConfig = [ 'Basic', 'Status' ];
 
   constructor(
-    private applicationActuatorService: ApplicationActuatorService,
+    private applicationActuatorService: ApplicationResourceBaselineService,
     private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
@@ -91,15 +78,20 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
   }
 
   fetchData() {
-    const param: ApplicationActuatorPageQuery = {
+    const param: ApplicationResourceBaselinePageQuery = {
       ...this.queryParam,
+      byMemberType: this.memberType === null ? null : {
+        baselineType: this.memberType.baselineType,
+        standard: this.memberType.standard,
+      },
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchData(this.table, this.applicationActuatorService.queryApplicationActuatorPage(param));
+    onFetchData(this.table, this.applicationActuatorService.queryApplicationResourceBaselinePage(param));
   }
 
   ngOnInit() {
+    this.getBaselineTypeOptions();
     this.fetchData();
   }
 
@@ -140,8 +132,6 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
     this.queryParam.namespace = '';
     this.queryParam.framework = '';
     this.queryParam.standard = null;
-    this.queryParam.actuatorStandard = null;
-    this.queryParam.lifecycleStandard = null;
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':
@@ -175,5 +165,34 @@ export class ApplicationActuatorListDataTableComponent implements OnInit {
 
   onApplicationChange(application: ApplicationVO) {
     this.queryParam.applicationName = application?.name;
+  }
+
+  getBaselineTypeOptions() {
+    this.baselineTypeOptions = [];
+    this.applicationActuatorService.getBaselineTypeOptions()
+      .subscribe(({ body }) => {
+        body.options.map(baseline => {
+          this.baselineTypeOptions.push({
+            label: baseline.label,
+            value: baseline.value,
+            children: [
+              {
+                label: baseline.label + '=true',
+                value: true,
+              },
+              {
+                label: baseline.label + '=false',
+                value: false,
+              },
+            ],
+          });
+        });
+        this.show = true;
+      });
+  }
+
+  onMemberTypeChanges(value: any) {
+    this.memberType.baselineType = value[0];
+    this.memberType.standard = value[1];
   }
 }

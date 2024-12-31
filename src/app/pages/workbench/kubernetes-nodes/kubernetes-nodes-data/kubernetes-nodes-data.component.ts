@@ -133,7 +133,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   //
   // wsOnSubSend() {
   //   if (this.ws?.readyState === WebSocket.OPEN) {
-  //     const param: ApplicationKubernetesDetailsRequest = {
+  //     const param: EdsKubernetesNodeDetailsRequest = {
   //       topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS,
   //       action: WsMessageActionEnum.SUBSCRIPTION,
   //       instanceName: this.queryParam.instanceName,
@@ -144,7 +144,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   //
   // wsOnUnsubSend() {
   //   if (this.ws?.readyState === WebSocket.OPEN) {
-  //     const param: ApplicationKubernetesDetailsRequest = {
+  //     const param: EdsKubernetesNodeDetailsRequest = {
   //       topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS,
   //       action: WsMessageActionEnum.UNSUBSCRIBE,
   //     };

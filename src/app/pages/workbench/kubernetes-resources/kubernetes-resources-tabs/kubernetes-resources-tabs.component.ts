@@ -157,6 +157,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       this.ws = null;
     } catch (error) {
     }
+    localStorage.removeItem('kubernetes_resources');
   }
 
   initInterval() {

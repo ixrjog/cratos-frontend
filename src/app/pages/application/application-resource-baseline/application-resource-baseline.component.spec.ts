@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApplicationActuatorListComponent } from './application-actuator-list.component';
+import { ApplicationResourceBaselineComponent } from './application-resource-baseline.component';
 
 describe('ApplicationActuatorListComponent', () => {
-  let component: ApplicationActuatorListComponent;
-  let fixture: ComponentFixture<ApplicationActuatorListComponent>;
+  let component: ApplicationResourceBaselineComponent;
+  let fixture: ComponentFixture<ApplicationResourceBaselineComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApplicationActuatorListComponent ]
+      declarations: [ ApplicationResourceBaselineComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationActuatorListComponent);
+    fixture = TestBed.createComponent(ApplicationResourceBaselineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

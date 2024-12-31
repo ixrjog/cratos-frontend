@@ -9,24 +9,40 @@ import { DeploymentTemplateSpecContainerVO, KubernetesDeploymentVO } from '../..
 export class KubernetesDeploymentSplitterComponent implements OnInit {
 
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
+  kubernetesResources: any;
 
   ngOnInit(): void {
-    this.kubernetesDeployment['$chosenItem'] = '';
+    if (!!localStorage.getItem('kubernetes_resources')) {
+      this.kubernetesResources = JSON.parse(localStorage.getItem('kubernetes_resources'));
+      this.kubernetesDeployment['$chosenItem'] = this.kubernetesResources[this.kubernetesDeployment.metadata.name];
+    } else {
+      this.kubernetesResources = {};
+    }
     this.kubernetesDeployment['$containers'] = [];
     this.kubernetesDeployment['$container'] = null;
     this.kubernetesDeployment['$containerMap'] = new Map<string, DeploymentTemplateSpecContainerVO>();
     this.kubernetesDeployment.spec.template.spec.containers.map(container => {
       if (container.main) {
-        this.kubernetesDeployment['$container'] = container
-        this.kubernetesDeployment['$chosenItem'] = container.name;
+        if (this.kubernetesDeployment['$chosenItem'] === undefined) {
+          this.kubernetesDeployment['$chosenItem'] = container.name;
+          this.kubernetesResources[this.kubernetesDeployment.metadata.name] = this.kubernetesDeployment['$chosenItem'];
+          this.setItem();
+        }
       }
       this.kubernetesDeployment['$containers'].push(container.name);
       this.kubernetesDeployment['$containerMap'].set(container.name, container);
+      this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$chosenItem']);
     });
+  }
+
+  setItem() {
+    localStorage.setItem('kubernetes_resources', JSON.stringify(this.kubernetesResources));
   }
 
   valueChange(item: string): void {
     this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(item);
+    this.kubernetesResources[this.kubernetesDeployment.metadata.name] = this.kubernetesDeployment['$chosenItem'];
+    this.setItem();
   }
 
   protected readonly JSON = JSON;

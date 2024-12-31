@@ -1,32 +1,16 @@
 <section>
-  <span
-    dPopover
-    [position]="'right-top'"
-    [trigger]="'hover'"
-    [controlled]="true"
-    [mouseEnterDelay]="500"
-    [content]="postStartTemplate"
-  >
-    postStart
-  </span>
-  <ng-template #postStartTemplate>
-    <span>
-     {{ lifecycle.postStart?.exec?.command | dSafeNullPipe }}
-    </span>
-  </ng-template>
-  <span
-    dPopover
-    [position]="'right-top'"
-    [trigger]="'hover'"
-    [controlled]="true"
-    [mouseEnterDelay]="500"
-    [content]="preStopTemplate"
-  >
-    preStop
-  </span>
-  <ng-template #preStopTemplate>
-    <span>
-    {{ lifecycle.preStop?.exec?.command | dSafeNullPipe }}
-    </span>
-  </ng-template>
+  <d-splitter orientation="horizontal">
+    <d-splitter-pane size="50%" [resizable]="false">
+      <div style="padding: 5px;width: 300px">
+        <h4>PostStart</h4>
+        <span>{{ lifecycle.postStart?.exec?.command | dSafeNullPipe }}</span>
+      </div>
+    </d-splitter-pane>
+    <d-splitter-pane>
+      <div style="padding: 5px;width: 300px">
+        <h4>PreStop</h4>
+        <span>{{ lifecycle.preStop?.exec?.command | dSafeNullPipe }}</span>
+      </div>
+    </d-splitter-pane>
+  </d-splitter>
 </section>

@@ -26,12 +26,14 @@ export interface ApplicationResourceBaselineProbeVO {
   path: string;
   port: number;
   standard: boolean;
+  content: string;
   baseline: ApplicationResourceBaselineProbeVO;
 }
 
 export interface ApplicationResourceBaselineLifecycleVO {
   preStopExecCommand: string;
   standard: boolean;
+  content: string;
   baseline: ApplicationResourceBaselineLifecycleVO;
 }
 
@@ -53,5 +55,7 @@ export abstract class ApplicationResourceBaselineData {
   abstract scanApplicationActuator(): Observable<HttpResult<Boolean>>;
 
   abstract getBaselineTypeOptions(): Observable<HttpResult<OptionsVO>>;
+
+  abstract rescanBaselineById(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
 
 }

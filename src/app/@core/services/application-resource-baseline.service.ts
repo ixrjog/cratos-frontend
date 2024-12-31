@@ -29,4 +29,8 @@ export class ApplicationResourceBaselineService extends ApplicationResourceBasel
     return this.apiService.get(this.baseUrl, '/type/options', {});
   }
 
+  rescanBaselineById(param: { baselineId: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/rescan', param);
+  }
+
 }

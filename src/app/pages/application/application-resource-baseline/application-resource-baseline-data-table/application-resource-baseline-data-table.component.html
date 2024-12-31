@@ -79,25 +79,25 @@
           <div>
             <d-badge [showDot]="true"
                      [status]="rowItem['container'].startupProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Startup</span>
-<!--            <d-icon-->
-<!--              dPopover-->
-<!--              style="vertical-align: sub"-->
-<!--              [icon]="'icon-view'"-->
-<!--              [content]="startupProbeTemplate"-->
-<!--              [position]="'left-top'"-->
-<!--              [controlled]="true"-->
-<!--              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"-->
-<!--            >-->
-<!--            </d-icon>-->
-<!--            <ng-template #startupProbeTemplate>-->
-<!--              <app-ace-editor-->
-<!--                [readonly]="true"-->
-<!--                [aceValue]="rowItem['startupProbe']"-->
-<!--                [mode]="'ace/mode/yaml'"-->
-<!--                [theme]="'ace/theme/tomorrow_night'"-->
-<!--              ></app-ace-editor>-->
-<!--            </ng-template>-->
+            <span
+              dPopover
+              [position]="'right-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="startupProbeTemplate"
+              class="font-color-name"
+              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+            >&nbsp;Startup</span>
+            <ng-template #startupProbeTemplate>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].startupProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+            </ng-template>
             <div style="margin-left: 2em">
               {{ rowItem['container'].startupProbe.path }} [:{{ rowItem['container'].startupProbe.port }}]
             </div>
@@ -105,25 +105,25 @@
           <div>
             <d-badge [showDot]="true"
                      [status]="rowItem['container'].livenessProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Liveness</span>
-<!--            <d-icon-->
-<!--              dPopover-->
-<!--              style="vertical-align: sub"-->
-<!--              [icon]="'icon-view'"-->
-<!--              [content]="livenessProbeTemplate"-->
-<!--              [position]="'left-top'"-->
-<!--              [controlled]="true"-->
-<!--              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"-->
-<!--            >-->
-<!--            </d-icon>-->
-<!--            <ng-template #livenessProbeTemplate>-->
-<!--              <app-ace-editor-->
-<!--                [readonly]="true"-->
-<!--                [aceValue]="rowItem['livenessProbe']"-->
-<!--                [mode]="'ace/mode/yaml'"-->
-<!--                [theme]="'ace/theme/tomorrow_night'"-->
-<!--              ></app-ace-editor>-->
-<!--            </ng-template>-->
+            <span
+              dPopover
+              [position]="'right-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="livenessProbeTemplate"
+              class="font-color-name"
+              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+            >&nbsp;Liveness</span>
+            <ng-template #livenessProbeTemplate>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].livenessProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+            </ng-template>
             <div style="margin-left: 2em">
               {{ rowItem['container'].livenessProbe.path }} [:{{ rowItem['container'].livenessProbe.port }}]
             </div>
@@ -131,25 +131,25 @@
           <div>
             <d-badge [showDot]="true"
                      [status]="rowItem['container'].readinessProbe.standard?'success':'warning'"></d-badge>
-            <span class="font-color-name" style="margin-right: 10px">&nbsp;Readiness</span>
-<!--            <d-icon-->
-<!--              dPopover-->
-<!--              style="vertical-align: sub"-->
-<!--              [icon]="'icon-view'"-->
-<!--              [content]="readinessProbeTemplate"-->
-<!--              [position]="'left-top'"-->
-<!--              [controlled]="true"-->
-<!--              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"-->
-<!--            >-->
-<!--            </d-icon>-->
-<!--            <ng-template #readinessProbeTemplate>-->
-<!--              <app-ace-editor-->
-<!--                [readonly]="true"-->
-<!--                [aceValue]="rowItem['readinessProbe']"-->
-<!--                [mode]="'ace/mode/yaml'"-->
-<!--                [theme]="'ace/theme/tomorrow_night'"-->
-<!--              ></app-ace-editor>-->
-<!--            </ng-template>-->
+            <span
+              dPopover
+              [position]="'right-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="readinessProbeTemplate"
+              class="font-color-name"
+              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+            >&nbsp;Readiness</span>
+            <ng-template #readinessProbeTemplate>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="rowItem['container'].readinessProbe.content"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+            </ng-template>
             <div style="margin-left: 2em">
               {{ rowItem['container'].readinessProbe.path }} [:{{ rowItem['container'].readinessProbe.port }}]
             </div>
@@ -161,41 +161,35 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-badge [showDot]="true" [status]="rowItem['container'].lifecycle.standard?'success':'warning'"></d-badge>
-          <span class="font-color-name" style="margin-right: 10px">&nbsp;PreStop:</span>
-<!--          <d-icon-->
-<!--            dPopover-->
-<!--            style="vertical-align: sub"-->
-<!--            [icon]="'icon-view'"-->
-<!--            [content]="lifecycleTemplate"-->
-<!--            [position]="'left-top'"-->
-<!--            [controlled]="true"-->
-<!--            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '700px' }"-->
-<!--          >-->
-<!--          </d-icon>-->
-<!--          <ng-template #lifecycleTemplate>-->
-<!--            <app-ace-editor-->
-<!--              [readonly]="true"-->
-<!--              [aceValue]="rowItem['lifecycle']"-->
-<!--              [mode]="'ace/mode/yaml'"-->
-<!--              [theme]="'ace/theme/tomorrow_night'"-->
-<!--            ></app-ace-editor>-->
-<!--          </ng-template>-->
+          <span
+            dPopover
+            [position]="'left-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="lifecycleTemplate"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+            class="font-color-name"
+          >&nbsp;PreStop</span>
+          <ng-template #lifecycleTemplate>
+            Baseline
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="rowItem['container'].lifecycle.content"
+              [mode]="'ace/mode/yaml'"
+              [theme]="'ace/theme/tomorrow_night'"
+            ></app-ace-editor>
+          </ng-template>
           <div style="margin-left: 2em">
             <span>{{ rowItem['container'].lifecycle.preStopExecCommand }}</span>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Standard">
+    <d-column field="standard" header="Standard">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <d-badge [showDot]="true"
-                   [status]="rowItem['actuatorStandard']?'success':'warning'"></d-badge>
-          <span class="font-color-name" style="margin-right: 10px">&nbsp;Actuator</span>
-          <br />
-          <d-badge [showDot]="true"
-                   [status]="rowItem['lifecycleStandard']?'success':'warning'"></d-badge>
-          <span class="font-color-name" style="margin-right: 10px">&nbsp;Lifecycle</span>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="cellItem?'var(--devui-success)':'var(--devui-danger)'"></d-icon>
         </ng-template>
       </d-cell>
     </d-column>
@@ -204,6 +198,11 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onRowFix(rowItem)"></d-icon>
+            <d-icon
+              [disabled]="rowItem['$rescan']"
+              [icon]="'icon-synchronize'"
+              [operable]="true"
+              (click)="onRowRescan(rowItem)"></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>

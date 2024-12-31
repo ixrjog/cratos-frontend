@@ -12,6 +12,7 @@ import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.u
 import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
 import { map } from 'rxjs/operators';
 import { ApplicationService } from '../../../../@core/services/application.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-application-resource-baseline-data-table',
@@ -149,6 +150,20 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
   protected readonly getRowColor = getRowColor;
 
   onRowFix(rowItem) {
+  }
+
+  onRowRescan(rowItem: ApplicationResourceBaselineVO) {
+    this.toastUtil.onCommonToast(TOAST_CONTENT.OPERATION);
+    rowItem['$rescan'] = true;
+    this.applicationActuatorService.rescanBaselineById({ baselineId: rowItem.id })
+      .pipe(
+        finalize(() => {
+          rowItem['$rescan'] = false;
+        }))
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.SCAN);
+        this.fetchData();
+      });
   }
 
   onSearchApplication = (term: string) => {

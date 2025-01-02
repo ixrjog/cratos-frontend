@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import {
@@ -7,12 +7,12 @@ import {
   ApplicationResourceBaselineVO,
 } from '../../../../@core/data/application-resource-baseline';
 import { ApplicationResourceBaselineService } from '../../../../@core/services/application-resource-baseline.service';
-import { ICategorySearchTagItem } from 'ng-devui';
+import { DataTableComponent, ICategorySearchTagItem } from 'ng-devui';
 import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
 import { map } from 'rxjs/operators';
 import { ApplicationService } from '../../../../@core/services/application.service';
-import { finalize } from 'rxjs';
+import { finalize, Observable, zip } from 'rxjs';
 
 @Component({
   selector: 'app-application-resource-baseline-data-table',
@@ -21,6 +21,7 @@ import { finalize } from 'rxjs';
 })
 export class ApplicationResourceBaselineDataTableComponent implements OnInit {
 
+  @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     applicationName: '',
     namespace: '',
@@ -220,5 +221,22 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
   onMemberTypeChanges(value: any) {
     this.memberType.baselineType = value[0];
     this.memberType.standard = value[1];
+  }
+
+  onBatchMerge() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchMerge,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.applicationActuatorService.mergeToBaseline({ baselineId: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_MERGE);
+        this.fetchData();
+      });
+    });
   }
 }

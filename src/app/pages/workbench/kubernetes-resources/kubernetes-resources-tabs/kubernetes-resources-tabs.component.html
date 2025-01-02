@@ -47,7 +47,10 @@
     <d-tabs type="pills" [(activeTab)]="tabActiveId">
       <d-tab [id]="'workloads'" [title]="'Workloads'">
         <div>
-          <app-kubernetes-workloads [deploymentList]="deploymentList"></app-kubernetes-workloads>
+          <app-kubernetes-workloads
+            [deploymentList]="deploymentList"
+            [application]="kubernetesApplication"
+          ></app-kubernetes-workloads>
         </div>
       </d-tab>
       <d-tab [id]="'network'" [title]="'Network'">

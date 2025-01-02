@@ -53,6 +53,7 @@
     [scrollable]="true"
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
+    [checkable]="true"
   >
     <d-column field="applicationName" header="Appliction"></d-column>
     <d-column header="Kubernetes Resource">
@@ -276,6 +277,21 @@
   </d-data-table>
 </div>
 <div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchMerge()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Merge</span>
+        </a>
+      </li>
+    </ul>
+  </div>
   <d-pagination
     class="pagination"
     [total]="table.pager.total"

@@ -181,6 +181,7 @@ export const DIALOG_DATA = {
     batchValid: '<strong>Confirm update these rows ?</strong>',
     batchInactive: '<strong>Confirm inactive these rows ?</strong>',
     batchRevoke: '<strong>Confirm revoke these rows ?</strong>',
+    batchMerge: '<strong>Confirm merge these rows ?</strong>',
     deleteAll:  '<strong>Confirm delete all rows ?</strong>',
   }
 }

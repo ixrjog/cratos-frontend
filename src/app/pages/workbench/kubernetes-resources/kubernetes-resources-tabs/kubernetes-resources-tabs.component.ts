@@ -31,6 +31,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   first = false;
   tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
+  kubernetesApplication: ApplicationVO;
   resourceNameOptions = [];
   nameSpaceLoading = false;
   loading = false;
@@ -57,6 +58,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.kubernetesDetails = null;
     this.deploymentList = [];
     this.serviceList = [];
+    this.kubernetesApplication = null;
     if (this.queryParam.applicationName !== '' && this.queryParam.namespace !== '') {
       const param: QueryApplicationResourceKubernetesDetails = {
         ...this.queryParam,
@@ -74,6 +76,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
             this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
             this.serviceList = this.kubernetesDetails?.network?.services;
             this.show = true;
+            this.kubernetesApplication = this.kubernetesDetails?.application;
             this.resourceNameOptions = this.deploymentList.map(deployment => deployment.metadata.name);
           } else {
             this.toastUtil.onErrorToast(body.body.message, { width: '600px' });

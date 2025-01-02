@@ -24,6 +24,10 @@
         </div>
 
         <div class="layout-bottom" style="margin-right: 5px">
+          <d-tag [tag]="'env:'+ kubernetesDeployment.env.envName" [customColor]="kubernetesDeployment.env.color"></d-tag>
+        </div>
+
+        <div class="layout-bottom" style="margin-right: 5px">
           <d-tag [tag]="'replicas x' + kubernetesDeployment.spec.replicas" [labelStyle]="'blue-w98'"></d-tag>
         </div>
 

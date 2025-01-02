@@ -1,5 +1,6 @@
 import { ApplicationVO } from './application';
 import { EdsInstanceVO } from './ext-datasource';
+import { EnvVO } from './env';
 
 export interface KubernetesDetailsVO {
   application: ApplicationVO;
@@ -45,6 +46,8 @@ export interface KubernetesDeploymentVO {
   spec: DeploymentSpecVO;
   pods: KubernetesPodVO[];
   topologyDetails: KubernetesTopologyDetails;
+  attributes: Map<string, string>;
+  env: EnvVO;
 }
 
 export interface KubernetesClusterVO {

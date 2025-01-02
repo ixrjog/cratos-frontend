@@ -19,6 +19,7 @@ export interface ApplicationResourceBaselineVO extends BaseVO {
     readinessProbe: ApplicationResourceBaselineProbeVO
     startupProbe: ApplicationResourceBaselineProbeVO
     lifecycle: ApplicationResourceBaselineLifecycleVO
+    env: ApplicationResourceBaselineEnvVarVO[]
   }
 }
 
@@ -37,6 +38,21 @@ export interface ApplicationResourceBaselineLifecycleVO {
   baseline: ApplicationResourceBaselineLifecycleVO;
 }
 
+export interface ApplicationResourceBaselineEnvVarVO {
+  name: string;
+  value: string;
+  valueFrom: {
+    configMapKeyRef: {
+      key: string
+      name: string
+      optional: boolean
+    }
+  };
+  standard: boolean;
+  content: string;
+  baseline: ApplicationResourceBaselineEnvVarVO;
+}
+
 export interface ApplicationResourceBaselinePageQuery extends PageQuery {
   applicationName: string;
   namespace: string;
@@ -52,10 +68,12 @@ export abstract class ApplicationResourceBaselineData {
 
   abstract queryApplicationResourceBaselinePage(param: ApplicationResourceBaselinePageQuery): Observable<DataTable<ApplicationResourceBaselineVO>>;
 
-  abstract scanApplicationActuator(): Observable<HttpResult<Boolean>>;
+  abstract scanAllBaseline(): Observable<HttpResult<Boolean>>;
 
   abstract getBaselineTypeOptions(): Observable<HttpResult<OptionsVO>>;
 
   abstract rescanBaselineById(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
+
+  abstract mergeToBaseline(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
 
 }

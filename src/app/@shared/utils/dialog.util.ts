@@ -174,6 +174,7 @@ export const DIALOG_DATA = {
     delete: '<strong>Confirm delete this row ?</strong>',
     inactive: '<strong>Confirm inactive this row ?</strong>',
     revoke: '<strong>Confirm revoke this row ?</strong>',
+    merge: '<strong>Confirm merge this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',

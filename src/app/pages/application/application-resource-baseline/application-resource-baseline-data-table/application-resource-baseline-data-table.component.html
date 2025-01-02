@@ -105,7 +105,7 @@
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
+            <div>
               {{ rowItem['container'].startupProbe.path }} [:{{ rowItem['container'].startupProbe.port }}]
             </div>
           </div>
@@ -138,7 +138,7 @@
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
+            <div>
               {{ rowItem['container'].livenessProbe.path }} [:{{ rowItem['container'].livenessProbe.port }}]
             </div>
           </div>
@@ -171,7 +171,7 @@
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
-            <div style="margin-left: 2em">
+            <div>
               {{ rowItem['container'].readinessProbe.path }} [:{{ rowItem['container'].readinessProbe.port }}]
             </div>
           </div>
@@ -208,8 +208,43 @@
               [theme]="'ace/theme/tomorrow_night'"
             ></app-ace-editor>
           </ng-template>
-          <div style="margin-left: 2em">
+          <div>
             <span>{{ rowItem['container'].lifecycle.preStopExecCommand }}</span>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Env">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div *ngFor="let env of rowItem['container'].env">
+            <d-badge [showDot]="true" [status]="env['standard']?'success':'warning'"></d-badge>
+            <span
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="envTemplate"
+              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+              class="font-color-name"
+            >&nbsp;{{ env['name'] }}</span>
+            <ng-template #envTemplate>
+              Current
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="env['content']"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+              Baseline
+              <app-ace-editor
+                [readonly]="true"
+                [aceValue]="env['baseline']['content']"
+                [mode]="'ace/mode/yaml'"
+                [theme]="'ace/theme/tomorrow_night'"
+              ></app-ace-editor>
+            </ng-template>
           </div>
         </ng-template>
       </d-cell>
@@ -230,7 +265,7 @@
               [icon]="'icon-synchronize'"
               [operable]="true"
               (click)="onRowRescan(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onRowFix(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-merge-request'" [operable]="true" (click)="onRowMerge(rowItem)"></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>

@@ -21,7 +21,7 @@ export class ApplicationResourceBaselineService extends ApplicationResourceBasel
     return this.apiService.post(this.baseUrl, '/page/query', param);
   }
 
-  scanApplicationActuator(): Observable<HttpResult<Boolean>> {
+  scanAllBaseline(): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/scanAll', {});
   }
 
@@ -31,6 +31,10 @@ export class ApplicationResourceBaselineService extends ApplicationResourceBasel
 
   rescanBaselineById(param: { baselineId: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam(this.baseUrl, '/rescan', param);
+  }
+
+  mergeToBaseline(param: { baselineId: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/merge', param);
   }
 
 }

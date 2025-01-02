@@ -112,7 +112,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       content: this.dialogDate.content.scanAll,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.applicationActuatorService.scanApplicationActuator()
+      this.applicationActuatorService.scanAllBaseline()
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.SCAN);
           this.fetchData();
@@ -149,7 +149,18 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
 
-  onRowFix(rowItem) {
+  onRowMerge(rowItem: ApplicationResourceBaselineVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.merge,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.applicationActuatorService.mergeToBaseline({ baselineId: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.MERGE);
+          this.fetchData();
+        });
+    });
   }
 
   onRowRescan(rowItem: ApplicationResourceBaselineVO) {

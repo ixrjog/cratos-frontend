@@ -30,7 +30,6 @@ export class ToastUtil {
       style: style,
     });
   }
-
 }
 
 export const TOAST_CONTENT = {
@@ -38,6 +37,7 @@ export const TOAST_CONTENT = {
   UPDATE: 'Update success',
   DELETE: 'Delete success',
   REVOKE: 'Revoke success',
+  MERGE: 'Merge success',
   INACTIVE: 'Inactive success',
   IMPORT: 'Importing, please wait',
   OPERATION: 'Operation in progress, please wait',

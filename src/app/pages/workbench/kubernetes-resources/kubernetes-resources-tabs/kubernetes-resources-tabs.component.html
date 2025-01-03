@@ -37,6 +37,7 @@
     [allowClear]="true"
     [options]="resourceNameOptions"
     [(ngModel)]="queryParam.name"
+    (valueChange)="onNameChange($event)"
   ></d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter
@@ -60,11 +61,4 @@
       </d-tab>
     </d-tabs>
   </div>
-
 </div>
-
-
-
-
-
-

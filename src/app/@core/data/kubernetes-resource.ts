@@ -115,6 +115,7 @@ export interface ApplicationKubernetesDetailsRequest {
   action: string;
   applicationName?: string;
   namespace?: string;
+  name?: string;
 }
 
 export abstract class KubernetesResourceData {

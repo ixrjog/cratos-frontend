@@ -3,7 +3,10 @@ import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/appl
 import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
 import { ApplicationService } from '../../../../@core/services/application.service';
-import { QueryApplicationResourceKubernetesDetails } from '../../../../@core/data/application-resource';
+import {
+  QueryApplicationResourceKubernetesDetails,
+  QueryKubernetesDeploymentOptions,
+} from '../../../../@core/data/application-resource';
 import { finalize, Subscription, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -77,7 +80,6 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
             this.serviceList = this.kubernetesDetails?.network?.services;
             this.show = true;
             this.kubernetesApplication = this.kubernetesDetails?.application;
-            this.resourceNameOptions = this.deploymentList.map(deployment => deployment.metadata.name);
           } else {
             this.toastUtil.onErrorToast(body.body.message, { width: '600px' });
           }
@@ -113,10 +115,23 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onNameChange(name: string) {
+    this.wsOnUnsubSend();
+    this.fetchData();
+  }
+
   onResourceNamespaceChange(tab) {
     this.queryParam.namespace = tab;
     this.queryParam.name = '';
     this.fetchData();
+    const parma: QueryKubernetesDeploymentOptions = {
+      applicationName: this.application.name,
+      namespace: this.queryParam.namespace,
+    };
+    this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
+      .subscribe(({ body }) => {
+        this.resourceNameOptions = body.options.map(item => item.value);
+      });
   }
 
   getResourceNamespaceOptions() {
@@ -190,6 +205,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         action: WsMessageActionEnum.SUBSCRIPTION,
         applicationName: this.queryParam.applicationName,
         namespace: this.queryParam.namespace,
+        name: this.queryParam.name,
       };
       this.ws.send(JSON.stringify(param));
     }
@@ -213,8 +229,14 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
           if (msg.body.application.name === this.queryParam.applicationName
             && msg.body.namespace === this.queryParam.namespace) {
             this.kubernetesDetails = msg.body;
-            this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
             this.serviceList = this.kubernetesDetails?.network?.services;
+            if (this.queryParam.name !== '' && this.queryParam.name !== null) {
+              this.deploymentList = this.kubernetesDetails?.workloads?.deployments.filter(
+                deployment => deployment.metadata.name === this.queryParam.name,
+              );
+            } else {
+              this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
+            }
           }
         } else {
           this.wsOnUnsubSend();

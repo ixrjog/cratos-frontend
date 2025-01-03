@@ -33,13 +33,12 @@
     *ngIf="show"
     class="cascader"
     [options]="baselineTypeOptions"
-    [placeholder]="'Select member type'"
+    placeholder="Select member type"
     [(ngModel)]="memberType"
     (ngModelChange)="onMemberTypeChanges($event)"
     [dropdownPanelClass]="'custom-class'"
     [allowClear]="true"
-  >
-  </d-cascader>
+  ></d-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
   <span class="right-button">
     <d-button bsStyle="danger" (click)="onScanAll()">Scan All</d-button>

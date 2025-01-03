@@ -45,7 +45,8 @@ export const TOAST_CONTENT = {
   UNREGISTER: 'Unregister success',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
-  BATCH_MERGE: 'Batch Merge success',
+  BATCH_MERGE: 'Batch merge success',
+  BATCH_SCAN: 'Batch scan success',
   BATCH_INACTIVE: 'Batch inactive success',
   BATCH_REVOKE: 'Batch revoke success',
 };

@@ -37,6 +37,7 @@
     [(ngModel)]="memberType"
     (ngModelChange)="onMemberTypeChanges($event)"
     [dropdownPanelClass]="'custom-class'"
+    [allowClear]="true"
   >
   </d-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
@@ -246,6 +247,14 @@
                 [theme]="'ace/theme/tomorrow_night'"
               ></app-ace-editor>
             </ng-template>
+            <div>
+              <span *ngIf="env['value']">{{ env['name'] }}:{{ env['value'] }}</span>
+              <span *ngIf="!env['value']">
+                <span *ngFor="let value of env['valueFrom'] | keyvalue">
+                  <span>{{ value.key }} | {{ value.value['key'] }}: {{ value.value['name'] }}</span>
+                </span>
+              </span>
+            </div>
           </div>
         </ng-template>
       </d-cell>
@@ -285,9 +294,14 @@
       </d-button>
     </d-button-group>
     <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchRescan()">
+        <a dDropDownMenuItem>
+          <span class="icon-synchronize" style="padding-right: 5px; vertical-align: middle"> Rescan</span>
+        </a>
+      </li>
       <li role="menuitem" (click)="onBatchMerge()">
         <a dDropDownMenuItem>
-          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Merge</span>
+          <span class="icon-merge-request" style="padding-right: 5px; vertical-align: middle"> Merge</span>
         </a>
       </li>
     </ul>

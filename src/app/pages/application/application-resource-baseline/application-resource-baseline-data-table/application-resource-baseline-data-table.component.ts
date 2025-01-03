@@ -219,8 +219,12 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
   }
 
   onMemberTypeChanges(value: any) {
-    this.memberType.baselineType = value[0];
-    this.memberType.standard = value[1];
+    if (JSON.stringify(value)=== '[]') {
+      this.memberType = null
+    } else {
+      this.memberType.baselineType = value[0];
+      this.memberType.standard = value[1];
+    }
   }
 
   onBatchMerge() {
@@ -235,6 +239,24 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_MERGE);
+        this.fetchData();
+      });
+    });
+  }
+
+
+  onBatchRescan() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchScan,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.applicationActuatorService.rescanBaselineById({ baselineId: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_SCAN);
         this.fetchData();
       });
     });

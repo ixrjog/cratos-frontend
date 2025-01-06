@@ -6,6 +6,7 @@ import { getRowColor } from '../../../../@shared/utils/data-table.utli';
 import { CredentialService } from '../../../../@core/services/credential.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 
 @Component({
   selector: 'app-user-ssh-key-settings',
@@ -66,4 +67,5 @@ export class UserSshKeySettingsComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 }

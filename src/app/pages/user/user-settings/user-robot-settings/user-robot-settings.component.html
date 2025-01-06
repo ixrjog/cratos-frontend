@@ -74,13 +74,14 @@
         </span>
         <d-card-header>
           <d-card-title>
-            <h4 style="margin: 0">{{ token.name }}</h4>
+            <h4 style="margin: 0 10px 0 0;display: inline-block">{{ token.name }}</h4>
+            <span class="card-content-comment font-color-comment">{{ token.comment | dSafeNullPipe }}</span>
           </d-card-title>
         </d-card-header>
         <d-card-content>
-          <div class="card-content-comment font-color-comment">{{ token.comment | dSafeNullPipe }}</div>
           <div>
-            <span style="margin-right: 10px">{{ token.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+            <span>{{ token.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+            &nbsp;
             <strong>{{ token.expiredTime | dRelativeTime: limit | async }}</strong>
           </div>
         </d-card-content>

@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ApplicationComponent } from './application.component';
 import { ApplicationListComponent } from './application-list/application-list.component';
-import { ApplicationResourceBaselineComponent } from './application-resource-baseline/application-resource-baseline.component';
+import {
+  ApplicationResourceBaselineComponent,
+} from './application-resource-baseline/application-resource-baseline.component';
 
 const routes: Routes = [
   {

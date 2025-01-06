@@ -26,11 +26,16 @@
         </span>
         <d-card-header>
           <d-card-title>
-            <h4 style="margin: 0">{{ key.title }}</h4>
+            <h4 style="margin: 0 10px 0 0;display: inline-block">{{ key.title }}</h4>
+            <span class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</span>
           </d-card-title>
         </d-card-header>
         <d-card-content>
-          <div class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</div>
+          <div>
+            <span>{{ key.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+            &nbsp;
+            <strong>{{ key.expiredTime | dRelativeTime: limit | async }}</strong>
+          </div>
         </d-card-content>
       </d-card>
     </da-col-item>

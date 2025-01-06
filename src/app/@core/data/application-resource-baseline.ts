@@ -1,5 +1,6 @@
 import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery } from './base-data';
 import { Observable } from 'rxjs';
+import { EnvVO } from './env';
 
 export interface ApplicationResourceBaselineVO extends BaseVO {
   id: number;
@@ -14,6 +15,7 @@ export interface ApplicationResourceBaselineVO extends BaseVO {
   framework: string;
   standard: boolean;
   comment: string;
+  env: EnvVO;
   container: {
     livenessProbe: ApplicationResourceBaselineProbeVO
     readinessProbe: ApplicationResourceBaselineProbeVO

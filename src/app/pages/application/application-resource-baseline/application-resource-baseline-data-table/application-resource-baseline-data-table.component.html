@@ -61,7 +61,14 @@
         <ng-template let-rowItem="rowItem">
           <span dClipboard [content]="rowItem.instanceName">Kubernetes:&nbsp;{{ rowItem.instanceName }}</span>
           <br />
-          <span dClipboard [content]="rowItem.namespace">Namespace:&nbsp;{{ rowItem.namespace }}</span>
+          <span dClipboard [content]="rowItem.namespace">Namespace:&nbsp;
+            <span *ngIf="rowItem['env'] === null">
+              {{ rowItem.namespace }}
+            </span>
+             <span *ngIf="rowItem['env'] !== null">
+               <d-tag [tag]="rowItem.env.envName" [customColor]="rowItem.env.color"></d-tag>
+            </span>
+          </span>
           <br />
           <span dClipboard [content]="rowItem.name">Deployment:&nbsp;{{ rowItem.name }}</span>
         </ng-template>

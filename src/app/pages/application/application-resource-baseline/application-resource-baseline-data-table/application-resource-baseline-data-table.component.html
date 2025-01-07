@@ -40,6 +40,13 @@
     [dropdownPanelClass]="'custom-class'"
     [allowClear]="true"
   ></d-cascader>
+  <d-checkbox
+    class="checkbox"
+    *ngIf="queryParam.namespace === 'prod'"
+    [label]="'query canary'"
+    [isShowTitle]="false"
+    (change)="onCheckboxChange($event)"
+  ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
   <span class="right-button">
     <d-button bsStyle="danger" (click)="onScanAll()">Scan All</d-button>

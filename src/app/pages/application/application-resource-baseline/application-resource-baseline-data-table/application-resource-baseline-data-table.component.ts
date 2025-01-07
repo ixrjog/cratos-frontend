@@ -27,7 +27,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     namespace: '',
     framework: '',
     standard: null,
-    isQueryCanary: null,
+    isQueryCanary: false,
   };
   memberType: {
     baselineType: string;
@@ -63,16 +63,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       options: [
         { label: 'true', value: true }, { label: 'false', value: false },
       ],
-    },
-    {
-      label: 'QueryCanary',
-      field: 'isQueryCanary',
-      type: 'radio',
-      group: 'Status',
-      options: [
-        { label: 'true', value: true }, { label: 'false', value: false },
-      ],
-    },
+    }
   ];
   groupOrderConfig = [ 'Basic', 'Status' ];
 
@@ -140,7 +131,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     this.queryParam.namespace = '';
     this.queryParam.framework = '';
     this.queryParam.standard = null;
-    this.queryParam.isQueryCanary = null;
+    this.queryParam.isQueryCanary = false;
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':
@@ -246,6 +237,10 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       this.memberType.baselineType = value[0];
       this.memberType.standard = value[1];
     }
+  }
+
+  onCheckboxChange(value) {
+    this.queryParam.isQueryCanary = value;
   }
 
   onBatchRedeploy() {

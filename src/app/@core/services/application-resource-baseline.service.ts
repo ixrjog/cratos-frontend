@@ -37,4 +37,8 @@ export class ApplicationResourceBaselineService extends ApplicationResourceBasel
     return this.apiService.putByParam(this.baseUrl, '/merge', param);
   }
 
+  redeployBaselineDeployment(param: { baselineId: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/redeploy', param);
+  }
+
 }

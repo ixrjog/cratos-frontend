@@ -175,6 +175,7 @@ export const DIALOG_DATA = {
     inactive: '<strong>Confirm inactive this row ?</strong>',
     revoke: '<strong>Confirm revoke this row ?</strong>',
     merge: '<strong>Confirm merge this row ?</strong>',
+    redeploy: '<strong>Confirm redeploy this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',
@@ -182,6 +183,7 @@ export const DIALOG_DATA = {
     batchInactive: '<strong>Confirm inactive these rows ?</strong>',
     batchRevoke: '<strong>Confirm revoke these rows ?</strong>',
     batchMerge: '<strong>Confirm merge these rows ?</strong>',
+    batchRedeploy: '<strong>Confirm redeploy these rows ?</strong>',
     batchScan: '<strong>Confirm scan these rows ?</strong>',
     deleteAll:  '<strong>Confirm delete all rows ?</strong>',
   }

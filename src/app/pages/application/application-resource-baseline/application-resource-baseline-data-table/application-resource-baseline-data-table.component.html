@@ -17,6 +17,7 @@
     </ng-template>
   </d-select>
   <d-category-search
+    *ngIf="showCategorySearch"
     style="width: 500px;max-width: 500px"
     class="category-search"
     [category]="category"
@@ -30,7 +31,7 @@
     (selectedTagsChange)="selectedTagsChange($event)"
   ></d-category-search>
   <d-cascader
-    *ngIf="show"
+    *ngIf="showCascader"
     class="cascader"
     [options]="baselineTypeOptions"
     placeholder="Select member type"
@@ -55,7 +56,16 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="applicationName" header="Appliction"></d-column>
+    <d-column header="Appliction">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon [icon]="'icon-refresh'" [rotate]="'infinite'" *ngIf="rowItem['isDeploying']">
+            <span iconSuffix>{{ rowItem['applicationName'] }}</span>
+          </d-icon>
+          <span *ngIf="!rowItem['isDeploying']">{{ rowItem['applicationName'] }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Kubernetes Resource">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -265,14 +275,14 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="standard" header="Standard">
+    <d-column field="standard" header="Standard" [width]="'80px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-icon [icon]="'icon-priority'" [color]="cellItem?'var(--devui-success)':'var(--devui-danger)'"></d-icon>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'150px'">
+    <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
@@ -282,6 +292,12 @@
               [operable]="true"
               (click)="onRowRescan(rowItem)"></d-icon>
             <d-icon [icon]="'icon-merge-request'" [operable]="true" (click)="onRowMerge(rowItem)"></d-icon>
+            <d-icon
+              [disabled]="rowItem['isDeploying']"
+              [icon]="'icon-publish'"
+              [operable]="true"
+              (click)="onRowRedeploy(rowItem)"
+            ></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>
@@ -308,6 +324,11 @@
       <li role="menuitem" (click)="onBatchMerge()">
         <a dDropDownMenuItem>
           <span class="icon-merge-request" style="padding-right: 5px; vertical-align: middle"> Merge</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchRedeploy()">
+        <a dDropDownMenuItem>
+          <span class="icon-publish" style="padding-right: 5px; vertical-align: middle"> Redeploy</span>
         </a>
       </li>
     </ul>

@@ -60,6 +60,7 @@ export interface ApplicationResourceBaselinePageQuery extends PageQuery {
   namespace: string;
   framework: string;
   standard: boolean;
+  isQueryCanary: boolean;
   byMemberType: {
     baselineType: string;
     standard: boolean;
@@ -77,5 +78,7 @@ export abstract class ApplicationResourceBaselineData {
   abstract rescanBaselineById(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
 
   abstract mergeToBaseline(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
+
+  abstract redeployBaselineDeployment(param: { baselineId: number }): Observable<HttpResult<Boolean>>;
 
 }

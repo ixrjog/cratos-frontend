@@ -27,12 +27,14 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     namespace: '',
     framework: '',
     standard: null,
+    isQueryCanary: null,
   };
   memberType: {
     baselineType: string;
     standard: boolean;
   } = null;
-  show: boolean = false;
+  showCascader: boolean = false;
+  showCategorySearch: boolean = false;
   application: ApplicationVO;
   table: Table<ApplicationResourceBaselineVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   dialogDate = {
@@ -48,12 +50,6 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
 
   category: ICategorySearchTagItem[] = [
     {
-      label: 'Namespace',
-      field: 'namespace',
-      type: 'textInput',
-      group: 'Basic',
-    },
-    {
       label: 'Framework',
       field: 'framework',
       type: 'textInput',
@@ -68,11 +64,20 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
         { label: 'true', value: true }, { label: 'false', value: false },
       ],
     },
+    {
+      label: 'QueryCanary',
+      field: 'isQueryCanary',
+      type: 'radio',
+      group: 'Status',
+      options: [
+        { label: 'true', value: true }, { label: 'false', value: false },
+      ],
+    },
   ];
   groupOrderConfig = [ 'Basic', 'Status' ];
 
   constructor(
-    private applicationActuatorService: ApplicationResourceBaselineService,
+    private applicationResourceBaselineService: ApplicationResourceBaselineService,
     private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
@@ -89,11 +94,12 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchData(this.table, this.applicationActuatorService.queryApplicationResourceBaselinePage(param));
+    onFetchData(this.table, this.applicationResourceBaselineService.queryApplicationResourceBaselinePage(param));
   }
 
   ngOnInit() {
     this.getBaselineTypeOptions();
+    this.getNamespaceOptions();
     this.fetchData();
   }
 
@@ -113,7 +119,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       content: this.dialogDate.content.scanAll,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.applicationActuatorService.scanAllBaseline()
+      this.applicationResourceBaselineService.scanAllBaseline()
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.SCAN);
           this.fetchData();
@@ -134,6 +140,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     this.queryParam.namespace = '';
     this.queryParam.framework = '';
     this.queryParam.standard = null;
+    this.queryParam.isQueryCanary = null;
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':
@@ -156,9 +163,23 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
       content: this.dialogDate.content.merge,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.applicationActuatorService.mergeToBaseline({ baselineId: rowItem.id })
+      this.applicationResourceBaselineService.mergeToBaseline({ baselineId: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.MERGE);
+          this.fetchData();
+        });
+    });
+  }
+
+  onRowRedeploy(rowItem: ApplicationResourceBaselineVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.redeploy,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.applicationResourceBaselineService.redeployBaselineDeployment({ baselineId: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.REDEPLOY);
           this.fetchData();
         });
     });
@@ -167,7 +188,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
   onRowRescan(rowItem: ApplicationResourceBaselineVO) {
     this.toastUtil.onCommonToast(TOAST_CONTENT.OPERATION);
     rowItem['$rescan'] = true;
-    this.applicationActuatorService.rescanBaselineById({ baselineId: rowItem.id })
+    this.applicationResourceBaselineService.rescanBaselineById({ baselineId: rowItem.id })
       .pipe(
         finalize(() => {
           rowItem['$rescan'] = false;
@@ -196,7 +217,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
 
   getBaselineTypeOptions() {
     this.baselineTypeOptions = [];
-    this.applicationActuatorService.getBaselineTypeOptions()
+    this.applicationResourceBaselineService.getBaselineTypeOptions()
       .subscribe(({ body }) => {
         body.options.map(baseline => {
           this.baselineTypeOptions.push({
@@ -214,7 +235,7 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
             ],
           });
         });
-        this.show = true;
+        this.showCascader = true;
       });
   }
 
@@ -227,23 +248,22 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     }
   }
 
-  onBatchMerge() {
+  onBatchRedeploy() {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.batchMerge,
+      content: this.dialogDate.content.batchRedeploy,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.applicationActuatorService.mergeToBaseline({ baselineId: row.id }));
+        obList.push(this.applicationResourceBaselineService.redeployBaselineDeployment({ baselineId: row.id }));
       });
       zip(obList).subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_MERGE);
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_REDEPLOY);
         this.fetchData();
       });
     });
   }
-
 
   onBatchRescan() {
     const dialogDate = {
@@ -253,12 +273,47 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     this.dialogUtil.onDialog(dialogDate, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => {
-        obList.push(this.applicationActuatorService.rescanBaselineById({ baselineId: row.id }));
+        obList.push(this.applicationResourceBaselineService.rescanBaselineById({ baselineId: row.id }));
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_SCAN);
         this.fetchData();
       });
     });
+  }
+
+  onBatchMerge() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchMerge,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.applicationResourceBaselineService.mergeToBaseline({ baselineId: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_MERGE);
+        this.fetchData();
+      });
+    });
+  }
+
+  getNamespaceOptions() {
+    let namespaceItem: ICategorySearchTagItem = {
+      label: 'Namespace',
+      field: 'namespace',
+      type: 'radio',
+      group: 'Basic',
+      options: [],
+    };
+    this.applicationService.getResourceNamespaceOptions()
+      .subscribe(({ body }) => {
+        body.options.map(namespace => {
+          namespaceItem.options.push(namespace);
+        });
+        this.category.push(namespaceItem);
+        this.showCategorySearch = true;
+      });
   }
 }

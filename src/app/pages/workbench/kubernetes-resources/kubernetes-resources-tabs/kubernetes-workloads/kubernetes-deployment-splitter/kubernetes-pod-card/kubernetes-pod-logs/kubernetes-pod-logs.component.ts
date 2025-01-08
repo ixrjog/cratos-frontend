@@ -41,7 +41,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   }
 
   wsOnInit() {
-    this.ws = this.wsApiService.createWsClient('/application/kubernetes/details');
+    this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
   }
 
   onWsHeartbeat() {

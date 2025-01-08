@@ -2,7 +2,7 @@
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="36px" [resizable]="false">
       <div class="splitter-header">
-        <h1 style="margin: 0 10px 0 0">{{application.name}}</h1>
+        <h1 style="margin: 0 10px 0 0">{{ application.name }}</h1>
 
         <div class="layout-center" style="margin-right: 5px">
           <d-tag [tag]="'total replicas x' + getTotalReplicas()" [labelStyle]="'blue-w98'"></d-tag>
@@ -13,7 +13,10 @@
     <d-splitter-pane>
       <d-splitter-pane size="30px" [resizable]="false">
         <div style="margin-bottom: 5px" *ngFor="let deployment of deploymentList">
-          <app-kubernetes-deployment-splitter [kubernetesDeployment]="deployment"></app-kubernetes-deployment-splitter>
+          <app-kubernetes-deployment-splitter
+            [application]="application"
+            [kubernetesDeployment]="deployment"
+          ></app-kubernetes-deployment-splitter>
         </div>
       </d-splitter-pane>
     </d-splitter-pane>

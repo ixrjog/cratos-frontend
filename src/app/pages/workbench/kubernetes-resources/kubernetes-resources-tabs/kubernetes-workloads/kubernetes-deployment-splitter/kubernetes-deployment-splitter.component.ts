@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DeploymentTemplateSpecContainerVO, KubernetesDeploymentVO } from '../../../../../../@core/data/kubernetes';
+import { ApplicationVO } from '../../../../../../@core/data/application';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -9,6 +10,8 @@ import { DeploymentTemplateSpecContainerVO, KubernetesDeploymentVO } from '../..
 export class KubernetesDeploymentSplitterComponent implements OnInit {
 
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
+  @Input() application: ApplicationVO;
+
   kubernetesResources: any;
 
   ngOnInit(): void {

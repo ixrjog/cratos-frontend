@@ -116,6 +116,22 @@ export interface ApplicationKubernetesDetailsRequest {
   applicationName?: string;
   namespace?: string;
   name?: string;
+  deployments?: ApplicationKubernetesDeploymentRequest[];
+}
+
+export interface ApplicationKubernetesDeploymentRequest {
+  kubernetesClusterName: string;
+  name: string;
+  pods: ApplicationKubernetesPodRequest[];
+}
+
+export interface ApplicationKubernetesPodRequest {
+  instanceId: string;
+  name: string;
+  namespace: string;
+  container: {
+    name: string
+  };
 }
 
 export abstract class KubernetesResourceData {

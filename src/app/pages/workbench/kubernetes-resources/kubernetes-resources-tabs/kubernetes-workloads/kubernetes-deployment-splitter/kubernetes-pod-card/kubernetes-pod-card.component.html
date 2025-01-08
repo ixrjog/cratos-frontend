@@ -3,14 +3,13 @@
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
-          <h4
+          <span
             class="font-color-name"
             dClipboard
             [content]="kubernetesPod.metadata.name"
             [title]="kubernetesPod.metadata.name"
-          >
-            {{ subPodName() | dSafeNullPipe }}
-          </h4>
+          >{{ subPodName() | dSafeNullPipe }}
+          </span>
           <d-tag
             dPopover
             [trigger]="'hover'"
@@ -50,11 +49,11 @@
         ></app-kubernetes-pod-containers>
       </div>
     </d-card-content>
-<!--    <d-card-actions [align]="'end'" style="margin: 0">-->
-<!--      <div>-->
+    <d-card-actions [align]="'end'" style="margin: 0">
+      <div>
 <!--        <d-button bsStyle="text" style="margin-right: 8px">Login</d-button>-->
-<!--        <d-button bsStyle="text">Log</d-button>-->
-<!--      </div>-->
-<!--    </d-card-actions>-->
+        <d-button bsStyle="text" (click)="onRowLogs()">Logs</d-button>
+      </div>
+    </d-card-actions>
   </d-card>
 </div>

@@ -28,9 +28,9 @@
   <div>
     <span class="name">Restart Count</span>
     <span class="value" *ngIf="container.restartCount !== 0">
-      {{ container.restartCount | dSafeNullPipe }}
       <i class="fa-solid fa-triangle-exclamation"
          style="color: #f66f6a;margin-left: 5px"></i>
+      {{ container.restartCount | dSafeNullPipe }}
     </span>
     <span class="value" *ngIf="container.restartCount === 0">
       {{ container.restartCount | dSafeNullPipe }}

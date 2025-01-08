@@ -147,6 +147,7 @@
               *ngFor="let pod of kubernetesDeployment.pods"
               [kubernetesPod]="pod"
               [kubernetesDeployment]="kubernetesDeployment"
+              [application]="application"
               class="card-item"
             ></app-kubernetes-pod-card>
           </div>

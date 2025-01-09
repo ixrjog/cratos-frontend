@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
@@ -8,6 +7,7 @@ import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-ta
 import { Observable, zip } from 'rxjs';
 import { RobotEdit, RobotPageQuery, RobotVO } from '../../../../@core/data/robot';
 import { RobotService } from '../../../../@core/services/robot.service';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-robot-data-table',
@@ -20,7 +20,7 @@ export class RobotDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 
   table: Table<RobotVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 

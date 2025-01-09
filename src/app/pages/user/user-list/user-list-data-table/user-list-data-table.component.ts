@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -11,6 +10,7 @@ import { UserEdit, UserPageQuery, UserVO } from '../../../../@core/data/user';
 import { UserService } from '../../../../@core/services/user.service';
 import { catchError } from 'rxjs/operators';
 import { UserPermissionService } from '../../../../@core/services/user-permission.service';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -23,7 +23,7 @@ export class UserListDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
   table: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 

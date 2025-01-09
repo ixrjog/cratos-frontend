@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
@@ -19,6 +18,7 @@ import {
   SshSessionInstanceCommandComponent,
 } from './ssh-session-instance-command/ssh-session-instance-command.component';
 import { countResource } from '../../../../@shared/utils/resource-count.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-ssh-session-data-table',
@@ -33,7 +33,7 @@ export class SshSessionDataTableComponent implements OnInit {
     sessionType: null,
   };
   user: UserVO;
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.SSH_SESSION;
 
   sessionTypeOptions = [

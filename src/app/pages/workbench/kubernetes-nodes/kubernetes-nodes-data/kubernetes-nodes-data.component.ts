@@ -9,6 +9,7 @@ import { EdsService } from '../../../../@core/services/ext-datasource.service.s'
 import { EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
 import { QueryKubernetesNodeDetails } from '../../../../@core/data/ext-datasource-kubernetes';
 import { EdsKubernetesService } from '../../../../@core/services/ext-datasource-kubernetes.service';
+import { WS_HEART_INTERVAL } from '../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-kubernetes-nodes-data',
@@ -89,7 +90,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, 10000)
+    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -115,9 +116,9 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   }
 
   // initInterval() {
-  //   this.timerRequest = timer(1000, 1000)
+  //   this.timerRequest = timer(1000, WS_INIT_INTERVAL)
   //     .subscribe(num => {
-  //       if (this.ws?.readyState !== WebSocket.OPEN) {
+  //        if (this.ws?.readyState !== WebSocket.OPEN && this.ws?.readyState !== WebSocket.CONNECTING) {
   //         this.wsOnInit();
   //         this.wsOnOpen();
   //         this.wsOnSubSend();

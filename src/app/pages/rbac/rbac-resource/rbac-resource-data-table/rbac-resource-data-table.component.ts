@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { GroupPageQuery, RbacGroupVO, RbacResourceVO, ResourcePageQuery } from '../../../../@core/data/rbac';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -10,6 +9,7 @@ import { getRowColor, onFetchData } from '../../../../@shared/utils/data-table.u
 import { Observable, zip } from 'rxjs';
 import { RbacResourceEditorComponent } from './rbac-resource-editor/rbac-resource-editor.component';
 import { map } from 'rxjs/operators';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-rbac-resource-data-table',
@@ -25,7 +25,7 @@ export class RbacResourceDataTableComponent implements OnInit {
     groupId: null,
   };
   group: RbacGroupVO = null;
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   table: Table<RbacResourceVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {

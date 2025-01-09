@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
 import { HttpResult, Table, TABLE_DATA } from '../../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
@@ -28,6 +27,7 @@ import {
 import {
   BusinessCascaderComponent,
 } from '../../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -55,7 +55,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     },
   };
 
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 
   table: Table<EdsAssetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 

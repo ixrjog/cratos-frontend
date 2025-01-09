@@ -3,9 +3,9 @@ import { FormLayout } from 'ng-devui/form';
 import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 import { RobotEdit, RobotTokenVO, RobotVO } from '../../../../@core/data/robot';
 import { RobotService } from '../../../../@core/services/robot.service';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-user-robot-settings',
@@ -34,7 +34,7 @@ export class UserRobotSettingsComponent implements OnInit {
   };
   robotToken: RobotTokenVO = null;
   minDate: Date = new Date();
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   robotTokenExample: string = `
   ### Robot calls API
 \`\`\`bash

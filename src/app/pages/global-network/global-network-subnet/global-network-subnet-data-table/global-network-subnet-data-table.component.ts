@@ -1,20 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
-import { GlobalNetworkSubnetEdit, GlobalNetworkSubnetPageQuery, GlobalNetworkSubnetVO } from '../../../../@core/data/global-network';
+import {
+  GlobalNetworkSubnetEdit,
+  GlobalNetworkSubnetPageQuery,
+  GlobalNetworkSubnetVO,
+} from '../../../../@core/data/global-network';
 import {
   GlobalNetworkSubnetEditorComponent,
 } from './global-network-subnet-editor/global-network-subnet-editor.component';
 import { GlobalNetworkService } from '../../../../@core/services/global-network.service';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-global-network-subnet-data-table',
@@ -32,7 +36,7 @@ export class GlobalNetworkSubnetDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_SUBNET;
   table: Table<GlobalNetworkSubnetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   newGlobalNetworkSubnet: GlobalNetworkSubnetEdit = {

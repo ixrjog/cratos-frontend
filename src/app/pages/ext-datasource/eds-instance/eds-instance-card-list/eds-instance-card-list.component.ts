@@ -4,7 +4,7 @@ import { Table } from '../../../../@core/data/base-data';
 import { EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-eds-instance-card-list',

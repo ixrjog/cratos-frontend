@@ -8,10 +8,11 @@ import {
   SshCommandVO,
 } from '../../../../../@core/data/ssh-session';
 import { onFetchData } from '../../../../../@shared/utils/data-table.utli';
-import { WebSocketApiService } from '../../../../../@core/services/ws.api.service';
+import { WebSocketApiService, WsMessageTopicEnum } from '../../../../../@core/services/ws.api.service';
 import { Subscription, timer } from 'rxjs';
 import { XtermLogsComponent } from '../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
 import { ToastUtil } from '../../../../../@shared/utils/toast.util';
+import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-ssh-session-instance-command',
@@ -45,7 +46,7 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, 10000)
+    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -95,9 +96,11 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   }
 
   initInterval() {
-    this.timerRequest = timer(1000, 1000)
+    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .subscribe(num => {
-        if (this.ws?.readyState !== WebSocket.OPEN) {
+        if (this.ws?.readyState !== WebSocket.OPEN
+          && this.ws?.readyState !== WebSocket.CONNECTING
+          && this.ws?.readyState !== WebSocket.CLOSING) {
           this.wsOnInit();
           this.wsOnOpen();
           this.wsOnMessage();
@@ -116,7 +119,7 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
   wsOnSend() {
     const param: SshAuditPlayMessage = {
-      state: 'PLAY',
+      topic: WsMessageTopicEnum.PLAY_SSH_SESSION_AUDIT,
       sessionId: this.sessionId,
       instanceId: this.instanceId,
     };

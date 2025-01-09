@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataTableComponent, DialogService } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
+import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import {
@@ -20,8 +19,9 @@ import {
 import { TrafficLayerDomainPageQuery } from '../../../../@core/data/traffic-layer';
 import { map } from 'rxjs/operators';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-global-network-planning-data-table',
@@ -40,7 +40,7 @@ export class GlobalNetworkPlanningDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.GLOBAL_NETWORK_PLANNING;
   network: GlobalNetworkVO;
 

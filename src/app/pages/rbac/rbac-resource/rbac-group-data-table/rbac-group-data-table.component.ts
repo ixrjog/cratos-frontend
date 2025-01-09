@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { CertificateVO } from '../../../../@core/data/certificate';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
@@ -10,6 +8,7 @@ import { Observable, zip } from 'rxjs';
 import { GroupPageQuery, RbacGroupVO } from '../../../../@core/data/rbac';
 import { RbacGroupEditorComponent } from './rbac-group-editor/rbac-group-editor.component';
 import { RbacService } from '../../../../@core/services/rbac.service';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-rbac-group-data-table',
@@ -22,7 +21,7 @@ export class RbacGroupDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 
   table: Table<RbacGroupVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 

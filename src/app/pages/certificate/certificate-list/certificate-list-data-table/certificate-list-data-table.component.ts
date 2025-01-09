@@ -8,8 +8,8 @@ import { CertificateEditorComponent } from './certificate-editor/certificate-edi
 import { Observable, zip } from 'rxjs';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-certificate-list-data-table',
@@ -22,7 +22,7 @@ export class CertificateListDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
   table: Table<CertificateVO> = JSON.parse(JSON.stringify(TABLE_DATA));

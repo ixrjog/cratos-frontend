@@ -4,12 +4,12 @@ import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.uti
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { DValidateRules } from 'ng-devui';
 import { finalize } from 'rxjs';
-import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
 import { RiskEventImpactEdit, RiskEventImpactVO } from '../../../../../@core/data/risk-event';
 import { RiskEventService } from '../../../../../@core/services/risk-event.service';
 import { getRowColor } from '../../../../../@shared/utils/data-table.utli';
 import { ChannelNetworkVO } from '../../../../../@core/data/channel-network';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
+import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-risk-event-impact-editor',

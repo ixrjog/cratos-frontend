@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 import { KubernetesServiceVO } from '../../../../../../@core/data/kubernetes';
-import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/utils/data.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-kubernetes-service',

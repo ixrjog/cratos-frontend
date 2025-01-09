@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -15,6 +14,7 @@ import {
 } from '../../../../@core/data/server-account';
 import { ServerAccountEditorComponent } from './server-account-editor/server-account-editor.component';
 import { ServerAccountService } from '../../../../@core/services/server-account.service';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-server-account-data-table',
@@ -29,7 +29,7 @@ export class ServerAccountDataTableComponent implements OnInit {
     valid: null,
     protocol: null,
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.SERVER_ACCOUNT;
 
   protocolOptions = [

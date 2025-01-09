@@ -14,9 +14,9 @@ import { CredentialEditorComponent } from './credential-editor/credential-editor
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { Observable, zip } from 'rxjs';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { catchError } from 'rxjs/operators';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-credential-data-table',
@@ -25,7 +25,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class CredentialDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CREDENTIAL;
   queryParam = {
     queryName: '',

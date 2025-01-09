@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -11,8 +10,9 @@ import { AssetMaturityEdit, AssetMaturityPageQuery, AssetMaturityVO } from '../.
 import { AssetMaturityEditorComponent } from './asset-maturity-editor/asset-maturity-editor.component';
 import { AssetMaturityService } from '../../../../@core/services/asset-maturity.service';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-asset-maturity-data-table',
@@ -30,7 +30,7 @@ export class AssetMaturityDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.ASSET_MATURITY;
 
   table: Table<AssetMaturityVO> = JSON.parse(JSON.stringify(TABLE_DATA));

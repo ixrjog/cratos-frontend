@@ -17,6 +17,7 @@ import {
 import { ApplicationKubernetesDetailsRequest } from '../../../../@core/data/kubernetes-resource';
 import { MessageResponse } from '../../../../@core/data/base-data';
 import { ToastUtil } from '../../../../@shared/utils/toast.util';
+import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-kubernetes-resources-tabs',
@@ -152,7 +153,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, 10000)
+    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -179,9 +180,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   }
 
   initInterval() {
-    this.timerRequest = timer(1000, 1000)
+    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .subscribe(num => {
-        if (this.ws?.readyState !== WebSocket.OPEN) {
+        if (this.ws?.readyState !== WebSocket.OPEN && this.ws?.readyState !== WebSocket.CONNECTING) {
           this.wsOnInit();
           this.wsOnOpen();
           this.wsOnSubSend();

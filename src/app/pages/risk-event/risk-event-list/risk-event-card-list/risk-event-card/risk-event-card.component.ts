@@ -9,7 +9,7 @@ import { RiskEventImpactEdit, RiskEventVO } from '../../../../../@core/data/risk
 import { RiskEventEditorComponent } from '../risk-event-editor/risk-event-editor.component';
 import { RiskEventService } from '../../../../../@core/services/risk-event.service';
 import { RiskEventImpactEditorComponent } from '../risk-event-impact-editor/risk-event-impact-editor.component';
-import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-risk-event-card',

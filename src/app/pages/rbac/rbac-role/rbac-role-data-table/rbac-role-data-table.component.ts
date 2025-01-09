@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
@@ -9,6 +8,7 @@ import { RbacRoleEdit, RbacRoleVO, RolePageQuery } from '../../../../@core/data/
 import { RbacRoleEditorComponent } from './rbac-role-editor/rbac-role-editor.component';
 import { RbacService } from '../../../../@core/services/rbac.service';
 import { RbacRoleMenuComponent } from './rbac-role-menu/rbac-role-menu.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-rbac-role-data-table',
@@ -21,7 +21,7 @@ export class RbacRoleDataTableComponent implements OnInit {
   queryParam = {
     roleName: '',
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 
   table: Table<RbacRoleVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 

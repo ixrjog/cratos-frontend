@@ -15,6 +15,7 @@ import {
 } from '../../../../../../../../@core/data/kubernetes-resource';
 import { SessionOutput } from '../../../../../../../../@core/data/ssh-terminal';
 import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
+import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-kubernetes-pod-logs',
@@ -46,7 +47,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, 10000)
+    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -79,10 +80,10 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   }
 
   initInterval() {
-    this.timerRequest = timer(1000, 1000)
+    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .subscribe(num => {
         console.log(this.ws.readyState);
-        if (this.ws?.readyState !== WebSocket.OPEN) {
+        if (this.ws?.readyState !== WebSocket.OPEN && this.ws?.readyState !== WebSocket.CONNECTING) {
           this.wsOnInit();
           this.wsOnOpen();
           this.wsOnMessage();
@@ -101,7 +102,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
 
   wsOnSend() {
     let param: ApplicationKubernetesDetailsRequest = {
-      topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_WATCH_LOG,
+      topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_POD_WATCH_LOG,
       action: WsMessageActionEnum.WATCH,
       applicationName: this.application.name,
       namespace: this.kubernetesDeployment.metadata.namespace,

@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { WebSocketApiService } from '../../../@core/services/ws.api.service';
 import { Subscription, timer } from 'rxjs';
+import { WS_INIT_INTERVAL } from '../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-websocket-test',
@@ -28,7 +29,7 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
   }
 
   initInterval() {
-    this.timerRequest = timer(1000, 1000)
+    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .subscribe(num => {
         console.log('num:' + num);
       });

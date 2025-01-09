@@ -10,10 +10,10 @@ import {
   UpdateScheduleJob,
 } from '../../../../../@core/data/ext-datasource-schedule';
 import { map } from 'rxjs/operators';
-import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/utils/data.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { finalize } from 'rxjs';
+import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-eds-instance-schedule',

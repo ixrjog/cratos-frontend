@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -13,6 +12,7 @@ import { DomainService } from '../../../../@core/services/domain.service';
 import {
   BusinessCascaderComponent
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-domain-list-data-table',
@@ -30,7 +30,7 @@ export class DomainListDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.DOMAIN;
 
   table: Table<DomainVO> = JSON.parse(JSON.stringify(TABLE_DATA));

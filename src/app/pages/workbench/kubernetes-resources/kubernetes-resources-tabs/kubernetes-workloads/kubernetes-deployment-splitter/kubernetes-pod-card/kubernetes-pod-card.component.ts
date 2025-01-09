@@ -1,9 +1,9 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { KubernetesDeploymentVO, KubernetesPodVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
-import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
 import { ApplicationVO } from '../../../../../../../@core/data/application';
 import { DialogService } from 'ng-devui';
 import { KubernetesPodLogsComponent } from './kubernetes-pod-logs/kubernetes-pod-logs.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-kubernetes-pod-card',

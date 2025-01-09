@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { GlobalNetworkEdit, GlobalNetworkPageQuery, GlobalNetworkVO } from '../../../../@core/data/global-network';
@@ -14,8 +13,9 @@ import { Router } from '@angular/router';
 import { GlobalNetworkCheckCidrComponent } from './global-network-check-cidr/global-network-check-cidr.component';
 import { DialogService } from 'ng-devui/modal';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-global-network-data-table',
@@ -33,7 +33,7 @@ export class GlobalNetworkDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
-  limit = RELATIVE_TIME_LIMIT;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.GLOBAL_NETWORK;
 
   table: Table<GlobalNetworkVO> = JSON.parse(JSON.stringify(TABLE_DATA));

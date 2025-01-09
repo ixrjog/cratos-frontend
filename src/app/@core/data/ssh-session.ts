@@ -52,7 +52,7 @@ export interface SshCommandPageQuery extends PageQuery {
 }
 
 export interface SshAuditPlayMessage {
-  state: string;
+  topic: string;
   sessionId: string;
   instanceId: string;
 }

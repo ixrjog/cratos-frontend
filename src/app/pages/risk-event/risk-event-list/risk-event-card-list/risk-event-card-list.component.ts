@@ -2,15 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table } from '../../../../@core/data/base-data';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/utils/data.util';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { RiskEventEdit, RiskEventPageQuery, RiskEventVO } from '../../../../@core/data/risk-event';
 import { RiskEventEditorComponent } from './risk-event-editor/risk-event-editor.component';
 import { RiskEventService } from '../../../../@core/services/risk-event.service';
 import { ICategorySearchTagItem } from 'ng-devui';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-risk-event-card-list',

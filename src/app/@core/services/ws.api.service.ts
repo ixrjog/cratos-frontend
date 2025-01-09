@@ -46,5 +46,6 @@ export enum WsMessageTopicEnum {
 export enum WsMessageActionEnum {
   QUERY = 'QUERY',
   SUBSCRIPTION = 'SUBSCRIPTION',
-  UNSUBSCRIBE = 'UNSUBSCRIBE'
+  UNSUBSCRIBE = 'UNSUBSCRIBE',
+  WATCH = 'WATCH'
 }

@@ -201,6 +201,7 @@ export class GlobalNetworkDataTableComponent implements OnInit {
           showAnimation: true,
           content: GlobalNetworkCheckCidrComponent,
           backdropCloseable: true,
+          showCloseBtn: false,
           data: { globalNetworkList: body },
         };
         this.dialogService.open({

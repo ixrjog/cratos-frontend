@@ -41,8 +41,8 @@ export class SshSessionDataTableComponent implements OnInit {
   ];
 
   sessionStatusOptions = [
-    SshShellEventType.SESSION_STARTED, SshShellEventType.SESSION_STOPPED
-    , SshShellEventType.SESSION_STOPPED_UNEXPECTEDLY, SshShellEventType.SESSION_DESTROYED,
+    SshShellEventType.SESSION_STARTED, SshShellEventType.SESSION_STOPPED,
+    SshShellEventType.SESSION_STOPPED_UNEXPECTEDLY, SshShellEventType.SESSION_DESTROYED,
   ];
 
   table: Table<SshSessionVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -92,12 +92,13 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   onRowClick(row: SshInstanceVO) {
-    // if (row.instanceClosed) {
     this.dialogService.open({
       id: 'ssh-session-audit',
       width: '60%',
       maxHeight: '1000px',
       backdropCloseable: true,
+      showCloseBtn: false,
+      escapable: true,
       dialogtype: 'standard',
       content: SshSessionInstanceCommandComponent,
       buttons: [],
@@ -107,7 +108,6 @@ export class SshSessionDataTableComponent implements OnInit {
         sessionId: row.sessionId,
       },
       });
-    // }
   }
 
   protected readonly countResource = countResource;

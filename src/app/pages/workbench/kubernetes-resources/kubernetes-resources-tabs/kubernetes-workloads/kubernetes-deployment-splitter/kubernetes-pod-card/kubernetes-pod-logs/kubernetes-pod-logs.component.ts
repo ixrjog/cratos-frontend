@@ -1,20 +1,20 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { KubernetesDeploymentVO, KubernetesPodVO } from '../../../../../../../../@core/data/kubernetes';
 import { XtermLogsComponent } from '../../../../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
-import { OutputMessage } from '../../../../../../../../@core/data/ssh-session';
 import { Subscription, timer } from 'rxjs';
 import {
   WebSocketApiService,
   WsMessageActionEnum,
   WsMessageTopicEnum,
 } from '../../../../../../../../@core/services/ws.api.service';
-import { ToastUtil } from '../../../../../../../../@shared/utils/toast.util';
 import { ApplicationVO } from '../../../../../../../../@core/data/application';
 import {
   ApplicationKubernetesDeploymentRequest,
   ApplicationKubernetesDetailsRequest,
   ApplicationKubernetesPodRequest,
 } from '../../../../../../../../@core/data/kubernetes-resource';
+import { SessionOutput } from '../../../../../../../../@core/data/ssh-terminal';
+import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
 
 @Component({
   selector: 'app-kubernetes-pod-logs',
@@ -24,8 +24,9 @@ import {
 export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
 
   @ViewChild('kubernetesPodLog') private kubernetesPodLog: XtermLogsComponent;
-
   @Input() data: any;
+  uuid: string;
+  instanceId: string;
 
   kubernetesPod: KubernetesPodVO;
   kubernetesDeployment: KubernetesDeploymentVO;
@@ -37,7 +38,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   wsHeartbeatTimerRequest: Subscription;
 
   constructor(private wsApiService: WebSocketApiService,
-              private toastUtil: ToastUtil) {
+              private uuidUtil: UuidUtil) {
   }
 
   wsOnInit() {
@@ -63,6 +64,8 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     this.application = this.data['application'];
     this.initInterval();
     this.onWsHeartbeat();
+    this.uuid = this.uuidUtil.uuid(8, 10);
+    this.instanceId = this.kubernetesPod.metadata.name + '#' + this.uuid
   }
 
   ngOnDestroy(): void {
@@ -78,6 +81,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   initInterval() {
     this.timerRequest = timer(1000, 1000)
       .subscribe(num => {
+        console.log(this.ws.readyState);
         if (this.ws?.readyState !== WebSocket.OPEN) {
           this.wsOnInit();
           this.wsOnOpen();
@@ -98,7 +102,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   wsOnSend() {
     let param: ApplicationKubernetesDetailsRequest = {
       topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_WATCH_LOG,
-      action: WsMessageActionEnum.SUBSCRIPTION,
+      action: WsMessageActionEnum.WATCH,
       applicationName: this.application.name,
       namespace: this.kubernetesDeployment.metadata.namespace,
       deployments: [],
@@ -109,7 +113,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
       pods: [],
     };
     let pod: ApplicationKubernetesPodRequest = {
-      instanceId: this.kubernetesPod.metadata.name,
+      instanceId: this.instanceId,
       name: this.kubernetesPod.metadata.name,
       namespace: this.kubernetesPod.metadata.namespace,
       container: {
@@ -123,12 +127,14 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
 
   wsOnMessage() {
     this.ws.onmessage = (event) => {
-      let msg: OutputMessage = JSON.parse(event.data);
-      if (msg.code === 0) {
-        this.kubernetesPodLog.onWrite(msg.output);
-        return;
-      }
-      this.toastUtil.onErrorToast(msg.error, { width: '600px' });
+      let msgList: SessionOutput[] = JSON.parse(event.data);
+      msgList
+        .filter(msg => msg.instanceId === this.instanceId)
+        .map(msg => {
+          if (msg.errorMsg === null) {
+            this.kubernetesPodLog.onWrite(msg.output);
+          }
+        });
     };
   }
 

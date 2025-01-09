@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { KubernetesDeploymentVO, KubernetesPodVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/utils/data.util';
 import { ApplicationVO } from '../../../../../../../@core/data/application';
-import { SshInstanceVO } from '../../../../../../../@core/data/ssh-session';
 import { DialogService } from 'ng-devui';
 import { KubernetesPodLogsComponent } from './kubernetes-pod-logs/kubernetes-pod-logs.component';
 
@@ -47,6 +46,8 @@ export class KubernetesPodCardComponent {
       width: '60%',
       maxHeight: '1000px',
       backdropCloseable: true,
+      showCloseBtn: false,
+      escapable: true,
       dialogtype: 'standard',
       content: KubernetesPodLogsComponent,
       buttons: [],

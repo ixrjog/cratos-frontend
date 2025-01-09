@@ -11,14 +11,11 @@ import { FitAddon } from '@xterm/addon-fit';
 export class XtermLogsComponent implements AfterViewInit, OnDestroy {
 
   feedLines = 1;
-
   @Input() logs: string = '';
   @Input() rows: number = 24;
 
-
   @ViewChild('terminal', { static: true })
   terminalWrapper: ElementRef;
-
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();

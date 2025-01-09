@@ -32,6 +32,9 @@ import { KubernetesNodeCardComponent } from './kubernetes-nodes/kubernetes-nodes
 import { KubernetesContainerLifecycleComponent } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-container-lifecycle/kubernetes-container-lifecycle.component';
 import { KubernetesContainerProbeComponent } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-container-probe/kubernetes-container-probe.component';
 import { KubernetesPodLogsComponent } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-pod-card/kubernetes-pod-logs/kubernetes-pod-logs.component';
+import {
+  KubernetesPodBatchLogsComponent
+} from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-pod-batch-logs/kubernetes-pod-batch-logs.component';
 
 
 @NgModule({
@@ -52,6 +55,7 @@ import { KubernetesPodLogsComponent } from './kubernetes-resources/kubernetes-re
     KubernetesContainerLifecycleComponent,
     KubernetesContainerProbeComponent,
     KubernetesPodLogsComponent,
+    KubernetesPodBatchLogsComponent,
   ],
   imports: [
     CommonModule,

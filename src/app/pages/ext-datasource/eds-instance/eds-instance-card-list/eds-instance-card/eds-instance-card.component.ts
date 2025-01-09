@@ -101,6 +101,7 @@ export class EdsInstanceCardComponent {
         instanceId: rowItem.id,
       });
   }
+
   onRowValid(rowItem: EdsInstanceVO) {
     this.edsService.setEdsInstanceValidById({ id: rowItem.id })
       .subscribe(() => {

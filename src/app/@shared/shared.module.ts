@@ -42,6 +42,7 @@ import { ContainerImageTagPipe, ShortContainerImage } from './pipe/container-ima
 import { BusinessPermissionsComponent } from './components/common/business-permissions/business-permissions.component';
 import { UnitTranPipe } from './pipe/unit-tran.pipe';
 import { StringReplacePipe } from './pipe/string-replace.pipe';
+import { UuidUtil } from './utils/uuid.util';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -81,6 +82,7 @@ const CRATOS_UTILS = [
   DialogUtil,
   DrawerUtil,
   ToastUtil,
+  UuidUtil,
 ];
 @NgModule({
   declarations: [

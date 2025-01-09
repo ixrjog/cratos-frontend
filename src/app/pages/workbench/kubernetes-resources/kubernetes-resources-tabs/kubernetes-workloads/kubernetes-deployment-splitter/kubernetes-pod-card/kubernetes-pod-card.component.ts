@@ -4,6 +4,7 @@ import { ApplicationVO } from '../../../../../../../@core/data/application';
 import { DialogService } from 'ng-devui';
 import { KubernetesPodLogsComponent } from './kubernetes-pod-logs/kubernetes-pod-logs.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/constant/date.constant';
+import { KubernetesPodExecComponent } from './kubernetes-pod-exec/kubernetes-pod-exec.component';
 
 @Component({
   selector: 'app-kubernetes-pod-card',
@@ -41,11 +42,11 @@ export class KubernetesPodCardComponent {
   }
 
   onRowLogs() {
-    this.dialogService.open({
+    const results = this.dialogService.open({
       id: 'kubernetes-pod-logs',
       width: '60%',
       maxHeight: '1000px',
-      backdropCloseable: true,
+      backdropCloseable: false,
       showCloseBtn: false,
       escapable: true,
       dialogtype: 'standard',
@@ -56,8 +57,29 @@ export class KubernetesPodCardComponent {
         kubernetesDeployment: this.kubernetesDeployment,
         containerName: this.containerName,
         application: this.application,
+        closeHandler: () => results.modalInstance.hide(),
       },
     });
   }
 
+  onRowExec() {
+    const results = this.dialogService.open({
+      id: 'kubernetes-pod-exec',
+      width: '60%',
+      maxHeight: '1000px',
+      backdropCloseable: false,
+      showCloseBtn: false,
+      escapable: true,
+      dialogtype: 'standard',
+      content: KubernetesPodExecComponent,
+      buttons: [],
+      data: {
+        kubernetesPod: this.kubernetesPod,
+        kubernetesDeployment: this.kubernetesDeployment,
+        containerName: this.containerName,
+        application: this.application,
+        closeHandler: () => results.modalInstance.hide(),
+      },
+    });
+  }
 }

@@ -33,6 +33,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   kubernetesDeployment: KubernetesDeploymentVO;
   containerName: string;
   application: ApplicationVO;
+  closeHandler: Function;
 
   ws: WebSocket;
   timerRequest: Subscription;
@@ -43,6 +44,8 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   }
 
   wsOnInit() {
+    this.uuid = this.uuidUtil.uuid(8, 10);
+    this.instanceId = this.kubernetesPod.metadata.name + '#' + this.uuid;
     this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
   }
 
@@ -56,17 +59,16 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.wsOnInit();
-    this.wsOnOpen();
-    this.wsOnMessage();
+    this.closeHandler = this.data['closeHandler'];
     this.kubernetesPod = this.data['kubernetesPod'];
     this.kubernetesDeployment = this.data['kubernetesDeployment'];
     this.containerName = this.data['containerName'];
     this.application = this.data['application'];
+    this.wsOnInit();
+    this.wsOnOpen();
+    this.wsOnMessage();
     this.initInterval();
     this.onWsHeartbeat();
-    this.uuid = this.uuidUtil.uuid(8, 10);
-    this.instanceId = this.kubernetesPod.metadata.name + '#' + this.uuid
   }
 
   ngOnDestroy(): void {
@@ -82,8 +84,9 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   initInterval() {
     this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .subscribe(num => {
-        console.log(this.ws.readyState);
-        if (this.ws?.readyState !== WebSocket.OPEN && this.ws?.readyState !== WebSocket.CONNECTING) {
+        if (this.ws?.readyState !== WebSocket.OPEN
+          && this.ws?.readyState !== WebSocket.CONNECTING
+          && this.ws?.readyState !== WebSocket.CLOSING) {
           this.wsOnInit();
           this.wsOnOpen();
           this.wsOnMessage();
@@ -139,4 +142,8 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     };
   }
 
+  onRowExit() {
+    this.closeHandler();
+    this.ngOnDestroy();
+  }
 }

@@ -35,6 +35,9 @@ import { KubernetesPodLogsComponent } from './kubernetes-resources/kubernetes-re
 import {
   KubernetesPodBatchLogsComponent
 } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-pod-batch-logs/kubernetes-pod-batch-logs.component';
+import {
+  KubernetesPodExecComponent
+} from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-pod-card/kubernetes-pod-exec/kubernetes-pod-exec.component';
 
 
 @NgModule({
@@ -56,6 +59,7 @@ import {
     KubernetesContainerProbeComponent,
     KubernetesPodLogsComponent,
     KubernetesPodBatchLogsComponent,
+    KubernetesPodExecComponent,
   ],
   imports: [
     CommonModule,

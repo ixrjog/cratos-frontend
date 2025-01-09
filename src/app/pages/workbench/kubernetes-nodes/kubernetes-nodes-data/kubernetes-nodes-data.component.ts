@@ -118,7 +118,9 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   // initInterval() {
   //   this.timerRequest = timer(1000, WS_INIT_INTERVAL)
   //     .subscribe(num => {
-  //        if (this.ws?.readyState !== WebSocket.OPEN && this.ws?.readyState !== WebSocket.CONNECTING) {
+  //        if (this.ws?.readyState !== WebSocket.OPEN
+  //           && this.ws?.readyState !== WebSocket.CONNECTING
+  //           && this.ws?.readyState !== WebSocket.CLOSING) {
   //         this.wsOnInit();
   //         this.wsOnOpen();
   //         this.wsOnSubSend();

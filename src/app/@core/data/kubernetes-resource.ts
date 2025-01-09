@@ -132,6 +132,11 @@ export interface ApplicationKubernetesPodRequest {
   container: {
     name: string
   };
+  input?: string;
+  terminal?: {
+    cols: number
+    rows: number
+  };
 }
 
 export abstract class KubernetesResourceData {

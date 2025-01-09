@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 import { ITerminalOptions, Terminal } from '@xterm/xterm';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { FitAddon } from '@xterm/addon-fit';
+import { BASE_TERMINAL_OPTIONS } from '../../../constant/xterm.constant';
 
 @Component({
   selector: 'app-xterm-logs',
@@ -19,18 +20,7 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
-  baseTerminalOptions: ITerminalOptions = {
-    allowTransparency: true,
-    fontSize: 12,
-    lineHeight: 1.2,
-    letterSpacing: 0,
-    fontWeight: '400',
-    fontFamily: 'Consolas, "Courier New", monospace',
-    cursorBlink: false,
-    theme: { background: '#263238' },
-    scrollback: Number.MAX_SAFE_INTEGER,
-    convertEol: true
-  };
+  baseTerminalOptions: ITerminalOptions = BASE_TERMINAL_OPTIONS;
 
   constructor() {
     this.terminal = new Terminal(this.baseTerminalOptions);

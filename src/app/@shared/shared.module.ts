@@ -50,6 +50,7 @@ const DEVUI_MODULES = [
   ReactiveFormsModule,
   NumberTransModule,
 ];
+
 const COMPONENTS = [
   HeaderComponent,
   FooterComponent,
@@ -84,6 +85,7 @@ const CRATOS_UTILS = [
   ToastUtil,
   UuidUtil,
 ];
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -137,6 +139,7 @@ const CRATOS_UTILS = [
     BusinessPermissionsComponent,
   ],
 })
+
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {

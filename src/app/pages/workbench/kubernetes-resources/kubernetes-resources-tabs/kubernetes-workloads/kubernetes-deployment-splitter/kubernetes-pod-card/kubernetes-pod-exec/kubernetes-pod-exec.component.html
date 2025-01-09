@@ -7,7 +7,7 @@
       </d-card-subtitle>
     </d-card-header>
     <d-card-content>
-      <app-xterm-logs #kubernetesPodLog [rows]="40"></app-xterm-logs>
+      <div class="kubernetes-pod-exec" id="kubernetesPodExec" (window:resize)="onResize($event)"></div>
     </d-card-content>
   </d-card>
 </section>

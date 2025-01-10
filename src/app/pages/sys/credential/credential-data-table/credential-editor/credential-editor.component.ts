@@ -54,7 +54,6 @@ export class CredentialEditorComponent implements OnInit {
   }
 
   warpCredentialData(credentialType: string) {
-    console.log(credentialType);
     switch (credentialType) {
       case CredentialTypeEnum.USERNAME_WITH_PASSWORD:
         this.credentialData = {

@@ -46,7 +46,7 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
+    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);

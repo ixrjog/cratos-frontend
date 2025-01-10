@@ -137,12 +137,4 @@ export class EdsInstanceCardComponent {
     // https://www.cnblogs.com/wolfocme110/p/13457531.html
     this.route.navigate([ '/pages/eds/asset' ], { queryParams: { instanceId: instanceId } });
   }
-
-  onSearchInstanceDetails(instanceName: string) {
-    const param: QueryKubernetesNodeDetails = {
-      instanceName: instanceName,
-    };
-    this.edsKubernetesService.queryKubernetesNodeDetails(param)
-      .subscribe(({ body }) => console.log(body));
-  }
 }

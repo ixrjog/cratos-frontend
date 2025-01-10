@@ -66,7 +66,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onWsHeartbeat() {
-    this.timerRequest = timer(5000, WS_HEART_INTERVAL)
+    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -88,16 +88,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy(): void {
-    try {
-      if (this.terminal) {
-        this.terminal.dispose();
-      }
-      this.timerRequest.unsubscribe();
-      this.wsHeartbeatTimerRequest.unsubscribe();
-      this.ws.close();
-      this.ws = null;
-    } catch (error) {
-    }
+    this.onDestroy()
   }
 
   initInterval() {
@@ -251,9 +242,26 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.wsOnResize();
   }
 
+  onDestroy(): void {
+    try {
+      if (this.terminal) {
+        this.terminal.dispose();
+      }
+      if (this.timerRequest) {
+        this.timerRequest.unsubscribe();
+      }
+      if (this.wsHeartbeatTimerRequest) {
+        this.wsHeartbeatTimerRequest.unsubscribe();
+      }
+      this.ws.close(1000, 'user exit');
+      this.ws = null;
+    } catch (error) {
+    }
+  }
+
   onRowExit() {
+    this.onDestroy()
     this.closeHandler();
-    this.ngOnDestroy()
   }
 
   protected readonly getRowColor = getRowColor;

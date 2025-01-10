@@ -51,7 +51,6 @@ export class GlobalNetworkPlanningEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
-    console.log(this.formData)
   }
 
   addForm() {

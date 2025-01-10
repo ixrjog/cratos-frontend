@@ -1,9 +1,14 @@
 <section>
   <d-card style="padding: 5px 10px">
-    <d-card-header style="position: relative">
+    <d-card-header style="position: relative;margin-bottom: 5px">
       <d-card-subtitle>
         <span class="font-color-name">{{ kubernetesPod.metadata.name }}</span>
-        <d-button style="position: absolute;margin: auto;right: 0" bsStyle="text" (click)="onRowExit()">Exit</d-button>
+        <d-button
+          style="position: absolute;right: 0;bottom: 0"
+          bsStyle="text"
+          (click)="onRowExit()"
+        >Exit
+        </d-button>
       </d-card-subtitle>
     </d-card-header>
     <d-card-content>

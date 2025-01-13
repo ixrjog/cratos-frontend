@@ -41,7 +41,7 @@ export class DefaultInterceptor implements HttpInterceptor {
         const result: HttpResult<any> = event instanceof HttpResponse && event.body;
         if (result && !result.success) {
           this.toastService.open({
-            value: [ { severity: 'error', summary: 'Error', content: result.msg } ],
+            value: [ { severity: 'error', summary: event.url, content: result.msg } ],
             ...this.toastData,
           });
           throw new Error(result.msg);
@@ -57,14 +57,14 @@ export class DefaultInterceptor implements HttpInterceptor {
         break;
       case 403:
         this.toastService.open({
-          value: [ { severity: 'error', summary: 'Error', content: event.error.msg} ],
+          value: [ { severity: 'error', summary: event.url, content: event.error.msg } ],
           ...this.toastData,
         });
         break;
       case 404:
       case 500:
         this.toastService.open({
-          value: [ { severity: 'error', summary: 'Error', content: event.message } ],
+          value: [ { severity: 'error', summary: event.url, content: event.message } ],
           ...this.toastData,
         });
         throw new Error('something error');

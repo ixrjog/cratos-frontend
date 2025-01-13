@@ -41,6 +41,7 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
+    <d-column field="sessionId" header="Session ID"></d-column>
     <d-column header="Session Time">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -67,9 +68,13 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="sessionId" header="Session"></d-column>
-    <d-column field="username" header="Username"></d-column>
-    <d-column field="serverHostname" header="Server Hostname"></d-column>
+    <d-column header="Username@Hostname">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem['username'] }}@{{ rowItem['serverHostname'] }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="sessionStatus" header="Session Status"></d-column>
     <d-column header="Instance Audit" [width]="'600px'">
       <d-cell>
@@ -85,7 +90,9 @@
                     <span style="margin-left: 5px">{{ instance | sshInstance }}</span>
                   </span>
                   <span *ngIf="instance['instanceClosed']">
-                    <span style="width: 255px;margin-right: 5px">{{ instance | sshInstance }}</span>
+                    <span style="width: 255px;margin-right: 5px">{{ instance | sshInstance }}
+                      &nbsp;<i class="fa-solid fa-terminal"></i>
+                    </span>
                     <d-badge [count]=countResource(instance) status="common"></d-badge>
                   </span>
                 </div>

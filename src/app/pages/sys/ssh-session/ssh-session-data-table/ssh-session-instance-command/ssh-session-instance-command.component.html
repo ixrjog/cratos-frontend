@@ -4,6 +4,7 @@
     <d-splitter-pane
       [collapsed]="collapsed"
       [collapsible]="true"
+      [resizable]="false"
       size="800px"
     >
       <div class="pane-content">
@@ -20,7 +21,7 @@
         </div>
       </div>
     </d-splitter-pane>
-    <d-splitter-pane style="overflow: auto">
+    <d-splitter-pane style="overflow: auto" [resizable]="false">
       <div class="pane-content">
         <h3>Command</h3>
         <div>

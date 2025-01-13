@@ -10,6 +10,23 @@
             [title]="kubernetesPod.metadata.name"
           >{{ subPodName() | dSafeNullPipe }}
           </span>
+
+          <span
+            dPopover
+            [position]="'right-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="podLabelsTemplate"
+          >
+            <i class="fa-solid fa-tags"></i>
+          </span>
+          <ng-template #podLabelsTemplate>
+            <div *ngFor="let label of kubernetesPod.metadata.labels | keyvalue">
+              <span>{{ label.key }}: {{ label.value }}</span>
+            </div>
+          </ng-template>
+
           <d-tag
             dPopover
             [trigger]="'hover'"

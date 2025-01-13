@@ -1,10 +1,10 @@
 <section>
   <d-card style="padding: 5px 10px">
-    <d-card-header style="position: relative;margin-bottom: 5px">
+    <d-card-header style="position: relative;margin-bottom: 5px;height: 28px">
       <d-card-subtitle>
-        <span class="font-color-name">{{ kubernetesPod.metadata.name }}</span>
+        <span class="font-color-name" style="height: 22px">{{ kubernetesPod.metadata.name }}</span>
         <d-button
-          style="position: absolute;right: 0;bottom: 0;top: 0;margin: auto"
+          style="position: absolute;right: 0;top: 0"
           bsStyle="text"
           (click)="onRowExit()"
         >Exit

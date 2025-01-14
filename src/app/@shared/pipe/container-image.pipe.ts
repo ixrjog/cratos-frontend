@@ -14,7 +14,7 @@ export class ShortContainerImage implements PipeTransform {
 
   transform(val: string) {
     const index = val.indexOf('/');
-    return '{CR}' + val.substring(index, val.length);
+    return val.substring(index, val.length);
   }
 
 }

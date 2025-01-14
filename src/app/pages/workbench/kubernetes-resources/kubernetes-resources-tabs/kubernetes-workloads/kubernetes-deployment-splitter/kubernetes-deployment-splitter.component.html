@@ -74,7 +74,9 @@
               <span class="value inline-value"
                     [title]="kubernetesDeployment['$container'].image"
                     dClipboard [content]="kubernetesDeployment['$container'].image"
-              >{{ kubernetesDeployment['$container'].image | shortContainerImage | dSafeNullPipe }}</span>
+              >
+                <span style="color: var(--devui-brand)">&#123;CR&#125;</span>
+                {{ kubernetesDeployment['$container'].image | shortContainerImage | dSafeNullPipe }}</span>
             </div>
 
             <div>

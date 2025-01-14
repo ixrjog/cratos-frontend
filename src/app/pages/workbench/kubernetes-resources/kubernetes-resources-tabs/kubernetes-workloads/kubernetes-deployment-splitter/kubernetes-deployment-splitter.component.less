@@ -87,7 +87,6 @@
   border: 1px solid @devui-dividing-line;
 }
 
-
 :host::ng-deep {
 
   .devui-radio .devui-radio-material {
@@ -99,14 +98,16 @@
     border-width: 3px !important;
   }
 
-  d-radio-group {
-    .devui-radio-list-item {
-      line-height: 18px;
-    }
+  d-radio-group .devui-radio-list-item {
+    line-height: 18px;
   }
 
   .devui-radio-horizontal .devui-radio-list-item:not(:last-child) {
     padding-right: 15px !important;
+  }
+
+  .devui-radio .devui-radio-label {
+    margin-left: 6px !important;
   }
 
 }

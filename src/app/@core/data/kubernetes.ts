@@ -9,6 +9,12 @@ export interface KubernetesDetailsVO {
   namespace: string;
   workloads: KubernetesWorkloadsVO;
   network: KubernetesNetworkVO;
+  accessControl: AccessControlVO;
+}
+
+export interface AccessControlVO {
+  permission: boolean;
+  businessType: string;
 }
 
 export interface KubernetesWorkloadsVO {

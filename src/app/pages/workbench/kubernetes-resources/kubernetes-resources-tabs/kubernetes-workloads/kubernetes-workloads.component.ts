@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { KubernetesDeploymentVO } from '../../../../../@core/data/kubernetes';
+import { AccessControlVO, KubernetesDeploymentVO } from '../../../../../@core/data/kubernetes';
 import { ApplicationVO } from '../../../../../@core/data/application';
 import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.util';
 import { KubernetesPodBatchLogsComponent } from './kubernetes-pod-batch-logs/kubernetes-pod-batch-logs.component';
@@ -13,6 +13,7 @@ export class KubernetesWorkloadsComponent {
 
   @Input() deploymentList: KubernetesDeploymentVO[];
   @Input() application: ApplicationVO;
+  @Input() accessControl: AccessControlVO;
 
   constructor(private drawerUtil: DrawerUtil) {
   }

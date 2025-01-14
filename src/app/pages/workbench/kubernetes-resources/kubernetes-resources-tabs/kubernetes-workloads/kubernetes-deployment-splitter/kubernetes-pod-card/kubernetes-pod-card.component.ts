@@ -1,5 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { KubernetesDeploymentVO, KubernetesPodVO, PodStatusVO } from '../../../../../../../@core/data/kubernetes';
+import {
+  AccessControlVO,
+  KubernetesDeploymentVO,
+  KubernetesPodVO,
+  PodStatusVO,
+} from '../../../../../../../@core/data/kubernetes';
 import { ApplicationVO } from '../../../../../../../@core/data/application';
 import { DialogService } from 'ng-devui';
 import { KubernetesPodLogsComponent } from './kubernetes-pod-logs/kubernetes-pod-logs.component';
@@ -17,6 +22,7 @@ export class KubernetesPodCardComponent {
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
   @Input() containerName: string;
   @Input() application: ApplicationVO;
+  @Input() accessControl: AccessControlVO;
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 

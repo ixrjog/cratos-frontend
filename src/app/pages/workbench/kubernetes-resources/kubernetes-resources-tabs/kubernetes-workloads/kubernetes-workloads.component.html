@@ -16,28 +16,10 @@
           <app-kubernetes-deployment-splitter
             [application]="application"
             [kubernetesDeployment]="deployment"
+            [accessControl]="accessControl"
           ></app-kubernetes-deployment-splitter>
         </div>
       </d-splitter-pane>
     </d-splitter-pane>
-<!--    <d-splitter-pane style="overflow: hidden">-->
-<!--      <div style="padding: 5px 0">-->
-<!--        <div dDropDown class="batch-button" appendToBody>-->
-<!--          <d-button-group>-->
-<!--            <d-button bsStyle="common" dDropDownToggle>-->
-<!--              Batch-->
-<!--              <span class="icon icon-select-arrow"></span>-->
-<!--            </d-button>-->
-<!--          </d-button-group>-->
-<!--          <ul dDropDownMenu class="devui-dropdown-menu" role="menu">-->
-<!--            <li role="menuitem" (click)="onBatchLogs()">-->
-<!--              <a dDropDownMenuItem>-->
-<!--                <span class="icon-log" style="padding-right: 5px; vertical-align: middle"> Logs</span>-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </d-splitter-pane>-->
   </d-splitter>
 </section>

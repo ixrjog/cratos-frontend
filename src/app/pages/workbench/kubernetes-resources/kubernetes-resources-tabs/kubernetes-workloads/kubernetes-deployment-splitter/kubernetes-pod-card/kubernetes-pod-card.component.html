@@ -68,8 +68,19 @@
     </d-card-content>
     <d-card-actions [align]="'end'" style="margin: 0">
       <div>
-        <d-button bsStyle="text" style="margin-right: 8px" (click)="onRowExec()"> Exec</d-button>
-        <d-button bsStyle="text" (click)="onRowLogs()">Logs</d-button>
+        <d-button
+          bsStyle="text"
+          style="margin-right: 8px"
+          (click)="onRowExec()"
+          [disabled]="accessControl.permission"
+        > Exec
+        </d-button>
+        <d-button
+          bsStyle="text"
+          (click)="onRowLogs()"
+          [disabled]="accessControl.permission"
+        >Logs
+        </d-button>
       </div>
     </d-card-actions>
   </d-card>

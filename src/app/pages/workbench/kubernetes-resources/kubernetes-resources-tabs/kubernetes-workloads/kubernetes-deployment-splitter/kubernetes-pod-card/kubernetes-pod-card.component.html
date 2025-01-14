@@ -13,7 +13,7 @@
 
           <span
             dPopover
-            [position]="'right-top'"
+            [position]="'left-top'"
             [trigger]="'hover'"
             [controlled]="true"
             [mouseEnterDelay]="500"
@@ -72,13 +72,13 @@
           bsStyle="text"
           style="margin-right: 8px"
           (click)="onRowExec()"
-          [disabled]="accessControl.permission"
+          [disabled]="!accessControl.permission"
         > Exec
         </d-button>
         <d-button
           bsStyle="text"
           (click)="onRowLogs()"
-          [disabled]="accessControl.permission"
+          [disabled]="!accessControl.permission"
         >Logs
         </d-button>
       </div>

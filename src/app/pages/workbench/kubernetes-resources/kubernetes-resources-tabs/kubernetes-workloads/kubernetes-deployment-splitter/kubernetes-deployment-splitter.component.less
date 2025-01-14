@@ -86,3 +86,27 @@
 .splitter-border {
   border: 1px solid @devui-dividing-line;
 }
+
+
+:host::ng-deep {
+
+  .devui-radio .devui-radio-material {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .devui-radio.active .devui-radio-material {
+    border-width: 3px !important;
+  }
+
+  d-radio-group {
+    .devui-radio-list-item {
+      line-height: 18px;
+    }
+  }
+
+  .devui-radio-horizontal .devui-radio-list-item:not(:last-child) {
+    padding-right: 15px !important;
+  }
+
+}

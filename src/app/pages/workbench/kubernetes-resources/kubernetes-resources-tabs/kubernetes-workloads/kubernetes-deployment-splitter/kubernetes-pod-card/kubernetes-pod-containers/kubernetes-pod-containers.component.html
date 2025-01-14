@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="container !== undefined">
 
   <div>
     <span class="name">Pod IP</span>
@@ -20,7 +20,7 @@
 
   <div>
     <span class="name">Image Tag</span>
-    <span class="value" dClipboard [content]="podStatus.podIP">
+    <span class="value" dClipboard [content]="container.image">
       {{ container.image | containerImageTag | dSafeNullPipe }}
     </span>
   </div>

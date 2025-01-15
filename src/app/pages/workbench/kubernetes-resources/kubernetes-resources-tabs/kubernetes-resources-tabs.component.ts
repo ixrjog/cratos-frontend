@@ -71,7 +71,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       this.applicationResourceService.queryApplicationResourceKubernetesDetails(param)
         .pipe(
           finalize(() => {
-          this.loading = false;
+            this.loading = false;
+            this.wsOnSubSend();
+            this.wsOnMessage();
           }),
         ).subscribe(
         ({ body }) => {
@@ -86,8 +88,6 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
           }
         },
       );
-      this.wsOnSubSend();
-      this.wsOnMessage();
     }
   }
 

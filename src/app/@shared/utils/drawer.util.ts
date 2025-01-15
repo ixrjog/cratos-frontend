@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ToastUtil } from './toast.util';
 import { DrawerService } from 'ng-devui/drawer';
 
 @Injectable()
 export class DrawerUtil {
 
-  constructor(private drawerService: DrawerService,
-              private toastUtil: ToastUtil) {
+  constructor(private drawerService: DrawerService) {
   }
 
   onDrawer(drawerDate: any, data: any, onFetch?: Function, extend?: any) {

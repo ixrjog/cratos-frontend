@@ -239,10 +239,6 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
     }
   }
 
-  onCheckboxChange(value) {
-    this.queryParam.isQueryCanary = value;
-  }
-
   onBatchRedeploy() {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,

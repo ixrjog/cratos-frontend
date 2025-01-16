@@ -45,7 +45,7 @@
     *ngIf="queryParam.namespace === 'prod'"
     [label]="'show only canary'"
     [isShowTitle]="false"
-    (change)="onCheckboxChange($event)"
+    [(ngModel)]="queryParam.isQueryCanary"
   ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
   <span class="right-button">

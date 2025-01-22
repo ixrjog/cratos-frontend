@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { UserMergedPermissionsVO, BusinessUserPermissionDetailsVO } from '../../../../../@core/data/user-permission';
+import { Component, Input, OnInit } from '@angular/core';
+import { BusinessUserPermissionDetailsVO, UserPermissionBusinessVO } from '../../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-user-permissions',
@@ -9,7 +9,7 @@ import { UserMergedPermissionsVO, BusinessUserPermissionDetailsVO } from '../../
 export class UserPermissionsComponent implements OnInit {
 
   @Input() userPermissions: BusinessUserPermissionDetailsVO;
-  permissionMap: Map<string, UserMergedPermissionsVO[]> = new Map();
+  permissionMap: Map<string, UserPermissionBusinessVO[]> = new Map();
   protected readonly JSON = JSON;
 
   ngOnInit(): void {

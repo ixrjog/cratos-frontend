@@ -22,7 +22,7 @@
     [checkable]="true"
     (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column header="Name" [width]="'250px'">
+    <d-column header="Name" [width]="'350px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-row>
@@ -62,18 +62,17 @@
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <app-user-permissions
-            *ngIf="rowItem['$show']"
-            [userPermissions]="rowItem['$userPermission']"
-          ></app-user-permissions>
           <d-icon
-            *ngIf="!rowItem['$show']"
             [icon]="'icon-refresh'"
             (click)="onUserPermission(rowItem)"
             dLoading
             [loading]="rowItem['$loading']"
           >
           </d-icon>
+          <app-user-permissions
+            *ngIf="rowItem['$show']"
+            [userPermissions]="rowItem['$userPermission']"
+          ></app-user-permissions>
         </ng-template>
       </d-cell>
     </d-column>

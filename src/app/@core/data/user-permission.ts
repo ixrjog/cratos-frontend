@@ -19,27 +19,7 @@ export interface UserPermissionVO extends BaseVO, ValidVO {
 }
 
 export interface BusinessUserPermissionDetailsVO {
-  businessPermissions: Map<string, UserMergedPermissionsVO[]>;
-}
-
-export interface UserMergedPermissionsVO {
-  businessType: string;
-  businessId: number;
-  name: string;
-  roles: UserPermissionRoleVO[];
-}
-
-export interface UserPermissionRoleVO extends ValidVO {
-  role: string;
-  seq: number;
-  expiredTime: Date;
-  comment: string;
-}
-
-export interface UserPermissionPageQuery extends PageQuery {
-  queryName: string;
-  username: string;
-  businessType: string;
+  businessPermissions: Map<string, UserPermissionBusinessVO[]>;
 }
 
 export interface UserPermissionBusinessPageQuery extends PageQuery {

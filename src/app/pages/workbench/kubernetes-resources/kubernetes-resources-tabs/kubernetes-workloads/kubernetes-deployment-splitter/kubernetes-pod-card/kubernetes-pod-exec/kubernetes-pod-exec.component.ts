@@ -32,7 +32,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   uuid: string;
   instanceId: string;
 
-  feedLines = 24;
+  feedLines = 40;
   rows: number = 40;
   kubernetesPod: KubernetesPodVO;
   kubernetesDeployment: KubernetesDeploymentVO;

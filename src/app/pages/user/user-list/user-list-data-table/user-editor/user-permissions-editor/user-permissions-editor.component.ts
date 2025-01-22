@@ -204,7 +204,10 @@ export class UserPermissionsEditorComponent implements OnInit {
         $allCheck: false,
       };
       this.table.columns.map(item => {
-        data[item]['checked'] = false;
+        data[item] = {
+          checked: false,
+          expiredTime: null
+        };
       });
       this.table.data.push(data);
     }

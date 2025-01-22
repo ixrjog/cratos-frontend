@@ -11,6 +11,7 @@ import { TrafficLayerService } from '../../../../../@core/services/traffic-layer
 import { map } from 'rxjs/operators';
 import { EnvPageQuery, EnvVO } from '../../../../../@core/data/env';
 import { EnvService } from '../../../../../@core/services/env.service';
+import { CommonService } from '../../../../../@core/services/common.service';
 
 @Component({
   selector: 'app-traffic-layer-record-editor',
@@ -24,12 +25,16 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
   formData: TrafficLayerRecordVO;
   trafficLayerDomain: TrafficLayerDomainVO;
   env: EnvVO;
+  dnsRecord: string = '';
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
     recordName: {
       validators: [ { required: true } ],
       message: 'recordName can not be null.',
+      asyncValidators: [ {
+        sameName: this.onResolveDns.bind(this), message: {},
+      } ],
     },
     originServer: {
       validators: [ { required: true } ],
@@ -39,6 +44,7 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   constructor(private trafficLayerService: TrafficLayerService,
               private envService: EnvService,
+              private commonService: CommonService,
   ) {
   }
 
@@ -94,4 +100,22 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
       this.formData.recordName = recordName.replace('.', '-' + env.envName + '.');
     }
   }
+
+  onResolveDns(name: string) {
+    this.dnsRecord = '';
+    return this.commonService.resolveDns({ name: name })
+      .pipe(
+        map(({ body }) => {
+          const s = body.Answer[0].data;
+          if (s.endsWith('.')) {
+            this.dnsRecord = s.slice(0, s.length - 1);
+          } else {
+            this.dnsRecord = s;
+          }
+          return true;
+        }),
+      );
+  }
+
+  protected readonly JSON = JSON;
 }

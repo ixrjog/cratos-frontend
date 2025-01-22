@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './@core/core.module';
 import { SharedModule } from './@shared/shared.module';
 import { Observable, of } from 'rxjs';
-import { DatePipe, DevUIModule } from 'ng-devui';
+import { DevUIModule } from 'ng-devui';
 import { I18N } from '../config/language-config';
 import { DefaultInterceptor } from './@core/services/default.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -39,7 +39,7 @@ class I18NLoader implements TranslateLoader {
     })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }, DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [AppComponent],

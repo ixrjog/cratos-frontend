@@ -4,10 +4,11 @@ import { ApiService } from './api.service';
 import {
   BusinessUserPermissionDetailsVO,
   GrantUserPermission,
-  QueryBusinessUserPermissionDetails,
+  PermissionBusinessVO,
+  QueryAllBusinessUserPermissionDetails,
   RevokeUserPermission,
+  UserPermissionBusinessPageQuery, UserPermissionBusinessVO,
   UserPermissionData,
-  UserPermissionDetailsVO,
   UserPermissionVO,
 } from '../data/user-permission';
 import { Observable } from 'rxjs';
@@ -22,8 +23,10 @@ export class UserPermissionService extends UserPermissionData {
     super();
   }
 
-  getUserPermissionDetailsByUsername(param: { username: string }): Observable<HttpResult<UserPermissionDetailsVO>> {
-    return this.apiService.get(this.baseUrl, '/details/get/by/username', param);
+  getUserBusinessUserPermissionDetails(param: {
+    username: string
+  }): Observable<HttpResult<BusinessUserPermissionDetailsVO>> {
+    return this.apiService.get(this.baseUrl, '/details/by/username', param);
   }
 
   grantUserPermission(param: GrantUserPermission): Observable<HttpResult<Boolean>> {
@@ -42,8 +45,14 @@ export class UserPermissionService extends UserPermissionData {
     return this.apiService.putByParam(this.baseUrl, '/revoke/by/id', param);
   }
 
-  queryBusinessUserPermissionDetails(param: QueryBusinessUserPermissionDetails): Observable<HttpResult<BusinessUserPermissionDetailsVO>> {
-    return this.apiService.post(this.baseUrl, '/business/details/query', param);
+  queryUserBusinessPermissionPage(param: UserPermissionBusinessPageQuery): Observable<DataTable<PermissionBusinessVO>> {
+    return this.apiService.post(this.baseUrl, '/business/page/query', param);
+  }
+
+  queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<{
+    userPermissions: UserPermissionBusinessVO[]
+  }>> {
+    return this.apiService.post(this.baseUrl, '/all/business/details/query', param);
   }
 
 }

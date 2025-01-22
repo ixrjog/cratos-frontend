@@ -34,7 +34,7 @@ export class CertificateListDataTableComponent implements OnInit {
     keyAlgorithm: '',
     name: '',
     notAfter: null,
-    notBefore: new Date(),
+    notBefore:null,
     valid: true,
     comment: '',
   };

@@ -1,0 +1,107 @@
+<section>
+  <div class="spacing-search">
+    <d-select
+      class="select"
+      [appendToBody]="true"
+      [(ngModel)]="queryParam.businessType"
+      [options]="businessTypeOptions"
+      [isSearch]="true"
+      placeholder="Select business type"
+      [searchPlaceholder]="'Search business type'"
+      (valueChange)="onBusinessTypeChange($event)"
+    >
+    </d-select>
+    <d-select
+      class="select"
+      style="max-width: 250px;width: 250px"
+      [width]="400"
+      [filterKey]="'displayName'"
+      [appendToBody]="true"
+      [(ngModel)]="userBusinessPermission"
+      [searchFn]="onSearchUserBusinessPermission"
+      [isSearch]="true"
+      placeholder="Select user business permission"
+      [allowClear]="true"
+    >
+      <ng-template let-option="option">
+        <span>{{ option.name }}</span>
+        <span style="float: right; padding: 3px 0">{{ option.displayName }}</span>
+      </ng-template>
+    </d-select>
+    <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+    <span class="right-button">
+      <d-button class="button" bsStyle="primary" (click)="onUserPermission()">Reset</d-button>
+    </span>
+  </div>
+  <div class="spacing-table" *ngIf="table.show">
+    <d-data-table
+      dLoading
+      [dataSource]="table.data"
+      [tableOverflowType]="'overlay'"
+      [backdrop]="true"
+      [scrollable]="true"
+      [loadingStyle]="'infinity'"
+      [loading]="table.loading"
+      (cellEditEnd)="onCellEditEnd($event)"
+    >
+      <d-column field="name" header="Name"></d-column>
+      <d-column
+        *ngFor="let colOption of table.columns"
+        [field]="colOption"
+        [header]="colOption"
+        [editable]="true"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem" let-column="column">
+            <d-checkbox [(ngModel)]="rowItem[column.field]['checked']" style="display: inline-block"></d-checkbox>
+            <span *ngIf="rowItem[column.field]['expiredTime']" style="margin-left: 5px">
+              <span>{{ rowItem[column.field]['expiredTime'] | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
+              <strong style="margin-left: 5px">
+                {{ rowItem[column.field]['expiredTime'] | dRelativeTime: limit | async }}
+              </strong>
+            </span>
+            <span *ngIf="!rowItem[column.field]['expiredTime']" style="margin-left: 5px">
+              <strong>Never</strong>
+            </span>
+          </ng-template>
+        </d-cell>
+        <d-cell-edit>
+          <ng-template let-rowItem="rowItem" let-column="column">
+            <d-checkbox [(ngModel)]="rowItem[column.field]['checked']"></d-checkbox>
+            <div class="devui-input-group devui-dropdown-origin">
+              <input
+                class="devui-form-control search"
+                name="date"
+                [(ngModel)]="rowItem[column.field]['expiredTime']"
+                dDatepicker
+                appendToBody
+                #datePicker="datepicker"
+                [autoOpen]="true"
+              />
+              <div class="devui-input-group-addon" (click)="datePicker.toggle()">
+                <i class="icon icon-calendar"></i>
+              </div>
+            </div>
+          </ng-template>
+        </d-cell-edit>
+      </d-column>
+      <d-column header="Actions">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-checkbox
+              [isShowTitle]="false"
+              (change)="onHalfCheckboxChange(rowItem)"
+              [halfchecked]="rowItem['$halfCheck']"
+              [ngModel]="rowItem['$allCheck']"
+            >
+            </d-checkbox>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+
+  <div class="spacing-pagination">
+    <d-button class="button" bsStyle="primary" (click)="onSave()">Save</d-button>
+  </div>
+</section>

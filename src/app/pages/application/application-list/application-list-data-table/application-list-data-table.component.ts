@@ -214,14 +214,14 @@ export class ApplicationListDataTableComponent implements OnInit {
       businessType: this.businessType,
       businessId: rowItem.id,
     };
-    this.userPermissionService.queryBusinessUserPermissionDetails(param)
-      .pipe(
-        finalize(() => rowItem['$loading'] = false),
-      )
-      .subscribe(({ body }) => {
-        rowItem['$permission'] = body
-        rowItem['$show'] = true;
-      });
+    // this.userPermissionService.queryBusinessUserPermissionDetails(param)
+    //   .pipe(
+    //     finalize(() => rowItem['$loading'] = false),
+    //   )
+    //   .subscribe(({ body }) => {
+    //     rowItem['$permission'] = body
+    //     rowItem['$show'] = true;
+    //   });
   }
 
   protected readonly getRowColor = getRowColor;

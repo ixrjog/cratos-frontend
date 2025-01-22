@@ -8,6 +8,7 @@ import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/u
 import {
   TrafficLayerIngressLimitEditorComponent,
 } from './traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
+import { HelperUtils } from 'ng-devui';
 
 @Component({
   selector: 'app-traffic-layer-ingress-limit-data-table',
@@ -68,4 +69,7 @@ export class TrafficLayerIngressLimitDataTableComponent implements OnInit {
     }, rowItem);
   }
 
+  onRouteGrafana() {
+    HelperUtils.jumpOuterUrl('https://grafana.palmpay-inc.com/d/1859120988191686-279454-30546ee3bf/alb?orgId=1');
+  }
 }

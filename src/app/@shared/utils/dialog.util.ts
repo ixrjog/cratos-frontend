@@ -34,6 +34,7 @@ export class DialogUtil {
           text: 'Cancel',
           handler: ($event: Event) => {
             results.modalInstance.hide();
+            return false;
           },
         },
       ],
@@ -120,7 +121,7 @@ export class DialogUtil {
     const results = this.dialogService.open({
       ...dialogDate,
       id: 'user-edit',
-      width: '40%',
+      width: '70%',
       maxHeight: '1000px',
       backdropCloseable: false,
       dialogtype: 'standard',
@@ -174,6 +175,7 @@ export const DIALOG_DATA = {
     delete: '<strong>Confirm delete this row ?</strong>',
     inactive: '<strong>Confirm inactive this row ?</strong>',
     revoke: '<strong>Confirm revoke this row ?</strong>',
+    grant: '<strong>Confirm grant this row ?</strong>',
     merge: '<strong>Confirm merge this row ?</strong>',
     redeploy: '<strong>Confirm redeploy this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',

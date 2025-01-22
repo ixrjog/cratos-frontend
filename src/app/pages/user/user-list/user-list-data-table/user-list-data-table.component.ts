@@ -187,12 +187,12 @@ export class UserListDataTableComponent implements OnInit {
     rowItem['$show'] = false;
     rowItem['$userPermission'] = null;
     rowItem['$loading'] = true;
-    this.userPermissionService.getUserPermissionDetailsByUsername({ username: rowItem.username })
+    this.userPermissionService.getUserBusinessUserPermissionDetails({ username: rowItem.username })
       .pipe(
         finalize(() => rowItem['$loading'] = false),
       )
       .subscribe(({ body }) => {
-        rowItem['$userPermission'] = body.permissions;
+        rowItem['$userPermission'] = body.businessPermissions;
         rowItem['$show'] = true
       });
   }

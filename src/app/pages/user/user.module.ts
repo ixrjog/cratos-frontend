@@ -26,6 +26,7 @@ import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settin
 import { UserRobotSettingsComponent } from './user-settings/user-robot-settings/user-robot-settings.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { UserPermissionsComponent } from './user-list/user-list-data-table/user-permissions/user-permissions.component';
+import { UserPermissionsEditorComponent } from './user-list/user-list-data-table/user-editor/user-permissions-editor/user-permissions-editor.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { UserPermissionsComponent } from './user-list/user-list-data-table/user-
     UserSshKeySettingsComponent,
     UserRobotSettingsComponent,
     UserPermissionsComponent,
+    UserPermissionsEditorComponent,
   ],
   imports: [
     CommonModule,

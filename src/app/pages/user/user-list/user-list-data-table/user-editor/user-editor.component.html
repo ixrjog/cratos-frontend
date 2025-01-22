@@ -7,6 +7,9 @@
       (onUserAdded)="onUserAdded($event)"
     ></app-user-info-editor>
   </d-tab>
+  <d-tab id="permissions" title="Permissions" [disabled]="!formData.id">
+    <app-user-permissions-editor [formData]="formData" *ngIf="formData.id"></app-user-permissions-editor>
+  </d-tab>
   <d-tab id="rbac" title="RBAC" [disabled]="!formData.id">
     <app-user-rbac-editor [formData]="formData" *ngIf="formData.id"></app-user-rbac-editor>
   </d-tab>

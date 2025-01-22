@@ -1,6 +1,7 @@
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 import { UserPageQuery } from './user';
+import { EnvVO } from './env';
 
 export interface UserPermissionVO extends BaseVO, ValidVO {
   id: number;
@@ -14,10 +15,11 @@ export interface UserPermissionVO extends BaseVO, ValidVO {
   content: string;
   expiredTime: Date;
   comment: string;
+  env: EnvVO;
 }
 
-export interface UserPermissionDetailsVO {
-  permissions: Map<string, UserMergedPermissionsVO[]>;
+export interface BusinessUserPermissionDetailsVO {
+  businessPermissions: Map<string, UserMergedPermissionsVO[]>;
 }
 
 export interface UserMergedPermissionsVO {
@@ -40,18 +42,24 @@ export interface UserPermissionPageQuery extends PageQuery {
   businessType: string;
 }
 
-export interface GrantUserPermission {
-  username: string;
+export interface UserPermissionBusinessPageQuery extends PageQuery {
+  queryName: string;
+  businessType: string;
+}
+
+export interface UserPermissionBusinessVO {
+  businessType: string;
+  businessId: number;
   name: string;
   displayName: string;
+  userPermissions: UserPermissionVO[];
+}
+
+export interface GrantUserPermission {
+  username: string;
   businessType: string;
   businessId: number;
   role: string;
-  valid: boolean;
-  seq: number;
-  content: string;
-  expiredTime: Date;
-  comment: string;
 }
 
 export interface RevokeUserPermission {
@@ -61,19 +69,29 @@ export interface RevokeUserPermission {
   role: string;
 }
 
-export interface BusinessUserPermissionDetailsVO {
-  permissionByUser: Map<string, string[]>;
-  permissionByRole: Map<string, string[]>;
-}
-
 export interface QueryBusinessUserPermissionDetails {
   businessType: string;
   businessId: number;
 }
 
+export interface PermissionBusinessVO {
+  name: string;
+  displayName: string;
+  businessType: string;
+  businessId: number;
+  comment: string;
+}
+
+export interface QueryAllBusinessUserPermissionDetails {
+  businessType: string;
+  username: string;
+}
+
 export abstract class UserPermissionData {
 
   abstract queryUserPermissionPage(param: UserPageQuery): Observable<DataTable<UserPermissionVO>>;
+
+  abstract queryUserBusinessPermissionPage(param: UserPermissionBusinessPageQuery): Observable<DataTable<PermissionBusinessVO>>;
 
   abstract grantUserPermission(param: GrantUserPermission): Observable<HttpResult<Boolean>>;
 
@@ -81,7 +99,11 @@ export abstract class UserPermissionData {
 
   abstract revokeUserPermissionById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
-  abstract getUserPermissionDetailsByUsername(param: { username: string }): Observable<HttpResult<UserPermissionDetailsVO>>;
+  abstract getUserBusinessUserPermissionDetails(param: {
+    username: string
+  }): Observable<HttpResult<BusinessUserPermissionDetailsVO>>;
 
-  abstract queryBusinessUserPermissionDetails(param: QueryBusinessUserPermissionDetails): Observable<HttpResult<BusinessUserPermissionDetailsVO>>;
+  abstract queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<{
+    userPermissions: UserPermissionBusinessVO[]
+  }>>;
 }

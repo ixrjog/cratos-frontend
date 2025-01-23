@@ -7,7 +7,9 @@ import {
   PermissionBusinessVO,
   QueryAllBusinessUserPermissionDetails,
   RevokeUserPermission,
-  UserPermissionBusinessPageQuery, UserPermissionBusinessVO,
+  UpdateUserPermissionBusiness,
+  UserPermissionBusinessPageQuery,
+  UserPermissionBusinessVO,
   UserPermissionData,
   UserPermissionVO,
 } from '../data/user-permission';
@@ -49,10 +51,15 @@ export class UserPermissionService extends UserPermissionData {
     return this.apiService.post(this.baseUrl, '/business/page/query', param);
   }
 
-  queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<{
-    userPermissions: UserPermissionBusinessVO[]
-  }>> {
+  queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<
+    {
+      userPermissions: UserPermissionBusinessVO[]
+    }>> {
     return this.apiService.post(this.baseUrl, '/all/business/details/query', param);
+  }
+
+  updateUserPermissionBusiness(param: UpdateUserPermissionBusiness): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/business/update', param);
   }
 
 }

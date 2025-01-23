@@ -21,7 +21,6 @@ export class UserPermissionsComponent implements OnInit {
   permissionMap: Map<string, UserPermissionBusinessVO[]> = new Map();
   protected readonly JSON = JSON;
 
-
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -48,7 +47,7 @@ export class UserPermissionsComponent implements OnInit {
   }
 
   onRowRemove(rowItem: UserPermissionVO) {
-    if (!rowItem.valid) {
+    if (rowItem.id === null) {
       const dialogDate = {
         ...this.dialogDate.warningOperateData,
         content: this.dialogDate.content.grant,
@@ -79,8 +78,6 @@ export class UserPermissionsComponent implements OnInit {
           });
       });
     }
-
   }
-
 }
 

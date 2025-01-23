@@ -19,7 +19,7 @@
             *ngFor="let role of item.userPermissions"
             style="margin-right: 5px;"
             [tag]="role.role"
-            [labelStyle]="role.valid?'green-w98':''"
+            [labelStyle]="role.id !== null?'green-w98':''"
             (click)="onRowRemove(role)"
           >
           </d-tag>

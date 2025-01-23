@@ -67,6 +67,19 @@ export interface QueryAllBusinessUserPermissionDetails {
   username: string;
 }
 
+export interface UpdateUserPermissionBusiness {
+  username: string;
+  businessType: string;
+  businessPermissions: {
+    businessId: number
+    roleMembers: {
+      role: string
+      checked: boolean
+      expiredTime: Date
+    }[]
+  }[];
+}
+
 export abstract class UserPermissionData {
 
   abstract queryUserPermissionPage(param: UserPageQuery): Observable<DataTable<UserPermissionVO>>;
@@ -83,7 +96,10 @@ export abstract class UserPermissionData {
     username: string
   }): Observable<HttpResult<BusinessUserPermissionDetailsVO>>;
 
-  abstract queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<{
-    userPermissions: UserPermissionBusinessVO[]
-  }>>;
+  abstract queryAllBusinessUserPermissionDetails(param: QueryAllBusinessUserPermissionDetails): Observable<HttpResult<
+    {
+      userPermissions: UserPermissionBusinessVO[]
+    }>>;
+
+  abstract updateUserPermissionBusiness(param: UpdateUserPermissionBusiness): Observable<HttpResult<Boolean>>;
 }

@@ -1,23 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserVO } from '../../../../../../@core/data/user';
-import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
-import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
+import { DIALOG_DATA } from '../../../../../../@shared/utils/dialog.util';
 import { UserPermissionService } from '../../../../../../@core/services/user-permission.service';
 import { EnvService } from '../../../../../../@core/services/env.service';
 import {
-  GrantUserPermission,
   PermissionBusinessVO,
   QueryAllBusinessUserPermissionDetails,
-  RevokeUserPermission,
+  UpdateUserPermissionBusiness,
   UserPermissionBusinessPageQuery,
   UserPermissionBusinessVO,
-  UserPermissionVO,
 } from '../../../../../../@core/data/user-permission';
 import { finalize } from 'rxjs';
 import { EnvPageQuery } from '../../../../../../@core/data/env';
 import { BusinessTypeEnum } from '../../../../../../@core/data/business';
 import { map } from 'rxjs/operators';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/constant/date.constant';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-user-permissions-editor',
@@ -41,6 +39,7 @@ export class UserPermissionsEditorComponent implements OnInit {
     loading: false,
     show: false,
   };
+
   userBusinessPermission: PermissionBusinessVO;
   businessTypeOptions = [ BusinessTypeEnum.APPLICATION ];
 
@@ -56,7 +55,6 @@ export class UserPermissionsEditorComponent implements OnInit {
   constructor(
     private userPermissionService: UserPermissionService,
     private envService: EnvService,
-    private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil) {
   }
 
@@ -80,46 +78,6 @@ export class UserPermissionsEditorComponent implements OnInit {
       });
   }
 
-  changeChecked(userPermission: UserPermissionVO) {
-    if (userPermission.id !== null) {
-      const dialogDate = {
-        ...this.dialogDate.warningOperateData,
-        content: this.dialogDate.content.revoke,
-      };
-      this.dialogUtil.onDialog(dialogDate, () => {
-        const param: RevokeUserPermission = {
-          username: this.formData.username,
-          businessType: userPermission.businessType,
-          businessId: userPermission.businessId,
-          role: userPermission.role,
-        };
-        this.userPermissionService.revokeUserPermission(param)
-          .subscribe(() => {
-            this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-            this.onUserPermission();
-          });
-      });
-    } else {
-      const dialogDate = {
-        ...this.dialogDate.warningOperateData,
-        content: this.dialogDate.content.grant,
-      };
-      this.dialogUtil.onDialog(dialogDate, () => {
-        const param: GrantUserPermission = {
-          username: this.formData.username,
-          businessType: userPermission.businessType,
-          businessId: userPermission.businessId,
-          role: userPermission.role,
-        };
-        this.userPermissionService.grantUserPermission(param)
-          .subscribe(() => {
-            this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-            this.onUserPermission();
-          });
-      });
-    }
-  };
-
   onUserPermission() {
     this.table.loading = true;
     this.table.data = [];
@@ -136,17 +94,16 @@ export class UserPermissionsEditorComponent implements OnInit {
         this.userPermissions.map(item => {
           let row = {
             name: item.name,
-            businessType: item.businessType,
             businessId: item.businessId,
             $halfCheck: true,
             $allCheck: true,
           };
           item.userPermissions.map(userPermission => {
             row[userPermission.role] = {
-              checked: userPermission.valid,
+              checked: userPermission.id !== null,
               expiredTime: userPermission.expiredTime,
             };
-            if (!userPermission.valid) {
+            if (userPermission.id === null) {
               row['$allCheck'] = false;
             }
           });
@@ -175,7 +132,31 @@ export class UserPermissionsEditorComponent implements OnInit {
   }
 
   onSave() {
-    console.log(this.table.data);
+    const param: UpdateUserPermissionBusiness = {
+      username: this.formData.username,
+      businessType: this.queryParam.businessType,
+      businessPermissions: [],
+    };
+    this.table.data.map(item => {
+      let roleMembers = [];
+      this.table.columns.map(column => {
+        let roleMember = {
+          role: column,
+          checked: item[column]['checked'] ? item[column]['checked'] : false,
+          expiredTime: item[column]['expiredTime'] ? Date.parse(item[column]['expiredTime'].toString()) : null,
+        };
+        roleMembers.push(roleMember);
+      });
+      param.businessPermissions.push({
+        businessId: item['businessId'],
+        roleMembers: roleMembers,
+      });
+    });
+    this.userPermissionService.updateUserPermissionBusiness(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+        this.onUserPermission();
+      });
   }
 
   onCellEditEnd(event) {
@@ -196,20 +177,27 @@ export class UserPermissionsEditorComponent implements OnInit {
 
   onRowNew() {
     if (this.userBusinessPermission) {
-      let data = {
-        name: this.userBusinessPermission.name,
-        businessType: this.userBusinessPermission.businessType,
-        businessId: this.userBusinessPermission.businessId,
-        $halfCheck: false,
-        $allCheck: false,
-      };
-      this.table.columns.map(item => {
-        data[item] = {
-          checked: false,
-          expiredTime: null
-        };
+      let flag = true;
+      this.table.data.forEach(item => {
+        if (item.name === this.userBusinessPermission.name) {
+          flag = false;
+        }
       });
-      this.table.data.push(data);
+      if (flag) {
+        let data = {
+          name: this.userBusinessPermission.name,
+          businessId: this.userBusinessPermission.businessId,
+          $halfCheck: false,
+          $allCheck: false,
+        };
+        this.table.columns.map(item => {
+          data[item] = {
+            checked: false,
+            expiredTime: null,
+          };
+        });
+        this.table.data.push(data);
+      }
     }
   }
 

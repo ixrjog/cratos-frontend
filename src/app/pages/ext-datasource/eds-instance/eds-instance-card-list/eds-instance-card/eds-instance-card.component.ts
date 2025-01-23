@@ -14,7 +14,6 @@ import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.uti
 import { EdsInstanceScheduleComponent } from '../eds-instance-schedule/eds-instance-schedule.component';
 import { AddScheduleJob } from '../../../../../@core/data/ext-datasource-schedule';
 import { EdsKubernetesService } from '../../../../../@core/services/ext-datasource-kubernetes.service';
-import { QueryKubernetesNodeDetails } from '../../../../../@core/data/ext-datasource-kubernetes';
 
 @Component({
   selector: 'app-eds-instance-card',

@@ -184,6 +184,7 @@ export class UserListDataTableComponent implements OnInit {
   }
 
   onUserPermission(rowItem: UserVO) {
+    rowItem['$notFirst'] = true;
     rowItem['$show'] = false;
     rowItem['$userPermission'] = null;
     rowItem['$loading'] = true;

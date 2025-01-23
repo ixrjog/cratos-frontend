@@ -1,20 +1,31 @@
 <section>
-    <span *ngFor="let permission of permissionMap| keyvalue">
+  <span *ngFor="let permission of permissionMap| keyvalue">
     <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
     <span *ngIf="JSON.stringify(permission.value) === '[]'">
       <d-tag [tag]="'No permissions'"></d-tag>
     </span>
-    <span *ngFor="let item of permission.value">
-      {{ item.name }}:
-      <span *ngFor="let role of item.userPermissions">
-        <d-tag
-          style="margin-right: 5px;"
-          [tag]="role.role"
-          [labelStyle]="role.valid?'blue-w98':''"
-        >
-        </d-tag>
-      </span>
-      <span style="margin-right: 10px"></span>
-    </span>
+    <div class="permissions">
+      <d-card *ngFor="let item of permission.value" class="permissions-card">
+        <d-card-content>
+          <d-tag
+            dClipboard
+            [content]="item.name"
+            style="margin-right: 8px"
+            [tag]="item.name"
+            [labelStyle]="'blue-w98'"
+          >
+          </d-tag>
+          <d-tag
+            *ngFor="let role of item.userPermissions"
+            style="margin-right: 5px;"
+            [tag]="role.role"
+            [labelStyle]="role.valid?'green-w98':''"
+            (click)="onRowRemove(role)"
+          >
+          </d-tag>
+        </d-card-content>
+      </d-card>
+    </div>
   </span>
 </section>
+

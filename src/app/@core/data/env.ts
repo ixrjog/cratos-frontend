@@ -8,6 +8,7 @@ export interface EnvVO extends BaseVO, ValidVO {
   promptColor: string;
   seq: number;
   comment: string;
+  lifecycle: number;
 }
 
 export interface EnvPageQuery extends PageQuery {
@@ -20,6 +21,7 @@ export interface EnvEdit {
   color: string;
   promptColor: string;
   seq: number;
+  lifecycle: number;
   valid: boolean;
   comment: string;
 }

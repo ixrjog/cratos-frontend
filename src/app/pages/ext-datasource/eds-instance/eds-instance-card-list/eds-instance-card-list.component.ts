@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { Table } from '../../../../@core/data/base-data';
 import { EdsInstanceVO, InstancePageQuery } from '../../../../@core/data/ext-datasource';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-eds-instance-card-list',
@@ -13,9 +16,16 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 })
 export class EdsInstanceCardListComponent implements OnInit {
 
+
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
+
   queryParam = {
     queryName: '',
     edsType: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
   businessType: string = BusinessTypeEnum.EDS_INSTANCE;
 
@@ -43,6 +53,10 @@ export class EdsInstanceCardListComponent implements OnInit {
     onFetchValidData(this.table, this.edsService.queryEdsInstancePage(param));
   }
 
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
+  }
+
   getEdsTypeOptions() {
     this.edsService.getEdsInstanceTypeOptions()
       .subscribe(({ body }) => {
@@ -51,6 +65,9 @@ export class EdsInstanceCardListComponent implements OnInit {
   };
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
     this.getEdsTypeOptions();
   }

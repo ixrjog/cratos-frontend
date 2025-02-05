@@ -29,6 +29,7 @@ export class EnvDataTableComponent implements OnInit {
     promptColor: 'BLACK',
     seq: 1,
     valid: true,
+    lifecycle: 90,
     comment: '',
   };
 

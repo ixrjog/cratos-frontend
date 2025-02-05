@@ -1,3 +1,5 @@
+@import "../../../../../../styles.less";
+
 .permissions {
   display: flex;
   flex-wrap: wrap;
@@ -6,5 +8,21 @@
     padding: 2px;
     margin: 0 5px 5px 0;
   }
-
 }
+
+:host ::ng-deep .progress-container {
+
+  &.circle-type {
+
+    d-progress {
+      width: 10px;
+      height: 10px;
+      vertical-align: baseline;
+
+      .devui-progress-circle .devui-progress-default-text {
+        font-size: @devui-font-size-price;
+      }
+    }
+  }
+}
+

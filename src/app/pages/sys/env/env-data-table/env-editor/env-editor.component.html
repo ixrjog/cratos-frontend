@@ -28,6 +28,19 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label [required]="true">Lifecycle</d-form-label>
+      <d-form-control>
+        <d-input-number
+          name="lifecycle"
+          [min]="7"
+          [max]="365"
+          [allowEmpty]="false"
+          [(ngModel)]="formData.lifecycle"
+          class="input-number"
+        ></d-input-number>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label [required]="true">Valid</d-form-label>
       <d-form-control>
         <d-toggle name="valid" [(ngModel)]="formData.valid"></d-toggle>

@@ -11,6 +11,9 @@ import { UserService } from '../../../../@core/services/user.service';
 import { catchError } from 'rxjs/operators';
 import { UserPermissionService } from '../../../../@core/services/user-permission.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -19,9 +22,14 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 })
 export class UserListDataTableComponent implements OnInit {
 
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
@@ -65,7 +73,14 @@ export class UserListDataTableComponent implements OnInit {
     onFetchValidData(this.table, this.userService.queryUserPage(param));
   }
 
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
+  }
+
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 

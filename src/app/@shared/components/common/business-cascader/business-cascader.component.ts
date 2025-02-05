@@ -34,10 +34,17 @@ export class BusinessCascaderComponent {
             .subscribe(({ body }) => {
               let child = [];
               body.map(value => {
-                child.push({
-                  label: tag.tagKey + ': ' + value,
-                  value: value,
-                });
+                if (value !== '') {
+                  child.push({
+                      label: tag.tagKey + ': ' + value,
+                      value: value,
+                  });
+                } else {
+                  child.push({
+                    label: tag.tagKey,
+                    value: value,
+                  });
+                }
               });
               this.tagOptions.push({
                 label: tag.tagKey,

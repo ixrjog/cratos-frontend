@@ -28,7 +28,6 @@ export class UserPermissionsEditorComponent implements OnInit {
 
   queryParam = {
     businessType: '',
-    env: [],
   };
 
   userPermissions: UserPermissionBusinessVO[];

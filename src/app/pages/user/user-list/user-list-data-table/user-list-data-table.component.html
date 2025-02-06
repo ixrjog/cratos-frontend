@@ -61,9 +61,9 @@
                 [controlled]="true"
                 [mouseEnterDelay]="500"
                 [content]="sshKeyTemplate"
-                [tag]="'ssh key'"
+                [tag]="'ssh-key'"
                 [labelStyle]="JSON.stringify(rowItem['$userSSHKey']) === '[]'?'':'green-w98'"
-                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' }"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
               ></d-tag>
               <ng-template #sshKeyTemplate>
                 <div>

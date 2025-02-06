@@ -222,10 +222,6 @@ export class UserListDataTableComponent implements OnInit {
 
   onChangeExternal(flag: boolean) {
     this.isExternal = flag;
-    if (flag) {
-      this.queryParam.queryByTag.tagId = null;
-      this.queryParam.queryByTag.tagValue = null;
-    }
     this.fetchData()
   }
 

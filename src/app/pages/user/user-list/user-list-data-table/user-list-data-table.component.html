@@ -8,8 +8,15 @@
     (change)="fetchData()"
   >
   </d-search>
-  <app-business-cascader #businessCascader [businessType]="businessType"
+  <app-business-cascader #businessCascader [businessType]="businessType" *ngIf="!isExternal"
                          (onChange)="onTagChanges($event)"></app-business-cascader>
+  <d-checkbox
+    class="checkbox"
+    label="show only external user"
+    [isShowTitle]="false"
+    [(ngModel)]="isExternal"
+    (change)="onChangeExternal($event)"
+  ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

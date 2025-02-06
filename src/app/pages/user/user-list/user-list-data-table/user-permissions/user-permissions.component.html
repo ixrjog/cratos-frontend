@@ -18,20 +18,19 @@
           <d-tag
             *ngFor="let role of item.userPermissions"
             style="margin-right: 5px;"
-            [tag]="role"
-            [customViewTemplate]="customTag"
+            [tag]="role.role"
             [labelStyle]="role.id !== null?'green-w98':''"
             (click)="onRowRemove(role)"
           >
           </d-tag>
-          <ng-template #customTag let-tag="tag">
-            <span class="progress-container circle-type">
-              <d-progress [type]="'circle'" [strokeWidth]="18" [percentage]="20"
-                          [strokeColor]="'#50d4ab'" [showContent]="false"
-                          style="display: inline-block"></d-progress>
-            <span>&nbsp;{{ tag.role }}</span>
-            </span>
-          </ng-template>
+<!--          <ng-template #customTag let-tag="tag">-->
+<!--            <span class="progress-container circle-type">-->
+<!--              <d-progress [type]="'circle'" [strokeWidth]="18" [percentage]="20"-->
+<!--                          [strokeColor]="'#50d4ab'" [showContent]="false"-->
+<!--                          style="display: inline-block"></d-progress>-->
+<!--            <span>&nbsp;{{ tag.role }}</span>-->
+<!--            </span>-->
+<!--          </ng-template>-->
         </d-card-content>
       </d-card>
     </div>

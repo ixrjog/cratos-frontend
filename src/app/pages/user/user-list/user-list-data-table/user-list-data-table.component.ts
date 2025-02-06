@@ -12,7 +12,7 @@ import { catchError } from 'rxjs/operators';
 import { UserPermissionService } from '../../../../@core/services/user-permission.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import {
-  BusinessCascaderComponent
+  BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
@@ -31,6 +31,9 @@ export class UserListDataTableComponent implements OnInit {
       tagValue: null,
     },
   };
+
+  isExternal: boolean = false;
+
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
   table: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -70,7 +73,11 @@ export class UserListDataTableComponent implements OnInit {
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.userService.queryUserPage(param));
+    if (this.isExternal) {
+      onFetchValidData(this.table, this.userService.queryExtUserPage(param));
+    } else {
+      onFetchValidData(this.table, this.userService.queryUserPage(param));
+    }
   }
 
   onTagChanges(value: any) {
@@ -211,6 +218,15 @@ export class UserListDataTableComponent implements OnInit {
         rowItem['$userPermission'] = body.businessPermissions;
         rowItem['$show'] = true
       });
+  }
+
+  onChangeExternal(flag: boolean) {
+    this.isExternal = flag;
+    if (flag) {
+      this.queryParam.queryByTag.tagId = null;
+      this.queryParam.queryByTag.tagValue = null;
+    }
+    this.fetchData()
   }
 
   protected readonly getRowColor = getRowColor;

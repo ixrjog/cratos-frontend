@@ -9,6 +9,7 @@ import { CredentialVO } from '../data/credential';
 export class UserService extends UserData {
 
   baseUrl = '/user';
+  extUserUrl = '/external/user';
 
   constructor(private apiService: ApiService) {
     super();
@@ -48,6 +49,10 @@ export class UserService extends UserData {
 
   queryMySshKey(): Observable<HttpResult<Array<CredentialVO>>> {
     return this.apiService.post(this.baseUrl, '/my/sshkey/query', {});
+  }
+
+  queryExtUserPage(param: UserPageQuery): Observable<DataTable<UserVO>> {
+    return this.apiService.post(this.extUserUrl, '/page/query', param);
   }
 
 }

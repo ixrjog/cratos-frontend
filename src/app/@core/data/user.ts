@@ -69,4 +69,6 @@ export abstract class UserData {
 
   abstract queryMySshKey(): Observable<HttpResult<Array<CredentialVO>>>;
 
+  abstract queryExtUserPage(param: UserPageQuery): Observable<DataTable<UserVO>>;
+
 }

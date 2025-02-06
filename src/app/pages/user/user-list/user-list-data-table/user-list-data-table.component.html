@@ -111,7 +111,7 @@
           <div style="position: relative">
             <span>{{ rowItem['expiredTime'] | dSafeNullPipe }}</span>
             <br />
-            <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
+            <strong>{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
             <span class="renewal-icon">
               <d-icon [icon]="'icon-rollback'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
             </span>

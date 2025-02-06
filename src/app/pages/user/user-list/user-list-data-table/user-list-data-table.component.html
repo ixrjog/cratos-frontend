@@ -55,19 +55,6 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <!--    <d-column header="Time">-->
-    <!--      <d-cell>-->
-    <!--        <ng-template let-rowItem="rowItem">-->
-    <!--          <span class="font-color-name" style="margin-right: 5px">Last Login</span>-->
-    <!--          <span>{{ rowItem['lastLogin'] | dSafeNullPipe }}</span>-->
-    <!--          <strong style="margin-left: 5px">{{ rowItem['lastLogin'] | dRelativeTime: limit | async }}</strong>-->
-    <!--          <br>-->
-    <!--          <span class="font-color-name" style="margin-right: 5px">Create Time</span>-->
-    <!--          <span>{{ rowItem['createTime'] }}</span>-->
-    <!--          <strong style="margin-left: 5px">{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>-->
-    <!--        </ng-template>-->
-    <!--      </d-cell>-->
-    <!--    </d-column>-->
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -90,6 +77,17 @@
               ></app-user-permissions>
             </span>
           </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Expired Time" [width]="'300px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem['expiredTime'] | dSafeNullPipe }}</span>
+          <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
+          <span style="margin-left: 5px">
+            <d-icon [icon]="'icon-remind'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
+          </span>
         </ng-template>
       </d-cell>
     </d-column>

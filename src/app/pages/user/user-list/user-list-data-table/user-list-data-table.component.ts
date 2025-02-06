@@ -225,5 +225,9 @@ export class UserListDataTableComponent implements OnInit {
     this.fetchData()
   }
 
+  onRenewalExtUser(rowItem: UserVO) {
+
+  }
+
   protected readonly getRowColor = getRowColor;
 }

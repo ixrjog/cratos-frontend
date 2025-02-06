@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { ResetPassword, UserData, UserEdit, UserPageQuery, UserVO } from '../data/user';
+import { RenewalExtUser, ResetPassword, UserData, UserEdit, UserPageQuery, UserVO } from '../data/user';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
 import { CredentialVO } from '../data/credential';
@@ -53,6 +53,10 @@ export class UserService extends UserData {
 
   queryExtUserPage(param: UserPageQuery): Observable<DataTable<UserVO>> {
     return this.apiService.post(this.extUserUrl, '/page/query', param);
+  }
+
+  renewalOfExtUser(param: RenewalExtUser): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.extUserUrl, '/renewal', param);
   }
 
 }

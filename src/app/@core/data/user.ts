@@ -1,4 +1,4 @@
-import { BaseVO, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
+import { BaseVO, CommitParam, DataTable, HttpResult, PageQuery, ResourceCountVO, ValidVO } from './base-data';
 import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { RbacRoleVO } from './rbac';
@@ -49,6 +49,12 @@ export interface UpdatePassword {
   password: string;
 }
 
+export interface RenewalExtUser {
+  username: string;
+  renewalType: string;
+  commit: CommitParam;
+}
+
 export abstract class UserData {
 
   abstract queryUserPage(param: UserPageQuery): Observable<DataTable<UserVO>>;
@@ -71,4 +77,13 @@ export abstract class UserData {
 
   abstract queryExtUserPage(param: UserPageQuery): Observable<DataTable<UserVO>>;
 
+  abstract renewalOfExtUser(param: RenewalExtUser): Observable<HttpResult<Boolean>>;
+
+
+}
+
+export enum RenewalExtUserTypeEnum {
+  SHORT_TERM = 'SHORT_TERM',
+  MID_TERM = 'MID_TERM',
+  LONG_TERM = 'LONG_TERM'
 }

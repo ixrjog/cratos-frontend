@@ -34,43 +34,68 @@
     <d-column header="Name" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <d-row>
-            <span dClipboard [content]="rowItem['username']">{{ rowItem['username'] }}</span>
-          </d-row>
-          <d-row>
-            <span class="font-color-name">{{ rowItem['name'] }}</span>
-            <span
-              *ngIf="rowItem['displayName'] !== rowItem['name']"
-              style="margin-left: 5px"
-              class="font-color-comment">
+          <div dLoading [loading]="rowItem['$userInfoLoading']">
+            <d-row>
+              <span dClipboard [content]="rowItem['username']">{{ rowItem['username'] }}</span>
+            </d-row>
+            <d-row>
+              <span class="font-color-name">{{ rowItem['name'] }}</span>
+              <span
+                *ngIf="rowItem['displayName'] !== rowItem['name']"
+                style="margin-left: 5px"
+                class="font-color-comment">
               {{ rowItem['displayName'] }}
             </span>
-          </d-row>
-          <d-row>
-            <span dClipboard [content]="rowItem['email']">{{ rowItem['email'] }}</span>
-          </d-row>
-          <d-row>
-            <span dClipboard [content]="rowItem['mobilePhone']">{{ rowItem['mobilePhone'] }}</span>
-          </d-row>
+            </d-row>
+            <d-row>
+              <span dClipboard [content]="rowItem['email']">{{ rowItem['email'] }}</span>
+            </d-row>
+            <d-row>
+              <span dClipboard [content]="rowItem['mobilePhone']">{{ rowItem['mobilePhone'] }}</span>
+            </d-row>
+            <d-row *ngIf="rowItem['$showUserInfo']">
+              <d-tag
+                dPopover
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="sshKeyTemplate"
+                [tag]="'ssh key'"
+                [labelStyle]="JSON.stringify(rowItem['$userSSHKey']) === '[]'?'':'green-w98'"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' }"
+              ></d-tag>
+              <ng-template #sshKeyTemplate>
+                <div>
+                  <d-card *ngFor="let key of rowItem['$userSSHKey']" style="padding: 5px 5px;margin-bottom: 10px">
+                    <d-card-header>
+                      <d-card-title>
+                        <h4 style="margin: 0 10px 0 0;display: inline-block">{{ key.title }}</h4>
+                        <span
+                          class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</span>
+                      </d-card-title>
+                    </d-card-header>
+                    <d-card-content>
+                      <div>
+                        <span>{{ key.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+                        &nbsp;
+                        <strong>{{ key.expiredTime | dRelativeTime: limit | async }}</strong>
+                      </div>
+                    </d-card-content>
+                  </d-card>
+                </div>
+                <div *ngIf="JSON.stringify(rowItem['$userSSHKey']) === '[]'">no ssh key</div>
+              </ng-template>
+            </d-row>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div style="position: relative" dLoading [loading]="rowItem['$loading']">
-            <d-icon
-              *ngIf="!rowItem['$notFirst']"
-              [icon]="'icon-refresh'"
-              (click)="onUserPermission(rowItem)"
-            >
-            </d-icon>
-            <span *ngIf="rowItem['$show']">
-              <d-icon
-                class="permissions-icon"
-                [icon]="'icon-refresh'"
-                (click)="onUserPermission(rowItem)"
-              ></d-icon>
+          <div style="position: relative" dLoading [loading]="rowItem['$permissionLoading']">
+            <span *ngIf="rowItem['$showPermission']">
               <app-user-permissions
                 [userPermissions]="rowItem['$userPermission']"
                 (onFetchData)="onUserPermission(rowItem)"
@@ -83,11 +108,14 @@
     <d-column header="Expired Time" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span>{{ rowItem['expiredTime'] | dSafeNullPipe }}</span>
-          <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
-          <span style="margin-left: 5px">
-            <d-icon [icon]="'icon-remind'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
-          </span>
+          <div style="position: relative">
+            <span>{{ rowItem['expiredTime'] | dSafeNullPipe }}</span>
+            <br />
+            <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
+            <span class="renewal-icon">
+              <d-icon [icon]="'icon-rollback'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
+            </span>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>
@@ -109,10 +137,11 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
+            <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onRowRefresh(rowItem)"></d-icon>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>

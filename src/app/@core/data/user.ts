@@ -79,7 +79,7 @@ export abstract class UserData {
 
   abstract renewalOfExtUser(param: RenewalExtUser): Observable<HttpResult<Boolean>>;
 
-
+  abstract querySshKey(param: { username: string }): Observable<HttpResult<Array<CredentialVO>>>;
 }
 
 export enum RenewalExtUserTypeEnum {

@@ -14,6 +14,7 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
+import { UserRenewalComponent } from './user-renewal/user-renewal.component';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -51,6 +52,10 @@ export class UserListDataTableComponent implements OnInit {
   };
 
   dialogDate = {
+    editorRenewalExtUserData: {
+      ...DIALOG_DATA.editorData,
+      content: UserRenewalComponent,
+    },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
     },
@@ -205,18 +210,36 @@ export class UserListDataTableComponent implements OnInit {
       .subscribe();
   }
 
+  onRowRefresh(rowItem: UserVO) {
+    this.onUserSSHKey(rowItem);
+    this.onUserPermission(rowItem);
+  }
+
+  onUserSSHKey(rowItem: UserVO) {
+    rowItem['$showUserInfo'] = false;
+    rowItem['$userSSHKey'] = [];
+    rowItem['$userInfoLoading'] = true;
+    this.userService.querySshKey({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$userInfoLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        rowItem['$userSSHKey'] = body;
+        rowItem['$showUserInfo'] = true;
+      });
+  }
+
   onUserPermission(rowItem: UserVO) {
-    rowItem['$notFirst'] = true;
-    rowItem['$show'] = false;
+    rowItem['$showPermission'] = false;
     rowItem['$userPermission'] = null;
-    rowItem['$loading'] = true;
+    rowItem['$permissionLoading'] = true;
     this.userPermissionService.getUserBusinessUserPermissionDetails({ username: rowItem.username })
       .pipe(
-        finalize(() => rowItem['$loading'] = false),
+        finalize(() => rowItem['$permissionLoading'] = false),
       )
       .subscribe(({ body }) => {
         rowItem['$userPermission'] = body.businessPermissions;
-        rowItem['$show'] = true
+        rowItem['$showPermission'] = true;
       });
   }
 
@@ -226,8 +249,15 @@ export class UserListDataTableComponent implements OnInit {
   }
 
   onRenewalExtUser(rowItem: UserVO) {
-
+    const dialogDate = {
+      ...this.dialogDate.editorRenewalExtUserData,
+      title: 'Renewal User',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
   }
 
   protected readonly getRowColor = getRowColor;
+  protected readonly JSON = JSON;
 }

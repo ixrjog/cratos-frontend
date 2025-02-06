@@ -27,6 +27,7 @@ import { UserRobotSettingsComponent } from './user-settings/user-robot-settings/
 import { MarkdownModule } from 'ngx-markdown';
 import { UserPermissionsComponent } from './user-list/user-list-data-table/user-permissions/user-permissions.component';
 import { UserPermissionsEditorComponent } from './user-list/user-list-data-table/user-editor/user-permissions-editor/user-permissions-editor.component';
+import { UserRenewalComponent } from './user-list/user-list-data-table/user-renewal/user-renewal.component';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { UserPermissionsEditorComponent } from './user-list/user-list-data-table
     UserRobotSettingsComponent,
     UserPermissionsComponent,
     UserPermissionsEditorComponent,
+    UserRenewalComponent,
   ],
   imports: [
     CommonModule,

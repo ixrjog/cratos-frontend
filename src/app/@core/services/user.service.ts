@@ -59,4 +59,8 @@ export class UserService extends UserData {
     return this.apiService.post(this.extUserUrl, '/renewal', param);
   }
 
+  querySshKey(param: { username: string }): Observable<HttpResult<Array<CredentialVO>>> {
+    return this.apiService.post(this.baseUrl, '/sshkey/query', param);
+  }
+
 }

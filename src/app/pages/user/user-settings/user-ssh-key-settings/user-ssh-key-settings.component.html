@@ -6,6 +6,7 @@
           <d-form-label>Public Key</d-form-label>
           <d-form-control>
             <textarea
+              name="sshKey"
               style="height: 200px"
               dTextarea
               placeholder="Please enter public key"
@@ -20,7 +21,7 @@
       </form>
     </da-col-item>
     <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
-      <d-card *ngFor="let key of sshKeyList">
+      <d-card *ngFor="let key of sshKeyList" style="margin-bottom: 10px">
         <span style="float: right; padding: 3px 0">
           <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(key)"></d-icon>
         </span>

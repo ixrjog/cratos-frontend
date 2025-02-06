@@ -40,7 +40,7 @@ export class UserPermissionsEditorComponent implements OnInit {
   };
 
   userBusinessPermission: PermissionBusinessVO;
-  businessTypeOptions = [ BusinessTypeEnum.APPLICATION ];
+  businessTypeOptions = [ BusinessTypeEnum.APPLICATION, BusinessTypeEnum.TAG_GROUP ];
 
   dialogDate = {
     warningOperateData: {

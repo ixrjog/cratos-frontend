@@ -72,6 +72,7 @@ export interface UpdateUserPermissionBusiness {
   businessType: string;
   businessPermissions: {
     businessId: number
+    name: string
     roleMembers: {
       role: string
       checked: boolean

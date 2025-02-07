@@ -152,6 +152,7 @@ export class UserPermissionsEditorComponent implements OnInit {
       });
       param.businessPermissions.push({
         businessId: item['businessId'],
+        name: item['name'],
         roleMembers: roleMembers,
       });
     });

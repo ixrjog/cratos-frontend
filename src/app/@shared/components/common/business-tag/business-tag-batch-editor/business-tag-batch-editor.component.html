@@ -1,0 +1,53 @@
+<section>
+  <h2>Batch Edit Tag</h2>
+  <div class="pane-content">
+    <h3>Bind</h3>
+    <div>
+      <form
+        dForm
+        ngForm
+        [dValidateRules]="formRules['rule']"
+        [layout]="layoutDirection"
+      >
+        <d-form-item>
+          <d-form-label [required]="true">Tag Key</d-form-label>
+          <d-form-control>
+            <d-select
+              name="tagKey"
+              [filterKey]="'tagKey'"
+              [appendToBody]="true"
+              [(ngModel)]="formData.tag"
+              [searchFn]="onSearchTag"
+              [isSearch]="true"
+              placeholder="Select tag"
+              [searchPlaceholder]="'Search tag'"
+              (valueChange)="onTagChange($event)"
+            >
+            </d-select>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Tag Value</d-form-label>
+          <d-form-control>
+            <input
+              dTextInput
+              [allowEmptyValueSearch]="true"
+              [delay]="1000"
+              [valueParser]="valueParser"
+              [appendToBody]="true"
+              name="tagValue"
+              [(ngModel)]="formData.tagValue"
+              placeholder="Enter a value of 0 to 15 characters"
+              dAutoComplete
+              [searchFn]="onSearchTagValue.bind(this)"
+            />
+          </d-form-control>
+        </d-form-item>
+        <d-form-operation>
+          <d-button bsStyle="primary" (click)="onBatchBind()">Bind
+          </d-button>
+        </d-form-operation>
+      </form>
+    </div>
+  </div>
+</section>

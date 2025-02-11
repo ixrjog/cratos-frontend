@@ -3,6 +3,7 @@ import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
 import { UserEdit, UserVO } from '../../../../../../@core/data/user';
 import { UserService } from '../../../../../../@core/services/user.service';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-user-info-editor',
@@ -33,7 +34,10 @@ export class UserInfoEditorComponent implements OnInit {
     },
   };
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private toastUtil: ToastUtil,
+  ) {
   }
 
   ngOnInit(): void {
@@ -46,9 +50,17 @@ export class UserInfoEditorComponent implements OnInit {
         fromAssetId: this.fromAssetId,
       };
       if (this.operationType) {
-        this.userService.addUser(param).subscribe(() => this.getUser());
+        this.userService.addUser(param)
+          .subscribe(() => {
+            this.toastUtil.onSuccessToast(TOAST_CONTENT.ADD);
+            this.getUser();
+          });
       } else {
-        this.userService.updateUser(param).subscribe(() => this.getUser());
+        this.userService.updateUser(param)
+          .subscribe(() => {
+            this.toastUtil.onSuccessToast(TOAST_CONTENT.ADD);
+            this.getUser();
+          });
       }
     } else {
       console.log(directive);

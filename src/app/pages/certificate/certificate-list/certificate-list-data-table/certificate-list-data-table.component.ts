@@ -165,6 +165,11 @@ export class CertificateListDataTableComponent implements OnInit {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  onBatchTag() {
+    this.dialogUtil.onBusinessTagBatchEditDialog(
+      this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
+  }
+
   onRowBusinessDoc(rowItem: CertificateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }

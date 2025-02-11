@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { RenewalExtUser, ResetPassword, UserData, UserEdit, UserPageQuery, UserVO } from '../data/user';
+import { AddSshKey, RenewalExtUser, ResetPassword, UserData, UserEdit, UserPageQuery, UserVO } from '../data/user';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
 import { CredentialVO } from '../data/credential';
@@ -61,6 +61,14 @@ export class UserService extends UserData {
 
   querySshKey(param: { username: string }): Observable<HttpResult<Array<CredentialVO>>> {
     return this.apiService.post(this.baseUrl, '/sshkey/query', param);
+  }
+
+  addSshKey(param: AddSshKey): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/sshkey/add', param);
+  }
+
+  addMySshKey(param: AddSshKey): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/my/sshkey/add', param);
   }
 
 }

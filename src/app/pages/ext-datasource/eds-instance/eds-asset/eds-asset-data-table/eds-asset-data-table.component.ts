@@ -235,6 +235,11 @@ export class EdsAssetDataTableComponent implements OnChanges {
     });
   }
 
+  onBatchTag() {
+    this.dialogUtil.onBusinessTagBatchEditDialog(
+      this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
+  }
+
   onQueryAssetIndex(rowItem: EdsAssetVO) {
     this.assetIndexTable = [];
     if (!parseResourceCount(rowItem)) {

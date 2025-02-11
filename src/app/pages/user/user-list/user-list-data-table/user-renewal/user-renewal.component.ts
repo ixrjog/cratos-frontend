@@ -16,6 +16,7 @@ export class UserRenewalComponent implements OnInit {
   formData: UserVO;
   renewalType: string = RenewalExtUserTypeEnum.SHORT_TERM;
   commitMsg: string = '';
+  renewalOfAll: boolean = false;
 
   renewalTypeOptions = [
     RenewalExtUserTypeEnum.SHORT_TERM,
@@ -38,6 +39,7 @@ export class UserRenewalComponent implements OnInit {
     const param: RenewalExtUser = {
       username: this.formData.username,
       renewalType: this.renewalType,
+      renewalOfAll: this.renewalOfAll,
       commit: {
         message: this.commitMsg,
       },

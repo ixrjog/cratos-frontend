@@ -183,6 +183,11 @@ export class UserListDataTableComponent implements OnInit {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  onBatchTag() {
+    this.dialogUtil.onBusinessTagBatchEditDialog(
+      this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
+  }
+
   onRowBusinessDoc(rowItem: UserVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }

@@ -7,7 +7,6 @@ import { finalize } from 'rxjs';
 import { RiskEventImpactEdit, RiskEventImpactVO } from '../../../../../@core/data/risk-event';
 import { RiskEventService } from '../../../../../@core/services/risk-event.service';
 import { getRowColor } from '../../../../../@shared/utils/data-table.utli';
-import { ChannelNetworkVO } from '../../../../../@core/data/channel-network';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 
@@ -170,11 +169,11 @@ export class RiskEventImpactEditorComponent implements OnInit {
       });
   }
 
-  onRowBusinessTag(rowItem: ChannelNetworkVO) {
+  onRowBusinessTag(rowItem: RiskEventImpactVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: ChannelNetworkVO) {
+  onRowBusinessDoc(rowItem: RiskEventImpactVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 

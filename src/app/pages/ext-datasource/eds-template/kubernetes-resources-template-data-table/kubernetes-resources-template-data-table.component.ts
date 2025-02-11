@@ -219,6 +219,11 @@ export class KubernetesResourcesTemplateDataTableComponent implements OnInit {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  onBatchTag() {
+    this.dialogUtil.onBusinessTagBatchEditDialog(
+      this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
+  }
+
   onRowBusinessDoc(rowItem: KubernetesResourceTemplateVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }

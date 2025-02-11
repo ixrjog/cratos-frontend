@@ -8,6 +8,9 @@ import {
 import { BusinessDocsComponent } from '../components/common/business-doc/business-docs/business-docs.component';
 import { UserEditorComponent } from '../../pages/user/user-list/user-list-data-table/user-editor/user-editor.component';
 import { RobotEditorComponent } from '../../pages/sys/robot/robot-data-table/robot-editor/robot-editor.component';
+import {
+  BusinessTagBatchEditorComponent,
+} from '../components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
 
 @Injectable()
 export class DialogUtil {
@@ -96,6 +99,23 @@ export class DialogUtil {
       data: {
         businessType: businessType,
         businessObject: businessObject,
+      },
+    });
+  }
+
+  onBusinessTagBatchEditDialog(businessType: string, businessObjects: any[], onFetch: Function) {
+    const results = this.dialogService.open({
+      id: 'business-batch-tag-edit',
+      width: '30%',
+      maxHeight: '800px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      content: BusinessTagBatchEditorComponent,
+      onClose: () => onFetch(),
+      buttons: [],
+      data: {
+        businessType: businessType,
+        businessObjects: businessObjects,
       },
     });
   }

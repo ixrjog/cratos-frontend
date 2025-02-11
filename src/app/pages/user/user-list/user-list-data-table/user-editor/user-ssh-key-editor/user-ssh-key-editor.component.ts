@@ -1,21 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { AddSshKey, UserVO } from '../../../../../../@core/data/user';
+import { CredentialVO } from '../../../../../../@core/data/credential';
+import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
+import { UserService } from '../../../../../../@core/services/user.service';
+import { CredentialService } from '../../../../../../@core/services/credential.service';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { FormLayout } from 'ng-devui/form';
-import { UserService } from '../../../../@core/services/user.service';
-import { CredentialVO } from '../../../../@core/data/credential';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
-import { CredentialService } from '../../../../@core/services/credential.service';
-import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
-import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
-import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
-import { AddSshKey } from '../../../../@core/data/user';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/constant/date.constant';
+import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 
 @Component({
-  selector: 'app-user-ssh-key-settings',
-  templateUrl: './user-ssh-key-settings.component.html',
-  styleUrls: [ './user-ssh-key-settings.component.less' ],
+  selector: 'app-user-ssh-key-editor',
+  templateUrl: './user-ssh-key-editor.component.html',
+  styleUrls: [ './user-ssh-key-editor.component.less' ],
 })
-export class UserSshKeySettingsComponent implements OnInit {
+export class UserSshKeyEditorComponent {
 
+  @Input() formData: UserVO;
   sshKeyList: CredentialVO[];
 
   dialogDate = {
@@ -33,7 +34,6 @@ export class UserSshKeySettingsComponent implements OnInit {
               private toastUtil: ToastUtil) {
   }
 
-  @Input() username: string;
   verticalLayout: FormLayout = FormLayout.Vertical;
   sshKey: string;
 
@@ -42,7 +42,7 @@ export class UserSshKeySettingsComponent implements OnInit {
   }
 
   fetchData() {
-    this.userService.queryMySshKey()
+    this.userService.querySshKey({ username: this.formData.username })
       .subscribe(({ body }) => this.sshKeyList = body);
   }
 
@@ -50,8 +50,9 @@ export class UserSshKeySettingsComponent implements OnInit {
     if (valid) {
       const param: AddSshKey = {
         pubKey: this.sshKey,
+        username: this.formData.username,
       };
-      this.userService.addMySshKey(param)
+      this.userService.addSshKey(param)
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.ADD);
           this.fetchData();
@@ -77,4 +78,5 @@ export class UserSshKeySettingsComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
   protected readonly limit = RELATIVE_TIME_LIMIT;
+
 }

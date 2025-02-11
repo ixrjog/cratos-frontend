@@ -61,7 +61,6 @@ export class UserPermissionsEditorComponent implements OnInit {
     private toastUtil: ToastUtil) {
   }
 
-
   ngOnInit(): void {
     this.queryParam.businessType = this.businessTypeOptions[0];
     this.onGetRoleColumns();

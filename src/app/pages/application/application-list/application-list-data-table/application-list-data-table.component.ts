@@ -184,6 +184,11 @@ export class ApplicationListDataTableComponent implements OnInit {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  onBatchTag() {
+    this.dialogUtil.onBusinessTagBatchEditDialog(
+      this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
+  }
+
   onRowBusinessDoc(rowItem: ApplicationVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }

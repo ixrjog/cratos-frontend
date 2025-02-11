@@ -43,6 +43,7 @@ import { BusinessPermissionsComponent } from './components/common/business-permi
 import { UnitTranPipe } from './pipe/unit-tran.pipe';
 import { StringReplacePipe } from './pipe/string-replace.pipe';
 import { UuidUtil } from './utils/uuid.util';
+import { BusinessTagBatchEditorComponent } from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -103,6 +104,7 @@ const CRATOS_UTILS = [
     BusinessCascaderComponent,
     XtermLogsComponent,
     BusinessPermissionsComponent,
+    BusinessTagBatchEditorComponent,
   ],
   imports: [
     CommonModule,

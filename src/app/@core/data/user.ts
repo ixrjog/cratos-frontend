@@ -52,7 +52,13 @@ export interface UpdatePassword {
 export interface RenewalExtUser {
   username: string;
   renewalType: string;
+  renewalOfAll: boolean;
   commit: CommitParam;
+}
+
+export interface AddSshKey {
+  username?: string;
+  pubKey: string;
 }
 
 export abstract class UserData {
@@ -80,6 +86,11 @@ export abstract class UserData {
   abstract renewalOfExtUser(param: RenewalExtUser): Observable<HttpResult<Boolean>>;
 
   abstract querySshKey(param: { username: string }): Observable<HttpResult<Array<CredentialVO>>>;
+
+  abstract addSshKey(param: AddSshKey): Observable<HttpResult<Boolean>>;
+
+  abstract addMySshKey(param: AddSshKey): Observable<HttpResult<Boolean>>;
+
 }
 
 export enum RenewalExtUserTypeEnum {

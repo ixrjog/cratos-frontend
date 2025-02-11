@@ -13,4 +13,7 @@
   <d-tab id="rbac" title="RBAC" [disabled]="!formData.id">
     <app-user-rbac-editor [formData]="formData" *ngIf="formData.id"></app-user-rbac-editor>
   </d-tab>
+  <d-tab id="sshkey" title="SSH Key" [disabled]="!formData.id">
+    <app-user-ssh-key-editor [formData]="formData" *ngIf="formData.id"></app-user-ssh-key-editor>
+  </d-tab>
 </d-tabs>

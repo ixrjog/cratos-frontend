@@ -15,6 +15,7 @@ import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { UserRenewalComponent } from './user-renewal/user-renewal.component';
+import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -67,6 +68,7 @@ export class UserListDataTableComponent implements OnInit {
   constructor(
     private userService: UserService,
     private userPermissionService: UserPermissionService,
+    private edsService: EdsService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
@@ -217,11 +219,57 @@ export class UserListDataTableComponent implements OnInit {
 
   onRowRefresh(rowItem: UserVO) {
     this.onUserSSHKey(rowItem);
+    rowItem['$showUserInfo'] = false;
     this.onUserPermission(rowItem);
+    this.onUserCloudIdentities(rowItem);
+    this.onUserLdapIdentities(rowItem);
+  }
+
+  onUserCloudIdentities(rowItem: UserVO) {
+    rowItem['$cloudIdentities'] = [];
+    rowItem['$cloudIdentityPolicy'] = null;
+    this.edsService.queryCloudIdentityDetails({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$userInfoLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        Object.entries(body.cloudIdentities).forEach(([ cloud, cloudIdentity ]) => {
+          Object.entries(cloudIdentity).forEach(([ instance, asset ]) => {
+            const obj = {
+              cloud: cloud,
+              instance: body.instanceMap[instance],
+              accounts: asset,
+            };
+            rowItem['$cloudIdentities'].push(obj)
+          });
+        });
+        rowItem['$cloudIdentityPolicy'] = body.policyMap;
+      });
+  }
+
+  onGetPolicy(rowItem: UserVO, assetId: number) {
+    return rowItem['$cloudIdentityPolicy'][assetId];
+  }
+
+  onUserLdapIdentities(rowItem: UserVO) {
+    rowItem['$ldapIdentities'] = [];
+    this.edsService.queryLdapIdentityDetails({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$userInfoLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        Object.entries(body.ldapIdentities).forEach(([ instance, ldapIdentity ]) => {
+          const obj = {
+            instance: body.instanceMap[instance],
+            account: ldapIdentity,
+            groups: body.ldapGroupMap[ldapIdentity.id],
+          };
+          rowItem['$ldapIdentities'].push(obj);
+        });
+      });
   }
 
   onUserSSHKey(rowItem: UserVO) {
-    rowItem['$showUserInfo'] = false;
     rowItem['$userSSHKey'] = [];
     rowItem['$userInfoLoading'] = true;
     this.userService.querySshKey({ username: rowItem.username })
@@ -265,4 +313,5 @@ export class UserListDataTableComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
   protected readonly JSON = JSON;
+  protected readonly Object = Object;
 }

@@ -8,19 +8,19 @@
     <d-form-item>
       <d-form-label>Ingress Name</d-form-label>
       <d-form-control>
-        <span>{{ formData.asset.name }}</span>
+        <input dTextInput name="assetName" [readonly]="true" [(ngModel)]="formData.asset.name"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>
       <d-form-label>Load Balancer</d-form-label>
       <d-form-control>
-        <span>{{ formData.loadBalancer.value }}</span>
+        <input dTextInput name="loadBalancer" [readonly]="true" [(ngModel)]="formData.loadBalancer.value"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>
       <d-form-label>Namespace</d-form-label>
       <d-form-control>
-        <span>{{ formData.namespace.value }}</span>
+        <input dTextInput name="namespace" [readonly]="true" [(ngModel)]="formData.namespace.value"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>

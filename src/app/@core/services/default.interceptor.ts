@@ -68,6 +68,14 @@ export class DefaultInterceptor implements HttpInterceptor {
           ...this.toastData,
         });
         throw new Error('something error');
+      case 502:
+      case 503:
+      case 504:
+        this.toastService.open({
+          value: [ { severity: 'error', summary: event.url, content: 'system err' } ],
+          ...this.toastData,
+        });
+        throw new Error('something error');
       default:
         throw new Error('something error');
     }

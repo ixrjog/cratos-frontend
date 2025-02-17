@@ -16,6 +16,10 @@ export interface UserPermissionVO extends BaseVO, ValidVO {
   expiredTime: Date;
   comment: string;
   env: EnvVO;
+  lifeCycleExpires: {
+    expiredTime: Date;
+    survivalRate: number;
+  };
 }
 
 export interface BusinessUserPermissionDetailsVO {

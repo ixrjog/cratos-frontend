@@ -8,7 +8,7 @@
     <d-form-item>
       <d-form-label>Username</d-form-label>
       <d-form-control>
-        <span>{{ formData.username }}</span>
+        <input dTextInput name="username" [readonly]="true" [(ngModel)]="formData.username"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>

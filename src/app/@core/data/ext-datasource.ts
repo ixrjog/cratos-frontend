@@ -134,6 +134,20 @@ export interface EdsAssetIndexVO extends BaseVO, BusinessTagsVO {
   comment: string;
 }
 
+export interface EdsCloudIdentityDetailsVO {
+  username: string;
+  cloudIdentities: Map<string, Map<number, EdsAssetVO[]>>;
+  instanceMap: Map<number, EdsInstanceVO[]>;
+  policyMap: Map<string, string[]>;
+}
+
+export interface EdsLdapIdentityDetailsVO {
+  username: string;
+  ldapIdentities: Map<number, EdsAssetVO[]>;
+  instanceMap: Map<number, EdsInstanceVO[]>;
+  ldapGroupMap: Map<number, string[]>;
+}
+
 export abstract class EdsData {
 
   abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
@@ -176,4 +190,7 @@ export abstract class EdsData {
 
   abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
 
+  abstract queryCloudIdentityDetails(param: { username: string }): Observable<HttpResult<EdsCloudIdentityDetailsVO>>;
+
+  abstract queryLdapIdentityDetails(param: { username: string }): Observable<HttpResult<EdsLdapIdentityDetailsVO>>;
 }

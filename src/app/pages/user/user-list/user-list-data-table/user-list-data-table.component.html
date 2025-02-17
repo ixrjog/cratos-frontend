@@ -31,7 +31,7 @@
     [checkable]="true"
     (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column header="Name" [width]="'300px'">
+    <d-column header="Name" [width]="'260px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div dLoading [loading]="rowItem['$userInfoLoading']">
@@ -56,12 +56,13 @@
             <d-row *ngIf="rowItem['$showUserInfo']">
               <d-tag
                 dPopover
+                style="margin:0 5px 5px 0"
                 [position]="'right-top'"
                 [trigger]="'hover'"
                 [controlled]="true"
                 [mouseEnterDelay]="500"
                 [content]="sshKeyTemplate"
-                [tag]="'ssh-key'"
+                [tag]="'ssh key'"
                 [labelStyle]="JSON.stringify(rowItem['$userSSHKey']) === '[]'?'':'green-w98'"
                 [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
               ></d-tag>
@@ -72,7 +73,8 @@
                       <d-card-title>
                         <h4 style="margin: 0 10px 0 0;display: inline-block">{{ key.title }}</h4>
                         <span
-                          class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}</span>
+                          class="card-content-comment font-color-comment">{{ key.fingerprint | dSafeNullPipe }}
+                        </span>
                       </d-card-title>
                     </d-card-header>
                     <d-card-content>
@@ -84,7 +86,80 @@
                     </d-card-content>
                   </d-card>
                 </div>
-                <div *ngIf="JSON.stringify(rowItem['$userSSHKey']) === '[]'">no ssh key</div>
+                <div *ngIf="JSON.stringify(rowItem['$userSSHKey']) === '[]'">no data</div>
+              </ng-template>
+
+              <d-tag
+                dPopover
+                style="margin:0 5px 5px 0"
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="cloudIdentitiesKeyTemplate"
+                [tag]="'cloud identities'"
+                [labelStyle]="JSON.stringify(rowItem['$cloudIdentities']) === '[]'?'':'green-w98'"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
+              ></d-tag>
+              <ng-template #cloudIdentitiesKeyTemplate>
+                <div>
+                  <d-card *ngFor="let cloudIdentity of rowItem['$cloudIdentities']"
+                          style="padding: 5px 5px;margin-bottom: 10px">
+                    <d-card-header>
+                      <d-card-title>
+                        <h4 style="margin: 0 10px 0 0;display: inline-block">{{ cloudIdentity.cloud }}</h4>
+                      </d-card-title>
+                    </d-card-header>
+                    <d-card-content>
+                      <div *ngFor="let account of cloudIdentity['accounts']">
+                        <d-tag
+                          style="margin-right: 8px"
+                          [tag]="account.assetKey+'@'+ cloudIdentity['instance']['instanceName']"
+                          [labelStyle]="'blue-w98'"
+                        ></d-tag>
+                        <strong *ngFor="let policy of onGetPolicy(rowItem,account.id)">
+                          <br />
+                          {{ policy }}
+                        </strong>
+                      </div>
+                    </d-card-content>
+                  </d-card>
+                </div>
+                <div *ngIf="JSON.stringify(rowItem['$cloudIdentities']) === '[]'">no data</div>
+              </ng-template>
+
+              <d-tag
+                dPopover
+                style="margin:0 5px 5px 0"
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="ldapIdentitiesKeyTemplate"
+                [tag]="'ldap identities'"
+                [labelStyle]="JSON.stringify(rowItem['$ldapIdentities']) === '[]'?'':'green-w98'"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
+              ></d-tag>
+              <ng-template #ldapIdentitiesKeyTemplate>
+                <div>
+                  <d-card *ngFor="let key of rowItem['$ldapIdentities']" style="padding: 5px 5px;margin-bottom: 10px">
+                    <d-card-header>
+                      <d-card-title>
+                        <h4 style="margin: 0 10px 0 0;display: inline-block">
+                          {{ key?.account?.assetKey }}@{{ key?.instance?.instanceName }}
+                        </h4>
+                      </d-card-title>
+                    </d-card-header>
+                    <d-card-content>
+                      <div>
+                        <strong *ngFor="let group of key?.groups">{{ group }}
+                          <br />
+                        </strong>
+                      </div>
+                    </d-card-content>
+                  </d-card>
+                </div>
+                <div *ngIf="JSON.stringify(rowItem['$ldapIdentities']) === '[]'">no data</div>
               </ng-template>
             </d-row>
           </div>
@@ -105,16 +180,13 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Expired Time" [width]="'300px'">
+    <d-column header="Expired Time" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div style="position: relative">
             <span>{{ rowItem['expiredTime'] | dSafeNullPipe }}</span>
             <br />
             <strong>{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
-            <span class="renewal-icon">
-              <d-icon [icon]="'icon-rollback'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
-            </span>
           </div>
         </ng-template>
       </d-cell>
@@ -142,6 +214,7 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onRowRefresh(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-rollback'" [operable]="true" (click)="onRenewalExtUser(rowItem)"></d-icon>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>

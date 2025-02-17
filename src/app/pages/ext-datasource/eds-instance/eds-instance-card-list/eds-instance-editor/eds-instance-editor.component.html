@@ -18,7 +18,7 @@
     <d-form-item>
       <d-form-label [required]="true">Eds Type</d-form-label>
       <d-form-control>
-        <span>{{ formData.edsType }}</span>
+        <input dTextInput name="edsType" [readonly]="true" [(ngModel)]="formData.edsType"/>
       </d-form-control>
     </d-form-item>
     <d-form-item>

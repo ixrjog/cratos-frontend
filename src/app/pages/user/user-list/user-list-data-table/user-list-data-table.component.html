@@ -114,7 +114,7 @@
                       <div *ngFor="let account of cloudIdentity['accounts']">
                         <d-tag
                           style="margin-right: 8px"
-                          [tag]="account.assetKey+'@'+ cloudIdentity['instance']['instanceName']"
+                          [tag]="account.assetKey + '@' + cloudIdentity['instance']['instanceName']"
                           [labelStyle]="'blue-w98'"
                         ></d-tag>
                         <strong *ngFor="let policy of onGetPolicy(rowItem,account.id)">

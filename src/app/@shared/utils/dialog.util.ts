@@ -37,7 +37,6 @@ export class DialogUtil {
           text: 'Cancel',
           handler: ($event: Event) => {
             results.modalInstance.hide();
-            return false;
           },
         },
       ],
@@ -82,6 +81,48 @@ export class DialogUtil {
         formData: data,
         operationType: operationType,
         ...extend
+      },
+    });
+  }
+
+  onApproveDialog(dialogDate: any, onFetch: Function, data: any, extend?: any) {
+    const results = this.dialogService.open({
+      id: 'approve-data',
+      width: '80%',
+      maxHeight: '1000px',
+      backdropCloseable: false,
+      dialogtype: 'standard',
+      onClose: () => onFetch(),
+      ...dialogDate,
+      buttons: [
+        {
+          id: 'btn-agree',
+          cssClass: 'primary',
+          text: 'Agree',
+          handler: ($event: Event) => {
+            results.modalContentInstance.agree();
+          },
+        },
+        {
+          id: 'btn-reject',
+          cssClass: 'danger',
+          text: 'Reject',
+          handler: ($event: Event) => {
+            results.modalContentInstance.reject();
+          },
+        },
+        {
+          id: 'btn-cancel',
+          cssClass: 'common',
+          text: 'Cancel',
+          handler: ($event: Event) => {
+            results.modalInstance.hide();
+          },
+        },
+      ],
+      data: {
+        formData: data,
+        ...extend,
       },
     });
   }
@@ -198,6 +239,9 @@ export const DIALOG_DATA = {
     grant: '<strong>Confirm grant this row ?</strong>',
     merge: '<strong>Confirm merge this row ?</strong>',
     redeploy: '<strong>Confirm redeploy this row ?</strong>',
+    exec: '<strong>Confirm exec this row ?</strong>',
+    approve: '<strong>Confirm approve this row ?</strong>',
+    reject: '<strong>Confirm reject this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',

@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { AlertModule, DatePipe, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
+import { AlertModule, DCommonModule, DevUIModule, TooltipModule } from 'ng-devui';
 import { IconModule } from 'ng-devui/icon';
 import { I18nModule } from 'ng-devui/i18n';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,7 +43,9 @@ import { BusinessPermissionsComponent } from './components/common/business-permi
 import { UnitTranPipe } from './pipe/unit-tran.pipe';
 import { StringReplacePipe } from './pipe/string-replace.pipe';
 import { UuidUtil } from './utils/uuid.util';
-import { BusinessTagBatchEditorComponent } from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
+import {
+  BusinessTagBatchEditorComponent,
+} from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
 
 const DEVUI_MODULES = [
   DevUIModule,

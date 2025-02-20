@@ -38,6 +38,11 @@ import {
 import {
   KubernetesPodExecComponent
 } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-workloads/kubernetes-deployment-splitter/kubernetes-pod-card/kubernetes-pod-exec/kubernetes-pod-exec.component';
+import { CommandExecComponent } from './command-exec/command-exec.component';
+import { CommandExecDataTableComponent } from './command-exec/command-exec-data-table/command-exec-data-table.component';
+import { CommandExecEditorComponent } from './command-exec/command-exec-data-table/command-exec-editor/command-exec-editor.component';
+import { CommandExecApproveComponent } from './command-exec/command-exec-data-table/command-exec-approve/command-exec-approve.component';
+import { CommandExecDoComponent } from './command-exec/command-exec-data-table/command-exec-do/command-exec-do.component';
 
 
 @NgModule({
@@ -60,6 +65,11 @@ import {
     KubernetesPodLogsComponent,
     KubernetesPodBatchLogsComponent,
     KubernetesPodExecComponent,
+    CommandExecComponent,
+    CommandExecDataTableComponent,
+    CommandExecEditorComponent,
+    CommandExecApproveComponent,
+    CommandExecDoComponent,
   ],
   imports: [
     CommonModule,

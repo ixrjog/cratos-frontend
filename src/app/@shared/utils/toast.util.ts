@@ -43,6 +43,8 @@ export const TOAST_CONTENT = {
   IMPORT: 'Importing, please wait',
   OPERATION: 'Operation in progress, please wait',
   SCAN: 'Scan success',
+  AGREE: 'Agree success',
+  REJECT: 'Reject success',
   UNREGISTER: 'Unregister success',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',

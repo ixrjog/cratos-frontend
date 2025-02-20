@@ -1,0 +1,81 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormLayout } from 'ng-devui/form';
+import { ApproveCommandExec, CommandExecApprovalStatusEnum, CommandExecVO } from '../../../../../@core/data/command';
+import { DValidateRules } from 'ng-devui';
+import { CommandService } from '../../../../../@core/services/command.service';
+import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
+
+@Component({
+  selector: 'app-command-exec-approve',
+  templateUrl: './command-exec-approve.component.html',
+  styleUrls: [ './command-exec-approve.component.less' ],
+})
+export class CommandExecApproveComponent implements OnInit {
+
+  layoutDirection: FormLayout = FormLayout.Vertical;
+  @Input() data: any;
+  formData: CommandExecVO;
+
+  approveRemark: string = '';
+
+
+  dialogDate = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
+  formRules: { [key: string]: DValidateRules } = {
+    rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
+  };
+
+  constructor(private commandService: CommandService,
+              private dialogUtil: DialogUtil,
+              private toastUtil: ToastUtil) {
+  }
+
+  ngOnInit(): void {
+    this.formData = this.data['formData'];
+  }
+
+  agree() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.approve,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      const param: ApproveCommandExec = {
+        commandExecId: this.formData.id,
+        approveRemark: this.approveRemark,
+        approvalAction: CommandExecApprovalStatusEnum.AGREE,
+      };
+      this.commandService.approveCommandExec(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.AGREE);
+        });
+    });
+  }
+
+  reject() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.reject,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      const param: ApproveCommandExec = {
+        commandExecId: this.formData.id,
+        approveRemark: this.approveRemark,
+        approvalAction: CommandExecApprovalStatusEnum.REJECT,
+      };
+      this.commandService.approveCommandExec(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.REJECT);
+        });
+    });
+  }
+
+}

@@ -1,0 +1,138 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-category-search
+    style="width: 800px;max-width: 800px"
+    class="category-search"
+    [category]="category"
+    [selectedTags]="selectedTags"
+    [tagMaxWidth]="200"
+    [extendedConfig]="extendedConfig"
+    [groupOrderConfig]="groupOrderConfig"
+    [toggleScrollToTail]="true"
+    [categoryInGroup]="true"
+    (searchEvent)="searchEvent($event)"
+    (selectedTagsChange)="selectedTagsChange($event)"
+  ></d-category-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column field="username" header="Applicant" [width]="'200px'"></d-column>
+    <d-column field="approvedBy" header="Approver" [width]="'200px'"></d-column>
+    <d-column field="commandMask" header="Command">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <app-xterm-logs [logs]="cellItem"></app-xterm-logs>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Output" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-tag
+            *ngIf="rowItem['outMsg']"
+            dPopover
+            style="margin:0 5px 5px 0"
+            [position]="'left-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="outMsgTemplate"
+            [tag]="'output message'"
+            [labelStyle]="'green-w98'"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
+          ></d-tag>
+          <ng-template #outMsgTemplate>
+            <app-xterm-logs [logs]="rowItem['outMsg']"></app-xterm-logs>
+          </ng-template>
+
+          <d-tag
+            *ngIf="rowItem['errorMsg']"
+            dPopover
+            style="margin:0 5px 5px 0"
+            [position]="'left-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="errorMsgTemplate"
+            [tag]="'error message'"
+            [labelStyle]="'red-w98'"
+            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
+          ></d-tag>
+          <ng-template #errorMsgTemplate>
+            <app-xterm-logs [logs]="rowItem['errorMsg']"></app-xterm-logs>
+          </ng-template>
+
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="applyRemark" header="Apply Remark"></d-column>
+    <d-column header="Actions" [width]="'150px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon
+              [disabled]="!rowItem['approvalInfo']['approvalRequired']"
+              [icon]="'icon-classroom-approve'"
+              [operable]="true"
+              (click)="onRowApprove(rowItem)"
+            ></d-icon>
+            <d-icon
+              [disabled]="!rowItem['applicantInfo']['execCommand']"
+              [icon]="'icon-run'"
+              [operable]="true"
+              (click)="onRowExec(rowItem)"
+            ></d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

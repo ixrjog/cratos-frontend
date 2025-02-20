@@ -1,0 +1,114 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Approve</d-form-label>
+      <d-form-control>
+        <d-select
+          name="approve"
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [(ngModel)]="approveUser"
+          [searchFn]="onSearchCommandExecUser"
+          [isSearch]="true"
+          placeholder="Select approve user"
+          (valueChange)="onApproveUserChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }} : {{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>CC</d-form-label>
+      <d-form-control>
+        <d-select
+          name="ccTo"
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [(ngModel)]="ccUser"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          placeholder="Select cc user"
+          (valueChange)="onCCUserChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }} : {{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-row [dGutter]="12" [dGutterNoOuter]="true">
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Instance</d-form-label>
+          <d-form-control>
+            <d-select
+              name="instance"
+              [filterKey]="'instanceName'"
+              [appendToBody]="true"
+              [(ngModel)]="instance"
+              [searchFn]="onSearchInstance"
+              [isSearch]="true"
+              placeholder="Select instance"
+              (valueChange)="onInstanceChange($event)"
+            >
+            </d-select>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Namespace</d-form-label>
+          <d-form-control>
+            <d-select
+              name="namespace"
+              [appendToBody]="true"
+              [options]="namespaceOptions"
+              [(ngModel)]="execTarget.namespace"
+              placeholder="Select namespace"
+            ></d-select>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+    </d-row>
+    <d-form-item>
+      <d-form-label [required]="true">Command</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="10"
+          [maxLines]="30"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.command"
+          (onChange)="onCommandChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Auto Exec</d-form-label>
+      <d-form-control>
+        <d-toggle name="autoExec" [(ngModel)]="formData.autoExec"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Remark</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="applyRemark"
+          maxlength="200"
+          [(ngModel)]="formData.applyRemark"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

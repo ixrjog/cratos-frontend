@@ -1,0 +1,52 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Command</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [readonly]="true"
+          [minLines]="10"
+          [maxLines]="30"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.commandMask"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Auto Exec</d-form-label>
+      <d-form-control>
+        <d-toggle name="autoExec" [(ngModel)]="formData.autoExec" [disabled]="true"></d-toggle>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Apply Remark</d-form-label>
+      <d-form-control>
+        <textarea
+          [disabled]="true"
+          dTextarea
+          name="applyRemark"
+          maxlength="200"
+          [(ngModel)]="formData.applyRemark"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Approve Remark</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="approveRemark"
+          maxlength="200"
+          [(ngModel)]="approveRemark"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

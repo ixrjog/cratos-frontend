@@ -72,6 +72,7 @@ export class BusinessTagEditorComponent implements OnInit {
         ),
       );
   };
+
   onSearchTagValue = (term: string) => {
     const param: ListValue = {
       queryTagValue: term, tagId: this.formData.tag['id'],

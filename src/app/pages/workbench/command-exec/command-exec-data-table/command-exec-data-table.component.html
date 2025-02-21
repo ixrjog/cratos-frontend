@@ -26,8 +26,63 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="username" header="Applicant" [width]="'200px'"></d-column>
-    <d-column field="approvedBy" header="Approver" [width]="'200px'"></d-column>
+    <d-column field="id" header="ID" [width]="'100px'"></d-column>
+    <d-column field="username" header="Info">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+
+          <div>
+            <span>Applicant:&nbsp;</span>
+            <span>{{ rowItem['username'] }}</span>
+          </div>
+
+          <div>
+            <span>Apply Remark:&nbsp;</span>
+            <span>{{ rowItem['applyRemark'] }}</span>
+          </div>
+
+          <div class="cratos-divider" style="margin: 5px 0 5px 0"></div>
+
+          <div>
+            <span>Approver:&nbsp;</span>
+            <span>{{ rowItem['approvedBy'] }}</span>
+            <d-tag
+              *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null"
+              dPopover
+              style="margin-left: 5px"
+              [tag]="rowItem['approvals']['APPROVER']['approvalStatus']"
+              [labelStyle]="rowItem['approvals']['APPROVER']['approvalStatus']==='AGREE'?'green-w98':'red-w98'"
+            ></d-tag>
+          </div>
+
+          <div *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null">
+            <span>Approver Remark:&nbsp;</span>
+            <span>{{ rowItem['approvals']['APPROVER']['approveRemark'] }}</span>
+          </div>
+
+          <div *ngIf="rowItem['ccTo'] !==''">
+            <span>CC:&nbsp;</span>
+            <span>{{ rowItem['ccTo'] }}</span>
+          </div>
+
+        </ng-template>
+      </d-cell>
+    </d-column>
+
+    <d-column field="execTarget" header="Exec Target" [width]="'200px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <div>
+            <span class="font-color-name">Instance&nbsp;</span>
+            <span class="font-color-comment">{{ cellItem['instance']['name'] }}</span>
+          </div>
+          <div>
+            <span class="font-color-name">Namespace&nbsp;</span>
+            <span class="font-color-comment">{{ cellItem['instance']['namespace'] }}</span>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="commandMask" header="Command">
       <d-cell>
         <ng-template let-cellItem="cellItem">
@@ -47,7 +102,7 @@
             [controlled]="true"
             [mouseEnterDelay]="500"
             [content]="outMsgTemplate"
-            [tag]="'output message'"
+            [tag]="'stdout'"
             [labelStyle]="'green-w98'"
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
           ></d-tag>
@@ -64,30 +119,48 @@
             [controlled]="true"
             [mouseEnterDelay]="500"
             [content]="errorMsgTemplate"
-            [tag]="'error message'"
+            [tag]="'stderr'"
             [labelStyle]="'red-w98'"
             [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
           ></d-tag>
           <ng-template #errorMsgTemplate>
             <app-xterm-logs [logs]="rowItem['errorMsg']"></app-xterm-logs>
           </ng-template>
-
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="applyRemark" header="Apply Remark"></d-column>
-    <d-column header="Actions" [width]="'150px'">
+    <d-column header="Status" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-tag
+            *ngIf="rowItem['completed']"
+            dPopover
+            style="margin:0 5px 5px 0"
+            [tag]="'completed'"
+            [labelStyle]="'green-w98'"
+          ></d-tag>
+          <d-tag
+            *ngIf="rowItem['success']"
+            dPopover
+            style="margin:0 5px 5px 0"
+            [tag]="'success'"
+            [labelStyle]="'green-w98'"
+          ></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'100px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon
-              [disabled]="!rowItem['approvalInfo']['approvalRequired']"
+              *ngIf="rowItem['approvalInfo']['approvalRequired']"
               [icon]="'icon-classroom-approve'"
               [operable]="true"
               (click)="onRowApprove(rowItem)"
             ></d-icon>
             <d-icon
-              [disabled]="!rowItem['applicantInfo']['execCommand']"
+              *ngIf="rowItem['applicantInfo']['execCommand']"
               [icon]="'icon-run'"
               [operable]="true"
               (click)="onRowExec(rowItem)"

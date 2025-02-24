@@ -13,7 +13,10 @@ import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { UserPermissionService } from '../../../../@core/services/user-permission.service';
-import { QueryBusinessUserPermissionDetails } from '../../../../@core/data/user-permission';
+import {
+  QueryBusinessUserPermissionDetails,
+  QueryUserPermissionByBusiness,
+} from '../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -215,18 +218,18 @@ export class ApplicationListDataTableComponent implements OnInit {
     rowItem['$show'] = false;
     rowItem['$permission'] = null;
     rowItem['$loading'] = true;
-    const param: QueryBusinessUserPermissionDetails = {
+    const param: QueryUserPermissionByBusiness = {
       businessType: this.businessType,
       businessId: rowItem.id,
     };
-    // this.userPermissionService.queryBusinessUserPermissionDetails(param)
-    //   .pipe(
-    //     finalize(() => rowItem['$loading'] = false),
-    //   )
-    //   .subscribe(({ body }) => {
-    //     rowItem['$permission'] = body
-    //     rowItem['$show'] = true;
-    //   });
+    this.userPermissionService.queryUserPermissionByBusiness(param)
+      .pipe(
+        finalize(() => rowItem['$loading'] = false),
+      )
+      .subscribe(({ body }) => {
+        rowItem['$permission'] = body.userPermissionsMap
+        rowItem['$show'] = true;
+      });
   }
 
   protected readonly getRowColor = getRowColor;

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BusinessUserPermissionDetailsVO } from '../../../../@core/data/user-permission';
+import { BusinessUserPermissionDetailsVO, UserPermissionBusinessVO } from '../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-business-permissions',
@@ -8,13 +8,7 @@ import { BusinessUserPermissionDetailsVO } from '../../../../@core/data/user-per
 })
 export class BusinessPermissionsComponent {
 
-  @Input() permissions: BusinessUserPermissionDetailsVO;
-
-  switch: boolean = true;
-
-  onLabelSwitch() {
-    this.switch = !this.switch;
-  }
+  @Input() permissions: Map<string, UserPermissionBusinessVO[]>;
 
   protected readonly JSON = JSON;
 }

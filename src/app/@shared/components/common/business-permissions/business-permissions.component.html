@@ -1,23 +1,54 @@
-<!--<section>-->
-<!--  <ng-container *ngIf="JSON.stringify(permissions.permissionByUser) !== '{}' ; else noPermissionsTemplate">-->
-<!--    <ng-template [ngTemplateOutlet]="permissionsTemplate"></ng-template>-->
-<!--  </ng-container>-->
-<!--</section>-->
+<section>
+  <ng-container *ngIf="JSON.stringify(permissions) !== '{}' ; else noPermissionsTemplate">
+    <ng-template [ngTemplateOutlet]="permissionsTemplate"></ng-template>
+  </ng-container>
+</section>
 
-<!--<ng-template #permissionsTemplate>-->
-<!--  <div *ngIf="switch">-->
-<!--    <h3 style="margin: 5px 0" class="font-color-comment" (click)="onLabelSwitch()">By User</h3>-->
-<!--    <pre><span>{{ permissions.permissionByUser | json }}</span></pre>-->
-<!--  </div>-->
+<ng-template #permissionsTemplate>
+  <span *ngFor="let permission of permissions| keyvalue">
+    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+    <div class="permissions">
+      <d-card *ngFor="let item of permission.value" class="permissions-card">
+        <d-card-content>
+          <d-tag
+            dClipboard
+            [content]="item.name"
+            style="margin-right: 8px"
+            [tag]="item.name"
+            [labelStyle]="'blue-w98'"
+          >
+          </d-tag>
+          <d-tag
+            *ngFor="let role of item.userPermissions"
+            style="margin-right: 5px;"
+            [tag]="role"
+            [customViewTemplate]="customTag"
+            [labelStyle]="role.id !== null?'green-w98':''"
+          >
+          </d-tag>
+          <ng-template #customTag let-tag="tag">
+            <div>
+              <span class="progress-container circle-type">
+                <d-progress
+                  [type]="'circle'"
+                  [strokeWidth]="18"
+                  [percentage]="tag.lifeCycleExpires?.survivalRate"
+                  [strokeColor]="'#50d4ab'"
+                  [showContent]="false"
+                  style="display: inline-block"
+                  *ngIf="tag.id !== null"
+                ></d-progress>
+                <span>&nbsp;{{ tag.role }}</span>
+              </span>
+            </div>
+          </ng-template>
+        </d-card-content>
+      </d-card>
+    </div>
+  </span>
+</ng-template>
 
-<!--  <div *ngIf="!switch" (click)="onLabelSwitch()">-->
-<!--    <h3 style="margin: 5px 0" class="font-color-comment" (click)="onLabelSwitch()">By Role</h3>-->
-<!--    <pre><span>{{ permissions.permissionByRole | json }}</span></pre>-->
-<!--  </div>-->
-<!--</ng-template>-->
+<ng-template #noPermissionsTemplate>
+  <d-tag [tag]="'No permissions'"></d-tag>
+</ng-template>
 
-<!--<ng-template #noPermissionsTemplate>-->
-<!--  <d-tag [tag]="'No permissions'"></d-tag>-->
-<!--</ng-template>-->
-
-<span>11111</span>

@@ -6,10 +6,12 @@ import {
   GrantUserPermission,
   PermissionBusinessVO,
   QueryAllBusinessUserPermissionDetails,
+  QueryUserPermissionByBusiness,
   RevokeUserPermission,
   UpdateUserPermissionBusiness,
   UserPermissionBusinessPageQuery,
   UserPermissionBusinessVO,
+  UserPermissionByBusinessVO,
   UserPermissionData,
   UserPermissionVO,
 } from '../data/user-permission';
@@ -60,6 +62,10 @@ export class UserPermissionService extends UserPermissionData {
 
   updateUserPermissionBusiness(param: UpdateUserPermissionBusiness): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/business/update', param);
+  }
+
+  queryUserPermissionByBusiness(param: QueryUserPermissionByBusiness): Observable<HttpResult<UserPermissionByBusinessVO>> {
+    return this.apiService.post(this.baseUrl, '/business/query', param);
   }
 
 }

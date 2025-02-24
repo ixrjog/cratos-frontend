@@ -85,6 +85,15 @@ export interface UpdateUserPermissionBusiness {
   }[];
 }
 
+export interface QueryUserPermissionByBusiness {
+  businessType: string;
+  businessId: number;
+}
+
+export interface UserPermissionByBusinessVO {
+  userPermissionsMap: Map<string, UserPermissionBusinessVO[]>;
+}
+
 export abstract class UserPermissionData {
 
   abstract queryUserPermissionPage(param: UserPageQuery): Observable<DataTable<UserPermissionVO>>;
@@ -107,4 +116,6 @@ export abstract class UserPermissionData {
     }>>;
 
   abstract updateUserPermissionBusiness(param: UpdateUserPermissionBusiness): Observable<HttpResult<Boolean>>;
+
+  abstract queryUserPermissionByBusiness(param: QueryUserPermissionByBusiness): Observable<HttpResult<UserPermissionByBusinessVO>>;
 }

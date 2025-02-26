@@ -161,6 +161,67 @@
                 </div>
                 <div *ngIf="JSON.stringify(rowItem['$ldapIdentities']) === '[]'">no data</div>
               </ng-template>
+
+              <d-tag
+                dPopover
+                style="margin:0 5px 5px 0"
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="dingtalkIdentitiesKeyTemplate"
+                [tag]="'dingtalk identities'"
+                [labelStyle]="JSON.stringify(rowItem['$dingtalkIdentities']) === '[]'?'':'green-w98'"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
+              ></d-tag>
+              <ng-template #dingtalkIdentitiesKeyTemplate>
+                <div>
+                  <d-card *ngFor="let key of rowItem['$dingtalkIdentities']"
+                          style="padding: 5px 5px;margin-bottom: 10px">
+                    <d-card-header>
+                      <d-card-title>
+                        {{ key?.account?.name }}@{{ key?.instance?.instanceName }}
+                      </d-card-title>
+                    </d-card-header>
+                  </d-card>
+                </div>
+                <div *ngIf="JSON.stringify(rowItem['$dingtalkIdentities']) === '[]'">no data</div>
+              </ng-template>
+
+              <d-tag
+                dPopover
+                style="margin:0 5px 5px 0"
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="gitlabIdentitiesKeyTemplate"
+                [tag]="'gitlab identities'"
+                [labelStyle]="JSON.stringify(rowItem['$gitlabIdentities']) === '[]'?'':'green-w98'"
+                [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '550px' ,padding: '10px'}"
+              ></d-tag>
+              <ng-template #gitlabIdentitiesKeyTemplate>
+                <div>
+                  <d-card *ngFor="let key of rowItem['$gitlabIdentities']" style="padding: 5px 5px;margin-bottom: 10px">
+                    <d-card-header>
+                      <d-card-title>
+                        <h4 style="margin: 0 10px 0 0;display: inline-block">
+                          {{ key?.account?.assetKey }}@{{ key?.instance?.instanceName }}
+                        </h4>
+                      </d-card-title>
+                    </d-card-header>
+                    <d-card-content>
+                      <div>
+                        <strong *ngFor="let sshKey of key?.sshKeys">{{ sshKey.assetKey }}
+                          <br />
+                        </strong>
+                      </div>
+                    </d-card-content>
+                  </d-card>
+                </div>
+                <div *ngIf="JSON.stringify(rowItem['$ldapIdentities']) === '[]'">no data</div>
+              </ng-template>
+
             </d-row>
           </div>
         </ng-template>

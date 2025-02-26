@@ -223,6 +223,8 @@ export class UserListDataTableComponent implements OnInit {
     this.onUserPermission(rowItem);
     this.onUserCloudIdentities(rowItem);
     this.onUserLdapIdentities(rowItem);
+    this.onUserDingtalkIdentities(rowItem);
+    this.onUserGitLabIdentities(rowItem);
   }
 
   onUserCloudIdentities(rowItem: UserVO) {
@@ -234,10 +236,10 @@ export class UserListDataTableComponent implements OnInit {
       )
       .subscribe(({ body }) => {
         Object.entries(body.cloudIdentities).forEach(([ cloud, cloudIdentity ]) => {
-          Object.entries(cloudIdentity).forEach(([ instance, asset ]) => {
+          Object.entries(cloudIdentity).forEach(([ instanceId, asset ]) => {
             const obj = {
               cloud: cloud,
-              instance: body.instanceMap[instance],
+              instance: body.instanceMap[instanceId],
               accounts: asset,
             };
             rowItem['$cloudIdentities'].push(obj)
@@ -258,13 +260,48 @@ export class UserListDataTableComponent implements OnInit {
         finalize(() => rowItem['$userInfoLoading'] = false),
       )
       .subscribe(({ body }) => {
-        Object.entries(body.ldapIdentities).forEach(([ instance, ldapIdentity ]) => {
+        Object.entries(body.ldapIdentities).forEach(([ instanceId, ldapIdentity ]) => {
           const obj = {
-            instance: body.instanceMap[instance],
+            instance: body.instanceMap[instanceId],
             account: ldapIdentity,
             groups: body.ldapGroupMap[ldapIdentity.id],
           };
           rowItem['$ldapIdentities'].push(obj);
+        });
+      });
+  }
+
+  onUserDingtalkIdentities(rowItem: UserVO) {
+    rowItem['$dingtalkIdentities'] = [];
+    this.edsService.queryDingtalkIdentityDetails({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$userInfoLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        Object.entries(body.dingtalkIdentities).forEach(([ instanceId, dingtalkIdentity ]) => {
+          const obj = {
+            instance: body.instanceMap[instanceId],
+            account: dingtalkIdentity,
+          };
+          rowItem['$dingtalkIdentities'].push(obj);
+        });
+      });
+  }
+
+  onUserGitLabIdentities(rowItem: UserVO) {
+    rowItem['$gitlabIdentities'] = [];
+    this.edsService.queryGitLabIdentityDetails({ username: rowItem.username })
+      .pipe(
+        finalize(() => rowItem['$userInfoLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        Object.entries(body.gitLabIdentities).forEach(([ instanceId, gitlabIdentity ]) => {
+          const obj = {
+            instance: body.instanceMap[instanceId],
+            account: gitlabIdentity,
+            sshKeys: body.sshKeyMap[gitlabIdentity.id],
+          };
+          rowItem['$gitlabIdentities'].push(obj);
         });
       });
   }

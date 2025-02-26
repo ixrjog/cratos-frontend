@@ -11,6 +11,8 @@ import {
   EdsConfigPageQuery,
   EdsConfigVO,
   EdsData,
+  EdsDingtalkIdentityDetailsVO,
+  EdsGitLabIdentityDetailsVO,
   EdsInstanceVO,
   EdsLdapIdentityDetailsVO,
   ImportInstanceAsset,
@@ -117,4 +119,11 @@ export class EdsService extends EdsData {
     return this.apiService.post(this.baseUrl, '/ldap/identity/details/query', param);
   }
 
+  queryDingtalkIdentityDetails(param: { username: string }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
+    return this.apiService.post(this.baseUrl, '/dingtalk/identity/details/query', param);
+  }
+
+  queryGitLabIdentityDetails(param: { username: string }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
+    return this.apiService.post(this.baseUrl, '/gitlab/identity/details/query', param);
+  }
 }

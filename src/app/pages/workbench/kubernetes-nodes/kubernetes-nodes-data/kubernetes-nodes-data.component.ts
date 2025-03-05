@@ -22,7 +22,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
     instanceName: '',
   };
 
-  KubernetesInstance: EdsInstanceVO;
+  kubernetesInstance: EdsInstanceVO;
   show = false;
   loading = false;
   kubernetesNodeDetailsVO: KubernetesNodeDetailsVO = null;

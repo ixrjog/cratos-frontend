@@ -39,6 +39,7 @@ import { EdsKubernetesService } from './services/ext-datasource-kubernetes.servi
 import { ApplicationResourceBaselineService } from './services/application-resource-baseline.service';
 import { CommonService } from './services/common.service';
 import { CommandService } from './services/command.service';
+import { EdsIdentityService } from './services/ext-dataSource-identity.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -82,7 +83,8 @@ export const CRATOS_PROVIDERS = [
   EdsKubernetesService,
   ApplicationResourceBaselineService,
   CommonService,
-  CommandService
+  CommandService,
+  EdsIdentityService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

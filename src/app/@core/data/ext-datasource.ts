@@ -134,33 +134,6 @@ export interface EdsAssetIndexVO extends BaseVO, BusinessTagsVO {
   comment: string;
 }
 
-export interface EdsCloudIdentityDetailsVO {
-  username: string;
-  cloudIdentities: Map<string, Map<number, EdsAssetVO[]>>;
-  instanceMap: Map<number, EdsInstanceVO[]>;
-  policyMap: Map<string, string[]>;
-}
-
-export interface EdsLdapIdentityDetailsVO {
-  username: string;
-  ldapIdentities: Map<number, EdsAssetVO[]>;
-  instanceMap: Map<number, EdsInstanceVO[]>;
-  ldapGroupMap: Map<number, string[]>;
-}
-
-export interface EdsDingtalkIdentityDetailsVO {
-  username: string;
-  dingtalkIdentities: Map<number, EdsAssetVO[]>;
-  instanceMap: Map<number, EdsInstanceVO[]>;
-}
-
-export interface EdsGitLabIdentityDetailsVO {
-  username: string;
-  gitLabIdentities: Map<number, EdsAssetVO[]>;
-  instanceMap: Map<number, EdsInstanceVO[]>;
-  sshKeyMap: Map<number, EdsAssetVO[]>;
-}
-
 export abstract class EdsData {
 
   abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
@@ -203,11 +176,4 @@ export abstract class EdsData {
 
   abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
 
-  abstract queryCloudIdentityDetails(param: { username: string }): Observable<HttpResult<EdsCloudIdentityDetailsVO>>;
-
-  abstract queryLdapIdentityDetails(param: { username: string }): Observable<HttpResult<EdsLdapIdentityDetailsVO>>;
-
-  abstract queryDingtalkIdentityDetails(param: { username: string }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>>;
-
-  abstract queryGitLabIdentityDetails(param: { username: string }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>>;
 }

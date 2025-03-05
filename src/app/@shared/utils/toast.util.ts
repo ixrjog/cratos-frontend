@@ -46,6 +46,7 @@ export const TOAST_CONTENT = {
   AGREE: 'Agree success',
   REJECT: 'Reject success',
   UNREGISTER: 'Unregister success',
+  CREATE:'Create success',
   BATCH_UPDATE: 'Batch update success',
   BATCH_DELETE: 'Batch delete success',
   BATCH_MERGE: 'Batch merge success',

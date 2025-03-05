@@ -15,7 +15,7 @@ import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { UserRenewalComponent } from './user-renewal/user-renewal.component';
-import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
+import { EdsIdentityService } from '../../../../@core/services/ext-dataSource-identity.service';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -68,7 +68,7 @@ export class UserListDataTableComponent implements OnInit {
   constructor(
     private userService: UserService,
     private userPermissionService: UserPermissionService,
-    private edsService: EdsService,
+    private edsIdentityService: EdsIdentityService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
@@ -230,7 +230,7 @@ export class UserListDataTableComponent implements OnInit {
   onUserCloudIdentities(rowItem: UserVO) {
     rowItem['$cloudIdentities'] = [];
     rowItem['$cloudIdentityPolicy'] = null;
-    this.edsService.queryCloudIdentityDetails({ username: rowItem.username })
+    this.edsIdentityService.queryCloudIdentityDetails({ username: rowItem.username })
       .pipe(
         finalize(() => rowItem['$userInfoLoading'] = false),
       )
@@ -255,7 +255,7 @@ export class UserListDataTableComponent implements OnInit {
 
   onUserLdapIdentities(rowItem: UserVO) {
     rowItem['$ldapIdentities'] = [];
-    this.edsService.queryLdapIdentityDetails({ username: rowItem.username })
+    this.edsIdentityService.queryLdapIdentityDetails({ username: rowItem.username })
       .pipe(
         finalize(() => rowItem['$userInfoLoading'] = false),
       )
@@ -273,7 +273,7 @@ export class UserListDataTableComponent implements OnInit {
 
   onUserDingtalkIdentities(rowItem: UserVO) {
     rowItem['$dingtalkIdentities'] = [];
-    this.edsService.queryDingtalkIdentityDetails({ username: rowItem.username })
+    this.edsIdentityService.queryDingtalkIdentityDetails({ username: rowItem.username })
       .pipe(
         finalize(() => rowItem['$userInfoLoading'] = false),
       )
@@ -290,7 +290,7 @@ export class UserListDataTableComponent implements OnInit {
 
   onUserGitLabIdentities(rowItem: UserVO) {
     rowItem['$gitlabIdentities'] = [];
-    this.edsService.queryGitLabIdentityDetails({ username: rowItem.username })
+    this.edsIdentityService.queryGitLabIdentityDetails({ username: rowItem.username })
       .pipe(
         finalize(() => rowItem['$userInfoLoading'] = false),
       )

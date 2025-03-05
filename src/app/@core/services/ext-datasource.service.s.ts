@@ -6,15 +6,11 @@ import {
   DeleteInstanceAsset,
   EdsAssetIndexVO,
   EdsAssetVO,
-  EdsCloudIdentityDetailsVO,
   EdsConfigEdit,
   EdsConfigPageQuery,
   EdsConfigVO,
   EdsData,
-  EdsDingtalkIdentityDetailsVO,
-  EdsGitLabIdentityDetailsVO,
   EdsInstanceVO,
-  EdsLdapIdentityDetailsVO,
   ImportInstanceAsset,
   InstanceEdit,
   InstancePageQuery,
@@ -111,19 +107,4 @@ export class EdsService extends EdsData {
     return this.apiService.get(this.baseUrl, '/asset/index/query', param);
   }
 
-  queryCloudIdentityDetails(param: { username: string }): Observable<HttpResult<EdsCloudIdentityDetailsVO>> {
-    return this.apiService.post(this.baseUrl, '/cloud/identity/details/query', param);
-  }
-
-  queryLdapIdentityDetails(param: { username: string }): Observable<HttpResult<EdsLdapIdentityDetailsVO>> {
-    return this.apiService.post(this.baseUrl, '/ldap/identity/details/query', param);
-  }
-
-  queryDingtalkIdentityDetails(param: { username: string }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
-    return this.apiService.post(this.baseUrl, '/dingtalk/identity/details/query', param);
-  }
-
-  queryGitLabIdentityDetails(param: { username: string }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
-    return this.apiService.post(this.baseUrl, '/gitlab/identity/details/query', param);
-  }
 }

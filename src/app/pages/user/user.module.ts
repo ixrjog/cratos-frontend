@@ -35,6 +35,7 @@ import {
 } from './user-list/user-list-data-table/user-editor/user-permissions-editor/user-permissions-editor.component';
 import { UserRenewalComponent } from './user-list/user-list-data-table/user-renewal/user-renewal.component';
 import { UserSshKeyEditorComponent } from './user-list/user-list-data-table/user-editor/user-ssh-key-editor/user-ssh-key-editor.component';
+import { UserIdentityEditorComponent } from './user-list/user-list-data-table/user-editor/user-identity-editor/user-identity-editor.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { UserSshKeyEditorComponent } from './user-list/user-list-data-table/user
     UserPermissionsEditorComponent,
     UserRenewalComponent,
     UserSshKeyEditorComponent,
+    UserIdentityEditorComponent,
   ],
   imports: [
     CommonModule,

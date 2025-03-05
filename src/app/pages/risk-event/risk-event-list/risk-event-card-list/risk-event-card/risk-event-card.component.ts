@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
 import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.util';
-import { Router } from '@angular/router';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { getRowColor } from 'src/app/@shared/utils/data-table.utli';
 import { RiskEventImpactEdit, RiskEventVO } from '../../../../../@core/data/risk-event';
@@ -49,7 +48,6 @@ export class RiskEventCardComponent {
   };
 
   constructor(
-    private route: Router,
     private riskEventService: RiskEventService,
     private dialogUtil: DialogUtil,
     private drawerUtil: DrawerUtil,

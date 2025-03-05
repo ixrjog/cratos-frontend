@@ -242,6 +242,8 @@ export const DIALOG_DATA = {
     exec: '<strong>Confirm exec this row ?</strong>',
     approve: '<strong>Confirm approve this row ?</strong>',
     reject: '<strong>Confirm reject this row ?</strong>',
+    reset: '<strong>Confirm reset this row ?</strong>',
+    create: '<strong>Confirm create this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',

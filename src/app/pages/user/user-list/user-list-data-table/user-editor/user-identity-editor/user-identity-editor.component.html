@@ -1,0 +1,168 @@
+<section>
+  <div>
+    <form dForm ngForm [layout]="FormLayout.Vertical">
+      <d-form-item>
+        <d-form-label>EDS Type</d-form-label>
+        <d-form-control>
+          <d-select
+            name="edsType"
+            class="select"
+            [options]="edsTypeOptions"
+            [appendToBody]="true"
+            placeholder="Select eds type"
+            [(ngModel)]="edsType"
+            (valueChange)="onEdsTypeChange($event)"
+          >
+          </d-select>
+        </d-form-control>
+      </d-form-item>
+
+      <d-form-item>
+        <d-form-label>EDS Instance</d-form-label>
+        <d-form-control>
+          <div>
+            <d-row [dSpace]="12">
+              <d-col [dSpan]="18">
+                <d-select
+                  name="edsInstance"
+                  [filterKey]="'instanceName'"
+                  [appendToBody]="true"
+                  [(ngModel)]="edsInstance"
+                  [searchFn]="onSearchEdsInstance"
+                  [isSearch]="true"
+                  placeholder="Select instance"
+                  (valueChange)="onEdsInstanceChange($event)"
+                >
+                  <ng-template let-option="option">
+                    <span>{{ option.instanceName }}</span>
+                    <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+                  </ng-template>
+                </d-select>
+              </d-col>
+              <d-col [dSpan]="6">
+                    <span style="float: right" *ngIf="showButton">
+                 <d-button
+                   style="margin-right: 5px"
+                   class="button"
+                   bsStyle="primary"
+                   (click)="onCreateIdentity()"
+                   *ngIf="canCreate"
+                 >Create
+                 </d-button>
+                 <d-button
+                   style="margin-right: 5px"
+                   class="button"
+                   bsStyle="primary"
+                   (click)="onResetIdentity()"
+                   *ngIf="!canCreate"
+                 >Reset
+                 </d-button>
+                 <d-button
+                   style="margin-right: 5px"
+                   class="button"
+                   bsStyle="danger"
+                   (click)="onDeleteIdentity()"
+                   *ngIf="!canCreate"
+                 >Remove
+                </d-button>
+            </span>
+              </d-col>
+            </d-row>
+            <div *ngIf="showIdentityInfo" style="margin-top: 10px">
+              <d-alert [type]="'info'" [closeable]="false">
+                当前页面刷新后，无法再次查询。
+              </d-alert>
+              <d-card style="padding: 15px;margin: 10px 0">
+                <d-card-header>
+                  <d-card-title>Identity Info</d-card-title>
+                </d-card-header>
+                <d-card-content>
+                  <form
+                    dForm
+                    ngForm
+                    [layout]="FormLayout.Vertical"
+                  >
+                    <d-form-item style="margin-bottom: 10px">
+                      <d-form-label>Username</d-form-label>
+                      <d-form-control>
+                        <div name="username" dClipboard [content]="identityInfo.username">{{ identityInfo.username }}
+                        </div>
+                      </d-form-control>
+                    </d-form-item>
+                    <d-form-item style="margin-bottom: 10px">
+                      <d-form-label>Password</d-form-label>
+                      <d-form-control>
+                        <div name="password" dClipboard [content]="identityInfo.password">{{ identityInfo.password }}
+                        </div>
+                      </d-form-control>
+                    </d-form-item>
+                  </form>
+                </d-card-content>
+              </d-card>
+            </div>
+          </div>
+        </d-form-control>
+      </d-form-item>
+      <d-form-item *ngIf="edsInstance !== null">
+        <d-form-label>{{ memberName }}</d-form-label>
+        <d-form-control>
+          <div>
+            <d-row [dSpace]="12">
+              <d-col [dSpan]="18">
+                <d-select
+                  name="edsInstanceMember"
+                  [filterKey]="'name'"
+                  [appendToBody]="true"
+                  [(ngModel)]="edsAsset"
+                  [searchFn]="onSearchEdsInstanceMember"
+                  [isSearch]="true"
+                  placeholder="Select instance member"
+                >
+                  <ng-template let-option="option">
+                    <span>{{ option.assetKey }}</span>
+                    <span style="float: right; padding: 3px 0">{{ option.name }}</span>
+                  </ng-template>
+                </d-select>
+              </d-col>
+              <d-col [dSpan]="6">
+                <span style="float: right">
+                  <d-button
+                    [disabled]="canCreate"
+                    style="margin-right: 5px"
+                    class="button"
+                    bsStyle="primary"
+                    (click)="onAddMember()"
+                  >Add
+                  </d-button>
+                </span>
+              </d-col>
+            </d-row>
+          </div>
+        </d-form-control>
+      </d-form-item>
+    </form>
+  </div>
+  <div>
+    <d-data-table
+      dLoading
+      [dataSource]="table.data"
+      [tableOverflowType]="'overlay'"
+      [backdrop]="true"
+      [scrollable]="true"
+      [loadingStyle]="'infinity'"
+      [loading]="table.loading"
+    >
+      <d-column field="name" header="Name"></d-column>
+      <d-column field="comment" header="Comment"></d-column>
+      <d-column header="Actions">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+</section>

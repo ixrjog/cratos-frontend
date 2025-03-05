@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { UserVO } from '../../../../../@core/data/user';
+import { UserSshKeyEditorComponent } from './user-ssh-key-editor/user-ssh-key-editor.component';
+import { UserIdentityEditorComponent } from './user-identity-editor/user-identity-editor.component';
 
 @Component({
   selector: 'app-user-editor',
@@ -7,6 +9,9 @@ import { UserVO } from '../../../../../@core/data/user';
   styleUrls: ['./user-editor.component.less']
 })
 export class UserEditorComponent implements OnInit {
+
+  @ViewChild('userSshKey') private userSshKey: UserSshKeyEditorComponent;
+  @ViewChild('userIdentity') private userIdentity: UserIdentityEditorComponent;
 
   tabActiveId: string | number = 'info';
 
@@ -26,6 +31,19 @@ export class UserEditorComponent implements OnInit {
 
   onUserAdded(user: UserVO) {
     this.formData = user;
+  }
+
+  onActiveTabChange(tab) {
+    switch (tab) {
+      case 'sshkey':
+        this.userSshKey.fetchData();
+        break;
+      case 'identity':
+        this.userIdentity.fetchData();
+        break;
+      default:
+        break;
+    }
   }
 
 }

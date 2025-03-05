@@ -37,10 +37,6 @@ export class UserSshKeyEditorComponent {
   verticalLayout: FormLayout = FormLayout.Vertical;
   sshKey: string;
 
-  ngOnInit(): void {
-    this.fetchData();
-  }
-
   fetchData() {
     this.userService.querySshKey({ username: this.formData.username })
       .subscribe(({ body }) => this.sshKeyList = body);

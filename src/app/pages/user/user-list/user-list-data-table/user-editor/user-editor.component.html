@@ -1,4 +1,4 @@
-<d-tabs [(activeTab)]="tabActiveId" type="pills">
+<d-tabs [(activeTab)]="tabActiveId" type="pills" (activeTabChange)="onActiveTabChange($event)">>
   <d-tab id="info" title="Info">
     <app-user-info-editor
       [formData]="formData"
@@ -14,6 +14,17 @@
     <app-user-rbac-editor [formData]="formData" *ngIf="formData.id"></app-user-rbac-editor>
   </d-tab>
   <d-tab id="sshkey" title="SSH Key" [disabled]="!formData.id">
-    <app-user-ssh-key-editor [formData]="formData" *ngIf="formData.id"></app-user-ssh-key-editor>
+    <app-user-ssh-key-editor
+      #userSshKey
+      [formData]="formData"
+      *ngIf="formData.id"
+    ></app-user-ssh-key-editor>
+  </d-tab>
+  <d-tab id="identity" title="Identity" [disabled]="!formData.id">
+    <app-user-identity-editor
+      #userIdentity
+      [formData]="formData"
+      *ngIf="formData.id"
+    ></app-user-identity-editor>
   </d-tab>
 </d-tabs>

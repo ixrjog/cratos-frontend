@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -34,8 +33,12 @@ import {
   UserPermissionsEditorComponent,
 } from './user-list/user-list-data-table/user-editor/user-permissions-editor/user-permissions-editor.component';
 import { UserRenewalComponent } from './user-list/user-list-data-table/user-renewal/user-renewal.component';
-import { UserSshKeyEditorComponent } from './user-list/user-list-data-table/user-editor/user-ssh-key-editor/user-ssh-key-editor.component';
-import { UserIdentityEditorComponent } from './user-list/user-list-data-table/user-editor/user-identity-editor/user-identity-editor.component';
+import {
+  UserSshKeyEditorComponent,
+} from './user-list/user-list-data-table/user-editor/user-ssh-key-editor/user-ssh-key-editor.component';
+import {
+  UserIdentityEditorComponent,
+} from './user-list/user-list-data-table/user-editor/user-identity-editor/user-identity-editor.component';
 
 @NgModule({
   declarations: [

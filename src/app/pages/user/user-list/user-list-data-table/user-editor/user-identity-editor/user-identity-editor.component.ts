@@ -203,6 +203,7 @@ export class UserIdentityEditorComponent {
           .subscribe(({ body }) => {
             this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
             this.canCreate = true;
+            this.fetchData();
           });
       }
     });

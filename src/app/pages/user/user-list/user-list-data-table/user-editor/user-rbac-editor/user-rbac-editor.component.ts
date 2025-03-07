@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserVO } from '../../../../../../@core/data/user';
 import { RbacService } from '../../../../../../@core/services/rbac.service';
 import { RolePageQuery } from '../../../../../../@core/data/rbac';
@@ -11,7 +11,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
   templateUrl: './user-rbac-editor.component.html',
   styleUrls: [ './user-rbac-editor.component.less' ],
 })
-export class UserRbacEditorComponent implements OnInit {
+export class UserRbacEditorComponent {
 
   @Input() formData: UserVO;
 
@@ -22,7 +22,7 @@ export class UserRbacEditorComponent implements OnInit {
               private toastUtil: ToastUtil) {
   }
 
-  initOption() {
+  fetchData() {
     this.sourceOption = [];
     this.targetOption = [];
     const param: RolePageQuery = {
@@ -50,11 +50,6 @@ export class UserRbacEditorComponent implements OnInit {
         }
       });
   }
-
-  ngOnInit(): void {
-    this.initOption();
-  }
-
 
   transferToTarget(data: any) {
     let obList: Observable<HttpResult<Boolean>>[] = [];

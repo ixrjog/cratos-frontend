@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserVO } from '../../../../../../@core/data/user';
 import { DIALOG_DATA } from '../../../../../../@shared/utils/dialog.util';
 import { UserPermissionService } from '../../../../../../@core/services/user-permission.service';
@@ -22,12 +22,12 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
   templateUrl: './user-permissions-editor.component.html',
   styleUrls: [ './user-permissions-editor.component.less' ],
 })
-export class UserPermissionsEditorComponent implements OnInit {
+export class UserPermissionsEditorComponent {
 
   @Input() formData: UserVO;
 
   queryParam = {
-    businessType: '',
+    businessType: BusinessTypeEnum.APPLICATION,
   };
 
   userPermissions: UserPermissionBusinessVO[];
@@ -61,8 +61,7 @@ export class UserPermissionsEditorComponent implements OnInit {
     private toastUtil: ToastUtil) {
   }
 
-  ngOnInit(): void {
-    this.queryParam.businessType = this.businessTypeOptions[0];
+  fetchData(): void {
     this.onGetRoleColumns();
     this.onUserPermission();
   }

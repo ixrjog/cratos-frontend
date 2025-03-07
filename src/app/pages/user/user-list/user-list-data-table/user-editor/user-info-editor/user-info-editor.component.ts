@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
 import { UserEdit, UserVO } from '../../../../../../@core/data/user';
@@ -10,7 +10,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
   templateUrl: './user-info-editor.component.html',
   styleUrls: [ './user-info-editor.component.less' ],
 })
-export class UserInfoEditorComponent implements OnInit {
+export class UserInfoEditorComponent {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() formData: UserVO;
@@ -38,9 +38,6 @@ export class UserInfoEditorComponent implements OnInit {
     private userService: UserService,
     private toastUtil: ToastUtil,
   ) {
-  }
-
-  ngOnInit(): void {
   }
 
   submitForm({ valid, directive }) {
@@ -73,6 +70,5 @@ export class UserInfoEditorComponent implements OnInit {
         this.onUserAdded.emit(body);
       });
   }
-
 
 }

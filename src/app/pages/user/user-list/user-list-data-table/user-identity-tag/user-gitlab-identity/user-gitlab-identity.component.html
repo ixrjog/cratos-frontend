@@ -26,13 +26,6 @@
           <div>
 
             <div class="card-content">
-              <span class="name">Username</span>
-              <span class="value" dClipboard [content]="identity.account.assetKey">
-                {{ identity.account.assetKey }}
-              </span>
-            </div>
-
-            <div class="card-content">
               <span class="name">SSH Key</span>
               <span class="value">
                 <d-tag
@@ -46,6 +39,13 @@
                   <i class="fa-solid fa-key"></i>
                   <span>&nbsp;{{ tag.assetKey }}</span>
                 </ng-template>
+              </span>
+            </div>
+
+            <div class="card-content">
+              <span class="name">Username</span>
+              <span class="value" dClipboard [content]="identity.account.assetKey">
+                {{ identity.account.assetKey }}
               </span>
             </div>
 

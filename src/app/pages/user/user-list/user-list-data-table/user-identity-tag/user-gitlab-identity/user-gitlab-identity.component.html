@@ -32,14 +32,20 @@
               </span>
             </div>
 
-            <div sclass="card-content">
+            <div class="card-content">
               <span class="name">SSH Key</span>
               <span class="value">
-                <div style="display: inline-block" *ngFor="let sshKey of identity.sshKeys">
+                <d-tag
+                  *ngFor="let sshKey of identity.sshKeys"
+                  style="margin: 0 3px 3px 0"
+                  [labelStyle]="'blue-w98'"
+                  [tag]="sshKey"
+                  [customViewTemplate]="gitlabSshKeyTemplate"
+                ></d-tag>
+                <ng-template #gitlabSshKeyTemplate let-tag="tag">
                   <i class="fa-solid fa-key"></i>
-                  &nbsp;{{ sshKey.assetKey }}
-                  <br />
-                </div>
+                  <span>&nbsp;{{ tag.assetKey }}</span>
+                </ng-template>
               </span>
             </div>
 

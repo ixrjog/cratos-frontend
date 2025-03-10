@@ -1,0 +1,79 @@
+<section>
+  <d-tag
+    (click)="fetchData()"
+    dLoading
+    [loading]="loading"
+    dPopover
+    style="margin:0 5px 5px 0"
+    [position]="'bottom-left'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="cloudIdentitiesKeyTemplate"
+    [tag]="'Cloud Identity'"
+    [labelStyle]="JSON.stringify(accounts) === '{}'?'':'green-w98'"
+    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+  ></d-tag>
+  <ng-template #cloudIdentitiesKeyTemplate>
+    <div>
+      <span *ngFor="let item of accounts | keyvalue">
+        <strong style="font-size: 1.5em" class="font-color-name">{{ item.key }}</strong>
+        <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+        <d-card
+          *ngFor="let account of item.value"
+          style="padding: 5px 5px;margin-bottom: 10px">
+        <d-card-header>
+          <d-card-title>{{ account.instance.instanceName }}</d-card-title>
+        </d-card-header>
+        <d-card-content>
+          <div>
+
+            <div class="card-content">
+              <span class="name">Username</span>
+              <span class="value" dClipboard [content]="account.accountLogin.loginUsername">
+                {{ account.accountLogin.loginUsername }}
+              </span>
+            </div>
+
+            <div class="card-content">
+              <span class="name">Login Link</span>
+              <span class="value">
+                <a class="devui-link-light" [href]="account.accountLogin.loginUrl" target="_blank">
+                  {{ account.accountLogin.loginUrl }}
+                </a>
+              </span>
+            </div>
+
+            <div class="card-content">
+              <span class="name">Policies</span>
+              <span class="value">
+                <d-tag
+                  style="margin: 0 3px 3px 0"
+                  *ngFor="let Policy of account.policies"
+                  [labelStyle]="'blue-w98'"
+                  [tag]="Policy"
+                ></d-tag>
+              </span>
+            </div>
+
+            <div class="card-content">
+              <span class="name">Access Key</span>
+              <span class="value">
+                <d-tag
+                  style="margin: 0 3px 3px 0"
+                  *ngFor="let accessKey of account.accessKeys"
+                  [labelStyle]="'blue-w98'"
+                  [tag]="accessKey.accessKeyId"
+                ></d-tag>
+              </span>
+            </div>
+
+          </div>
+        </d-card-content>
+      </d-card>
+      </span>
+
+    </div>
+    <div *ngIf="JSON.stringify(accounts) === '{}'">no data</div>
+  </ng-template>
+</section>

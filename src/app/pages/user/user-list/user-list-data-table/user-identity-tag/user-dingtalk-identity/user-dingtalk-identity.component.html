@@ -1,0 +1,48 @@
+<section>
+  <d-tag
+    (click)="fetchData()"
+    dLoading
+    [loading]="loading"
+    dPopover
+    style="margin:0 5px 5px 0"
+    [position]="'bottom-left'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="dingtalkIdentitiesTemplate"
+    [tag]="'Dingtalk Identity'"
+    [labelStyle]="JSON.stringify(dingtalkIdentities) === '[]'?'':'green-w98'"
+    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+  ></d-tag>
+  <ng-template #dingtalkIdentitiesTemplate>
+    <div>
+      <d-card
+        *ngFor="let identity of dingtalkIdentities"
+        style="padding: 5px 5px;margin-bottom: 10px">
+        <d-card-header>
+          <d-card-title>{{ identity.instance.instanceName }}</d-card-title>
+        </d-card-header>
+        <d-card-content>
+          <div>
+
+            <div class="card-content">
+              <span class="name">Username</span>
+              <span class="value" dClipboard [content]="identity.account.name">
+                {{ identity.account.name }}
+              </span>
+            </div>
+
+            <div class="card-content">
+              <span class="name">Description</span>
+              <span class="value">
+                {{ identity.account.description }}
+              </span>
+            </div>
+
+          </div>
+        </d-card-content>
+      </d-card>
+    </div>
+    <div *ngIf="JSON.stringify(dingtalkIdentities) === '[]'">no data</div>
+  </ng-template>
+</section>

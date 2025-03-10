@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
   AddLdapUserToTheGroup,
-  CreateLdapIdentity, DeleteLdapIdentity,
+  CreateLdapIdentity,
+  DeleteLdapIdentity,
   EdsCloudIdentityDetailsVO,
   EdsDingtalkIdentityDetailsVO,
   EdsGitLabIdentityDetailsVO,
@@ -24,19 +25,32 @@ export class EdsIdentityService extends EdsIdentityData {
     super();
   }
 
-  queryCloudIdentityDetails(param: { username: string }): Observable<HttpResult<EdsCloudIdentityDetailsVO>> {
+  queryCloudIdentityDetails(param: {
+    username: string,
+    instanceType?: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsCloudIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/cloud/details/query', param);
   }
 
-  queryLdapIdentityDetails(param: { username: string }): Observable<HttpResult<EdsLdapIdentityDetailsVO>> {
+  queryLdapIdentityDetails(param: {
+    username: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsLdapIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/ldap/details/query', param);
   }
 
-  queryDingtalkIdentityDetails(param: { username: string }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
+  queryDingtalkIdentityDetails(param: {
+    username: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/dingtalk/details/query', param);
   }
 
-  queryGitLabIdentityDetails(param: { username: string }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
+  queryGitLabIdentityDetails(param: {
+    username: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/gitlab/details/query', param);
   }
 
@@ -46,10 +60,6 @@ export class EdsIdentityService extends EdsIdentityData {
 
   createLdapIdentity(param: CreateLdapIdentity): Observable<HttpResult<LdapIdentity>> {
     return this.apiService.post(this.baseUrl, '/ldap/user/create', param);
-  }
-
-  queryLdapGroups(param: { instanceId: number }): Observable<HttpResult<Array<string>>> {
-    return this.apiService.post(this.baseUrl, '/ldap/group/query', param);
   }
 
   removeLdapUserFromGroup(param: RemoveLdapUserFromGroup): Observable<HttpResult<Boolean>> {

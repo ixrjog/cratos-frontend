@@ -67,7 +67,7 @@ export class UserIdentityEditorComponent {
 
   fetchData() {
     if (this.edsType === 'LDAP') {
-      this.onGetLdapIdentity();
+      this.onGetLdapIdentity(this.edsInstance.id);
     }
   }
 
@@ -108,10 +108,7 @@ export class UserIdentityEditorComponent {
   onEdsInstanceChange(instance: EdsInstanceVO) {
     this.showButton = true;
     this.canCreate = false;
-    if (this.UserIdentityDetail['instanceMap'] && !this.UserIdentityDetail['instanceMap'][instance.id]) {
-      this.canCreate = true;
-    }
-    this.onGetInstanceMember();
+    this.fetchData();
   }
 
   onGetInstanceMember() {
@@ -120,8 +117,7 @@ export class UserIdentityEditorComponent {
     }
     this.table.data = [];
     if (this.edsType === 'LDAP') {
-      const asset = this.UserIdentityDetail['ldapIdentities'][this.edsInstance.id];
-      this.UserIdentityDetail['ldapGroupMap'][asset.id]
+      this.UserIdentityDetail[0]['groups']
         .forEach(item => {
           const obj = {
             name: item,
@@ -132,14 +128,22 @@ export class UserIdentityEditorComponent {
     }
   }
 
-  onGetLdapIdentity() {
-    this.edsIdentityService.queryLdapIdentityDetails({ username: this.formData.username })
+  onGetLdapIdentity(instanceId: number) {
+    if (instanceId === null) {
+      return;
+    }
+    this.edsIdentityService.queryLdapIdentityDetails({ username: this.formData.username, instanceId: instanceId })
       .pipe(
         finalize(() => this.loading = false),
       )
       .subscribe(({ body }) => {
-        this.UserIdentityDetail = body;
-        this.onGetInstanceMember();
+        this.UserIdentityDetail = body.ldapIdentities;
+        debugger
+        if (JSON.stringify(this.UserIdentityDetail) === '[]') {
+          this.canCreate = true;
+        } else {
+          this.onGetInstanceMember();
+        }
       });
   }
 

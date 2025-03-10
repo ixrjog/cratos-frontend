@@ -5,6 +5,7 @@ import { DValidateRules } from 'ng-devui';
 import { CommandService } from '../../../../../@core/services/command.service';
 import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-command-exec-approve',
@@ -48,13 +49,18 @@ export class CommandExecApproveComponent implements OnInit {
       content: this.dialogDate.content.approve,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
+      this.data.canConfirm(false);
       const param: ApproveCommandExec = {
         commandExecId: this.formData.id,
         approveRemark: this.approveRemark,
         approvalAction: CommandExecApprovalStatusEnum.AGREE,
       };
       this.commandService.approveCommandExec(param)
-        .subscribe(() => {
+        .pipe(
+          finalize(() => {
+            this.data.canConfirm(true);
+          }),
+        ).subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.AGREE);
         });
     });
@@ -66,13 +72,18 @@ export class CommandExecApproveComponent implements OnInit {
       content: this.dialogDate.content.reject,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
+      this.data.canConfirm(false);
       const param: ApproveCommandExec = {
         commandExecId: this.formData.id,
         approveRemark: this.approveRemark,
         approvalAction: CommandExecApprovalStatusEnum.REJECT,
       };
       this.commandService.approveCommandExec(param)
-        .subscribe(() => {
+        .pipe(
+          finalize(() => {
+            this.data.canConfirm(true);
+          }),
+        ).subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.REJECT);
         });
     });

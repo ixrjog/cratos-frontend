@@ -49,7 +49,6 @@ export class UserEditorComponent implements OnInit {
         this.userRbac.fetchData();
         break;
       case 'identity':
-        this.userIdentity.fetchData();
         break;
       default:
         break;

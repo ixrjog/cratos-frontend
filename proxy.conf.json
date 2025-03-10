@@ -1,8 +1,8 @@
 // "target": "http://localhost:8081",  "target": "https://cratos.palmpay-inc.com",
 {
   "/api": {
-    "target": "http://localhost:8081",
-    "secure": false,
+    "target": "https://cratos.palmpay-inc.com",
+    "secure": true,
     "changeOrigin": true
   }
 }

@@ -39,6 +39,11 @@ import {
 import {
   UserIdentityEditorComponent,
 } from './user-list/user-list-data-table/user-editor/user-identity-editor/user-identity-editor.component';
+import { UserCloudIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-cloud-identity/user-cloud-identity.component';
+import { UserLdapIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-ldap-identity/user-ldap-identity.component';
+import { UserGitlabIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-gitlab-identity/user-gitlab-identity.component';
+import { UserDingtalkIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-dingtalk-identity/user-dingtalk-identity.component';
+import { UserSshKeyIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-ssh-key-identity/user-ssh-key-identity.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +62,11 @@ import {
     UserRenewalComponent,
     UserSshKeyEditorComponent,
     UserIdentityEditorComponent,
+    UserCloudIdentityComponent,
+    UserLdapIdentityComponent,
+    UserGitlabIdentityComponent,
+    UserDingtalkIdentityComponent,
+    UserSshKeyIdentityComponent,
   ],
   imports: [
     CommonModule,

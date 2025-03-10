@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DialogService } from 'ng-devui';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { TOAST_CONTENT, ToastUtil } from './toast.util';
 import {
   BusinessTagEditorComponent,
@@ -52,6 +52,7 @@ export class DialogUtil {
           text: 'Confirm',
           disabled: false,
           handler: ($event: Event) => {
+            results.modalContentInstance.data.canConfirm(false);
             let ob: Observable<any>;
             let content: string;
             if (operationType) {
@@ -61,7 +62,11 @@ export class DialogUtil {
               content = TOAST_CONTENT.UPDATE;
               ob = results.modalContentInstance.updateForm();
             }
-            ob.subscribe(() => {
+            ob.pipe(
+              finalize(() => {
+                results.modalContentInstance.data.canConfirm(true);
+              }),
+            ).subscribe(() => {
               this.toastUtil.onSuccessToast(content);
               onFetch();
               results.modalInstance.hide();
@@ -78,6 +83,9 @@ export class DialogUtil {
         },
       ],
       data: {
+        canConfirm: (value: boolean) => {
+          results.modalInstance.updateButtonOptions([ { disabled: !value } ]);
+        },
         formData: data,
         operationType: operationType,
         ...extend
@@ -99,6 +107,7 @@ export class DialogUtil {
           id: 'btn-agree',
           cssClass: 'primary',
           text: 'Agree',
+          disabled: false,
           handler: ($event: Event) => {
             results.modalContentInstance.agree();
           },
@@ -107,6 +116,7 @@ export class DialogUtil {
           id: 'btn-reject',
           cssClass: 'danger',
           text: 'Reject',
+          disabled: false,
           handler: ($event: Event) => {
             results.modalContentInstance.reject();
           },
@@ -121,6 +131,9 @@ export class DialogUtil {
         },
       ],
       data: {
+        canConfirm: (value: boolean) => {
+          results.modalInstance.updateButtonOptions([ { disabled: !value }, { disabled: !value } ]);
+        },
         formData: data,
         ...extend,
       },

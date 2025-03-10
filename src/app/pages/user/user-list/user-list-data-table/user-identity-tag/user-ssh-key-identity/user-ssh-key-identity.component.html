@@ -1,0 +1,42 @@
+<section>
+  <d-tag
+    (click)="fetchData()"
+    dLoading
+    [loading]="loading"
+    dPopover
+    style="margin:0 5px 5px 0"
+    [position]="'bottom-left'"
+    [trigger]="'hover'"
+    [controlled]="true"
+    [mouseEnterDelay]="500"
+    [content]="sshKeyTemplate"
+    [tag]="'SSH Key'"
+    [labelStyle]="JSON.stringify(sshKeys) === '[]'?'':'green-w98'"
+    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+  ></d-tag>
+  <ng-template #sshKeyTemplate>
+    <div *ngIf="JSON.stringify(sshKeys) !== '[]'">
+      <div>Connecting to Cratos SSH-Server using SSH keys</div>
+      <pre><app-xterm-logs [logs]="'$ ssh '+ user.username + '@' + hostUrl"></app-xterm-logs></pre>
+      <d-card
+        *ngFor="let sshKey of sshKeys"
+        style="padding: 5px 5px;margin-bottom: 10px">
+        <d-card-content>
+          <div>
+            <div> {{ sshKey.title }}</div>
+            <div>
+              <i class="fa-solid fa-key"></i>
+              &nbsp;{{ sshKey.fingerprint }}
+            </div>
+            <div>
+              <span>{{ sshKey.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+              &nbsp;
+              <strong>{{ sshKey.expiredTime | dRelativeTime: limit | async }}</strong>
+            </div>
+          </div>
+        </d-card-content>
+      </d-card>
+    </div>
+    <div *ngIf="JSON.stringify(sshKeys) === '[]'">no data</div>
+  </ng-template>
+</section>

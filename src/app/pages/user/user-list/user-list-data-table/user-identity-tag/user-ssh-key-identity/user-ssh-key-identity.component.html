@@ -16,7 +16,7 @@
   ></d-tag>
   <ng-template #sshKeyTemplate>
     <div *ngIf="JSON.stringify(sshKeys) !== '[]'">
-      <div>Connecting to Cratos SSH-Server using SSH keys</div>
+      <div class="font-color-comment">Connecting to Cratos SSH-Server using SSH keys</div>
       <pre><app-xterm-logs [logs]="'$ ssh '+ user.username + '@' + hostUrl"></app-xterm-logs></pre>
       <d-card
         *ngFor="let sshKey of sshKeys"

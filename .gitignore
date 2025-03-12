@@ -47,3 +47,5 @@ package-lock.json
 
 ossutil_output/
 *.report
+
+proxy.conf.json

@@ -8,9 +8,8 @@ describe('UserCloudIdentityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserCloudIdentityComponent ]
-    })
-    .compileComponents();
+      declarations: [UserCloudIdentityComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(UserCloudIdentityComponent);
     component = fixture.componentInstance;
@@ -20,4 +19,5 @@ describe('UserCloudIdentityComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

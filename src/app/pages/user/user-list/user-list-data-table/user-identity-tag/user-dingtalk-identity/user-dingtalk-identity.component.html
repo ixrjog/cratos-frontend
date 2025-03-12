@@ -12,7 +12,7 @@
     [content]="dingtalkIdentitiesTemplate"
     [tag]="'Dingtalk Identity'"
     [labelStyle]="JSON.stringify(dingtalkIdentities) === '[]'?'':'green-w98'"
-    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+    [popoverStyle]="getPopoverStyle()"
   ></d-tag>
   <ng-template #dingtalkIdentitiesTemplate>
     <div>

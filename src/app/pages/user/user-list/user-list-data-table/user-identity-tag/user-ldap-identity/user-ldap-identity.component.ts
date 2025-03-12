@@ -3,6 +3,7 @@ import { EdsLdapAccountVO } from '../../../../../../@core/data/ext-dataSource-id
 import { EdsIdentityService } from '../../../../../../@core/services/ext-dataSource-identity.service';
 import { UserVO } from '../../../../../../@core/data/user';
 import { finalize } from 'rxjs';
+import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-user-ldap-identity',
@@ -33,4 +34,5 @@ export class UserLdapIdentityComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

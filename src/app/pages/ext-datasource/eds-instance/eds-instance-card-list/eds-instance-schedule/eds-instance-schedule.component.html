@@ -47,7 +47,7 @@
                 [trigger]="'hover'"
                 [controlled]="true"
                 [mouseEnterDelay]="500"
-                [popoverStyle]="{ backgroundColor: 'white' }"
+                [popoverStyle]="getPopoverStyle()"
               >
               </d-icon>
               <ng-template #customTemplate>

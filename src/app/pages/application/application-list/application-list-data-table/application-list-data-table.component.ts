@@ -17,6 +17,7 @@ import {
   QueryBusinessUserPermissionDetails,
   QueryUserPermissionByBusiness,
 } from '../../../../@core/data/user-permission';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -233,4 +234,5 @@ export class ApplicationListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

@@ -18,6 +18,7 @@ import {
 } from './kubernetes-resources-member-editor/kubernetes-resources-member-editor.component';
 import { GroupPageQuery } from '../../../../@core/data/rbac';
 import { map } from 'rxjs/operators';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-kubernetes-resources-member-data-table',
@@ -258,4 +259,5 @@ export class KubernetesResourcesMemberDataTableComponent {
 
   protected readonly getRowColor = getRowColor;
 
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

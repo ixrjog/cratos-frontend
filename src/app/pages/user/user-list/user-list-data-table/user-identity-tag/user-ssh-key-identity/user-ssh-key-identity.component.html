@@ -12,7 +12,7 @@
     [content]="sshKeyTemplate"
     [tag]="'SSH Key'"
     [labelStyle]="JSON.stringify(sshKeys) === '[]'?'':'green-w98'"
-    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+    [popoverStyle]="getPopoverStyle()"
   ></d-tag>
   <ng-template #sshKeyTemplate>
     <div *ngIf="JSON.stringify(sshKeys) !== '[]'">

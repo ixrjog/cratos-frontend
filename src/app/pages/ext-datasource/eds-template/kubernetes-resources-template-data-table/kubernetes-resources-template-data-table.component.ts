@@ -20,6 +20,7 @@ import { KubernetesResourcesCreateComponent } from './kubernetes-resources-creat
 import {
   KubernetesResourcesTemplateCloneComponent,
 } from './kubernetes-resources-template-clone/kubernetes-resources-template-clone.component';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-kubernetes-resources-template-data-table',
@@ -234,4 +235,5 @@ export class KubernetesResourcesTemplateDataTableComponent implements OnInit {
     this.fetchData();
   }
 
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

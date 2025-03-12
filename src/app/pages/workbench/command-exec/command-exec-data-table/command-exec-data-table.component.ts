@@ -11,6 +11,7 @@ import { AddCommandExec, CommandExecPageQuery, CommandExecVO } from '../../../..
 import { CommandExecApproveComponent } from './command-exec-approve/command-exec-approve.component';
 import { CommandExecDoComponent } from './command-exec-do/command-exec-do.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-command-exec-data-table',
@@ -227,4 +228,5 @@ export class CommandExecDataTableComponent implements OnInit {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
   protected readonly JSON = JSON;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

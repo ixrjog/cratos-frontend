@@ -9,6 +9,7 @@ import {
   TrafficLayerIngressLimitEditorComponent,
 } from './traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
 import { HelperUtils } from 'ng-devui';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-traffic-layer-ingress-limit-data-table',
@@ -72,4 +73,6 @@ export class TrafficLayerIngressLimitDataTableComponent implements OnInit {
   onRouteGrafana() {
     HelperUtils.jumpOuterUrl('https://grafana.palmpay-inc.com/d/1859120988191686-279454-30546ee3bf/alb?orgId=1');
   }
+
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

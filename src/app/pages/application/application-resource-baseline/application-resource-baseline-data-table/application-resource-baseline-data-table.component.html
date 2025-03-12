@@ -112,7 +112,7 @@
               [mouseEnterDelay]="500"
               [content]="startupProbeTemplate"
               class="font-color-name"
-              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+              [popoverStyle]="getPopoverStyle({width: '750px'})"
             >&nbsp;Startup</span>
             <ng-template #startupProbeTemplate>
               Current
@@ -145,7 +145,7 @@
               [mouseEnterDelay]="500"
               [content]="livenessProbeTemplate"
               class="font-color-name"
-              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+              [popoverStyle]="getPopoverStyle({width: '750px'})"
             >&nbsp;Liveness</span>
             <ng-template #livenessProbeTemplate>
               Current
@@ -178,7 +178,7 @@
               [mouseEnterDelay]="500"
               [content]="readinessProbeTemplate"
               class="font-color-name"
-              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+              [popoverStyle]="getPopoverStyle({width: '750px'})"
             >&nbsp;Readiness</span>
             <ng-template #readinessProbeTemplate>
               Current
@@ -214,7 +214,7 @@
             [controlled]="true"
             [mouseEnterDelay]="500"
             [content]="lifecycleTemplate"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+            [popoverStyle]="getPopoverStyle({width: '750px'})"
             class="font-color-name"
           >&nbsp;PreStop</span>
           <ng-template #lifecycleTemplate>
@@ -251,7 +251,7 @@
               [controlled]="true"
               [mouseEnterDelay]="500"
               [content]="envTemplate"
-              [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '750px' }"
+              [popoverStyle]="getPopoverStyle({width: '750px'})"
               class="font-color-name"
             >&nbsp;{{ env['name'] }}</span>
             <ng-template #envTemplate>

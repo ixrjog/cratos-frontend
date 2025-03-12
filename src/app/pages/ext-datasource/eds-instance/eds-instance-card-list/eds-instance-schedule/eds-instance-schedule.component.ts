@@ -14,6 +14,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.uti
 import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { finalize } from 'rxjs';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
+import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-eds-instance-schedule',
@@ -153,4 +154,5 @@ export class EdsInstanceScheduleComponent implements OnInit {
 
   protected readonly JSON = JSON;
   protected readonly limit = RELATIVE_TIME_LIMIT;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

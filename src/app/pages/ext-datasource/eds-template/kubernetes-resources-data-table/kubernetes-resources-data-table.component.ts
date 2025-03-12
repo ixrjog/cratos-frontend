@@ -7,6 +7,7 @@ import { KubernetesResourceService } from '../../../../@core/services/kubernetes
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-kubernetes-resources-data-table',
@@ -161,4 +162,5 @@ export class KubernetesResourcesDataTableComponent implements OnInit{
   ngOnInit(): void {
   }
 
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

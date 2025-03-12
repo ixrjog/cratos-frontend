@@ -3,6 +3,7 @@ import { UserVO } from '../../../../../../@core/data/user';
 import { finalize } from 'rxjs';
 import { UserService } from '../../../../../../@core/services/user.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../@shared/constant/date.constant';
+import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-user-ssh-key-identity',
@@ -35,4 +36,5 @@ export class UserSshKeyIdentityComponent implements OnInit {
 
   protected readonly JSON = JSON;
   protected readonly limit = RELATIVE_TIME_LIMIT;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

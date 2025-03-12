@@ -3,6 +3,7 @@ import { UserVO } from '../../../../../../@core/data/user';
 import { EdsDingtalkAccountVO, EdsGitLabAccountVO } from '../../../../../../@core/data/ext-dataSource-identity';
 import { EdsIdentityService } from '../../../../../../@core/services/ext-dataSource-identity.service';
 import { finalize } from 'rxjs';
+import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-user-dingtalk-identity',
@@ -33,4 +34,5 @@ export class UserDingtalkIdentityComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

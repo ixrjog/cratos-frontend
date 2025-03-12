@@ -12,13 +12,13 @@
     [content]="ldapIdentitiesTemplate"
     [tag]="'LDAP Identity'"
     [labelStyle]="JSON.stringify(ldapIdentities) === '[]'?'':'green-w98'"
-    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+    [popoverStyle]="getPopoverStyle()"
   ></d-tag>
   <ng-template #ldapIdentitiesTemplate>
     <div>
       <d-card
         *ngFor="let identity of ldapIdentities"
-        style="padding: 5px 5px;margin-bottom: 10px">
+        style="padding: 5px 5px;margin-bottom: 10px;width: 500px">
         <d-card-header>
           <d-card-title>{{ identity.instance.instanceName }}</d-card-title>
         </d-card-header>

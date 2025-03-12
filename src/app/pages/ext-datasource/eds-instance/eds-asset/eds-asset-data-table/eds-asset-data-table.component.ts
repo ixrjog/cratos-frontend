@@ -28,6 +28,7 @@ import {
   BusinessCascaderComponent,
 } from '../../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
+import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -257,4 +258,6 @@ export class EdsAssetDataTableComponent implements OnChanges {
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
   }
+
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

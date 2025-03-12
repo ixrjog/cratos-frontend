@@ -13,6 +13,7 @@ import {
 } from './notification-template-editor/notification-template-editor.component';
 import { NotificationTemplateService } from '../../../../@core/services/notification-template.service';
 import { EnvEdit } from '../../../../@core/data/env';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-notification-template-data-table',
@@ -102,4 +103,5 @@ export class NotificationTemplateDataTableComponent implements OnInit {
     }, rowItem);
   }
 
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

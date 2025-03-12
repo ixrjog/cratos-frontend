@@ -104,7 +104,7 @@
             [content]="outMsgTemplate"
             [tag]="'stdout'"
             [labelStyle]="'green-w98'"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
+            [popoverStyle]="getPopoverStyle({width: '600px'})"
           ></d-tag>
           <ng-template #outMsgTemplate>
             <app-xterm-logs [logs]="rowItem['outMsg']"></app-xterm-logs>
@@ -121,7 +121,7 @@
             [content]="errorMsgTemplate"
             [tag]="'stderr'"
             [labelStyle]="'red-w98'"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '600px' ,padding: '5px'}"
+            [popoverStyle]="getPopoverStyle({width: '600px'})"
           ></d-tag>
           <ng-template #errorMsgTemplate>
             <app-xterm-logs [logs]="rowItem['errorMsg']"></app-xterm-logs>

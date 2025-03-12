@@ -12,7 +12,7 @@
     [content]="gitLabIdentitiesTemplate"
     [tag]="'GitLab Identity'"
     [labelStyle]="JSON.stringify(gitLabIdentities) === '[]'?'':'green-w98'"
-    [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '500px',padding: '10px'}"
+    [popoverStyle]="getPopoverStyle()"
   ></d-tag>
   <ng-template #gitLabIdentitiesTemplate>
     <div>

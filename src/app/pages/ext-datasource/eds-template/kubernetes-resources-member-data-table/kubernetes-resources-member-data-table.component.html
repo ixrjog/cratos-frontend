@@ -49,7 +49,7 @@
             [content]="contentTemplate"
             [position]="'right-top'"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+            [popoverStyle]="getPopoverStyle({width: '1000px'})"
           >
           </d-icon>
           <ng-template #contentTemplate>

@@ -40,7 +40,7 @@
             [content]="originalModelTemplate"
             [position]="'left-top'"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '800px' }"
+            [popoverStyle]="getPopoverStyle({width: '800px'})"
           >
           </d-icon>
           <ng-template #originalModelTemplate>
@@ -67,7 +67,7 @@
             (click)="onQueryAssetIndex(rowItem)"
             [disabled]="!parseResourceCount(rowItem)"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: 'white', color: 'black',width: '1000px' }"
+            [popoverStyle]="getPopoverStyle({width: '1000px'})"
           ></d-icon>
           <ng-template #assetIndexTemplate>
             <app-eds-asset-index-data-table [dataTable]="assetIndexTable"></app-eds-asset-index-data-table>

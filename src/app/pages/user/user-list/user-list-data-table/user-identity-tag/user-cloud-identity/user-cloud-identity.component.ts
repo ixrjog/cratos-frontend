@@ -3,6 +3,7 @@ import { EdsIdentityService } from '../../../../../../@core/services/ext-dataSou
 import { UserVO } from '../../../../../../@core/data/user';
 import { finalize } from 'rxjs';
 import { EdsCloudAccountVO } from '../../../../../../@core/data/ext-dataSource-identity';
+import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-user-cloud-identity',
@@ -33,4 +34,5 @@ export class UserCloudIdentityComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  getPopoverStyle = getPopoverStyle;
 }

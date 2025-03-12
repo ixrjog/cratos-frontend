@@ -13,6 +13,7 @@ import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/appl
 import { map } from 'rxjs/operators';
 import { ApplicationService } from '../../../../@core/services/application.service';
 import { finalize, Observable, zip } from 'rxjs';
+import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-application-resource-baseline-data-table',
@@ -307,4 +308,6 @@ export class ApplicationResourceBaselineDataTableComponent implements OnInit {
         this.showCategorySearch = true;
       });
   }
+
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

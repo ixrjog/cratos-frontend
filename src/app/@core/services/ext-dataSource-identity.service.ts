@@ -10,8 +10,8 @@ import {
   EdsDingtalkIdentityDetailsVO,
   EdsGitLabIdentityDetailsVO,
   EdsIdentityData,
-  EdsLdapIdentityDetailsVO,
-  LdapIdentity,
+  EdsLdapIdentityDetailsVO, EdsMailIdentityDetailsVO,
+  LdapIdentity, queryIdentityDetails,
   RemoveLdapUserFromGroup,
   ResetLdapUserPassword,
 } from '../data/ext-dataSource-identity';
@@ -33,24 +33,15 @@ export class EdsIdentityService extends EdsIdentityData {
     return this.apiService.post(this.baseUrl, '/cloud/details/query', param);
   }
 
-  queryLdapIdentityDetails(param: {
-    username: string,
-    instanceId?: number
-  }): Observable<HttpResult<EdsLdapIdentityDetailsVO>> {
+  queryLdapIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsLdapIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/ldap/details/query', param);
   }
 
-  queryDingtalkIdentityDetails(param: {
-    username: string,
-    instanceId?: number
-  }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
+  queryDingtalkIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/dingtalk/details/query', param);
   }
 
-  queryGitLabIdentityDetails(param: {
-    username: string,
-    instanceId?: number
-  }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
+  queryGitLabIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsGitLabIdentityDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/gitlab/details/query', param);
   }
 
@@ -72,6 +63,14 @@ export class EdsIdentityService extends EdsIdentityData {
 
   deleteLdapIdentity(param: DeleteLdapIdentity): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/ldap/user/delete', param);
+  }
+
+  queryMailIdentityDetails(param: {
+    username: string;
+    instanceType?: string;
+    instanceId?: number
+  }): Observable<HttpResult<EdsMailIdentityDetailsVO>> {
+    return this.apiService.post(this.baseUrl, '/mail/details/query', param);
   }
 
 }

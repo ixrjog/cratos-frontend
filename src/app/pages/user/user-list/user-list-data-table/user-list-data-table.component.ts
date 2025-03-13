@@ -15,7 +15,6 @@ import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { UserRenewalComponent } from './user-renewal/user-renewal.component';
-import { EdsIdentityService } from '../../../../@core/services/ext-dataSource-identity.service';
 
 @Component({
   selector: 'app-user-list-data-table',
@@ -68,7 +67,6 @@ export class UserListDataTableComponent implements OnInit {
   constructor(
     private userService: UserService,
     private userPermissionService: UserPermissionService,
-    private edsIdentityService: EdsIdentityService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {

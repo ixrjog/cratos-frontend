@@ -1,0 +1,61 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daXs]="24" [daOrder]="2">
+      <div *ngIf="JSON.stringify(identity.cloud) !== '{}'">
+        <span *ngFor="let item of identity.cloud | keyvalue">
+          <h3 style="margin: 5px 0" class="font-color-comment"> {{ item.key }}</h3>
+          <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+          <app-user-cloud-identity-card
+            *ngFor="let identity of item.value"
+            class="card-identity"
+            [identity]="identity"
+          ></app-user-cloud-identity-card>
+        </span>
+      </div>
+
+      <div *ngIf="JSON.stringify(identity.ldap) !== '[]'">
+        <h3 style="margin: 5px 0" class="font-color-comment">LDAP</h3>
+        <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+        <app-user-ldap-identity-card
+          *ngFor="let identity of identity.ldap"
+          class="card-identity"
+          [identity]="identity"
+        ></app-user-ldap-identity-card>
+      </div>
+
+      <div dLoading *ngIf="JSON.stringify(identity.gitlab) !== '[]'">
+        <h3 style="margin: 5px 0" class="font-color-comment">GitLab</h3>
+        <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+        <app-user-gitlab-identity-card
+          *ngFor="let identity of identity.gitlab"
+          class="card-identity"
+          [identity]="identity"
+        >
+        </app-user-gitlab-identity-card>
+      </div>
+
+      <div *ngIf="JSON.stringify(identity.dingtalk) !== '[]'">
+        <h3 style="margin: 5px 0" class="font-color-comment">Dingtalk</h3>
+        <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+        <app-user-dingtalk-identity-card
+          *ngFor="let identity of identity.dingtalk"
+          class="card-identity"
+          [identity]="identity"
+        ></app-user-dingtalk-identity-card>
+      </div>
+
+      <div *ngIf="JSON.stringify(identity.mail) !== '{}'">
+        <span *ngFor="let item of identity.mail | keyvalue">
+          <h3 style="margin: 5px 0" class="font-color-comment"> {{ item.key }}</h3>
+          <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+          <app-user-mail-identity-card
+            *ngFor="let identity of item.value"
+            class="card-identity"
+            [identity]="identity"
+          ></app-user-mail-identity-card>
+        </span>
+      </div>
+    </da-col-item>
+
+  </da-layout-row>
+</div>

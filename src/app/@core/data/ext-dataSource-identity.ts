@@ -15,17 +15,34 @@ export interface EdsCloudAccountVO {
   user: UserVO;
   account: EdsAssetVO;
   isExist: boolean;
-  accountLogin: {
-    accountId: string
-    username: string
-    name: string
-    loginUsername: string
-    loginUrl: string
-  };
+  accountLogin: AccountLoginDetailsVO;
   policies: string[];
   accessKeys: {
     accessKeyId: string
   }[];
+}
+
+export interface AccountLoginDetailsVO {
+  accountId: string;
+  username: string;
+  name: string;
+  loginUsername: string;
+  loginUrl: string;
+}
+
+export interface EdsMailIdentityDetailsVO {
+  username: string;
+  accounts: Map<string, EdsMailAccountVO[]>;
+}
+
+export interface EdsMailAccountVO {
+  username: string;
+  password: string;
+  instance: EdsInstanceVO;
+  user: UserVO;
+  account: EdsAssetVO;
+  isExist: boolean;
+  accountLogin: AccountLoginDetailsVO;
 }
 
 export interface EdsLdapIdentityDetailsVO {
@@ -65,6 +82,7 @@ export interface EdsGitLabAccountVO {
   user: UserVO;
   account: EdsAssetVO;
   sshKeys: EdsAssetVO[];
+  accountLogin: AccountLoginDetailsVO;
 }
 
 export interface CreateLdapIdentity {
@@ -104,16 +122,24 @@ export interface RemoveLdapUserFromGroup {
   group: string;
 }
 
+export interface queryIdentityDetails {
+  username: string,
+  instanceId?: number
+}
+
 export abstract class EdsIdentityData {
-  abstract queryCloudIdentityDetails(param: { username: string }): Observable<HttpResult<EdsCloudIdentityDetailsVO>>;
 
-  abstract queryLdapIdentityDetails(param: { username: string }): Observable<HttpResult<EdsLdapIdentityDetailsVO>>;
+  abstract queryCloudIdentityDetails(param: {
+    username: string,
+    instanceType?: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsCloudIdentityDetailsVO>>;
 
-  abstract queryDingtalkIdentityDetails(param: {
-    username: string
-  }): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>>;
+  abstract queryLdapIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsLdapIdentityDetailsVO>>;
 
-  abstract queryGitLabIdentityDetails(param: { username: string }): Observable<HttpResult<EdsGitLabIdentityDetailsVO>>;
+  abstract queryDingtalkIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsDingtalkIdentityDetailsVO>>;
+
+  abstract queryGitLabIdentityDetails(param: queryIdentityDetails): Observable<HttpResult<EdsGitLabIdentityDetailsVO>>;
 
   abstract createLdapIdentity(param: CreateLdapIdentity): Observable<HttpResult<LdapIdentity>>;
 
@@ -125,4 +151,9 @@ export abstract class EdsIdentityData {
 
   abstract removeLdapUserFromGroup(param: RemoveLdapUserFromGroup): Observable<HttpResult<Boolean>>;
 
+  abstract queryMailIdentityDetails(param: {
+    username: string,
+    instanceType?: string,
+    instanceId?: number
+  }): Observable<HttpResult<EdsMailIdentityDetailsVO>>;
 }

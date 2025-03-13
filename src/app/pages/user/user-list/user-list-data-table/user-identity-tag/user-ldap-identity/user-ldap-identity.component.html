@@ -16,44 +16,11 @@
   ></d-tag>
   <ng-template #ldapIdentitiesTemplate>
     <div>
-      <d-card
+      <app-user-ldap-identity-card
         *ngFor="let identity of ldapIdentities"
-        style="padding: 5px 5px;margin-bottom: 10px;width: 500px">
-        <d-card-header>
-          <d-card-title>{{ identity.instance.instanceName }}</d-card-title>
-        </d-card-header>
-        <d-card-content>
-          <div>
-
-            <div class="card-content">
-              <span class="name">Groups</span>
-              <span class="value">
-                <d-tag
-                  style="margin: 0 3px 3px 0"
-                  *ngFor="let group of identity.groups"
-                  [labelStyle]="'blue-w98'"
-                  [tag]="group"
-                ></d-tag>
-              </span>
-            </div>
-
-            <div class="card-content">
-              <span class="name">Username</span>
-              <span class="value" dClipboard [content]="identity.account.assetKey">
-                {{ identity.account.assetKey }}
-              </span>
-            </div>
-
-            <div class="card-content">
-              <span class="name">Display Name</span>
-              <span class="value" dClipboard [content]="identity.account.name">
-                {{ identity.account.name }}
-              </span>
-            </div>
-
-          </div>
-        </d-card-content>
-      </d-card>
+        [identity]="identity"
+        style="padding: 5px 5px;margin-bottom: 10px"
+      ></app-user-ldap-identity-card>
     </div>
     <div *ngIf="JSON.stringify(ldapIdentities) === '[]'">no data</div>
   </ng-template>

@@ -27,11 +27,21 @@
 
                 <div *ngIf="menus[1].isActive">
                   <div class="da-settings-header">{{ menus[1].title }}</div>
-                  <app-user-ssh-key-settings [username]="username"></app-user-ssh-key-settings>
+                  <app-user-permissions-settings [username]="username"></app-user-permissions-settings>
                 </div>
 
                 <div *ngIf="menus[2].isActive">
                   <div class="da-settings-header">{{ menus[2].title }}</div>
+                  <app-user-identity-settings [username]="username"></app-user-identity-settings>
+                </div>
+
+                <div *ngIf="menus[3].isActive">
+                  <div class="da-settings-header">{{ menus[3].title }}</div>
+                  <app-user-ssh-key-settings [username]="username"></app-user-ssh-key-settings>
+                </div>
+
+                <div *ngIf="menus[4].isActive">
+                  <div class="da-settings-header">{{ menus[4].title }}</div>
                   <app-user-robot-settings [username]="username"></app-user-robot-settings>
                 </div>
 

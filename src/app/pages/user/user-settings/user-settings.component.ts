@@ -19,6 +19,14 @@ export class UserSettingsComponent implements OnInit {
     },
     {
       isActive: false,
+      title: 'Permissions',
+    },
+    {
+      isActive: false,
+      title: 'Identity',
+    },
+    {
+      isActive: false,
       title: 'SSH Key',
     },
     {

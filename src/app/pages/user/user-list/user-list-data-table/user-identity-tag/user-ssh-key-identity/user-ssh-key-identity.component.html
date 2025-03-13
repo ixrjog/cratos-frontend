@@ -20,7 +20,7 @@
       <pre><app-xterm-logs [logs]="'$ ssh '+ user.username + '@' + hostUrl"></app-xterm-logs></pre>
       <d-card
         *ngFor="let sshKey of sshKeys"
-        style="padding: 5px 5px;margin-bottom: 10px">
+        style="padding: 5px 5px;margin-bottom: 10px;width: 500px">
         <d-card-content>
           <div>
             <div> {{ sshKey.title }}</div>

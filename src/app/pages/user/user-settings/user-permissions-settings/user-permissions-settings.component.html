@@ -1,0 +1,16 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daXs]="10" [daOrder]="2">
+      <div style="position: relative" dLoading [loading]="loading">
+        <span *ngIf="show">
+          <app-user-permissions
+            [userPermissions]="businessPermissions"
+            (onFetchData)="fetchData()"
+          ></app-user-permissions>
+        </span>
+      </div>
+    </da-col-item>
+    <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
+    </da-col-item>
+  </da-layout-row>
+</div>

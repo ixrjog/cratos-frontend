@@ -15,7 +15,7 @@ import { UserPermissionService } from '../../../../../@core/services/user-permis
 })
 export class UserPermissionsComponent implements OnInit {
 
-  @Input() userPermissions: BusinessUserPermissionDetailsVO;
+  @Input() userPermissions: Map<string, UserPermissionBusinessVO[]>;
   @Output() onFetchData = new EventEmitter<any>();
 
   permissionMap: Map<string, UserPermissionBusinessVO[]> = new Map();

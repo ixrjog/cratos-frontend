@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { FormLayout } from 'ng-devui/form';
 import { UserEdit, UserVO } from '../../../../@core/data/user';
 import { UserService } from '../../../../@core/services/user.service';
+import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-user-base-settings',
@@ -34,4 +35,5 @@ export class UserBaseSettingsComponent implements OnChanges {
     }
   }
 
+  protected readonly limit = RELATIVE_TIME_LIMIT;
 }

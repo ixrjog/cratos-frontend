@@ -44,6 +44,14 @@ import { UserLdapIdentityComponent } from './user-list/user-list-data-table/user
 import { UserGitlabIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-gitlab-identity/user-gitlab-identity.component';
 import { UserDingtalkIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-dingtalk-identity/user-dingtalk-identity.component';
 import { UserSshKeyIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-ssh-key-identity/user-ssh-key-identity.component';
+import { UserPermissionsSettingsComponent } from './user-settings/user-permissions-settings/user-permissions-settings.component';
+import { UserIdentitySettingsComponent } from './user-settings/user-identity-settings/user-identity-settings.component';
+import { UserCloudIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-cloud-identity-card/user-cloud-identity-card.component';
+import { UserLdapIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-ldap-identity-card/user-ldap-identity-card.component';
+import { UserGitlabIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-gitlab-identity-card/user-gitlab-identity-card.component';
+import { UserDingtalkIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-dingtalk-identity-card/user-dingtalk-identity-card.component';
+import { UserMailIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-mail-identity-card/user-mail-identity-card.component';
+import { UserMailIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-mail-identity/user-mail-identity.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +75,14 @@ import { UserSshKeyIdentityComponent } from './user-list/user-list-data-table/us
     UserGitlabIdentityComponent,
     UserDingtalkIdentityComponent,
     UserSshKeyIdentityComponent,
+    UserPermissionsSettingsComponent,
+    UserIdentitySettingsComponent,
+    UserCloudIdentityCardComponent,
+    UserLdapIdentityCardComponent,
+    UserGitlabIdentityCardComponent,
+    UserDingtalkIdentityCardComponent,
+    UserMailIdentityCardComponent,
+    UserMailIdentityComponent,
   ],
   imports: [
     CommonModule,

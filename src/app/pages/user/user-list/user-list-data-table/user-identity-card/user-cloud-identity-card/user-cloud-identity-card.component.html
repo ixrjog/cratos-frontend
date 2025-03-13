@@ -1,0 +1,57 @@
+<d-card style="padding: 8px;width: 500px">
+  <d-card-header>
+    <d-card-title>{{ identity.instance.instanceName }}</d-card-title>
+  </d-card-header>
+  <d-card-content>
+    <div>
+
+      <div class="card-content" *ngIf="identity.accountLogin.accountId">
+        <span class="name">Account ID</span>
+        <span class="value" dClipboard [content]="identity.accountLogin.accountId">
+          {{ identity.accountLogin.accountId }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Username</span>
+        <span class="value" dClipboard [content]="identity.accountLogin.loginUsername">
+          {{ identity.accountLogin.loginUsername }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Login Link</span>
+        <span class="value">
+          <a class="devui-link-light" [href]="identity.accountLogin.loginUrl" target="_blank">
+            {{ identity.accountLogin.loginUrl }}
+          </a>
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Policies</span>
+        <span class="value">
+          <d-tag
+            style="margin: 0 3px 3px 0"
+            *ngFor="let Policy of identity.policies"
+            [labelStyle]="'blue-w98'"
+            [tag]="Policy"
+          ></d-tag>
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Access Key</span>
+        <span class="value">
+          <d-tag
+            style="margin: 0 3px 3px 0"
+            *ngFor="let accessKey of identity.accessKeys"
+            [labelStyle]="'blue-w98'"
+            [tag]="accessKey.accessKeyId"
+          ></d-tag>
+        </span>
+      </div>
+
+    </div>
+  </d-card-content>
+</d-card>

@@ -9,23 +9,23 @@
     [trigger]="'hover'"
     [controlled]="true"
     [mouseEnterDelay]="500"
-    [content]="cloudIdentitiesKeyTemplate"
-    [tag]="'Cloud Identity'"
+    [content]="mailIdentitiesKeyTemplate"
+    [tag]="'Mail Identity'"
     [labelStyle]="JSON.stringify(accounts) === '{}'?'':'green-w98'"
     [popoverStyle]="getPopoverStyle()"
   ></d-tag>
-  <ng-template #cloudIdentitiesKeyTemplate>
+  <ng-template #mailIdentitiesKeyTemplate>
     <div>
       <d-splitter orientation="horizontal">
         <d-splitter-pane [resizable]="false" *ngFor="let item of accounts | keyvalue">
           <div style="padding: 10px;width: 520px">
             <h3 style="margin: 5px 0" class="font-color-comment"> {{ item.key }}</h3>
             <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
-            <app-user-cloud-identity-card
+            <app-user-mail-identity-card
               *ngFor="let identity of item.value"
               [identity]="identity"
               style="padding: 5px 5px;margin-bottom: 10px"
-            ></app-user-cloud-identity-card>
+            ></app-user-mail-identity-card>
           </div>
         </d-splitter-pane>
       </d-splitter>

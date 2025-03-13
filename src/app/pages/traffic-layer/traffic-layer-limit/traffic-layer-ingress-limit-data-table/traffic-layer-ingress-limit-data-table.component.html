@@ -72,7 +72,7 @@
             [content]="assetTemplate"
             [position]="'left-top'"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: '#FFFFFF', padding: '10px' ,width: '1000px'}"
+            [popoverStyle]="getPopoverStyle({width: '1000px'})"
           >
           </d-icon>
           <ng-template #assetTemplate>

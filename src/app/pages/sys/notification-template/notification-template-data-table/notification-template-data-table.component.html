@@ -33,7 +33,7 @@
             [content]="contentTemplate"
             [position]="'left-top'"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: '#FFFFFF', padding: '10px' ,width: '800px'}"
+            [popoverStyle]="getPopoverStyle({width: '800px'})"
           >
           </d-icon>
           <ng-template #contentTemplate>

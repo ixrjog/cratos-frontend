@@ -35,7 +35,7 @@
             [content]="configTemplate"
             [position]="'right-top'"
             [controlled]="true"
-            [popoverStyle]="{ backgroundColor: '#FFFFFF', padding: '10px' ,width: '800px'}"
+            [popoverStyle]="getPopoverStyle({width: '800px'})"
           >
             <span iconPrefix>{{ rowItem['name'] }}</span>
           </d-icon>

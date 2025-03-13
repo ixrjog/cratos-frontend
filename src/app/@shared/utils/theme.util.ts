@@ -19,5 +19,5 @@ export function getPopoverStyle(style?: any): any {
   if (isDark()) {
     return { ...DARK_THEME_POPOVER_STYLE, ...style };
   }
-  return LIGHT_THEME_POPOVER_STYLE;
+  return { ...LIGHT_THEME_POPOVER_STYLE, ...style };
 }

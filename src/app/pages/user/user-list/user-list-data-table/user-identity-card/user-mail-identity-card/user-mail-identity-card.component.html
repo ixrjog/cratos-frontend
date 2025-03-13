@@ -13,6 +13,18 @@
       </div>
 
       <div class="card-content">
+        <span class="name">Alias</span>
+        <span class="value">
+          <d-tag
+            style="margin: 0 3px 3px 0"
+            *ngFor="let alias of identity.mailAlias"
+            [labelStyle]="'blue-w98'"
+            [tag]="alias"
+          ></d-tag>
+        </span>
+      </div>
+
+      <div class="card-content">
         <span class="name">Login Link</span>
         <span class="value">
           <a class="devui-link-light" [href]="identity.accountLogin.loginUrl" target="_blank">

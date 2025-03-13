@@ -85,7 +85,7 @@
   </d-splitter>
 </section>
 <ng-template #customTag let-tag="tag">
-  <span>{{ tag.tag.tagKey }}</span>
+  <span (click)="onTagClick(tag)">{{ tag.tag.tagKey }}</span>
   <span *ngIf="tag.tagValue !==''">:{{ tag.tagValue }}</span>
   <span class="icon-close" style="vertical-align: center; padding-left: 4px" (click)="onTagDelete(tag)"></span>
 </ng-template>

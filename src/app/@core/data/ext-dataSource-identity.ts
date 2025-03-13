@@ -43,6 +43,7 @@ export interface EdsMailAccountVO {
   account: EdsAssetVO;
   isExist: boolean;
   accountLogin: AccountLoginDetailsVO;
+  mailAlias: string[];
 }
 
 export interface EdsLdapIdentityDetailsVO {

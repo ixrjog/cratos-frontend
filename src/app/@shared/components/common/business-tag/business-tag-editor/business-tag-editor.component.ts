@@ -143,4 +143,8 @@ export class BusinessTagEditorComponent implements OnInit {
         });
     });
   };
+
+  onTagClick(tag: BusinessTagVO) {
+    this.formData.tag = tag.tag;
+  }
 }

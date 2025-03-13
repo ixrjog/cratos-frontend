@@ -17,13 +17,11 @@ export class UserIdentitySettingsComponent implements OnInit {
   @Input() username: string;
 
   identity: {
-    cloud: Map<string, EdsCloudAccountVO[]>,
     ldap: EdsLdapAccountVO[],
     gitlab: EdsGitLabAccountVO[],
     dingtalk: EdsDingtalkAccountVO[],
     mail: Map<string, EdsMailAccountVO[]>,
   } = {
-    cloud: new Map(),
     ldap: [],
     gitlab: [],
     dingtalk: [],
@@ -35,16 +33,10 @@ export class UserIdentitySettingsComponent implements OnInit {
   }
 
   fetchData() {
-    this.onCloudIdentity();
     this.onLdapIdentity();
     this.onGitlabIdentity();
     this.onDingtalkIdentity();
     this.onMailIdentity();
-  }
-
-  onCloudIdentity() {
-    this.edsIdentityService.queryCloudIdentityDetails({ username: this.username })
-      .subscribe(({ body }) => this.identity.cloud = body.accounts);
   }
 
   onLdapIdentity() {

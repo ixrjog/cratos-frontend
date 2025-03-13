@@ -31,7 +31,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/styles.less",·
+              "src/styles.less",
               "src/assets/styles/atom-one-dark.min.css",
               "node_modules/ng-devui/devui.min.css",
               "node_modules/@devui-design/icons/icomoon/devui-icon.css",

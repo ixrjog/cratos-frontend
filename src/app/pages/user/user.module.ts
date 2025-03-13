@@ -52,6 +52,7 @@ import { UserGitlabIdentityCardComponent } from './user-list/user-list-data-tabl
 import { UserDingtalkIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-dingtalk-identity-card/user-dingtalk-identity-card.component';
 import { UserMailIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-mail-identity-card/user-mail-identity-card.component';
 import { UserMailIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-mail-identity/user-mail-identity.component';
+import { UserCloudIdentitySettingsComponent } from './user-settings/user-cloud-identity-settings/user-cloud-identity-settings.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { UserMailIdentityComponent } from './user-list/user-list-data-table/user
     UserDingtalkIdentityCardComponent,
     UserMailIdentityCardComponent,
     UserMailIdentityComponent,
+    UserCloudIdentitySettingsComponent,
   ],
   imports: [
     CommonModule,

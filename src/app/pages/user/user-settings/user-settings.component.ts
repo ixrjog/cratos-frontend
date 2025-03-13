@@ -23,6 +23,10 @@ export class UserSettingsComponent implements OnInit {
     },
     {
       isActive: false,
+      title: 'Cloud Identity',
+    },
+    {
+      isActive: false,
       title: 'Identity',
     },
     {

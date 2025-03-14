@@ -10,7 +10,6 @@
             <span iconPrefix class="font-color-comment">{{ robotToken.token }}</span>
           </d-icon>
         </h3>
-        <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
       </div>
       <form
         dForm
@@ -62,7 +61,10 @@
       </form>
     </da-col-item>
     <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
-      <d-card *ngFor="let token of robotTokenList" style="margin: 10px">
+      <div>
+        <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
+      </div>
+      <d-card *ngFor="let token of robotTokenList" style="margin-bottom: 10px">
         <span style="float: right; padding: 3px 0">
           <d-icon
             [icon]="'icon-priority'"

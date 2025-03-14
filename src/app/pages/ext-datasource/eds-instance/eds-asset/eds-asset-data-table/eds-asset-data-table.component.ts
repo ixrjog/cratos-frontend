@@ -140,6 +140,10 @@ export class EdsAssetDataTableComponent implements OnChanges {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
+  onRowBusinessDoc(rowItem: EdsAssetVO) {
+    this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
+  }
+
   onRowDelete(rowItem: EdsAssetVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,

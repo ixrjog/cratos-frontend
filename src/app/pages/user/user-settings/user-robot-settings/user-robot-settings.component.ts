@@ -35,14 +35,7 @@ export class UserRobotSettingsComponent implements OnInit {
   robotToken: RobotTokenVO = null;
   minDate: Date = new Date();
   protected readonly limit = RELATIVE_TIME_LIMIT;
-  robotTokenExample: string = `
-  ### Robot calls API
-\`\`\`bash
-$ curl -X 'GET' \\
-'http://127.0.0.1:8081/api/user/username/get?username=baiyi' \\
--H 'content-type: application/json' -H "Authorization: Robot {ROBOT_TOKEN}"
-\`\`\`
-  `;
+  robotTokenExample: string = '';
 
   dialogDate = {
     warningOperateData: {
@@ -53,8 +46,16 @@ $ curl -X 'GET' \\
     },
   };
 
-
   ngOnInit(): void {
+    const hostUrl = window.location.host;
+    const protocol = window.location.protocol;
+    this.robotTokenExample = `
+    ### Robot Calls API
+    \`\`\`bash
+    $ curl -X 'GET' ${protocol}//${hostUrl}/api/user/username/get?username=${this.username} \\
+    -H 'content-type: application/json' -H 'Authorization: Robot {ROBOT_TOKEN}'
+    \`\`\`
+    `;
     this.fetchData();
   }
 

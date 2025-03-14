@@ -7,11 +7,15 @@ export function isDark(): boolean {
     return true;
   }
 
-  const { brand, isDark } = localStorage.getItem('user-custom-theme-config')
-    ? JSON.parse(localStorage.getItem('user-custom-theme-config')!)
-    : this.defaultCustom;
+  if (localStorage.getItem('user-custom-theme-config')) {
+    return JSON.parse(localStorage.getItem('user-custom-theme-config'))['isDark']
+  }
 
-  return isDark;
+  // const { brand, isDark } = localStorage.getItem('user-custom-theme-config')
+  //   ? JSON.parse(localStorage.getItem('user-custom-theme-config'))
+  //   : this.defaultCustom;
+
+  return false;
 
 }
 

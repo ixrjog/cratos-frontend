@@ -51,17 +51,22 @@
             <d-card-title>RBAC</d-card-title>
           </d-card-header>
           <d-card-content>
-            <d-tags
-              [tags]="user.rbacRoles"
-              [displayProperty]="'roleName'"
-              [titleProperty]="'accessLevel'"
-            ></d-tags>
+            <d-tag
+              style="margin: 0 3px 3px 0"
+              *ngFor="let role of user.rbacRoles"
+              [tag]="role.roleName"
+              [labelStyle]="'green-w98'"
+            >
+            </d-tag>
           </d-card-content>
         </d-card>
       </div>
 
       <div style="margin-bottom: 10px">
         <d-card>
+          <span style="float: right; padding: 3px 0">
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(user)"></d-icon>
+          </span>
           <d-card-header>
             <d-card-title>Tags</d-card-title>
           </d-card-header>
@@ -70,7 +75,6 @@
           </d-card-content>
         </d-card>
       </div>
-
     </da-col-item>
   </da-layout-row>
 </div>

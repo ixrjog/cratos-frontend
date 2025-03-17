@@ -94,11 +94,13 @@
     <d-column header="RBAC" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <d-tags
-            [tags]="rowItem['rbacRoles']"
-            [displayProperty]="'roleName'"
-            [titleProperty]="'accessLevel'"
-          ></d-tags>
+          <d-tag
+            style="margin: 0 3px 3px 0"
+            *ngFor="let role of rowItem.rbacRoles"
+            [tag]="role.roleName"
+            [labelStyle]="'green-w98'"
+          >
+          </d-tag>
         </ng-template>
       </d-cell>
     </d-column>

@@ -50,6 +50,11 @@ export class UserRobotSettingsComponent implements OnInit {
     const hostUrl = window.location.host;
     const protocol = window.location.protocol;
     this.robotTokenExample = `
+    ### Swagger
+    \`\`\`bash
+    ${protocol}//${hostUrl}/swagger-ui/index.html
+    \`\`\`
+
     ### Robot Calls API
     \`\`\`bash
     $ curl -X 'GET' ${protocol}//${hostUrl}/api/user/username/get?username=${this.username} \\

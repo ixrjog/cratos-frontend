@@ -40,6 +40,7 @@ import { ApplicationResourceBaselineService } from './services/application-resou
 import { CommonService } from './services/common.service';
 import { CommandService } from './services/command.service';
 import { EdsIdentityService } from './services/ext-dataSource-identity.service';
+import { WorkOrderService } from './services/work-order.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -84,7 +85,8 @@ export const CRATOS_PROVIDERS = [
   ApplicationResourceBaselineService,
   CommonService,
   CommandService,
-  EdsIdentityService
+  EdsIdentityService,
+  WorkOrderService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

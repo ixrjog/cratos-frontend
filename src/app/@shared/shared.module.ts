@@ -38,7 +38,7 @@ import { SshInstancePipe } from './pipe/ssh-instnace.pipe';
 import { NumberTransModule } from 'ng-devui/number-translation';
 import { FlowUnitTranPipe } from './pipe/flow-unit-tran.pipe';
 import { ArrayLengthPipe } from './pipe/array-length.pipe';
-import { ContainerImageTagPipe, ShortContainerImage } from './pipe/container-image.pipe';
+import { ContainerImageTagPipe, ShortContainerImagePipe } from './pipe/container-image.pipe';
 import { BusinessPermissionsComponent } from './components/common/business-permissions/business-permissions.component';
 import { UnitTranPipe } from './pipe/unit-tran.pipe';
 import { StringReplacePipe } from './pipe/string-replace.pipe';
@@ -46,6 +46,7 @@ import { UuidUtil } from './utils/uuid.util';
 import {
   BusinessTagBatchEditorComponent,
 } from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
+import { I18nTranPipe } from './pipe/i18n-tran.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -71,7 +72,8 @@ const PIPES = [
   ContainerImageTagPipe,
   UnitTranPipe,
   StringReplacePipe,
-  ShortContainerImage
+  ShortContainerImagePipe,
+  I18nTranPipe,
 ];
 
 const CRATOS_COMPONENTS = [

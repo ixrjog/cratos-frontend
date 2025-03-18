@@ -10,7 +10,7 @@ export class ContainerImageTagPipe implements PipeTransform {
 }
 
 @Pipe({ name: 'shortContainerImage' })
-export class ShortContainerImage implements PipeTransform {
+export class ShortContainerImagePipe implements PipeTransform {
 
   transform(val: string) {
     const index = val.indexOf('/');

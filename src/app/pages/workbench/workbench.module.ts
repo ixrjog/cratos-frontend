@@ -43,7 +43,10 @@ import { CommandExecDataTableComponent } from './command-exec/command-exec-data-
 import { CommandExecEditorComponent } from './command-exec/command-exec-data-table/command-exec-editor/command-exec-editor.component';
 import { CommandExecApproveComponent } from './command-exec/command-exec-data-table/command-exec-approve/command-exec-approve.component';
 import { CommandExecDoComponent } from './command-exec/command-exec-data-table/command-exec-do/command-exec-do.component';
-
+import { WorkOrderComponent } from './work-order/work-order.component';
+import { WorkOrderLayoutComponent } from './work-order/work-order-layout/work-order-layout.component';
+import { WorkOrderMenuComponent } from './work-order/work-order-layout/work-order-menu/work-order-menu.component';
+import { WorkOrderDataTableComponent } from './work-order/work-order-layout/work-order-data-table/work-order-data-table.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +73,10 @@ import { CommandExecDoComponent } from './command-exec/command-exec-data-table/c
     CommandExecEditorComponent,
     CommandExecApproveComponent,
     CommandExecDoComponent,
+    WorkOrderComponent,
+    WorkOrderLayoutComponent,
+    WorkOrderMenuComponent,
+    WorkOrderDataTableComponent,
   ],
   imports: [
     CommonModule,

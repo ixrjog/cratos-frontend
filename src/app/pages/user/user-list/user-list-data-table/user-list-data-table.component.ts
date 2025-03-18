@@ -220,6 +220,12 @@ export class UserListDataTableComponent implements OnInit {
     this.onUserPermission(rowItem);
   }
 
+  onRefreshAll() {
+    this.table.data.map(rowItem => {
+      this.onRowRefresh(rowItem);
+    });
+  }
+
   onUserPermission(rowItem: UserVO) {
     rowItem['$showPermission'] = false;
     rowItem['$userPermission'] = null;

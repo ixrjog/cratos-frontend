@@ -76,4 +76,10 @@ export interface CommitParam {
   content?: string
 }
 
+export interface I18nData {
+  langMap: Map<string, {
+    displayName: string;
+    desc: string;
+  }>;
+}
 

@@ -18,6 +18,9 @@
     (change)="onChangeExternal($event)"
   ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <span class="right-button">
+    <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onRefreshAll()"></d-icon>
+  </span>
 </div>
 <div class="spacing-table">
   <d-data-table

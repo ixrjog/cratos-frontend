@@ -39,7 +39,10 @@
     <d-column field="color" header="Color">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <input type="color" [value]="cellItem" disabled="true" />
+          <span dClipboard [content]="cellItem">
+            <input type="color" [value]="cellItem" disabled="true" />
+            {{ cellItem }}
+          </span>
         </ng-template>
       </d-cell>
     </d-column>

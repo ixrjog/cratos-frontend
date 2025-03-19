@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import * as ace from 'ace-builds';
+import { isDark } from '../../../utils/theme.util';
 
 @Component({
   selector: 'app-ace-editor',
@@ -22,7 +23,7 @@ export class AceEditorComponent implements AfterViewInit {
    * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/theme">theme 列表</a>
    */
   // ace/theme/tomorrow_night
-  @Input() theme: string = 'ace/theme/tomorrow';
+  // @Input() theme: string = 'ace/theme/tomorrow';
   /**
    * @see <a href="https://github.com/ajaxorg/ace/tree/master/src/mode">mode 列表</a>
    */
@@ -61,8 +62,12 @@ export class AceEditorComponent implements AfterViewInit {
     aceEditor.setOptions(this.options);
     aceEditor.setReadOnly(this.readonly);
     aceEditor.session.setValue(this.aceValue);
-    aceEditor.setTheme(this.theme);
     aceEditor.session.setMode(this.mode);
+    if (isDark()) {
+      aceEditor.setTheme('ace/theme/tomorrow_night');
+    } else {
+      aceEditor.setTheme('ace/theme/tomorrow');
+    }
     aceEditor.on('change', () => {
       this.onChange.emit(aceEditor.getValue())
     });

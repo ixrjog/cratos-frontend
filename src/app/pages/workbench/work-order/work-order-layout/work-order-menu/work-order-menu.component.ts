@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { WorkOrderService } from '../../../../../@core/services/work-order.service';
 import { WorkOrderVO } from '../../../../../@core/data/work-order';
 
@@ -13,6 +13,7 @@ export class WorkOrderMenuComponent implements OnInit {
   @Output() onNewData = new EventEmitter<WorkOrderVO>();
 
   menu = [];
+  disabled = false;
 
   constructor(private workOrderService: WorkOrderService) {
   }
@@ -33,6 +34,10 @@ export class WorkOrderMenuComponent implements OnInit {
 
   onRowNew(item: WorkOrderVO) {
     this.onNewData.emit(item);
+    this.disabled = true;
+    setTimeout(() => {
+      this.disabled = false;
+    }, 1000);
   }
 
   onRowFilter(item: WorkOrderVO) {

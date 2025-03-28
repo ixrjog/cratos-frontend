@@ -7,14 +7,14 @@
 
 <ng-template #menuTemplate let-item="item">
   <i [class]="item.icon"></i>
-  &nbsp;{{ item.i18nData | i18nTran }}
+  &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
 </ng-template>
 
 <ng-template #itemTemplate let-item="item">
   <i [class]="item.icon"></i>
-  &nbsp;{{ item.i18nData | i18nTran }}
+  &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
   <span class="right-button">
-    <d-button class="button" bsStyle="primary" (click)="onRowNew(item)">New</d-button>
+    <d-button class="button" bsStyle="primary" (click)="onRowNew(item)" [disabled]="disabled">New</d-button>
     <d-button class="button" bsStyle="common" (click)="onRowFilter(item)">Filter</d-button>
   </span>
 

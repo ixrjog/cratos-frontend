@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
-import { ApproveCommandExec, CommandExecApprovalStatusEnum, CommandExecVO } from '../../../../../@core/data/command';
+import { ApproveCommandExec, CommandExecVO } from '../../../../../@core/data/command';
 import { DValidateRules } from 'ng-devui';
 import { CommandService } from '../../../../../@core/services/command.service';
 import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { finalize } from 'rxjs';
+import { APPROVAL_AGREE, APPROVAL_REJECT } from '../../../../../@shared/constant/approval.constant';
 
 @Component({
   selector: 'app-command-exec-approve',
@@ -53,7 +54,7 @@ export class CommandExecApproveComponent implements OnInit {
       const param: ApproveCommandExec = {
         commandExecId: this.formData.id,
         approveRemark: this.approveRemark,
-        approvalAction: CommandExecApprovalStatusEnum.AGREE,
+        approvalAction: APPROVAL_AGREE,
       };
       this.commandService.approveCommandExec(param)
         .pipe(
@@ -76,7 +77,7 @@ export class CommandExecApproveComponent implements OnInit {
       const param: ApproveCommandExec = {
         commandExecId: this.formData.id,
         approveRemark: this.approveRemark,
-        approvalAction: CommandExecApprovalStatusEnum.REJECT,
+        approvalAction: APPROVAL_REJECT,
       };
       this.commandService.approveCommandExec(param)
         .pipe(

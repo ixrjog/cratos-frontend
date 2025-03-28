@@ -1,0 +1,9 @@
+<app-work-order-business-permission-ticket
+  #workOrderBusinessPermissionTicket
+  [businessType]="businessType"
+  [ticketDetails]="ticketDetails"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+>
+</app-work-order-business-permission-ticket>

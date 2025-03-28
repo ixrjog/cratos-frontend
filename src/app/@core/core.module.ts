@@ -41,6 +41,8 @@ import { CommonService } from './services/common.service';
 import { CommandService } from './services/command.service';
 import { EdsIdentityService } from './services/ext-dataSource-identity.service';
 import { WorkOrderService } from './services/work-order.service';
+import { WorkOrderTicketService } from './services/work-order-ticket.service';
+import { WorkOrderTicketEntryService } from './services/work-order-ticket-entry.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -87,6 +89,8 @@ export const CRATOS_PROVIDERS = [
   CommandService,
   EdsIdentityService,
   WorkOrderService,
+  WorkOrderTicketService,
+  WorkOrderTicketEntryService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

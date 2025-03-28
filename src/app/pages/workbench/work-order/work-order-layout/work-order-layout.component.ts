@@ -16,7 +16,7 @@ export class WorkOrderLayoutComponent {
   }
 
   onFetchData(workOrder: WorkOrderVO) {
-    this.workOrderDataTable.fetchData(workOrder)
+    this.workOrderDataTable.clickWorkOrder(workOrder)
   }
 
 }

@@ -18,3 +18,13 @@ export class WorkOrderService extends WorkOrderData {
   }
 
 }
+
+
+export enum WorkOrderKeyEnum {
+
+  APPLICATION_PERMISSION = 'APPLICATION_PERMISSION',
+  COMPUTER_PERMISSION = 'COMPUTER_PERMISSION',
+  SERVER_ACCOUNT_PERMISSION = 'SERVER_ACCOUNT_PERMISSION'
+
+}
+

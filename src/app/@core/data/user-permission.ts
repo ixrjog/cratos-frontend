@@ -74,14 +74,16 @@ export interface QueryAllBusinessUserPermissionDetails {
 export interface UpdateUserPermissionBusiness {
   username: string;
   businessType: string;
-  businessPermissions: {
-    businessId: number
-    name: string
-    roleMembers: {
-      role: string
-      checked: boolean
-      expiredTime: Date
-    }[]
+  businessPermissions: UserBusinessPermission[];
+}
+
+export interface UserBusinessPermission {
+  businessId: number;
+  name: string;
+  roleMembers: {
+    role: string;
+    checked: boolean;
+    expiredTime: any;
   }[];
 }
 

@@ -17,12 +17,12 @@ export class UserRenewalComponent implements OnInit {
   renewalType: string = RenewalExtUserTypeEnum.SHORT_TERM;
   commitMsg: string = '';
   renewalOfAll: boolean = false;
-
   renewalTypeOptions = [
     RenewalExtUserTypeEnum.SHORT_TERM,
     RenewalExtUserTypeEnum.MID_TERM,
     RenewalExtUserTypeEnum.LONG_TERM,
   ];
+  renewalTypeHelpTips = 'SHORT_TERM(7 days)\nMID_TERM(30 days)\nLONG_TERM(90 days)';
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },

@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { I18nData } from '../../@core/data/base-data';
+import { I18nDataAlias } from '../../@core/data/base-data';
 
 @Pipe({ name: 'i18nTran' })
 export class I18nTranPipe implements PipeTransform {
 
-  transform(param: I18nData) {
+  transform(param: I18nDataAlias) {
     const lang = localStorage.getItem('lang');
     if (lang) {
-      return param.langMap[lang]['displayName'];
+      return param[lang]['displayName'];
     }
-    return param.langMap['en-us']['displayName'];
+    return param['en-us']['displayName'];
   }
 }

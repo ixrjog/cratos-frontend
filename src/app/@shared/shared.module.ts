@@ -47,6 +47,7 @@ import {
   BusinessTagBatchEditorComponent,
 } from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
 import { I18nTranPipe } from './pipe/i18n-tran.pipe';
+import { UserTagComponent } from './components/common/tag/user-tag/user-tag.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -109,6 +110,7 @@ const CRATOS_UTILS = [
     XtermLogsComponent,
     BusinessPermissionsComponent,
     BusinessTagBatchEditorComponent,
+    UserTagComponent,
   ],
   imports: [
     CommonModule,
@@ -143,6 +145,7 @@ const CRATOS_UTILS = [
     ...CRATOS_COMPONENTS,
     BusinessCascaderComponent,
     BusinessPermissionsComponent,
+    UserTagComponent,
   ],
 })
 

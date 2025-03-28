@@ -92,9 +92,3 @@ export abstract class CommandData {
 
   abstract queryCommandExecUserPage(param: { queryName: string }): Observable<DataTable<UserVO>>;
 }
-
-
-export enum CommandExecApprovalStatusEnum {
-  AGREE = 'AGREE',
-  REJECT = 'REJECT'
-}

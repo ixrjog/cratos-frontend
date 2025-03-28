@@ -93,6 +93,22 @@ export class DialogUtil {
     });
   }
 
+  onEditWithoutButtonDialog(operationType: boolean, dialogDate: any, onFetch: Function, data: any, extend?: any) {
+    const results = this.dialogService.open({
+      ...dialogDate,
+      onClose: () => onFetch(),
+      buttons: [],
+      data: {
+        hideDialog: () => {
+          results.modalInstance.hide();
+        },
+        formData: data,
+        operationType: operationType,
+        ...extend
+      },
+    });
+  }
+
   onApproveDialog(dialogDate: any, onFetch: Function, data: any, extend?: any) {
     const results = this.dialogService.open({
       id: 'approve-data',

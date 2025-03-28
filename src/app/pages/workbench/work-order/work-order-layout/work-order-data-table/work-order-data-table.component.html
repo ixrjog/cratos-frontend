@@ -1,1 +1,143 @@
-<p>work-order-data-table works!</p>
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.ticketNo"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+    placeholder="Search ticketNo"
+  >
+  </d-search>
+  <d-select
+    class="select"
+    [filterKey]="'username'"
+    [appendToBody]="true"
+    [(ngModel)]="user"
+    [searchFn]="onSearchUser"
+    [isSearch]="true"
+    placeholder="Select user"
+    (valueChange)="onUserChange($event)"
+    [allowClear]="true"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.name }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.displayName }}</span>
+    </ng-template>
+  </d-select>
+  <d-checkbox
+    class="checkbox"
+    [label]="'show only my submit'"
+    [isShowTitle]="false"
+    [(ngModel)]="queryParam.mySubmitted"
+    (change)="fetchData()"
+  ></d-checkbox>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <br />
+  <d-tabs
+    style="margin-top: 5px"
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.ticketState"
+    (activeTabChange)="onTicketStateChange($event)"
+  >
+    <d-tab
+      *ngFor="let item of ticketStateOptions"
+      [id]="item.id"
+      [title]="item.title"
+    ></d-tab>
+  </d-tabs>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="ticketNo" header="Ticket No"></d-column>
+    <d-column field="username" header="Username"></d-column>
+    <d-column field="ticketState" header="Ticket State">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="registrationTime" header="Registration Time" [fieldType]="'date'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
+          <br>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="expiry" header="Expiry" [fieldType]="'date'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon
+              dPopover
+              [icon]="'icon-view'"
+              [content]="ticketAbstractTemplate"
+              [position]="'left-top'"
+              [controlled]="true"
+              [popoverStyle]="getPopoverStyle({width: '800px'})"
+            >
+            </d-icon>
+            <ng-template #ticketAbstractTemplate>
+              <markdown class="markdown-body" lineNumbers lineHighlight mermaid
+                        [data]="rowItem['ticketAbstract']['markdown']"></markdown>
+            </ng-template>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.NEW"
+              [icon]="'icon-edit'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+            ></d-icon>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.SUBMITTED"
+              [icon]="'icon-classroom-approve'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+            ></d-icon>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.COMPLETED"
+              [icon]="'icon-go-document'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+            ></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

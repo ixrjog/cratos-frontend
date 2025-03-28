@@ -1,0 +1,85 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicketComponent
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <form dForm ngForm [layout]="FormLayout.Vertical">
+    <d-form-item>
+      <d-form-label [required]="true">Permission</d-form-label>
+      <d-form-control>
+        <d-select
+          name="permission"
+          [filterKey]="'displayName'"
+          [appendToBody]="true"
+          [(ngModel)]="userBusinessPermission"
+          [searchFn]="onSearchUserBusinessPermission"
+          [isSearch]="true"
+          placeholder="Select user business permission"
+          [allowClear]="true"
+          (valueChange)="onUserBusinessPermissionChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.displayName }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Namespaces</d-form-label>
+      <d-form-control>
+        <d-checkbox-group
+          name="namespaces"
+          [options]="namespaceOptions"
+          [filterKey]="'envName'"
+          [(ngModel)]="namespaces"
+          [direction]="'row'"
+        ></d-checkbox-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="renewalTypeHelpTips">Renewal Type</d-form-label>
+      <d-form-control>
+        <d-select name="renewalType" [options]="renewalTypeOptions" [(ngModel)]="renewalType"></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+  <d-card *ngFor="let entry of ticketDetails.entries"
+          style="padding: 5px; display: inline-block; margin: 0 10px 10px 0;">
+    <d-card-content>
+      <d-tag
+        style="margin-right: 8px"
+        [tag]="entry.detail.name"
+        [labelStyle]="'blue-w98'"
+      >
+      </d-tag>
+      <d-tag
+        *ngFor="let role of entry.detail.roleMembers"
+        style="margin-right: 5px;"
+        [tag]="role.role"
+        [labelStyle]="role.checked ?'green-w98':''"
+      >
+      </d-tag>
+      <d-tag
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW"
+        [labelStyle]="'red-w98'"
+        [customViewTemplate]="deleteTag"
+        [tag]="entry"
+      ></d-tag>
+      <ng-template #deleteTag let-tag="tag">
+        <span class="icon-close" (click)="onRowRemove(tag)"></span>
+      </ng-template>
+    </d-card-content>
+  </d-card>
+</ng-template>

@@ -1,0 +1,15 @@
+<d-tag
+  style="margin: 0 5px 5px 0"
+  [tag]="user"
+  [customViewTemplate]="userTag"
+  [labelStyle]="'blue-w98'"
+></d-tag>
+<ng-template #userTag let-tag="tag">
+  <span>
+    {{tag.username}}
+    &lt;<span *ngIf="tag.name !== null && tag.name !== '' && tag.name !== tag.displayName">
+      {{ tag.name }}:
+    </span>
+    {{ tag.displayName }}&gt;
+  </span>
+</ng-template>

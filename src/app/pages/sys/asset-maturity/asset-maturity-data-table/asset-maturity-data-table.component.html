@@ -38,11 +38,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column
-      field="expiry"
-      header="Expiry"
-      [fieldType]="'date'"
-    >
+    <d-column field="expiry" header="Expiry" [fieldType]="'date'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>

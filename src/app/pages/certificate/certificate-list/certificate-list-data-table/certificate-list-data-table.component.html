@@ -27,12 +27,7 @@
     <d-column field="certificateType" header="Certificate Type">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <d-tag
-            dPopover
-            style="margin-left: 5px"
-            [tag]="cellItem"
-            [labelStyle]="'blue-w98'"
-          ></d-tag>
+          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>

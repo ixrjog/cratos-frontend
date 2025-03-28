@@ -1,0 +1,127 @@
+<section>
+  <d-card style="margin-bottom: 20px">
+    <d-card-content>
+      <d-splitter class="splitter-border" [orientation]="vertical">
+        <d-splitter-pane [resizable]="false">
+          <d-splitter [orientation]="orientation">
+            <d-splitter-pane
+              size="40%"
+              [resizable]="false"
+              *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW"
+            >
+              <div class="pane-content" style="margin-bottom: 10px">
+                <h3>Options</h3>
+                <ng-template [ngTemplateOutlet]="editTicketEntryTemplate"></ng-template>
+              </div>
+            </d-splitter-pane>
+            <d-splitter-pane>
+              <div class="pane-content" style="margin-bottom: 10px">
+                <h3>Content</h3>
+                <div dLoading [loadingStyle]="'infinity'" [loading]="entryLoading">
+                  <ng-template [ngTemplateOutlet]="showTicketEntryTemplate"></ng-template>
+                </div>
+              </div>
+            </d-splitter-pane>
+          </d-splitter>
+        </d-splitter-pane>
+        <d-splitter-pane [resizable]="false">
+          <d-splitter-pane>
+            <div class="pane-content" style="margin-top: 10px">
+              <h3>Approval Info</h3>
+              <form dForm ngForm [layout]="FormLayout.Vertical">
+                <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+                  <d-form-item *ngFor="let node of ticketDetails.workflow.nodes">
+                  <d-form-label [required]="node.approvalType==='USER_SPECIFIED'">{{ node.name }}</d-form-label>
+                    <d-form-control>
+                      <ng-container *ngIf="node.approvalType === 'USER_SPECIFIED'; else orBatchTemplate">
+                        <ng-template [ngTemplateOutlet]="userSpecifiedTemplate"></ng-template>
+                      </ng-container>
+                    </d-form-control>
+                    <ng-template #userSpecifiedTemplate>
+                      <d-select
+                        name="userSpecified"
+                        placeholder="Select approver user"
+                        [filterKey]="'name'"
+                        [appendToBody]="true"
+                        [options]="node.selectableUsers"
+                        (valueChange)="onSelectableUsersChange($event,node)"
+                      >
+                        <ng-template let-option="option">
+                          <span>{{ option.name }}</span>
+                          <span style="float: right; padding: 3px 0">{{ option.displayName }}</span>
+                        </ng-template>
+                      </d-select>
+                    </ng-template>
+                    <ng-template #orBatchTemplate>
+                      <app-user-tag *ngFor="let user of node.selectableUsers" [user]="user"></app-user-tag>
+                    </ng-template>
+                  </d-form-item>
+                </span>
+                <d-form-item>
+                  <d-form-label [required]="true">Apply Remark</d-form-label>
+                  <d-form-control>
+                    <textarea
+                      name="applyRemark"
+                      [readonly]="ticketDetails.ticket.ticketState !== WorkOrderStatus.NEW"
+                      placeholder="Please enter apply remark"
+                      dTextarea
+                      maxlength="200"
+                      style="height: 50px"
+                      [(ngModel)]="ticketDetails.ticket.applyRemark"
+                    ></textarea>
+                  </d-form-control>
+                </d-form-item>
+              </form>
+            </div>
+          </d-splitter-pane>
+        </d-splitter-pane>
+      </d-splitter>
+    </d-card-content>
+  </d-card>
+
+  <d-card style="margin-bottom: 20px" *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.NEW">
+    <d-card-content>
+      <span >
+
+      </span>
+    </d-card-content>
+  </d-card>
+
+  <d-card style="margin-bottom: 20px" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL">
+    <div class="pane-content" style="margin-top: 10px">
+      <form dForm ngForm [layout]="FormLayout.Vertical">
+        <d-form-item>
+          <d-form-label [required]="true">Apply Remark</d-form-label>
+          <d-form-control>
+            <textarea
+              [readonly]="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL"
+              placeholder="Please enter approve remark"
+              dTextarea
+              maxlength="200"
+              style="height: 50px"
+              [(ngModel)]="approveRemark"
+            ></textarea>
+          </d-form-control>
+        </d-form-item>
+      </form>
+    </div>
+  </d-card>
+
+  <div style="float: right">
+    <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-button style="margin-right: 5px" bsStyle="primary" (click)="onSubmit()"
+                [disabled]="disabled.submit">Submit</d-button>
+    </span>
+    <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL">
+      <d-button style="margin-right: 5px" bsStyle="primary" (click)="onApproval(APPROVAL_AGREE)"
+                [disabled]="disabled.approval">Agree</d-button>
+      <d-button style="margin-right: 5px" bsStyle="danger" (click)="onApproval(APPROVAL_REJECT)"
+                [disabled]="disabled.approval">Reject</d-button>
+    </span>
+    <span>
+      <d-button style="margin-right: 5px" bsStyle="common" (click)="onCancel()"
+                [disabled]="disabled.cancel">Cancel</d-button>
+    </span>
+  </div>
+
+</section>

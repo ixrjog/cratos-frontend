@@ -31,7 +31,9 @@
               <form dForm ngForm [layout]="FormLayout.Vertical">
                 <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
                   <d-form-item *ngFor="let node of ticketDetails.workflow.nodes">
-                  <d-form-label [required]="node.approvalType==='USER_SPECIFIED'">{{ node.name }}</d-form-label>
+                  <d-form-label [required]="node.approvalType==='USER_SPECIFIED'">
+                    {{ node.langMap | i18nTran }}
+                  </d-form-label>
                     <d-form-control>
                       <ng-container *ngIf="node.approvalType === 'USER_SPECIFIED'; else orBatchTemplate">
                         <ng-template [ngTemplateOutlet]="userSpecifiedTemplate"></ng-template>
@@ -81,8 +83,8 @@
 
   <d-card style="margin-bottom: 20px" *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.NEW">
     <d-card-content>
-      <span >
-
+      <span style="display: flex; justify-content: center;">
+        <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
       </span>
     </d-card-content>
   </d-card>
@@ -91,10 +93,10 @@
     <div class="pane-content" style="margin-top: 10px">
       <form dForm ngForm [layout]="FormLayout.Vertical">
         <d-form-item>
-          <d-form-label [required]="true">Apply Remark</d-form-label>
+          <d-form-label [required]="true">Approve Remark</d-form-label>
           <d-form-control>
             <textarea
-              [readonly]="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL"
+              name="approveRemark"
               placeholder="Please enter approve remark"
               dTextarea
               maxlength="200"

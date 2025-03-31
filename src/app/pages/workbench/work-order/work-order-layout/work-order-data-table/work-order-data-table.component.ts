@@ -57,11 +57,11 @@ export class WorkOrderDataTableComponent implements OnInit {
     },
     {
       id: WorkOrderStatus.IN_APPROVAL,
-      title: WorkOrderStatus.IN_APPROVAL,
+      title: WorkOrderStatus.IN_APPROVAL.replace('_',' '),
     },
     {
       id: WorkOrderStatus.IN_PROGRESS,
-      title: WorkOrderStatus.IN_PROGRESS,
+      title: WorkOrderStatus.IN_PROGRESS.replace('_',' '),
     },
     {
       id: WorkOrderStatus.COMPLETED,

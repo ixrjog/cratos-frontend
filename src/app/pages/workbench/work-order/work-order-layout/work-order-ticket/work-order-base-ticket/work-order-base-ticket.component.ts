@@ -14,6 +14,7 @@ import { WorkflowNodeVO, WorkOrderStatus } from '../../../../../../@core/data/wo
 import { FormLayout } from 'ng-devui/form';
 import { UserVO } from '../../../../../../@core/data/user';
 import { APPROVAL_AGREE, APPROVAL_REJECT } from '../../../../../../@shared/constant/approval.constant';
+import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 
 @Component({
   selector: 'app-work-order-base-ticket',
@@ -41,9 +42,19 @@ export class WorkOrderBaseTicketComponent {
     cancel: false,
   };
 
+  dialogDate = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
   constructor(
     private workOrderTicketService: WorkOrderTicketService,
-    private toastUtil: ToastUtil) {
+    private toastUtil: ToastUtil,
+    private dialogUtil: DialogUtil) {
   }
 
   onGetTicketDetail() {
@@ -87,24 +98,30 @@ export class WorkOrderBaseTicketComponent {
   }
 
   onApproval(approvalType: string) {
-    this.disabled.approval = true;
-    this.disabled.cancel = true;
-    const param: ApprovalTicket = {
-      ticketNo: this.ticketDetails.ticketNo,
-      approveRemark: this.approveRemark,
-      approvalType: approvalType,
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.approve,
     };
-    this.workOrderTicketService.approvalTicket(param)
-      .pipe(
-        finalize(() => {
-          this.disabled.approval = false;
-          this.disabled.cancel = false;
-        }),
-      )
-      .subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT[approvalType]);
-        this.onCancel();
-      });
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.disabled.approval = true;
+      this.disabled.cancel = true;
+      const param: ApprovalTicket = {
+        ticketNo: this.ticketDetails.ticketNo,
+        approveRemark: this.approveRemark,
+        approvalType: approvalType,
+      };
+      this.workOrderTicketService.approvalTicket(param)
+        .pipe(
+          finalize(() => {
+            this.disabled.approval = false;
+            this.disabled.cancel = false;
+          }),
+        )
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT[approvalType]);
+          this.onCancel();
+        });
+    });
   }
 
   onCancel() {

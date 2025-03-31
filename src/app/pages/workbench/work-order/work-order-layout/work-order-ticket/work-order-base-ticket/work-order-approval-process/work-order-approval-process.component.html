@@ -1,0 +1,19 @@
+<div *ngIf="show">
+  <d-time-axis [data]="timeAxisTemplate" [contentTemplate]="customTemplate" [mode]="'alternative'"></d-time-axis>
+</div>
+
+<ng-template #customTemplate let-data="data">
+  <div style="position: relative">
+    <div
+      [style.border-color]="data.color"
+      style="border-left: 4px solid; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); padding: 6px 4px;width: 200px"
+      [style.background-color]="data.backgroundColor"
+    >
+      <div style="padding-bottom: 8px; font-size: 14px; font-weight: bold">{{ data.nodeName }}</div>
+      <div style="padding-bottom: 8px">approvalType：{{ data.approvalType }}</div>
+      <div style="padding-bottom: 8px">approveRemark：
+        <d-tag [tag]="data.approveRemark" [customColor]="data.color"></d-tag>
+      </div>
+    </div>
+  </div>
+</ng-template>

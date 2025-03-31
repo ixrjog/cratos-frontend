@@ -57,7 +57,14 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="ticketNo" header="Ticket No"></d-column>
+    <d-column field="ticketNo" header="Ticket No" [width]="'120px'"></d-column>
+        <d-column field="workOrder" header="Work Order">
+          <d-cell>
+            <ng-template let-cellItem="cellItem">
+              <span>{{ cellItem.i18nData['langMap'] | i18nTran }}</span>
+            </ng-template>
+          </d-cell>
+        </d-column>
     <d-column field="username" header="Username"></d-column>
     <d-column field="ticketState" header="Ticket State">
       <d-cell>
@@ -113,7 +120,7 @@
               (click)="onRowEdit(rowItem)"
             ></d-icon>
             <d-icon
-              *ngIf="rowItem['ticketState']===WorkOrderStatus.COMPLETED"
+              *ngIf="rowItem['ticketState']!==WorkOrderStatus.NEW && rowItem['ticketState']!==WorkOrderStatus.SUBMITTED"
               [icon]="'icon-go-document'"
               [operable]="true"
               (click)="onRowEdit(rowItem)"

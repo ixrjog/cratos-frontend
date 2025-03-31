@@ -42,7 +42,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
 
   renewalType: string = RenewalExtUserTypeEnum.SHORT_TERM;
 
-  renewalTypeHelpTips = 'SHORT_TERM (7 days)\nMID_TERM (30 days)\nLONG_TERM (90 days)';
+  renewalTypeHelpTips = 'SHORT_TERM(7 days)\nMID_TERM(30 days)\nLONG_TERM(90 days)';
 
   constructor(
     private userPermissionService: UserPermissionService,

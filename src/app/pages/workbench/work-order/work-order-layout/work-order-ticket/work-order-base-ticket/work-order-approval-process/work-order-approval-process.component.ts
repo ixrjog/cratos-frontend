@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
+import { APPROVAL_AGREE, APPROVAL_REJECT } from '../../../../../../../@shared/constant/approval.constant';
 
 @Component({
   selector: 'app-work-order-approval-process',
@@ -35,11 +36,26 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
     });
     this.ticketDetails.workflow.nodes.forEach(node => {
       let process = this.ticketDetails.nodes[node.name];
-      process['isCurrent'] = node.name === this.ticketDetails.currentNode;
-      this.timeAxisTemplate.list.push({
-        customDot: node.name === this.ticketDetails.currentNode ? this.loadingDot : null,
-        data: process,
-      });
+      let color = '';
+      let customDot = ''
+      if (process.approvalStatus === APPROVAL_AGREE) {
+        color = 'var(--devui-success)';
+      }
+      if (process.approvalStatus === APPROVAL_REJECT) {
+        color = 'var(--devui-danger)';
+      }
+      let timeAxis = {
+        dotColor: color,
+        data: {
+          ...process,
+          dotColor: color,
+          color: color,
+        },
+      };
+      if (node.name === this.ticketDetails.currentNode && process.approvalCompleted === null) {
+        timeAxis['customDot'] = this.loadingDot;
+      }
+      this.timeAxisTemplate.list.push(timeAxis);
     });
     this.timeAxisTemplate.list.push({
       customDot: '<i class="fa-solid fa-circle-stop" style="font-size:16px"></i>',
@@ -51,4 +67,5 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
   }
 
 
+  protected readonly APPROVAL_AGREE = APPROVAL_AGREE;
 }

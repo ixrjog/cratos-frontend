@@ -71,4 +71,8 @@ export class UserService extends UserData {
     return this.apiService.post(this.baseUrl, '/my/sshkey/add', param);
   }
 
+  updateMyLanguage(param: { lang: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/my/language/update', param);
+  }
+
 }

@@ -66,6 +66,5 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
     this.show = true;
   }
 
-
   protected readonly APPROVAL_AGREE = APPROVAL_AGREE;
 }

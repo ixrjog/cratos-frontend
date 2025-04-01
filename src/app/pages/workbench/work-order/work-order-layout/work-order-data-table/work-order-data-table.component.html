@@ -66,31 +66,48 @@
           </d-cell>
         </d-column>
     <d-column field="username" header="Applicant"></d-column>
-    <d-column field="ticketState" header="State">
+    <d-column header="State">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        <ng-template let-rowItem="rowItem">
+          <span>
+            <d-tag [tag]="rowItem['ticketState']" [labelStyle]="onGetTicketStateColor(rowItem)"></d-tag>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.COMPLETED && rowItem.success === false"
+              [icon]="'icon-warning-o'"
+              [color]="'var(--devui-danger)'"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="failTemplate"
+              style="vertical-align: middle;margin-left: 5px"
+            ></d-icon>
+            <ng-template #failTemplate>
+              <span>{{ rowItem.ticketResult }}</span>
+            </ng-template>
+          </span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="registrationTime" header="Registration Time" [fieldType]="'date'">
+    <d-column header="Time" [fieldType]="'date'">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
-          <br>
+        <ng-template let-rowItem="rowItem">
+          <div *ngIf="rowItem['submittedAt'] !== null">
+            <span class="font-color-name">Submit&nbsp;</span>
+            <span>{{ rowItem['submittedAt'] | dDatePipe: 'yyyy/MM/dd' }}</span>&nbsp;
+            <strong>{{ rowItem['submittedAt'] | dRelativeTime: limit | async }}</strong>
+          </div>
+          <div *ngIf="rowItem['completedAt'] !== null">
+            <span class="font-color-name">Complete&nbsp;</span>
+            <span>{{ rowItem['completedAt'] | dDatePipe: 'yyyy/MM/dd' }}</span>&nbsp;
+            <strong>{{ rowItem['completedAt'] | dRelativeTime: limit | async }}</strong>
+          </div>
+
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="expiry" header="Expiry" [fieldType]="'date'">
-      <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
-          <br>
-          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'120px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
@@ -114,13 +131,14 @@
               (click)="onRowEdit(rowItem)"
             ></d-icon>
             <d-icon
-              *ngIf="rowItem['ticketState']===WorkOrderStatus.SUBMITTED"
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.IN_APPROVAL
+                && rowItem.approvalInfo?.currentApprover === true"
               [icon]="'icon-classroom-approve'"
               [operable]="true"
               (click)="onRowEdit(rowItem)"
             ></d-icon>
             <d-icon
-              *ngIf="rowItem['ticketState']!==WorkOrderStatus.NEW && rowItem['ticketState']!==WorkOrderStatus.SUBMITTED"
+              *ngIf="rowItem['ticketState']!==WorkOrderStatus.NEW && rowItem['ticketState']!==WorkOrderStatus.IN_APPROVAL"
               [icon]="'icon-go-document'"
               [operable]="true"
               (click)="onRowEdit(rowItem)"

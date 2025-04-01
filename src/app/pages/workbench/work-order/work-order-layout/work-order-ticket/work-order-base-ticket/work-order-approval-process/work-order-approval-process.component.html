@@ -4,20 +4,18 @@
 
 <ng-template #customTemplate let-data="data">
   <div style="position: relative">
-    <div
-      [style.border-color]="data.color"
-      style="border-left: 4px solid; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); padding: 6px 4px;width: 200px;height: 100px"
-    >
+    <div [style.border-color]="data.color" class="approve-node">
       <div style="padding-bottom: 8px; font-size: 14px; font-weight: bold">{{ data.nodeName }}</div>
       <div style="padding-bottom: 8px" *ngIf="data.approvalStatus">
-        {{ data.username }}&nbsp;
+        <i class="fa-solid fa-circle-user"></i>
+        &nbsp;{{ data.username }}&nbsp;
         <d-tag
           [tag]="data.approvalStatus"
           [labelStyle]="data.approvalStatus === APPROVAL_AGREE?'green-w98':'red-w98'"
         ></d-tag>
       </div>
-      <div style="padding-bottom: 8px" *ngIf="data.approveRemark">
-        <span>
+      <div class="remark-content" style="padding-bottom: 8px" *ngIf="data.approveRemark">
+        <span [title]="data.approveRemark">
           <i class="fa-solid fa-comment-dots"></i>
           &nbsp;{{ data.approveRemark }}
         </span>

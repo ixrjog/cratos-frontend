@@ -91,6 +91,8 @@ export abstract class UserData {
 
   abstract addMySshKey(param: AddSshKey): Observable<HttpResult<Boolean>>;
 
+  abstract updateMyLanguage(param: { lang: string }): Observable<HttpResult<Boolean>>;
+
 }
 
 export enum RenewalExtUserTypeEnum {

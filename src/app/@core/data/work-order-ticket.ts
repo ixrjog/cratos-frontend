@@ -1,5 +1,5 @@
 import { WorkflowModelVO, WorkOrderVO } from './work-order';
-import { DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
+import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { UserVO } from './user';
 import { Observable } from 'rxjs';
 
@@ -13,7 +13,7 @@ export interface WorkOrderTicketDetailsVO {
   currentNode: string;
 }
 
-export interface WorkOrderTicketVO extends ValidVO {
+export interface WorkOrderTicketVO extends BaseVO, ValidVO {
   id: number;
   ticketNo: string;
   workOrderId: number;
@@ -29,11 +29,20 @@ export interface WorkOrderTicketVO extends ValidVO {
   autoProcessing: boolean;
   processAt: Date;
   applyRemark: string;
+  workflow: string;
+  version: string;
   comment: string;
   applicant: UserVO;
   ticketAbstract: {
     entryCnt: number
     markdown: string
+  };
+  applicantInfo: {
+    applicant: boolean
+  };
+  approvalInfo: {
+    currentApprover: boolean
+    approvalRequired: boolean
   };
 }
 

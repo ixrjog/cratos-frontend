@@ -5,6 +5,7 @@ import { LANGUAGES } from 'src/config/language-config';
 import { I18nService } from 'ng-devui/i18n';
 import { LoginVO } from '../../../../@core/data/log';
 import { LogService } from '../../../../@core/services/log.service';
+import { UserService } from '../../../../@core/services/user.service';
 
 @Component({
   selector: 'da-header-operation',
@@ -21,7 +22,8 @@ export class HeaderOperationComponent implements OnInit {
     private route: Router,
     private logService: LogService,
     private translate: TranslateService,
-    private i18n: I18nService
+    private i18n: I18nService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +50,8 @@ export class HeaderOperationComponent implements OnInit {
     localStorage.setItem('lang', this.language);
     this.i18n.toggleLang(this.language);
     this.translate.use(this.language);
+    this.userService.updateMyLanguage({ lang: language })
+      .subscribe();
   }
 
   handleUserOps(operation: string) {

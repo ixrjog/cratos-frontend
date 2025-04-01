@@ -86,6 +86,9 @@
       <span style="display: flex; justify-content: center;">
         <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
       </span>
+      <span style="position: absolute; top: 10px; right: 10px;">
+        <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"></d-tag>
+      </span>
     </d-card-content>
   </d-card>
 
@@ -114,7 +117,8 @@
       <d-button style="margin-right: 5px" bsStyle="primary" (click)="onSubmit()"
                 [disabled]="disabled.submit">Submit</d-button>
     </span>
-    <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL">
+    <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL
+    && ticketDetails.ticket.approvalInfo?.currentApprover">
       <d-button style="margin-right: 5px" bsStyle="primary" (click)="onApproval(APPROVAL_AGREE)"
                 [disabled]="disabled.approval">Agree</d-button>
       <d-button style="margin-right: 5px" bsStyle="danger" (click)="onApproval(APPROVAL_REJECT)"

@@ -269,7 +269,7 @@ export const DIALOG_DATA = {
     merge: '<strong>Confirm merge this row ?</strong>',
     redeploy: '<strong>Confirm redeploy this row ?</strong>',
     exec: '<strong>Confirm exec this row ?</strong>',
-    approve: '<strong>Confirm approve this row ?</strong>',
+    approve: '<strong>Confirm approve this order ?</strong>',
     reject: '<strong>Confirm reject this row ?</strong>',
     reset: '<strong>Confirm reset this row ?</strong>',
     create: '<strong>Confirm create this row ?</strong>',

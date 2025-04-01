@@ -174,4 +174,14 @@ export class WorkOrderDataTableComponent implements OnInit {
 
   protected readonly getPopoverStyle = getPopoverStyle;
   protected readonly WorkOrderStatus = WorkOrderStatus;
+
+  onGetTicketStateColor(rowItem: WorkOrderTicketVO) {
+    if (rowItem.ticketState === WorkOrderStatus.COMPLETED) {
+      if (rowItem.success) {
+        return 'green-w98';
+      }
+      return 'red-w98';
+    }
+    return 'blue-w98';
+  }
 }

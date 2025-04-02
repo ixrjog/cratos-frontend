@@ -10,6 +10,7 @@ import { SshSessionComponent } from './ssh-session/ssh-session.component';
 import { NotificationTemplateComponent } from './notification-template/notification-template.component';
 import { AssetMaturityComponent } from './asset-maturity/asset-maturity.component';
 import { RobotComponent } from './robot/robot.component';
+import { ResourceCenterComponent } from './resource-center/resource-center.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'tag', component: TagComponent },
       { path: 'env', component: EnvComponent },
       { path: 'menu', component: MenuComponent },
+      { path: 'resource-center', component: ResourceCenterComponent },
       { path: 'credential', component: CredentialComponent },
       { path: 'ssh-session', component: SshSessionComponent },
       { path: 'server-account', component: ServerAccountComponent },

@@ -1,0 +1,160 @@
+<div class="spacing-search">
+  <d-select
+    class="select"
+    [appendToBody]="true"
+    [(ngModel)]="resourceType"
+    [options]="resourceTypeOptions"
+    placeholder="Select resource type"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    [appendToBody]="true"
+    [(ngModel)]="tag"
+    [options]="tagOptions"
+    placeholder="Select tag"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    [filterKey]="'value'"
+    [appendToBody]="true"
+    [searchFn]="onSearchTagGroup"
+    [isSearch]="true"
+    placeholder="Select tag group"
+    (valueChange)="onTagGroupChange($event)"
+  >
+  </d-select>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+  >
+  </d-search>
+  <d-button
+    class="button"
+    bsStyle="common"
+    (click)="fetchData()"
+    [disabled]="queryParam.tagGroup===''"
+  >Filter
+  </d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column field="assetId" header="Asset ID"></d-column>
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="assetKey" header="Asset Key"></d-column>
+    <d-column field="region" header="Region"></d-column>
+    <d-column field="description" header="Description"></d-column>
+    <d-column field="originalModel" header="Model" [width]="'80px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="originalModelTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="getPopoverStyle({width: '800px'})"          >
+          </d-icon>
+          <ng-template #originalModelTemplate>
+            <!--            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>-->
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem"
+              [mode]="'ace/mode/yaml'"
+            ></app-ace-editor>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Time" [width]="'260px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span class="font-color-name" style="margin-right: 5px">Created</span>
+          <span>{{ rowItem['createdTime'] | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
+          <strong style="margin-left: 5px">{{ rowItem['createdTime'] | dRelativeTime: limit | async }}</strong>
+          <br>
+          <span class="font-color-name" style="margin-right: 5px">Expired</span>
+          <span>{{ rowItem['expiredTime'] | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
+          <strong style="margin-left: 5px">{{ rowItem['expiredTime'] | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'180px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchTag()">
+        <a dDropDownMenuItem>
+          <span class="icon-tag" style="padding-right: 5px; vertical-align: middle"> Tag</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

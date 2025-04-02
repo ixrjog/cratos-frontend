@@ -43,6 +43,7 @@ import { EdsIdentityService } from './services/ext-dataSource-identity.service';
 import { WorkOrderService } from './services/work-order.service';
 import { WorkOrderTicketService } from './services/work-order-ticket.service';
 import { WorkOrderTicketEntryService } from './services/work-order-ticket-entry.service';
+import { TagGroupService } from './services/tag-group.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -91,6 +92,7 @@ export const CRATOS_PROVIDERS = [
   WorkOrderService,
   WorkOrderTicketService,
   WorkOrderTicketEntryService,
+  TagGroupService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

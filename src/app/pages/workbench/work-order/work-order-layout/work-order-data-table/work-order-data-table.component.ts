@@ -52,10 +52,6 @@ export class WorkOrderDataTableComponent implements OnInit {
       title: WorkOrderStatus.NEW,
     },
     {
-      id: WorkOrderStatus.SUBMITTED,
-      title: WorkOrderStatus.SUBMITTED,
-    },
-    {
       id: WorkOrderStatus.IN_APPROVAL,
       title: WorkOrderStatus.IN_APPROVAL.replace('_',' '),
     },

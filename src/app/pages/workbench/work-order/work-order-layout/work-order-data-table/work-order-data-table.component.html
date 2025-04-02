@@ -65,8 +65,8 @@
             </ng-template>
           </d-cell>
         </d-column>
-    <d-column field="username" header="Applicant"></d-column>
-    <d-column header="State">
+    <d-column field="username" header="Applicant" [width]="'200px'">></d-column>
+    <d-column header="State" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span>
@@ -95,12 +95,12 @@
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem['submittedAt'] !== null">
             <span class="font-color-name">Submit&nbsp;</span>
-            <span>{{ rowItem['submittedAt'] | dDatePipe: 'yyyy/MM/dd' }}</span>&nbsp;
+            <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
             <strong>{{ rowItem['submittedAt'] | dRelativeTime: limit | async }}</strong>
           </div>
           <div *ngIf="rowItem['completedAt'] !== null">
             <span class="font-color-name">Complete&nbsp;</span>
-            <span>{{ rowItem['completedAt'] | dDatePipe: 'yyyy/MM/dd' }}</span>&nbsp;
+            <span>{{ rowItem['completedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
             <strong>{{ rowItem['completedAt'] | dRelativeTime: limit | async }}</strong>
           </div>
 
@@ -121,7 +121,7 @@
             >
             </d-icon>
             <ng-template #ticketAbstractTemplate>
-              <markdown class="markdown-body" lineNumbers lineHighlight mermaid
+              <markdown lineNumbers lineHighlight mermaid
                         [data]="rowItem['ticketAbstract']['markdown']"></markdown>
             </ng-template>
             <d-icon

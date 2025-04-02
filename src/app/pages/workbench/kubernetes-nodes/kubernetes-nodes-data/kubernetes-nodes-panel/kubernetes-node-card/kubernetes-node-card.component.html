@@ -111,11 +111,11 @@
           <span class="value progress-container circle-type">
             <i class="fa-solid fa-microchip"></i>
             cpu&nbsp;{{ kubernetesNode.attributes['status.capacity.cpu'] |stringReplace:'/':'' }}
-            <d-progress [type]="'circle'" [percentage]="kubernetesNode.usage.cpuPercentage" [strokeWidth]="18"
+            <d-progress [type]="'circle'" [percentage]="kubernetesNode?.usage?.cpuPercentage" [strokeWidth]="18"
                         [strokeColor]="'#50d4ab'" [showContent]="false"
                         style="display: inline-block"></d-progress>
             mem&nbsp;{{ kubernetesNode.attributes['status.capacity.memory'] | unitTran }}
-            <d-progress [type]="'circle'" [percentage]="kubernetesNode.usage.memoryPercentage" [strokeWidth]="18"
+            <d-progress [type]="'circle'" [percentage]="kubernetesNode?.usage?.memoryPercentage" [strokeWidth]="18"
                         [strokeColor]="'#50d4ab'" [showContent]="false"
                         style="display: inline-block"></d-progress>
             &nbsp;<i class="fa-solid fa-hard-drive"></i>

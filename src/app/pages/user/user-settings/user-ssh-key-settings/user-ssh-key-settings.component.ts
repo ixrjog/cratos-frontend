@@ -17,6 +17,7 @@ import { AddSshKey } from '../../../../@core/data/user';
 export class UserSshKeySettingsComponent implements OnInit {
 
   sshKeyList: CredentialVO[];
+  hostUrl: string;
 
   dialogDate = {
     warningOperateData: {
@@ -38,6 +39,7 @@ export class UserSshKeySettingsComponent implements OnInit {
   sshKey: string;
 
   ngOnInit(): void {
+    this.hostUrl = window.location.hostname;
     this.fetchData();
   }
 

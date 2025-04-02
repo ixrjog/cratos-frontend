@@ -87,7 +87,12 @@
         <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
       </span>
       <span style="position: absolute; top: 10px; right: 10px;">
-        <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"></d-tag>
+        <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"
+               [customViewTemplate]="versionTemplate"></d-tag>
+        <ng-template #versionTemplate let-tag="tag">
+          <span class="icon-fork" style="vertical-align: center"></span>
+          <span>&nbsp;{{ tag }}</span>
+        </ng-template>
       </span>
     </d-card-content>
   </d-card>

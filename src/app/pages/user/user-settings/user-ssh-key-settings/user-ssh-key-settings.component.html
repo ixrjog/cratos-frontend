@@ -21,6 +21,8 @@
       </form>
     </da-col-item>
     <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
+      <div class="font-color-comment">Connecting to Cratos SSH-Server using SSH keys</div>
+      <pre><app-xterm-logs [logs]="'$ ssh '+ username + '@' + hostUrl"></app-xterm-logs></pre>
       <d-card *ngFor="let key of sshKeyList" style="margin-bottom: 10px">
         <span style="float: right; padding: 3px 0">
           <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(key)"></d-icon>

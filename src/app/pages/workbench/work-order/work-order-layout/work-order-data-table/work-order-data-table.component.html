@@ -65,7 +65,7 @@
             </ng-template>
           </d-cell>
         </d-column>
-    <d-column field="username" header="Applicant" [width]="'200px'">></d-column>
+    <d-column field="username" header="Applicant"></d-column>
     <d-column header="State" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -90,17 +90,21 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Time" [fieldType]="'date'">
+    <d-column header="Time" [fieldType]="'date'" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem['submittedAt'] !== null">
-            <span class="font-color-name">Submit&nbsp;</span>
-            <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
+            <span class="font-color-name">Submit</span>
+            <br/>
+            <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+            <br/>
             <strong>{{ rowItem['submittedAt'] | dRelativeTime: limit | async }}</strong>
           </div>
           <div *ngIf="rowItem['completedAt'] !== null">
-            <span class="font-color-name">Complete&nbsp;</span>
-            <span>{{ rowItem['completedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
+            <span class="font-color-name">Complete</span>
+            <br/>
+            <span>{{ rowItem['completedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+            <br/>
             <strong>{{ rowItem['completedAt'] | dRelativeTime: limit | async }}</strong>
           </div>
 

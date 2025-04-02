@@ -11,11 +11,19 @@
 </ng-template>
 
 <ng-template #itemTemplate let-item="item">
-  <i [class]="item.icon"></i>
-  &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
-  <span class="right-button">
-    <d-button class="button" bsStyle="primary" (click)="onRowNew(item)" [disabled]="disabled">New</d-button>
-    <d-button class="button" bsStyle="common" (click)="onRowFilter(item)">Filter</d-button>
-  </span>
+  <div>
+    <i [class]="item.icon"></i>
+    &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
+    <span class="right-button">
+      <d-button class="button" bsStyle="primary" (click)="onRowNew(item)" [disabled]="disabled">New</d-button>
+      <d-button class="button" bsStyle="common" (click)="onRowFilter(item)">Filter</d-button>
+    </span>
+    <d-tag [tag]="item.version" [labelStyle]="'blue-w98'" style="text-indent: 0"
+           [customViewTemplate]="versionTemplate"></d-tag>
+    <ng-template #versionTemplate let-tag="tag">
+      <span class="icon-fork" style="vertical-align: center"></span>
+      <span>&nbsp;{{ tag }}</span>
+    </ng-template>
+  </div>
 
 </ng-template>

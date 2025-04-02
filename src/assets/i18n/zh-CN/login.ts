@@ -1,6 +1,6 @@
 export default {
   loginPage: {
-    coperation: '山中习静观朝槿，松下清斋折露葵',
+    coperation: '静水潜流运维深，行云无迹自乾坤',
     loginWays: {
       account: '账号密码登录',
       email: '邮箱登录',

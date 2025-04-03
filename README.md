@@ -12,6 +12,17 @@
 }
 ```
 
++ PRE
+```json
+{
+  "/api": {
+    "target": "https://cratos-pre.palmpay-inc.com",
+    "secure": true,
+    "changeOrigin": true
+  }
+}
+```
+
 + PROD
 ```json
 {

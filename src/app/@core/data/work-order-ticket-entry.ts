@@ -19,5 +19,8 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract addComputerPermissionTicketEntry(param: AddComputerPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract setTicketEntryValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract deleteTicketEntryById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
 }

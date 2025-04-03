@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { WorkOrderTicketDetailsVO } from '../../../../../../@core/data/work-order-ticket';
+import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
 import {
   PermissionBusinessVO,
   UserBusinessPermission,
@@ -11,9 +11,11 @@ import { EnvService } from '../../../../../../@core/services/env.service';
 import { EnvPageQuery } from '../../../../../../@core/data/env';
 import { FormLayout } from 'ng-devui/form';
 import { RenewalExtUserTypeEnum } from '../../../../../../@core/data/user';
-import { ToastUtil } from '../../../../../../@shared/utils/toast.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
+import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
+import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
 
 @Component({
   selector: 'app-work-order-business-permission-ticket',
@@ -40,13 +42,24 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
     RenewalExtUserTypeEnum.LONG_TERM,
   ];
 
+  dialogDate = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
   renewalType: string = RenewalExtUserTypeEnum.SHORT_TERM;
 
   renewalTypeHelpTips = 'SHORT_TERM(7 days)\nMID_TERM(30 days)\nLONG_TERM(90 days)';
 
   constructor(
     private userPermissionService: UserPermissionService,
+    private workOrderTicketEntryService: WorkOrderTicketEntryService,
     private envService: EnvService,
+    private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil) {
   }
 
@@ -120,8 +133,18 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
     this.onAddTicketEntry.emit(userBusinessPermission);
   }
 
-  onRowRemove(entry: UserBusinessPermission) {
-    console.log(entry);
+  onRowRemove(entry: WorkOrderTicketEntryVO<UserBusinessPermission>) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.workOrderTicketEntryService.deleteTicketEntryById({ id: entry.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.onFetchData();
+        });
+    });
   }
 
   onGetTicketDetail(ticketDetails: WorkOrderTicketDetailsVO) {

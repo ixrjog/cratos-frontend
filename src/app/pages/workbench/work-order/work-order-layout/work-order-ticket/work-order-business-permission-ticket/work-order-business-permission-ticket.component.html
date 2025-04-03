@@ -80,6 +80,20 @@
       <ng-template #deleteTag let-tag="tag">
         <span class="icon-close" (click)="onRowRemove(tag)"></span>
       </ng-template>
+
+      <d-tag
+        style="vertical-align: bottom"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+          && entry.success === false"
+        [labelStyle]="'red-w98'"
+        [customViewTemplate]="failResultTag"
+        [tag]="entry"
+      ></d-tag>
+      <ng-template #failResultTag let-tag="tag">
+        <div class="fail-result">
+          <span [title]="tag.result">{{ tag.result }}</span>
+        </div>
+      </ng-template>
     </d-card-content>
   </d-card>
 </ng-template>

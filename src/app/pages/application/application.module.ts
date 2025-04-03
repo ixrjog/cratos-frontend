@@ -21,6 +21,7 @@ import { SharedModule } from '../../@shared/shared.module';
 import { ApplicationResourcesComponent } from './application-list/application-list-data-table/application-resources/application-resources.component';
 import { ApplicationResourceBaselineComponent } from './application-resource-baseline/application-resource-baseline.component';
 import { ApplicationResourceBaselineDataTableComponent } from './application-resource-baseline/application-resource-baseline-data-table/application-resource-baseline-data-table.component';
+import { ApplicationPermissionTagComponent } from './application-list/application-list-data-table/application-permission-tag/application-permission-tag.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ApplicationResourceBaselineDataTableComponent } from './application-res
     ApplicationEditorComponent,
     ApplicationResourcesComponent,
     ApplicationResourceBaselineComponent,
-    ApplicationResourceBaselineDataTableComponent
+    ApplicationResourceBaselineDataTableComponent,
+    ApplicationPermissionTagComponent
   ],
   imports: [
     CommonModule,

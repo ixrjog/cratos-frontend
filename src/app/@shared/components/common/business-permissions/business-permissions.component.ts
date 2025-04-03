@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BusinessUserPermissionDetailsVO, UserPermissionBusinessVO } from '../../../../@core/data/user-permission';
+import { UserPermissionBusinessVO } from '../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-business-permissions',

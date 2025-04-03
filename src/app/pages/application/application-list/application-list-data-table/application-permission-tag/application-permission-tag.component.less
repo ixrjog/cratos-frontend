@@ -1,0 +1,28 @@
+@import "../../../../../../styles.less";
+
+.permissions {
+  display: flex;
+  flex-wrap: wrap;
+
+  .permissions-card {
+    padding: 2px;
+    margin: 0 5px 5px 0;
+  }
+}
+
+:host ::ng-deep .progress-container {
+
+  &.circle-type {
+
+    d-progress {
+      width: 9px;
+      height: 9px;
+      vertical-align: baseline;
+
+      .devui-progress-circle .devui-progress-default-text {
+        font-size: @devui-font-size-price;
+      }
+    }
+  }
+}
+

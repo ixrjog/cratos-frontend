@@ -72,7 +72,7 @@
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div style="position: relative" dLoading [loading]="rowItem['$permissionLoading']">
+          <div dLoading [loading]="rowItem['$permissionLoading']">
             <span *ngIf="rowItem['$showPermission']">
               <app-user-permissions
                 [userPermissions]="rowItem['$userPermission']"

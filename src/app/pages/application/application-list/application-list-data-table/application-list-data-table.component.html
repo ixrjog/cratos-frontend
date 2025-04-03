@@ -69,16 +69,17 @@
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <app-business-permissions
-            *ngIf="rowItem['$show']"
-            [permissions]="rowItem['$permission']"
-          ></app-business-permissions>
+          <div dLoading [loading]="rowItem['$loading']">
+            <span *ngIf="rowItem['$show']">
+              <app-application-permission-tag
+                [permissions]="rowItem['$permission']"
+              ></app-application-permission-tag>
+            </span>
+          </div>
           <d-icon
             *ngIf="!rowItem['$show']"
             [icon]="'icon-refresh'"
             (click)="onApplicationPermission(rowItem)"
-            dLoading
-            [loading]="rowItem['$loading']"
           >
           </d-icon>
         </ng-template>

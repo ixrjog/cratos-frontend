@@ -6,10 +6,11 @@
   <div style="position: relative">
     <div [style.border-color]="data.color" class="approve-node">
       <div style="padding-bottom: 8px; font-size: 14px; font-weight: bold">{{ data.nodeName }}</div>
-      <div style="padding-bottom: 8px" *ngIf="data.approvalStatus">
+      <div style="padding-bottom: 8px" *ngIf="data.username">
         <i class="fa-solid fa-circle-user"></i>
         &nbsp;{{ data.username }}&nbsp;
         <d-tag
+          *ngIf="data.approvalStatus"
           [tag]="data.approvalStatus"
           [labelStyle]="data.approvalStatus === APPROVAL_AGREE?'green-w98':'red-w98'"
         ></d-tag>

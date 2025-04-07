@@ -27,6 +27,7 @@ export class WorkOrderMenuComponent implements OnInit {
       .subscribe(({ body }) => {
         body.groupList.forEach(group => {
           group['children'] = group.workOrderList;
+          group['open'] = true;
           this.menu.push(group);
         });
       });

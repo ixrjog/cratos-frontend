@@ -53,6 +53,8 @@ import { RobotEditorComponent } from './robot/robot-data-table/robot-editor/robo
 import { MarkdownModule } from 'ngx-markdown';
 import { ResourceCenterComponent } from './resource-center/resource-center.component';
 import { ResourceCenterDataTableComponent } from './resource-center/resource-center-data-table/resource-center-data-table.component';
+import { InstanceComponent } from './instance/instance.component';
+import { InstanceDataTableComponent } from './instance/instance-data-table/instance-data-table.component';
 
 
 @NgModule({
@@ -86,6 +88,8 @@ import { ResourceCenterDataTableComponent } from './resource-center/resource-cen
     RobotEditorComponent,
     ResourceCenterComponent,
     ResourceCenterDataTableComponent,
+    InstanceComponent,
+    InstanceDataTableComponent,
   ],
   imports: [
     CommonModule,

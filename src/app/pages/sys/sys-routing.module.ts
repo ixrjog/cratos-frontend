@@ -11,6 +11,7 @@ import { NotificationTemplateComponent } from './notification-template/notificat
 import { AssetMaturityComponent } from './asset-maturity/asset-maturity.component';
 import { RobotComponent } from './robot/robot.component';
 import { ResourceCenterComponent } from './resource-center/resource-center.component';
+import { InstanceComponent } from './instance/instance.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
       { path: 'asset-maturity', component: AssetMaturityComponent },
       { path: 'notification-template', component: NotificationTemplateComponent },
       { path: 'robot', component: RobotComponent },
+      { path: 'instance', component: InstanceComponent },
     ],
   },
 ];

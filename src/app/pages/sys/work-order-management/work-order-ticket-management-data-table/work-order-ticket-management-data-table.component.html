@@ -1,0 +1,178 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.ticketNo"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+    placeholder="Search ticketNo"
+  >
+  </d-search>
+  <d-select
+    class="select"
+    style="width: 300px;max-width: 300px"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [(ngModel)]="workOrder"
+    [searchFn]="onSearchWorkOrder"
+    [isSearch]="true"
+    placeholder="Select work order"
+    (valueChange)="onWorkOrderChange($event)"
+    [allowClear]="true"
+  >
+  </d-select>
+  <d-select
+    class="select"
+    style="width: 300px;max-width: 300px"
+    [filterKey]="'username'"
+    [appendToBody]="true"
+    [(ngModel)]="user"
+    [searchFn]="onSearchUser"
+    [isSearch]="true"
+    placeholder="Select user"
+    (valueChange)="onUserChange($event)"
+    [allowClear]="true"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.name }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.displayName }}</span>
+    </ng-template>
+  </d-select>
+  <d-tabs
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.ticketState"
+    (activeTabChange)="onTicketStateChange($event)"
+  >
+    <d-tab
+      *ngFor="let item of ticketStateOptions"
+      [id]="item.id"
+      [title]="item.title"
+    ></d-tab>
+  </d-tabs>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="ticketNo" header="No" [width]="'120px'"></d-column>
+    <d-column field="workOrder" header="Name">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.i18nData['langMap'] | i18nTran }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="username" header="Applicant"></d-column>
+    <d-column header="State">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>
+            <d-tag [tag]="rowItem['ticketState']" [labelStyle]="onGetTicketStateColor(rowItem)"></d-tag>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.COMPLETED && rowItem.success === false"
+              [icon]="'icon-warning-o'"
+              [color]="'var(--devui-danger)'"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="failTemplate"
+              style="vertical-align: middle;margin-left: 5px"
+            ></d-icon>
+            <ng-template #failTemplate>
+              <span>{{ rowItem.ticketResult }}</span>
+            </ng-template>
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Time" [fieldType]="'date'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div *ngIf="rowItem['submittedAt'] !== null">
+            <span class="font-color-name">Submit</span>
+            <br/>
+            <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+            <br/>
+            <strong>{{ rowItem['submittedAt'] | dRelativeTime: limit | async }}</strong>
+          </div>
+          <div *ngIf="rowItem['completedAt'] !== null">
+            <span class="font-color-name">Complete</span>
+            <br/>
+            <span>{{ rowItem['completedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+            <br/>
+            <strong>{{ rowItem['completedAt'] | dRelativeTime: limit | async }}</strong>
+          </div>
+
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'120px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon
+              dPopover
+              [icon]="'icon-view'"
+              [content]="ticketAbstractTemplate"
+              [position]="'left-top'"
+              [controlled]="true"
+              [popoverStyle]="getPopoverStyle({width: '800px'})"
+            >
+            </d-icon>
+            <ng-template #ticketAbstractTemplate>
+              <markdown lineNumbers lineHighlight mermaid
+                        [data]="rowItem['ticketAbstract']['markdown']"></markdown>
+            </ng-template>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.IN_APPROVAL
+                && rowItem.approvalInfo?.currentApprover === true"
+              [icon]="'icon-classroom-approve'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+            ></d-icon>
+            <d-icon
+              *ngIf="rowItem['ticketState']!==WorkOrderStatus.NEW
+               && rowItem['ticketState']!==WorkOrderStatus.IN_APPROVAL"
+              [icon]="'icon-go-document'"
+              [operable]="true"
+              (click)="onRowEdit(rowItem)"
+            ></d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

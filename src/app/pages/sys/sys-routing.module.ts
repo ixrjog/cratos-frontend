@@ -12,6 +12,7 @@ import { AssetMaturityComponent } from './asset-maturity/asset-maturity.componen
 import { RobotComponent } from './robot/robot.component';
 import { ResourceCenterComponent } from './resource-center/resource-center.component';
 import { InstanceComponent } from './instance/instance.component';
+import { WorkOrderManagementComponent } from './work-order-management/work-order-management.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
       { path: 'notification-template', component: NotificationTemplateComponent },
       { path: 'robot', component: RobotComponent },
       { path: 'instance', component: InstanceComponent },
+      { path: 'work-order-mgmt', component: WorkOrderManagementComponent },
     ],
   },
 ];

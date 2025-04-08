@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { WorkOrderData, WorkOrderMenuVO } from '../data/work-order';
+import {
+  UpdateWorkOrder, UpdateWorkOrderGroup,
+  WorkOrderData,
+  WorkOrderGroupPageQuery,
+  WorkOrderGroupVO,
+  WorkOrderMenuVO,
+  WorkOrderPageQuery, WorkOrderVO,
+} from '../data/work-order';
 import { Observable } from 'rxjs';
-import { HttpResult } from '../data/base-data';
+import { DataTable, HttpResult } from '../data/base-data';
 
 @Injectable()
 export class WorkOrderService extends WorkOrderData {
@@ -15,6 +22,22 @@ export class WorkOrderService extends WorkOrderData {
 
   getWorkOrderMenu(): Observable<HttpResult<WorkOrderMenuVO>> {
     return this.apiService.get(this.baseUrl, '/menu/get', {});
+  }
+
+  queryWorkOrderGroupPage(param: WorkOrderGroupPageQuery): Observable<DataTable<WorkOrderGroupVO>> {
+    return this.apiService.post(this.baseUrl, '/group/page/query', param);
+  }
+
+  queryWorkOrderPage(param: WorkOrderPageQuery): Observable<DataTable<WorkOrderVO>> {
+    return this.apiService.post(this.baseUrl, '/page/query', param);
+  }
+
+  updateWorkOrder(param: UpdateWorkOrder): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/update', param);
+  }
+
+  updateWorkOrderGroup(param: UpdateWorkOrderGroup): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/group/update', param);
   }
 
 }

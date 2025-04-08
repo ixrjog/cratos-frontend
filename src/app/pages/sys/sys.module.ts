@@ -52,9 +52,24 @@ import { RobotDataTableComponent } from './robot/robot-data-table/robot-data-tab
 import { RobotEditorComponent } from './robot/robot-data-table/robot-editor/robot-editor.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { ResourceCenterComponent } from './resource-center/resource-center.component';
-import { ResourceCenterDataTableComponent } from './resource-center/resource-center-data-table/resource-center-data-table.component';
+import {
+  ResourceCenterDataTableComponent,
+} from './resource-center/resource-center-data-table/resource-center-data-table.component';
 import { InstanceComponent } from './instance/instance.component';
 import { InstanceDataTableComponent } from './instance/instance-data-table/instance-data-table.component';
+import { WorkOrderManagementComponent } from './work-order-management/work-order-management.component';
+import {
+  WorkOrderManagementDataTableComponent,
+} from './work-order-management/work-order-management-data-table/work-order-management-data-table.component';
+import {
+  WorkOrderGroupManagementDataTableComponent,
+} from './work-order-management/work-order-group-management-data-table/work-order-group-management-data-table.component';
+import {
+  WorkOrderTicketManagementDataTableComponent,
+} from './work-order-management/work-order-ticket-management-data-table/work-order-ticket-management-data-table.component';
+import { WorkbenchModule } from '../workbench/workbench.module';
+import { WorkOrderGroupManagementEditorComponent } from './work-order-management/work-order-group-management-data-table/work-order-group-management-editor/work-order-group-management-editor.component';
+import { WorkOrderManagementEditorComponent } from './work-order-management/work-order-management-data-table/work-order-management-editor/work-order-management-editor.component';
 
 
 @NgModule({
@@ -90,6 +105,12 @@ import { InstanceDataTableComponent } from './instance/instance-data-table/insta
     ResourceCenterDataTableComponent,
     InstanceComponent,
     InstanceDataTableComponent,
+    WorkOrderManagementComponent,
+    WorkOrderManagementDataTableComponent,
+    WorkOrderGroupManagementDataTableComponent,
+    WorkOrderTicketManagementDataTableComponent,
+    WorkOrderGroupManagementEditorComponent,
+    WorkOrderManagementEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -104,6 +125,7 @@ import { InstanceDataTableComponent } from './instance/instance-data-table/insta
     BasicFormModule,
     SharedModule,
     MarkdownModule,
+    WorkbenchModule,
   ],
 })
 export class SysModule { }

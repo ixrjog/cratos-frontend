@@ -33,8 +33,8 @@
       </div>
 
       <div *ngIf="JSON.stringify(identity.mail) !== '{}'">
+        <h3 style="margin: 5px 0" class="font-color-comment">Mail</h3>
         <span *ngFor="let item of identity.mail | keyvalue">
-          <h3 style="margin: 5px 0" class="font-color-comment"> {{ item.key }}</h3>
           <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
           <app-user-mail-identity-card
             *ngFor="let identity of item.value"

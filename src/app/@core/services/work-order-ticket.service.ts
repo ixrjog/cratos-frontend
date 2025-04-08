@@ -5,7 +5,7 @@ import { DataTable, HttpResult } from '../data/base-data';
 import {
   ApprovalTicket,
   MyTicketPageQuery,
-  SubmitTicket,
+  SubmitTicket, TicketPageQuery,
   WorkOrderTicketData,
   WorkOrderTicketDetailsVO,
   WorkOrderTicketVO,
@@ -38,5 +38,13 @@ export class WorkOrderTicketService extends WorkOrderTicketData {
 
   queryMyTicketPage(param: MyTicketPageQuery): Observable<DataTable<WorkOrderTicketVO>> {
     return this.apiService.post(this.baseUrl, '/my/page/query', param);
+  }
+
+  queryTicketPage(param: TicketPageQuery): Observable<DataTable<WorkOrderTicketVO>> {
+    return this.apiService.post(this.baseUrl, '/page/query', param);
+  }
+
+  deleteTicketById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/del', param);
   }
 }

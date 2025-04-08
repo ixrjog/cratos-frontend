@@ -1,0 +1,56 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label>Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Icon</d-form-label>
+      <d-form-control [suffixTemplate]="suffixTemplate">
+        <input dTextInput name="icon" [(ngModel)]="formData.icon"/>
+        <ng-template #suffixTemplate>
+          <i [class]="formData.icon"></i>
+        </ng-template>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Seq</d-form-label>
+      <d-form-control>
+        <d-input-number [min]="1" name="seq" [(ngModel)]="formData.seq" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">I18n</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="5"
+          [maxLines]="10"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="formData.i18n"
+          (onChange)="onI18nChange($event,formData)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

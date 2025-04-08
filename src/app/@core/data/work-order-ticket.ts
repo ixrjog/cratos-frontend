@@ -108,6 +108,13 @@ export interface MyTicketPageQuery extends PageQuery {
   mySubmitted: boolean;
 }
 
+export interface TicketPageQuery extends PageQuery {
+  ticketNo: string;
+  ticketState: string;
+  workOrderKey: string;
+  username: string;
+}
+
 export abstract class WorkOrderTicketData {
 
   abstract createTicket(param: { workOrderKey: string }): Observable<HttpResult<WorkOrderTicketDetailsVO>>;
@@ -119,4 +126,8 @@ export abstract class WorkOrderTicketData {
   abstract approvalTicket(param: ApprovalTicket): Observable<HttpResult<WorkOrderTicketDetailsVO>>;
 
   abstract queryMyTicketPage(param: MyTicketPageQuery): Observable<DataTable<WorkOrderTicketVO>>;
+
+  abstract queryTicketPage(param: TicketPageQuery): Observable<DataTable<WorkOrderTicketVO>>;
+
+  abstract deleteTicketById(param: { id: number }): Observable<HttpResult<Boolean>>;
 }

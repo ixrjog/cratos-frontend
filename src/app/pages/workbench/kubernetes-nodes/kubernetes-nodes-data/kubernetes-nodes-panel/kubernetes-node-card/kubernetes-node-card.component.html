@@ -10,7 +10,7 @@
             [content]="kubernetesNode.metadata.name"
             [title]="kubernetesNode.metadata.name"
           >
-            &nbsp;{{ kubernetesNode.status.addresses['Hostname']['address'] | dSafeNullPipe }}
+            &nbsp;{{ kubernetesNode.status.addresses['Hostname']?.address | dSafeNullPipe }}
           </span>
           <span
             *ngIf="showNodeStatusConditions()"
@@ -64,7 +64,7 @@
           <span class="name">Node</span>
           <span class="value" >
             <span dClipboard [content]="kubernetesNode.status.addresses['InternalIP']['address']">
-              {{ kubernetesNode.status.addresses['InternalIP']['address'] | dSafeNullPipe }}
+              {{ kubernetesNode.status.addresses['InternalIP']?.address | dSafeNullPipe }}
             </span>
           </span>
         </div>

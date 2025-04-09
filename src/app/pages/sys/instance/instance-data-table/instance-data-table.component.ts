@@ -8,6 +8,9 @@ import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { CratosInstanceService } from '../../../../@core/services/cratos-instance.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
+import {
+  BusinessCascaderComponent
+} from '../../../../@shared/components/common/business-cascader/business-cascader.component';
 
 @Component({
   selector: 'app-instance-data-table',
@@ -16,12 +19,18 @@ import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-ta
 })
 export class InstanceDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
+
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CRATOS_INSTANCE;
 
   queryParam = {
     queryName: '',
     valid: null,
+    queryByTag: {
+      tagId: null,
+      tagValue: null,
+    },
   };
 
   table: Table<CratosInstanceVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -50,6 +59,9 @@ export class InstanceDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    setTimeout(() => {
+      this.businessCascader.getTagOptions();
+    }, 500);
     this.fetchData();
   }
 
@@ -88,5 +100,9 @@ export class InstanceDataTableComponent implements OnInit {
           this.fetchData();
         });
     });
+  }
+
+  onTagChanges(value: any) {
+    this.queryParam.queryByTag = value;
   }
 }

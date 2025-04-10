@@ -15,12 +15,28 @@
     <i [class]="item.icon"></i>
     &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
     <span class="right-button">
-      <d-button class="button" bsStyle="primary" (click)="onRowNew(item)"
-                [disabled]="disabled || !item.isUsable">{{ item.isUsable ? 'New' : item.status }}</d-button>
-      <d-button class="button" bsStyle="common" (click)="onRowFilter(item)">Filter</d-button>
+      <d-button
+        class="button"
+        bsStyle="primary"
+        (click)="onRowNew(item)"
+        [disabled]="disabled || !item.isUsable"
+      >
+        {{ item.isUsable ? 'New' : item.status }}
+      </d-button>
+      <d-button
+        *ngIf="item.isUsable"
+        class="button"
+        bsStyle="common"
+        (click)="onRowFilter(item)"
+      >Filter</d-button>
     </span>
-    <d-tag [tag]="item.version" [labelStyle]="'blue-w98'" style="text-indent: 0"
-           [customViewTemplate]="versionTemplate"></d-tag>
+    <d-tag
+      *ngIf="item.isUsable"
+      [tag]="item.version"
+      [labelStyle]="'blue-w98'"
+      style="text-indent: 0"
+      [customViewTemplate]="versionTemplate"
+    ></d-tag>
     <ng-template #versionTemplate let-tag="tag">
       <span class="icon-fork" style="vertical-align: center"></span>
       <span>&nbsp;{{ tag }}</span>

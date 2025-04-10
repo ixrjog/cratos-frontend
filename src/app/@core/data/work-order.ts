@@ -37,6 +37,7 @@ export interface WorkOrderVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTa
   workflow: string;
   workflowData: WorkflowModelVO;
   version: string;
+  isUsable: boolean
 }
 
 export interface WorkflowModelVO {

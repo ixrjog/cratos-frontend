@@ -7,8 +7,10 @@ export function isDark(): boolean {
     return true;
   }
 
-  if (localStorage.getItem('user-custom-theme-config')) {
-    return JSON.parse(localStorage.getItem('user-custom-theme-config'))['isDark']
+  if (theme === 'customize-theme') {
+    if (localStorage.getItem('user-custom-theme-config')) {
+      return JSON.parse(localStorage.getItem('user-custom-theme-config'))['isDark']
+    }
   }
 
   // const { brand, isDark } = localStorage.getItem('user-custom-theme-config')

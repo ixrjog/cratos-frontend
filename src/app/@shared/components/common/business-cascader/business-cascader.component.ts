@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TagService } from '../../../../@core/services/tag.service';
 import { BusinessTagService } from '../../../../@core/services/business-tag.service';
 
@@ -30,7 +30,7 @@ export class BusinessCascaderComponent {
       .subscribe(({ body }) => {
         this.tagOptionsLength = body.length
         body.map(tag => {
-          this.businessTagService.queryBusinessTagByValue({ tagId: tag.id })
+          this.businessTagService.queryBusinessTagByValue({ tagId: tag.id, businessType: this.businessType })
             .subscribe(({ body }) => {
               let child = [];
               body.map(value => {

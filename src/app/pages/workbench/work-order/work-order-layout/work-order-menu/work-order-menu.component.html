@@ -30,17 +30,17 @@
         (click)="onRowFilter(item)"
       >Filter</d-button>
     </span>
-    <d-tag
-      *ngIf="item.isUsable"
-      [tag]="item.version"
-      [labelStyle]="'blue-w98'"
-      style="text-indent: 0"
-      [customViewTemplate]="versionTemplate"
-    ></d-tag>
-    <ng-template #versionTemplate let-tag="tag">
-      <span class="icon-fork" style="vertical-align: center"></span>
-      <span>&nbsp;{{ tag }}</span>
-    </ng-template>
+<!--    <d-tag-->
+<!--      *ngIf="item.isUsable"-->
+<!--      [tag]="item.version"-->
+<!--      [labelStyle]="'blue-w98'"-->
+<!--      style="text-indent: 0"-->
+<!--      [customViewTemplate]="versionTemplate"-->
+<!--    ></d-tag>-->
+<!--    <ng-template #versionTemplate let-tag="tag">-->
+<!--      <span class="icon-fork" style="vertical-align: center"></span>-->
+<!--      <span>&nbsp;{{ tag }}</span>-->
+<!--    </ng-template>-->
   </div>
 
 </ng-template>

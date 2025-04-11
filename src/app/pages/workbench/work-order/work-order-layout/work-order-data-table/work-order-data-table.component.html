@@ -93,7 +93,7 @@
     <d-column header="Time" [fieldType]="'date'" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div *ngIf="rowItem['submittedAt'] !== null">
+          <div *ngIf="rowItem['submittedAt'] !== null && rowItem['completedAt'] === null">
             <span class="font-color-name">Submit</span>
             <br/>
             <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>

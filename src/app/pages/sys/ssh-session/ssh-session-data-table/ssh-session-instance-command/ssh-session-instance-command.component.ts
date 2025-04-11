@@ -12,7 +12,7 @@ import { WebSocketApiService, WsMessageTopicEnum } from '../../../../../@core/se
 import { Subscription, timer } from 'rxjs';
 import { XtermLogsComponent } from '../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
 import { ToastUtil } from '../../../../../@shared/utils/toast.util';
-import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../@shared/constant/ws.constant';
+import { WS_INIT_INTERVAL } from '../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-ssh-session-instance-command',
@@ -34,7 +34,6 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   table: Table<SshCommandVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   ws: WebSocket;
   timerRequest: Subscription;
-  wsHeartbeatTimerRequest: Subscription;
 
   constructor(private sessionService: SshSessionService,
               private wsApiService: WebSocketApiService,
@@ -43,15 +42,6 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
   wsOnInit() {
     this.ws = this.wsApiService.createWsClient('/ssh/audit');
-  }
-
-  onWsHeartbeat() {
-    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState === WebSocket.OPEN) {
-          this.wsApiService.onPing(this.ws);
-        }
-      });
   }
 
   fetchData() {
@@ -72,13 +62,11 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
     this.sessionId = this.data['sessionId'];
     this.fetchData();
     this.initInterval();
-    this.onWsHeartbeat();
   }
 
   ngOnDestroy(): void {
     try {
       this.timerRequest.unsubscribe();
-      this.wsHeartbeatTimerRequest.unsubscribe();
       this.ws.close();
       this.ws = null;
     } catch (error) {

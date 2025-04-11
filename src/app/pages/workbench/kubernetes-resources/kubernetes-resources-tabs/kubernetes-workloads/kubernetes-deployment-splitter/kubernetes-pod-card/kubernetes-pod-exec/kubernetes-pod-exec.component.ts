@@ -8,7 +8,7 @@ import {
   WsMessageTopicEnum,
 } from '../../../../../../../../@core/services/ws.api.service';
 import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
-import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
+import { WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
 import {
   ApplicationKubernetesDeploymentRequest,
   ApplicationKubernetesDetailsRequest,
@@ -42,7 +42,6 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
 
   ws: WebSocket;
   timerRequest: Subscription;
-  wsHeartbeatTimerRequest: Subscription;
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
@@ -65,15 +64,6 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.terminal.open(document.getElementById('kubernetesPodExec'));
   }
 
-  onWsHeartbeat() {
-    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState === WebSocket.OPEN) {
-          this.wsApiService.onPing(this.ws);
-        }
-      });
-  }
-
   ngOnInit(): void {
     this.closeHandler = this.data['closeHandler'];
     this.kubernetesPod = this.data['kubernetesPod'];
@@ -84,7 +74,6 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.wsOnOpen();
     this.wsOnMessage();
     this.initInterval();
-    this.onWsHeartbeat();
   }
 
   ngOnDestroy(): void {
@@ -249,9 +238,6 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       }
       if (this.timerRequest) {
         this.timerRequest.unsubscribe();
-      }
-      if (this.wsHeartbeatTimerRequest) {
-        this.wsHeartbeatTimerRequest.unsubscribe();
       }
       this.ws.close(1000, 'user exit');
       this.ws = null;

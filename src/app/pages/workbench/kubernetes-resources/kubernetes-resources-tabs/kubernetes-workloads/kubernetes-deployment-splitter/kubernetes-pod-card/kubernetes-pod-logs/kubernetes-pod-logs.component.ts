@@ -15,7 +15,7 @@ import {
 } from '../../../../../../../../@core/data/kubernetes-resource';
 import { SessionOutput } from '../../../../../../../../@core/data/ssh-terminal';
 import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
-import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
+import { WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-kubernetes-pod-logs',
@@ -37,7 +37,6 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
 
   ws: WebSocket;
   timerRequest: Subscription;
-  wsHeartbeatTimerRequest: Subscription;
 
   constructor(private wsApiService: WebSocketApiService,
               private uuidUtil: UuidUtil) {
@@ -49,14 +48,6 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
   }
 
-  onWsHeartbeat() {
-    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState === WebSocket.OPEN) {
-          this.wsApiService.onPing(this.ws);
-        }
-      });
-  }
 
   ngOnInit(): void {
     this.closeHandler = this.data['closeHandler'];
@@ -68,7 +59,6 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     this.wsOnOpen();
     this.wsOnMessage();
     this.initInterval();
-    this.onWsHeartbeat();
   }
 
   ngOnDestroy(): void {
@@ -140,9 +130,6 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     try {
       if (this.timerRequest) {
         this.timerRequest.unsubscribe();
-      }
-      if (this.wsHeartbeatTimerRequest) {
-        this.wsHeartbeatTimerRequest.unsubscribe();
       }
       this.ws.close();
       this.ws = null;

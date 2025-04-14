@@ -59,4 +59,7 @@ export class ApplicationService extends ApplicationData {
     return this.apiService.get(this.baseUrl, '/resource/namespace/my/options/get', param);
   }
 
+  getApplicationByName(param: { name: string }): Observable<HttpResult<ApplicationVO>> {
+    return this.apiService.post(this.baseUrl, '/get/by/name', param);
+  }
 }

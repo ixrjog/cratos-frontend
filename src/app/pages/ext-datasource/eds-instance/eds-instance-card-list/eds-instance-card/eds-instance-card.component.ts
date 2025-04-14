@@ -56,7 +56,6 @@ export class EdsInstanceCardComponent {
     private drawerUtil: DrawerUtil,
     private toastUtil: ToastUtil,
     private edsService: EdsService,
-    private edsKubernetesService: EdsKubernetesService,
   ) {
   }
 

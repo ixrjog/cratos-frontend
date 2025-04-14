@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ApplicationPageQuery, ApplicationVO } from '../../../../@core/data/application';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ApplicationPageQuery, ApplicationVO, ScanResource } from '../../../../@core/data/application';
 import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
 import { ApplicationService } from '../../../../@core/services/application.service';
@@ -7,7 +7,7 @@ import {
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions,
 } from '../../../../@core/data/application-resource';
-import { finalize, Subscription, timer } from 'rxjs';
+import { finalize, of, Subscription, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   WebSocketApiService,
@@ -16,15 +16,16 @@ import {
 } from '../../../../@core/services/ws.api.service';
 import { ApplicationKubernetesDetailsRequest } from '../../../../@core/data/kubernetes-resource';
 import { MessageResponse } from '../../../../@core/data/base-data';
-import { ToastUtil } from '../../../../@shared/utils/toast.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../@shared/constant/ws.constant';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-kubernetes-resources-tabs',
   templateUrl: './kubernetes-resources-tabs.component.html',
   styleUrls: [ './kubernetes-resources-tabs.component.less' ],
 })
-export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
+export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   queryParam = {
     applicationName: '',
@@ -50,11 +51,42 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   wsHeartbeatTimerRequest: Subscription;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
     private wsApiService: WebSocketApiService,
     private toastUtil: ToastUtil,
   ) {
+  }
+
+  ngAfterViewInit(): void {
+    this.activatedRoute.queryParams.subscribe(param => {
+      console.log(param)
+      if (param['applicationName'] !== undefined) {
+        this.queryParam.applicationName  = param['applicationName']
+        this.applicationService.getApplicationByName({name: this.queryParam.applicationName})
+          .subscribe(({body}) => {
+            this.application = body;
+            this.queryParam.namespace = param['namespace'] !== undefined ? param['namespace'] : '';
+            if (!this.first) {
+              this.first = true;
+            }
+            this.getResourceNamespaceOptions();
+            this.queryParam.name = param['name'] !== undefined ? param['name'] : '';
+
+            const parma: QueryKubernetesDeploymentOptions = {
+              applicationName: this.application.name,
+              namespace: this.queryParam.namespace,
+            };
+            this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
+              .subscribe(({ body }) => {
+                this.resourceNameOptions = body.options.map(item => item.value);
+              });
+
+            this.fetchData();
+          })
+      }
+    });
   }
 
   fetchData() {
@@ -91,6 +123,23 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onScanData() {
+    const param: ScanResource = {
+      name: this.queryParam.applicationName,
+    };
+    this.loading = true;
+    this.toastUtil.onCommonToast(TOAST_CONTENT.OPERATION);
+    this.applicationService.scanApplicationResource(param)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }))
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.SCAN);
+        this.fetchData();
+      });
+  }
+
   onSearchApplication = (term: string) => {
     const param: ApplicationPageQuery = {
       length: 10, page: 1, queryName: term,
@@ -116,7 +165,15 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onNameChange(name: string) {
+  onSelectResourceName = (term) => {
+    return of(
+      this.resourceNameOptions
+        .map((option, index) => ({ id: index, option: option }))
+        .filter((item) => item.option.toLowerCase().indexOf(term.toLowerCase()) !== -1),
+    );
+  };
+
+  onResourceNameChange(name: string) {
     this.wsOnUnsubSend();
     this.fetchData();
   }

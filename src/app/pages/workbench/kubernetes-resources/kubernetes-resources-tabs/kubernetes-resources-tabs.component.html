@@ -1,6 +1,10 @@
 <div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onScanData()"
+            [disabled]="queryParam.applicationName ==='' ">Scan
+  </d-button>
   <d-select
     class="select"
+    style="max-width: 250px;width: 250px"
     [filterKey]="'name'"
     [width]="580"
     [appendToBody]="true"
@@ -33,10 +37,12 @@
   <d-select
     class="select"
     placeholder="Select resource name"
+    style="max-width: 250px;width: 250px"
     [allowClear]="true"
-    [options]="resourceNameOptions"
+    [searchFn]="onSelectResourceName"
+    [isSearch]="true"
     [(ngModel)]="queryParam.name"
-    (valueChange)="onNameChange($event)"
+    (valueChange)="onResourceNameChange($event)"
   ></d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter

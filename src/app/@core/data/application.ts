@@ -43,6 +43,8 @@ export abstract class ApplicationData {
 
   abstract queryApplicationPage(param: ApplicationPageQuery): Observable<DataTable<ApplicationVO>>;
 
+  abstract getApplicationByName(param: { name: string }): Observable<HttpResult<ApplicationVO>>;
+
   abstract updateApplication(param: ApplicationEdit): Observable<HttpResult<Boolean>>;
 
   abstract addApplication(param: ApplicationEdit): Observable<HttpResult<Boolean>>;

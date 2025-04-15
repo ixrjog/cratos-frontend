@@ -167,7 +167,7 @@ export class WorkOrderDataTableComponent implements OnInit {
         break;
       case WorkOrderKeyEnum.REVOKE_USER_PERMISSION:
         dialogDate['content'] = WorkOrderUserRevokeTicketComponent;
-        dialogDate['title'] = 'User Revoke';
+        dialogDate['title'] = 'User Permission Revoke';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.USER });

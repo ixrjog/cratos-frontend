@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { AddApplicationPermissionTicketEntry, WorkOrderTicketEntryData } from '../data/work-order-ticket-entry';
+import {
+  AddApplicationPermissionTicketEntry,
+  AddRevokeUserPermissionTicketEntry,
+  WorkOrderTicketEntryData,
+} from '../data/work-order-ticket-entry';
 import { Observable } from 'rxjs';
 import { HttpResult } from '../data/base-data';
 
@@ -19,6 +23,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addComputerPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/computer/permission/add', param);
+  }
+
+  addRevokeUserPermissionTicketEntry(param: AddRevokeUserPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/user/revoke/permission/add', param);
   }
 
   setTicketEntryValidById(param: { id: number }): Observable<HttpResult<Boolean>> {

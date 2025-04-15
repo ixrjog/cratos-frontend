@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  UpdateWorkOrder, UpdateWorkOrderGroup,
+  UpdateWorkOrder,
+  UpdateWorkOrderGroup,
   WorkOrderData,
   WorkOrderGroupPageQuery,
   WorkOrderGroupVO,
   WorkOrderMenuVO,
-  WorkOrderPageQuery, WorkOrderVO,
+  WorkOrderPageQuery,
+  WorkOrderVO,
 } from '../data/work-order';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -47,7 +49,9 @@ export enum WorkOrderKeyEnum {
 
   APPLICATION_PERMISSION = 'APPLICATION_PERMISSION',
   COMPUTER_PERMISSION = 'COMPUTER_PERMISSION',
-  SERVER_ACCOUNT_PERMISSION = 'SERVER_ACCOUNT_PERMISSION'
+  SERVER_ACCOUNT_PERMISSION = 'SERVER_ACCOUNT_PERMISSION',
+  APPLICATION_ELASTIC_SCALING = 'APPLICATION_ELASTIC_SCALING',
+  REVOKE_USER_PERMISSION = 'REVOKE_USER_PERMISSION',
 
 }
 

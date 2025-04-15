@@ -1,0 +1,39 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicketComponent
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <form dForm ngForm [layout]="FormLayout.Vertical">
+    <d-form-item>
+      <d-form-label [required]="true">User</d-form-label>
+      <d-form-control>
+        <d-select
+          name="user"
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [(ngModel)]="user"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          placeholder="Select user"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }} : {{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+
+</ng-template>

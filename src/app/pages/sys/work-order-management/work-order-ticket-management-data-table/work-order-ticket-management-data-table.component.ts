@@ -20,6 +20,9 @@ import {
   WorkOrderComputerTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
 import { getPopoverStyle } from 'src/app/@shared/utils/theme.util';
+import {
+  WorkOrderUserRevokeTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -184,6 +187,13 @@ export class WorkOrderTicketManagementDataTableComponent {
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.TAG_GROUP });
+        break;
+      case WorkOrderKeyEnum.REVOKE_USER_PERMISSION:
+        dialogDate['content'] = WorkOrderUserRevokeTicketComponent;
+        dialogDate['title'] = 'User Revoke';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket, { businessType: BusinessTypeEnum.USER });
         break;
       default:
         this.toastUtil.onErrorToast('nonsupport workOrder');

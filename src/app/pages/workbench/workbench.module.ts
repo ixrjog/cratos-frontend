@@ -79,6 +79,7 @@ import {
 import { WorkOrderBusinessPermissionTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-business-permission-ticket.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { WorkOrderApprovalProcessComponent } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-approval-process/work-order-approval-process.component';
+import { WorkOrderUserRevokeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,7 @@ import { WorkOrderApprovalProcessComponent } from './work-order/work-order-layou
     WorkOrderBaseTicketComponent,
     WorkOrderBusinessPermissionTicketComponent,
     WorkOrderApprovalProcessComponent,
+    WorkOrderUserRevokeTicketComponent,
   ],
   imports: [
     CommonModule,

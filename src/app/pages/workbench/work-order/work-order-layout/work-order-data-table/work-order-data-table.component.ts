@@ -23,6 +23,9 @@ import { map } from 'rxjs/operators';
 import { UserService } from '../../../../../@core/services/user.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
+import {
+  WorkOrderUserRevokeTicketComponent
+} from '../work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -161,6 +164,13 @@ export class WorkOrderDataTableComponent implements OnInit {
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.TAG_GROUP });
+        break;
+      case WorkOrderKeyEnum.REVOKE_USER_PERMISSION:
+        dialogDate['content'] = WorkOrderUserRevokeTicketComponent;
+        dialogDate['title'] = 'User Revoke';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket, { businessType: BusinessTypeEnum.USER });
         break;
       default:
         this.toastUtil.onErrorToast('nonsupport workOrder');

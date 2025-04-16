@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ApplicationVO } from '../../../../@core/data/application';
 import { KubernetesNodeDetailsVO, KubernetesNodeVO } from '../../../../@core/data/kubernetes';
 import { finalize, Subscription, timer } from 'rxjs';
 import { WebSocketApiService } from '../../../../@core/services/ws.api.service';
@@ -86,7 +85,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   }
 
   wsOnInit() {
-    this.ws = this.wsApiService.createWsClient('/application/kubernetes/details');
+    // this.ws = this.wsApiService.createWsClient('/eds/kubernetes/node');
   }
 
   onWsHeartbeat() {
@@ -137,7 +136,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   // wsOnSubSend() {
   //   if (this.ws?.readyState === WebSocket.OPEN) {
   //     const param: EdsKubernetesNodeDetailsRequest = {
-  //       topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS,
+  //       topic: WsMessageTopicEnum.EDS_KUBERNETES_NODE_DETAILS,
   //       action: WsMessageActionEnum.SUBSCRIPTION,
   //       instanceName: this.queryParam.instanceName,
   //     };
@@ -157,8 +156,8 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   //
   // wsOnMessage() {
   //   this.ws.onmessage = (event) => {
-  //     const msg: MessageResponse<KubernetesDetailsVO> = JSON.parse(event.data);
-  //     if (msg.topic === WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS) {
+  //     const msg: MessageResponse<KubernetesNodeDetailsVO> = JSON.parse(event.data);
+  //     if (msg.topic === WsMessageTopicEnum.EDS_KUBERNETES_NODE_DETAILS) {
   //       if (msg.body.success) {
   //           this.kubernetesNodeDetailsVO = msg.body;
   //       } else {

@@ -9,10 +9,8 @@ import {
 } from '../../../../../@core/data/ssh-session';
 import { onFetchData } from '../../../../../@shared/utils/data-table.utli';
 import { WebSocketApiService, WsMessageTopicEnum } from '../../../../../@core/services/ws.api.service';
-import { Subscription, timer } from 'rxjs';
 import { XtermLogsComponent } from '../../../../../@shared/components/common/xterm-logs/xterm-logs.component';
 import { ToastUtil } from '../../../../../@shared/utils/toast.util';
-import { WS_INIT_INTERVAL } from '../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-ssh-session-instance-command',
@@ -33,7 +31,6 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   @Input() data: any;
   table: Table<SshCommandVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   ws: WebSocket;
-  timerRequest: Subscription;
 
   constructor(private sessionService: SshSessionService,
               private wsApiService: WebSocketApiService,
@@ -61,12 +58,10 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
     this.instanceId = this.data['instanceId'];
     this.sessionId = this.data['sessionId'];
     this.fetchData();
-    this.initInterval();
   }
 
   ngOnDestroy(): void {
     try {
-      this.timerRequest.unsubscribe();
       this.ws.close();
       this.ws = null;
     } catch (error) {
@@ -81,19 +76,6 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
-  }
-
-  initInterval() {
-    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState !== WebSocket.OPEN
-          && this.ws?.readyState !== WebSocket.CONNECTING
-          && this.ws?.readyState !== WebSocket.CLOSING) {
-          this.wsOnInit();
-          this.wsOnOpen();
-          this.wsOnMessage();
-        }
-      });
   }
 
   wsOnOpen() {

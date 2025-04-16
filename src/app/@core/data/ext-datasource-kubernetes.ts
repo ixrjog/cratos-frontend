@@ -9,7 +9,7 @@ export interface QueryKubernetesNodeDetails {
 export interface EdsKubernetesNodeDetailsRequest {
   topic: string;
   action: string;
-  instanceName: string;
+  instanceName?: string;
 }
 
 export abstract class EdsKubernetesData {

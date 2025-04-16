@@ -8,7 +8,11 @@
 ></app-work-order-base-ticket>
 
 <ng-template #editTicketEntryTemplate>
-  <form dForm ngForm [layout]="FormLayout.Vertical">
+  <h3 *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    this work order only support one entry , you should remove entry first
+  </h3>
+
+  <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
       <d-form-label [required]="true">User</d-form-label>
       <d-form-control>
@@ -29,11 +33,59 @@
       </d-form-control>
     </d-form-item>
     <d-form-operation>
-      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+      <d-button
+        bsStyle="primary"
+        (click)="onRowAdd()"
+      >Add Entry
+      </d-button>
     </d-form-operation>
   </form>
 </ng-template>
 
 <ng-template #showTicketEntryTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    <d-card *ngFor="let entry of ticketDetails.entries"
+            style="padding: 5px; display: inline-block; margin: 0 10px 10px 0;">
+      <d-card-content>
+        <d-tag
+          style="margin-right: 8px"
+          [tag]="entry.subType === null ? entry.businessType : entry.subType"
+          [labelStyle]="'blue-w98'"
+        >
+        </d-tag>
+
+        <d-tag
+          *ngIf="entry.instance !== null && entry.instance !== undefined"
+          style="margin-right: 8px"
+          [tag]="entry.instance.instanceName"
+          [labelStyle]="'green-w98'"
+        >
+        </d-tag>
+
+        <d-tag
+          style="margin-right: 8px"
+          [tag]="entry.name"
+          [labelStyle]="'green-w98'"
+        >
+        </d-tag>
+
+        <d-tag
+          style="vertical-align: bottom"
+          *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+          && entry.success === false"
+          [labelStyle]="'red-w98'"
+          [customViewTemplate]="failResultTag"
+          [tag]="entry"
+        ></d-tag>
+        <ng-template #failResultTag let-tag="tag">
+          <div class="fail-result">
+            <span [title]="tag.result">{{ tag.result }}</span>
+          </div>
+        </ng-template>
+      </d-card-content>
+    </d-card>
+    <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+    <d-button bsStyle="danger" (click)="onRowRemove()">Remove Entry</d-button>
+  </div>
 
 </ng-template>

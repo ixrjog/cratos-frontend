@@ -2,6 +2,7 @@ import { WorkflowModelVO, WorkOrderVO } from './work-order';
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { UserVO } from './user';
 import { Observable } from 'rxjs';
+import { EdsInstanceVO } from './ext-datasource';
 
 export interface WorkOrderTicketDetailsVO {
   workOrder: WorkOrderVO;
@@ -52,6 +53,7 @@ export interface WorkOrderTicketEntryVO<T> extends ValidVO {
   name: string;
   displayName: string;
   instanceId: number;
+  instance: EdsInstanceVO;
   businessType: number;
   subType: string;
   businessId: number;

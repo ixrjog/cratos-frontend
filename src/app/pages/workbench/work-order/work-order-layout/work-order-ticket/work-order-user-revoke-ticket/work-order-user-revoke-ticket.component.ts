@@ -4,13 +4,10 @@ import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../..
 import { UserPageQuery, UserVO } from '../../../../../../@core/data/user';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
-import { EnvService } from '../../../../../../@core/services/env.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { map } from 'rxjs/operators';
 import { FormLayout } from 'ng-devui/form';
-import { WorkOrderStatus } from 'src/app/@core/data/work-order';
 import { UserService } from '../../../../../../@core/services/user.service';
-import { UserBusinessPermission } from '../../../../../../@core/data/user-permission';
 
 @Component({
   selector: 'app-work-order-user-revoke-ticket',
@@ -39,7 +36,6 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
   constructor(
     private userService: UserService,
     private workOrderTicketEntryService: WorkOrderTicketEntryService,
-    private envService: EnvService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil) {
   }
@@ -72,13 +68,13 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
     });
   }
 
-  onRowRemove() {
+  onRowRemove(rowItem: WorkOrderTicketEntryVO<any>) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.workOrderTicketEntryService.deleteTicketEntryById({ id: this.ticketDetails.entries[0].id })
+      this.workOrderTicketEntryService.deleteTicketEntryById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.onFetchData();
@@ -98,6 +94,5 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
     this.data.hideDialog();
   }
 
-  protected readonly WorkOrderStatus = WorkOrderStatus;
   protected readonly JSON = JSON;
 }

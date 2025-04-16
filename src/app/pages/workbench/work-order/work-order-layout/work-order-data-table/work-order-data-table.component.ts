@@ -83,6 +83,7 @@ export class WorkOrderDataTableComponent implements OnInit {
     editorData: {
       ...DIALOG_DATA.editorData,
       width: '70%',
+      maxHeight: '1000px',
     },
   };
 

@@ -44,48 +44,30 @@
 
 <ng-template #showTicketEntryTemplate>
   <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
-    <d-card *ngFor="let entry of ticketDetails.entries"
-            style="padding: 5px; display: inline-block; margin: 0 10px 10px 0;">
-      <d-card-content>
-        <d-tag
-          style="margin-right: 8px"
-          [tag]="entry.subType === null ? entry.businessType : entry.subType"
-          [labelStyle]="'blue-w98'"
-        >
-        </d-tag>
-
-        <d-tag
-          *ngIf="entry.instance !== null && entry.instance !== undefined"
-          style="margin-right: 8px"
-          [tag]="entry.instance.instanceName"
-          [labelStyle]="'green-w98'"
-        >
-        </d-tag>
-
-        <d-tag
-          style="margin-right: 8px"
-          [tag]="entry.name"
-          [labelStyle]="'green-w98'"
-        >
-        </d-tag>
-
-        <d-tag
-          style="vertical-align: bottom"
-          *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
-          && entry.success === false"
-          [labelStyle]="'red-w98'"
-          [customViewTemplate]="failResultTag"
-          [tag]="entry"
-        ></d-tag>
-        <ng-template #failResultTag let-tag="tag">
-          <div class="fail-result">
-            <span [title]="tag.result">{{ tag.result }}</span>
-          </div>
-        </ng-template>
-      </d-card-content>
-    </d-card>
-    <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
-    <d-button bsStyle="danger" (click)="onRowRemove()">Remove Entry</d-button>
+    <d-data-table
+      [dataSource]="ticketDetails.entries"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="businessType" header="Business Type"></d-column>
+      <d-column field="subType" header="Sub Type"></d-column>
+      <d-column field="instance" header="Instance">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="name" header="Account"></d-column>
+      <d-column header="Actions" [width]="'80px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem" >
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
   </div>
 
 </ng-template>

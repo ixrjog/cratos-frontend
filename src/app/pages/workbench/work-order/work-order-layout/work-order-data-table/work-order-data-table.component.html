@@ -145,7 +145,7 @@
               *ngIf="(rowItem['ticketState']!==WorkOrderStatus.NEW
                && rowItem['ticketState']!==WorkOrderStatus.IN_APPROVAL)
                || (rowItem['ticketState']===WorkOrderStatus.IN_APPROVAL
-                && rowItem.applicantInfo?.applicant === true)"
+               && rowItem.approvalInfo?.currentApprover !== true)"
               [icon]="'icon-go-document'"
               [operable]="true"
               (click)="onRowEdit(rowItem)"

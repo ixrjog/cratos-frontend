@@ -142,8 +142,10 @@
               (click)="onRowEdit(rowItem)"
             ></d-icon>
             <d-icon
-              *ngIf="rowItem['ticketState']!==WorkOrderStatus.NEW
-               && rowItem['ticketState']!==WorkOrderStatus.IN_APPROVAL"
+              *ngIf="(rowItem['ticketState']!==WorkOrderStatus.NEW
+               && rowItem['ticketState']!==WorkOrderStatus.IN_APPROVAL)
+               || (rowItem['ticketState']===WorkOrderStatus.IN_APPROVAL
+                && rowItem.applicantInfo?.applicant === true)"
               [icon]="'icon-go-document'"
               [operable]="true"
               (click)="onRowEdit(rowItem)"

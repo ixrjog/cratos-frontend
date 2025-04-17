@@ -24,8 +24,9 @@ import { UserService } from '../../../../../@core/services/user.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 import {
-  WorkOrderUserRevokeTicketComponent
+  WorkOrderUserRevokeTicketComponent,
 } from '../work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -69,13 +70,19 @@ export class WorkOrderDataTableComponent implements OnInit {
   ];
 
 
-  constructor(private userService: UserService,
+  constructor(private activatedRoute: ActivatedRoute,
+              private userService: UserService,
               private workOrderTicketService: WorkOrderTicketService,
               private dialogUtil: DialogUtil,
               private toastUtil: ToastUtil) {
   }
 
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(param => {
+      if (param['ticketNo'] !== undefined) {
+        this.queryParam.ticketNo = param['ticketNo'];
+      }
+    });
     this.fetchData();
   }
 

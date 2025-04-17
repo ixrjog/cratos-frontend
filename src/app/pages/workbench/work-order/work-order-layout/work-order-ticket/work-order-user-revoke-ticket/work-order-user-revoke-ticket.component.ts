@@ -21,7 +21,6 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
   businessType: string;
-
   user: UserVO;
 
   dialogDate = {

@@ -51,7 +51,12 @@ export class HeaderOperationComponent implements OnInit {
     this.i18n.toggleLang(this.language);
     this.translate.use(this.language);
     this.userService.updateMyLanguage({ lang: language })
-      .subscribe();
+      .subscribe(() => {
+        const currentUrl = this.route.url;
+        this.route.navigateByUrl(`client`, { skipLocationChange: true }).then(() => {
+          this.route.navigateByUrl(currentUrl);
+        });
+      });
   }
 
   handleUserOps(operation: string) {

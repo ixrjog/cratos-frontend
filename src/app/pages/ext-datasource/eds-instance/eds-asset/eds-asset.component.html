@@ -12,10 +12,9 @@
 
 <ng-template #edsInstanceAsset>
   <h2 style="margin: 6px 0">
-    <a
-      class="devui-dropdown-item"
-      [routerLink]="['/pages', 'eds', 'instance']"
-    ><i class="icon icon-module" style="margin-right: 5px"></i>{{ edsInstance?.instanceName }}</a>
+    <a class="devui-link-light" [routerLink]="['/pages', 'eds', 'instance']">
+      <i class="icon icon-module" style="margin-right: 5px"></i>{{ edsInstance?.instanceName }}
+    </a>
   </h2>
   <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
     <d-tab *ngFor="let item of instanceAssetTypes" [id]="item.type">

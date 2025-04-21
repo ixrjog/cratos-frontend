@@ -58,12 +58,19 @@
         </d-cell>
       </d-column>
       <d-column field="name" header="Account"></d-column>
-      <d-column header="Actions" [width]="'80px'">
+      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem" >
             <d-icon-group>
               <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
             </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Result" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem.result | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>

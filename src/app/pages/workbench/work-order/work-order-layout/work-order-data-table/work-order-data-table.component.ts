@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WorkOrderKeyEnum } from '../../../../../@core/services/work-order.service';
-import { WorkOrderStatus, WorkOrderVO } from '../../../../../@core/data/work-order';
+import { WorkOrderKeyEnum, WorkOrderService } from '../../../../../@core/services/work-order.service';
+import { WorkOrderPageQuery, WorkOrderStatus, WorkOrderVO } from '../../../../../@core/data/work-order';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { WorkOrderTicketService } from '../../../../../@core/services/work-order-ticket.service';
@@ -72,6 +72,7 @@ export class WorkOrderDataTableComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private userService: UserService,
+              private workOrderService: WorkOrderService,
               private workOrderTicketService: WorkOrderTicketService,
               private dialogUtil: DialogUtil,
               private toastUtil: ToastUtil) {
@@ -122,6 +123,22 @@ export class WorkOrderDataTableComponent implements OnInit {
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
+  }
+
+  onSearchWorkOrder = (term: string) => {
+    const param: WorkOrderPageQuery = {
+      length: 10, page: 1, queryName: term, groupId: null,
+    };
+    return this.workOrderService.queryWorkOrderPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((workOrder, index) => ({ id: index, option: workOrder })),
+        ),
+      );
+  };
+
+  onWorkOrderChange(workOrder: WorkOrderVO) {
+    this.workOrder = workOrder;
   }
 
   onSearchUser = (term: string) => {

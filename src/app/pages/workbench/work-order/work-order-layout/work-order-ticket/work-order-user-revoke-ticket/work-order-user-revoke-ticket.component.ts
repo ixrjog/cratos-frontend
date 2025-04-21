@@ -8,6 +8,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
 import { map } from 'rxjs/operators';
 import { FormLayout } from 'ng-devui/form';
 import { UserService } from '../../../../../../@core/services/user.service';
+import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 
 @Component({
   selector: 'app-work-order-user-revoke-ticket',
@@ -94,4 +95,5 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  protected readonly WorkOrderStatus = WorkOrderStatus;
 }

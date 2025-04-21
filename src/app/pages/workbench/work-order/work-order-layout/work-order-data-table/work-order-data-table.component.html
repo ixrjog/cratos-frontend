@@ -10,6 +10,19 @@
   </d-search>
   <d-select
     class="select"
+    style="width: 250px;max-width: 250px"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [(ngModel)]="workOrder"
+    [searchFn]="onSearchWorkOrder"
+    [isSearch]="true"
+    placeholder="Select work order"
+    (valueChange)="onWorkOrderChange($event)"
+    [allowClear]="true"
+  >
+  </d-select>
+  <d-select
+    class="select"
     [filterKey]="'username'"
     [appendToBody]="true"
     [(ngModel)]="user"

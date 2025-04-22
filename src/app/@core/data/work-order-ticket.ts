@@ -132,4 +132,7 @@ export abstract class WorkOrderTicketData {
   abstract queryTicketPage(param: TicketPageQuery): Observable<DataTable<WorkOrderTicketVO>>;
 
   abstract deleteTicketById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract doNextStateOfTicket(param: { ticketNo: string }): Observable<HttpResult<WorkOrderTicketDetailsVO>>;
+
 }

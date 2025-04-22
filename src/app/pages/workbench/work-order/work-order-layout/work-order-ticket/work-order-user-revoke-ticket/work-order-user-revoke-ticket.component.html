@@ -67,7 +67,11 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Result" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED">
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem.result | dSafeNullPipe }}</span>

@@ -141,13 +141,6 @@ export class WorkOrderTicketManagementDataTableComponent {
     this.queryParam.username = user?.username;
   }
 
-  onRowNew(workOrder: WorkOrderVO) {
-    this.workOrderTicketService.createTicket({ workOrderKey: workOrder.workOrderKey })
-      .subscribe(({ body }) => {
-        this.onRowDialog(workOrder.workOrderKey, body);
-      });
-  }
-
   onRowEdit(rowItem: WorkOrderTicketVO) {
     this.workOrderTicketService.getTicket({ ticketNo: rowItem.ticketNo })
       .subscribe(({ body }) => {
@@ -155,7 +148,21 @@ export class WorkOrderTicketManagementDataTableComponent {
       });
   }
 
-  onRowDelete(rowItem: TagVO) {
+  onRowNext(rowItem: WorkOrderTicketVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.update,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.workOrderTicketService.doNextStateOfTicket({ ticketNo: rowItem.ticketNo })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+          this.fetchData();
+        });
+    });
+  }
+
+  onRowDelete(rowItem: WorkOrderTicketVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,

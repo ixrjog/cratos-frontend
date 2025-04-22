@@ -48,6 +48,16 @@
     </d-column>
     <d-column field="name" header="Name"></d-column>
     <d-column field="workOrderKey" header="Work Order Key"></d-column>
+    <d-column field="color" header="Color">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span dClipboard [content]="cellItem">
+            <input type="color" [value]="cellItem" disabled="true" />
+            {{ cellItem }}
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="comment" header="Comment"></d-column>
     <d-column header="Actions" [width]="'120px'">
       <d-cell>

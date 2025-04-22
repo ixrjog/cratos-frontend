@@ -29,6 +29,7 @@ export class WorkOrderGroupManagementDataTableComponent implements OnInit {
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
+      width: '50%',
       content: WorkOrderGroupManagementEditorComponent,
     },
   };

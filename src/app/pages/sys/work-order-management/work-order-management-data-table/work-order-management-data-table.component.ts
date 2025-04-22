@@ -38,6 +38,7 @@ export class WorkOrderManagementDataTableComponent {
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
+      width: '50%',
       content: WorkOrderManagementEditorComponent,
     },
   };
@@ -76,7 +77,6 @@ export class WorkOrderManagementDataTableComponent {
     this.table.pager.pageSize = pageSize;
     this.fetchData();
   }
-
 
   onRowEdit(rowItem: WorkOrderGroupVO) {
     const dialogDate = {

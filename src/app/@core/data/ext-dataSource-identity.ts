@@ -70,6 +70,9 @@ export interface EdsDingtalkAccountVO {
   instance: EdsInstanceVO;
   user: UserVO;
   account: EdsAssetVO;
+  email: string;
+  mobile: string;
+  avatar: string;
 }
 
 export interface EdsGitLabIdentityDetailsVO {

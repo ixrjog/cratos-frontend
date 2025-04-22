@@ -7,15 +7,29 @@
 
       <div class="card-content">
         <span class="name">Username</span>
-        <span class="value" dClipboard [content]="identity.account.name">
-          {{ identity.account.name }}
+        <span class="value" dClipboard [content]="identity.username">
+          {{ identity.username }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Mobile</span>
+        <span class="value" dClipboard [content]="identity.mobile">
+          {{ identity.mobile | dSafeNullPipe }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Email</span>
+        <span class="value" dClipboard [content]="identity.email">
+          {{ identity.email | dSafeNullPipe }}
         </span>
       </div>
 
       <div class="card-content">
         <span class="name">Description</span>
         <span class="value">
-          {{ identity.account.description }}
+          {{ identity.account.description | dSafeNullPipe }}
         </span>
       </div>
 

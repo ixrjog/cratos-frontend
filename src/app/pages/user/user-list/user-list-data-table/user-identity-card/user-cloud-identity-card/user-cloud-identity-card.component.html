@@ -15,6 +15,12 @@
       <div class="card-content">
         <span class="name">Username</span>
         <span class="value" dClipboard [content]="identity.accountLogin.loginUsername">
+          <i
+            *ngIf="identity.loginProfile?.enabled === false"
+            class="fa-solid fa-ban"
+            style="color: #f66f6a;margin-left: 5px"
+          ></i>
+
           {{ identity.accountLogin.loginUsername }}
         </span>
       </div>

@@ -20,6 +20,9 @@ export interface EdsCloudAccountVO {
   accessKeys: {
     accessKeyId: string
   }[];
+  loginProfile: {
+    enabled: boolean
+  };
 }
 
 export interface AccountLoginDetailsVO {

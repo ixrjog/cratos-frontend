@@ -86,6 +86,8 @@ export abstract class CommandData {
 
   abstract doCommandExec(param: DoCommandExec): Observable<HttpResult<Boolean>>;
 
+  abstract adminDoCommandExec(param: DoCommandExec): Observable<HttpResult<Boolean>>;
+
   abstract queryCommandExecEdsInstancePage(param: { queryName: string }): Observable<DataTable<EdsInstanceVO>>;
 
   abstract queryCommandExecEdsInstanceNamespace(param: { instanceId: number }): Observable<HttpResult<Array<string>>>;

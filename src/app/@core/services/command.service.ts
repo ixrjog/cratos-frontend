@@ -42,6 +42,10 @@ export class CommandService extends CommandData {
     return this.apiService.post(this.baseUrl, '/do', param);
   }
 
+  adminDoCommandExec(param: DoCommandExec): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/admin/do', param);
+  }
+
   queryCommandExecEdsInstancePage(param: { queryName: string }): Observable<DataTable<EdsInstanceVO>> {
     return this.apiService.post(this.baseUrl, '/instance/page/query', param);
   }

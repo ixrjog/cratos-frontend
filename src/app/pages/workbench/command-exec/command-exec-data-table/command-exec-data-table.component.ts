@@ -180,6 +180,20 @@ export class CommandExecDataTableComponent implements OnInit {
     });
   }
 
+  onRowAdminDo(rowItem: CommandExecVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.exec,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.commandService.adminDoCommandExec({commandExecId: rowItem.id, maxWaitingTime: 10})
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.OPERATION);
+          this.fetchData();
+        });
+    });
+  }
+
   onBatchDelete() {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,

@@ -15,7 +15,7 @@ import {
 } from '../../../../../../../../@core/data/kubernetes-resource';
 import { SessionOutput } from '../../../../../../../../@core/data/ssh-terminal';
 import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
-import { WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
+import { WS_HEART_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
 
 @Component({
   selector: 'app-kubernetes-pod-logs',
@@ -36,7 +36,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
   closeHandler: Function;
 
   ws: WebSocket;
-  timerRequest: Subscription;
+  wsHeartbeatTimerRequest: Subscription;
 
   constructor(private wsApiService: WebSocketApiService,
               private uuidUtil: UuidUtil) {
@@ -48,6 +48,14 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
   }
 
+  onWsHeartbeat() {
+    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
+      .subscribe(num => {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+          this.wsApiService.onPing(this.ws);
+        }
+      });
+  }
 
   ngOnInit(): void {
     this.closeHandler = this.data['closeHandler'];
@@ -58,24 +66,11 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
     this.wsOnInit();
     this.wsOnOpen();
     this.wsOnMessage();
-    this.initInterval();
+    this.onWsHeartbeat();
   }
 
   ngOnDestroy(): void {
    this.onDestroy()
-  }
-
-  initInterval() {
-    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState !== WebSocket.OPEN
-          && this.ws?.readyState !== WebSocket.CONNECTING
-          && this.ws?.readyState !== WebSocket.CLOSING) {
-          this.wsOnInit();
-          this.wsOnOpen();
-          this.wsOnMessage();
-        }
-      });
   }
 
   wsOnOpen() {
@@ -128,9 +123,7 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
 
   onDestroy(): void {
     try {
-      if (this.timerRequest) {
-        this.timerRequest.unsubscribe();
-      }
+      this.wsHeartbeatTimerRequest.unsubscribe();
       this.ws.close();
       this.ws = null;
     } catch (error) {

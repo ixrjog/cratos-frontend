@@ -8,7 +8,7 @@ import {
   WsMessageTopicEnum,
 } from '../../../../../../../../@core/services/ws.api.service';
 import { UuidUtil } from '../../../../../../../../@shared/utils/uuid.util';
-import { WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
+import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../../../../../@shared/constant/ws.constant';
 import {
   ApplicationKubernetesDeploymentRequest,
   ApplicationKubernetesDetailsRequest,
@@ -41,7 +41,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   closeHandler: Function;
 
   ws: WebSocket;
-  timerRequest: Subscription;
+  wsHeartbeatTimerRequest: Subscription;
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
@@ -60,6 +60,15 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
   }
 
+  onWsHeartbeat() {
+    this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
+      .subscribe(num => {
+        if (this.ws?.readyState === WebSocket.OPEN) {
+          this.wsApiService.onPing(this.ws);
+        }
+      });
+  }
+
   ngAfterViewInit(): void {
     this.terminal.open(document.getElementById('kubernetesPodExec'));
   }
@@ -73,24 +82,12 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.wsOnInit();
     this.wsOnOpen();
     this.wsOnMessage();
-    this.initInterval();
+    this.onWsHeartbeat();
+
   }
 
   ngOnDestroy(): void {
     this.onDestroy()
-  }
-
-  initInterval() {
-    this.timerRequest = timer(1000, WS_INIT_INTERVAL)
-      .subscribe(num => {
-        if (this.ws?.readyState !== WebSocket.OPEN
-          && this.ws?.readyState !== WebSocket.CONNECTING
-          && this.ws?.readyState !== WebSocket.CLOSING) {
-          this.wsOnInit();
-          this.wsOnOpen();
-          this.wsOnMessage();
-        }
-      });
   }
 
   wsOnOpen() {
@@ -236,9 +233,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       if (this.terminal) {
         this.terminal.dispose();
       }
-      if (this.timerRequest) {
-        this.timerRequest.unsubscribe();
-      }
+      this.wsHeartbeatTimerRequest.unsubscribe();
       this.ws.close(1000, 'user exit');
       this.ws = null;
     } catch (error) {

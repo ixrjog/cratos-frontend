@@ -52,7 +52,7 @@
             style="margin-top: 10px"
             [type]="'info'">
             <div style="font-size: 1.2em">DNS Record</div>
-            <div dClipboard [content]="dnsRecord">{{ dnsRecord }}</div>
+            <div dClipboard [content]="dnsRecord" (click)="onClickRecord(dnsRecord)">{{ dnsRecord }}</div>
           </d-alert>
         </div>
       </d-form-control>

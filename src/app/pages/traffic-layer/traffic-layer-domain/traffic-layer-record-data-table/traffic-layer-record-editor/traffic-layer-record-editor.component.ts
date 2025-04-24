@@ -117,5 +117,9 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
       );
   }
 
+  onClickRecord(record: string) {
+    this.formData.originServer = record;
+  }
+
   protected readonly JSON = JSON;
 }

@@ -5,6 +5,8 @@ import {
   KubernetesDeploymentVO,
 } from '../../../../../../@core/data/kubernetes';
 import { ApplicationVO } from '../../../../../../@core/data/application';
+import { ApplicationResourceService } from '../../../../../../@core/services/application-resource.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -16,8 +18,10 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
   @Input() application: ApplicationVO;
   @Input() accessControl: AccessControlVO;
-
   kubernetesResources: any;
+
+  constructor(private applicationResourceService: ApplicationResourceService) {
+  }
 
   ngOnInit(): void {
     if (!!localStorage.getItem('kubernetes_resources')) {
@@ -78,4 +82,16 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
     }
     return 'no request';
   }
+
+  onRowQueryImageVersion(image: string) {
+    this.kubernetesDeployment['$container']['$versionLoading'] = true;
+    this.applicationResourceService.queryApplicationResourceKubernetesDeploymentImageVersion({ image: image })
+      .pipe(
+        finalize(() => this.kubernetesDeployment['$container']['$versionLoading'] = false),
+      )
+      .subscribe(({ body }) => {
+        this.kubernetesDeployment['$container']['$imageVersion'] = body;
+      });
+  }
+
 }

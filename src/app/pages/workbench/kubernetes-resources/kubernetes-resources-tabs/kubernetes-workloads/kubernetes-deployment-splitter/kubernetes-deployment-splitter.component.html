@@ -72,11 +72,26 @@
             <div>
               <span class="name">Image</span>
               <span class="value inline-value"
-                    [title]="kubernetesDeployment['$container'].image"
+                    [title]="kubernetesDeployment['$container']?.image"
                     dClipboard [content]="kubernetesDeployment['$container'].image"
               >
                 <span style="color: var(--devui-brand)">&#123;CR&#125;</span>
                 {{ kubernetesDeployment['$container'].image | shortContainerImage | dSafeNullPipe }}</span>
+            </div>
+
+            <div>
+              <span class="name">Version</span>
+              <span class="value inline-value">
+                <span
+                  dLoading
+                  [loading]="this.kubernetesDeployment['$container']['$versionLoading']"
+                  (click)="onRowQueryImageVersion(kubernetesDeployment['$container'].image)">
+                  <i class="fa-solid fa-arrows-rotate"></i>&nbsp;
+                  <span
+                    [title]="kubernetesDeployment['$container']['$imageVersion']?.versionName"
+                  >{{ kubernetesDeployment['$container']['$imageVersion']?.versionName | dSafeNullPipe }}</span>
+                </span>
+              </span>
             </div>
 
             <div>

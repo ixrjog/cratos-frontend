@@ -5,6 +5,7 @@ import { HttpResult, MessageResponse, OptionsVO } from '../data/base-data';
 import { KubernetesDetailsVO } from '../data/kubernetes';
 import {
   ApplicationResourceData,
+  KubernetesDeploymentImageVersion,
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions,
 } from '../data/application-resource';
@@ -24,6 +25,12 @@ export class ApplicationResourceService extends ApplicationResourceData {
 
   queryApplicationResourceKubernetesDeploymentOptions(param: QueryKubernetesDeploymentOptions): Observable<HttpResult<OptionsVO>> {
     return this.apiService.post(this.baseUrl, '/kubernetes/deployment/options', param);
+  }
+
+  queryApplicationResourceKubernetesDeploymentImageVersion(param: {
+    image: string
+  }): Observable<HttpResult<KubernetesDeploymentImageVersion>> {
+    return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/image/version/query', param);
   }
 
 }

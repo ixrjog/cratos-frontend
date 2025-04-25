@@ -61,7 +61,6 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
   ngAfterViewInit(): void {
     this.activatedRoute.queryParams.subscribe(param => {
-      console.log(param)
       if (param['applicationName'] !== undefined) {
         this.queryParam.applicationName  = param['applicationName']
         this.applicationService.getApplicationByName({name: this.queryParam.applicationName})

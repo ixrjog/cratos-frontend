@@ -233,6 +233,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     } catch (error) {
     }
     localStorage.removeItem('kubernetes_resources');
+    localStorage.removeItem('kubernetes_resources_version');
   }
 
   initInterval() {

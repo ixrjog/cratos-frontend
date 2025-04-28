@@ -19,11 +19,18 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   @Input() application: ApplicationVO;
   @Input() accessControl: AccessControlVO;
   kubernetesResources: any;
+  imageVersion: any;
 
   constructor(private applicationResourceService: ApplicationResourceService) {
   }
 
   ngOnInit(): void {
+    if (!!localStorage.getItem('kubernetes_resources_version')) {
+      this.imageVersion = JSON.parse(localStorage.getItem('kubernetes_resources'));
+    } else {
+      this.imageVersion = {};
+    }
+
     if (!!localStorage.getItem('kubernetes_resources')) {
       this.kubernetesResources = JSON.parse(localStorage.getItem('kubernetes_resources'));
       this.kubernetesDeployment['$chosenItem'] = this.kubernetesResources[this.kubernetesDeployment.metadata.name];
@@ -44,6 +51,8 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       this.kubernetesDeployment['$containers'].push(container.name);
       this.kubernetesDeployment['$containerMap'].set(container.name, container);
       this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$chosenItem']);
+
+      this.getVersionByLocalStorage();
     });
   }
 
@@ -83,15 +92,36 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
     return 'no request';
   }
 
-  onRowQueryImageVersion(image: string) {
-    this.kubernetesDeployment['$container']['$versionLoading'] = true;
-    this.applicationResourceService.queryApplicationResourceKubernetesDeploymentImageVersion({ image: image })
-      .pipe(
-        finalize(() => this.kubernetesDeployment['$container']['$versionLoading'] = false),
-      )
-      .subscribe(({ body }) => {
-        this.kubernetesDeployment['$container']['$imageVersion'] = body;
-      });
+  onRowQueryImageVersion() {
+    if (this.kubernetesDeployment['$container'] !== undefined && this.kubernetesDeployment['$container'].image !== undefined) {
+      const image = this.kubernetesDeployment['$container'].image;
+      this.kubernetesDeployment['$container']['$versionLoading'] = true;
+      this.applicationResourceService.queryApplicationResourceKubernetesDeploymentImageVersion({ image: image })
+        .pipe(
+          finalize(() => this.kubernetesDeployment['$container']['$versionLoading'] = false),
+        )
+        .subscribe(({ body }) => {
+          this.kubernetesDeployment['$container']['$imageVersion'] = body;
+          this.imageVersion[this.kubernetesDeployment['$container'].image] = body;
+          this.setVersionItem();
+        });
+    }
+  }
+
+  setVersionItem() {
+    try {
+      localStorage.setItem('kubernetes_resources_version', JSON.stringify(this.imageVersion));
+    } catch (error) {
+    }
+  }
+
+  getVersionByLocalStorage() {
+    if (!!localStorage.getItem('kubernetes_resources_version')) {
+      const versionMap = JSON.parse(localStorage.getItem('kubernetes_resources_version'));
+      if (this.kubernetesDeployment['$container'] !== undefined && versionMap[this.kubernetesDeployment['$container'].image] !== undefined) {
+        this.kubernetesDeployment['$container']['$imageVersion'] = versionMap[this.kubernetesDeployment['$container'].image];
+      }
+    }
   }
 
 }

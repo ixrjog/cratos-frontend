@@ -1,0 +1,50 @@
+<d-card style="padding: 8px;width: 500px" *ngIf="show">
+  <d-card-header>
+    <d-card-title>{{ user.name }}</d-card-title>
+  </d-card-header>
+  <d-card-content>
+    <div>
+
+      <div class="card-content">
+        <span class="name">Username</span>
+        <span class="value" dClipboard [content]="user.username">
+          <i
+            *ngIf="user.valid === false"
+            class="fa-solid fa-ban"
+            style="color: #f66f6a;margin-left: 5px"
+          ></i>
+          {{ user.username }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">DisplayName</span>
+        <span class="value" dClipboard [content]="user.displayName">
+          {{ user.displayName | dSafeNullPipe }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Email</span>
+        <span class="value" dClipboard [content]="user.email">
+          {{ user.email | dSafeNullPipe }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Phone</span>
+        <span class="value" dClipboard [content]="user.mobilePhone">
+          {{ user.mobilePhone | dSafeNullPipe }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Description</span>
+        <span class="value">
+          {{ user.comment | dSafeNullPipe }}
+        </span>
+      </div>
+
+    </div>
+  </d-card-content>
+</d-card>

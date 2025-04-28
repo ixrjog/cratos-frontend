@@ -48,6 +48,7 @@ import {
 } from './components/common/business-tag/business-tag-batch-editor/business-tag-batch-editor.component';
 import { I18nTranPipe } from './pipe/i18n-tran.pipe';
 import { UserTagComponent } from './components/common/tag/user-tag/user-tag.component';
+import { UserInfoCardComponent } from './components/common/user-info-card/user-info-card.component';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -111,6 +112,7 @@ const CRATOS_UTILS = [
     BusinessPermissionsComponent,
     BusinessTagBatchEditorComponent,
     UserTagComponent,
+    UserInfoCardComponent,
   ],
   imports: [
     CommonModule,
@@ -146,6 +148,7 @@ const CRATOS_UTILS = [
     BusinessCascaderComponent,
     BusinessPermissionsComponent,
     UserTagComponent,
+    UserInfoCardComponent,
   ],
 })
 

@@ -85,7 +85,7 @@
                 <span
                   dLoading
                   [loading]="this.kubernetesDeployment['$container']['$versionLoading']"
-                  (click)="onRowQueryImageVersion(kubernetesDeployment['$container'].image)">
+                  (click)="onRowQueryImageVersion()">
                   <i class="fa-solid fa-arrows-rotate"></i>&nbsp;
                   <span
                     [title]="kubernetesDeployment['$container']['$imageVersion']?.versionName"

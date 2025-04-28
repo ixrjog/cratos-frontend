@@ -14,7 +14,7 @@ export interface QueryKubernetesDeploymentOptions {
 }
 
 export interface KubernetesDeploymentImageVersion {
-  isExist: boolean;
+  exist: boolean;
   image: string;
   versionName: string;
   versionDesc: string;

@@ -7,7 +7,21 @@
     <div [style.border-color]="data.color" class="approve-node">
       <div style="padding-bottom: 8px; font-size: 14px; font-weight: bold">{{ data.nodeName }}</div>
       <div style="padding-bottom: 8px" *ngIf="data.username">
-        <i class="fa-solid fa-circle-user"></i>
+
+        <d-icon
+          [icon]="'icon-identity-auth'"
+          dPopover
+          [position]="'left-top'"
+          [trigger]="'hover'"
+          [controlled]="true"
+          [mouseEnterDelay]="500"
+          [content]="userInfoCardTemplate"
+          [popoverStyle]="getPopoverStyle()"
+          style="vertical-align: middle"
+        ></d-icon>
+        <ng-template #userInfoCardTemplate>
+          <app-user-info-card [username]="data.username"></app-user-info-card>
+        </ng-template>
         &nbsp;{{ data.username }}&nbsp;
         <d-tag
           *ngIf="data.approvalStatus"
@@ -17,7 +31,7 @@
       </div>
       <div class="remark-content" style="padding-bottom: 8px" *ngIf="data.approveRemark">
         <span [title]="data.approveRemark">
-          <i class="fa-solid fa-comment-dots"></i>
+          <d-icon [icon]="'icon-comment'" style="vertical-align: middle"></d-icon>
           &nbsp;{{ data.approveRemark }}
         </span>
       </div>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
 import { APPROVAL_AGREE, APPROVAL_REJECT } from '../../../../../../../@shared/constant/approval.constant';
+import { getPopoverStyle } from '../../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-work-order-approval-process',
@@ -67,4 +68,5 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
   }
 
   protected readonly APPROVAL_AGREE = APPROVAL_AGREE;
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

@@ -80,6 +80,9 @@ import { WorkOrderBusinessPermissionTicketComponent } from './work-order/work-or
 import { MarkdownModule } from 'ngx-markdown';
 import { WorkOrderApprovalProcessComponent } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-approval-process/work-order-approval-process.component';
 import { WorkOrderUserRevokeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
+import { WorkOrderGitlabTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-ticket.component';
+import { WorkOrderGitlabGroupTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import { WorkOrderGitlabProjectTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
 
 @NgModule({
   declarations: [
@@ -116,6 +119,9 @@ import { WorkOrderUserRevokeTicketComponent } from './work-order/work-order-layo
     WorkOrderBusinessPermissionTicketComponent,
     WorkOrderApprovalProcessComponent,
     WorkOrderUserRevokeTicketComponent,
+    WorkOrderGitlabTicketComponent,
+    WorkOrderGitlabGroupTicketComponent,
+    WorkOrderGitlabProjectTicketComponent,
   ],
   imports: [
     CommonModule,

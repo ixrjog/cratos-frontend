@@ -27,6 +27,12 @@ import {
   WorkOrderUserRevokeTicketComponent,
 } from '../work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 import { ActivatedRoute } from '@angular/router';
+import {
+  WorkOrderGitlabProjectTicketComponent,
+} from '../work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
+import {
+  WorkOrderGitlabGroupTicketComponent,
+} from '../work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -195,7 +201,21 @@ export class WorkOrderDataTableComponent implements OnInit {
         dialogDate['title'] = 'User Permission Revoke';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
-        }, ticket, { businessType: BusinessTypeEnum.USER });
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.GITLAB_PROJECT_PERMISSION:
+        dialogDate['content'] = WorkOrderGitlabProjectTicketComponent;
+        dialogDate['title'] = 'GitLab Project Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.GITLAB_GROUP_PERMISSION:
+        dialogDate['content'] = WorkOrderGitlabGroupTicketComponent;
+        dialogDate['title'] = 'GitLab Group Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
         break;
       default:
         this.toastUtil.onErrorToast('nonsupport workOrder');

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  AddApplicationPermissionTicketEntry,
+  AddApplicationPermissionTicketEntry, AddGitLabPermissionTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   WorkOrderTicketEntryData,
 } from '../data/work-order-ticket-entry';
@@ -36,4 +36,13 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
   deleteTicketEntryById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/del/by/id', param);
   }
+
+  addGitLabProjectPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/gitlab/project/permission/add', param);
+  }
+
+  addGitLabGroupPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/gitlab/group/permission/add', param);
+  }
+
 }

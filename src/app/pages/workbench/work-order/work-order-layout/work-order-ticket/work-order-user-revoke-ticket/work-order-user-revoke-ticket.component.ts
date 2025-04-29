@@ -21,7 +21,6 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
   @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  businessType: string;
   user: UserVO;
 
   dialogDate = {
@@ -42,7 +41,6 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
 
   ngOnInit(): void {
     this.ticketDetails = this.data['formData'];
-    this.businessType = this.data['businessType'];
   }
 
   onSearchUser = (term: string) => {

@@ -1,0 +1,9 @@
+<app-work-order-gitlab-ticket
+  #workOrderGitlabPermissionTicket
+  [ticketDetails]="ticketDetails"
+  [assetType]="'GITLAB_PROJECT'"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+>
+</app-work-order-gitlab-ticket>

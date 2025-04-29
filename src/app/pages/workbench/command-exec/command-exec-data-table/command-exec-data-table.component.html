@@ -30,9 +30,22 @@
     <d-column field="username" header="Info">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-
           <div>
             <span>Applicant:&nbsp;</span>
+            <d-icon
+              [icon]="'icon-identity-auth'"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="userInfoCardTemplate"
+              [popoverStyle]="getPopoverStyle()"
+              style="vertical-align: middle;margin-right: 5px"
+            ></d-icon>
+            <ng-template #userInfoCardTemplate>
+              <app-user-info-card [username]="rowItem['username']"></app-user-info-card>
+            </ng-template>
             <span>{{ rowItem['username'] }}</span>
           </div>
 
@@ -41,10 +54,29 @@
             <span>{{ rowItem['applyRemark'] }}</span>
           </div>
 
+          <div>
+            <span>{{ rowItem['createTime'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
+            <strong>{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>
+          </div>
+
           <div class="cratos-divider" style="margin: 5px 0 5px 0"></div>
 
           <div>
             <span>Approver:&nbsp;</span>
+            <d-icon
+              [icon]="'icon-identity-auth'"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="userInfoCardTemplate"
+              [popoverStyle]="getPopoverStyle()"
+              style="vertical-align: middle;margin-right: 5px"
+            ></d-icon>
+            <ng-template #userInfoCardTemplate>
+              <app-user-info-card [username]="rowItem['approvedBy']"></app-user-info-card>
+            </ng-template>
             <span>{{ rowItem['approvedBy'] }}</span>
             <d-tag
               *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null"
@@ -134,14 +166,12 @@
         <ng-template let-rowItem="rowItem">
           <d-tag
             *ngIf="rowItem['completed']"
-            dPopover
             style="margin:0 5px 5px 0"
             [tag]="'completed'"
             [labelStyle]="'green-w98'"
           ></d-tag>
           <d-tag
             *ngIf="rowItem['success']"
-            dPopover
             style="margin:0 5px 5px 0"
             [tag]="'success'"
             [labelStyle]="'green-w98'"

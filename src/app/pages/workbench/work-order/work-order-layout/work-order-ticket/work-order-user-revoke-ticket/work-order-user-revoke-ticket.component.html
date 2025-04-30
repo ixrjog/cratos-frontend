@@ -74,7 +74,13 @@
       >
         <d-cell>
           <ng-template let-rowItem="rowItem">
-            <span>{{ rowItem.result | dSafeNullPipe }}</span>
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
           </ng-template>
         </d-cell>
       </d-column>

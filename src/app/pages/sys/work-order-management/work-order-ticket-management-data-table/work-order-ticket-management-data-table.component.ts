@@ -10,7 +10,6 @@ import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/util
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { map } from 'rxjs/operators';
-import { TagVO } from '../../../../@core/data/tag';
 import { WorkOrderKeyEnum, WorkOrderService } from '../../../../@core/services/work-order.service';
 import {
   WorkOrderApplicationTicketComponent,
@@ -21,14 +20,17 @@ import {
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
 import { getPopoverStyle } from 'src/app/@shared/utils/theme.util';
 import {
-  WorkOrderUserRevokeTicketComponent
+  WorkOrderUserRevokeTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 import {
-  WorkOrderGitlabProjectTicketComponent
+  WorkOrderGitlabProjectTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
 import {
-  WorkOrderGitlabGroupTicketComponent
+  WorkOrderGitlabGroupTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import {
+  WorkOrderElasticScalingTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -168,7 +170,7 @@ export class WorkOrderTicketManagementDataTableComponent {
     });
   }
 
-  onRowDelete(rowItem: WorkOrderTicketVO) {
+  onRowClose(rowItem: WorkOrderTicketVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.delete,
@@ -218,6 +220,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.GITLAB_GROUP_PERMISSION:
         dialogDate['content'] = WorkOrderGitlabGroupTicketComponent;
         dialogDate['title'] = 'GitLab Group Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_ELASTIC_SCALING:
+        dialogDate['content'] = WorkOrderElasticScalingTicketComponent;
+        dialogDate['title'] = 'Application Elastic Scaling';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

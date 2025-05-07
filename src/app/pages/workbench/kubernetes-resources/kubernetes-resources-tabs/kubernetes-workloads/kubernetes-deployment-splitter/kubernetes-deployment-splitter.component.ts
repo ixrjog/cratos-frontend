@@ -7,6 +7,7 @@ import {
 import { ApplicationVO } from '../../../../../../@core/data/application';
 import { ApplicationResourceService } from '../../../../../../@core/services/application-resource.service';
 import { finalize } from 'rxjs';
+import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -53,6 +54,8 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$chosenItem']);
 
       this.getVersionByLocalStorage();
+
+      console.log(this.kubernetesDeployment)
     });
   }
 
@@ -124,4 +127,5 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
     }
   }
 
+  protected readonly getPopoverStyle = getPopoverStyle;
 }

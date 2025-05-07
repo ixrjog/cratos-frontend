@@ -2,7 +2,8 @@ import { Observable } from 'rxjs';
 import { HttpResult } from './base-data';
 import { UserBusinessPermission } from './user-permission';
 import { UserVO } from './user';
-import { EdsAssetVO } from './ext-datasource';
+import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
+import { ApplicationVO } from './application';
 
 
 export interface AddApplicationPermissionTicketEntry {
@@ -30,6 +31,25 @@ export interface GitLabPermission {
   role: string
 }
 
+export interface AddApplicationElasticScalingTicketEntry {
+  ticketId: number;
+  detail: {
+    application: ApplicationVO;
+    namespace: string;
+    config: {
+      expectedReplicas: number
+    };
+  };
+}
+
+export interface AddDeploymentElasticScalingTicketEntry {
+  ticketId: number;
+  detail: {
+    deployment: EdsAssetVO
+    namespace: string;
+    expectedReplicas: number
+  };
+}
 
 
 export abstract class WorkOrderTicketEntryData {
@@ -44,8 +64,20 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract deleteTicketEntryById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract deleteAllTicketEntryByTicketId(param: { ticketId: number }): Observable<HttpResult<Boolean>>;
+
   abstract addGitLabProjectPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addGitLabGroupPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract addElasticScalingOfApplicationReplicasTicketEntry(param: AddApplicationElasticScalingTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addElasticScalingOfDeploymentReplicasTicketEntry(param: AddDeploymentElasticScalingTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract queryApplicationResourceDeploymentTicketEntry(param: {
+    applicationName: string,
+    namespace: string
+  }): Observable<HttpResult<Array<EdsAssetVO>>>;
+
+  abstract queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
 }

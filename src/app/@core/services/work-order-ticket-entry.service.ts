@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  AddApplicationPermissionTicketEntry, AddGitLabPermissionTicketEntry,
+  AddApplicationElasticScalingTicketEntry,
+  AddApplicationPermissionTicketEntry, AddDeploymentElasticScalingTicketEntry,
+  AddGitLabPermissionTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   WorkOrderTicketEntryData,
 } from '../data/work-order-ticket-entry';
 import { Observable } from 'rxjs';
 import { HttpResult } from '../data/base-data';
+import { EdsAssetVO, EdsInstanceVO } from '../data/ext-datasource';
 
 @Injectable()
 export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
@@ -37,6 +40,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.delete(this.baseUrl, '/del/by/id', param);
   }
 
+  deleteAllTicketEntryByTicketId(param: { ticketId: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/del/all/by/ticketId', param);
+  }
+
   addGitLabProjectPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/gitlab/project/permission/add', param);
   }
@@ -44,5 +51,25 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
   addGitLabGroupPermissionTicketEntry(param: AddGitLabPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/gitlab/group/permission/add', param);
   }
+
+  addElasticScalingOfApplicationReplicasTicketEntry(param: AddApplicationElasticScalingTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/elastic/scaling/add', param);
+  }
+
+  addElasticScalingOfDeploymentReplicasTicketEntry(param: AddDeploymentElasticScalingTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/deployment/elastic/scaling/add', param);
+  }
+
+  queryApplicationResourceDeploymentTicketEntry(param: {
+    applicationName: string,
+    namespace: string
+  }): Observable<HttpResult<Array<EdsAssetVO>>> {
+    return this.apiService.post(this.baseUrl, '/application/resource/deployment/query', param);
+  }
+
+  queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/query', {});
+  }
+
 
 }

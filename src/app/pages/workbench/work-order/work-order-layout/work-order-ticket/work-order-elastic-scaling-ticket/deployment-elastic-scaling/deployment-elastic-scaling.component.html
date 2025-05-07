@@ -1,0 +1,75 @@
+<form dForm ngForm [layout]="FormLayout.Vertical">
+  <d-form-item>
+    <d-form-label [required]="true">Application</d-form-label>
+    <d-form-control>
+      <d-select
+        name="application"
+        [filterKey]="'name'"
+        [appendToBody]="true"
+        [(ngModel)]="application"
+        [searchFn]="onSearchApplication"
+        [isSearch]="true"
+        placeholder="Select application"
+        (valueChange)="onApplicationChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.name }}</span>
+          <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item *ngIf="application !== undefined">
+    <d-form-label [required]="true">Namespace</d-form-label>
+    <d-form-control>
+      <d-tabs
+        name="namespace"
+        type="options"
+        [activeTab]="namespace"
+        (activeTabChange)="onResourceNamespaceChange($event)"
+        dLoading
+        [loading]="nameSpaceLoading"
+      >
+        <d-tab
+          *ngFor="let item of resourceNamespaceOptions"
+          [id]="item.value"
+          [title]="item.label"
+        ></d-tab>
+      </d-tabs>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item *ngIf="namespace !== undefined">
+    <d-form-label [required]="true">Deployment</d-form-label>
+    <d-form-control>
+      <d-form-control>
+        <d-select
+          name="deployment"
+          [options]="deploymentOptions"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="deployment"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">Expected Replicas</d-form-label>
+    <d-form-control>
+      <div class="composite-slider slider-wrapper">
+        <d-slider name="limit" [(ngModel)]="expectedReplicas" class="slider"></d-slider>
+        <div class="snapshot-value">
+          <d-input-number
+            name="expectedReplicas"
+            [allowEmpty]="false"
+            [(ngModel)]="expectedReplicas"
+            class="input-number"
+          ></d-input-number>
+        </div>
+      </div>
+    </d-form-control>
+  </d-form-item>
+  <d-form-operation>
+    <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+  </d-form-operation>
+</form>

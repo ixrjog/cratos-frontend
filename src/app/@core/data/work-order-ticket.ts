@@ -54,7 +54,7 @@ export interface WorkOrderTicketEntryVO<T> extends ValidVO {
   displayName: string;
   instanceId: number;
   instance: EdsInstanceVO;
-  businessType: number;
+  businessType: string;
   subType: string;
   businessId: number;
   completed: boolean;

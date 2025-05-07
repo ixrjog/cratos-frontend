@@ -33,6 +33,9 @@ import {
 import {
   WorkOrderGitlabGroupTicketComponent,
 } from '../work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import {
+  WorkOrderElasticScalingTicketComponent,
+} from '../work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -213,6 +216,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.GITLAB_GROUP_PERMISSION:
         dialogDate['content'] = WorkOrderGitlabGroupTicketComponent;
         dialogDate['title'] = 'GitLab Group Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_ELASTIC_SCALING:
+        dialogDate['content'] = WorkOrderElasticScalingTicketComponent;
+        dialogDate['title'] = 'Elastic Scaling';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

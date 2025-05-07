@@ -1,0 +1,170 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicketComponent
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <h3 *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    this work order only support one entry , you should remove entry first
+  </h3>
+
+  <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
+    <d-form-item>
+      <d-form-label [required]="true">Scaling Type</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [(activeTab)]="tabActiveId">
+          <d-tab [id]="'application'" [title]="'Application'">
+            <app-application-elastic-scaling
+              [ticketDetails]="ticketDetails"
+              (onFetchData)="onFetchData()"
+            ></app-application-elastic-scaling>
+          </d-tab>
+          <d-tab [id]="'deployment'" [title]="'Deployment'">
+            <app-deployment-elastic-scaling
+              [ticketDetails]="ticketDetails"
+              (onFetchData)="onFetchData()"
+            ></app-deployment-elastic-scaling>
+          </d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+
+    <d-data-table
+      *ngIf="tabActiveId === 'application'"
+      [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="detail" header="Application">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['application']?.applicationName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Current Replicas">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['config']?.currentReplicas | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Expected Replicas">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['config']?.expectedReplicas | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Scaling Type">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['config']?.elasticScalingType | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemoveAll(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+
+    <d-data-table
+      [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column header="Instance">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Deployment">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['deployment']?.name | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Current Replicas">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['currentReplicas'] | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Expected Replicas">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['expectedReplicas'] | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Actions"
+        [width]="'80px'"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW
+        && tabActiveId === 'deployment'"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+
+</ng-template>
+
+

@@ -154,6 +154,24 @@
                 >
                 </app-kubernetes-container-probe>
               </ng-template>
+
+              <d-tag
+                dPopover
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="jvmTemplate"
+                [tag]="'jvm'"
+                [labelStyle]="'blue-w98'"
+                [popoverStyle]="getPopoverStyle({width: '1000px'})"
+              ></d-tag>
+              <ng-template #jvmTemplate>
+                <app-xterm-logs
+                  [rows]="30"
+                  [logs]="kubernetesDeployment.attributes['env.java.opts']"
+                ></app-xterm-logs>
+              </ng-template>
             </div>
 
           </div>

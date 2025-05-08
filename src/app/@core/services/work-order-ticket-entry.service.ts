@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
+  AddAliyunDataWorksInstanceTicketEntry,
   AddApplicationElasticScalingTicketEntry,
   AddApplicationPermissionTicketEntry, AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
@@ -71,5 +72,8 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/query', {});
   }
 
+  addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/add', param);
+  }
 
 }

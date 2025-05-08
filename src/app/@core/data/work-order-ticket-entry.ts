@@ -51,6 +51,12 @@ export interface AddDeploymentElasticScalingTicketEntry {
   };
 }
 
+export interface AddAliyunDataWorksInstanceTicketEntry {
+  ticketId: number;
+  detail: {
+    edsInstance: EdsInstanceVO
+  };
+}
 
 export abstract class WorkOrderTicketEntryData {
 
@@ -80,4 +86,7 @@ export abstract class WorkOrderTicketEntryData {
   }): Observable<HttpResult<Array<EdsAssetVO>>>;
 
   abstract queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
+
+  abstract addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>>;
+
 }

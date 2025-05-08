@@ -86,6 +86,7 @@ import { WorkOrderGitlabProjectTicketComponent } from './work-order/work-order-l
 import { WorkOrderElasticScalingTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 import { ApplicationElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/application-elastic-scaling/application-elastic-scaling.component';
 import { DeploymentElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/deployment-elastic-scaling/deployment-elastic-scaling.component';
+import { WorkOrderAliyunDataworksTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
 
 @NgModule({
   declarations: [
@@ -128,6 +129,7 @@ import { DeploymentElasticScalingComponent } from './work-order/work-order-layou
     WorkOrderElasticScalingTicketComponent,
     ApplicationElasticScalingComponent,
     DeploymentElasticScalingComponent,
+    WorkOrderAliyunDataworksTicketComponent,
   ],
   imports: [
     CommonModule,

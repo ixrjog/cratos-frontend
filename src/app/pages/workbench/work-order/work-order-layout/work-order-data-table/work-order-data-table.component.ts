@@ -36,6 +36,9 @@ import {
 import {
   WorkOrderElasticScalingTicketComponent,
 } from '../work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
+import {
+  WorkOrderAliyunDataworksTicketComponent
+} from '../work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -223,6 +226,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.APPLICATION_ELASTIC_SCALING:
         dialogDate['content'] = WorkOrderElasticScalingTicketComponent;
         dialogDate['title'] = 'Elastic Scaling';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_DATAWORKS_AK:
+        dialogDate['content'] = WorkOrderAliyunDataworksTicketComponent;
+        dialogDate['title'] = 'Dataworks AK Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

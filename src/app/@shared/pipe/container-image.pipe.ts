@@ -13,6 +13,9 @@ export class ContainerImageTagPipe implements PipeTransform {
 export class ShortContainerImagePipe implements PipeTransform {
 
   transform(val: string) {
+    if (val === null) {
+      return ''
+    }
     const index = val.indexOf('/');
     return val.substring(index, val.length);
   }

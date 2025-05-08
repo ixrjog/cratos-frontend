@@ -73,10 +73,10 @@
               <span class="name">Image</span>
               <span class="value inline-value"
                     [title]="kubernetesDeployment['$container']?.image"
-                    dClipboard [content]="kubernetesDeployment['$container'].image"
+                    dClipboard [content]="kubernetesDeployment['$container']?.image"
               >
                 <span style="color: var(--devui-brand)">&#123;CR&#125;</span>
-                {{ kubernetesDeployment['$container'].image | shortContainerImage | dSafeNullPipe }}</span>
+                {{ kubernetesDeployment['$container']?.image | shortContainerImage | dSafeNullPipe }}</span>
             </div>
 
             <div>
@@ -156,6 +156,7 @@
               </ng-template>
 
               <d-tag
+                *ngIf="kubernetesDeployment.attributes['env.java.opts'] !== undefined"
                 dPopover
                 [position]="'right-top'"
                 [trigger]="'hover'"

@@ -52,10 +52,10 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       this.kubernetesDeployment['$containers'].push(container.name);
       this.kubernetesDeployment['$containerMap'].set(container.name, container);
       this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$chosenItem']);
-
+      if (this.kubernetesDeployment['$container'] === undefined) {
+        this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$containers'][0]);
+      }
       this.getVersionByLocalStorage();
-
-      console.log(this.kubernetesDeployment)
     });
   }
 

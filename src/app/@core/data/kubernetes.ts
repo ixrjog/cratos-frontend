@@ -15,6 +15,7 @@ export interface KubernetesDetailsVO {
 export interface AccessControlVO {
   permission: boolean;
   businessType: string;
+  operationPermissions: Map<string, any>;
 }
 
 export interface KubernetesWorkloadsVO {

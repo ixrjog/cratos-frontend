@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpResult, MessageResponse, OptionsVO } from '../data/base-data';
 import { KubernetesDetailsVO } from '../data/kubernetes';
 import {
-  ApplicationResourceData,
+  ApplicationResourceData, DeleteKubernetesDeploymentPod,
   KubernetesDeploymentImageVersion,
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions,
@@ -33,4 +33,7 @@ export class ApplicationResourceService extends ApplicationResourceData {
     return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/image/version/query', param);
   }
 
+  deleteApplicationResourceKubernetesDeploymentPod(param: DeleteKubernetesDeploymentPod): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/kubernetes/deployment/pod/del', param);
+  }
 }

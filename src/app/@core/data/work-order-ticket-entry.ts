@@ -58,6 +58,11 @@ export interface AddAliyunDataWorksInstanceTicketEntry {
   };
 }
 
+export interface AddApplicationDeletePodTicketEntry {
+  ticketId: number;
+  detail: ApplicationVO;
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -88,5 +93,7 @@ export abstract class WorkOrderTicketEntryData {
   abstract queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
 
   abstract addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addApplicationDeletePodTicketEntry(param: AddApplicationDeletePodTicketEntry): Observable<HttpResult<Boolean>>;
 
 }

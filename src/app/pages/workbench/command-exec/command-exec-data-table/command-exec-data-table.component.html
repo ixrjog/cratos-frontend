@@ -50,7 +50,7 @@
           </div>
 
           <div>
-            <span>Apply Remark:&nbsp;</span>
+            <span>Remark:&nbsp;</span>
             <span>{{ rowItem['applyRemark'] }}</span>
           </div>
 
@@ -88,12 +88,26 @@
           </div>
 
           <div *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null">
-            <span>Approver Remark:&nbsp;</span>
+            <span>Remark:&nbsp;</span>
             <span>{{ rowItem['approvals']['APPROVER']['approveRemark'] }}</span>
           </div>
 
           <div *ngIf="rowItem['ccTo'] !==''">
             <span>CC:&nbsp;</span>
+            <d-icon
+              [icon]="'icon-identity-auth'"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'hover'"
+              [controlled]="true"
+              [mouseEnterDelay]="500"
+              [content]="userInfoCardTemplate"
+              [popoverStyle]="getPopoverStyle()"
+              style="vertical-align: middle;margin-right: 5px"
+            ></d-icon>
+            <ng-template #userInfoCardTemplate>
+              <app-user-info-card [username]="rowItem['ccTo']"></app-user-info-card>
+            </ng-template>
             <span>{{ rowItem['ccTo'] }}</span>
           </div>
 

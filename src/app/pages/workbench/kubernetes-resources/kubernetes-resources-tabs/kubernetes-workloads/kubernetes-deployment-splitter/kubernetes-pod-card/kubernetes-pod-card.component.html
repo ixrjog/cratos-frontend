@@ -73,13 +73,21 @@
           style="margin-right: 8px"
           (click)="onRowExec()"
           [disabled]="!accessControl.permission"
-        > Exec
+        >Exec
         </d-button>
         <d-button
           bsStyle="text"
+          style="margin-right: 8px"
           (click)="onRowLogs()"
           [disabled]="!accessControl.permission"
         >Logs
+        </d-button>
+
+        <d-button
+          bsStyle="text"
+          (click)="onRowDelete()"
+          [disabled]="!accessControl.operationPermissions['DEPLOYMENT_POD_DELETE']"
+        >Delete
         </d-button>
       </div>
     </d-card-actions>

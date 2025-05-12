@@ -20,6 +20,13 @@ export interface KubernetesDeploymentImageVersion {
   versionDesc: string;
 }
 
+export interface DeleteKubernetesDeploymentPod {
+  applicationName: string;
+  namespace: string;
+  deploymentName: string;
+  podName: string;
+}
+
 export abstract class ApplicationResourceData {
 
   abstract queryApplicationResourceKubernetesDetails(param: QueryApplicationResourceKubernetesDetails): Observable<HttpResult<MessageResponse<KubernetesDetailsVO>>>;
@@ -29,4 +36,6 @@ export abstract class ApplicationResourceData {
   abstract queryApplicationResourceKubernetesDeploymentImageVersion(param: {
     image: string
   }): Observable<HttpResult<KubernetesDeploymentImageVersion>>;
+
+  abstract deleteApplicationResourceKubernetesDeploymentPod(param: DeleteKubernetesDeploymentPod): Observable<HttpResult<Boolean>>;
 }

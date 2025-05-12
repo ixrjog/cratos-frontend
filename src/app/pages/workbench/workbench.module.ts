@@ -87,6 +87,7 @@ import { WorkOrderElasticScalingTicketComponent } from './work-order/work-order-
 import { ApplicationElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/application-elastic-scaling/application-elastic-scaling.component';
 import { DeploymentElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/deployment-elastic-scaling/deployment-elastic-scaling.component';
 import { WorkOrderAliyunDataworksTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
+import { WorkOrderPodDeleteTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
 
 @NgModule({
   declarations: [
@@ -130,6 +131,7 @@ import { WorkOrderAliyunDataworksTicketComponent } from './work-order/work-order
     ApplicationElasticScalingComponent,
     DeploymentElasticScalingComponent,
     WorkOrderAliyunDataworksTicketComponent,
+    WorkOrderPodDeleteTicketComponent,
   ],
   imports: [
     CommonModule,

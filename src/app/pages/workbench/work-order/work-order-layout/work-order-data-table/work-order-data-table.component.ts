@@ -39,6 +39,9 @@ import {
 import {
   WorkOrderAliyunDataworksTicketComponent
 } from '../work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
+import {
+  WorkOrderPodDeleteTicketComponent
+} from '../work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -233,6 +236,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.ALIYUN_DATAWORKS_AK:
         dialogDate['content'] = WorkOrderAliyunDataworksTicketComponent;
         dialogDate['title'] = 'Dataworks AK Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_DELETE_POD:
+        dialogDate['content'] = WorkOrderPodDeleteTicketComponent;
+        dialogDate['title'] = 'Application Pod Delete';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

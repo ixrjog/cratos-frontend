@@ -10,6 +10,10 @@ import { DialogService } from 'ng-devui';
 import { KubernetesPodLogsComponent } from './kubernetes-pod-logs/kubernetes-pod-logs.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/constant/date.constant';
 import { KubernetesPodExecComponent } from './kubernetes-pod-exec/kubernetes-pod-exec.component';
+import { DIALOG_DATA, DialogUtil } from '../../../../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../../@shared/utils/toast.util';
+import { ApplicationResourceService } from '../../../../../../../@core/services/application-resource.service';
+import { DeleteKubernetesDeploymentPod } from '../../../../../../../@core/data/application-resource';
 
 @Component({
   selector: 'app-kubernetes-pod-card',
@@ -26,7 +30,21 @@ export class KubernetesPodCardComponent {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
-  constructor(private dialogService: DialogService) {
+  dialogDate = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
+  constructor(
+    private applicationResourceService: ApplicationResourceService,
+    private dialogService: DialogService,
+    private dialogUtil: DialogUtil,
+    private toastUtil: ToastUtil,
+  ) {
   }
 
   subPodName(): string {
@@ -86,6 +104,25 @@ export class KubernetesPodCardComponent {
         application: this.application,
         closeHandler: () => results.modalInstance.hide(),
       },
+    });
+  }
+
+  onRowDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      const param: DeleteKubernetesDeploymentPod = {
+          applicationName: this.application.name,
+          namespace: this.kubernetesDeployment.metadata.namespace,
+          deploymentName: this.kubernetesDeployment.metadata.name,
+          podName: this.kubernetesPod.metadata.name,
+        };
+      this.applicationResourceService.deleteApplicationResourceKubernetesDeploymentPod(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+        });
     });
   }
 }

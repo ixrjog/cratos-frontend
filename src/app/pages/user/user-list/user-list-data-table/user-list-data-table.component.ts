@@ -27,14 +27,29 @@ export class UserListDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    valid: null,
     queryByTag: {
       tagId: null,
       tagValue: null,
     },
   };
 
-  isExternal: boolean = false;
+  validOptions = [
+    {
+      id: '',
+      title: 'ALL',
+    },
+    {
+      id: 'true',
+      title: 'ACTIVE',
+    },
+    {
+      id: 'false',
+      title: 'INACTIVE',
+    },
+  ];
 
+  isExternal: boolean = false;
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.USER;
   table: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -87,6 +102,21 @@ export class UserListDataTableComponent implements OnInit {
 
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
+  }
+
+  onValidChange(tab) {
+    switch (tab) {
+      case '':
+        this.queryParam.valid = null;
+        break;
+      case 'true':
+        this.queryParam.valid = true;
+        break;
+      case 'false':
+        this.queryParam.valid = false;
+        break;
+    }
+    this.fetchData();
   }
 
   ngOnInit() {

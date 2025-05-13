@@ -17,6 +17,18 @@
     [(ngModel)]="isExternal"
     (change)="onChangeExternal($event)"
   ></d-checkbox>
+  <d-tabs
+    class="tabs"
+    type="options"
+    [activeTab]="''"
+    (activeTabChange)="onValidChange($event)"
+  >
+    <d-tab
+      *ngFor="let item of validOptions"
+      [id]="item.id"
+      [title]="item.title"
+    ></d-tab>
+  </d-tabs>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
   <span class="right-button">
     <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onRefreshAll()"></d-icon>

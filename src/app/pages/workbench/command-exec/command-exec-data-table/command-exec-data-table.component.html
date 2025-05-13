@@ -39,11 +39,11 @@
               [trigger]="'hover'"
               [controlled]="true"
               [mouseEnterDelay]="500"
-              [content]="userInfoCardTemplate"
+              [content]="userApplicantTemplate"
               [popoverStyle]="getPopoverStyle()"
               style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
-            <ng-template #userInfoCardTemplate>
+            <ng-template #userApplicantTemplate>
               <app-user-info-card [username]="rowItem['username']"></app-user-info-card>
             </ng-template>
             <span>{{ rowItem['username'] }}</span>
@@ -70,11 +70,11 @@
               [trigger]="'hover'"
               [controlled]="true"
               [mouseEnterDelay]="500"
-              [content]="userInfoCardTemplate"
+              [content]="userApproverTemplate"
               [popoverStyle]="getPopoverStyle()"
               style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
-            <ng-template #userInfoCardTemplate>
+            <ng-template #userApproverTemplate>
               <app-user-info-card [username]="rowItem['approvedBy']"></app-user-info-card>
             </ng-template>
             <span>{{ rowItem['approvedBy'] }}</span>
@@ -101,11 +101,11 @@
               [trigger]="'hover'"
               [controlled]="true"
               [mouseEnterDelay]="500"
-              [content]="userInfoCardTemplate"
+              [content]="userCCTemplate"
               [popoverStyle]="getPopoverStyle()"
               style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
-            <ng-template #userInfoCardTemplate>
+            <ng-template #userCCTemplate>
               <app-user-info-card [username]="rowItem['ccTo']"></app-user-info-card>
             </ng-template>
             <span>{{ rowItem['ccTo'] }}</span>
@@ -208,6 +208,12 @@
               [icon]="'icon-run'"
               [operable]="true"
               (click)="onRowExec(rowItem)"
+            ></d-icon>
+            <d-icon
+              *ngIf="rowItem['completed']"
+              [icon]="'icon-view'"
+              [operable]="true"
+              (click)="onRowView(rowItem)"
             ></d-icon>
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>

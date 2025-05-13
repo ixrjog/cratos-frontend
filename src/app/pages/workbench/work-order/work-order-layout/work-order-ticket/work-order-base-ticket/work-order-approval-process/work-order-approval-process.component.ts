@@ -33,6 +33,7 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
       customDot: '<i class="fa-solid fa-play" style="font-size:16px"></i>',
       data: {
         nodeName: 'Start',
+        username: this.ticketDetails?.ticket?.applicant?.username,
       },
     });
     this.ticketDetails.workflow.nodes.forEach(node => {

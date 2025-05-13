@@ -12,6 +12,7 @@ import { CommandExecApproveComponent } from './command-exec-approve/command-exec
 import { CommandExecDoComponent } from './command-exec-do/command-exec-do.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
+import { CommandExecViewComponent } from './command-exec-view/command-exec-view.component';
 
 @Component({
   selector: 'app-command-exec-data-table',
@@ -87,9 +88,15 @@ export class CommandExecDataTableComponent implements OnInit {
   dialogDate = {
     editorData: {
       ...DIALOG_DATA.editorData,
-      width: '50%',
+      width: '60%',
       maxHeight: '1000px',
       content: CommandExecEditorComponent,
+    },
+    viewData: {
+      ...DIALOG_DATA.editorData,
+      width: '60%',
+      maxHeight: '1000px',
+      content: CommandExecViewComponent,
     },
     approveData: {
       content: CommandExecApproveComponent,
@@ -160,6 +167,16 @@ export class CommandExecDataTableComponent implements OnInit {
     const dialogDate = {
       ...this.dialogDate.execData,
       title: 'Command Exec',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
+
+  onRowView(rowItem: CommandExecVO) {
+    const dialogDate = {
+      ...this.dialogDate.viewData,
+      title: 'Command View',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();

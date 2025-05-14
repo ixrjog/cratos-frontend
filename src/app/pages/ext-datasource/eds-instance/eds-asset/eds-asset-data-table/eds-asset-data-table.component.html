@@ -1,5 +1,16 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onAssetImport()">Import</d-button>
+  <d-button
+    *ngIf="supportManualAsset?.valid === false"
+    class="button"
+    bsStyle="primary"
+    (click)="onAssetImport()"
+  >Import</d-button>
+  <d-button
+    *ngIf="supportManualAsset?.valid === true"
+    class="button"
+    bsStyle="primary"
+    (click)="onAssetNew()"
+  >New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"

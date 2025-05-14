@@ -6,6 +6,7 @@ import footer from './zh-CN/footer';
 import header from './zh-CN/header';
 import login from './zh-CN/login';
 import register from './zh-CN/register';
+import workOrderTicket from './zh-CN/work-order-ticket';
 
 export default {
   ...pages,
@@ -16,4 +17,5 @@ export default {
   ...header,
   ...login,
   ...register,
+  ...workOrderTicket,
 };

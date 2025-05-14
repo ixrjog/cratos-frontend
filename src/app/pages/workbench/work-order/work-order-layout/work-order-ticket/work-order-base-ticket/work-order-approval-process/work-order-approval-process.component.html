@@ -35,6 +35,21 @@
           &nbsp;{{ data.approveRemark }}
         </span>
       </div>
+
+      <div style="padding-bottom: 8px" *ngIf="data.nodeName === 'End'">
+        <span [title]="data.ticketResult">
+          <d-icon [icon]="'icon-suggestion'" style="vertical-align: middle"></d-icon>
+          &nbsp; <d-tag [tag]="data.ticketState" [labelStyle]="onGetTicketStateColor()"></d-tag>
+        </span>
+      </div>
+
+      <div style="padding-bottom: 8px" *ngIf="data.nodeName === 'Start' || data.nodeName === 'End'">
+        <span [title]="data.time | dRelativeTime: limit | async">
+          <d-icon [icon]="'icon-time'" style="vertical-align: middle"></d-icon>
+          &nbsp;<span>{{ data.time | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
+        </span>
+      </div>
+
     </div>
   </div>
 </ng-template>

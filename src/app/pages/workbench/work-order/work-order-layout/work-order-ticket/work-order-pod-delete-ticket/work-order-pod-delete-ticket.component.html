@@ -10,6 +10,13 @@
 <ng-template #editTicketEntryTemplate>
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <d-form-item>
+      <d-form-control>
+        <d-alert [type]="'info'" [closeable]="false">
+          {{ 'workOrderTicket.podDelete.tips' | translate }}
+        </d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label [required]="true">Application</d-form-label>
       <d-form-control>
         <d-select

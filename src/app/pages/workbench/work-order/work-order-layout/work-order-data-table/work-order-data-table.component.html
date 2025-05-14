@@ -70,7 +70,13 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="ticketNo" header="No" [width]="'120px'"></d-column>
+    <d-column field="ticketNo" header="No" [width]="'120px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span dClipboard [content]="cellItem">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
         <d-column field="workOrder" header="Name">
           <d-cell>
             <ng-template let-cellItem="cellItem">

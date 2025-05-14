@@ -7,10 +7,12 @@ import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data
 import { Observable, zip } from 'rxjs';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import {
+  AddCratosAsset,
   AssetPageQuery,
   DeleteInstanceAsset,
   EdsAssetIndexVO,
   EdsAssetVO,
+  EdsSupportManualAssetVO,
   ImportInstanceAsset,
 } from '../../../../../@core/data/ext-datasource';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
@@ -29,6 +31,7 @@ import {
 } from '../../../../../@shared/components/common/business-cascader/business-cascader.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
+import { EdsAssetManualEditorComponent } from './eds-asset-manual-editor/eds-asset-manual-editor.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -41,11 +44,13 @@ export class EdsAssetDataTableComponent implements OnChanges {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
 
   @Input() instanceId: number;
+  @Input() instanceType: string;
   @Input() assetType: string;
   @Input() currentType: string;
 
   assetIndexTable: EdsAssetIndexVO[] = [];
   businessType: string = BusinessTypeEnum.EDS_ASSET;
+  supportManualAsset: EdsSupportManualAssetVO;
 
   queryParam = {
     queryName: '',
@@ -61,14 +66,36 @@ export class EdsAssetDataTableComponent implements OnChanges {
   table: Table<EdsAssetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
-    editorData: {
+    importData: {
       ...DIALOG_DATA.editorData,
+    },
+    manualEditData: {
+      ...DIALOG_DATA.editorData,
+      content: EdsAssetManualEditorComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
     },
     content: {
       ...DIALOG_DATA.content,
+    },
+  };
+
+  newEdsAsset: AddCratosAsset = {
+    instanceId: null,
+    assetType: '',
+    name: '',
+    assetId: '',
+    assetKey: '',
+    kind: '',
+    version: '',
+    region: '',
+    zone: '',
+    assetStatus: '',
+    description: '',
+    valid: true,
+    configMap: {
+      data: new Map<string, string>(),
     },
   };
 
@@ -85,7 +112,16 @@ export class EdsAssetDataTableComponent implements OnChanges {
         this.businessCascader.getTagOptions();
       }, 500);
       this.fetchData();
+      this.onGetSupportManual();
     }
+  }
+
+  onGetSupportManual() {
+    this.supportManualAsset = null;
+    this.edsService.getEdsInstanceAssetSupportManual({ instanceType: this.instanceType, assetType: this.assetType })
+      .subscribe(({ body }) => {
+        this.supportManualAsset = body;
+      });
   }
 
   onAssetImport() {
@@ -95,6 +131,20 @@ export class EdsAssetDataTableComponent implements OnChanges {
     };
     this.edsService.importEdsInstanceAsset(param)
       .subscribe(() => this.toastUtil.onSuccessToast(TOAST_CONTENT.IMPORT));
+  }
+
+  onAssetNew() {
+    const dialogDate = {
+      ...this.dialogDate.manualEditData,
+      title: 'Manual Eds Asset Edit',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, {
+      ...this.newEdsAsset,
+      instanceId: this.instanceId,
+      assetType: this.assetType,
+    }, { supportManualAsset: this.supportManualAsset });
   }
 
   fetchData() {
@@ -162,7 +212,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     this.edsService.getToBusinessTarget({ assetId: rowItem.id })
       .subscribe(({ body }) => {
         let dialogDate = {
-          ...this.dialogDate.editorData,
+          ...this.dialogDate.importData,
         };
         switch (body.toBusiness.businessType) {
           case BusinessTypeEnum.USER:

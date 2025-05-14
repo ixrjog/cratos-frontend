@@ -166,7 +166,7 @@ export class CommandExecDataTableComponent implements OnInit {
   onRowExec(rowItem: CommandExecVO) {
     const dialogDate = {
       ...this.dialogDate.execData,
-      title: 'Command Exec',
+      title: 'Exec Command',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -176,7 +176,7 @@ export class CommandExecDataTableComponent implements OnInit {
   onRowView(rowItem: CommandExecVO) {
     const dialogDate = {
       ...this.dialogDate.viewData,
-      title: 'Command View',
+      title: 'View Command',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();

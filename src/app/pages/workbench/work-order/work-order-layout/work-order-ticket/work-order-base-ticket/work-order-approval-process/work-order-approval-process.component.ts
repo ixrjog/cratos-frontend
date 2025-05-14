@@ -1,7 +1,9 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
+import { WorkOrderTicketDetailsVO, WorkOrderTicketVO } from '../../../../../../../@core/data/work-order-ticket';
+import { WorkOrderStatus } from '../../../../../../../@core/data/work-order';
 import { APPROVAL_AGREE, APPROVAL_REJECT } from '../../../../../../../@shared/constant/approval.constant';
 import { getPopoverStyle } from '../../../../../../../@shared/utils/theme.util';
+import { RELATIVE_TIME_LIMIT } from '../../../../../../../@shared/constant/date.constant';
 
 @Component({
   selector: 'app-work-order-approval-process',
@@ -34,12 +36,12 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
       data: {
         nodeName: 'Start',
         username: this.ticketDetails?.ticket?.applicant?.username,
+        time: this.ticketDetails?.ticket?.submittedAt,
       },
     });
     this.ticketDetails.workflow.nodes.forEach(node => {
       let process = this.ticketDetails.nodes[node.name];
       let color = '';
-      let customDot = ''
       if (process.approvalStatus === APPROVAL_AGREE) {
         color = 'var(--devui-success)';
       }
@@ -60,14 +62,31 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
       this.timeAxisTemplate.list.push(timeAxis);
     });
     this.timeAxisTemplate.list.push({
-      customDot: '<i class="fa-solid fa-circle-stop" style="font-size:16px"></i>',
+      customDot: '<i class="fa-solid fa-stop" style="font-size:16px"></i>',
       data: {
         nodeName: 'End',
+        ticketState: this.ticketDetails?.ticket?.ticketState,
+        ticketResult: this.ticketDetails?.ticket?.ticketResult,
+        time: this.ticketDetails?.ticket?.completedAt,
       },
     });
     this.show = true;
   }
 
+
+  onGetTicketStateColor() {
+    const ticket: WorkOrderTicketVO = this.ticketDetails.ticket;
+    if (ticket.ticketState === WorkOrderStatus.COMPLETED) {
+      if (ticket.success) {
+        return 'green-w98';
+      }
+      return 'red-w98';
+    }
+    return 'blue-w98';
+  }
+
   protected readonly APPROVAL_AGREE = APPROVAL_AGREE;
   protected readonly getPopoverStyle = getPopoverStyle;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
+  protected readonly WorkOrderStatus = WorkOrderStatus;
 }

@@ -1,0 +1,82 @@
+<section>
+  <form dForm ngForm [layout]="layoutDirection">
+
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('name')"
+      >{{ onConvertFieldDesc('name') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('assetId')"
+      >{{ onConvertFieldDesc('assetId') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="assetId" [(ngModel)]="formData.assetId" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('assetKey')"
+      >{{ onConvertFieldDesc('assetKey') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="assetKey" [(ngModel)]="formData.assetKey" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('kind')"
+      >{{ onConvertFieldDesc('kind') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="kind" [(ngModel)]="formData.kind" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('region')"
+      >{{ onConvertFieldDesc('region') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="region" [(ngModel)]="formData.region" />
+      </d-form-control>
+    </d-form-item>
+
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('version')"
+      >{{ onConvertFieldDesc('version') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="version" [(ngModel)]="formData.version" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label
+        [required]="onConvertFieldRequired('assetStatus')"
+      >{{ onConvertFieldDesc('assetStatus') }}</d-form-label>
+      <d-form-control>
+        <input dTextInput name="assetStatus" [(ngModel)]="formData.assetStatus" />
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.description"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

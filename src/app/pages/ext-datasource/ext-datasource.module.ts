@@ -62,6 +62,7 @@ import {
 import { UserModule } from '../user/user.module';
 import { DomainModule } from '../domain/domain.module';
 import { CertificateModule } from '../certificate/certificate.module';
+import { EdsAssetManualEditorComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-manual-editor/eds-asset-manual-editor.component';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ import { CertificateModule } from '../certificate/certificate.module';
     KubernetesResourcesDataTableComponent,
     KubernetesResourcesCreateComponent,
     KubernetesResourcesTemplateCloneComponent,
+    EdsAssetManualEditorComponent,
   ],
   imports: [
     CommonModule,

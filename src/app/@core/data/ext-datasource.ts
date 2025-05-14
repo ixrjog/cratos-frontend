@@ -134,6 +134,34 @@ export interface EdsAssetIndexVO extends BaseVO, BusinessTagsVO {
   comment: string;
 }
 
+export interface EdsSupportManualAssetVO extends ValidVO {
+  mapper: Map<string, EdsAssetFieldDesc>;
+}
+
+export interface EdsAssetFieldDesc {
+  name: string;
+  desc: string;
+  required: boolean;
+}
+
+export interface AddCratosAsset {
+  instanceId: number;
+  assetType: string;
+  name: string;
+  assetId: string;
+  assetKey: string;
+  kind: string;
+  version: string;
+  region: string;
+  zone: string;
+  assetStatus: string;
+  description: string;
+  valid: boolean;
+  configMap: {
+    data: Map<string, string>;
+  };
+}
+
 export abstract class EdsData {
 
   abstract getEdsInstanceTypeOptions(): Observable<HttpResult<OptionsVO>>;
@@ -175,5 +203,12 @@ export abstract class EdsData {
   abstract getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>>
 
   abstract deleteEdsInstanceAsset(param: DeleteInstanceAsset): Observable<HttpResult<Boolean>>;
+
+  abstract getEdsInstanceAssetSupportManual(param: {
+    instanceType: string,
+    assetType: string
+  }): Observable<HttpResult<EdsSupportManualAssetVO>>;
+
+  abstract addInstanceCratosAsset(param: AddCratosAsset): Observable<HttpResult<Boolean>>;
 
 }

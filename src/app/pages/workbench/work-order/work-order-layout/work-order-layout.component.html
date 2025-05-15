@@ -1,12 +1,12 @@
 <div class="da-settings-layout">
   <da-layout-row [daGutter]="[24, 24]">
-    <da-col-item [daSpan]="24" [daXs]="8" [daOrder]="1">
+    <da-col-item [daSpan]="24" [daXs]="10" [daMd]="8" [daOrder]="1">
       <app-work-order-menu
         (onNewData)="onNewData($event)"
         (onFetchData)="onFetchData($event)"
       ></app-work-order-menu>
     </da-col-item>
-    <da-col-item [daSpan]="24" [daXs]="16" [daOrder]="2" [daOrderXs]="3">
+    <da-col-item [daSpan]="24" [daXs]="14" [daMd]="16" [daOrder]="2">
       <app-work-order-data-table #workOrderDataTable></app-work-order-data-table>
     </da-col-item>
   </da-layout-row>

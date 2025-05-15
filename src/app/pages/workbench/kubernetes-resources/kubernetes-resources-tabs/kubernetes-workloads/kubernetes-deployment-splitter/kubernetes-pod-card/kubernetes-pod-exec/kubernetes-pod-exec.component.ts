@@ -233,9 +233,19 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       if (this.terminal) {
         this.terminal.dispose();
       }
-      this.wsHeartbeatTimerRequest.unsubscribe();
-      this.ws.close(1000, 'user exit');
-      this.ws = null;
+      if (this.wsHeartbeatTimerRequest) {
+        this.wsHeartbeatTimerRequest.unsubscribe();
+        this.wsHeartbeatTimerRequest = null;
+      }
+      if (this.ws) {
+        this.ws.onopen = null;
+        this.ws.onmessage = null;
+        if (this.ws.readyState === WebSocket.OPEN ||
+          this.ws.readyState === WebSocket.CONNECTING) {
+          this.ws.close();
+        }
+        this.ws = null;
+      }
     } catch (error) {
     }
   }

@@ -226,10 +226,23 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
   ngOnDestroy(): void {
     try {
-      this.timerRequest.unsubscribe();
-      this.wsHeartbeatTimerRequest.unsubscribe();
-      this.ws.close();
-      this.ws = null;
+      if (this.timerRequest) {
+        this.timerRequest.unsubscribe();
+        this.timerRequest = null;
+      }
+      if (this.wsHeartbeatTimerRequest) {
+        this.wsHeartbeatTimerRequest.unsubscribe();
+        this.wsHeartbeatTimerRequest = null;
+      }
+      if (this.ws) {
+        this.ws.onopen = null;
+        this.ws.onmessage = null;
+        if (this.ws.readyState === WebSocket.OPEN ||
+          this.ws.readyState === WebSocket.CONNECTING) {
+          this.ws.close();
+        }
+        this.ws = null;
+      }
     } catch (error) {
     }
     localStorage.removeItem('kubernetes_resources');

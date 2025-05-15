@@ -118,18 +118,27 @@ export class KubernetesPodLogsComponent implements OnInit, OnDestroy {
             this.kubernetesPodLog.onWrite(msg.output);
           }
         });
-    };
+    }
   }
 
   onDestroy(): void {
     try {
-      this.wsHeartbeatTimerRequest.unsubscribe();
-      this.ws.close();
-      this.ws = null;
+      if (this.wsHeartbeatTimerRequest) {
+        this.wsHeartbeatTimerRequest.unsubscribe();
+        this.wsHeartbeatTimerRequest = null;
+      }
+      if (this.ws) {
+        this.ws.onopen = null;
+        this.ws.onmessage = null;
+        if (this.ws.readyState === WebSocket.OPEN ||
+          this.ws.readyState === WebSocket.CONNECTING) {
+          this.ws.close();
+        }
+        this.ws = null;
+      }
     } catch (error) {
     }
   }
-
 
   onRowExit() {
     this.onDestroy()

@@ -9,6 +9,6 @@ export const BASE_TERMINAL_OPTIONS: ITerminalOptions = {
   fontFamily: 'Consolas, "Courier New", monospace',
   cursorBlink: false,
   theme: { background: '#263238' },
-  scrollback: Number.MAX_SAFE_INTEGER,
+  scrollback: 1000,
   convertEol: true,
 };

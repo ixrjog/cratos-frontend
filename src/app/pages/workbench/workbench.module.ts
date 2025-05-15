@@ -89,6 +89,8 @@ import { DeploymentElasticScalingComponent } from './work-order/work-order-layou
 import { WorkOrderAliyunDataworksTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
 import { WorkOrderPodDeleteTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
 import { CommandExecViewComponent } from './command-exec/command-exec-data-table/command-exec-view/command-exec-view.component';
+import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
+import { ApplicationCredentialDataTableComponent } from './application-credential/application-credential-data-table/application-credential-data-table.component';
 
 @NgModule({
   declarations: [
@@ -134,6 +136,8 @@ import { CommandExecViewComponent } from './command-exec/command-exec-data-table
     WorkOrderAliyunDataworksTicketComponent,
     WorkOrderPodDeleteTicketComponent,
     CommandExecViewComponent,
+    ApplicationCredentialComponent,
+    ApplicationCredentialDataTableComponent,
   ],
   imports: [
     CommonModule,

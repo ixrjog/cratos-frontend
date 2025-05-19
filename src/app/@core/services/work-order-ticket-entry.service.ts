@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  AddAliyunDataWorksInstanceTicketEntry, AddApplicationDeletePodTicketEntry,
+  AddAliyunDataWorksInstanceTicketEntry,
+  AddApplicationDeletePodTicketEntry,
   AddApplicationElasticScalingTicketEntry,
-  AddApplicationPermissionTicketEntry, AddDeploymentElasticScalingTicketEntry,
+  AddApplicationPermissionTicketEntry,
+  AddCreateAliyunRamUserTicketEntry,
+  AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   WorkOrderTicketEntryData,
@@ -78,6 +81,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addApplicationDeletePodTicketEntry(param: AddApplicationDeletePodTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/application/pod/delete/add', param);
+  }
+
+  addCreateAliyunRamUserTicketEntry(param: AddCreateAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/ram/user/instance/add', param);
   }
 
 }

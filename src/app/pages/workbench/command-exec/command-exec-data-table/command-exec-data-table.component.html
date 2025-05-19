@@ -209,12 +209,7 @@
               [operable]="true"
               (click)="onRowExec(rowItem)"
             ></d-icon>
-            <d-icon
-              *ngIf="rowItem['completed']"
-              [icon]="'icon-view'"
-              [operable]="true"
-              (click)="onRowView(rowItem)"
-            ></d-icon>
+            <d-icon [icon]="'icon-view'" [operable]="true" (click)="onRowView(rowItem)"></d-icon>
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>

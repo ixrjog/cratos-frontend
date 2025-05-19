@@ -91,6 +91,8 @@ import { WorkOrderPodDeleteTicketComponent } from './work-order/work-order-layou
 import { CommandExecViewComponent } from './command-exec/command-exec-data-table/command-exec-view/command-exec-view.component';
 import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
 import { ApplicationCredentialDataTableComponent } from './application-credential/application-credential-data-table/application-credential-data-table.component';
+import { WorkOrderCloudIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-cloud-identity-ticket.component';
+import { WorkOrderAliyunRamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
 
 @NgModule({
   declarations: [
@@ -138,6 +140,8 @@ import { ApplicationCredentialDataTableComponent } from './application-credentia
     CommandExecViewComponent,
     ApplicationCredentialComponent,
     ApplicationCredentialDataTableComponent,
+    WorkOrderCloudIdentityTicketComponent,
+    WorkOrderAliyunRamTicketComponent,
   ],
   imports: [
     CommonModule,

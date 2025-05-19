@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { ITerminalOptions, Terminal } from '@xterm/xterm';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { FitAddon } from '@xterm/addon-fit';
@@ -9,7 +18,7 @@ import { BASE_TERMINAL_OPTIONS } from '../../../constant/xterm.constant';
   template: '<div class="app-xterm-logs" #terminal></div>',
   styleUrls: [ './xterm-logs.component.less' ],
 })
-export class XtermLogsComponent implements AfterViewInit, OnDestroy {
+export class XtermLogsComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   feedLines = 1;
   @Input() logs: string = '';
@@ -30,7 +39,6 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.terminal.open(this.terminalWrapper.nativeElement);
-    window.dispatchEvent(new Event('resize'));
     this.fitAddon.fit();
     const defaultRows = this.rows;
     const defaultCols = this.terminal.cols;
@@ -50,11 +58,18 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     if (this.terminal) {
       this.terminal.dispose();
+      this.terminal = null;
     }
   }
 
   onWrite(message: string) {
     this.terminal.write(message);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    window.addEventListener('resize', () => {
+      this.fitAddon.fit();
+    });
   }
 
 }

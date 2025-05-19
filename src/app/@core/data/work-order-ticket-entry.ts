@@ -63,6 +63,20 @@ export interface AddApplicationDeletePodTicketEntry {
   detail: ApplicationVO;
 }
 
+export interface AddCreateAliyunRamUserTicketEntry {
+  ticketId: number;
+  detail: AliyunRamUserAccount;
+}
+
+export interface AliyunRamUserAccount extends CloudIdentityAccount{
+}
+
+export interface CloudIdentityAccount {
+  edsInstance: EdsInstanceVO;
+}
+
+
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -96,4 +110,5 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationDeletePodTicketEntry(param: AddApplicationDeletePodTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract addCreateAliyunRamUserTicketEntry(param: AddCreateAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>>;
 }

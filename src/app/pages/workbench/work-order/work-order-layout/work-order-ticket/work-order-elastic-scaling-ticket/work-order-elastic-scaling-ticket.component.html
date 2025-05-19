@@ -50,6 +50,13 @@
           </ng-template>
         </d-cell>
       </d-column>
+      <d-column header="Namespace">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ ticketDetails.entries[0].namespace | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
       <d-column field="detail" header="Current Replicas">
         <d-cell>
           <ng-template let-cellItem="cellItem">

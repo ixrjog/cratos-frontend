@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent, ICategorySearchTagItem } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
@@ -19,7 +19,7 @@ import { CommandExecViewComponent } from './command-exec-view/command-exec-view.
   templateUrl: './command-exec-data-table.component.html',
   styleUrls: [ './command-exec-data-table.component.less' ],
 })
-export class CommandExecDataTableComponent implements OnInit {
+export class CommandExecDataTableComponent implements OnInit, AfterViewInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
@@ -131,6 +131,10 @@ export class CommandExecDataTableComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+  }
+
+  ngAfterViewInit(): void {
+    window.dispatchEvent(new Event('resize'));
   }
 
   pageIndexChange(pageIndex) {

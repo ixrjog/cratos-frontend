@@ -37,6 +37,9 @@ import {
 import {
   WorkOrderPodDeleteTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
+import {
+  WorkOrderAliyunRamTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -247,6 +250,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.APPLICATION_DELETE_POD:
         dialogDate['content'] = WorkOrderPodDeleteTicketComponent;
         dialogDate['title'] = 'Application Pod Delete';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_RAM_USER_PERMISSION:
+        dialogDate['content'] = WorkOrderAliyunRamTicketComponent;
+        dialogDate['title'] = 'Aliyun RAM User Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

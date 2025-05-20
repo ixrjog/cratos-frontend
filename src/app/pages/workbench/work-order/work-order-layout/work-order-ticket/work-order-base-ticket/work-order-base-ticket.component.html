@@ -83,17 +83,20 @@
 
   <d-card style="margin-bottom: 20px" *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.NEW">
     <d-card-content>
-      <span style="display: flex; justify-content: center;">
-        <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
-      </span>
-      <span style="position: absolute; top: 10px; right: 10px;">
-        <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"
-               [customViewTemplate]="versionTemplate"></d-tag>
-        <ng-template #versionTemplate let-tag="tag">
-          <span class="icon-fork" style="vertical-align: center"></span>
-          <span>&nbsp;{{ tag }}</span>
-        </ng-template>
-      </span>
+      <div class="pane-content" style="margin-top: 10px">
+        <h3>Approval Process</h3>
+        <span style="display: flex; justify-content: center;">
+          <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
+        </span>
+        <span style="position: absolute; top: 10px; right: 10px;">
+          <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"
+                 [customViewTemplate]="versionTemplate"></d-tag>
+          <ng-template #versionTemplate let-tag="tag">
+            <span class="icon-fork" style="vertical-align: center"></span>
+            <span>&nbsp;{{ tag }}</span>
+          </ng-template>
+        </span>
+      </div>
     </d-card-content>
   </d-card>
 

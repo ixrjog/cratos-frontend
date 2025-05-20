@@ -18,12 +18,18 @@
       <d-form-control>
         <d-tabs type="options" [(activeTab)]="tabActiveId">
           <d-tab [id]="'application'" [title]="'Application'">
+            <d-alert [type]="'info'" [closeable]="false" style="margin-bottom: 5px">
+              {{ 'workOrderTicket.elasticScaling.application.tips' | translate }}
+            </d-alert>
             <app-application-elastic-scaling
               [ticketDetails]="ticketDetails"
               (onFetchData)="onFetchData()"
             ></app-application-elastic-scaling>
           </d-tab>
           <d-tab [id]="'deployment'" [title]="'Deployment'">
+            <d-alert [type]="'info'" [closeable]="false" style="margin-bottom: 5px">
+              {{ 'workOrderTicket.elasticScaling.deployment.tips' | translate }}
+            </d-alert>
             <app-deployment-elastic-scaling
               [ticketDetails]="ticketDetails"
               (onFetchData)="onFetchData()"
@@ -39,7 +45,7 @@
   <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
 
     <d-data-table
-      *ngIf="tabActiveId === 'application'"
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.APPLICATION) !== undefined"
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
       [tableOverflowType]="'overlay'"
     >
@@ -52,7 +58,7 @@
       </d-column>
       <d-column header="Namespace">
         <d-cell>
-          <ng-template let-cellItem="cellItem">
+          <ng-template let-rowItem="rowItem">
             <span>{{ ticketDetails.entries[0].namespace | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
@@ -107,6 +113,7 @@
     </d-data-table>
 
     <d-data-table
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET) !== undefined"
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
       [tableOverflowType]="'overlay'"
     >

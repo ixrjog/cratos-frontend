@@ -44,6 +44,7 @@
 <ng-template #showTicketEntryTemplate>
   <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
     <d-data-table
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.APPLICATION) !== undefined"
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
       [tableOverflowType]="'overlay'"
     >
@@ -91,6 +92,7 @@
     </d-data-table>
 
     <d-data-table
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET) !== undefined"
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
       [tableOverflowType]="'overlay'"
     >

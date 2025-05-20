@@ -198,6 +198,7 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon
+              class="fa-shake"
               *ngIf="rowItem['approvalInfo']['approvalRequired']"
               [icon]="'icon-classroom-approve'"
               [operable]="true"

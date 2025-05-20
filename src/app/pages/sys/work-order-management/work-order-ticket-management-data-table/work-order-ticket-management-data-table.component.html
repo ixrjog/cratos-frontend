@@ -134,6 +134,7 @@
                         [data]="rowItem['ticketAbstract']['markdown']"></markdown>
             </ng-template>
             <d-icon
+              class="fa-shake"
               *ngIf="rowItem['ticketState']===WorkOrderStatus.IN_APPROVAL
                 && rowItem.approvalInfo?.currentApprover === true"
               [icon]="'icon-classroom-approve'"

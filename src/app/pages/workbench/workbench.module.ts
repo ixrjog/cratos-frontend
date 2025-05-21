@@ -68,12 +68,6 @@ import {
   WorkOrderDataTableComponent,
 } from './work-order/work-order-layout/work-order-data-table/work-order-data-table.component';
 import {
-  WorkOrderApplicationTicketComponent,
-} from './work-order/work-order-layout/work-order-ticket/work-order-application-ticket/work-order-application-ticket.component';
-import {
-  WorkOrderComputerTicketComponent,
-} from './work-order/work-order-layout/work-order-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
-import {
   WorkOrderBaseTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderBusinessPermissionTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-business-permission-ticket.component';
@@ -81,8 +75,6 @@ import { MarkdownModule } from 'ngx-markdown';
 import { WorkOrderApprovalProcessComponent } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-approval-process/work-order-approval-process.component';
 import { WorkOrderUserRevokeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 import { WorkOrderGitlabTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-ticket.component';
-import { WorkOrderGitlabGroupTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
-import { WorkOrderGitlabProjectTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
 import { WorkOrderElasticScalingTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 import { ApplicationElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/application-elastic-scaling/application-elastic-scaling.component';
 import { DeploymentElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/deployment-elastic-scaling/deployment-elastic-scaling.component';
@@ -92,7 +84,21 @@ import { CommandExecViewComponent } from './command-exec/command-exec-data-table
 import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
 import { ApplicationCredentialDataTableComponent } from './application-credential/application-credential-data-table/application-credential-data-table.component';
 import { WorkOrderCloudIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-cloud-identity-ticket.component';
-import { WorkOrderAliyunRamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+import { WorkOrderApplicationTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-ticket/work-order-application-ticket.component';
+import {
+  WorkOrderComputerTicketComponent
+} from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
+import {
+  WorkOrderGitlabGroupTicketComponent
+} from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import {
+  WorkOrderGitlabProjectTicketComponent
+} from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
+import {
+  WorkOrderAliyunRamTicketComponent
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+import { WorkOrderCloudPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-cloud-policy-ticket.component';
+import { WorkOrderAliyunRamPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +148,8 @@ import { WorkOrderAliyunRamTicketComponent } from './work-order/work-order-layou
     ApplicationCredentialDataTableComponent,
     WorkOrderCloudIdentityTicketComponent,
     WorkOrderAliyunRamTicketComponent,
+    WorkOrderCloudPolicyTicketComponent,
+    WorkOrderAliyunRamPolicyTicketComponent,
   ],
   imports: [
     CommonModule,

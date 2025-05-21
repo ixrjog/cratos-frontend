@@ -68,14 +68,24 @@ export interface AddCreateAliyunRamUserTicketEntry {
   detail: AliyunRamUserAccount;
 }
 
+export interface AddAliyunRamPolicyPermissionTicketEntry {
+  ticketId: number;
+  detail: AliyunRamPolicy;
+}
+
 export interface AliyunRamUserAccount extends CloudIdentityAccount{
+}
+
+export interface AliyunRamPolicy extends CloudPolicy {
 }
 
 export interface CloudIdentityAccount {
   edsInstance: EdsInstanceVO;
 }
 
-
+export interface CloudPolicy {
+  asset: EdsAssetVO;
+}
 
 export abstract class WorkOrderTicketEntryData {
 
@@ -111,4 +121,6 @@ export abstract class WorkOrderTicketEntryData {
   abstract addApplicationDeletePodTicketEntry(param: AddApplicationDeletePodTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addCreateAliyunRamUserTicketEntry(param: AddCreateAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 }

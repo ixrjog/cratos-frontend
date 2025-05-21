@@ -4,12 +4,6 @@ import { WorkOrderPageQuery, WorkOrderStatus, WorkOrderVO } from '../../../../..
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
 import { ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { WorkOrderTicketService } from '../../../../../@core/services/work-order-ticket.service';
-import {
-  WorkOrderApplicationTicketComponent,
-} from '../work-order-ticket/work-order-application-ticket/work-order-application-ticket.component';
-import {
-  WorkOrderComputerTicketComponent,
-} from '../work-order-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { Table, TABLE_DATA } from '../../../../../@core/data/base-data';
 import {
@@ -28,23 +22,32 @@ import {
 } from '../work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 import { ActivatedRoute } from '@angular/router';
 import {
-  WorkOrderGitlabProjectTicketComponent,
-} from '../work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
-import {
-  WorkOrderGitlabGroupTicketComponent,
-} from '../work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
-import {
   WorkOrderElasticScalingTicketComponent,
 } from '../work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 import {
-  WorkOrderAliyunDataworksTicketComponent
+  WorkOrderAliyunDataworksTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
 import {
-  WorkOrderPodDeleteTicketComponent
+  WorkOrderPodDeleteTicketComponent,
 } from '../work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
 import {
-  WorkOrderAliyunRamTicketComponent
-} from '../work-order-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+  WorkOrderApplicationTicketComponent,
+} from '../work-order-ticket/work-order-business-permission-ticket/work-order-application-ticket/work-order-application-ticket.component';
+import {
+  WorkOrderComputerTicketComponent,
+} from '../work-order-ticket/work-order-business-permission-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
+import {
+  WorkOrderGitlabProjectTicketComponent,
+} from '../work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
+import {
+  WorkOrderGitlabGroupTicketComponent,
+} from '../work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import {
+  WorkOrderAliyunRamTicketComponent,
+} from '../work-order-ticket/work-order-cloud-identity-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+import {
+  WorkOrderAliyunRamPolicyTicketComponent,
+} from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -253,6 +256,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamTicketComponent;
         dialogDate['title'] = 'Aliyun RAM User Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_RAM_POLICY_PERMISSION:
+        dialogDate['content'] = WorkOrderAliyunRamPolicyTicketComponent;
+        dialogDate['title'] = 'Aliyun RAM Policy Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

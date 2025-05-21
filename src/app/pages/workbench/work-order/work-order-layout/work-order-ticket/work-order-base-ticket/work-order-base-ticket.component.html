@@ -88,6 +88,20 @@
         <span style="display: flex; justify-content: center;">
           <app-work-order-approval-process [ticketDetails]="ticketDetails"></app-work-order-approval-process>
         </span>
+        <div style="margin-top: 10px" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.IN_APPROVAL">
+          <form dForm ngForm [layout]="FormLayout.Vertical">
+            <d-form-item *ngFor="let node of ticketDetails.workflow.nodes">
+                <span *ngIf="node.approvalType !== 'USER_SPECIFIED'">
+                  <d-form-label>
+                    {{ node.langMap | i18nTran }}
+                  </d-form-label>
+                  <d-form-control>
+                    <app-user-tag *ngFor="let user of node.selectableUsers" [user]="user"></app-user-tag>
+                  </d-form-control>
+                </span>
+            </d-form-item>
+          </form>
+        </div>
         <span style="position: absolute; top: 10px; right: 10px;">
           <d-tag [tag]="ticketDetails.ticket.version" [labelStyle]="'blue-w98'"
                  [customViewTemplate]="versionTemplate"></d-tag>

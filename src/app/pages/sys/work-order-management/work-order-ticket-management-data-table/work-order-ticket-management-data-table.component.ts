@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { TicketPageQuery, WorkOrderTicketDetailsVO, WorkOrderTicketVO } from '../../../../@core/data/work-order-ticket';
+import {
+  TicketPageQuery,
+  WorkOrderTicketDetailsVO,
+  WorkOrderTicketVO,
+} from '../../../../@core/data/work-order-ticket';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { WorkOrderPageQuery, WorkOrderStatus, WorkOrderVO } from '../../../../@core/data/work-order';
 import { UserPageQuery, UserVO } from '../../../../@core/data/user';
 import { UserService } from '../../../../@core/services/user.service';
@@ -11,35 +16,37 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { map } from 'rxjs/operators';
 import { WorkOrderKeyEnum, WorkOrderService } from '../../../../@core/services/work-order.service';
-import {
-  WorkOrderApplicationTicketComponent,
-} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-application-ticket/work-order-application-ticket.component';
-import { BusinessTypeEnum } from '../../../../@core/data/business';
-import {
-  WorkOrderComputerTicketComponent,
-} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
 import { getPopoverStyle } from 'src/app/@shared/utils/theme.util';
 import {
   WorkOrderUserRevokeTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
 import {
-  WorkOrderGitlabProjectTicketComponent,
-} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
-import {
-  WorkOrderGitlabGroupTicketComponent,
-} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
-import {
   WorkOrderElasticScalingTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
 import {
-  WorkOrderAliyunDataworksTicketComponent
+  WorkOrderAliyunDataworksTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
 import {
-  WorkOrderPodDeleteTicketComponent
+  WorkOrderPodDeleteTicketComponent,
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
 import {
-  WorkOrderAliyunRamTicketComponent
-} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+  WorkOrderAliyunRamTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
+import {
+  WorkOrderApplicationTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-ticket/work-order-application-ticket.component';
+import {
+  WorkOrderComputerTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
+import {
+  WorkOrderGitlabProjectTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
+import {
+  WorkOrderGitlabGroupTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
+import {
+  WorkOrderAliyunRamPolicyTicketComponent,
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -257,6 +264,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamTicketComponent;
         dialogDate['title'] = 'Aliyun RAM User Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_RAM_POLICY_PERMISSION:
+        dialogDate['content'] = WorkOrderAliyunRamPolicyTicketComponent;
+        dialogDate['title'] = 'Aliyun RAM Policy Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

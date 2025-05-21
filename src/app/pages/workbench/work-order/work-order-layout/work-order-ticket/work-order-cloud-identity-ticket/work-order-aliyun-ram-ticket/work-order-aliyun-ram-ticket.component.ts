@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { WorkOrderGitlabTicketComponent } from '../work-order-gitlab-ticket/work-order-gitlab-ticket.component';
-import { WorkOrderTicketDetailsVO } from '../../../../../../@core/data/work-order-ticket';
-import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
-import { CloudIdentityAccount, GitLabPermission } from '../../../../../../@core/data/work-order-ticket-entry';
-import {
-  WorkOrderCloudIdentityTicketComponent
-} from '../work-order-cloud-identity-ticket/work-order-cloud-identity-ticket.component';
+import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
+import { WorkOrderTicketEntryService } from '../../../../../../../@core/services/work-order-ticket-entry.service';
+import { CloudIdentityAccount } from '../../../../../../../@core/data/work-order-ticket-entry';
+import { WorkOrderCloudIdentityTicketComponent } from '../work-order-cloud-identity-ticket.component';
 
 @Component({
   selector: 'app-work-order-aliyun-ram-ticket',

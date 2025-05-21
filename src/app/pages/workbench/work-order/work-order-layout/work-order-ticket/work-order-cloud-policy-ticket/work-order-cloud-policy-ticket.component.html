@@ -8,11 +8,7 @@
 ></app-work-order-base-ticket>
 
 <ng-template #editTicketEntryTemplate>
-  <h3 *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
-    this work order only support one entry , you should remove entry first
-  </h3>
-
-  <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
+  <form dForm ngForm [layout]="FormLayout.Vertical">
     <d-form-item>
       <d-form-label [required]="true">Instance</d-form-label>
       <d-form-control>
@@ -27,6 +23,27 @@
           [allowClear]="true"
           (valueChange)="onCloudInstanceChange($event)"
         >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="instance !== null">
+      <d-form-label [required]="true">Cloud Policy</d-form-label>
+      <d-form-control>
+        <d-select
+          name="cloudPolicy"
+          [filterKey]="'assetKey'"
+          [appendToBody]="true"
+          [(ngModel)]="cloudPolicy"
+          [searchFn]="onSearchCloudPolicy"
+          [isSearch]="true"
+          placeholder="Select cloud policy"
+          [allowClear]="true"
+          (valueChange)="onCloudPolicyChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.assetKey }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.description }}</span>
+          </ng-template>
         </d-select>
       </d-form-control>
     </d-form-item>
@@ -50,17 +67,24 @@
         </d-cell>
       </d-column>
       <d-column field="name" header="Ram Login Username"></d-column>
-      <d-column field="detail" header="Login Link">
+      <d-column field="detail" header="Policy Name">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            <span *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.COMPLETED"
-            >{{ cellItem.loginLink }}</span>
-            <a
-              *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED"
-              class="devui-link-light"
-              [href]="cellItem.loginLink" target="_blank">
-              {{ cellItem.loginLink }}
-            </a>
+            {{ cellItem['asset']?.assetKey }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Policy Type">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['asset']?.kind }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Policy Desc">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['asset']?.description }}
           </ng-template>
         </d-cell>
       </d-column>

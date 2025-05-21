@@ -1,15 +1,15 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { WorkOrderTicketDetailsVO } from '../../../../../../@core/data/work-order-ticket';
-import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
-import { WorkOrderGitlabTicketComponent } from '../work-order-gitlab-ticket/work-order-gitlab-ticket.component';
-import { GitLabPermission } from '../../../../../../@core/data/work-order-ticket-entry';
+import { WorkOrderGitlabTicketComponent } from '../work-order-gitlab-ticket.component';
+import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
+import { WorkOrderTicketEntryService } from '../../../../../../../@core/services/work-order-ticket-entry.service';
+import { GitLabPermission } from '../../../../../../../@core/data/work-order-ticket-entry';
 
 @Component({
-  selector: 'app-work-order-gitlab-group-ticket',
-  templateUrl: './work-order-gitlab-group-ticket.component.html',
-  styleUrls: [ './work-order-gitlab-group-ticket.component.less' ],
+  selector: 'app-work-order-gitlab-project-ticket',
+  templateUrl: './work-order-gitlab-project-ticket.component.html',
+  styleUrls: ['./work-order-gitlab-project-ticket.component.less']
 })
-export class WorkOrderGitlabGroupTicketComponent implements OnInit {
+export class WorkOrderGitlabProjectTicketComponent implements OnInit {
 
   @ViewChild('workOrderGitlabPermissionTicket') private workOrderGitlabPermissionTicket: WorkOrderGitlabTicketComponent;
   @Input() data: any;
@@ -19,7 +19,7 @@ export class WorkOrderGitlabGroupTicketComponent implements OnInit {
   }
 
   onAddTicketEntry(gitLabPermission: GitLabPermission) {
-    this.workOrderTicketEntryService.addGitLabGroupPermissionTicketEntry({
+    this.workOrderTicketEntryService.addGitLabProjectPermissionTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
       detail: gitLabPermission,
     }).subscribe(() => {

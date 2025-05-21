@@ -1,6 +1,8 @@
 <div class="spacing-search">
   <d-select
     class="select"
+    style="width: 300px;max-width: 300px"
+    [width]="580"
     [filterKey]="'username'"
     [appendToBody]="true"
     [(ngModel)]="user"
@@ -10,6 +12,10 @@
     (valueChange)="onUserChange($event)"
     [allowClear]="true"
   >
+    <ng-template let-option="option">
+      <span>{{ option.username }} : {{ option.name }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+    </ng-template>
   </d-select>
   <d-select
     class="select"
@@ -22,6 +28,7 @@
   </d-select>
   <d-select
     class="select"
+    style="width: 300px;max-width: 300px"
     [options]="sessionStatusOptions"
     [appendToBody]="true"
     [(ngModel)]="queryParam.sessionStatus"

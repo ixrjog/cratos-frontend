@@ -70,6 +70,7 @@ export class WorkOrderLdapIdentityTicketComponent implements OnInit {
 
   onLdapGroupChange(ldapGroup: any) {
     this.getLdapRoleOptions(ldapGroup.value);
+    this.ldapIdentity = null;
   }
 
   protected readonly FormLayout = FormLayout;

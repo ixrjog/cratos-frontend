@@ -1,0 +1,9 @@
+<app-work-order-cloud-identity-reset-ticket
+  #workOrderCloudIdentityResetTicket
+  [ticketDetails]="ticketDetails"
+  [edsType]="'ALIYUN'"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+>
+</app-work-order-cloud-identity-reset-ticket>

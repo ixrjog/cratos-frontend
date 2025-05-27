@@ -48,6 +48,12 @@ import {
 import {
   WorkOrderAliyunRamPolicyTicketComponent,
 } from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
+import {
+  WorkOrderAliyunRamResetTicketComponent
+} from '../work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
+import {
+  WorkOrderLdapIdentityTicketComponent
+} from '../work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -89,7 +95,6 @@ export class WorkOrderDataTableComponent implements OnInit {
       title: WorkOrderStatus.COMPLETED,
     },
   ];
-
 
   constructor(private activatedRoute: ActivatedRoute,
               private userService: UserService,
@@ -263,6 +268,20 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.ALIYUN_RAM_POLICY_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamPolicyTicketComponent;
         dialogDate['title'] = 'Aliyun RAM Policy Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_RAM_USER_RESET:
+        dialogDate['content'] = WorkOrderAliyunRamResetTicketComponent;
+        dialogDate['title'] = 'Aliyun RAM Reset';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.LDAP_ROLE_PERMISSION:
+        dialogDate['content'] = WorkOrderLdapIdentityTicketComponent;
+        dialogDate['title'] = 'Ldap Role Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

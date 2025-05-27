@@ -50,6 +50,7 @@
     [loading]="table.loading"
     [checkable]="true"
   >
+    <d-column field="assetType" header="Asset Type"></d-column>
     <d-column field="assetId" header="Asset ID"></d-column>
     <d-column field="name" header="Name"></d-column>
     <d-column field="assetKey" header="Asset Key"></d-column>
@@ -64,10 +65,9 @@
             [content]="originalModelTemplate"
             [position]="'left-top'"
             [controlled]="true"
-            [popoverStyle]="getPopoverStyle({width: '800px'})"          >
+            [popoverStyle]="getPopoverStyle({width: '800px'})">
           </d-icon>
           <ng-template #originalModelTemplate>
-            <!--            <textarea highlight-js [lang]="'yaml'" [code]="cellItem"></textarea>-->
             <app-ace-editor
               [readonly]="true"
               [aceValue]="cellItem"

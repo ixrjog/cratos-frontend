@@ -99,6 +99,9 @@ import {
 } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
 import { WorkOrderCloudPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-cloud-policy-ticket.component';
 import { WorkOrderAliyunRamPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
+import { WorkOrderCloudIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-cloud-identity-reset-ticket.component';
+import { WorkOrderAliyunRamResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
+import { WorkOrderLdapIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
 
 @NgModule({
   declarations: [
@@ -150,6 +153,9 @@ import { WorkOrderAliyunRamPolicyTicketComponent } from './work-order/work-order
     WorkOrderAliyunRamTicketComponent,
     WorkOrderCloudPolicyTicketComponent,
     WorkOrderAliyunRamPolicyTicketComponent,
+    WorkOrderCloudIdentityResetTicketComponent,
+    WorkOrderAliyunRamResetTicketComponent,
+    WorkOrderLdapIdentityTicketComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,102 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicketComponent
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <form dForm ngForm [layout]="FormLayout.Vertical">
+    <d-form-item>
+      <d-form-label [required]="true">Group</d-form-label>
+      <d-form-control>
+        <d-select
+          name="group"
+          [options]="ldapGroupOptions"
+          [filterKey]="'label'"
+          [valueKey]="'value'"
+          [appendToBody]="true"
+          (valueChange)="onLdapGroupChange($event)"
+          [(ngModel)]="ldapGroup"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="ldapGroup !== ''">
+      <d-form-label [required]="true">Role</d-form-label>
+      <d-form-control>
+        <d-select
+          name="role"
+          [appendToBody]="true"
+          [filterKey]="'$unique'"
+          [(ngModel)]="ldapIdentity"
+          [options]="ldapRoleOptions"
+          placeholder="Select ldap role"
+          dLoading
+          [loading]="ldapRoleLoading"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.asset.assetKey }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.description }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    <d-data-table
+      [dataSource]="ticketDetails.entries"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="detail" header="LDAP Role">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem.group }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Description">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem.description }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+
+</ng-template>

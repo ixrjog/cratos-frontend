@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  AddAliyunDataWorksInstanceTicketEntry, AddAliyunRamPolicyPermissionTicketEntry,
+  AddAliyunDataWorksInstanceTicketEntry,
+  AddAliyunRamPolicyPermissionTicketEntry,
   AddApplicationDeletePodTicketEntry,
   AddApplicationElasticScalingTicketEntry,
   AddApplicationPermissionTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
+  AddLdapRolePermissionTicketEntry,
+  AddResetAliyunRamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
+  LdapIdentity,
   WorkOrderTicketEntryData,
 } from '../data/work-order-ticket-entry';
 import { Observable } from 'rxjs';
-import { HttpResult } from '../data/base-data';
+import { HttpResult, OptionsVO } from '../data/base-data';
 import { EdsAssetVO, EdsInstanceVO } from '../data/ext-datasource';
 
 @Injectable()
@@ -89,6 +93,22 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/ram/policy/permission/add', param);
+  }
+
+  addResetAliyunRamUserTicketEntry(param: AddResetAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/ram/user/reset/add', param);
+  }
+
+  getLdapGroupOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get(this.baseUrl, '/ldap/group/options/get', {});
+  }
+
+  queryLdapRolePermissionTicketEntry(param: { group: string }): Observable<HttpResult<Array<LdapIdentity>>> {
+    return this.apiService.post(this.baseUrl, '/ldap/role/query', param);
+  }
+
+  addLdapRolePermissionTicketEntry(param: AddLdapRolePermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/ldap/role/permission/add', param);
   }
 
 }

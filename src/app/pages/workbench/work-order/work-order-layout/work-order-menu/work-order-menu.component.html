@@ -1,5 +1,5 @@
 <d-accordion
-  class="menu"
+  style="min-width: 620px"
   [data]="menu"
   [menuItemTemplate]="menuTemplate"
   [itemTemplate]="itemTemplate"
@@ -12,8 +12,10 @@
 
 <ng-template #itemTemplate let-item="item">
   <div>
-    <i [class]="item.icon"></i>
+    <span class="left-name">
+      <i [class]="item.icon"></i>
     &nbsp;{{ item.i18nData['langMap'] | i18nTran }}
+    </span>
     <span class="right-button">
       <d-button
         class="button"

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { HttpResult } from './base-data';
+import { HttpResult, OptionsVO } from './base-data';
 import { UserBusinessPermission } from './user-permission';
 import { UserVO } from './user';
 import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
@@ -87,6 +87,31 @@ export interface CloudPolicy {
   asset: EdsAssetVO;
 }
 
+export interface AddResetAliyunRamUserTicketEntry {
+  ticketId: number;
+  detail: AliyunRamResetAccount;
+}
+
+export interface AliyunRamResetAccount extends CloudIdentityReset {
+}
+
+export interface CloudIdentityReset {
+  asset: EdsAssetVO;
+  resetPassword: Boolean;
+  unbindMFA: Boolean;
+}
+
+export interface LdapIdentity {
+  asset: EdsAssetVO;
+  group: string;
+  description?: string;
+}
+
+export interface AddLdapRolePermissionTicketEntry {
+  ticketId: number;
+  detail: LdapIdentity;
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -123,4 +148,12 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateAliyunRamUserTicketEntry(param: AddCreateAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addResetAliyunRamUserTicketEntry(param: AddResetAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract getLdapGroupOptions(): Observable<HttpResult<OptionsVO>>;
+
+  abstract queryLdapRolePermissionTicketEntry(param: { group: string }): Observable<HttpResult<Array<LdapIdentity>>>;
+
+  abstract addLdapRolePermissionTicketEntry(param: AddLdapRolePermissionTicketEntry): Observable<HttpResult<Boolean>>;
 }

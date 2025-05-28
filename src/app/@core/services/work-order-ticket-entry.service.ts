@@ -10,6 +10,7 @@ import {
   AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
+  AddResetAlimailUserTicketEntry,
   AddResetAliyunRamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   LdapIdentity,
@@ -109,6 +110,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addLdapRolePermissionTicketEntry(param: AddLdapRolePermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/ldap/role/permission/add', param);
+  }
+
+  addResetAlimailUserTicketEntry(param: AddResetAlimailUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/alimail/user/reset/add', param);
   }
 
 }

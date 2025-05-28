@@ -102,6 +102,8 @@ import { WorkOrderAliyunRamPolicyTicketComponent } from './work-order/work-order
 import { WorkOrderCloudIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-cloud-identity-reset-ticket.component';
 import { WorkOrderAliyunRamResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
 import { WorkOrderLdapIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
+import { WorkOrderMailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-mail-identity-reset-ticket.component';
+import { WorkOrderAlimailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
 
 @NgModule({
   declarations: [
@@ -156,6 +158,8 @@ import { WorkOrderLdapIdentityTicketComponent } from './work-order/work-order-la
     WorkOrderCloudIdentityResetTicketComponent,
     WorkOrderAliyunRamResetTicketComponent,
     WorkOrderLdapIdentityTicketComponent,
+    WorkOrderMailIdentityResetTicketComponent,
+    WorkOrderAlimailIdentityResetTicketComponent,
   ],
   imports: [
     CommonModule,

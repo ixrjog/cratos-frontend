@@ -1,0 +1,9 @@
+<app-work-order-mail-identity-reset-ticket
+  #workOrderMailIdentityResetTicket
+  [ticketDetails]="ticketDetails"
+  [edsType]="'ALIMAIL'"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+>
+</app-work-order-mail-identity-reset-ticket>

@@ -49,11 +49,14 @@ import {
   WorkOrderAliyunRamPolicyTicketComponent,
 } from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
 import {
-  WorkOrderAliyunRamResetTicketComponent
+  WorkOrderAliyunRamResetTicketComponent,
 } from '../work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
 import {
-  WorkOrderLdapIdentityTicketComponent
+  WorkOrderLdapIdentityTicketComponent,
 } from '../work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
+import {
+  WorkOrderAlimailIdentityResetTicketComponent,
+} from '../work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -282,6 +285,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.LDAP_ROLE_PERMISSION:
         dialogDate['content'] = WorkOrderLdapIdentityTicketComponent;
         dialogDate['title'] = 'Ldap Role Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIMAIL_USER_RESET:
+        dialogDate['content'] = WorkOrderAlimailIdentityResetTicketComponent;
+        dialogDate['title'] = 'Alimail Reset Password';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

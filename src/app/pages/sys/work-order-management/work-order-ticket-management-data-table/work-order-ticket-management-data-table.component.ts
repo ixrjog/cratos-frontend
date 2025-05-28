@@ -53,6 +53,9 @@ import {
 import {
   WorkOrderLdapIdentityTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
+import {
+  WorkOrderAlimailIdentityResetTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -291,6 +294,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.LDAP_ROLE_PERMISSION:
         dialogDate['content'] = WorkOrderLdapIdentityTicketComponent;
         dialogDate['title'] = 'Ldap Role Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIMAIL_USER_RESET:
+        dialogDate['content'] = WorkOrderAlimailIdentityResetTicketComponent;
+        dialogDate['title'] = 'Alimail Reset Password';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

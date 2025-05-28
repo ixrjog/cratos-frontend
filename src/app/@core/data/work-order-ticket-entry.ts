@@ -4,6 +4,7 @@ import { UserBusinessPermission } from './user-permission';
 import { UserVO } from './user';
 import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
 import { ApplicationVO } from './application';
+import { EdsMailAccountVO } from './ext-dataSource-identity';
 
 
 export interface AddApplicationPermissionTicketEntry {
@@ -112,6 +113,12 @@ export interface AddLdapRolePermissionTicketEntry {
   detail: LdapIdentity;
 }
 
+export interface AddResetAlimailUserTicketEntry {
+  ticketId: number;
+  detail: EdsMailAccountVO;
+}
+
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -156,4 +163,6 @@ export abstract class WorkOrderTicketEntryData {
   abstract queryLdapRolePermissionTicketEntry(param: { group: string }): Observable<HttpResult<Array<LdapIdentity>>>;
 
   abstract addLdapRolePermissionTicketEntry(param: AddLdapRolePermissionTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addResetAlimailUserTicketEntry(param: AddResetAlimailUserTicketEntry): Observable<HttpResult<Boolean>>;
 }

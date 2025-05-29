@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
-import { CloudIdentityAccount, CloudIdentityReset } from '../../../../../../@core/data/work-order-ticket-entry';
+import { CloudIdentityAccount } from '../../../../../../@core/data/work-order-ticket-entry';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
@@ -20,16 +20,15 @@ export class WorkOrderCloudIdentityResetTicketComponent implements OnInit {
 
   @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
+  @Input() editTicketEntryExtTemplate: TemplateRef<any>;
   @Input() edsType: string;
-  @Output() onAddTicketEntry = new EventEmitter<CloudIdentityReset>();
+  @Output() onAddTicketEntry = new EventEmitter<EdsCloudAccountVO>();
   @Output() onGetTicket = new EventEmitter<WorkOrderTicketDetailsVO>();
   @Output() onHideDialog = new EventEmitter<null>();
   username: string;
   account: EdsCloudAccountVO;
   accountOptions = [];
   loading: boolean = false;
-  resetPassword: boolean = true;
-  unbindMFA: boolean = false;
 
   dialogDate = {
     warningOperateData: {
@@ -77,16 +76,7 @@ export class WorkOrderCloudIdentityResetTicketComponent implements OnInit {
       this.toastUtil.onErrorToast('Choose at least one account');
       return;
     }
-    if (!this.resetPassword && !this.unbindMFA) {
-      this.toastUtil.onErrorToast('Choose at least mode to reset');
-      return;
-    }
-    const cloudIdentity: CloudIdentityReset = {
-      asset: this.account.account,
-      unbindMFA: this.unbindMFA,
-      resetPassword: this.resetPassword,
-    };
-    this.onAddTicketEntry.emit(cloudIdentity);
+    this.onAddTicketEntry.emit(this.account);
   }
 
   onRowRemove(entry: WorkOrderTicketEntryVO<CloudIdentityAccount>) {

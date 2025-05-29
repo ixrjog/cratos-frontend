@@ -51,4 +51,8 @@ export class WorkOrderTicketService extends WorkOrderTicketData {
   doNextStateOfTicket(param: { ticketNo: string }): Observable<HttpResult<WorkOrderTicketDetailsVO>> {
     return this.apiService.post(this.baseUrl, '/next', param);
   }
+
+  adminDeleteTicketById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/admin/del', param);
+  }
 }

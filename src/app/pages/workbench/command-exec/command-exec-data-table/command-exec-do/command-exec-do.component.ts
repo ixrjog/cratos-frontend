@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import { CommandExecVO, DoCommandExec } from '../../../../../@core/data/command';
-import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
+import { DIALOG_DATA } from '../../../../../@shared/utils/dialog.util';
 import { DValidateRules } from 'ng-devui';
 import { CommandService } from '../../../../../@core/services/command.service';
-import { ToastUtil } from '../../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-command-exec-do',

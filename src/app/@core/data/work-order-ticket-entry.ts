@@ -4,7 +4,7 @@ import { UserBusinessPermission } from './user-permission';
 import { UserVO } from './user';
 import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
 import { ApplicationVO } from './application';
-import { EdsMailAccountVO } from './ext-dataSource-identity';
+import { EdsCloudAccountVO, EdsMailAccountVO } from './ext-dataSource-identity';
 
 
 export interface AddApplicationPermissionTicketEntry {
@@ -93,11 +93,7 @@ export interface AddResetAliyunRamUserTicketEntry {
   detail: AliyunRamResetAccount;
 }
 
-export interface AliyunRamResetAccount extends CloudIdentityReset {
-}
-
-export interface CloudIdentityReset {
-  asset: EdsAssetVO;
+export interface AliyunRamResetAccount extends EdsCloudAccountVO {
   resetPassword: Boolean;
   unbindMFA: Boolean;
 }
@@ -116,6 +112,11 @@ export interface AddLdapRolePermissionTicketEntry {
 export interface AddResetAlimailUserTicketEntry {
   ticketId: number;
   detail: EdsMailAccountVO;
+}
+
+export interface AddResetAwsIamUserTicketEntry {
+  ticketId: number;
+  detail: EdsCloudAccountVO;
 }
 
 
@@ -165,4 +166,6 @@ export abstract class WorkOrderTicketEntryData {
   abstract addLdapRolePermissionTicketEntry(param: AddLdapRolePermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addResetAlimailUserTicketEntry(param: AddResetAlimailUserTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addResetAwsIamUserTicketEntry(param: AddResetAwsIamUserTicketEntry): Observable<HttpResult<Boolean>>;
 }

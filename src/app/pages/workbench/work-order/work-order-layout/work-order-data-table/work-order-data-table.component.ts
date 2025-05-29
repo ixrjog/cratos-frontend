@@ -57,6 +57,9 @@ import {
 import {
   WorkOrderAlimailIdentityResetTicketComponent,
 } from '../work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
+import {
+  WorkOrderAwsIamResetTicketComponent
+} from '../work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -292,6 +295,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.ALIMAIL_USER_RESET:
         dialogDate['content'] = WorkOrderAlimailIdentityResetTicketComponent;
         dialogDate['title'] = 'Alimail Reset Password';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.AWS_IAM_USER_RESET:
+        dialogDate['content'] = WorkOrderAwsIamResetTicketComponent;
+        dialogDate['title'] = 'AWS IAM Password Reset';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

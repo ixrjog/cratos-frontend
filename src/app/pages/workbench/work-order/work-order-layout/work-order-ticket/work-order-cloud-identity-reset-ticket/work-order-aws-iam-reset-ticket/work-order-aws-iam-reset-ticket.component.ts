@@ -1,39 +1,28 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { WorkOrderCloudIdentityResetTicketComponent } from '../work-order-cloud-identity-reset-ticket.component';
 import { WorkOrderTicketDetailsVO } from '../../../../../../../@core/data/work-order-ticket';
 import { WorkOrderTicketEntryService } from '../../../../../../../@core/services/work-order-ticket-entry.service';
-import { WorkOrderCloudIdentityResetTicketComponent } from '../work-order-cloud-identity-reset-ticket.component';
-import { ToastUtil } from '../../../../../../../@shared/utils/toast.util';
 import { EdsCloudAccountVO } from '../../../../../../../@core/data/ext-dataSource-identity';
 
 @Component({
-  selector: 'app-work-order-aliyun-ram-reset-ticket',
-  templateUrl: './work-order-aliyun-ram-reset-ticket.component.html',
-  styleUrls: [ './work-order-aliyun-ram-reset-ticket.component.less' ],
+  selector: 'app-work-order-aws-iam-reset-ticket',
+  templateUrl: './work-order-aws-iam-reset-ticket.component.html',
+  styleUrls: [ './work-order-aws-iam-reset-ticket.component.less' ],
 })
-export class WorkOrderAliyunRamResetTicketComponent implements OnInit {
+export class WorkOrderAwsIamResetTicketComponent implements OnInit {
 
   @ViewChild('workOrderCloudIdentityResetTicket') private workOrderCloudIdentityResetTicket: WorkOrderCloudIdentityResetTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  resetPassword: boolean = true;
-  unbindMFA: boolean = false;
 
-  constructor(private workOrderTicketEntryService: WorkOrderTicketEntryService,
-              private toastUtil: ToastUtil) {
+  constructor(private workOrderTicketEntryService: WorkOrderTicketEntryService) {
   }
 
   onAddTicketEntry(edsCloudAccount: EdsCloudAccountVO) {
-    if (!this.resetPassword && !this.unbindMFA) {
-      this.toastUtil.onErrorToast('Choose at least mode to reset');
-      return;
-    }
-    this.workOrderTicketEntryService.addResetAliyunRamUserTicketEntry({
+
+    this.workOrderTicketEntryService.addResetAwsIamUserTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
-      detail: {
-        ...edsCloudAccount,
-        resetPassword: this.resetPassword,
-        unbindMFA: this.unbindMFA,
-      },
+      detail: edsCloudAccount,
     }).subscribe(() => {
       this.onFetchData();
     });

@@ -11,7 +11,7 @@ import {
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
-  AddResetAliyunRamUserTicketEntry,
+  AddResetAliyunRamUserTicketEntry, AddResetAwsIamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   LdapIdentity,
   WorkOrderTicketEntryData,
@@ -114,6 +114,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addResetAlimailUserTicketEntry(param: AddResetAlimailUserTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/alimail/user/reset/add', param);
+  }
+
+  addResetAwsIamUserTicketEntry(param: AddResetAwsIamUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aws/iam/user/reset/add', param);
   }
 
 }

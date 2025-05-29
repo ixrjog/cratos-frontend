@@ -98,6 +98,26 @@
         <d-toggle name="autoExec" [(ngModel)]="formData.autoExec"></d-toggle>
       </d-form-control>
     </d-form-item>
+    <d-form-item *ngIf="formData.autoExec">
+      <d-form-label [required]="true">Max Waiting Time</d-form-label>
+      <d-form-control>
+        <div class="composite-slider slider-wrapper">
+          <d-slider name="limit" [(ngModel)]="maxWaitingTime" [min]="min" [max]="max" class="slider"></d-slider>
+          <div class="snapshot-value">
+            <d-input-number
+              name="limit"
+              [min]="min"
+              [max]="max"
+              [allowEmpty]="false"
+              [(ngModel)]="maxWaitingTime"
+              class="input-number"
+            ></d-input-number>
+          </div>
+          <span style="margin-top: 15px">{{ min }}</span>
+          <span style="margin:15px 10px 0 0">{{ max }}</span>
+        </div>
+      </d-form-control>
+    </d-form-item>
     <d-form-item>
       <d-form-label [required]="true">Remark</d-form-label>
       <d-form-control>

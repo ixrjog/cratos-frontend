@@ -21,6 +21,9 @@ export class CommandExecEditorComponent implements OnInit {
   approveUser: UserVO;
   ccUser: UserVO;
   execTarget: { instanceId: number, namespace: string } = { instanceId: null, namespace: '' };
+  maxWaitingTime: number = 10;
+  min: number = 10;
+  max: number = 60;
   namespaceOptions: string[] = [];
   instance: EdsInstanceVO;
 
@@ -41,6 +44,9 @@ export class CommandExecEditorComponent implements OnInit {
       ...this.formData,
       execTarget: this.execTarget,
     };
+    if (this.formData.autoExec) {
+      param.execTarget['maxWaitingTime'] = this.maxWaitingTime;
+    }
     return this.commandService.addCommandExec(param);
   }
 

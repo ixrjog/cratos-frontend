@@ -56,6 +56,9 @@ import {
 import {
   WorkOrderAlimailIdentityResetTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
+import {
+  WorkOrderAwsIamResetTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -198,10 +201,24 @@ export class WorkOrderTicketManagementDataTableComponent {
   onRowClose(rowItem: WorkOrderTicketVO) {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.delete,
+      content: this.dialogDate.content.close,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       this.workOrderTicketService.deleteTicketById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
+  }
+
+  onRowDelete(rowItem: WorkOrderTicketVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.workOrderTicketService.adminDeleteTicketById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
@@ -301,6 +318,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.ALIMAIL_USER_RESET:
         dialogDate['content'] = WorkOrderAlimailIdentityResetTicketComponent;
         dialogDate['title'] = 'Alimail Reset Password';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.AWS_IAM_USER_RESET:
+        dialogDate['content'] = WorkOrderAwsIamResetTicketComponent;
+        dialogDate['title'] = 'AWS IAM Password Reset';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

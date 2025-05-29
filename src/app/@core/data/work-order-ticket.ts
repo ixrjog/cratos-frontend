@@ -135,4 +135,7 @@ export abstract class WorkOrderTicketData {
 
   abstract doNextStateOfTicket(param: { ticketNo: string }): Observable<HttpResult<WorkOrderTicketDetailsVO>>;
 
+  abstract adminDeleteTicketById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+
 }

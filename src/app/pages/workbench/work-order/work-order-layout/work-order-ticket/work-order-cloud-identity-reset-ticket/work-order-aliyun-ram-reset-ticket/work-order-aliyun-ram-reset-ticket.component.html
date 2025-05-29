@@ -5,5 +5,21 @@
   (onAddTicketEntry)="onAddTicketEntry($event)"
   (onGetTicket)="onGetTicketDetail($event)"
   (onHideDialog)="onCancel()"
+  [editTicketEntryExtTemplate]="editTicketEntryExtTemplate"
 >
 </app-work-order-cloud-identity-reset-ticket>
+
+<ng-template #editTicketEntryExtTemplate>
+  <d-form-item>
+    <d-form-label [required]=" true">Password</d-form-label>
+    <d-form-control>
+      <d-toggle name="Password" [(ngModel)]="resetPassword"></d-toggle>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">MFA</d-form-label>
+    <d-form-control>
+      <d-toggle name="mfa" [(ngModel)]="unbindMFA"></d-toggle>
+    </d-form-control>
+  </d-form-item>
+</ng-template>

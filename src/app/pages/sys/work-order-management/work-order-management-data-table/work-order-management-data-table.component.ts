@@ -78,7 +78,7 @@ export class WorkOrderManagementDataTableComponent {
     this.fetchData();
   }
 
-  onRowEdit(rowItem: WorkOrderGroupVO) {
+  onRowEdit(rowItem: WorkOrderVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
       title: 'Edit Work Order Group',

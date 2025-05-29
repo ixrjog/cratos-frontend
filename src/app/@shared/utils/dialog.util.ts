@@ -263,6 +263,7 @@ export const DIALOG_DATA = {
   },
   content: {
     delete: '<strong>Confirm delete this row ?</strong>',
+    close: '<strong>Confirm close this row ?</strong>',
     inactive: '<strong>Confirm inactive this row ?</strong>',
     revoke: '<strong>Confirm revoke this row ?</strong>',
     grant: '<strong>Confirm grant this row ?</strong>',

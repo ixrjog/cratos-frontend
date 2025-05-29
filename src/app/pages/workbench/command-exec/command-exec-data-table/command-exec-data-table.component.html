@@ -126,6 +126,10 @@
             <span>Namespace:&nbsp;</span>
             <span>{{ cellItem['instance']['namespace'] }}</span>
           </div>
+          <div>
+            <span>Max Waiting Time:&nbsp;</span>
+            <span>{{ cellItem['maxWaitingTime'] | dSafeNullPipe }}</span>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

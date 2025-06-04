@@ -39,6 +39,8 @@
           placeholder="Select cloud policy"
           [allowClear]="true"
           (valueChange)="onCloudPolicyChange($event)"
+          dLoading
+          [loading]="loading"
         >
           <ng-template let-option="option">
             <span>{{ option.assetKey }}</span>

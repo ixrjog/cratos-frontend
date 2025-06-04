@@ -15,6 +15,7 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
 import { map } from 'rxjs/operators';
 import { FormLayout } from 'ng-devui/form';
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-work-order-cloud-policy-ticket',
@@ -33,6 +34,7 @@ export class WorkOrderCloudPolicyTicketComponent implements OnInit {
 
   instance: EdsInstanceVO = null;
   cloudPolicy: EdsAssetVO = null;
+  loading: boolean = false
 
   dialogDate = {
     warningOperateData: {
@@ -73,8 +75,12 @@ export class WorkOrderCloudPolicyTicketComponent implements OnInit {
     const param: AssetPageQuery = {
       instanceId: this.instance?.id, assetType: this.assetType, valid: true, length: 10, page: 1, queryName: term,
     };
+    this.loading = true
     return this.edsService.queryEdsInstanceAssetPage(param)
       .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
         map(({ body }) =>
           body.data.map((policy, index) => ({ id: index, option: policy })),
         ),

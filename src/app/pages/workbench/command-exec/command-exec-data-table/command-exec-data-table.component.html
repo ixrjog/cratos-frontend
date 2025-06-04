@@ -117,18 +117,23 @@
 
     <d-column field="execTarget" header="Exec Target" [width]="'200px'">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
+        <ng-template let-rowItem="rowItem">
           <div>
             <span>Instance:&nbsp;</span>
-            <span>{{ cellItem['instance']['name'] }}</span>
+            <span>{{ rowItem['execTarget']['instance']['name'] }}</span>
           </div>
           <div>
             <span>Namespace:&nbsp;</span>
-            <span>{{ cellItem['instance']['namespace'] }}</span>
+            <span *ngIf="rowItem['env'] === null">
+              <span>{{ rowItem['execTarget']['instance']['namespace'] }}</span>
+            </span>
+            <span *ngIf="rowItem['env'] !== null">
+               <d-tag [tag]="rowItem.env.envName" [customColor]="rowItem.env.color"></d-tag>
+            </span>
           </div>
           <div>
             <span>Max Waiting Time:&nbsp;</span>
-            <span>{{ cellItem['maxWaitingTime'] | dSafeNullPipe }}</span>
+            <span>{{ rowItem['execTarget']['maxWaitingTime'] | dSafeNullPipe }}</span>
           </div>
         </ng-template>
       </d-cell>

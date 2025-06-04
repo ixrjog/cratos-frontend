@@ -35,7 +35,7 @@
                 </d-select>
               </d-form-control>
             </d-form-item>
-            <d-form-item>
+            <d-form-item *ngIf="formData.tag['tagKey'] !== 'ConfigMap'">
               <d-form-label>Tag Value</d-form-label>
               <d-form-control>
                 <input
@@ -50,6 +50,19 @@
                   dAutoComplete
                   [searchFn]="onSearchTagValue.bind(this)"
                 />
+              </d-form-control>
+            </d-form-item>
+            <d-form-item *ngIf="formData.tag['tagKey'] === 'ConfigMap'">
+              <d-form-label>Config Map Data</d-form-label>
+              <d-form-control>
+                <app-ace-editor
+                  [minLines]="20"
+                  [maxLines]="30"
+                  [mode]="'ace/mode/yaml'"
+                  [aceValue]="formData.tagValue"
+                  (onChange)="onDataChange($event)"
+                >
+                </app-ace-editor>
               </d-form-control>
             </d-form-item>
             <d-form-operation>
@@ -77,6 +90,7 @@
               [customViewTemplate]="customTag"
               [maxWidth]="'100px'"
               [customColor]="businessTag.tag.color"
+              [titleContent]="businessTag.tagValue"
             >
             </d-tag>
         </div>
@@ -86,6 +100,6 @@
 </section>
 <ng-template #customTag let-tag="tag">
   <span (click)="onTagClick(tag)">{{ tag.tag.tagKey }}</span>
-  <span *ngIf="tag.tagValue !==''">:{{ tag.tagValue }}</span>
+  <span *ngIf="tag.tag.tagKey !=='ConfigMap' && tag.tagValue !==''">:{{ tag.tagValue }}</span>
   <span class="icon-close" style="vertical-align: center; padding-left: 4px" (click)="onTagDelete(tag)"></span>
 </ng-template>

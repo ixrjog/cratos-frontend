@@ -12,6 +12,9 @@ export class BusinessTagsComponent {
   @Input() businessTags: BusinessTagVO[];
 
   getTagValue(businessTag: BusinessTagVO) {
+    if (businessTag.tag.tagKey === 'ConfigMap') {
+      return 'ConfigMap';
+    }
     if (businessTag.tagValue !== '') {
       return businessTag.tag.tagKey + ':' + businessTag.tagValue;
     }

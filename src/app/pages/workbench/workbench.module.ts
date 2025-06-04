@@ -105,6 +105,7 @@ import { WorkOrderLdapIdentityTicketComponent } from './work-order/work-order-la
 import { WorkOrderMailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-mail-identity-reset-ticket.component';
 import { WorkOrderAlimailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
 import { WorkOrderAwsIamResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
+import { WorkOrderAwsTransferSftpTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
 
 @NgModule({
   declarations: [
@@ -162,6 +163,7 @@ import { WorkOrderAwsIamResetTicketComponent } from './work-order/work-order-lay
     WorkOrderMailIdentityResetTicketComponent,
     WorkOrderAlimailIdentityResetTicketComponent,
     WorkOrderAwsIamResetTicketComponent,
+    WorkOrderAwsTransferSftpTicketComponent,
   ],
   imports: [
     CommonModule,

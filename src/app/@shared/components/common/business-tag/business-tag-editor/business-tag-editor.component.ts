@@ -9,6 +9,7 @@ import { BusinessTagService } from '../../../../../@core/services/business-tag.s
 import { TOAST_CONTENT, ToastUtil } from '../../../../utils/toast.util';
 import { TagPageQuery, TagVO } from '../../../../../@core/data/tag';
 import { GetByBusiness } from '../../../../../@core/data/business';
+import { ApplicationVO } from '../../../../../@core/data/application';
 
 @Component({
   selector: 'app-business-tag-editor',
@@ -17,7 +18,7 @@ import { GetByBusiness } from '../../../../../@core/data/business';
 })
 export class BusinessTagEditorComponent implements OnInit {
 
-  size = '30%';
+  size = '50%';
   minSize = '20%';
   maxSize = '60%';
   orientation: SplitterOrientation = 'horizontal';
@@ -146,5 +147,12 @@ export class BusinessTagEditorComponent implements OnInit {
 
   onTagClick(tag: BusinessTagVO) {
     this.formData.tag = tag.tag;
+    if (tag.tag.tagKey === 'ConfigMap') {
+      this.formData.tagValue = tag.tagValue;
+    }
+  }
+
+  onDataChange(data: string) {
+    this.formData.tagValue = data;
   }
 }

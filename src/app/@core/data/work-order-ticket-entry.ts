@@ -119,6 +119,15 @@ export interface AddResetAwsIamUserTicketEntry {
   detail: EdsCloudAccountVO;
 }
 
+export interface AddCreateAwsTransferSftpUserTicketEntry {
+  ticketId: number;
+  detail: {
+    asset: EdsAssetVO;
+    username: string;
+    publicKey: string;
+    description: string;
+  };
+}
 
 export abstract class WorkOrderTicketEntryData {
 
@@ -168,4 +177,7 @@ export abstract class WorkOrderTicketEntryData {
   abstract addResetAlimailUserTicketEntry(param: AddResetAlimailUserTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addResetAwsIamUserTicketEntry(param: AddResetAwsIamUserTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addCreateAwsTransferSftpUserTicketEntry(param: AddCreateAwsTransferSftpUserTicketEntry): Observable<HttpResult<Boolean>>;
+
 }

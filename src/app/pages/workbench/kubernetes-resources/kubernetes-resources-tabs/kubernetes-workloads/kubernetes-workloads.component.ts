@@ -44,4 +44,5 @@ export class KubernetesWorkloadsComponent {
     this.drawerUtil.onDrawer(drawerDate, formData);
   }
 
+  protected readonly JSON = JSON;
 }

@@ -60,6 +60,9 @@ import {
 import {
   WorkOrderAwsIamResetTicketComponent
 } from '../work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
+import {
+  WorkOrderAwsTransferSftpTicketComponent
+} from '../work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -302,6 +305,13 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.AWS_IAM_USER_RESET:
         dialogDate['content'] = WorkOrderAwsIamResetTicketComponent;
         dialogDate['title'] = 'AWS IAM Password Reset';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.AWS_TRANSFER_SFTP_USER_PERMISSION:
+        dialogDate['content'] = WorkOrderAwsTransferSftpTicketComponent;
+        dialogDate['title'] = 'AWS Transfer Sftp Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

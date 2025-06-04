@@ -1,28 +1,28 @@
-<!--<div class="da-settings-layout">-->
-<!--  <da-layout-row [daGutter]="[24, 24]">-->
-<!--    <da-col-item [daSpan]="24" [daXs]="10" [daMd]="8" [daOrder]="1">-->
-<!--      <app-work-order-menu-->
-<!--        (onNewData)="onNewData($event)"-->
-<!--        (onFetchData)="onFetchData($event)"-->
-<!--      ></app-work-order-menu>-->
-<!--    </da-col-item>-->
-<!--    <da-col-item [daSpan]="24" [daXs]="14" [daMd]="16" [daOrder]="2">-->
-<!--      <app-work-order-data-table #workOrderDataTable></app-work-order-data-table>-->
-<!--    </da-col-item>-->
-<!--  </da-layout-row>-->
-<!--</div>-->
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[24, 24]">
+    <da-col-item [daSpan]="24" [daLg]="10" [daXl]="8" [daOrder]="1">
+      <app-work-order-menu
+        (onNewData)="onNewData($event)"
+        (onFetchData)="onFetchData($event)"
+      ></app-work-order-menu>
+    </da-col-item>
+    <da-col-item [daSpan]="24" [daLg]="14" [daXl]="16" [daOrder]="2">
+      <app-work-order-data-table #workOrderDataTable></app-work-order-data-table>
+    </da-col-item>
+  </da-layout-row>
+</div>
 
-<d-layout class="layout-wrapper">
-  <d-layout>
-    <d-aside>
-      <div class="app-data-table">
-        <app-work-order-menu (onNewData)="onNewData($event)" (onFetchData)="onFetchData($event)"></app-work-order-menu>
-      </div>
-    </d-aside>
-    <d-content>
-      <div class="app-data-table">
-        <app-work-order-data-table #workOrderDataTable></app-work-order-data-table>
-      </div>
-    </d-content>
-  </d-layout>
-</d-layout>
+<!--<d-layout class="layout-wrapper">-->
+<!--  <d-layout>-->
+<!--    <d-aside>-->
+<!--      <div class="app-data-table">-->
+<!--        <app-work-order-menu (onNewData)="onNewData($event)" (onFetchData)="onFetchData($event)"></app-work-order-menu>-->
+<!--      </div>-->
+<!--    </d-aside>-->
+<!--    <d-content>-->
+<!--      <div class="app-data-table">-->
+<!--        <app-work-order-data-table #workOrderDataTable></app-work-order-data-table>-->
+<!--      </div>-->
+<!--    </d-content>-->
+<!--  </d-layout>-->
+<!--</d-layout>-->

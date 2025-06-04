@@ -7,11 +7,13 @@ import {
   AddApplicationElasticScalingTicketEntry,
   AddApplicationPermissionTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
+  AddCreateAwsTransferSftpUserTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
-  AddResetAliyunRamUserTicketEntry, AddResetAwsIamUserTicketEntry,
+  AddResetAliyunRamUserTicketEntry,
+  AddResetAwsIamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   LdapIdentity,
   WorkOrderTicketEntryData,
@@ -118,6 +120,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addResetAwsIamUserTicketEntry(param: AddResetAwsIamUserTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aws/iam/user/reset/add', param);
+  }
+
+  addCreateAwsTransferSftpUserTicketEntry(param: AddCreateAwsTransferSftpUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aws/transfer/sftp/user/add', param);
   }
 
 }

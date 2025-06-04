@@ -5,7 +5,10 @@
         <h1 style="margin: 0 10px 0 0">{{ application.name }}</h1>
 
         <div class="layout-center" style="margin-right: 5px">
-          <d-tag [tag]="'total replicas x' + getTotalReplicas()" [labelStyle]="'blue-w98'"></d-tag>
+          <d-tag
+            [tag]="JSON.stringify(deploymentList) !== '[]'?'total replicas x' + getTotalReplicas():'Unbound Deployment'"
+            [labelStyle]="'blue-w98'"
+          ></d-tag>
         </div>
 
       </div>

@@ -18,6 +18,12 @@
         <app-xterm-logs [logs]="formData.errorMsg"></app-xterm-logs>
       </d-form-control>
     </d-form-item>
+    <d-form-item>
+      <d-form-label>Max Waiting Time (S)</d-form-label>
+      <d-form-control>
+        <span>{{ formData.execTarget.maxWaitingTime }}</span>
+      </d-form-control>
+    </d-form-item>
   </form>
 </section>
 

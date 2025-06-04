@@ -7,9 +7,18 @@ export interface KubernetesDetailsVO {
   success: boolean;
   message: string;
   namespace: string;
+  banner: KubernetesDetailsBannerVO;
   workloads: KubernetesWorkloadsVO;
   network: KubernetesNetworkVO;
   accessControl: AccessControlVO;
+}
+
+export interface KubernetesDetailsBannerVO {
+  name: string;
+  arms: {
+    home: string
+    valid: boolean
+  };
 }
 
 export interface AccessControlVO {

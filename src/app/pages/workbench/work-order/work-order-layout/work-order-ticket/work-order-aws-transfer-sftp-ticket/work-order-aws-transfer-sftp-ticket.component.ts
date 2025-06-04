@@ -33,6 +33,7 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
   edsType: string = 'AWS';
   assetType: string = 'AWS_TRANSFER_SERVER';
   description: string;
+  usernameRegex = '^\\w[\\w@.-]{2,99}$';
 
   dialogDate = {
     warningOperateData: {

@@ -11,5 +11,10 @@ export default {
         tips: 'Specify Deployment to adjust the replica.',
       },
     },
+    awsTransferSftp: {
+      tips1: '1. Start with a letter, digit, or underscore',
+      tips2: '2. Continue with 2-99 characters that can be letters, digits, underscores, @, periods, or hyphens',
+      tips3: '3. Have a total length between 3-100 characters',
+    },
   },
 };

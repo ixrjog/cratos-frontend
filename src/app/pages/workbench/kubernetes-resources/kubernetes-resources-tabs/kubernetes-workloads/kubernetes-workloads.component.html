@@ -11,6 +11,10 @@
           ></d-tag>
         </div>
 
+        <div class="layout-center" style="margin-right: 5px" *ngIf="banner?.arms?.valid === true">
+          <d-tag [tag]="'ARMS'" [labelStyle]="'blue-w98'" (click)="onRouteArms()"></d-tag>
+        </div>
+
       </div>
     </d-splitter-pane>
     <d-splitter-pane>

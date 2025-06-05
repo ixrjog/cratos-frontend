@@ -62,6 +62,9 @@ import {
 import {
   WorkOrderAwsTransferSftpTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
+import {
+  WorkOrderAwsIamPolicyTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aws-iam-policy-ticket/work-order-aws-iam-policy-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -335,6 +338,13 @@ export class WorkOrderTicketManagementDataTableComponent {
       case WorkOrderKeyEnum.AWS_TRANSFER_SFTP_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAwsTransferSftpTicketComponent;
         dialogDate['title'] = 'AWS Transfer Sftp Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.AWS_IAM_POLICY_PERMISSION:
+        dialogDate['content'] = WorkOrderAwsIamPolicyTicketComponent;
+        dialogDate['title'] = 'AWS IAM Policy Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

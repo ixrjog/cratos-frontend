@@ -5,7 +5,7 @@ import {
   AddAliyunRamPolicyPermissionTicketEntry,
   AddApplicationDeletePodTicketEntry,
   AddApplicationElasticScalingTicketEntry,
-  AddApplicationPermissionTicketEntry,
+  AddApplicationPermissionTicketEntry, AddAwsIamPolicyPermissionTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
   AddCreateAwsTransferSftpUserTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
@@ -126,4 +126,7 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aws/transfer/sftp/user/add', param);
   }
 
+  addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aws/iam/policy/permission/add', param);
+  }
 }

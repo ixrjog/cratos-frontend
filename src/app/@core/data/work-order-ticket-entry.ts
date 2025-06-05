@@ -129,6 +129,14 @@ export interface AddCreateAwsTransferSftpUserTicketEntry {
   };
 }
 
+export interface AddAwsIamPolicyPermissionTicketEntry {
+  ticketId: number;
+  detail: AwsIamPolicy;
+}
+
+export interface AwsIamPolicy extends CloudPolicy {
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -179,5 +187,7 @@ export abstract class WorkOrderTicketEntryData {
   abstract addResetAwsIamUserTicketEntry(param: AddResetAwsIamUserTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addCreateAwsTransferSftpUserTicketEntry(param: AddCreateAwsTransferSftpUserTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
 }

@@ -1,0 +1,13 @@
+<app-work-order-cloud-policy-ticket
+  #workOrderCloudPolicyTicket
+  [ticketDetails]="ticketDetails"
+  [assetType]="'AWS_IAM_POLICY'"
+  [edsType]="'AWS'"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+>
+</app-work-order-cloud-policy-ticket>
+
+
+

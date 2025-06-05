@@ -31,7 +31,7 @@
       <d-form-control>
         <d-select
           name="cloudPolicy"
-          [filterKey]="'assetKey'"
+          [filterKey]="'name'"
           [appendToBody]="true"
           [(ngModel)]="cloudPolicy"
           [searchFn]="onSearchCloudPolicy"
@@ -43,7 +43,7 @@
           [loading]="loading"
         >
           <ng-template let-option="option">
-            <span>{{ option.assetKey }}</span>
+            <span>{{ option.name }}</span>
             <span style="float: right; padding: 3px 0">{{ option.description }}</span>
           </ng-template>
         </d-select>
@@ -68,18 +68,18 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="name" header="Ram Login Username"></d-column>
-      <d-column field="detail" header="Policy Name">
+      <d-column field="detail" header="Login Username">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            {{ cellItem['asset']?.assetKey }}
+            <span *ngIf="edsType==='ALIYUN'">{{ cellItem['loginLink'] }}</span>
+            <span *ngIf="edsType==='AWS'">{{ cellItem['cloudAccount']?.accountLogin.loginUrl }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Policy Type">
+      <d-column field="detail" header="Policy Name">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            {{ cellItem['asset']?.kind }}
+            {{ cellItem['asset']?.name }}
           </ng-template>
         </d-cell>
       </d-column>

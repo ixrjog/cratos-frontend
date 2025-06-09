@@ -70,6 +70,7 @@ export interface TrafficLayerDomainPageQuery extends PageQuery {
 export interface TrafficLayerRecordPageQuery extends PageQuery {
   queryName: string;
   domainId: number;
+  hasRouteTrafficTo: boolean;
 }
 
 export interface TrafficLayerRecordQueryDetails {

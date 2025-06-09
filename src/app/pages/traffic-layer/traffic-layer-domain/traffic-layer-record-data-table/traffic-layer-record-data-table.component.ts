@@ -31,6 +31,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
     domainId: null,
+    hasRouteTrafficTo: null,
   };
   trafficLayerDomain: TrafficLayerDomainVO;
   envOptions = [];
@@ -75,6 +76,36 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     };
     this.envService.queryEnvPage(param)
       .subscribe(({ body }) => this.envOptions = body.data);
+  }
+
+  validOptions = [
+    {
+      id: '',
+      title: 'ALL',
+    },
+    {
+      id: 'true',
+      title: 'Have Route Traffic',
+    },
+    {
+      id: 'false',
+      title: 'Not Have Route Traffic',
+    },
+  ];
+
+  onValidChange(tab) {
+    switch (tab) {
+      case '':
+        this.queryParam.hasRouteTrafficTo = null;
+        break;
+      case 'true':
+        this.queryParam.hasRouteTrafficTo = true;
+        break;
+      case 'false':
+        this.queryParam.hasRouteTrafficTo = false;
+        break;
+    }
+    this.fetchData();
   }
 
   fetchData() {

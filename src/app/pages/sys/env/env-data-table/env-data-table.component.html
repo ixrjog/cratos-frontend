@@ -32,11 +32,19 @@
     </d-column>
     <d-column field="lifecycle" header="Lifecycle"></d-column>
     <d-column field="seq" header="Seq" [sortable]="true"></d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"

@@ -34,6 +34,7 @@ export class EdsConfigDataTableComponent implements OnInit {
     valid: null,
   };
   businessType: string = BusinessTypeEnum.EDS_CONFIG;
+  edsTypeOptions = [];
 
   table: Table<EdsConfigVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
@@ -82,6 +83,13 @@ export class EdsConfigDataTableComponent implements OnInit {
   ) {
   }
 
+  getEdsTypeOptions() {
+    this.edsService.getEdsInstanceTypeOptions()
+      .subscribe(({ body }) => {
+        this.edsTypeOptions = body.options;
+      });
+  };
+
   fetchData() {
     const param: EdsConfigPageQuery = {
       ...this.queryParam,
@@ -93,6 +101,7 @@ export class EdsConfigDataTableComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    this.getEdsTypeOptions();
   }
 
   pageIndexChange(pageIndex) {
@@ -229,6 +238,10 @@ export class EdsConfigDataTableComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  onEdsTypeChange(edsType: string) {
+    this.fetchData();
   }
 
   protected readonly getRowColor = getRowColor;

@@ -33,4 +33,8 @@ export class EnvService extends EnvData {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
+  queryEnvByGroupValue(param: { groupValue: string }): Observable<HttpResult<Array<EnvVO>>> {
+    return this.apiService.post(this.baseUrl, '/query/by/group/value', param);
+  }
+
 }

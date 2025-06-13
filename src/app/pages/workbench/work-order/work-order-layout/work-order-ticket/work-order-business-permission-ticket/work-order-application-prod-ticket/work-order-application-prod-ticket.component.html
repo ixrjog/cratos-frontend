@@ -1,0 +1,21 @@
+<app-work-order-business-permission-ticket
+  #workOrderBusinessPermissionTicket
+  [businessType]="businessType"
+  [ticketDetails]="ticketDetails"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+  [envGroup]="envGroup"
+  [editTicketEntryTipsTemplate]="editTicketEntryTipsTemplate"
+>
+</app-work-order-business-permission-ticket>
+
+<ng-template #editTicketEntryTipsTemplate>
+  <d-form-item>
+    <d-form-control>
+      <d-alert [type]="'info'" [closeable]="false">
+        {{ 'workOrderTicket.application.prod.tips' | translate }}
+      </d-alert>
+    </d-form-control>
+  </d-form-item>
+</ng-template>

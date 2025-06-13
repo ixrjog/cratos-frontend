@@ -5,7 +5,10 @@ import {
   AddAliyunRamPolicyPermissionTicketEntry,
   AddApplicationDeletePodTicketEntry,
   AddApplicationElasticScalingTicketEntry,
-  AddApplicationPermissionTicketEntry, AddAwsIamPolicyPermissionTicketEntry,
+  AddApplicationPermissionTicketEntry,
+  AddAwsIamPolicyPermissionTicketEntry,
+  AddCreateAliyunOnsConsumerGroupTicketEntry,
+  AddCreateAliyunOnsTopicTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
   AddCreateAwsTransferSftpUserTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
@@ -82,6 +85,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/query', {});
   }
 
+  queryRocketMqInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/rocketmq/instance/query', {});
+  }
+
   addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/add', param);
   }
@@ -129,4 +136,21 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
   addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aws/iam/policy/permission/add', param);
   }
+
+  addApplicationProdPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/prod/permission/add', param);
+  }
+
+  addApplicationTestPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/test/permission/add', param);
+  }
+
+  addCreateAliyunOnsTopicTicketEntry(param: AddCreateAliyunOnsTopicTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/ons/topic/add', param);
+  }
+
+  addCreateAliyunOnsConsumerGroupTicketEntry(param: AddCreateAliyunOnsConsumerGroupTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/ons/consumerGroup/add', param);
+  }
+
 }

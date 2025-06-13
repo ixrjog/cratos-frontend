@@ -66,6 +66,18 @@ import {
 import {
   WorkOrderAwsIamPolicyTicketComponent
 } from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-aws-iam-policy-ticket/work-order-aws-iam-policy-ticket.component';
+import {
+  WorkOrderApplicationProdTicketComponent
+} from '../work-order-ticket/work-order-business-permission-ticket/work-order-application-prod-ticket/work-order-application-prod-ticket.component';
+import {
+  WorkOrderApplicationTestTicketComponent
+} from '../work-order-ticket/work-order-business-permission-ticket/work-order-application-test-ticket/work-order-application-test-ticket.component';
+import {
+  WorkOrderAliyunOnsTopicTicketComponent
+} from '../work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-topic-ticket/work-order-aliyun-ons-topic-ticket.component';
+import {
+  WorkOrderAliyunOnsConsumeGroupTicketComponent
+} from '../work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-consume-group-ticket/work-order-aliyun-ons-consume-group-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -221,6 +233,20 @@ export class WorkOrderDataTableComponent implements OnInit {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
         break;
+      case WorkOrderKeyEnum.APPLICATION_PROD_PERMISSION:
+        dialogDate['content'] = WorkOrderApplicationProdTicketComponent;
+        dialogDate['title'] = 'Application Prod Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
+        break;
+      case WorkOrderKeyEnum.APPLICATION_TEST_PERMISSION:
+        dialogDate['content'] = WorkOrderApplicationTestTicketComponent;
+        dialogDate['title'] = 'Application Test Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
+        break;
       case WorkOrderKeyEnum.COMPUTER_PERMISSION:
         dialogDate['content'] = WorkOrderComputerTicketComponent;
         dialogDate['title'] = 'Computer Permission';
@@ -322,6 +348,20 @@ export class WorkOrderDataTableComponent implements OnInit {
       case WorkOrderKeyEnum.AWS_IAM_POLICY_PERMISSION:
         dialogDate['content'] = WorkOrderAwsIamPolicyTicketComponent;
         dialogDate['title'] = 'AWS IAM Policy Permission';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_ONS_TOPIC:
+        dialogDate['content'] = WorkOrderAliyunOnsTopicTicketComponent;
+        dialogDate['title'] = 'Aliyun ONS Topic Application';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.ALIYUN_ONS_CONSUMER_GROUP:
+        dialogDate['content'] = WorkOrderAliyunOnsConsumeGroupTicketComponent;
+        dialogDate['title'] = 'Aliyun ONS Consume Group Application';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

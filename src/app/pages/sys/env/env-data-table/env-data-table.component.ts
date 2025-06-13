@@ -8,6 +8,8 @@ import { Observable, zip } from 'rxjs';
 import { EnvEdit, EnvPageQuery, EnvVO } from '../../../../@core/data/env';
 import { EnvEditorComponent } from './env-editor/env-editor.component';
 import { EnvService } from '../../../../@core/services/env.service';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { ApplicationVO } from '../../../../@core/data/application';
 
 @Component({
   selector: 'app-env-data-table',
@@ -17,6 +19,8 @@ import { EnvService } from '../../../../@core/services/env.service';
 export class EnvDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  businessType: string = BusinessTypeEnum.ENV;
+
   queryParam = {
     queryName: '',
   };
@@ -60,6 +64,10 @@ export class EnvDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.envService.queryEnvPage(param));
+  }
+
+  onRowBusinessTag(rowItem: ApplicationVO) {
+    this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
   ngOnInit() {

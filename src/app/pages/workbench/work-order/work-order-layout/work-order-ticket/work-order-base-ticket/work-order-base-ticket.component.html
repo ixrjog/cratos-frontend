@@ -45,6 +45,7 @@
                         placeholder="Select approver user"
                         [filterKey]="'name'"
                         [appendToBody]="true"
+                        [isSearch]="true"
                         [options]="node.selectableUsers"
                         (valueChange)="onSelectableUsersChange($event,node)"
                       >

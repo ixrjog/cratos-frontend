@@ -137,6 +137,39 @@ export interface AddAwsIamPolicyPermissionTicketEntry {
 export interface AwsIamPolicy extends CloudPolicy {
 }
 
+export interface AddCreateAliyunOnsTopicTicketEntry {
+  ticketId: number;
+  detail: AddCreateAliyunOnsTopic;
+}
+
+export interface AddCreateAliyunOnsConsumerGroupTicketEntry {
+  ticketId: number;
+  detail: AddCreateAliyunOnsConsumerGroup;
+}
+
+export interface AddCreateAliyunOnsConsumerGroup extends CreateAliyunOnsResource {
+  consumerGroupId: string;
+  deliveryOrderType: string;
+  consumeRetryPolicy: {
+    maxRetryTimes: number
+    retryPolicy: string
+  };
+}
+
+export interface AddCreateAliyunOnsTopic extends CreateAliyunOnsResource {
+  topicName: string;
+  messageType: string;
+}
+
+export interface CreateAliyunOnsResource {
+  edsInstance: EdsInstanceVO;
+  regionId: string;
+  onsInstanceName: string;
+  onsInstanceId: string;
+  remark: string;
+}
+
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -166,6 +199,8 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
 
+  abstract queryRocketMqInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
+
   abstract addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addApplicationDeletePodTicketEntry(param: AddApplicationDeletePodTicketEntry): Observable<HttpResult<Boolean>>;
@@ -190,4 +225,11 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract addApplicationProdPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addApplicationTestPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addCreateAliyunOnsTopicTicketEntry(param: AddCreateAliyunOnsTopicTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addCreateAliyunOnsConsumerGroupTicketEntry(param: AddCreateAliyunOnsConsumerGroupTicketEntry): Observable<HttpResult<Boolean>>;
 }

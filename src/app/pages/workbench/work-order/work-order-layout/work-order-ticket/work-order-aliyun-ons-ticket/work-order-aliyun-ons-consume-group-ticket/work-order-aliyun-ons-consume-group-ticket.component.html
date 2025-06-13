@@ -1,0 +1,142 @@
+<app-work-order-aliyun-ons-ticket
+  #workOrderAliyunOnsTicket
+  [ticketDetails]="ticketDetails"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+  [editTicketEntryExtTemplate]="editTicketEntryExtTemplate"
+  [showTicketEntryExtTemplate]="showTicketEntryExtTemplate"
+>
+</app-work-order-aliyun-ons-ticket>
+
+<ng-template #editTicketEntryExtTemplate>
+  <d-form-item>
+    <d-form-label [required]=" true">Group ID</d-form-label>
+    <d-form-control>
+      <input dTextInput name="consumerGroupId" [(ngModel)]="consumerGroupId" />
+      <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
+        {{ 'workOrderTicket.aliyunOns.consumerGroup.consumerGroupId.tips' | translate }}
+      </d-alert>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">Delivery Order Type</d-form-label>
+    <d-form-control>
+      <d-tabs type="options" [(activeTab)]="deliveryOrderTypeActiveId"
+              (activeTabChange)="onActiveDeliveryOrderTypeChange($event)">
+        <d-tab *ngFor="let item of deliveryOrderTypeOptions" [id]="item.id">
+          <ng-template dTabTitle>
+          <span class="da-tabs-title">
+            {{ item.title }}
+          </span>
+          </ng-template>
+          <d-alert [type]="'info'" [closeable]="false" style="margin-bottom: 5px">
+            {{ item.desc }}
+          </d-alert>
+        </d-tab>
+      </d-tabs>
+    </d-form-control>
+  </d-form-item>
+  <d-card style="padding: 5px;margin-bottom: 10px">
+    <d-card-content>
+      <div class="pane-content">
+        <h3>Retry Rules</h3>
+        <d-form-item>
+          <d-form-label [required]="true">Retry Policy</d-form-label>
+          <d-form-control>
+            <d-tabs type="options" [(activeTab)]="retryPolicyActiveId">
+              <d-tab *ngFor="let item of retryPolicyOptions" [id]="item.id">
+                <ng-template dTabTitle>
+                  <span class="da-tabs-title">
+                    {{ item.title }}
+                  </span>
+                </ng-template>
+                <d-alert [type]="'info'" [closeable]="false" style="margin-bottom: 5px">
+                  {{ item.desc }}
+                </d-alert>
+              </d-tab>
+            </d-tabs>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]=" true">Max Retry Times</d-form-label>
+          <d-form-control>
+            <d-input-number name="maxRetryTimes" [min]="1" [max]="1000" [step]="1"
+                            [(ngModel)]="maxRetryTimes"></d-input-number>
+          </d-form-control>
+        </d-form-item>
+      </div>
+    </d-card-content>
+  </d-card>
+</ng-template>
+
+<ng-template #showTicketEntryExtTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    <d-data-table
+      [dataSource]="ticketDetails.entries"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="instance" header="Instance">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="ONS Instance">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['onsInstanceName'] }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Consumer Group">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['consumerGroupId'] }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Delivery Order Type">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['deliveryOrderType'] }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Remark">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['remark'] }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+</ng-template>

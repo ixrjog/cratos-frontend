@@ -70,43 +70,100 @@ import {
 import {
   WorkOrderBaseTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-base-ticket.component';
-import { WorkOrderBusinessPermissionTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-business-permission-ticket.component';
-import { MarkdownModule } from 'ngx-markdown';
-import { WorkOrderApprovalProcessComponent } from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-approval-process/work-order-approval-process.component';
-import { WorkOrderUserRevokeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
-import { WorkOrderGitlabTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-ticket.component';
-import { WorkOrderElasticScalingTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
-import { ApplicationElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/application-elastic-scaling/application-elastic-scaling.component';
-import { DeploymentElasticScalingComponent } from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/deployment-elastic-scaling/deployment-elastic-scaling.component';
-import { WorkOrderAliyunDataworksTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
-import { WorkOrderPodDeleteTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
-import { CommandExecViewComponent } from './command-exec/command-exec-data-table/command-exec-view/command-exec-view.component';
-import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
-import { ApplicationCredentialDataTableComponent } from './application-credential/application-credential-data-table/application-credential-data-table.component';
-import { WorkOrderCloudIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-cloud-identity-ticket.component';
-import { WorkOrderApplicationTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-ticket/work-order-application-ticket.component';
 import {
-  WorkOrderComputerTicketComponent
+  WorkOrderBusinessPermissionTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-business-permission-ticket.component';
+import { MarkdownModule } from 'ngx-markdown';
+import {
+  WorkOrderApprovalProcessComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-base-ticket/work-order-approval-process/work-order-approval-process.component';
+import {
+  WorkOrderUserRevokeTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-user-revoke-ticket/work-order-user-revoke-ticket.component';
+import {
+  WorkOrderGitlabTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-ticket.component';
+import {
+  WorkOrderElasticScalingTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/work-order-elastic-scaling-ticket.component';
+import {
+  ApplicationElasticScalingComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/application-elastic-scaling/application-elastic-scaling.component';
+import {
+  DeploymentElasticScalingComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-elastic-scaling-ticket/deployment-elastic-scaling/deployment-elastic-scaling.component';
+import {
+  WorkOrderAliyunDataworksTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-dataworks-ticket/work-order-aliyun-dataworks-ticket.component';
+import {
+  WorkOrderPodDeleteTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-pod-delete-ticket/work-order-pod-delete-ticket.component';
+import {
+  CommandExecViewComponent,
+} from './command-exec/command-exec-data-table/command-exec-view/command-exec-view.component';
+import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
+import {
+  ApplicationCredentialDataTableComponent,
+} from './application-credential/application-credential-data-table/application-credential-data-table.component';
+import {
+  WorkOrderCloudIdentityTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-cloud-identity-ticket.component';
+import {
+  WorkOrderApplicationTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-ticket/work-order-application-ticket.component';
+import {
+  WorkOrderComputerTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-computer-ticket/work-order-computer-ticket.component';
 import {
-  WorkOrderGitlabGroupTicketComponent
+  WorkOrderGitlabGroupTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-group-ticket/work-order-gitlab-group-ticket.component';
 import {
-  WorkOrderGitlabProjectTicketComponent
+  WorkOrderGitlabProjectTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-gitlab-ticket/work-order-gitlab-project-ticket/work-order-gitlab-project-ticket.component';
 import {
-  WorkOrderAliyunRamTicketComponent
+  WorkOrderAliyunRamTicketComponent,
 } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aliyun-ram-ticket/work-order-aliyun-ram-ticket.component';
-import { WorkOrderCloudPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-cloud-policy-ticket.component';
-import { WorkOrderAliyunRamPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
-import { WorkOrderCloudIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-cloud-identity-reset-ticket.component';
-import { WorkOrderAliyunRamResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
-import { WorkOrderLdapIdentityTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
-import { WorkOrderMailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-mail-identity-reset-ticket.component';
-import { WorkOrderAlimailIdentityResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
-import { WorkOrderAwsIamResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
-import { WorkOrderAwsTransferSftpTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
-import { WorkOrderAwsIamPolicyTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aws-iam-policy-ticket/work-order-aws-iam-policy-ticket.component';
+import {
+  WorkOrderCloudPolicyTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-cloud-policy-ticket.component';
+import {
+  WorkOrderAliyunRamPolicyTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aliyun-ram-policy-ticket/work-order-aliyun-ram-policy-ticket.component';
+import {
+  WorkOrderCloudIdentityResetTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-cloud-identity-reset-ticket.component';
+import {
+  WorkOrderAliyunRamResetTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aliyun-ram-reset-ticket/work-order-aliyun-ram-reset-ticket.component';
+import {
+  WorkOrderLdapIdentityTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-ldap-identity-ticket/work-order-ldap-identity-ticket.component';
+import {
+  WorkOrderMailIdentityResetTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-mail-identity-reset-ticket.component';
+import {
+  WorkOrderAlimailIdentityResetTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
+import {
+  WorkOrderAwsIamResetTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
+import {
+  WorkOrderAwsTransferSftpTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
+import {
+  WorkOrderAwsIamPolicyTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-aws-iam-policy-ticket/work-order-aws-iam-policy-ticket.component';
+import {
+  WorkOrderApplicationProdTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-prod-ticket/work-order-application-prod-ticket.component';
+import {
+  WorkOrderApplicationTestTicketComponent,
+} from './work-order/work-order-layout/work-order-ticket/work-order-business-permission-ticket/work-order-application-test-ticket/work-order-application-test-ticket.component';
+import { WorkOrderAliyunOnsTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-ticket.component';
+import {
+  WorkOrderAliyunOnsTopicTicketComponent
+} from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-topic-ticket/work-order-aliyun-ons-topic-ticket.component';
+import { WorkOrderAliyunOnsConsumeGroupTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-consume-group-ticket/work-order-aliyun-ons-consume-group-ticket.component';
 
 @NgModule({
   declarations: [
@@ -166,6 +223,11 @@ import { WorkOrderAwsIamPolicyTicketComponent } from './work-order/work-order-la
     WorkOrderAwsIamResetTicketComponent,
     WorkOrderAwsTransferSftpTicketComponent,
     WorkOrderAwsIamPolicyTicketComponent,
+    WorkOrderApplicationProdTicketComponent,
+    WorkOrderApplicationTestTicketComponent,
+    WorkOrderAliyunOnsTicketComponent,
+    WorkOrderAliyunOnsTopicTicketComponent,
+    WorkOrderAliyunOnsConsumeGroupTicketComponent,
   ],
   imports: [
     CommonModule,

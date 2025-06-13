@@ -16,6 +16,7 @@ import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-ord
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
+import { PROD } from '../../../../../../@shared/constant/env-group.constant';
 
 @Component({
   selector: 'app-work-order-business-permission-ticket',
@@ -25,12 +26,14 @@ import { WorkOrderTicketEntryService } from '../../../../../../@core/services/wo
 export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
 
   @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @Input() editTicketEntryTipsTemplate: TemplateRef<any>;
   @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() businessType: string;
   @Output() onAddTicketEntry = new EventEmitter<UserBusinessPermission>();
   @Output() onGetTicket = new EventEmitter<WorkOrderTicketDetailsVO>();
   @Output() onHideDialog = new EventEmitter<null>();
+  @Input() envGroup: string = '';
 
   userBusinessPermission: PermissionBusinessVO = null;
   namespaceOptions = [];
@@ -52,7 +55,6 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
   };
 
   renewalType: string = RenewalExtUserTypeEnum.SHORT_TERM;
-
   renewalTypeHelpTips = 'SHORT_TERM(7 days)\nMID_TERM(30 days)\nLONG_TERM(90 days)';
 
   constructor(
@@ -64,7 +66,11 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.onGetNamespaceOptions();
+    if (this.envGroup === '') {
+      this.onGetNamespaceOptions();
+    } else {
+      this.onGetNamespaceByEnvGroupOptions();
+    }
   }
 
   onGetNamespaceOptions() {
@@ -75,6 +81,13 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
     this.envService.queryEnvPage(param)
       .subscribe(({ body }) => {
         this.namespaceOptions = body.data;
+      });
+  }
+
+  onGetNamespaceByEnvGroupOptions() {
+    this.envService.queryEnvByGroupValue({ groupValue: this.envGroup })
+      .subscribe(({ body }) => {
+        this.namespaceOptions = body;
       });
   }
 
@@ -160,4 +173,5 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
   }
 
   protected readonly WorkOrderStatus = WorkOrderStatus;
+  protected readonly PROD = PROD;
 }

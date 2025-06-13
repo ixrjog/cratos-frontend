@@ -9,7 +9,6 @@ import { BusinessTagService } from '../../../../../@core/services/business-tag.s
 import { TOAST_CONTENT, ToastUtil } from '../../../../utils/toast.util';
 import { TagPageQuery, TagVO } from '../../../../../@core/data/tag';
 import { GetByBusiness } from '../../../../../@core/data/business';
-import { ApplicationVO } from '../../../../../@core/data/application';
 
 @Component({
   selector: 'app-business-tag-editor',
@@ -76,7 +75,7 @@ export class BusinessTagEditorComponent implements OnInit {
 
   onSearchTagValue = (term: string) => {
     const param: ListValue = {
-      queryTagValue: term, tagId: this.formData.tag['id'],
+      queryTagValue: term, tagId: this.formData.tag['id'], businessType: this.businessType
     };
     return this.businessTagService.queryBusinessTagByValue(param)
       .pipe(

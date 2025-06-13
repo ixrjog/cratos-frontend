@@ -8,6 +8,19 @@
     (change)="fetchData()"
   >
   </d-search>
+  <d-select
+    class="select"
+    [options]="edsTypeOptions"
+    [filterKey]="'label'"
+    [valueKey]="'value'"
+    [appendToBody]="true"
+    [allowClear]="true"
+    [isSearch]="true"
+    placeholder="Select eds type"
+    [(ngModel)]="queryParam.edsType"
+    (valueChange)="onEdsTypeChange($event)"
+  >
+  </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

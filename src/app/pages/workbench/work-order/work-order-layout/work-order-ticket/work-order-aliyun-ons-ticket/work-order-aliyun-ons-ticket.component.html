@@ -1,0 +1,71 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicketComponent
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <form dForm ngForm [layout]="FormLayout.Vertical">
+    <d-form-item>
+      <d-form-label [required]="true">Instance</d-form-label>
+      <d-form-control>
+        <d-select
+          name="instance"
+          [filterKey]="'instanceName'"
+          [appendToBody]="true"
+          [(ngModel)]="aliyunInstance"
+          [searchFn]="onSearchCloudInstance"
+          [isSearch]="true"
+          placeholder="Select aliyun instance"
+          [allowClear]="true"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="aliyunInstance !== undefined">
+      <d-form-label [required]="true">ONS Instance</d-form-label>
+      <d-form-control>
+        <d-select
+          name="onsInstance"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="onsInstance"
+          [searchFn]="onSearchOnsInstance"
+          [isSearch]="true"
+          placeholder="Select aliyun ons instance"
+          [allowClear]="true"
+          dLoading
+          [loading]="loading"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.description }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <ng-template [ngTemplateOutlet]="editTicketEntryExtTemplate"></ng-template>
+    <d-form-item>
+      <d-form-label [required]="true">Remark</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="remark"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+  <ng-template [ngTemplateOutlet]="showTicketEntryExtTemplate"></ng-template>
+</ng-template>

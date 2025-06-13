@@ -1,7 +1,8 @@
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
+import { BusinessTagsVO } from './business-tag';
 
-export interface EnvVO extends BaseVO, ValidVO {
+export interface EnvVO extends BaseVO, ValidVO, BusinessTagsVO {
   id: number;
   envName: string;
   color: string;
@@ -37,5 +38,7 @@ export abstract class EnvData {
   abstract deleteEnvById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract setEnvValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract queryEnvByGroupValue(param: { groupValue: string }): Observable<HttpResult<Array<EnvVO>>>;
 
 }

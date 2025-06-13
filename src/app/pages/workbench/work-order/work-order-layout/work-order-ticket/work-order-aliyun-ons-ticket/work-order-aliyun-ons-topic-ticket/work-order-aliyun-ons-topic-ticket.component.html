@@ -1,0 +1,110 @@
+<app-work-order-aliyun-ons-ticket
+  #workOrderAliyunOnsTicket
+  [ticketDetails]="ticketDetails"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+  [editTicketEntryExtTemplate]="editTicketEntryExtTemplate"
+  [showTicketEntryExtTemplate]="showTicketEntryExtTemplate"
+>
+</app-work-order-aliyun-ons-ticket>
+
+<ng-template #editTicketEntryExtTemplate>
+  <d-form-item>
+    <d-form-label [required]=" true">Topic Name</d-form-label>
+    <d-form-control>
+      <input dTextInput name="topicName" [(ngModel)]="topicName" />
+      <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
+        {{ 'workOrderTicket.aliyunOns.topic.topicName.tips' | translate }}
+      </d-alert>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">Message Type</d-form-label>
+    <d-form-control>
+      <d-tabs type="options" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+        <d-tab *ngFor="let item of messageTypeOptions" [id]="item.id">
+          <ng-template dTabTitle>
+          <span class="da-tabs-title">
+            {{ item.title }}
+          </span>
+          </ng-template>
+          <d-alert [type]="'info'" [closeable]="false" style="margin-bottom: 5px">
+            {{ item.desc }}
+          </d-alert>
+        </d-tab>
+      </d-tabs>
+    </d-form-control>
+  </d-form-item>
+</ng-template>
+
+<ng-template #showTicketEntryExtTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    <d-data-table
+      [dataSource]="ticketDetails.entries"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="instance" header="Instance">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="ONS Instance">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+           <span>{{cellItem['onsInstanceName']}}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Topic Name">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['topicName'] }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Message Type">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['messageType']}}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Remark">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['remark']}}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+</ng-template>

@@ -24,7 +24,7 @@ export default {
     aliyunOns: {
       topic: {
         topicName: {
-          tips: '以 TOPIC_ 开头，长度限制为 1 ~ 60 个字符，只能包含大小写英文、数字、短横线（-）、下划线（_）。同时，系统会保留部分命名方式不允许使用。',
+          tips: '以 TOPIC_ 开头，长度限制为 1 ~ 60 个字符，只能包含大写英文、数字、短横线（-）、下划线（_）。同时，系统会保留部分命名方式不允许使用。',
         },
         messageTypes: {
           title: {
@@ -43,7 +43,7 @@ export default {
       },
       consumerGroup: {
         consumerGroupId: {
-          tips: '以 GID_ 开头，长度限制为 1 ~ 60 个字符，只能包含大小写英文、数字、短横线（-）、下划线（_）。同时，系统会保留部分命名方式不允许使用，'
+          tips: '以 GID_ 开头，长度限制为 1 ~ 60 个字符，只能包含大写英文、数字、短横线（-）、下划线（_）。同时，系统会保留部分命名方式不允许使用，'
         },
         deliveryOrderType: {
           title: {

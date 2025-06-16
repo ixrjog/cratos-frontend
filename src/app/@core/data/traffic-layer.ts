@@ -9,6 +9,12 @@ export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, 
   id: number;
   name: string;
   domain: string;
+  registeredDomain: string;
+  dnsProviders: {
+    providerType: string;
+    providerName: string;
+    consoleUrl: string;
+  }[];
   comment: string;
 }
 
@@ -20,6 +26,7 @@ export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagsVO, B
   routeTrafficTo: string;
   originServer: string;
   comment: string;
+  domain: TrafficLayerDomainVO;
   env: EnvVO;
 }
 

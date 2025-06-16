@@ -17,7 +17,7 @@ export class WorkOrderAliyunOnsTopicTicketComponent implements OnInit {
   @ViewChild('workOrderAliyunOnsTicket') private workOrderAliyunOnsTicket: WorkOrderAliyunOnsTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  topicName: string = '';
+  topicName: string = 'TOPIC_';
   messageType: string = 'NORMAL';
   tabActiveId: string | number = 'NORMAL';
   messageTypeOptions = [];

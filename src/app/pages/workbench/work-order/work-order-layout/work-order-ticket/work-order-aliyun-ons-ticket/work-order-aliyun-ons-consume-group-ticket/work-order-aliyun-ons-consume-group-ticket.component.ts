@@ -19,7 +19,7 @@ export class WorkOrderAliyunOnsConsumeGroupTicketComponent implements OnInit {
   @Input() data: any;
   i18nValues: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  consumerGroupId: string = '';
+  consumerGroupId: string = 'GID_';
   deliveryOrderType: string = 'Concurrently';
   deliveryOrderTypeActiveId: string | number = 'Concurrently';
   deliveryOrderTypeOptions = [];

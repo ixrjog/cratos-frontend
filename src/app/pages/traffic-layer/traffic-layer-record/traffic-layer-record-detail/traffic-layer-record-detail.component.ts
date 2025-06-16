@@ -7,6 +7,7 @@ import {
   TrafficLayerRecordQueryDetails,
 } from '../../../../@core/data/traffic-layer';
 import { finalize } from 'rxjs';
+import { FormLayout } from 'ng-devui/form';
 
 @Component({
   selector: 'app-traffic-layer-record-detail',
@@ -96,4 +97,5 @@ export class TrafficLayerRecordDetailComponent implements OnInit {
   }
 
   protected readonly JSON = JSON;
+  protected readonly FormLayout = FormLayout;
 }

@@ -50,6 +50,18 @@
     (cellEditEnd)="onCellEditEnd($event)"
     [checkable]="true"
   >
+    <d-column field="domain" header="Domain">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span></span>
+          <div *ngFor="let dnsProvider of cellItem['dnsProviders']">
+            <a class="devui-link-light" [href]="dnsProvider.consoleUrl" target="_blank">
+              {{ dnsProvider.providerName }}
+            </a>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="recordName" header="Record Name" [editable]="true">
       <d-cell-edit>
         <ng-template let-rowItem="rowItem" let-column="column">

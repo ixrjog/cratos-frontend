@@ -24,7 +24,7 @@ export default {
     aliyunOns: {
       topic: {
         topicName: {
-          tips: 'Start with TOPIC_ , The name must be 1 to 60 characters in length, and can contain letters, digits, hyphens (-), and underscores (_). Some names are reserved for the system and cannot be used.',
+          tips: 'Start with TOPIC_ , The name must be 1 to 60 characters in length, and can contain only capital letters, digits, hyphens (-), and underscores (_). Some names are reserved for the system and cannot be used.',
         },
         messageTypes: {
           title: {
@@ -43,7 +43,7 @@ export default {
       },
       consumerGroup: {
         consumerGroupId: {
-          tips: 'Start with GID_ , The name must be 1 to 60 characters in length and can contain only letters, digits, hyphens (-), and underscores (_). Specific names are reserved for the system and cannot be used.'
+          tips: 'Start with GID_ , The name must be 1 to 60 characters in length and can contain only capital letters, digits, hyphens (-), and underscores (_). Specific names are reserved for the system and cannot be used.'
         },
         deliveryOrderType: {
           title: {

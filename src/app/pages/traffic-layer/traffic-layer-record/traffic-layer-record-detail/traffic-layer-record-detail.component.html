@@ -35,10 +35,28 @@
 <div class="spacing-table" *ngIf="showRecord">
   <div dLoading [loading]="loading">
     <div *ngIf="!loading && showRecord">
-      <span *ngIf="JSON.stringify(trafficLayerDomain.businessTags) !=='[]'">
-        <h3>Domain Tags</h3>
-         <app-business-tags [businessTags]="trafficLayerDomain.businessTags"></app-business-tags>
-      </span>
+      <h3>Domain</h3>
+      <form dForm ngForm [layout]="FormLayout.Horizontal">
+        <d-form-item>
+          <d-form-label>Tags</d-form-label>
+          <d-form-control>
+            <app-business-tags [businessTags]="trafficLayerDomain.businessTags"></app-business-tags>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Dns Providers</d-form-label>
+          <d-form-control>
+              <span
+                *ngFor="let dnsProvider of trafficLayerDomain.dnsProviders"
+                style="margin-right: 10px"
+              >
+                <a class="devui-link-light" [href]="dnsProvider.consoleUrl" target="_blank">
+                  {{ dnsProvider.providerName }}
+                </a>
+              </span>
+          </d-form-control>
+        </d-form-item>
+      </form>
       <h3>Record Table</h3>
       <app-ace-editor
         [readonly]="true"

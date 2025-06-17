@@ -1,0 +1,91 @@
+<section>
+  <d-splitter class="splitter-border" orientation="vertical">
+    <d-splitter-pane [resizable]="false">
+      <d-splitter orientation="horizontal">
+        <d-splitter-pane [resizable]="false" size="50%">
+          <div style="padding: 12px">
+            <div class="spacing-search">
+              <d-button class="button" bsStyle="primary" (click)="onAddAppCost()">New</d-button>
+              <d-button class="button" bsStyle="common" (click)="fetchData()">Fetch</d-button>
+              <span class="right-button">
+                <d-button class="button" bsStyle="common" (click)="onRowExport()">Export</d-button>
+                <d-button class="button" bsStyle="danger" (click)="onRowClear()">Clear</d-button>
+              </span>
+            </div>
+
+            <div *ngFor="let item of allocationCategories;index as i">
+              <h5 style="margin: 0">Item {{ i }}</h5>
+              <form dForm ngForm [layout]="FormLayout.Horizontal">
+                <d-row>
+                  <d-form-item style="margin-right: 10px">
+                    <d-form-label>name</d-form-label>
+                    <d-form-control>
+                      <input dTextInput name="name" [(ngModel)]="item.name" />
+                    </d-form-control>
+                  </d-form-item>
+                  <d-form-item style="margin-right: 10px">
+                    <d-form-label>Currency Code</d-form-label>
+                    <d-form-control>
+                      <input dTextInput name="currencyCode" [(ngModel)]="item.currencyCode" />
+                    </d-form-control>
+                  </d-form-item>
+                  <d-form-item>
+                    <d-form-label>Amount</d-form-label>
+                    <d-form-control>
+                      <d-input-number name="amount" [(ngModel)]="item.amount"></d-input-number>
+                    </d-form-control>
+                  </d-form-item>
+                  <d-form-item>
+                    <d-form-label></d-form-label>
+                    <d-form-control>
+                      <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(i)"></d-icon>
+                    </d-form-control>
+                  </d-form-item>
+                </d-row>
+              </form>
+            </div>
+          </div>
+        </d-splitter-pane>
+        <d-splitter-pane>
+          <div style="padding: 12px">
+            <div class="spacing-search">
+              <d-button class="button" bsStyle="primary" (click)="onRowImport()">Import</d-button>
+            </div>
+            <app-ace-editor
+              #appCostDataAce
+              [minLines]="20"
+              [mode]="'ace/mode/yaml'"
+              [aceValue]="appCostData"
+              (onChange)="onDataChange($event)"
+            >
+            </app-ace-editor>
+            <br />
+          </div>
+        </d-splitter-pane>
+      </d-splitter>
+    </d-splitter-pane>
+    <d-splitter-pane>
+      <div style="padding: 12px">
+        <span *ngIf="costTable !==''">
+          <h3>Cost Table</h3>
+          <app-ace-editor
+            [readonly]="true"
+            [aceValue]="costTable"
+            [mode]="'ace/mode/text'"
+          ></app-ace-editor>
+          <br />
+        </span>
+        <span *ngIf="costDetailsTable !==''">
+          <h3>Cost Details Table</h3>
+          <app-ace-editor
+            [maxLines]="200"
+            [readonly]="true"
+            [aceValue]="costDetailsTable"
+            [mode]="'ace/mode/text'"
+          ></app-ace-editor>
+          <br />
+        </span>
+      </div>
+    </d-splitter-pane>
+  </d-splitter>
+</section>

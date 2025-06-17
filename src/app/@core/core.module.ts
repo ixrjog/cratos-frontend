@@ -46,6 +46,7 @@ import { WorkOrderTicketEntryService } from './services/work-order-ticket-entry.
 import { TagGroupService } from './services/tag-group.service';
 import { CratosInstanceService } from './services/cratos-instance.service';
 import { ApplicationCredentialService } from './services/application-credential.service';
+import { FinOpsService } from './services/finops.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -96,7 +97,8 @@ export const CRATOS_PROVIDERS = [
   WorkOrderTicketEntryService,
   TagGroupService,
   CratosInstanceService,
-  ApplicationCredentialService
+  ApplicationCredentialService,
+  FinOpsService
 ];
 
 export const WS_CRATOS_PROVIDERS = [

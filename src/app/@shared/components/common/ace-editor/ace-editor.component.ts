@@ -73,4 +73,9 @@ export class AceEditorComponent implements AfterViewInit {
     });
   }
 
+  onWrite(value: string) {
+    const aceEditor = ace.edit(this.editor.nativeElement);
+    aceEditor.session.setValue(value);
+  }
+
 }

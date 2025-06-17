@@ -276,6 +276,7 @@ export const DIALOG_DATA = {
     reset: '<strong>Confirm reset this row ?</strong>',
     create: '<strong>Confirm create this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
+    clear: '<strong>Confirm clear all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',
     batchDelete: '<strong>Confirm delete these rows ?</strong>',
     batchValid: '<strong>Confirm update these rows ?</strong>',

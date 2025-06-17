@@ -60,6 +60,10 @@ const routes: Routes = [
         path: 'workbench',
         loadChildren: () => import('./workbench/workbench.module').then(m => m.WorkbenchModule),
       },
+      {
+        path: 'finops',
+        loadChildren: () => import('./finops/finops.module').then(m => m.FinopsModule),
+      },
     ],
   },
 ];

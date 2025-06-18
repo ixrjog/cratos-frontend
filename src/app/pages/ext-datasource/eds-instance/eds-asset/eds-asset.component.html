@@ -1,5 +1,5 @@
 <da-layout-row [daGutter]="[12, 12]">
-  <da-col-item [daSpan]="12" [daXs]="24">
+  <da-col-item [daSpan]="24" [daXs]="24">
     <ng-container *ngIf="JSON.stringify(edsInstance) !== '{}'; else noInstanceAsset">
       <ng-template [ngTemplateOutlet]="edsInstanceAsset"></ng-template>
     </ng-container>

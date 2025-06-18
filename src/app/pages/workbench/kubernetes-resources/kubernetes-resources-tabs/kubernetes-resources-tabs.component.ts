@@ -224,7 +224,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.onWsHeartbeat();
   }
 
-  ngOnDestroy(): void {
+  wsOnClose() {
     try {
       if (this.timerRequest) {
         this.timerRequest.unsubscribe();
@@ -245,6 +245,10 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       }
     } catch (error) {
     }
+  }
+
+  ngOnDestroy(): void {
+    this.wsOnClose();
     localStorage.removeItem('kubernetes_resources');
     localStorage.removeItem('kubernetes_resources_version');
   }
@@ -255,6 +259,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
         if (this.ws?.readyState !== WebSocket.OPEN
           && this.ws?.readyState !== WebSocket.CONNECTING
           && this.ws?.readyState !== WebSocket.CLOSING) {
+          this.wsOnClose();
           this.wsOnInit();
           this.wsOnOpen();
           this.wsOnSubSend();

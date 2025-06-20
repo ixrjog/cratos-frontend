@@ -71,7 +71,27 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="username" header="Applicant"></d-column>
+    <d-column field="username" header="Applicant">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            [icon]="'icon-identity-auth'"
+            dPopover
+            [position]="'left-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="userInfoCardTemplate"
+            [popoverStyle]="getPopoverStyle()"
+            style="vertical-align: middle;margin-right: 5px"
+          ></d-icon>
+          <ng-template #userInfoCardTemplate>
+            <app-user-info-card [username]="cellItem"></app-user-info-card>
+          </ng-template>
+          <span>{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="State">
       <d-cell>
         <ng-template let-rowItem="rowItem">

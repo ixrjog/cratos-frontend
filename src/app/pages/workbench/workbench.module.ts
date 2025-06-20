@@ -164,6 +164,7 @@ import {
   WorkOrderAliyunOnsTopicTicketComponent
 } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-topic-ticket/work-order-aliyun-ons-topic-ticket.component';
 import { WorkOrderAliyunOnsConsumeGroupTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-consume-group-ticket/work-order-aliyun-ons-consume-group-ticket.component';
+import { WorkOrderApplicationFrontendTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-frontend-ticket/work-order-application-frontend-ticket.component';
 
 @NgModule({
   declarations: [
@@ -228,6 +229,7 @@ import { WorkOrderAliyunOnsConsumeGroupTicketComponent } from './work-order/work
     WorkOrderAliyunOnsTicketComponent,
     WorkOrderAliyunOnsTopicTicketComponent,
     WorkOrderAliyunOnsConsumeGroupTicketComponent,
+    WorkOrderApplicationFrontendTicketComponent,
   ],
   imports: [
     CommonModule,

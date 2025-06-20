@@ -16,8 +16,7 @@ import { finalize } from 'rxjs';
 })
 export class WorkOrderLdapIdentityTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
-  @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
   ldapGroupOptions = [];
@@ -103,7 +102,7 @@ export class WorkOrderLdapIdentityTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

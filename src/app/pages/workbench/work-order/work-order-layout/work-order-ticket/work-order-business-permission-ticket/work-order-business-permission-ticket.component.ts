@@ -25,7 +25,7 @@ import { PROD } from '../../../../../../@shared/constant/env-group.constant';
 })
 export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() editTicketEntryTipsTemplate: TemplateRef<any>;
   @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
@@ -165,7 +165,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

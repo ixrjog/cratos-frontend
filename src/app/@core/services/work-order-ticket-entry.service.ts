@@ -11,6 +11,7 @@ import {
   AddCreateAliyunOnsTopicTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
   AddCreateAwsTransferSftpUserTicketEntry,
+  AddCreateFrontEndApplicationTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
@@ -151,6 +152,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addCreateAliyunOnsConsumerGroupTicketEntry(param: AddCreateAliyunOnsConsumerGroupTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/ons/consumerGroup/add', param);
+  }
+
+  addCreateFrontEndApplicationTicketEntry(param: AddCreateFrontEndApplicationTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/front-end/add', param);
   }
 
 }

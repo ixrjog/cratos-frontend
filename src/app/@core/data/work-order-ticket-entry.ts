@@ -169,6 +169,24 @@ export interface CreateAliyunOnsResource {
   remark: string;
 }
 
+export interface AddCreateFrontEndApplicationTicketEntry {
+  ticketId: number;
+  detail: CreateFrontEndApplication;
+}
+
+export interface CreateFrontEndApplication {
+  applicationName: string;
+  repository: {
+    instanceId: number
+    assetId: number
+    sshUrl: string
+  };
+  domain: string;
+  mappingsPath: string;
+  copyFromApplication: string;
+  tags: any;
+  comment: string;
+}
 
 export abstract class WorkOrderTicketEntryData {
 
@@ -232,4 +250,6 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateAliyunOnsTopicTicketEntry(param: AddCreateAliyunOnsTopicTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addCreateAliyunOnsConsumerGroupTicketEntry(param: AddCreateAliyunOnsConsumerGroupTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addCreateFrontEndApplicationTicketEntry(param: AddCreateFrontEndApplicationTicketEntry): Observable<HttpResult<Boolean>>;
 }

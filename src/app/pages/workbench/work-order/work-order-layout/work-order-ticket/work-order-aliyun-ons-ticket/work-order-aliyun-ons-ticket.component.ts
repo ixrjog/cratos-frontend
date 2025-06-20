@@ -19,7 +19,7 @@ import { EdsService } from '../../../../../../@core/services/ext-datasource.serv
 })
 export class WorkOrderAliyunOnsTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() editTicketEntryExtTemplate: TemplateRef<any>;
   @Input() showTicketEntryExtTemplate: TemplateRef<any>;
@@ -124,7 +124,7 @@ export class WorkOrderAliyunOnsTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

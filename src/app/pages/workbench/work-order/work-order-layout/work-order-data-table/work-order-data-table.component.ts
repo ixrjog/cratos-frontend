@@ -58,26 +58,29 @@ import {
   WorkOrderAlimailIdentityResetTicketComponent,
 } from '../work-order-ticket/work-order-mail-identity-reset-ticket/work-order-alimail-identity-reset-ticket/work-order-alimail-identity-reset-ticket.component';
 import {
-  WorkOrderAwsIamResetTicketComponent
+  WorkOrderAwsIamResetTicketComponent,
 } from '../work-order-ticket/work-order-cloud-identity-reset-ticket/work-order-aws-iam-reset-ticket/work-order-aws-iam-reset-ticket.component';
 import {
-  WorkOrderAwsTransferSftpTicketComponent
+  WorkOrderAwsTransferSftpTicketComponent,
 } from '../work-order-ticket/work-order-aws-transfer-sftp-ticket/work-order-aws-transfer-sftp-ticket.component';
 import {
-  WorkOrderAwsIamPolicyTicketComponent
+  WorkOrderAwsIamPolicyTicketComponent,
 } from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-aws-iam-policy-ticket/work-order-aws-iam-policy-ticket.component';
 import {
-  WorkOrderApplicationProdTicketComponent
+  WorkOrderApplicationProdTicketComponent,
 } from '../work-order-ticket/work-order-business-permission-ticket/work-order-application-prod-ticket/work-order-application-prod-ticket.component';
 import {
-  WorkOrderApplicationTestTicketComponent
+  WorkOrderApplicationTestTicketComponent,
 } from '../work-order-ticket/work-order-business-permission-ticket/work-order-application-test-ticket/work-order-application-test-ticket.component';
 import {
-  WorkOrderAliyunOnsTopicTicketComponent
+  WorkOrderAliyunOnsTopicTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-topic-ticket/work-order-aliyun-ons-topic-ticket.component';
 import {
-  WorkOrderAliyunOnsConsumeGroupTicketComponent
+  WorkOrderAliyunOnsConsumeGroupTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-ons-ticket/work-order-aliyun-ons-consume-group-ticket/work-order-aliyun-ons-consume-group-ticket.component';
+import {
+  WorkOrderApplicationFrontendTicketComponent,
+} from '../work-order-ticket/work-order-application-frontend-ticket/work-order-application-frontend-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -222,146 +225,138 @@ export class WorkOrderDataTableComponent implements OnInit {
   }
 
   onRowDialog(workOrderKey: string, ticket: WorkOrderTicketDetailsVO) {
+    const lang = localStorage.getItem('lang');
+    let title = ticket.workOrder.i18nData.langMap['en-us'].displayName;
+    if (lang) {
+      title = ticket.workOrder.i18nData.langMap[lang].displayName;
+    }
     let dialogDate = {
       ...this.dialogDate.editorData,
+      title: title,
     };
     switch (workOrderKey) {
       case WorkOrderKeyEnum.APPLICATION_PERMISSION:
         dialogDate['content'] = WorkOrderApplicationTicketComponent;
-        dialogDate['title'] = 'Application Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
         break;
       case WorkOrderKeyEnum.APPLICATION_PROD_PERMISSION:
         dialogDate['content'] = WorkOrderApplicationProdTicketComponent;
-        dialogDate['title'] = 'Application Prod Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
         break;
       case WorkOrderKeyEnum.APPLICATION_TEST_PERMISSION:
         dialogDate['content'] = WorkOrderApplicationTestTicketComponent;
-        dialogDate['title'] = 'Application Test Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.APPLICATION });
         break;
       case WorkOrderKeyEnum.COMPUTER_PERMISSION:
         dialogDate['content'] = WorkOrderComputerTicketComponent;
-        dialogDate['title'] = 'Computer Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket, { businessType: BusinessTypeEnum.TAG_GROUP });
         break;
       case WorkOrderKeyEnum.REVOKE_USER_PERMISSION:
         dialogDate['content'] = WorkOrderUserRevokeTicketComponent;
-        dialogDate['title'] = 'User Permission Revoke';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.GITLAB_PROJECT_PERMISSION:
         dialogDate['content'] = WorkOrderGitlabProjectTicketComponent;
-        dialogDate['title'] = 'GitLab Project Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.GITLAB_GROUP_PERMISSION:
         dialogDate['content'] = WorkOrderGitlabGroupTicketComponent;
-        dialogDate['title'] = 'GitLab Group Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.APPLICATION_ELASTIC_SCALING:
         dialogDate['content'] = WorkOrderElasticScalingTicketComponent;
-        dialogDate['title'] = 'Elastic Scaling';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_DATAWORKS_AK:
         dialogDate['content'] = WorkOrderAliyunDataworksTicketComponent;
-        dialogDate['title'] = 'Dataworks AK Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.APPLICATION_DELETE_POD:
         dialogDate['content'] = WorkOrderPodDeleteTicketComponent;
-        dialogDate['title'] = 'Application Pod Delete';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamTicketComponent;
-        dialogDate['title'] = 'Aliyun RAM User Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_RAM_POLICY_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamPolicyTicketComponent;
-        dialogDate['title'] = 'Aliyun RAM Policy Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_RESET:
         dialogDate['content'] = WorkOrderAliyunRamResetTicketComponent;
-        dialogDate['title'] = 'Aliyun RAM Reset';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.LDAP_ROLE_PERMISSION:
         dialogDate['content'] = WorkOrderLdapIdentityTicketComponent;
-        dialogDate['title'] = 'Ldap Role Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIMAIL_USER_RESET:
         dialogDate['content'] = WorkOrderAlimailIdentityResetTicketComponent;
-        dialogDate['title'] = 'Alimail Reset Password';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.AWS_IAM_USER_RESET:
         dialogDate['content'] = WorkOrderAwsIamResetTicketComponent;
-        dialogDate['title'] = 'AWS IAM Password Reset';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.AWS_TRANSFER_SFTP_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAwsTransferSftpTicketComponent;
-        dialogDate['title'] = 'AWS Transfer Sftp Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.AWS_IAM_POLICY_PERMISSION:
         dialogDate['content'] = WorkOrderAwsIamPolicyTicketComponent;
-        dialogDate['title'] = 'AWS IAM Policy Permission';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_ONS_TOPIC:
         dialogDate['content'] = WorkOrderAliyunOnsTopicTicketComponent;
-        dialogDate['title'] = 'Aliyun ONS Topic Application';
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);
         break;
       case WorkOrderKeyEnum.ALIYUN_ONS_CONSUMER_GROUP:
         dialogDate['content'] = WorkOrderAliyunOnsConsumeGroupTicketComponent;
-        dialogDate['title'] = 'Aliyun ONS Consume Group Application';
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_FRONTEND_CREATE:
+        dialogDate['content'] = WorkOrderApplicationFrontendTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

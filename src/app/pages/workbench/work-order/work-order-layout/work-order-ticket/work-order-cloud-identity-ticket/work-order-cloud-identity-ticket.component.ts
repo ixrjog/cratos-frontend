@@ -18,7 +18,7 @@ import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 })
 export class WorkOrderCloudIdentityTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() edsType: string;
   @Output() onAddTicketEntry = new EventEmitter<CloudIdentityAccount>();
@@ -94,7 +94,7 @@ export class WorkOrderCloudIdentityTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

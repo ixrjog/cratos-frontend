@@ -24,7 +24,7 @@ import { finalize } from 'rxjs';
 })
 export class WorkOrderCloudPolicyTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() edsType: string;
   @Input() assetType: string;
@@ -127,7 +127,7 @@ export class WorkOrderCloudPolicyTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

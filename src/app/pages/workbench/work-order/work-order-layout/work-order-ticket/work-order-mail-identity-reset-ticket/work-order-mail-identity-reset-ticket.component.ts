@@ -18,7 +18,7 @@ import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 })
 export class WorkOrderMailIdentityResetTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() edsType: string;
   @Output() onAddTicketEntry = new EventEmitter<EdsMailAccountVO>();
@@ -97,7 +97,7 @@ export class WorkOrderMailIdentityResetTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

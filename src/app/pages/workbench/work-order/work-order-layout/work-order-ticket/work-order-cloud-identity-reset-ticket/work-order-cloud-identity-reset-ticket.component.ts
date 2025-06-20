@@ -18,7 +18,7 @@ import { EdsCloudAccountVO } from '../../../../../../@core/data/ext-dataSource-i
 })
 export class WorkOrderCloudIdentityResetTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() editTicketEntryExtTemplate: TemplateRef<any>;
   @Input() edsType: string;
@@ -98,7 +98,7 @@ export class WorkOrderCloudIdentityResetTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

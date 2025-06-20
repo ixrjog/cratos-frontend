@@ -17,8 +17,7 @@ import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 })
 export class WorkOrderUserRevokeTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
-  @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
   user: UserVO;
@@ -85,7 +84,7 @@ export class WorkOrderUserRevokeTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

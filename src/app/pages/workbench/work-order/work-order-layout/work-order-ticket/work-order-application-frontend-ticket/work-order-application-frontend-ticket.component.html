@@ -14,33 +14,81 @@
 
   <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
-      <d-form-label [required]="true">Instance</d-form-label>
+      <d-form-label [required]="true">Application Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="applicationName" [(ngModel)]="applicationName" />
+        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
+          Regex: <strong>{{ applicationNameRegex }}</strong>
+          <br />
+          {{ 'workOrderTicket.frontend.tips' | translate }}
+        </d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Level</d-form-label>
+      <d-form-control>
+        <d-tabs
+          name="level"
+          type="options"
+          [activeTab]="tabActiveId"
+          (activeTabChange)="onLevelChange($event)"
+        >
+          <d-tab
+            *ngFor="let item of levelOptions"
+            [id]="item.id"
+            [title]="item.title"
+          ></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Copy Of</d-form-label>
       <d-form-control>
         <d-select
-          name="user"
+          name="application"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="copyFromApplication"
+          [searchFn]="onSearchApplication"
+          [isSearch]="true"
+          placeholder="Select application"
+          [allowClear]="true"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">GitLab Instance</d-form-label>
+      <d-form-control>
+        <d-select
+          name="instance"
           [filterKey]="'instanceName'"
           [appendToBody]="true"
-          [(ngModel)]="instance"
-          [searchFn]="onSearchInstance"
+          [(ngModel)]="gitLabInstance"
+          [searchFn]="onSearchGitLabInstance"
           [isSearch]="true"
-          placeholder="Select instance"
-          (valueChange)="onInstanceChange($event)"
+          placeholder="Select gitlab instance"
         >
         </d-select>
       </d-form-control>
     </d-form-item>
-    <d-form-item *ngIf="instance !== undefined">
-      <d-form-label [required]="true">Transfer Server</d-form-label>
+    <d-form-item *ngIf="gitLabInstance !== undefined">
+      <d-form-label [required]="true">GitLab Project</d-form-label>
       <d-form-control>
         <d-select
-          name="awsTransfer"
+          name="gitLabProject"
           [filterKey]="'name'"
           [appendToBody]="true"
-          [(ngModel)]="awsTransfer"
-          [searchFn]="onSearchAwsTransfer"
+          [(ngModel)]="gitLabProject"
+          [searchFn]="onSearchGitLabProject"
           [isSearch]="true"
-          placeholder="Select aws transfer"
-          [allowClear]="true"
+          placeholder="Select gitlab project"
+          dLoading
+          [loading]="loading"
         >
           <ng-template let-option="option">
             <span>{{ option.name }}</span>
@@ -50,30 +98,25 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Username</d-form-label>
+      <d-form-label [required]="true">Domain</d-form-label>
       <d-form-control>
-        <input dTextInput name="username" [(ngModel)]="username" />
-        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
-          Regex: <strong>{{ usernameRegex }}</strong>
-          <br />
-          {{ 'workOrderTicket.awsTransferSftp.tips1' | translate }}
-          <br />
-          {{ 'workOrderTicket.awsTransferSftp.tips2' | translate }}
-          <br />
-          {{ 'workOrderTicket.awsTransferSftp.tips3' | translate }}
+        <input dTextInput name="domain" [(ngModel)]="domain" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Mappings Path</d-form-label>
+      <d-form-control>
+        <input dTextInput name="mappingsPath" [(ngModel)]="mappingsPath" />
+        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px"
+                 *ngIf="domain !== '' && mappingsPath !== ''">
+          URI: <strong>https://{{ domain }}{{ mappingsPath }}</strong>
         </d-alert>
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Public Key</d-form-label>
+      <d-form-label [required]="true">Comment</d-form-label>
       <d-form-control>
-        <textarea dTextarea name="publicKey" style="height: 100px" [(ngModel)]="publicKey"></textarea>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
-      <d-form-label [required]="true">Description</d-form-label>
-      <d-form-control>
-        <textarea dTextarea name="description" maxlength="200" style="height: 80px"  [(ngModel)]="description"></textarea>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px" [(ngModel)]="comment"></textarea>
       </d-form-control>
     </d-form-item>
     <d-form-operation>

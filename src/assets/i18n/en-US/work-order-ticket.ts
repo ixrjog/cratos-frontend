@@ -66,6 +66,9 @@ export default {
           }
         }
       }
+    },
+    frontend: {
+      tips: 'Start with a letter and can only contain lowercase letters, numbers, and hyphens.',
     }
   },
 };

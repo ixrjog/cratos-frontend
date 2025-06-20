@@ -18,8 +18,7 @@ import { BusinessTypeEnum } from '../../../../../../@core/data/business';
 })
 export class WorkOrderPodDeleteTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
-  @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
   ticketEntryMap = new Map<string, WorkOrderTicketEntryVO<any>[]>();
@@ -100,7 +99,7 @@ export class WorkOrderPodDeleteTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

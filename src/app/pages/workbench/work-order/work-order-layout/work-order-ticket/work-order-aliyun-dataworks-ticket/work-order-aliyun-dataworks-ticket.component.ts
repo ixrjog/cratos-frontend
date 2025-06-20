@@ -17,8 +17,7 @@ import { EdsInstanceVO } from '../../../../../../@core/data/ext-datasource';
 })
 export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
-  @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
   instance: EdsInstanceVO;
@@ -83,7 +82,7 @@ export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

@@ -8,31 +8,45 @@ import {
   InstancePageQuery,
 } from '../../../../../../@core/data/ext-datasource';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
+import { EdsService } from '../../../../../../@core/services/ext-datasource.service.s';
 import { WorkOrderTicketEntryService } from '../../../../../../@core/services/work-order-ticket-entry.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { map } from 'rxjs/operators';
 import { FormLayout } from 'ng-devui/form';
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
-import { EdsService } from '../../../../../../@core/services/ext-datasource.service.s';
+import { ApplicationPageQuery, ApplicationVO } from '../../../../../../@core/data/application';
+import { ApplicationService } from '../../../../../../@core/services/application.service';
+import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'app-work-order-aws-transfer-sftp-ticket',
-  templateUrl: './work-order-aws-transfer-sftp-ticket.component.html',
-  styleUrls: [ './work-order-aws-transfer-sftp-ticket.component.less' ],
+  selector: 'app-work-order-application-frontend-ticket',
+  templateUrl: './work-order-application-frontend-ticket.component.html',
+  styleUrls: [ './work-order-application-frontend-ticket.component.less' ],
 })
-export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
+export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
 
   @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  instance: EdsInstanceVO;
-  awsTransfer: EdsAssetVO;
-  username: string;
-  publicKey: string;
-  edsType: string = 'AWS';
-  assetType: string = 'AWS_TRANSFER_SERVER';
-  description: string;
-  usernameRegex = '^\\w[\\w@.-]{2,99}$';
+  gitLabInstance: EdsInstanceVO;
+  gitLabProject: EdsAssetVO;
+  applicationName: string;
+  level: string = 'A1';
+  domain: string = '';
+  mappingsPath: string = '/';
+  copyFromApplication: ApplicationVO;
+  tags: Map<string, string>;
+  comment: string;
+  applicationNameRegex = '[a-z][\\d0-9a-z-]{3,32}';
+  loading: boolean = false;
+
+  tabActiveId: string | number = 'A1';
+
+  levelOptions = [
+    { id: 'A1', title: 'A1' }, { id: 'A2', title: 'A2' }, { id: 'A3', title: 'A3' },
+    { id: 'B1', title: 'B1' }, { id: 'B2', title: 'B2' }, { id: 'B3', title: 'B3' },
+    { id: 'C1', title: 'C1' }, { id: 'C2', title: 'C2' }, { id: 'C3', title: 'C3' },
+  ];
 
   dialogDate = {
     warningOperateData: {
@@ -46,6 +60,7 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
   constructor(
     private edsService: EdsService,
     private workOrderTicketEntryService: WorkOrderTicketEntryService,
+    private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil) {
   }
@@ -54,26 +69,38 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
     this.ticketDetails = this.data['formData'];
   }
 
-  onSearchInstance = (term: string) => {
-    const param: InstancePageQuery = {
-      edsType: this.edsType, length: 10, page: 1, queryName: term,
+  onSearchApplication = (term: string) => {
+    const param: ApplicationPageQuery = {
+      length: 10, page: 1, queryName: term,
     };
-    return this.edsService.queryEdsInstancePage(param)
+    return this.applicationService.queryApplicationPage(param)
       .pipe(
         map(({ body }) =>
-          body.data.map((instance, index) => ({ id: index, option: instance })),
+          body.data.map((application, index) => ({ id: index, option: application })),
         ),
       );
   };
 
-  onInstanceChange(edsInstance: EdsInstanceVO) {
-    this.instance = edsInstance;
-  }
+  onSearchGitLabInstance = (term: string) => {
+    const param: InstancePageQuery = {
+      edsType: 'GITLAB', length: 10, page: 1, queryName: term,
+    };
+    this.loading = true;
+    return this.edsService.queryEdsInstancePage(param)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        }),
+        map(({ body }) =>
+          body.data.map((permission, index) => ({ id: index, option: permission })),
+        ),
+      );
+  };
 
-  onSearchAwsTransfer = (term: string) => {
+  onSearchGitLabProject = (term: string) => {
     const param: AssetPageQuery = {
-      instanceId: this.instance?.id,
-      assetType: this.assetType,
+      instanceId: this.gitLabInstance?.id,
+      assetType: 'GITLAB_PROJECT',
       valid: true,
       length: 10,
       page: 1,
@@ -82,7 +109,7 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
     return this.edsService.queryEdsInstanceAssetPage(param)
       .pipe(
         map(({ body }) =>
-          body.data.map((awsTransfer, index) => ({ id: index, option: awsTransfer })),
+          body.data.map((permission, index) => ({ id: index, option: permission })),
         ),
       );
   };
@@ -90,13 +117,23 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
   protected readonly FormLayout = FormLayout;
 
   onRowAdd() {
-    this.workOrderTicketEntryService.addCreateAwsTransferSftpUserTicketEntry({
+    this.tags = new Map<string, string>();
+    this.tags.set('Level', this.level);
+    console.log(Object.fromEntries(this.tags));
+    this.workOrderTicketEntryService.addCreateFrontEndApplicationTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
       detail: {
-        asset: this.awsTransfer,
-        username: this.username,
-        publicKey: this.publicKey,
-        description: this.description,
+        applicationName: this.applicationName,
+        domain: this.domain,
+        mappingsPath: this.mappingsPath,
+        copyFromApplication: this.copyFromApplication?.name,
+        tags: Object.fromEntries(this.tags),
+        comment: this.comment,
+        repository: {
+          instanceId: this.gitLabInstance.id,
+          assetId: this.gitLabProject.id,
+          sshUrl: this.gitLabProject.originalAsset['sshUrlToRepo'],
+        },
       },
     }).subscribe(() => {
       this.onFetchData();
@@ -127,6 +164,10 @@ export class WorkOrderAwsTransferSftpTicketComponent implements OnInit {
 
   onCancel() {
     this.data.hideDialog();
+  }
+
+  onLevelChange(tab) {
+    this.level = tab;
   }
 
   protected readonly JSON = JSON;

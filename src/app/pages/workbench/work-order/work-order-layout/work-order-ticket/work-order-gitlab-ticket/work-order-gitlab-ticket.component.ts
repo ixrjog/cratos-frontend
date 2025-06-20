@@ -24,7 +24,7 @@ import { GitLabPermission } from '../../../../../../@core/data/work-order-ticket
 })
 export class WorkOrderGitlabTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() assetType: string;
   @Output() onAddTicketEntry = new EventEmitter<GitLabPermission>();
@@ -146,7 +146,7 @@ export class WorkOrderGitlabTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

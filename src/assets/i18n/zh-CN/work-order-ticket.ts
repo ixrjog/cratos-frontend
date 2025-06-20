@@ -66,6 +66,9 @@ export default {
           }
         }
       }
+    },
+    frontend: {
+      tips: '以字母开头，只能包含小写字母、数字和 - 。',
     }
   },
 };

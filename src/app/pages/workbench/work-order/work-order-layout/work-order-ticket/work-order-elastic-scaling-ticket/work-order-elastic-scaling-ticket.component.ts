@@ -16,8 +16,7 @@ import { GitLabPermission } from '../../../../../../@core/data/work-order-ticket
 })
 export class WorkOrderElasticScalingTicketComponent implements OnInit {
 
-  @ViewChild('workOrderBaseTicketComponent') workOrderBaseTicketComponent: WorkOrderBaseTicketComponent;
-  @ViewChild('workOrderTicketSearch') custom: TemplateRef<any>;
+  @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
 
   tabActiveId: string | number = 'application';
@@ -89,7 +88,7 @@ export class WorkOrderElasticScalingTicketComponent implements OnInit {
   }
 
   onFetchData() {
-    this.workOrderBaseTicketComponent.onGetTicketDetail();
+    this.workOrderBaseTicket.onGetTicketDetail();
   }
 
   onCancel() {

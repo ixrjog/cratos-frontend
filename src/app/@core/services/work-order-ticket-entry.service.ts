@@ -7,6 +7,7 @@ import {
   AddApplicationElasticScalingTicketEntry,
   AddApplicationPermissionTicketEntry,
   AddAwsIamPolicyPermissionTicketEntry,
+  AddCreateAliyunKmsSecretTicketEntry,
   AddCreateAliyunOnsConsumerGroupTicketEntry,
   AddCreateAliyunOnsTopicTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
@@ -90,6 +91,14 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aliyun/rocketmq/instance/query', {});
   }
 
+  queryAliyunKmsInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/kms/instance/query', {});
+  }
+
+  queryAliyunKmsKeyTicketEntry(param: { kmsInstanceId: string }): Observable<HttpResult<Array<EdsAssetVO>>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/kms/key/query', param);
+  }
+
   addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/dataworks/instance/add', param);
   }
@@ -156,6 +165,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addCreateFrontEndApplicationTicketEntry(param: AddCreateFrontEndApplicationTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/application/front-end/add', param);
+  }
+
+  addCreateAliyunKmsSecretTicketEntry(param: AddCreateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/kms/secret/add', param);
   }
 
 }

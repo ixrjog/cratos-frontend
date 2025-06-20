@@ -188,6 +188,22 @@ export interface CreateFrontEndApplication {
   comment: string;
 }
 
+export interface AddCreateAliyunKmsSecretTicketEntry {
+  ticketId: number;
+  instanceId: number;
+  detail: AddCreateAliyunKmsSecret;
+}
+
+export interface AddCreateAliyunKmsSecret {
+  edsInstance: EdsInstanceVO;
+  kmsInstance: EdsAssetVO;
+  secretName: string;
+  secretData: string;
+  versionId: string;
+  encryptionKeyId: string;
+  description: string;
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -218,6 +234,10 @@ export abstract class WorkOrderTicketEntryData {
   abstract queryDataWorksInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
 
   abstract queryRocketMqInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
+
+  abstract queryAliyunKmsInstanceTicketEntry(): Observable<HttpResult<Array<EdsInstanceVO>>>;
+
+  abstract queryAliyunKmsKeyTicketEntry(param: { kmsInstanceId: string }): Observable<HttpResult<Array<EdsAssetVO>>>;
 
   abstract addDataWorksInstanceTicketEntry(param: AddAliyunDataWorksInstanceTicketEntry): Observable<HttpResult<Boolean>>;
 
@@ -252,4 +272,6 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateAliyunOnsConsumerGroupTicketEntry(param: AddCreateAliyunOnsConsumerGroupTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addCreateFrontEndApplicationTicketEntry(param: AddCreateFrontEndApplicationTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addCreateAliyunKmsSecretTicketEntry(param: AddCreateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>>;
 }

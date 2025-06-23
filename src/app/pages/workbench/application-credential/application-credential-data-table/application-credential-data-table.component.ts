@@ -4,6 +4,9 @@ import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { ApplicationCredentialPageQuery, ApplicationCredentialVO } from '../../../../@core/data/application-credential';
 import { ApplicationCredentialService } from '../../../../@core/services/application-credential.service';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
+import { UserPageQuery, UserVO } from '../../../../@core/data/user';
+import { map } from 'rxjs/operators';
+import { UserService } from '../../../../@core/services/user.service';
 
 @Component({
   selector: 'app-application-credential-data-table',
@@ -16,11 +19,14 @@ export class ApplicationCredentialDataTableComponent implements OnInit {
 
   queryParam = {
     queryName: '',
+    createdBy: '',
   };
+  user: UserVO;
 
   table: Table<ApplicationCredentialVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
-  constructor(private applicationCredentialService: ApplicationCredentialService) {
+  constructor(private applicationCredentialService: ApplicationCredentialService,
+              private userService: UserService) {
   }
 
   fetchData() {
@@ -30,6 +36,22 @@ export class ApplicationCredentialDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     onFetchData(this.table, this.applicationCredentialService.queryCredentialPage(param));
+  }
+
+  onSearchUser = (term: string) => {
+    const param: UserPageQuery = {
+      length: 10, page: 1, queryName: term,
+    };
+    return this.userService.queryUserPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((user, index) => ({ id: index, option: user })),
+        ),
+      );
+  };
+
+  onUserChange(user: UserVO) {
+    this.queryParam.createdBy = user?.username;
   }
 
   ngOnInit() {

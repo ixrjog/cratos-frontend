@@ -191,6 +191,7 @@ export interface CreateFrontEndApplication {
 export interface AddCreateAliyunKmsSecretTicketEntry {
   ticketId: number;
   instanceId: number;
+  namespace: string;
   detail: AddCreateAliyunKmsSecret;
 }
 

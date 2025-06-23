@@ -12,7 +12,7 @@ import { finalize } from 'rxjs';
 import { EdsService } from '../../../../../../@core/services/ext-datasource.service.s';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../../../@core/data/application';
 import { ApplicationService } from '../../../../../../@core/services/application.service';
-import { EnvPageQuery, EnvVO } from '../../../../../../@core/data/env';
+import { EnvPageQuery } from '../../../../../../@core/data/env';
 import { EnvService } from '../../../../../../@core/services/env.service';
 
 @Component({
@@ -34,11 +34,11 @@ export class WorkOrderAliyunKmsSecretTicketComponent implements OnInit {
   kmsInstance: EdsAssetVO;
   secretName: string;
   secretData: string;
-  versionId: string = 'V1';
+  versionId: string = 'v1';
   encryptionKey: EdsAssetVO;
   description: string;
   envOptions = [];
-  tabActiveId: string | number = '';
+  namespace: string = '';
 
   dialogDate = {
     warningOperateData: {
@@ -119,7 +119,7 @@ export class WorkOrderAliyunKmsSecretTicketComponent implements OnInit {
   };
 
   onApplicationChange(application: ApplicationVO) {
-    this.secretName = this.tabActiveId + '_' + application.name;
+    this.secretName = this.namespace + '_' + application.name;
   }
 
   onGetEnvOptions() {
@@ -130,12 +130,13 @@ export class WorkOrderAliyunKmsSecretTicketComponent implements OnInit {
     this.envService.queryEnvPage(param)
       .subscribe(({ body }) => {
         this.envOptions = body.data;
-        this.tabActiveId = this.envOptions[0].envName;
+        this.namespace = this.envOptions[0].envName;
       });
   }
 
   onEnvChange(tab) {
     this.secretName = tab + '_' + this.application?.name;
+    this.namespace = tab;
   }
 
   protected readonly FormLayout = FormLayout;
@@ -144,13 +145,14 @@ export class WorkOrderAliyunKmsSecretTicketComponent implements OnInit {
     this.workOrderTicketEntryService.addCreateAliyunKmsSecretTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
       instanceId: this.aliyunInstance.id,
+      namespace: this.namespace,
       detail: {
         edsInstance: this.aliyunInstance,
         kmsInstance: this.kmsInstance,
         secretName: this.secretName,
         secretData: this.secretData,
         versionId: this.versionId,
-        encryptionKeyId: this.encryptionKey.assetKey,
+        encryptionKeyId: this.encryptionKey.assetId,
         description: this.description,
       },
     }).subscribe(() => {

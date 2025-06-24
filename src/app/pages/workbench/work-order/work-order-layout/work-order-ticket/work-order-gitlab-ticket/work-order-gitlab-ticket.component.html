@@ -31,8 +31,8 @@
       <d-form-control>
         <d-select
           name="gitLabPermission"
-          [filterKey]="'name'"
           [appendToBody]="true"
+          [valueParser]="gitLabPermissionValueParser"
           [(ngModel)]="gitLabPermission"
           [searchFn]="onSearchGitLabPermission"
           [isSearch]="true"

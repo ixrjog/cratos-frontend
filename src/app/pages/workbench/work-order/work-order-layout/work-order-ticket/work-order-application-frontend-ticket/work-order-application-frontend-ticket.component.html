@@ -28,6 +28,7 @@
       <d-form-label [required]="true">Level</d-form-label>
       <d-form-control>
         <d-tabs
+          style="height: 20px"
           name="level"
           type="options"
           [(activeTab)]="tabActiveId"
@@ -81,8 +82,8 @@
       <d-form-control>
         <d-select
           name="gitLabProject"
-          [filterKey]="'name'"
           [appendToBody]="true"
+          [valueParser]="gitLabProjectValueParser"
           [(ngModel)]="gitLabProject"
           [searchFn]="onSearchGitLabProject"
           [isSearch]="true"
@@ -92,7 +93,7 @@
         >
           <ng-template let-option="option">
             <span>{{ option.name }}</span>
-            <span style="float: right; padding: 3px 0">{{ option.originalAsset?.webUrl }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.originalAsset?.sshUrlToRepo }}</span>
           </ng-template>
         </d-select>
       </d-form-control>
@@ -135,13 +136,17 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="trafficLayerDomain !== undefined && mappingsPath !== ''">
-      <d-form-label>URI</d-form-label>
+      <d-form-label>URL Preview</d-form-label>
       <d-form-control>
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px" [showIcon]="false">
-          <span *ngFor="let domain of TrafficLayerRecordList">
-            {{ domain.envName | uppercase }} URI: <strong>https://{{ domain.recordName }}{{ mappingsPath }}</strong>
-            <br />
-          </span>
+          <div *ngFor="let domain of TrafficLayerRecordList">
+            <span class="name">
+              <strong>https://{{ domain.recordName }}{{ mappingsPath }}</strong>
+            </span>
+            <span class="value">
+              <d-tag [tag]="domain.envName" [customColor]="domain.env.color"></d-tag>
+            </span>
+          </div>
         </d-alert>
       </d-form-control>
     </d-form-item>
@@ -163,25 +168,32 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Aliyun Instance">
+      <d-column field="displayName" header="Application Name"></d-column>
+      <d-column header="Type">
         <d-cell>
-          <ng-template let-rowItem="rowItem">
-            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          <ng-template>
+            <span>FrontEnd</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="displayName" header="Transfer Username@Server"></d-column>
-      <d-column field="detail" header="Key Fingerprint">
+      <d-column field="detail" header="Level">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            <span>{{ cellItem.keyFingerprint }}</span>
+            <span>{{ cellItem['tags'].Level }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="description">
+      <d-column field="detail" header="	Repository SSH URL">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            <span>{{ cellItem.description }}</span>
+            <span>{{ cellItem['repository']?.sshUrl }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" header="Description">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem.comment }}</span>
           </ng-template>
         </d-cell>
       </d-column>

@@ -133,7 +133,7 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
       ticketId: this.ticketDetails.ticket.id,
       detail: {
         applicationName: this.applicationName,
-        domain: this.trafficLayerDomain.name,
+        domain: this.trafficLayerDomain.domain,
         mappingsPath: this.mappingsPath,
         copyFromApplication: this.copyFromApplication?.name,
         tags: Object.fromEntries(this.tags),
@@ -205,8 +205,12 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
     };
     this.trafficLayerService.queryTrafficLayerRecordPage(param)
       .subscribe(({ body }) => {
-        this.TrafficLayerRecordList = body.data;
+        this.TrafficLayerRecordList = body.data.sort((a, b) => b.env.seq - a.env.seq);
       });
+  }
+
+  gitLabProjectValueParser($event) {
+    return $event['originalAsset']?.sshUrlToRepo;
   }
 
 }

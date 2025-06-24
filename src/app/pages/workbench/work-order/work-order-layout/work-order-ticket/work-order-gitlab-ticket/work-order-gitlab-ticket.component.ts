@@ -153,6 +153,10 @@ export class WorkOrderGitlabTicketComponent implements OnInit {
     this.onHideDialog.emit();
   }
 
+  gitLabPermissionValueParser($event) {
+    return $event['originalAsset']?.webUrl;
+  }
+
   protected readonly WorkOrderStatus = WorkOrderStatus;
   protected readonly JSON = JSON;
 }

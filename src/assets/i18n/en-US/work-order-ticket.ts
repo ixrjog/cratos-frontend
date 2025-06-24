@@ -68,7 +68,26 @@ export default {
       }
     },
     frontend: {
-      tips: 'Start with a letter and can only contain lowercase letters, numbers, and hyphens.',
+      applicationName: {
+        tips: 'Start with a letter and can only contain lowercase letters, numbers, and hyphens.',
+      },
+      mappingsPath: {
+        tips1: 'Filling Rules',
+        tips2: '● Path Levels: Maximum 2 levels (e.g., path or path/subpath)',
+        tips3: '● Allowed Characters: Letters, numbers, hyphens (-), underscores (_), dots (.)',
+        tips4: '● Slashes: Leading and trailing / are optional',
+        tips5: '● Length: Each path segment must have at least 1 character',
+      }
+    },
+    aliyunKms: {
+      secretName: {
+        tips: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
+        envTips: '● env: dev | daily | sit | pre | prod',
+        countryCodeTips: '● countryCode<optional>: ng | gh | bd | tz | ...',
+        cloudServiceTips: '● cloudService<optional>: oss | ons | s3 | sqs | sns | ...',
+        secretTypeTips: '● secretType<optional>: token | accessId | secretKey | username | password | ...',
+        userCustomTips: '● userCustom<optional>: User defined credential suffix',
+      }
     }
   },
 };

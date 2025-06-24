@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
 import {
@@ -17,6 +17,13 @@ import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 import { ApplicationPageQuery, ApplicationVO } from '../../../../../../@core/data/application';
 import { ApplicationService } from '../../../../../../@core/services/application.service';
 import { finalize } from 'rxjs';
+import {
+  TrafficLayerDomainPageQuery,
+  TrafficLayerDomainVO,
+  TrafficLayerRecordPageQuery,
+  TrafficLayerRecordVO,
+} from '../../../../../../@core/data/traffic-layer';
+import { TrafficLayerService } from '../../../../../../@core/services/traffic-layer.service';
 
 @Component({
   selector: 'app-work-order-application-frontend-ticket',
@@ -32,13 +39,14 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
   gitLabProject: EdsAssetVO;
   applicationName: string;
   level: string = 'A1';
-  domain: string = '';
   mappingsPath: string = '/';
   copyFromApplication: ApplicationVO;
   tags: Map<string, string>;
   comment: string;
   applicationNameRegex = '[a-z][\\d0-9a-z-]{3,32}';
   loading: boolean = false;
+  trafficLayerDomain: TrafficLayerDomainVO;
+  TrafficLayerRecordList: TrafficLayerRecordVO[] = [];
 
   tabActiveId: string | number = 'A1';
 
@@ -59,6 +67,7 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
 
   constructor(
     private edsService: EdsService,
+    private trafficLayerService: TrafficLayerService,
     private workOrderTicketEntryService: WorkOrderTicketEntryService,
     private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
@@ -124,7 +133,7 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
       ticketId: this.ticketDetails.ticket.id,
       detail: {
         applicationName: this.applicationName,
-        domain: this.domain,
+        domain: this.trafficLayerDomain.name,
         mappingsPath: this.mappingsPath,
         copyFromApplication: this.copyFromApplication?.name,
         tags: Object.fromEntries(this.tags),
@@ -172,4 +181,32 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
 
   protected readonly JSON = JSON;
   protected readonly WorkOrderStatus = WorkOrderStatus;
+
+  onSearchTrafficLayerDomain = (term: string) => {
+    const param: TrafficLayerDomainPageQuery = {
+      length: 10, page: 1, queryName: term,
+    };
+    return this.trafficLayerService.queryTrafficLayerDomainPage(param)
+      .pipe(
+        map(({ body }) =>
+          body.data.map((group, index) => ({ id: index, option: group })),
+        ),
+      );
+  };
+
+  onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
+    this.onGetTrafficLayerRecord(domainVO.id);
+  }
+
+  onGetTrafficLayerRecord(domainId: number) {
+    this.TrafficLayerRecordList = [];
+    const param: TrafficLayerRecordPageQuery = {
+      length: 10, page: 1, queryName: '', domainId: domainId, hasRouteTrafficTo: null,
+    };
+    this.trafficLayerService.queryTrafficLayerRecordPage(param)
+      .subscribe(({ body }) => {
+        this.TrafficLayerRecordList = body.data;
+      });
+  }
+
 }

@@ -20,7 +20,7 @@
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
           Regex: <strong>{{ applicationNameRegex }}</strong>
           <br />
-          {{ 'workOrderTicket.frontend.tips' | translate }}
+          {{ 'workOrderTicket.frontend.applicationName.tips' | translate }}
         </d-alert>
       </d-form-control>
     </d-form-item>
@@ -42,7 +42,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Copy Of</d-form-label>
+      <d-form-label>Clone of</d-form-label>
       <d-form-control>
         <d-select
           name="application"
@@ -100,16 +100,48 @@
     <d-form-item>
       <d-form-label [required]="true">Domain</d-form-label>
       <d-form-control>
-        <input dTextInput name="domain" [(ngModel)]="domain" />
+        <d-select
+          name="domain"
+          [filterKey]="'domain'"
+          [appendToBody]="true"
+          [(ngModel)]="trafficLayerDomain"
+          [searchFn]="onSearchTrafficLayerDomain"
+          [isSearch]="true"
+          placeholder="Select domain"
+          (valueChange)="onTrafficLayerDomainChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.domain }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.name }}</span>
+          </ng-template>
+        </d-select>
       </d-form-control>
     </d-form-item>
     <d-form-item>
       <d-form-label [required]="true">Mappings Path</d-form-label>
       <d-form-control>
         <input dTextInput name="mappingsPath" [(ngModel)]="mappingsPath" />
-        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px"
-                 *ngIf="domain !== '' && mappingsPath !== ''">
-          URI: <strong>https://{{ domain }}{{ mappingsPath }}</strong>
+        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
+          {{ 'workOrderTicket.frontend.mappingsPath.tips1' | translate }}
+          <br />
+          {{ 'workOrderTicket.frontend.mappingsPath.tips2' | translate }}
+          <br />
+          {{ 'workOrderTicket.frontend.mappingsPath.tips3' | translate }}
+          <br />
+          {{ 'workOrderTicket.frontend.mappingsPath.tips4' | translate }}
+          <br />
+          {{ 'workOrderTicket.frontend.mappingsPath.tips5' | translate }}
+        </d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="trafficLayerDomain !== undefined && mappingsPath !== ''">
+      <d-form-label>URI</d-form-label>
+      <d-form-control>
+        <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px" [showIcon]="false">
+          <span *ngFor="let domain of TrafficLayerRecordList">
+            {{ domain.envName | uppercase }} URI: <strong>https://{{ domain.recordName }}{{ mappingsPath }}</strong>
+            <br />
+          </span>
         </d-alert>
       </d-form-control>
     </d-form-item>

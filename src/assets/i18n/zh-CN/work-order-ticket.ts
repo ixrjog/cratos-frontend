@@ -68,7 +68,26 @@ export default {
       }
     },
     frontend: {
-      tips: '以字母开头，只能包含小写字母、数字和 - 。',
+      applicationName: {
+        tips: '以字母开头，只能包含小写字母、数字和 - 。',
+      },
+      mappingsPath: {
+        tips1: '填写规则',
+        tips2: '● 路径层级：最多2级（如：path 或 path/subpath）',
+        tips3: '● 允许字符：字母、数字、连字符(-)、下划线(_)、点号(.)',
+        tips4: '● 斜杠：开头和结尾的 / 可选',
+        tips5: '● 长度：每个路径段至少1个字符',
+      }
+    },
+    aliyunKms: {
+      secretName: {
+        tips: '{环境}_{应用名称}_{租户}_{国家码}_{云服务}_{凭据类型}_{用户自定义}',
+        envTips: '● 环境: dev | daily | sit | pre | prod',
+        countryCodeTips: '● 国家码<可选>: ng | gh | bd | tz | ...',
+        cloudServiceTips: '● 云服务<可选>: oss | ons | s3 | sqs | sns | rds | ...',
+        secretTypeTips: '● 凭据类型<可选>: token | accessId | secretKey | username | password | ...',
+        userCustomTips: '● 用户自定义<可选>: 用户自定义后缀',
+      }
     }
   },
 };

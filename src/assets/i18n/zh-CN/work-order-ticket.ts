@@ -244,6 +244,11 @@ export default {
         namespaces: '命名空间',
         applyDuration: '申请时长',
       },
+      application: {
+        prod: {
+          tips: '审批完成后，您需在15分钟内完成相关操作。',
+        }
+      },
     },
     aliyunOns: {
       headers: {
@@ -312,11 +317,6 @@ export default {
             defaultRetryPolicy: '固定间隔策略下，PushConsumer会在本地按照固定间隔重试。',
           }
         }
-      }
-    },
-    application: {
-      prod: {
-        tips: '审批完成后，您需在15分钟内完成相关操作。',
       }
     },
   },

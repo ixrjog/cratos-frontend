@@ -244,6 +244,11 @@ export default {
         namespaces: 'Namespaces',
         applyDuration: 'Apply Duration',
       },
+      application: {
+        prod: {
+          tips: 'After the approval is completed, you need to complete the relevant operations within 15 minutes.',
+        }
+      },
     },
     aliyunOns: {
       headers: {
@@ -312,11 +317,6 @@ export default {
             defaultRetryPolicy: 'In concurrent delivery mode, the interval at which the system retries message consumption increases as the number of retries increases.',
           }
         }
-      }
-    },
-    application: {
-      prod: {
-        tips: 'After the approval is completed, you need to complete the relevant operations within 15 minutes.',
       }
     },
   },

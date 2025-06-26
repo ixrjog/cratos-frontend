@@ -1,36 +1,9 @@
-#### proxy.conf.json
+![SVG Image](https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/logo/cratos-logo.svg)
 
+#### Start in sync with the world
 
-+ LOCAL
-```json
-{
-  "/api": {
-    "target": "http://localhost:8081",
-    "secure": false,
-    "changeOrigin": true
-  }
-}
-```
+> A secure general development framework for operations and maintenance
 
-+ PRE
-```json
-{
-  "/api": {
-    "target": "https://cratos-pre.palmpay-inc.com",
-    "secure": true,
-    "changeOrigin": true
-  }
-}
-```
-
-+ PROD
-```json
-{
-  "/api": {
-    "target": "https://cratos.palmpay-inc.com",
-    "secure": true,
-    "changeOrigin": true
-  }
-}
-```
-
++ OpenJDK 21
++ SpringBoot 3.5.3 (GA)
++ MySql 8+

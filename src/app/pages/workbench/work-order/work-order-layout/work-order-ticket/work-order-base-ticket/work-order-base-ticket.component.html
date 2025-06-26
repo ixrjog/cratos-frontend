@@ -10,13 +10,13 @@
               *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW"
             >
               <div class="pane-content" style="margin-bottom: 10px">
-                <h3>Options</h3>
+                <h3>{{ 'workOrderTicket.base.options' | translate }}</h3>
                 <ng-template [ngTemplateOutlet]="editTicketEntryTemplate"></ng-template>
               </div>
             </d-splitter-pane>
             <d-splitter-pane>
               <div class="pane-content" style="margin-bottom: 10px">
-                <h3>Content</h3>
+                <h3>{{ 'workOrderTicket.base.content' | translate }}</h3>
                 <div dLoading [loadingStyle]="'infinity'" [loading]="entryLoading">
                   <ng-template [ngTemplateOutlet]="showTicketEntryTemplate"></ng-template>
                 </div>
@@ -27,7 +27,7 @@
         <d-splitter-pane [resizable]="false">
           <d-splitter-pane>
             <div class="pane-content" style="margin-top: 10px">
-              <h3>Approval Info</h3>
+              <h3>{{ 'workOrderTicket.base.approvalInfo' | translate }}</h3>
               <form dForm ngForm [layout]="FormLayout.Vertical">
                 <span *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
                   <d-form-item *ngFor="let node of ticketDetails.workflow.nodes">
@@ -61,7 +61,7 @@
                   </d-form-item>
                 </span>
                 <d-form-item>
-                  <d-form-label [required]="true">Apply Remark</d-form-label>
+                  <d-form-label [required]="true">{{ 'workOrderTicket.base.applyRemark' | translate }}</d-form-label>
                   <d-form-control>
                     <textarea
                       name="applyRemark"
@@ -119,7 +119,7 @@
     <div class="pane-content" style="margin-top: 10px">
       <form dForm ngForm [layout]="FormLayout.Vertical">
         <d-form-item>
-          <d-form-label>Approve Remark</d-form-label>
+          <d-form-label>{{ 'workOrderTicket.base.approveRemark' | translate }}</d-form-label>
           <d-form-control>
             <textarea
               name="approveRemark"

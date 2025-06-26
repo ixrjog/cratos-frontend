@@ -10,7 +10,7 @@
 <ng-template #editTicketEntryTemplate>
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <d-form-item>
-      <d-form-label [required]="true">Instance</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.aliyunOns.labels.instance' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="instance"
@@ -25,7 +25,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="aliyunInstance !== undefined">
-      <d-form-label [required]="true">ONS Instance</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.aliyunOns.labels.onsInstance' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="onsInstance"
@@ -47,7 +47,7 @@
     </d-form-item>
     <ng-template [ngTemplateOutlet]="editTicketEntryExtTemplate"></ng-template>
     <d-form-item>
-      <d-form-label [required]="true">Remark</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.aliyunOns.labels.remark' | translate }}</d-form-label>
       <d-form-control>
         <textarea
           dTextarea

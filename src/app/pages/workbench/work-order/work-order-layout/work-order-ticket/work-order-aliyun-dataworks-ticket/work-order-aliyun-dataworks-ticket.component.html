@@ -14,7 +14,7 @@
 
   <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
-      <d-form-label [required]="true">Instance</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.aliyunDataworks.labels.instance' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="instanceName"
@@ -40,15 +40,15 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Aliyun Instance">
+      <d-column field="instance" [header]="'workOrderTicket.aliyunDataworks.headers.aliyunInstance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="name" header="AK RAM User"></d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column field="name" [header]="'workOrderTicket.aliyunDataworks.headers.akRamUser' | translate"></d-column>
+      <d-column [header]="'workOrderTicket.aliyunDataworks.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -58,7 +58,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.aliyunDataworks.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

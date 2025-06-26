@@ -14,7 +14,7 @@
 
   <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
-      <d-form-label [required]="true">Instance</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.awsTransferSftp.labels.instance' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="user"
@@ -30,7 +30,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="instance !== undefined">
-      <d-form-label [required]="true">Transfer Server</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.awsTransferSftp.labels.transferServer' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="awsTransfer"
@@ -50,7 +50,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Username</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.awsTransferSftp.labels.username' | translate }}</d-form-label>
       <d-form-control>
         <input dTextInput name="username" [(ngModel)]="username" />
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
@@ -65,13 +65,13 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Public Key</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.awsTransferSftp.labels.publicKey' | translate }}</d-form-label>
       <d-form-control>
         <textarea dTextarea name="publicKey" style="height: 100px" [(ngModel)]="publicKey"></textarea>
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Description</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.awsTransferSftp.labels.description' | translate }}</d-form-label>
       <d-form-control>
         <textarea dTextarea name="description" maxlength="200" style="height: 80px"  [(ngModel)]="description"></textarea>
       </d-form-control>
@@ -88,29 +88,29 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Aliyun Instance">
+      <d-column field="instance" [header]="'workOrderTicket.awsTransferSftp.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="displayName" header="Transfer Username@Server"></d-column>
-      <d-column field="detail" header="Key Fingerprint">
+      <d-column field="displayName" [header]="'workOrderTicket.awsTransferSftp.headers.transferUsernameServer' | translate"></d-column>
+      <d-column field="detail" [header]="'workOrderTicket.awsTransferSftp.headers.keyFingerprint' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem.keyFingerprint }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Description">
+      <d-column field="detail" [header]="'workOrderTicket.awsTransferSftp.headers.description' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem.description }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.awsTransferSftp.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -120,7 +120,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.awsTransferSftp.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

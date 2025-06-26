@@ -1,14 +1,167 @@
 export default {
   workOrderTicket: {
-    application: {
-      prod: {
-        tips: 'After the approval is completed, you need to complete the relevant operations within 15 minutes.',
+    base: {
+      options: 'Options',
+      content: 'Content',
+      approvalInfo: 'Approval Info',
+      applyRemark: 'Apply Remark',
+      approveRemark: 'Approve Remark',
+    },
+    aliyunDataworks: {
+      headers: {
+        aliyunInstance: 'Aliyun Instance',
+        akRamUser: 'AK RAM User',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+      },
+    },
+    cloudIdentityReset: {
+      headers: {
+        instance: 'Instance',
+        loginUsername: 'Login Username',
+        loginLink: 'Login Link',
+        password: 'Password',
+        mfa: 'MFA',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        account: 'Account',
+        password: 'Password',
+        mfa: 'MFA',
       }
     },
-    podDelete: {
-      tips: 'Approved tickets provide a 2-hours window for pod deletion, and the entire operation process will be fully recorded in the ticket.',
+    applicationFrontend: {
+      headers: {
+        applicationName: 'Application Name',
+        type: 'Type',
+        level: 'Level',
+        repositorySshUrl: 'Repository SSH URL',
+        description: 'Description',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        applicationName: 'Application Name',
+        level: 'Level',
+        cloneOf: 'Clone of',
+        gitlabInstance: 'GitLab Instance',
+        gitlabProject: 'GitLab Project',
+        domain: 'Domain',
+        mappingsPath: 'Mappings Path',
+        urlPreview: 'URL Preview',
+        comment: 'Comment',
+      },
+      applicationName: {
+        tips: 'Start with a letter and can only contain lowercase letters, numbers, and hyphens.',
+      },
+      mappingsPath: {
+        tips1: 'Filling Rules',
+        tips2: '● Path Levels: Maximum 2 levels (e.g., path or path/subpath)',
+        tips3: '● Allowed Characters: Letters, numbers, hyphens (-), underscores (_), dots (.)',
+        tips4: '● Slashes: Leading and trailing / are optional',
+        tips5: '● Length: Each path segment must have at least 1 character',
+      },
+    },
+    aliyunKmsSecret: {
+      headers: {
+        aliyunInstance: 'Aliyun Instance',
+        secretName: 'Secret Name',
+        version: 'Version',
+        encryptionKeyId: 'Encryption Key ID',
+        configCenterValue: 'Config Center Value',
+        description: 'Description',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        kmsInstance: 'KMS Instance',
+        kmsEncryptionKey: 'KMS Encryption Key',
+        application: 'Application',
+        env: 'Env',
+        secretName: 'Secret Name',
+        secretData: 'Secret Data',
+        version: 'Version',
+        description: 'Description',
+      },
+      tips: 'see more application credential , please click here',
+      secretName: {
+        tips: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
+        envTips: '● env: dev | daily | sit | pre | prod',
+        countryCodeTips: '● countryCode<optional>: ng | gh | bd | tz | ...',
+        cloudServiceTips: '● cloudService<optional>: oss | ons | s3 | sqs | sns | ...',
+        secretTypeTips: '● secretType<optional>: token | accessId | secretKey | username | password | ...',
+        userCustomTips: '● userCustom<optional>: User defined credential suffix',
+      },
+    },
+    awsTransferSftp: {
+      headers: {
+        instance: 'Instance',
+        transferUsernameServer: 'Transfer Username@Server',
+        keyFingerprint: 'Key Fingerprint',
+        description: 'Description',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        transferServer: 'Transfer Server',
+        username: 'Username',
+        publicKey: 'Public Key',
+        description: 'Description',
+      },
+      tips1: '1. Start with a letter, digit, or underscore',
+      tips2: '2. Continue with 2-99 characters that can be letters, digits, underscores, @, periods, or hyphens',
+      tips3: '3. Have a total length between 3-100 characters',
+    },
+    cloudIdentity: {
+      headers: {
+        instance: 'Instance',
+        ramLoginUsername: 'RAM Login Username',
+        loginLink: 'Login Link',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+      },
+    },
+    cloudPolicy: {
+      headers: {
+        instance: 'Instance',
+        loginUrl: 'Login URL',
+        policyName: 'Policy Name',
+        policyDesc: 'Policy Desc',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        cloudPolicy: 'Cloud Policy',
+      },
     },
     elasticScaling: {
+      headers: {
+        application: 'Application',
+        namespace: 'Namespace',
+        currentReplicas: 'Current Replicas',
+        expectedReplicas: 'Expected Replicas',
+        scalingType: 'Scaling Type',
+        instance: 'Instance',
+        deployment: 'Deployment',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        application: 'Application',
+        namespace: 'Namespace',
+        deployment: 'Deployment',
+        expectedReplicas: 'Expected Replicas',
+      },
       application: {
         tips: 'Application elastic scaling, conforms to the SRE specification.',
       },
@@ -16,12 +169,106 @@ export default {
         tips: 'Specify Deployment to adjust the replica.',
       },
     },
-    awsTransferSftp: {
-      tips1: '1. Start with a letter, digit, or underscore',
-      tips2: '2. Continue with 2-99 characters that can be letters, digits, underscores, @, periods, or hyphens',
-      tips3: '3. Have a total length between 3-100 characters',
+    gitlab: {
+      headers: {
+        instance: 'Instance',
+        sshUrl: 'SSH URL',
+        role: 'Role',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        gitlabPermission: 'GitLab Permission',
+        role: 'Role',
+      },
+    },
+    ldapIdentity: {
+      headers: {
+        ldapRole: 'LDAP Role',
+        description: 'Description',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        group: 'Group',
+        role: 'Role',
+      },
+    },
+    mailIdentityReset: {
+      headers: {
+        instance: 'Instance',
+        mail: 'Mail',
+        loginLink: 'Login Link',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        account: 'Account',
+      },
+    },
+    podDelete: {
+      headers: {
+        application: 'Application',
+        comment: 'Comment',
+        tags: 'Tags',
+        instance: 'Instance',
+        namespace: 'Namespace',
+        deployment: 'Deployment',
+        pod: 'Pod',
+        deleteOperationTime: 'Delete Operation Time',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        application: 'Application',
+      },
+      tips: 'Approved tickets provide a 2-hours window for pod deletion, and the entire operation process will be fully recorded in the ticket.',
+    },
+    userRevoke: {
+      headers: {
+        businessType: 'Business Type',
+        subType: 'Sub Type',
+        instance: 'Instance',
+        account: 'Account',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        user: 'User',
+      },
+    },
+    businessPermission: {
+      labels: {
+        permission: 'Permission',
+        namespaces: 'Namespaces',
+        applyDuration: 'Apply Duration',
+      },
     },
     aliyunOns: {
+      headers: {
+        instance: 'Instance',
+        onsInstance: 'ONS Instance',
+        consumerGroup: 'Consumer Group',
+        deliveryOrderType: 'Delivery Order Type',
+        topicName: 'Topic Name',
+        messageType: 'Message Type',
+        remark: 'Remark',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        onsInstance: 'ONS Instance',
+        remark: 'Remark',
+        topicName: 'Topic Name',
+        messageType: 'Message Type',
+        groupId: 'Group ID',
+        deliveryOrderType: 'Delivery Order Type',
+        retryRules: 'Retry Rules',
+        retryPolicy: 'Retry Policy',
+        maxRetryTimes: 'Max Retry Times',
+      },
       topic: {
         topicName: {
           tips: 'Start with TOPIC_ , The name must be 1 to 60 characters in length, and can contain only capital letters, digits, hyphens (-), and underscores (_). Some names are reserved for the system and cannot be used.',
@@ -67,28 +314,10 @@ export default {
         }
       }
     },
-    frontend: {
-      applicationName: {
-        tips: 'Start with a letter and can only contain lowercase letters, numbers, and hyphens.',
-      },
-      mappingsPath: {
-        tips1: 'Filling Rules',
-        tips2: '● Path Levels: Maximum 2 levels (e.g., path or path/subpath)',
-        tips3: '● Allowed Characters: Letters, numbers, hyphens (-), underscores (_), dots (.)',
-        tips4: '● Slashes: Leading and trailing / are optional',
-        tips5: '● Length: Each path segment must have at least 1 character',
+    application: {
+      prod: {
+        tips: 'After the approval is completed, you need to complete the relevant operations within 15 minutes.',
       }
     },
-    aliyunKms: {
-      tips: 'see more application credential , please click here',
-      secretName: {
-        tips: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
-        envTips: '● env: dev | daily | sit | pre | prod',
-        countryCodeTips: '● countryCode<optional>: ng | gh | bd | tz | ...',
-        cloudServiceTips: '● cloudService<optional>: oss | ons | s3 | sqs | sns | ...',
-        secretTypeTips: '● secretType<optional>: token | accessId | secretKey | username | password | ...',
-        userCustomTips: '● userCustom<optional>: User defined credential suffix',
-      }
-    }
   },
 };

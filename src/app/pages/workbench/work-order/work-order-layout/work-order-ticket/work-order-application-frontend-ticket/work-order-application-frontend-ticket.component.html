@@ -14,18 +14,18 @@
 
   <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
-      <d-form-label [required]="true">Application Name</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.applicationName' | translate }}</d-form-label>
       <d-form-control>
         <input dTextInput name="applicationName" [(ngModel)]="applicationName" />
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
           Regex: <strong>{{ applicationNameRegex }}</strong>
           <br />
-          {{ 'workOrderTicket.frontend.applicationName.tips' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.applicationName.tips' | translate }}
         </d-alert>
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Level</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.level' | translate }}</d-form-label>
       <d-form-control>
         <d-tabs
           style="height: 20px"
@@ -43,7 +43,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Clone of</d-form-label>
+      <d-form-label>{{ 'workOrderTicket.applicationFrontend.labels.cloneOf' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="application"
@@ -63,7 +63,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">GitLab Instance</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.gitlabInstance' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="instance"
@@ -78,7 +78,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="gitLabInstance !== undefined">
-      <d-form-label [required]="true">GitLab Project</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.gitlabProject' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="gitLabProject"
@@ -99,7 +99,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Domain</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.domain' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="domain"
@@ -119,24 +119,24 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Mappings Path</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.mappingsPath' | translate }}</d-form-label>
       <d-form-control>
         <input dTextInput name="mappingsPath" [(ngModel)]="mappingsPath" />
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
-          {{ 'workOrderTicket.frontend.mappingsPath.tips1' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.mappingsPath.tips1' | translate }}
           <br />
-          {{ 'workOrderTicket.frontend.mappingsPath.tips2' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.mappingsPath.tips2' | translate }}
           <br />
-          {{ 'workOrderTicket.frontend.mappingsPath.tips3' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.mappingsPath.tips3' | translate }}
           <br />
-          {{ 'workOrderTicket.frontend.mappingsPath.tips4' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.mappingsPath.tips4' | translate }}
           <br />
-          {{ 'workOrderTicket.frontend.mappingsPath.tips5' | translate }}
+          {{ 'workOrderTicket.applicationFrontend.mappingsPath.tips5' | translate }}
         </d-alert>
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="trafficLayerDomain !== undefined && mappingsPath !== ''">
-      <d-form-label>URL Preview</d-form-label>
+      <d-form-label>{{ 'workOrderTicket.applicationFrontend.labels.urlPreview' | translate }}</d-form-label>
       <d-form-control>
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px" [showIcon]="false">
           <div *ngFor="let domain of TrafficLayerRecordList">
@@ -151,7 +151,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Comment</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationFrontend.labels.comment' | translate }}</d-form-label>
       <d-form-control>
         <textarea dTextarea name="comment" maxlength="200" style="height: 80px" [(ngModel)]="comment"></textarea>
       </d-form-control>
@@ -168,36 +168,36 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="displayName" header="Application Name"></d-column>
-      <d-column header="Type">
+      <d-column field="displayName" [header]="'workOrderTicket.applicationFrontend.headers.applicationName' | translate"></d-column>
+      <d-column [header]="'workOrderTicket.applicationFrontend.headers.type' | translate">
         <d-cell>
           <ng-template>
             <span>FrontEnd</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Level">
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.level' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['tags'].Level }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="	Repository SSH URL">
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.repositorySshUrl' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['repository']?.sshUrl }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Description">
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.description' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem.comment }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.applicationFrontend.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -207,7 +207,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.applicationFrontend.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

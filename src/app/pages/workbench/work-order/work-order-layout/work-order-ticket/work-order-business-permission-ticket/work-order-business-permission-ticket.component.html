@@ -11,7 +11,7 @@
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <ng-template [ngTemplateOutlet]="editTicketEntryTipsTemplate"></ng-template>
     <d-form-item>
-      <d-form-label [required]="true">Permission</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.businessPermission.labels.permission' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="permission"
@@ -32,7 +32,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Namespaces</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.businessPermission.labels.namespaces' | translate }}</d-form-label>
       <d-form-control>
         <d-checkbox-group
           name="namespaces"
@@ -44,7 +44,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="envGroup !== PROD">
-      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="renewalTypeHelpTips">Apply Duration</d-form-label>
+      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="renewalTypeHelpTips">{{ 'workOrderTicket.businessPermission.labels.applyDuration' | translate }}</d-form-label>
       <d-form-control>
         <d-select name="renewalType" [options]="renewalTypeOptions" [(ngModel)]="renewalType"></d-select>
       </d-form-control>

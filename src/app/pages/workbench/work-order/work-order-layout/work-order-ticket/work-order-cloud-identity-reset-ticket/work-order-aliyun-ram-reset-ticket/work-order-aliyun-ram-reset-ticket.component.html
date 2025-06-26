@@ -11,13 +11,13 @@
 
 <ng-template #editTicketEntryExtTemplate>
   <d-form-item>
-    <d-form-label [required]=" true">Password</d-form-label>
+    <d-form-label [required]=" true">{{ 'workOrderTicket.cloudIdentityReset.labels.password' | translate }}</d-form-label>
     <d-form-control>
       <d-toggle name="Password" [(ngModel)]="resetPassword"></d-toggle>
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label [required]="true">MFA</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.cloudIdentityReset.labels.mfa' | translate }}</d-form-label>
     <d-form-control>
       <d-toggle name="mfa" [(ngModel)]="unbindMFA"></d-toggle>
     </d-form-control>

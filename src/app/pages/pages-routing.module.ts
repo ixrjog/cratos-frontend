@@ -64,6 +64,10 @@ const routes: Routes = [
         path: 'finops',
         loadChildren: () => import('./finops/finops.module').then(m => m.FinopsModule),
       },
+      {
+        path: '',
+        loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+      },
     ],
   },
 ];

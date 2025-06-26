@@ -92,16 +92,23 @@ export class DefaultInterceptor implements HttpInterceptor {
     const newReq = req.clone({
       url,
     });
-    return next.handle(newReq).pipe(
-      mergeMap((event: any) => {
-        // 允许统一对请求错误处理，这是因为一个请求若是业务上错误的情况下其HTTP请求的状态是200的情况下需要
-        if (event instanceof HttpResponse && `${event.status}`.startsWith('20')) {
-          return this.handleData(event);
-        }
-        // 若一切都正常，则后续操作
-        return of(event);
-      }),
-      catchError((err: HttpErrorResponse) => this.handleData(err)),
-    );
+
+    if (req.url.startsWith('/api')) {
+      return next.handle(newReq).pipe(
+        mergeMap((event: any) => {
+          // 允许统一对请求错误处理，这是因为一个请求若是业务上错误的情况下其HTTP请求的状态是200的情况下需要
+          if (event instanceof HttpResponse && `${event.status}`.startsWith('20')) {
+            return this.handleData(event);
+          }
+          // 若一切都正常，则后续操作
+          return of(event);
+        }),
+        catchError((err: HttpErrorResponse) => this.handleData(err)),
+      );
+
+    } else {
+      // 默认处理
+      return next.handle(req);
+    }
   }
 }

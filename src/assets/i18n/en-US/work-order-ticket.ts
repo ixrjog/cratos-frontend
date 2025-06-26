@@ -80,6 +80,7 @@ export default {
       }
     },
     aliyunKms: {
+      tips: 'see more application credential , please click here',
       secretName: {
         tips: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
         envTips: '● env: dev | daily | sit | pre | prod',

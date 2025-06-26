@@ -80,6 +80,7 @@ export default {
       }
     },
     aliyunKms: {
+      tips: '点击查看更多应用凭据',
       secretName: {
         tips: '{环境}_{应用名称}_{租户}_{国家码}_{云服务}_{凭据类型}_{用户自定义}',
         envTips: '● 环境: dev | daily | sit | pre | prod',

@@ -56,7 +56,9 @@
 </ng-template>
 
 <ng-template #showTicketEntryTemplate>
-  <d-card *ngFor="let entry of ticketDetails.entries"
+  <span *ngFor="let permission of ticketEntryMap| keyvalue">
+    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+    <d-card *ngFor="let entry of permission.value"
           style="padding: 5px; display: inline-block; margin: 0 10px 10px 0;">
     <d-card-content>
       <d-tag
@@ -95,6 +97,10 @@
           <span [title]="tag.result">{{ tag.result }}</span>
         </div>
       </ng-template>
+
     </d-card-content>
   </d-card>
+  </span>
+
+
 </ng-template>

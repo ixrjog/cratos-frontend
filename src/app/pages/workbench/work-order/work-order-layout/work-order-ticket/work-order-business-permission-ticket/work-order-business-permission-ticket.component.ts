@@ -35,6 +35,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
   @Output() onHideDialog = new EventEmitter<null>();
   @Input() envGroup: string = '';
 
+  ticketEntryMap = new Map<string, WorkOrderTicketEntryVO<UserBusinessPermission>[]>();
   userBusinessPermission: PermissionBusinessVO = null;
   namespaceOptions = [];
   namespaces = [];
@@ -71,6 +72,18 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
     } else {
       this.onGetNamespaceByEnvGroupOptions();
     }
+    this.onTicketEntryConvert()
+  }
+
+  onTicketEntryConvert() {
+    this.ticketEntryMap = new Map<string, WorkOrderTicketEntryVO<UserBusinessPermission>[]>();
+    this.ticketDetails.entries.forEach((entry) => {
+      const key: string = entry.businessType;
+      if (!this.ticketEntryMap.has(key)) {
+        this.ticketEntryMap.set(key, []);
+      }
+      this.ticketEntryMap.get(key).push(entry);
+    });
   }
 
   onGetNamespaceOptions() {
@@ -162,6 +175,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
 
   onGetTicketDetail(ticketDetails: WorkOrderTicketDetailsVO) {
     this.onGetTicket.emit(ticketDetails);
+    this.onTicketEntryConvert();
   }
 
   onFetchData() {

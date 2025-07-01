@@ -1,6 +1,12 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onScanData()"
-            [disabled]="queryParam.applicationName ==='' ">Scan
+  <d-button
+    [disabled]="queryParam.applicationName ===''"
+    class="button"
+    bsStyle="common"
+    (click)="onFavoriteClick()"
+  >
+    <i class="icon" [ngClass]="isFavorite?'icon-star':'icon-star-o'" ></i>
+    Favorite
   </d-button>
   <d-select
     class="select"
@@ -47,7 +53,36 @@
   <d-button class="button" bsStyle="common" (click)="fetchData()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter
   </d-button>
+  <span class="right-button">
+      <d-button class="button" bsStyle="primary" (click)="onScanData()"
+                [disabled]="queryParam.applicationName ==='' ">Scan
+  </d-button>
+  </span>
 </div>
+
+<d-panel #anotherPanel [isCollapsed]="isCollapsed" [hasLeftPadding]="false" [showAnimation]="true"
+         *ngIf="JSON.stringify(favoriteApplicationList) !== '[]'" style="margin-bottom: 10px">
+  <d-panel-header>
+    <em class="icon icon-select-arrow" [ngClass]="{ open: anotherPanel.isCollapsed }"></em>
+    My Favorites Application
+  </d-panel-header>
+  <d-panel-body style="padding: 5px">
+    <d-tag
+      *ngFor="let application of favoriteApplicationList"
+      style="margin: 5px 5px 0 0"
+      [tag]="application"
+      [customViewTemplate]="customTag"
+      [labelStyle]="'blue-w98'"
+    >
+    </d-tag>
+    <ng-template #customTag let-tag="tag">
+      <span (click)="onClick(tag)">{{ tag.applicationName }}</span>
+      <span class="icon-close" style="vertical-align: center; padding-left: 4px"
+            (click)="onRemoveApplicationFavorite(tag.id)"></span>
+    </ng-template>
+  </d-panel-body>
+</d-panel>
+
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
     <d-tabs type="pills" [(activeTab)]="tabActiveId">

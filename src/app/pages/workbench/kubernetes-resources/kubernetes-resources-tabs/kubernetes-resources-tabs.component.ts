@@ -19,6 +19,9 @@ import { MessageResponse } from '../../../../@core/data/base-data';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { WS_HEART_INTERVAL, WS_INIT_INTERVAL } from '../../../../@shared/constant/ws.constant';
 import { ActivatedRoute } from '@angular/router';
+import { UserFavoriteService } from '../../../../@core/services/user-favorite.service';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
+import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user-favorite';
 
 @Component({
   selector: 'app-kubernetes-resources-tabs',
@@ -45,6 +48,10 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
   serviceList = [];
   resourceNamespaceOptions = [];
   show = false;
+  isFavorite: boolean;
+  favoriteApplicationList: ApplicationVO[] = [];
+
+  isCollapsed = true;
 
   ws: WebSocket;
   timerRequest: Subscription;
@@ -52,10 +59,12 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private userFavoriteService: UserFavoriteService,
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
     private wsApiService: WebSocketApiService,
     private toastUtil: ToastUtil,
+
   ) {
   }
 
@@ -66,6 +75,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
         this.applicationService.getApplicationByName({name: this.queryParam.applicationName})
           .subscribe(({body}) => {
             this.application = body;
+            this.isFavorite = this.application.favorited;
             this.queryParam.namespace = param['namespace'] !== undefined ? param['namespace'] : '';
             if (!this.first) {
               this.first = true;
@@ -86,6 +96,47 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
           })
       }
     });
+    this.onGetUserFavorite();
+  }
+
+  onGetUserFavorite() {
+    this.userFavoriteService.getMyFavoriteApplication()
+      .subscribe(({ body }) => {
+        this.favoriteApplicationList = body;
+      });
+  }
+
+  onAddApplicationFavorite(applicationId: number) {
+    const param: AddUserFavorite = {
+      businessType: BusinessTypeEnum.APPLICATION,
+      businessId: applicationId,
+    };
+    this.userFavoriteService.addApplicationFavorite(param)
+      .subscribe(() => {
+        this.onGetUserFavorite();
+      });
+  }
+
+  onRemoveApplicationFavorite(applicationId: number) {
+    const param: RemoveUserFavorite = {
+      businessType: BusinessTypeEnum.APPLICATION,
+      businessId: applicationId,
+    };
+    this.userFavoriteService.removeApplicationFavorite(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+        if (this.application.id === applicationId) {
+          this.isFavorite = false;
+        }
+        this.onGetUserFavorite();
+      });
+
+  }
+
+  onClick(application: ApplicationVO) {
+    this.application = application;
+    this.onApplicationChange(application);
+    this.onAddApplicationFavorite(application.id);
   }
 
   fetchData() {
@@ -155,6 +206,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     if (!this.first) {
       this.first = true;
     }
+    this.isFavorite = application.favorited;
     this.queryParam.applicationName = application?.name;
     this.queryParam.namespace = ''
     this.wsOnUnsubSend();
@@ -321,6 +373,15 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
         }
       }
     };
+  }
+
+  onFavoriteClick() {
+    this.isFavorite = !this.isFavorite;
+    if (this.isFavorite) {
+      this.onAddApplicationFavorite(this.application.id);
+    } else {
+      this.onRemoveApplicationFavorite(this.application.id);
+    }
   }
 
   protected readonly JSON = JSON;

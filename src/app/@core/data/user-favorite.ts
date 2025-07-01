@@ -1,0 +1,24 @@
+import { Observable } from 'rxjs';
+import { HttpResult } from './base-data';
+import { ApplicationVO } from './application';
+
+export interface AddUserFavorite {
+  businessType: string;
+  businessId: number;
+}
+
+export interface RemoveUserFavorite {
+  businessType: string;
+  businessId: number;
+}
+
+
+export abstract class UserFavoriteData {
+
+  abstract getMyFavoriteApplication(): Observable<HttpResult<Array<ApplicationVO>>>;
+
+  abstract addApplicationFavorite(param: AddUserFavorite): Observable<HttpResult<Boolean>>;
+
+  abstract removeApplicationFavorite(param: RemoveUserFavorite): Observable<HttpResult<Boolean>>;
+
+}

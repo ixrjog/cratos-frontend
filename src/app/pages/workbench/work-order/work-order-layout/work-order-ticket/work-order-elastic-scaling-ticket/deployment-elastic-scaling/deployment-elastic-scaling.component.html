@@ -1,6 +1,6 @@
 <form dForm ngForm [layout]="FormLayout.Vertical">
   <d-form-item>
-    <d-form-label [required]="true">Application</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.elasticScaling.labels.application' | translate }}</d-form-label>
     <d-form-control>
       <d-select
         name="application"
@@ -20,7 +20,7 @@
     </d-form-control>
   </d-form-item>
   <d-form-item *ngIf="application !== undefined">
-    <d-form-label [required]="true">Namespace</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.elasticScaling.labels.namespace' | translate }}</d-form-label>
     <d-form-control>
       <d-tabs
         name="namespace"
@@ -39,7 +39,7 @@
     </d-form-control>
   </d-form-item>
   <d-form-item *ngIf="namespace !== undefined">
-    <d-form-label [required]="true">Deployment</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.elasticScaling.labels.deployment' | translate }}</d-form-label>
     <d-form-control>
       <d-form-control>
         <d-select
@@ -54,7 +54,7 @@
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label [required]="true">Expected Replicas</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.elasticScaling.labels.expectedReplicas' | translate }}</d-form-label>
     <d-form-control>
       <div class="composite-slider slider-wrapper">
         <d-slider name="limit" [(ngModel)]="expectedReplicas" class="slider"></d-slider>

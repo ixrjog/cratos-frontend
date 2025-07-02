@@ -17,7 +17,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Application</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.podDelete.labels.application' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="application"
@@ -48,22 +48,22 @@
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="name" header="Application"></d-column>
-      <d-column field="detail" header="Comment">
+      <d-column field="name" [header]="'workOrderTicket.podDelete.headers.application' | translate"></d-column>
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.comment' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             {{ cellItem['comment'] }}
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Tags">
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.tags' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <app-business-tags [businessTags]="cellItem['businessTags']"></app-business-tags>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.podDelete.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -96,35 +96,35 @@
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
       [tableOverflowType]="'overlay'"
     >
-      <d-column header="Instance">
+      <d-column [header]="'workOrderTicket.podDelete.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Namespace">
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.namespace' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['namespace'] | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Deployment">
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.deployment' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['asset']?.name | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Pod">
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.pod' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['podName'] | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Delete Operation Time">
+      <d-column field="detail" [header]="'workOrderTicket.podDelete.headers.deleteOperationTime' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['deleteOperationTime'] | dSafeNullPipe }}</span>

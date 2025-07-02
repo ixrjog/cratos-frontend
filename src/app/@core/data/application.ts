@@ -9,6 +9,7 @@ export interface ApplicationVO extends BaseVO, ValidVO, BusinessDocsVO, Business
   config: string;
   comment: string;
   resources: Map<string, ApplicationResourceVO>;
+  favorited: boolean;
 }
 
 export interface ApplicationResourceVO {

@@ -82,7 +82,7 @@ import {
   WorkOrderApplicationFrontendTicketComponent,
 } from '../work-order-ticket/work-order-application-frontend-ticket/work-order-application-frontend-ticket.component';
 import {
-  WorkOrderAliyunKmsSecretTicketComponent
+  WorkOrderAliyunKmsSecretTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-kms-secret-ticket/work-order-aliyun-kms-secret-ticket.component';
 
 @Component({
@@ -387,5 +387,10 @@ export class WorkOrderDataTableComponent implements OnInit {
       return 'red-w98';
     }
     return 'blue-w98';
+  }
+
+  onGetTicketUri(ticketNo: string): string {
+    const href = window.location.href;
+    return href + '?ticketNo=' + ticketNo;
   }
 }

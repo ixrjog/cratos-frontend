@@ -11,7 +11,7 @@
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <ng-template [ngTemplateOutlet]="editTicketEntryTipsTemplate"></ng-template>
     <d-form-item>
-      <d-form-label [required]="true">Permission</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.businessPermission.labels.permission' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="permission"
@@ -32,7 +32,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Namespaces</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.businessPermission.labels.namespaces' | translate }}</d-form-label>
       <d-form-control>
         <d-checkbox-group
           name="namespaces"
@@ -44,7 +44,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item *ngIf="envGroup !== PROD">
-      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="renewalTypeHelpTips">Apply Duration</d-form-label>
+      <d-form-label [required]="true" [hasHelp]="true" [helpTips]="renewalTypeHelpTips">{{ 'workOrderTicket.businessPermission.labels.applyDuration' | translate }}</d-form-label>
       <d-form-control>
         <d-select name="renewalType" [options]="renewalTypeOptions" [(ngModel)]="renewalType"></d-select>
       </d-form-control>
@@ -56,7 +56,9 @@
 </ng-template>
 
 <ng-template #showTicketEntryTemplate>
-  <d-card *ngFor="let entry of ticketDetails.entries"
+  <span *ngFor="let permission of ticketEntryMap| keyvalue">
+    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+    <d-card *ngFor="let entry of permission.value"
           style="padding: 5px; display: inline-block; margin: 0 10px 10px 0;">
     <d-card-content>
       <d-tag
@@ -95,6 +97,10 @@
           <span [title]="tag.result">{{ tag.result }}</span>
         </div>
       </ng-template>
+
     </d-card-content>
   </d-card>
+  </span>
+
+
 </ng-template>

@@ -49,42 +49,42 @@
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="detail" header="Application">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.application' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['application']?.applicationName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Namespace">
+      <d-column [header]="'workOrderTicket.elasticScaling.headers.namespace' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ ticketDetails.entries[0].namespace | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Current Replicas">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.currentReplicas' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['config']?.currentReplicas | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Expected Replicas">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.expectedReplicas' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['config']?.expectedReplicas | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Scaling Type">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.scalingType' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['config']?.elasticScalingType | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.elasticScaling.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -117,28 +117,28 @@
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
       [tableOverflowType]="'overlay'"
     >
-      <d-column header="Instance">
+      <d-column [header]="'workOrderTicket.elasticScaling.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Deployment">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.deployment' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['deployment']?.name | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Current Replicas">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.currentReplicas' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['currentReplicas'] | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Expected Replicas">
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.expectedReplicas' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['expectedReplicas'] | dSafeNullPipe }}</span>
@@ -146,7 +146,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Actions"
+        [header]="'workOrderTicket.elasticScaling.headers.actions' | translate"
         [width]="'80px'"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW
         && tabActiveId === 'deployment'"

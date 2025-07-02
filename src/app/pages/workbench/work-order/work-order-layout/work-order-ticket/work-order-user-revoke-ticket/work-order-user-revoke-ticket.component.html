@@ -14,7 +14,7 @@
 
   <form dForm ngForm [layout]="FormLayout.Vertical" *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
     <d-form-item>
-      <d-form-label [required]="true">User</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.userRevoke.labels.user' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="user"
@@ -48,17 +48,17 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="businessType" header="Business Type"></d-column>
-      <d-column field="subType" header="Sub Type"></d-column>
-      <d-column field="instance" header="Instance">
+      <d-column field="businessType" [header]="'workOrderTicket.userRevoke.headers.businessType' | translate"></d-column>
+      <d-column field="subType" [header]="'workOrderTicket.userRevoke.headers.subType' | translate"></d-column>
+      <d-column field="instance" [header]="'workOrderTicket.userRevoke.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="name" header="Account"></d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column field="name" [header]="'workOrderTicket.userRevoke.headers.account' | translate"></d-column>
+      <d-column [header]="'workOrderTicket.userRevoke.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem" >
             <d-icon-group>
@@ -68,7 +68,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.userRevoke.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

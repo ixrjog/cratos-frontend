@@ -75,7 +75,7 @@
     <d-column field="ticketNo" header="No" [width]="'120px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span dClipboard [content]="cellItem">{{ cellItem }}  <i class='fa-solid fa-share-from-square'></i></span>
+          <span dClipboard [content]="onGetTicketUri(cellItem)">{{ cellItem }}&nbsp;<i class='fa-solid fa-share-from-square'></i></span>
         </ng-template>
       </d-cell>
     </d-column>

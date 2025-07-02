@@ -47,6 +47,7 @@ import { TagGroupService } from './services/tag-group.service';
 import { CratosInstanceService } from './services/cratos-instance.service';
 import { ApplicationCredentialService } from './services/application-credential.service';
 import { FinOpsService } from './services/finops.service';
+import { UserFavoriteService } from './services/user-favorite.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -98,7 +99,8 @@ export const CRATOS_PROVIDERS = [
   TagGroupService,
   CratosInstanceService,
   ApplicationCredentialService,
-  FinOpsService
+  FinOpsService,
+  UserFavoriteService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

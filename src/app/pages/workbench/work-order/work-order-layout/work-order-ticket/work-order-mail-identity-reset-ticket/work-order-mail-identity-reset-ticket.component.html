@@ -10,7 +10,7 @@
 <ng-template #editTicketEntryTemplate>
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <d-form-item>
-      <d-form-label [required]="true">Account</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.mailIdentityReset.labels.account' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="account"
@@ -41,15 +41,15 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Instance">
+      <d-column field="instance" [header]="'workOrderTicket.mailIdentityReset.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="displayName" header="Mail"></d-column>
-      <d-column field="detail" header="Login Link">
+      <d-column field="displayName" [header]="'workOrderTicket.mailIdentityReset.headers.mail' | translate"></d-column>
+      <d-column field="detail" [header]="'workOrderTicket.mailIdentityReset.headers.loginLink' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.COMPLETED"
@@ -63,7 +63,7 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.mailIdentityReset.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -73,7 +73,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.mailIdentityReset.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

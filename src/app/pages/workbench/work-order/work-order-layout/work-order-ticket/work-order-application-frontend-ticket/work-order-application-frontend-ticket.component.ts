@@ -213,4 +213,8 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
     return $event['originalAsset']?.sshUrlToRepo;
   }
 
+  onGetConvertUrl(recordName: string, mappingsPath: string) {
+    const normalizedPath = '/' + mappingsPath.replace(/^\/+|\/+$/g, '') + '/';
+    return `https://${recordName}${normalizedPath}`;
+  }
 }

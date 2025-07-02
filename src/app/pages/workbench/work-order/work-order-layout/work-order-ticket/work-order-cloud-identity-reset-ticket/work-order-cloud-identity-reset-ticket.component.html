@@ -10,7 +10,7 @@
 <ng-template #editTicketEntryTemplate>
   <form dForm ngForm [layout]="FormLayout.Vertical">
     <d-form-item>
-      <d-form-label [required]="true">Account</d-form-label>
+      <d-form-label [required]="true">{{ 'workOrderTicket.cloudIdentityReset.labels.account' | translate }}</d-form-label>
       <d-form-control>
         <d-select
           name="account"
@@ -42,15 +42,15 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Instance">
+      <d-column field="instance" [header]="'workOrderTicket.cloudIdentityReset.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="name" header="Login Username"></d-column>
-      <d-column field="detail" header="Login Link">
+      <d-column field="name" [header]="'workOrderTicket.cloudIdentityReset.headers.loginUsername' | translate"></d-column>
+      <d-column field="detail" [header]="'workOrderTicket.cloudIdentityReset.headers.loginLink' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span *ngIf="ticketDetails.ticket.ticketState !== WorkOrderStatus.COMPLETED"
@@ -64,21 +64,21 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Password" *ngIf="edsType === 'ALIYUN'">
+      <d-column field="detail" [header]="'workOrderTicket.cloudIdentityReset.headers.password' | translate" *ngIf="edsType === 'ALIYUN'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <d-toggle [(ngModel)]="cellItem.resetPassword" [disabled]="true"></d-toggle>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="MFA"  *ngIf="edsType === 'ALIYUN'">
+      <d-column field="detail" [header]="'workOrderTicket.cloudIdentityReset.headers.mfa' | translate" *ngIf="edsType === 'ALIYUN'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <d-toggle [(ngModel)]="cellItem.unbindMFA" [disabled]="true"></d-toggle>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.cloudIdentityReset.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -88,7 +88,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.cloudIdentityReset.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

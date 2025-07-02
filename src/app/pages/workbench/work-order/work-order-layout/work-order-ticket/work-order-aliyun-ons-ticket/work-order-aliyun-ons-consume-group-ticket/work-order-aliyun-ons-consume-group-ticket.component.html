@@ -11,7 +11,7 @@
 
 <ng-template #editTicketEntryExtTemplate>
   <d-form-item>
-    <d-form-label [required]=" true">Group ID</d-form-label>
+    <d-form-label [required]=" true">{{ 'workOrderTicket.aliyunOns.labels.groupId' | translate }}</d-form-label>
     <d-form-control>
       <input dTextInput name="consumerGroupId" [(ngModel)]="consumerGroupId" />
       <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
@@ -20,7 +20,7 @@
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label [required]="true">Delivery Order Type</d-form-label>
+    <d-form-label [required]="true">{{ 'workOrderTicket.aliyunOns.labels.deliveryOrderType' | translate }}</d-form-label>
     <d-form-control>
       <d-tabs type="options" [(activeTab)]="deliveryOrderTypeActiveId"
               (activeTabChange)="onActiveDeliveryOrderTypeChange($event)">
@@ -40,9 +40,9 @@
   <d-card style="padding: 5px;margin-bottom: 10px">
     <d-card-content>
       <div class="pane-content">
-        <h3>Retry Rules</h3>
+        <h3>{{ 'workOrderTicket.aliyunOns.labels.retryRules' | translate }}</h3>
         <d-form-item>
-          <d-form-label [required]="true">Retry Policy</d-form-label>
+          <d-form-label [required]="true">{{ 'workOrderTicket.aliyunOns.labels.retryPolicy' | translate }}</d-form-label>
           <d-form-control>
             <d-tabs type="options" [(activeTab)]="retryPolicyActiveId">
               <d-tab *ngFor="let item of retryPolicyOptions" [id]="item.id">
@@ -59,7 +59,7 @@
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label [required]=" true">Max Retry Times</d-form-label>
+          <d-form-label [required]=" true">{{ 'workOrderTicket.aliyunOns.labels.maxRetryTimes' | translate }}</d-form-label>
           <d-form-control>
             <d-input-number name="maxRetryTimes" [min]="1" [max]="1000" [step]="1"
                             [(ngModel)]="maxRetryTimes"></d-input-number>
@@ -76,42 +76,42 @@
       [dataSource]="ticketDetails.entries"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="instance" header="Instance">
+      <d-column field="instance" [header]="'workOrderTicket.aliyunOns.headers.instance' | translate">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="ONS Instance">
+      <d-column field="detail" [header]="'workOrderTicket.aliyunOns.headers.onsInstance' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['onsInstanceName'] }}</span>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Consumer Group">
+      <d-column field="detail" [header]="'workOrderTicket.aliyunOns.headers.consumerGroup' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             {{ cellItem['consumerGroupId'] }}
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Delivery Order Type">
+      <d-column field="detail" [header]="'workOrderTicket.aliyunOns.headers.deliveryOrderType' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             {{ cellItem['deliveryOrderType'] }}
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" header="Remark">
+      <d-column field="detail" [header]="'workOrderTicket.aliyunOns.headers.remark' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             {{ cellItem['remark'] }}
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column header="Actions" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+      <d-column [header]="'workOrderTicket.aliyunOns.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <d-icon-group>
@@ -121,7 +121,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.aliyunOns.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

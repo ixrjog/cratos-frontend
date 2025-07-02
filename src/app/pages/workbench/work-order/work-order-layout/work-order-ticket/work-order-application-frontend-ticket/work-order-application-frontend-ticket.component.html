@@ -141,7 +141,7 @@
         <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px" [showIcon]="false">
           <div *ngFor="let domain of TrafficLayerRecordList">
             <span class="name">
-              <strong>https://{{ domain.recordName }}{{ mappingsPath }}</strong>
+              <strong>{{ onGetConvertUrl(domain.recordName,mappingsPath) }}</strong>
             </span>
             <span class="value">
               <d-tag [tag]="domain.envName" [customColor]="domain.env.color"></d-tag>

@@ -72,7 +72,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
     } else {
       this.onGetNamespaceByEnvGroupOptions();
     }
-    this.onTicketEntryConvert()
+    this.onTicketEntryConvert();
   }
 
   onTicketEntryConvert() {
@@ -175,6 +175,7 @@ export class WorkOrderBusinessPermissionTicketComponent implements OnInit {
 
   onGetTicketDetail(ticketDetails: WorkOrderTicketDetailsVO) {
     this.onGetTicket.emit(ticketDetails);
+    this.ticketDetails = ticketDetails;
     this.onTicketEntryConvert();
   }
 

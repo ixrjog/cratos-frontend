@@ -1,11 +1,42 @@
 export default {
   workOrderTicket: {
+    dataTable: {
+      searchPlaceholder: '搜索工单号',
+      selectWorkOrder: '选择工单',
+      selectUser: '选择用户',
+      showOnlyMySubmit: '仅显示我提交的',
+      filter: '筛选',
+      fetchData: '获取数据',
+      headers: {
+        no: '编号',
+        name: '名称',
+        applicant: '申请人',
+        state: '状态',
+        time: '时间',
+        actions: '操作',
+      },
+      timeLabels: {
+        submit: '提交',
+        complete: '完成',
+      },
+    },
+    menu: {
+      new: '新建',
+      select: '选择',
+    },
     base: {
       options: '选项',
       content: '内容',
       approvalInfo: '审批信息',
       applyRemark: '申请说明',
       approveRemark: '审批意见',
+    },
+    state: {
+      all: '全部',
+      new: '新建',
+      inApproval: '审批中',
+      inProgress: '执行中',
+      completed: '完成',
     },
     aliyunDataworks: {
       headers: {

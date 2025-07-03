@@ -1,11 +1,42 @@
 export default {
   workOrderTicket: {
+    dataTable: {
+      searchPlaceholder: 'Search ticketNo',
+      selectWorkOrder: 'Select work order',
+      selectUser: 'Select user',
+      showOnlyMySubmit: 'show only my submit',
+      filter: 'Filter',
+      fetchData: 'Fetch Data',
+      headers: {
+        no: 'No',
+        name: 'Name',
+        applicant: 'Applicant',
+        state: 'State',
+        time: 'Time',
+        actions: 'Actions',
+      },
+      timeLabels: {
+        submit: 'Submit',
+        complete: 'Complete',
+      },
+    },
+    menu: {
+      new: 'New',
+      select: 'Select',
+    },
     base: {
       options: 'Options',
       content: 'Content',
       approvalInfo: 'Approval Info',
       applyRemark: 'Apply Remark',
       approveRemark: 'Approve Remark',
+    },
+    state: {
+      all: 'ALL',
+      new: 'NEW',
+      inApproval: 'IN APPROVAL',
+      inProgress: 'IN PROGRESS',
+      completed: 'COMPLETED',
     },
     aliyunDataworks: {
       headers: {

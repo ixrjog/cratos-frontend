@@ -22,14 +22,14 @@
         (click)="onRowNew(item)"
         [disabled]="disabled || !item.isUsable"
       >
-        {{ item.isUsable ? 'New' : item.status }}
+        {{ item.isUsable ? ('workOrderTicket.menu.new' | translate) : item.status }}
       </d-button>
       <d-button
         *ngIf="item.isUsable"
         class="button"
         bsStyle="common"
         (click)="onRowFilter(item)"
-      >Select</d-button>
+      >{{ 'workOrderTicket.menu.select' | translate }}</d-button>
     </span>
 <!--    <d-tag-->
 <!--      *ngIf="item.isUsable"-->

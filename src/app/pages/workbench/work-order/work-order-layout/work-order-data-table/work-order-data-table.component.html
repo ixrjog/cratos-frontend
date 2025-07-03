@@ -5,7 +5,7 @@
     [iconPosition]="'left'"
     (searchFn)="fetchData()"
     (change)="fetchData()"
-    placeholder="Search ticketNo"
+    [placeholder]="'workOrderTicket.dataTable.searchPlaceholder' | translate"
   >
   </d-search>
   <d-select
@@ -16,7 +16,7 @@
     [(ngModel)]="workOrder"
     [searchFn]="onSearchWorkOrder"
     [isSearch]="true"
-    placeholder="Select work order"
+    [placeholder]="'workOrderTicket.dataTable.selectWorkOrder' | translate"
     (valueChange)="onWorkOrderChange($event)"
     [allowClear]="true"
   >
@@ -30,7 +30,7 @@
     [(ngModel)]="user"
     [searchFn]="onSearchUser"
     [isSearch]="true"
-    placeholder="Select user"
+    [placeholder]="'workOrderTicket.dataTable.selectUser' | translate"
     (valueChange)="onUserChange($event)"
     [allowClear]="true"
   >
@@ -41,12 +41,12 @@
   </d-select>
   <d-checkbox
     class="checkbox"
-    [label]="'show only my submit'"
+    [label]="'workOrderTicket.dataTable.showOnlyMySubmit' | translate"
     [isShowTitle]="false"
     [(ngModel)]="queryParam.mySubmitted"
     (change)="fetchData()"
   ></d-checkbox>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'workOrderTicket.dataTable.filter' | translate }}</d-button>
   <br />
   <d-tabs
     style="margin-top: 5px"
@@ -72,21 +72,21 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="ticketNo" header="No" [width]="'120px'">
+    <d-column field="ticketNo" [header]="'workOrderTicket.dataTable.headers.no' | translate" [width]="'120px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span dClipboard [content]="onGetTicketUri(cellItem)">{{ cellItem }}&nbsp;<i class='fa-solid fa-share-from-square'></i></span>
         </ng-template>
       </d-cell>
     </d-column>
-        <d-column field="workOrder" header="Name">
+        <d-column field="workOrder" [header]="'workOrderTicket.dataTable.headers.name' | translate">
           <d-cell>
             <ng-template let-cellItem="cellItem">
               <span>{{ cellItem.i18nData['langMap'] | i18nTran }}</span>
             </ng-template>
           </d-cell>
         </d-column>
-    <d-column field="username" header="Applicant">
+    <d-column field="username" [header]="'workOrderTicket.dataTable.headers.applicant' | translate">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-icon
@@ -107,11 +107,11 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="State" [width]="'180px'">
+    <d-column [header]="'workOrderTicket.dataTable.headers.state' | translate" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span>
-            <d-tag [tag]="rowItem['ticketState']" [labelStyle]="onGetTicketStateColor(rowItem)"></d-tag>
+            <d-tag [tag]="rowItem['ticketState'] | ticketState" [labelStyle]="onGetTicketStateColor(rowItem)"></d-tag>
             <d-icon
               *ngIf="rowItem['ticketState']===WorkOrderStatus.COMPLETED && rowItem.success === false"
               [icon]="'icon-warning-o'"
@@ -131,18 +131,18 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Time" [fieldType]="'date'" [width]="'200px'">
+    <d-column [header]="'workOrderTicket.dataTable.headers.time' | translate" [fieldType]="'date'" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem['submittedAt'] !== null && rowItem['completedAt'] === null">
-            <span class="font-color-name">Submit</span>
+            <span class="font-color-name">{{ 'workOrderTicket.dataTable.timeLabels.submit' | translate }}</span>
             <br/>
             <span>{{ rowItem['submittedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
             <br/>
             <strong>{{ rowItem['submittedAt'] | dRelativeTime: limit | async }}</strong>
           </div>
           <div *ngIf="rowItem['completedAt'] !== null">
-            <span class="font-color-name">Complete</span>
+            <span class="font-color-name">{{ 'workOrderTicket.dataTable.timeLabels.complete' | translate }}</span>
             <br/>
             <span>{{ rowItem['completedAt'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>
             <br/>
@@ -152,7 +152,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'120px'">
+    <d-column [header]="'workOrderTicket.dataTable.headers.actions' | translate" [width]="'120px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
@@ -197,7 +197,7 @@
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class="no-data">{{ 'workOrderTicket.dataTable.fetchData' | translate }}</div>
     </ng-template>
   </d-data-table>
 </div>

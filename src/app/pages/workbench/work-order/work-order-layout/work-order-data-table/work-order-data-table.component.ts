@@ -85,8 +85,9 @@ import {
   WorkOrderAliyunKmsSecretTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-kms-secret-ticket/work-order-aliyun-kms-secret-ticket.component';
 import {
-  WorkOrderRiskChangeTicketComponent
+  WorkOrderRiskChangeTicketComponent,
 } from '../work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -106,38 +107,21 @@ export class WorkOrderDataTableComponent implements OnInit {
   };
   workOrder: WorkOrderVO = null;
   user: UserVO;
-  ticketStateOptions = [
-    {
-      id: '',
-      title: 'ALL',
-    },
-    {
-      id: WorkOrderStatus.NEW,
-      title: WorkOrderStatus.NEW,
-    },
-    {
-      id: WorkOrderStatus.IN_APPROVAL,
-      title: WorkOrderStatus.IN_APPROVAL.replace('_',' '),
-    },
-    {
-      id: WorkOrderStatus.IN_PROGRESS,
-      title: WorkOrderStatus.IN_PROGRESS.replace('_',' '),
-    },
-    {
-      id: WorkOrderStatus.COMPLETED,
-      title: WorkOrderStatus.COMPLETED,
-    },
-  ];
+  ticketStateOptions = [];
 
   constructor(private activatedRoute: ActivatedRoute,
               private userService: UserService,
               private workOrderService: WorkOrderService,
               private workOrderTicketService: WorkOrderTicketService,
               private dialogUtil: DialogUtil,
-              private toastUtil: ToastUtil) {
+              private toastUtil: ToastUtil,
+              private translate: TranslateService) {
   }
 
   ngOnInit(): void {
+    this.translate.get('workOrderTicket').subscribe((res) => {
+      this.onGetTicketStateOptions(res);
+    });
     this.activatedRoute.queryParams.subscribe(param => {
       if (param['ticketNo'] !== undefined) {
         this.queryParam.ticketNo = param['ticketNo'];
@@ -153,6 +137,31 @@ export class WorkOrderDataTableComponent implements OnInit {
       maxHeight: '1000px',
     },
   };
+
+  onGetTicketStateOptions(values: any) {
+    this.ticketStateOptions = [
+      {
+        id: '',
+        title: values['state']['all'],
+      },
+      {
+        id: WorkOrderStatus.NEW,
+        title: values['state']['new'],
+      },
+      {
+        id: WorkOrderStatus.IN_APPROVAL,
+        title: values['state']['inApproval'],
+      },
+      {
+        id: WorkOrderStatus.IN_PROGRESS,
+        title: values['state']['inProgress'],
+      },
+      {
+        id: WorkOrderStatus.COMPLETED,
+        title: values['state']['completed'],
+      },
+    ];
+  }
 
   clickWorkOrder(workOrder: WorkOrderVO) {
     this.workOrder = workOrder;

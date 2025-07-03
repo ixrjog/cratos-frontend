@@ -49,6 +49,7 @@ import {
 import { I18nTranPipe } from './pipe/i18n-tran.pipe';
 import { UserTagComponent } from './components/common/tag/user-tag/user-tag.component';
 import { UserInfoCardComponent } from './components/common/user-info-card/user-info-card.component';
+import { TicketStatePipe } from './pipe/ticket-state.pipe';
 
 const DEVUI_MODULES = [
   DevUIModule,
@@ -76,6 +77,7 @@ const PIPES = [
   StringReplacePipe,
   ShortContainerImagePipe,
   I18nTranPipe,
+  TicketStatePipe
 ];
 
 const CRATOS_COMPONENTS = [

@@ -20,6 +20,7 @@ import {
   AddResetAliyunRamUserTicketEntry,
   AddResetAwsIamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
+  AddRiskChangeTicketEntry,
   LdapIdentity,
   WorkOrderTicketEntryData,
 } from '../data/work-order-ticket-entry';
@@ -171,4 +172,7 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aliyun/kms/secret/add', param);
   }
 
+  addRiskChangeTicketEntry(param: AddRiskChangeTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/risk/change/add', param);
+  }
 }

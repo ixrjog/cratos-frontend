@@ -83,6 +83,9 @@ import {
 import {
   WorkOrderAliyunKmsSecretTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-aliyun-kms-secret-ticket/work-order-aliyun-kms-secret-ticket.component';
+import {
+  WorkOrderRiskChangeTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -389,6 +392,12 @@ export class WorkOrderTicketManagementDataTableComponent {
         break;
       case WorkOrderKeyEnum.ALIYUN_KMS_SECRET_CREATE:
         dialogDate['content'] = WorkOrderAliyunKmsSecretTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.RISK_CHANGE:
+        dialogDate['content'] = WorkOrderRiskChangeTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

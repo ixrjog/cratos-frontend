@@ -319,5 +319,17 @@ export default {
         }
       }
     },
+    riskChange: {
+      labels: {
+        applicant: '变更申请人',
+        title: '标题',
+        content: '内容',
+      },
+      headers: {
+        applicant: '变更申请人',
+        title: '标题',
+        content: '内容',
+      }
+    }
   },
 };

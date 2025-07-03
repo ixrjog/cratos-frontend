@@ -205,6 +205,15 @@ export interface AddCreateAliyunKmsSecret {
   description: string;
 }
 
+export interface AddRiskChangeTicketEntry {
+  ticketId: number;
+  detail: {
+    applicant: UserVO;
+    title: string;
+    content: string;
+  };
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -275,4 +284,7 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateFrontEndApplicationTicketEntry(param: AddCreateFrontEndApplicationTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addCreateAliyunKmsSecretTicketEntry(param: AddCreateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addRiskChangeTicketEntry(param: AddRiskChangeTicketEntry): Observable<HttpResult<Boolean>>;
+
 }

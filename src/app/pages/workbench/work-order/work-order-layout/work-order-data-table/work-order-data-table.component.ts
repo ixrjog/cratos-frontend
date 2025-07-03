@@ -84,6 +84,9 @@ import {
 import {
   WorkOrderAliyunKmsSecretTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-kms-secret-ticket/work-order-aliyun-kms-secret-ticket.component';
+import {
+  WorkOrderRiskChangeTicketComponent
+} from '../work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -366,6 +369,12 @@ export class WorkOrderDataTableComponent implements OnInit {
         break;
       case WorkOrderKeyEnum.ALIYUN_KMS_SECRET_CREATE:
         dialogDate['content'] = WorkOrderAliyunKmsSecretTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.RISK_CHANGE:
+        dialogDate['content'] = WorkOrderRiskChangeTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

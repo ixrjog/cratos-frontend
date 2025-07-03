@@ -319,5 +319,17 @@ export default {
         }
       }
     },
+    riskChange: {
+      labels: {
+        applicant: 'Change Applicant',
+        title: 'Title',
+        content: 'Content',
+      },
+      headers: {
+        applicant: 'Change Applicant',
+        title: 'Title',
+        content: 'Content',
+      }
+    }
   },
 };

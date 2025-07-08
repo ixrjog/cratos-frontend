@@ -54,15 +54,15 @@ export default {
         instance: 'Instance',
         loginUsername: 'Login Username',
         loginLink: 'Login Link',
-        password: 'Password',
-        mfa: 'MFA',
+        password: 'Reset Password',
+        mfa: 'Unbind MFA',
         actions: 'Actions',
         result: 'Result',
       },
       labels: {
         account: 'Account',
-        password: 'Password',
-        mfa: 'MFA',
+        password: 'Reset Password',
+        mfa: 'Unbind MFA',
       }
     },
     applicationFrontend: {

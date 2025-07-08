@@ -54,15 +54,15 @@ export default {
         instance: '实例',
         loginUsername: '登录用户名',
         loginLink: '登录链接',
-        password: '密码',
-        mfa: 'MFA',
+        password: '重置密码',
+        mfa: '解绑 MFA',
         actions: '操作',
         result: '结果',
       },
       labels: {
         account: '账户',
-        password: '密码',
-        mfa: 'MFA',
+        password: '重置密码',
+        mfa: '解绑 MFA',
       }
     },
     applicationFrontend: {

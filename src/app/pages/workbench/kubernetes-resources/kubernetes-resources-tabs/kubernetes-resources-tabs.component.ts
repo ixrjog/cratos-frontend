@@ -125,7 +125,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.userFavoriteService.removeApplicationFavorite(param)
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-        if (this.application.id === applicationId) {
+        if (this.application?.id === applicationId) {
           this.isFavorite = false;
         }
         this.onGetUserFavorite();

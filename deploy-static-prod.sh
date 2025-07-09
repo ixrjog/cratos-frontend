@@ -1,7 +1,7 @@
 #!/bin/bash
 
-. /etc/profile
-
+source /etc/profile
+source ~/.nvm/nvm.sh
 nvm use v18.19.0
 npm run build:prod
 

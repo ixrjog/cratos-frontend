@@ -58,17 +58,31 @@
 </ng-template>
 
 <ng-template #showTicketEntryTemplate>
+
+  <div *ngIf="JSON.stringify(ticketDetails.entries) === '[]'">
+
+    <h3 style="display: inline-block;margin: 0">
+      <strong>
+        {{ title }}
+      </strong>
+    </h3>
+    <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
+    <div>
+      <markdown lineNumbers lineHighlight mermaid [data]="content"></markdown>
+    </div>
+  </div>
+
+
   <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
 
     <div *ngFor="let entry of ticketDetails.entries">
-
       <h3 style="display: inline-block;margin: 0">
         <strong>
           {{ entry.detail.title }}
         </strong>
       </h3>
-
       <span style="float: right">
+        <span style="margin-right: 2em">Applicant</span>
         <d-icon
           [icon]="'icon-identity-auth'"
           dPopover
@@ -85,16 +99,14 @@
         </ng-template>
         <span>{{ entry.detail.applicant.displayName }}</span>
       </span>
-
       <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
       <div>
         <markdown lineNumbers lineHighlight mermaid [data]="entry.detail.content"></markdown>
       </div>
       <br />
-      <div>
+      <div *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
         <d-button bsStyle="primary" (click)="onRowRemove(entry)">Remove Entry</d-button>
       </div>
-
     </div>
   </div>
 </ng-template>

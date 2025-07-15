@@ -167,6 +167,8 @@ import { WorkOrderAliyunOnsConsumeGroupTicketComponent } from './work-order/work
 import { WorkOrderApplicationFrontendTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-frontend-ticket/work-order-application-frontend-ticket.component';
 import { WorkOrderAliyunKmsSecretTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-kms-secret-ticket/work-order-aliyun-kms-secret-ticket.component';
 import { WorkOrderRiskChangeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
+import { WorkOrderAliyunKmsSecretUpdateTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-kms-secret-update-ticket/work-order-aliyun-kms-secret-update-ticket.component';
+import { WorkOrderApplicationRedeployTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
 
 @NgModule({
   declarations: [
@@ -234,6 +236,8 @@ import { WorkOrderRiskChangeTicketComponent } from './work-order/work-order-layo
     WorkOrderApplicationFrontendTicketComponent,
     WorkOrderAliyunKmsSecretTicketComponent,
     WorkOrderRiskChangeTicketComponent,
+    WorkOrderAliyunKmsSecretUpdateTicketComponent,
+    WorkOrderApplicationRedeployTicketComponent,
   ],
   imports: [
     CommonModule,

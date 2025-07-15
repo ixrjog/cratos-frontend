@@ -6,8 +6,8 @@
   [scrollable]="true"
   [loadingStyle]="'infinity'"
 >
-  <d-column field="name" header="Name"></d-column>
-  <d-column field="selector" header="Selector">
+  <d-column field="name" [header]="'kubernetes.service.headers.name' | translate"></d-column>
+  <d-column field="selector" [header]="'kubernetes.service.headers.selector' | translate">
     <d-cell>
       <ng-template let-cellItem="cellItem">
         <p *ngFor="let item of cellItem | keyvalue">
@@ -16,15 +16,15 @@
       </ng-template>
     </d-cell>
   </d-column>
-  <d-column field="type" header="Type"></d-column>
-  <d-column field="clusterIP" header="Cluster IP">
+  <d-column field="type" [header]="'kubernetes.service.headers.type' | translate"></d-column>
+  <d-column field="clusterIP" [header]="'kubernetes.service.headers.clusterIP' | translate">
     <d-cell>
       <ng-template let-cellItem="cellItem">
         <span>{{ cellItem | dSafeNullPipe: 'null' }}</span>
       </ng-template>
     </d-cell>
   </d-column>
-  <d-column field="ports" header="Ports">
+  <d-column field="ports" [header]="'kubernetes.service.headers.ports' | translate">
     <d-cell>
       <ng-template let-cellItem="cellItem">
         <p *ngFor="let port of cellItem ">
@@ -34,6 +34,6 @@
     </d-cell>
   </d-column>
   <ng-template #noResultTemplateRef>
-    <div class="no-data">No Data</div>
+    <div class="no-data">{{ 'kubernetes.messages.noData' | translate }}</div>
   </ng-template>
 </d-data-table>

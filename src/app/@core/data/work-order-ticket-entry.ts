@@ -64,6 +64,11 @@ export interface AddApplicationDeletePodTicketEntry {
   detail: ApplicationVO;
 }
 
+export interface AddApplicationRedeployTicketEntry {
+  ticketId: number;
+  detail: ApplicationVO;
+}
+
 export interface AddCreateAliyunRamUserTicketEntry {
   ticketId: number;
   detail: AliyunRamUserAccount;
@@ -214,6 +219,20 @@ export interface AddRiskChangeTicketEntry {
   };
 }
 
+export interface AddUpdateAliyunKmsSecretTicketEntry {
+  ticketId: number;
+  instanceId: number;
+  detail: UpdateAliyunKmsSecret;
+}
+
+export interface UpdateAliyunKmsSecret {
+  edsInstance: EdsInstanceVO;
+  secret: EdsAssetVO;
+  secretData: string;
+  versionId: string;
+  confirmTheRiskOfChange: boolean;
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -286,5 +305,9 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateAliyunKmsSecretTicketEntry(param: AddCreateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addRiskChangeTicketEntry(param: AddRiskChangeTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addUpdateAliyunKmsSecretTicketEntry(param: AddUpdateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addApplicationRedeployTicketEntry(param: AddApplicationRedeployTicketEntry): Observable<HttpResult<Boolean>>;
 
 }

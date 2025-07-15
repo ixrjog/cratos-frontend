@@ -7,7 +7,7 @@ import {
   ApplicationResourceData, DeleteKubernetesDeploymentPod,
   KubernetesDeploymentImageVersion,
   QueryApplicationResourceKubernetesDetails,
-  QueryKubernetesDeploymentOptions,
+  QueryKubernetesDeploymentOptions, RedeployKubernetesDeployment,
 } from '../data/application-resource';
 
 @Injectable()
@@ -35,5 +35,9 @@ export class ApplicationResourceService extends ApplicationResourceData {
 
   deleteApplicationResourceKubernetesDeploymentPod(param: DeleteKubernetesDeploymentPod): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/kubernetes/deployment/pod/del', param);
+  }
+
+  redeployApplicationResourceKubernetesDeployment(param: RedeployKubernetesDeployment): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/kubernetes/deployment/redeploy', param);
   }
 }

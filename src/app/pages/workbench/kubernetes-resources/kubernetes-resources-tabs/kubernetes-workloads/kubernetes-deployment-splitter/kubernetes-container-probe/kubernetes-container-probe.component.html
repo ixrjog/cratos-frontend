@@ -2,72 +2,72 @@
   <d-splitter orientation="horizontal">
     <d-splitter-pane size="33%" [resizable]="false">
       <div style="padding: 5px;width: 200px">
-        <h4>StartupProbe</h4>
+        <h4>{{ 'kubernetes.probe.startup' | translate }}</h4>
         <div>
-          <div *ngIf="startupProbe.empty">None</div>
+          <div *ngIf="startupProbe.empty">{{ 'kubernetes.probe.none' | translate }}</div>
           <div *ngIf="!startupProbe.empty">
-            <div>command:&nbsp;{{ startupProbe?.exec?.command | dSafeNullPipe }}</div>
-            <div>httpGet</div>
+            <div>{{ 'kubernetes.probe.fields.command' | translate }}:&nbsp;{{ startupProbe?.exec?.command | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.httpGet' | translate }}</div>
             <div style="margin-left: 1em">
-              <div>httpHeaders:&nbsp;{{ startupProbe?.httpGet?.httpHeaders | json }}</div>
-              <div>host:&nbsp;{{ startupProbe?.httpGet?.host | dSafeNullPipe }}</div>
-              <div>path:&nbsp;{{ startupProbe?.httpGet?.path | dSafeNullPipe }}</div>
-              <div>port:&nbsp;{{ startupProbe?.httpGet?.port | dSafeNullPipe }}</div>
-              <div>scheme:&nbsp;{{ startupProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.httpHeaders' | translate }}:&nbsp;{{ startupProbe?.httpGet?.httpHeaders | json }}</div>
+              <div>{{ 'kubernetes.probe.fields.host' | translate }}:&nbsp;{{ startupProbe?.httpGet?.host | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.path' | translate }}:&nbsp;{{ startupProbe?.httpGet?.path | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.port' | translate }}:&nbsp;{{ startupProbe?.httpGet?.port | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.scheme' | translate }}:&nbsp;{{ startupProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
             </div>
-            <div>initialDelaySeconds:&nbsp;{{ startupProbe.initialDelaySeconds | dSafeNullPipe }}</div>
-            <div>failureThreshold:&nbsp;{{ startupProbe.failureThreshold | dSafeNullPipe }}</div>
-            <div>periodSeconds:&nbsp;{{ startupProbe.periodSeconds | dSafeNullPipe }}</div>
-            <div>successThreshold:&nbsp;{{ startupProbe.successThreshold | dSafeNullPipe }}</div>
-            <div>timeoutSeconds:&nbsp;{{ startupProbe.timeoutSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.initialDelaySeconds' | translate }}:&nbsp;{{ startupProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.failureThreshold' | translate }}:&nbsp;{{ startupProbe.failureThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.periodSeconds' | translate }}:&nbsp;{{ startupProbe.periodSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.successThreshold' | translate }}:&nbsp;{{ startupProbe.successThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.timeoutSeconds' | translate }}:&nbsp;{{ startupProbe.timeoutSeconds | dSafeNullPipe }}</div>
           </div>
         </div>
       </div>
     </d-splitter-pane>
     <d-splitter-pane size="33%" [resizable]="false">
       <div style="padding: 5px;width: 200px">
-        <h4>LivenessProbe</h4>
+        <h4>{{ 'kubernetes.probe.liveness' | translate }}</h4>
         <div>
-          <div *ngIf="livenessProbe.empty">None</div>
+          <div *ngIf="livenessProbe.empty">{{ 'kubernetes.probe.none' | translate }}</div>
           <div *ngIf="!livenessProbe.empty">
-            <div>command:&nbsp;{{ livenessProbe?.exec?.command | dSafeNullPipe }}</div>
-            <div>httpGet</div>
+            <div>{{ 'kubernetes.probe.fields.command' | translate }}:&nbsp;{{ livenessProbe?.exec?.command | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.httpGet' | translate }}</div>
             <div style="margin-left: 1em">
-              <div>httpHeaders:&nbsp;{{ livenessProbe?.httpGet?.httpHeaders | json }}</div>
-              <div>host:&nbsp;{{ livenessProbe?.httpGet?.host | dSafeNullPipe }}</div>
-              <div>path:&nbsp;{{ livenessProbe?.httpGet?.path | dSafeNullPipe }}</div>
-              <div>port:&nbsp;{{ livenessProbe?.httpGet?.port | dSafeNullPipe }}</div>
-              <div>scheme:&nbsp;{{ livenessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.httpHeaders' | translate }}:&nbsp;{{ livenessProbe?.httpGet?.httpHeaders | json }}</div>
+              <div>{{ 'kubernetes.probe.fields.host' | translate }}:&nbsp;{{ livenessProbe?.httpGet?.host | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.path' | translate }}:&nbsp;{{ livenessProbe?.httpGet?.path | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.port' | translate }}:&nbsp;{{ livenessProbe?.httpGet?.port | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.scheme' | translate }}:&nbsp;{{ livenessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
             </div>
-            <div>initialDelaySeconds:&nbsp;{{ livenessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
-            <div>failureThreshold:&nbsp;{{ livenessProbe.failureThreshold | dSafeNullPipe }}</div>
-            <div>periodSeconds:&nbsp;{{ livenessProbe.periodSeconds | dSafeNullPipe }}</div>
-            <div>successThreshold:&nbsp;{{ livenessProbe.successThreshold | dSafeNullPipe }}</div>
-            <div>timeoutSeconds:&nbsp;{{ livenessProbe.timeoutSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.initialDelaySeconds' | translate }}:&nbsp;{{ livenessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.failureThreshold' | translate }}:&nbsp;{{ livenessProbe.failureThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.periodSeconds' | translate }}:&nbsp;{{ livenessProbe.periodSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.successThreshold' | translate }}:&nbsp;{{ livenessProbe.successThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.timeoutSeconds' | translate }}:&nbsp;{{ livenessProbe.timeoutSeconds | dSafeNullPipe }}</div>
           </div>
         </div>
       </div>
     </d-splitter-pane>
     <d-splitter-pane size="33%" [resizable]="false">
       <div style="padding: 5px;width: 200px">
-        <h4>ReadinessProbe</h4>
+        <h4>{{ 'kubernetes.probe.readiness' | translate }}</h4>
         <div>
-          <div *ngIf="readinessProbe.empty">None</div>
+          <div *ngIf="readinessProbe.empty">{{ 'kubernetes.probe.none' | translate }}</div>
           <div *ngIf="!readinessProbe.empty">
-            <div>command:&nbsp;{{ readinessProbe?.exec?.command | dSafeNullPipe }}</div>
-            <div>httpGet</div>
+            <div>{{ 'kubernetes.probe.fields.command' | translate }}:&nbsp;{{ readinessProbe?.exec?.command | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.httpGet' | translate }}</div>
             <div style="margin-left: 1em">
-              <div>httpHeaders:&nbsp;{{ readinessProbe?.httpGet?.httpHeaders | json }}</div>
-              <div>host:&nbsp;{{ readinessProbe?.httpGet?.host | dSafeNullPipe }}</div>
-              <div>path:&nbsp;{{ readinessProbe?.httpGet?.path | dSafeNullPipe }}</div>
-              <div>port:&nbsp;{{ readinessProbe?.httpGet?.port | dSafeNullPipe }}</div>
-              <div>scheme:&nbsp;{{ readinessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.httpHeaders' | translate }}:&nbsp;{{ readinessProbe?.httpGet?.httpHeaders | json }}</div>
+              <div>{{ 'kubernetes.probe.fields.host' | translate }}:&nbsp;{{ readinessProbe?.httpGet?.host | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.path' | translate }}:&nbsp;{{ readinessProbe?.httpGet?.path | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.port' | translate }}:&nbsp;{{ readinessProbe?.httpGet?.port | dSafeNullPipe }}</div>
+              <div>{{ 'kubernetes.probe.fields.scheme' | translate }}:&nbsp;{{ readinessProbe?.httpGet?.scheme | dSafeNullPipe }}</div>
             </div>
-            <div>initialDelaySeconds:&nbsp;{{ readinessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
-            <div>failureThreshold:&nbsp;{{ readinessProbe.failureThreshold | dSafeNullPipe }}</div>
-            <div>periodSeconds:&nbsp;{{ readinessProbe.periodSeconds | dSafeNullPipe }}</div>
-            <div>successThreshold:&nbsp;{{ readinessProbe.successThreshold | dSafeNullPipe }}</div>
-            <div>timeoutSeconds:&nbsp;{{ readinessProbe.timeoutSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.initialDelaySeconds' | translate }}:&nbsp;{{ readinessProbe.initialDelaySeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.failureThreshold' | translate }}:&nbsp;{{ readinessProbe.failureThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.periodSeconds' | translate }}:&nbsp;{{ readinessProbe.periodSeconds | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.successThreshold' | translate }}:&nbsp;{{ readinessProbe.successThreshold | dSafeNullPipe }}</div>
+            <div>{{ 'kubernetes.probe.fields.timeoutSeconds' | translate }}:&nbsp;{{ readinessProbe.timeoutSeconds | dSafeNullPipe }}</div>
           </div>
         </div>
       </div>

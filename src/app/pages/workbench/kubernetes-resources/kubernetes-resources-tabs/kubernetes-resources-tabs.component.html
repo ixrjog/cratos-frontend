@@ -6,7 +6,7 @@
     (click)="onFavoriteClick()"
   >
     <i class="icon" [ngClass]="isFavorite?'icon-star':'icon-star-o'" ></i>
-    Favorite
+    {{ 'kubernetes.actions.favorite' | translate }}
   </d-button>
   <d-select
     class="select"
@@ -17,7 +17,7 @@
     [(ngModel)]="application"
     [searchFn]="onSearchApplication"
     [isSearch]="true"
-    placeholder="Select application"
+    [placeholder]="'kubernetes.form.selectApplication' | translate"
     (valueChange)="onApplicationChange($event)"
   >
     <ng-template let-option="option">
@@ -42,7 +42,7 @@
   </d-tabs>
   <d-select
     class="select"
-    placeholder="Select resource name"
+    [placeholder]="'kubernetes.form.selectResourceName' | translate"
     style="max-width: 250px;width: 250px"
     [allowClear]="true"
     [searchFn]="onSelectResourceName"
@@ -51,11 +51,13 @@
     (valueChange)="onResourceNameChange($event)"
   ></d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"
-            [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''">Filter
+            [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''"
+  >{{ 'kubernetes.actions.filter' | translate }}
   </d-button>
   <span class="right-button">
       <d-button class="button" bsStyle="primary" (click)="onScanData()"
-                [disabled]="queryParam.applicationName ==='' ">Scan
+                [disabled]="queryParam.applicationName ==='' "
+      >{{ 'kubernetes.actions.scan' | translate }}
   </d-button>
   </span>
 </div>
@@ -64,7 +66,7 @@
          *ngIf="JSON.stringify(favoriteApplicationList) !== '[]'" style="margin-bottom: 10px">
   <d-panel-header>
     <em class="icon icon-select-arrow" [ngClass]="{ open: anotherPanel.isCollapsed }"></em>
-    My Favorites Application
+    {{ 'kubernetes.messages.myFavorites' | translate }}
   </d-panel-header>
   <d-panel-body style="padding: 5px">
     <d-tag
@@ -86,7 +88,7 @@
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
     <d-tabs type="pills" [(activeTab)]="tabActiveId">
-      <d-tab [id]="'workloads'" [title]="'Workloads'">
+      <d-tab [id]="'workloads'" [title]="'kubernetes.tabs.workloads' | translate">
         <div>
           <app-kubernetes-workloads
             [deploymentList]="deploymentList"
@@ -96,7 +98,7 @@
           ></app-kubernetes-workloads>
         </div>
       </d-tab>
-      <d-tab [id]="'network'" [title]="'Network'">
+      <d-tab [id]="'network'" [title]="'kubernetes.tabs.network' | translate">
         <div>
           <app-kubernetes-network [serviceList]="serviceList"></app-kubernetes-network>
         </div>

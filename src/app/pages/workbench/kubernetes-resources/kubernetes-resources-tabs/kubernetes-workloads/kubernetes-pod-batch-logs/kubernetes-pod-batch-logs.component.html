@@ -1,15 +1,15 @@
 <div class="drawer-menu">
   <div [style.margin]="'20px 20px 0 0'" [style.text-align]="'right'" [style.cursor]="'pointer'">
-    <span [style.margin-right]="'12px'" title="More" class="icon icon-more-operate"> </span>
+    <span [style.margin-right]="'12px'" [title]="'kubernetes.actions.more' | translate" class="icon icon-more-operate"> </span>
     <span
       [style.margin-right]="'8px'"
-      title="Fullscreen"
+      [title]="isFullScreen ? ('kubernetes.actions.minimize' | translate) : ('kubernetes.actions.fullscreen' | translate)"
       (click)="toggleFullScreen()"
       class="icon"
       [ngClass]="{ 'icon-maxmize': !isFullScreen, 'icon-minimize': isFullScreen }"
     >
     </span>
-    <span (click)="close($event)" title="Close" class="icon icon-close"> </span>
+    <span (click)="close($event)" [title]="'kubernetes.actions.close' | translate" class="icon icon-close"> </span>
   </div>
   <div class="operation-area">
     <p>{{ deploymentList | json}}</p>

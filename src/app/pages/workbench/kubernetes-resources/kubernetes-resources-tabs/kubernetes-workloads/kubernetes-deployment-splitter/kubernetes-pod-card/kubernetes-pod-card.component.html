@@ -73,21 +73,22 @@
           style="margin-right: 8px"
           (click)="onRowExec()"
           [disabled]="!accessControl.permission"
-        >Exec
+        >{{ 'kubernetes.actions.exec' | translate }}
         </d-button>
         <d-button
           bsStyle="text"
           style="margin-right: 8px"
           (click)="onRowLogs()"
           [disabled]="!accessControl.permission"
-        >Logs
+        >{{ 'kubernetes.actions.logs' | translate }}
         </d-button>
 
         <d-button
           bsStyle="text"
           (click)="onRowDelete()"
           [disabled]="!accessControl.operationPermissions['DEPLOYMENT_POD_DELETE']"
-        >Delete
+          [title]="'kubernetes.actions.delete.tooltip' | translate"
+        >{{ 'kubernetes.actions.delete.button' | translate }}
         </d-button>
       </div>
     </d-card-actions>

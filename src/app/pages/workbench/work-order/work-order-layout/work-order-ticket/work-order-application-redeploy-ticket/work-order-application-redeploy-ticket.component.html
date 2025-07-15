@@ -1,0 +1,147 @@
+<app-work-order-base-ticket
+  #workOrderBaseTicket
+  [ticketDetails]="ticketDetails"
+  [editTicketEntryTemplate]="editTicketEntryTemplate"
+  [showTicketEntryTemplate]="showTicketEntryTemplate"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+></app-work-order-base-ticket>
+
+<ng-template #editTicketEntryTemplate>
+  <form dForm ngForm [layout]="FormLayout.Vertical">
+    <d-form-item>
+      <d-form-control>
+        <d-alert [type]="'info'" [closeable]="false">
+          {{ 'workOrderTicket.applicationRedeploy.tips' | translate }}
+        </d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">{{ 'workOrderTicket.applicationRedeploy.labels.application' | translate }}</d-form-label>
+      <d-form-control>
+        <d-select
+          name="application"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="application"
+          [searchFn]="onSearchApplication"
+          [isSearch]="true"
+          placeholder="Select application"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; padding: 3px 0">{{ option.comment }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button bsStyle="primary" (click)="onRowAdd()">Add Entry</d-button>
+    </d-form-operation>
+  </form>
+</ng-template>
+
+<ng-template #showTicketEntryTemplate>
+  <div *ngIf="JSON.stringify(ticketDetails.entries) !== '[]'">
+    <d-data-table
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.APPLICATION) !== undefined"
+      [dataSource]="ticketEntryMap.get(BusinessTypeEnum.APPLICATION)"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="name" [header]="'workOrderTicket.applicationRedeploy.headers.application' | translate"></d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationRedeploy.headers.comment' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            {{ cellItem['comment'] }}
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationRedeploy.headers.tags' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <app-business-tags [businessTags]="cellItem['businessTags']"></app-business-tags>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column [header]="'workOrderTicket.applicationRedeploy.headers.actions' | translate" [width]="'80px'" *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowRemove(rowItem)"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+
+    <d-data-table
+      *ngIf="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET) !== undefined"
+      [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column [header]="'workOrderTicket.applicationRedeploy.headers.instance' | translate">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ rowItem['instance']?.instanceName | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationRedeploy.headers.namespace' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['namespace'] | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationRedeploy.headers.deployment' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['asset']?.name | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationRedeploy.headers.redeployTime' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['redeployOperationTime'] | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column
+        header="Result"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
+        || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
+      >
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag
+              *ngIf="rowItem['success']"
+              style="margin:0 5px 5px 0"
+              [tag]="'success'"
+              [labelStyle]="'green-w98'"
+            ></d-tag>
+            <span>{{ rowItem.result }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+  </div>
+
+</ng-template>

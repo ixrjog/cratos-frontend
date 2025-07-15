@@ -31,7 +31,7 @@ export interface EdsConfigVO extends BaseVO, ValidVO {
   credential: CredentialVO;
 }
 
-export interface EdsAssetVO extends BaseVO, ValidVO, ResourceCountVO {
+export interface EdsAssetVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagsVO {
   id: number;
   parentId: number;
   instanceId: number;

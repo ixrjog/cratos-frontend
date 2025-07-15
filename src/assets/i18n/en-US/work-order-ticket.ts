@@ -129,6 +129,24 @@ export default {
         userCustomTips: '● userCustom<optional>: User defined credential suffix',
       },
     },
+    aliyunKmsSecretUpdate: {
+      headers: {
+        aliyunInstance: 'Aliyun Instance',
+        secretName: 'Secret Name',
+        version: 'Version',
+        configCenterValue: 'Config Center Value',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        instance: 'Instance',
+        kmsSecret: 'KMS Secret',
+        secretData: 'Secret Data',
+        version: 'Version',
+      },
+      riskTips: 'Detected that you are not the creator of this secret!',
+      tips: 'I acknowledge and confirm all risks, and still want to continue the operation',
+    },
     awsTransferSftp: {
       headers: {
         instance: 'Instance',
@@ -255,6 +273,23 @@ export default {
         application: 'Application',
       },
       tips: 'Approved tickets provide a 2-hours window for pod deletion, and the entire operation process will be fully recorded in the ticket.',
+    },
+    applicationRedeploy: {
+      headers: {
+        application: 'Application',
+        comment: 'Comment',
+        tags: 'Tags',
+        instance: 'Instance',
+        namespace: 'Namespace',
+        deployment: 'Deployment',
+        redeployTime: 'Redeploy Time',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        application: 'Application',
+      },
+      tips: 'Approved tickets provide a 2-hours window for application redeployment, and the entire operation process will be fully recorded in the ticket.',
     },
     userRevoke: {
       headers: {

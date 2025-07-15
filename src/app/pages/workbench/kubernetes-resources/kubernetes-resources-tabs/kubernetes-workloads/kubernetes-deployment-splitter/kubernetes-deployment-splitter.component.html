@@ -52,6 +52,17 @@
             </div>
           </ng-template>
         </div>
+
+        <div class="layout-bottom" style="margin-left: auto; margin-right: 10px">
+          <d-button
+            bsStyle="text"
+            (click)="onRedeploy()"
+            [title]="'kubernetes.deployment.redeploy.tooltip' | translate"
+            [disabled]="!accessControl.operationPermissions['DEPLOYMENT_REDEPLOY']"
+          >
+            {{ 'kubernetes.deployment.redeploy.button' | translate }}
+          </d-button>
+        </div>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>
@@ -59,7 +70,7 @@
         <d-splitter-pane [resizable]="false" size="350px">
           <div style="padding: 8px" class="splitter-left">
 
-            <span class="name">Containers</span>
+            <span class="name">{{ 'kubernetes.resources.containers' | translate }}</span>
             <d-radio-group
               [name]="'container-name-radio'"
               [values]="kubernetesDeployment['$containers']"
@@ -70,7 +81,7 @@
             </d-radio-group>
 
             <div>
-              <span class="name">Image</span>
+              <span class="name">{{ 'kubernetes.resources.image' | translate }}</span>
               <span class="value inline-value"
                     [title]="kubernetesDeployment['$container']?.image"
                     dClipboard [content]="kubernetesDeployment['$container']?.image"
@@ -80,7 +91,7 @@
             </div>
 
             <div>
-              <span class="name">Version</span>
+              <span class="name">{{ 'kubernetes.resources.version' | translate }}</span>
               <span class="value inline-value">
                 <span
                   dLoading
@@ -95,7 +106,7 @@
             </div>
 
             <div>
-              <span class="name">Resources</span>
+              <span class="name">{{ 'kubernetes.resources.resources' | translate }}</span>
               <span class="value">
                 <span
                   dPopover
@@ -109,9 +120,9 @@
                 </span>
                 <ng-template #resourcesTemplate>
                   <span>
-                    Requests:&nbsp;{{ getResourcesRequests() }}
+                    {{ 'kubernetes.resources.requests' | translate }}:&nbsp;{{ getResourcesRequests() }}
                     <br />
-                    Limits:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ getResourcesLimits() }}
+                    {{ 'kubernetes.resources.limits' | translate }}:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ getResourcesLimits() }}
                   </span>
                 </ng-template>
               </span>
@@ -127,7 +138,7 @@
                 [controlled]="true"
                 [mouseEnterDelay]="500"
                 [content]="lifecycleTemplate"
-                [tag]="'lifecycle'"
+                [tag]="'kubernetes.resources.lifecycle' | translate"
                 [labelStyle]="'blue-w98'"
               ></d-tag>
               <ng-template #lifecycleTemplate>
@@ -143,7 +154,7 @@
                 [controlled]="true"
                 [mouseEnterDelay]="500"
                 [content]="probeTemplate"
-                [tag]="'probe'"
+                [tag]="'kubernetes.resources.probe' | translate"
                 [labelStyle]="'blue-w98'"
               ></d-tag>
               <ng-template #probeTemplate>
@@ -163,7 +174,7 @@
                 [controlled]="true"
                 [mouseEnterDelay]="500"
                 [content]="jvmTemplate"
-                [tag]="'jvm'"
+                [tag]="'kubernetes.resources.jvm' | translate"
                 [labelStyle]="'blue-w98'"
                 [popoverStyle]="getPopoverStyle({width: '1000px'})"
               ></d-tag>

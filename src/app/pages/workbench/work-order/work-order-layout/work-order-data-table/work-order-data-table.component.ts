@@ -88,6 +88,12 @@ import {
   WorkOrderRiskChangeTicketComponent,
 } from '../work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  WorkOrderAliyunKmsSecretUpdateTicketComponent
+} from '../work-order-ticket/work-order-aliyun-kms-secret-update-ticket/work-order-aliyun-kms-secret-update-ticket.component';
+import {
+  WorkOrderApplicationRedeployTicketComponent
+} from '../work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -382,8 +388,20 @@ export class WorkOrderDataTableComponent implements OnInit {
           this.fetchData();
         }, ticket);
         break;
+      case WorkOrderKeyEnum.ALIYUN_KMS_SECRET_UPDATE:
+        dialogDate['content'] = WorkOrderAliyunKmsSecretUpdateTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
       case WorkOrderKeyEnum.RISK_CHANGE:
         dialogDate['content'] = WorkOrderRiskChangeTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_REDEPLOY:
+        dialogDate['content'] = WorkOrderApplicationRedeployTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

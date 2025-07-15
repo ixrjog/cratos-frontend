@@ -6,7 +6,7 @@
 
         <div class="layout-center" style="margin-right: 5px">
           <d-tag
-            [tag]="JSON.stringify(deploymentList) !== '[]'?'total replicas x' + getTotalReplicas():'Unbound Deployment'"
+            [tag]="JSON.stringify(deploymentList) !== '[]'?('kubernetes.deployment.totalReplicas' | translate) + getTotalReplicas():('kubernetes.deployment.unboundDeployment' | translate)"
             [labelStyle]="'blue-w98'"
           ></d-tag>
         </div>

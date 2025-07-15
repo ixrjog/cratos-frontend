@@ -129,6 +129,25 @@ export default {
         userCustomTips: '● 用户自定义<可选>: 用户自定义后缀',
       },
     },
+    aliyunKmsSecretUpdate: {
+      headers: {
+        aliyunInstance: '阿里云实例',
+        secretName: '密钥名称',
+        version: '版本',
+        configCenterValue: '配置中心值',
+        description: '描述',
+        actions: '操作',
+        result: '结果',
+      },
+      labels: {
+        instance: '实例',
+        kmsSecret: 'KMS 密钥',
+        secretData: '密钥数据',
+        version: '版本',
+      },
+      riskTips: '检测到您不是改密钥创建者！',
+      tips: '我已悉知并确认所有风险，仍要继续操作',
+    },
     awsTransferSftp: {
       headers: {
         instance: '实例',
@@ -255,6 +274,23 @@ export default {
         application: '应用',
       },
       tips: '审批通过的工单提供2小时的有效期用于pod删除，操作过程会被完整记录在工单内。',
+    },
+    applicationRedeploy: {
+      headers: {
+        application: '应用',
+        comment: '备注',
+        tags: '标签',
+        instance: '实例',
+        namespace: '命名空间',
+        deployment: '部署',
+        redeployTime: '重新部署时间',
+        actions: '操作',
+        result: '结果',
+      },
+      labels: {
+        application: '应用',
+      },
+      tips: '审批通过的工单提供2小时的有效期用于应用重新部署，操作过程会被完整记录在工单内。',
     },
     userRevoke: {
       headers: {

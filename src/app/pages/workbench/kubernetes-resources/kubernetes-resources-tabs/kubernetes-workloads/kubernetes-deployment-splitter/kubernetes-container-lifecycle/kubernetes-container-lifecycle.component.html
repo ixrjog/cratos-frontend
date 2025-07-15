@@ -2,13 +2,13 @@
   <d-splitter orientation="horizontal">
     <d-splitter-pane size="50%" [resizable]="false">
       <div style="padding: 5px;width: 300px">
-        <h4>PostStart</h4>
+        <h4>{{ 'kubernetes.lifecycle.postStart' | translate }}</h4>
         <span>{{ lifecycle.postStart?.exec?.command | dSafeNullPipe }}</span>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>
       <div style="padding: 5px;width: 300px">
-        <h4>PreStop</h4>
+        <h4>{{ 'kubernetes.lifecycle.preStop' | translate }}</h4>
         <span>{{ lifecycle.preStop?.exec?.command | dSafeNullPipe }}</span>
       </div>
     </d-splitter-pane>

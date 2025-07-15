@@ -7,6 +7,7 @@ import header from './en-US/header';
 import login from './en-US/login';
 import register from './en-US/register';
 import workOrderTicket from './en-US/work-order-ticket';
+import kubernetes from './en-US/kubernetes';
 
 export default {
   ...pages,
@@ -18,4 +19,5 @@ export default {
   ...login,
   ...register,
   ...workOrderTicket,
+  ...kubernetes,
 };

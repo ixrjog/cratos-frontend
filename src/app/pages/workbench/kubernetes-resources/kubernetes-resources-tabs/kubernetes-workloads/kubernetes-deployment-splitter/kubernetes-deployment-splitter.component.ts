@@ -8,6 +8,9 @@ import { ApplicationVO } from '../../../../../../@core/data/application';
 import { ApplicationResourceService } from '../../../../../../@core/services/application-resource.service';
 import { finalize } from 'rxjs';
 import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
+import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
+import { RedeployKubernetesDeployment } from '../../../../../../@core/data/application-resource';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -22,7 +25,20 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   kubernetesResources: any;
   imageVersion: any;
 
-  constructor(private applicationResourceService: ApplicationResourceService) {
+  dialogData = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
+  constructor(
+    private applicationResourceService: ApplicationResourceService,
+    private dialogUtil: DialogUtil,
+    private toastUtil: ToastUtil
+  ) {
   }
 
   ngOnInit(): void {
@@ -128,4 +144,24 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
   }
 
   protected readonly getPopoverStyle = getPopoverStyle;
+
+  onRedeploy() {
+    const dialogData = {
+      ...this.dialogData.warningOperateData,
+      content: this.dialogData.content.redeploy,
+    };
+    
+    this.dialogUtil.onDialog(dialogData, () => {
+      const param: RedeployKubernetesDeployment = {
+        applicationName: this.application.name,
+        namespace: this.kubernetesDeployment.metadata.namespace,
+        deploymentName: this.kubernetesDeployment.metadata.name,
+      };
+      
+      this.applicationResourceService.redeployApplicationResourceKubernetesDeployment(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.REDEPLOY);
+        });
+    });
+  }
 }

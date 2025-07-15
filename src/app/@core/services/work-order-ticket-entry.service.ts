@@ -6,6 +6,7 @@ import {
   AddApplicationDeletePodTicketEntry,
   AddApplicationElasticScalingTicketEntry,
   AddApplicationPermissionTicketEntry,
+  AddApplicationRedeployTicketEntry,
   AddAwsIamPolicyPermissionTicketEntry,
   AddCreateAliyunKmsSecretTicketEntry,
   AddCreateAliyunOnsConsumerGroupTicketEntry,
@@ -21,6 +22,7 @@ import {
   AddResetAwsIamUserTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   AddRiskChangeTicketEntry,
+  AddUpdateAliyunKmsSecretTicketEntry,
   LdapIdentity,
   WorkOrderTicketEntryData,
 } from '../data/work-order-ticket-entry';
@@ -175,4 +177,13 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
   addRiskChangeTicketEntry(param: AddRiskChangeTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/risk/change/add', param);
   }
+
+  addUpdateAliyunKmsSecretTicketEntry(param: AddUpdateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aliyun/kms/update/secret/add', param);
+  }
+
+  addApplicationRedeployTicketEntry(param: AddApplicationRedeployTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/redeploy/add', param);
+  }
+
 }

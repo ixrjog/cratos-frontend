@@ -27,6 +27,12 @@ export interface DeleteKubernetesDeploymentPod {
   podName: string;
 }
 
+export interface RedeployKubernetesDeployment {
+  applicationName: string
+  namespace: string
+  deploymentName: string
+}
+
 export abstract class ApplicationResourceData {
 
   abstract queryApplicationResourceKubernetesDetails(param: QueryApplicationResourceKubernetesDetails): Observable<HttpResult<MessageResponse<KubernetesDetailsVO>>>;
@@ -38,4 +44,6 @@ export abstract class ApplicationResourceData {
   }): Observable<HttpResult<KubernetesDeploymentImageVersion>>;
 
   abstract deleteApplicationResourceKubernetesDeploymentPod(param: DeleteKubernetesDeploymentPod): Observable<HttpResult<Boolean>>;
+
+  abstract redeployApplicationResourceKubernetesDeployment(param: RedeployKubernetesDeployment): Observable<HttpResult<Boolean>>;
 }

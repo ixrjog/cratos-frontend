@@ -1,7 +1,7 @@
 <section *ngIf="container !== undefined">
 
   <div>
-    <span class="name">Pod IP</span>
+    <span class="name">{{ 'kubernetes.pod.info.podIP' | translate }}</span>
     <span class="value">
       <span dClipboard [content]="podStatus.podIP">
         {{ podStatus.podIP | dSafeNullPipe }}
@@ -11,7 +11,7 @@
         [trigger]="'hover'"
         [controlled]="true"
         [mouseEnterDelay]="500"
-        [content]="'Worker IP: ' + podStatus.hostIP"
+        [content]="('kubernetes.pod.info.workerIP' | translate) + ': ' + podStatus.hostIP"
       >
         <i class="fa-solid fa-location-dot"></i>
       </span>
@@ -19,14 +19,14 @@
   </div>
 
   <div>
-    <span class="name">Image Tag</span>
+    <span class="name">{{ 'kubernetes.pod.info.imageTag' | translate }}</span>
     <span class="value" dClipboard [content]="container.image">
       {{ container.image | containerImageTag | dSafeNullPipe }}
     </span>
   </div>
 
   <div>
-    <span class="name">Restart Count</span>
+    <span class="name">{{ 'kubernetes.pod.info.restartCount' | translate }}</span>
     <span class="value" *ngIf="container.restartCount !== 0">
       <i class="fa-solid fa-triangle-exclamation"
          style="color: #f66f6a;margin-left: 5px"></i>

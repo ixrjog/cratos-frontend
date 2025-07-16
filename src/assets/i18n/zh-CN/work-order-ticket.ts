@@ -282,7 +282,7 @@ export default {
         tags: '标签',
         instance: '实例',
         namespace: '命名空间',
-        deployment: '部署',
+        deployment: '无状态',
         redeployTime: '重新部署时间',
         actions: '操作',
         result: '结果',

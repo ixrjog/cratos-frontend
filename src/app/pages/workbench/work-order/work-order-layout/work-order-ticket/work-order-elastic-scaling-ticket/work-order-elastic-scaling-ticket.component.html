@@ -94,7 +94,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.elasticScaling.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >
@@ -111,7 +111,7 @@
         </d-cell>
       </d-column>
     </d-data-table>
-
+    <br />
     <d-data-table
       *ngIf="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET) !== undefined"
       [dataSource]="ticketEntryMap.get(BusinessTypeEnum.EDS_ASSET)"
@@ -160,7 +160,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.elasticScaling.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

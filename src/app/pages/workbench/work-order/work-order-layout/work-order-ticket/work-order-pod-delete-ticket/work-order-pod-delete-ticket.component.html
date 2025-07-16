@@ -73,7 +73,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.podDelete.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >
@@ -132,7 +132,7 @@
         </d-cell>
       </d-column>
       <d-column
-        header="Result"
+        [header]="'workOrderTicket.podDelete.headers.result' | translate"
         *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.COMPLETED
         || ticketDetails.ticket.ticketState === WorkOrderStatus.IN_PROGRESS"
       >

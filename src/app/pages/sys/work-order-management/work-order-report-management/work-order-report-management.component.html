@@ -1,0 +1,35 @@
+<div class="report-container">
+  <div class="header-actions">
+    <div class="title">{{ 'workOrderTicket.report.title' | translate }}</div>
+    <div class="actions">
+      <button class="action-button" (click)="refreshData()" [disabled]="isRefreshing">
+        <span class="icon" [class.rotating]="isRefreshing">↻</span>
+        {{ isRefreshing ? ('workOrderTicket.report.refreshing' | translate) : ('workOrderTicket.report.refreshData' | translate) }}
+      </button>
+      <button class="action-button" (click)="exportData()" [disabled]="isRefreshing">
+        <span class="icon">↓</span> {{ 'workOrderTicket.report.exportData' | translate }}
+      </button>
+      <span *ngIf="lastRefreshTime" class="refresh-time">{{ 'workOrderTicket.report.lastRefresh' | translate }}: {{ lastRefreshTime }}</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="section-title">{{ 'workOrderTicket.report.nameReport' | translate }}</h2>
+      <div class="card-actions">
+        <span class="card-info">{{ 'workOrderTicket.report.nameReportDesc' | translate }}</span>
+      </div>
+    </div>
+    <app-work-order-name-report #nameReport></app-work-order-name-report>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="section-title">{{ 'workOrderTicket.report.monthlyReport' | translate }}</h2>
+      <div class="card-actions">
+        <span class="card-info">{{ 'workOrderTicket.report.monthlyReportDesc' | translate }}</span>
+      </div>
+    </div>
+    <app-work-order-month-report #monthReport></app-work-order-month-report>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="chart-container">
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">{{ i18n.loading }}</div>
+  </div>
+  <div style="text-align: center; margin-bottom: 10px;">
+    <div *ngIf="timeRangeText" class="time-range">{{ timeRangeText }}</div>
+  </div>
+  <!-- 设置明确的最小宽度，确保图表有足够的空间 -->
+  <div #chartContainer id="workOrderMonthChart" style="width: 100%; min-width: 800px; height: 600px;"></div>
+  <div class="time-slider-container">
+    <div class="time-markers-container" id="timeMarkersContainer"></div>
+  </div>
+</div>

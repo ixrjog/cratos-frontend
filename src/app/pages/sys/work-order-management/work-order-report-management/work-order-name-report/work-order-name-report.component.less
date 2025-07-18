@@ -1,0 +1,75 @@
+.chart-container {
+  position: relative;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  overflow: visible; /* 修改为visible，避免内容被裁剪 */
+  min-width: 800px; /* 确保容器有最小宽度 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#workOrderNameChart {
+  width: 100% !important; /* 强制宽度为100% */
+  min-width: 800px !important; /* 确保最小宽度 */
+  height: 500px !important; /* 增加高度，确保图表有足够的空间 */
+}
+
+.loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}
+
+.loading-spinner {
+  font-size: 14px;
+  color: #1890ff;
+  text-align: center;
+  padding: 10px;
+  animation: spin 1.5s linear infinite;
+}
+
+.chart-summary {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #e8e8e8;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+}
+
+.summary-label {
+  font-size: 14px;
+  color: #666;
+  margin-right: 4px;
+}
+
+.summary-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+@keyframes spin {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}

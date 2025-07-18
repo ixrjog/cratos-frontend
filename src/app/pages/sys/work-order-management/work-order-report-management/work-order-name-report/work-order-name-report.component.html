@@ -1,0 +1,13 @@
+<div class="chart-container">
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner">{{ 'workOrderTicket.report.loading' | translate }}</div>
+  </div>
+  <!-- 设置明确的最小宽度，确保图表有足够的空间 -->
+  <div #chartContainer id="workOrderNameChart" style="width: 100%; min-width: 800px; height: 500px;"></div>
+  <div *ngIf="totalCount > 0" class="chart-summary">
+    <div class="summary-item">
+      <span class="summary-label">{{ 'workOrderTicket.report.totalCount' | translate }}:</span>
+      <span class="summary-value">{{ totalCount }}</span>
+    </div>
+  </div>
+</div>

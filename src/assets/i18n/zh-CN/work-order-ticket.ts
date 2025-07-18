@@ -38,16 +38,33 @@ export default {
       inProgress: '执行中',
       completed: '完成',
     },
-    aliyunDataworks: {
-      headers: {
-        aliyunInstance: '阿里云实例',
-        akRamUser: 'AK RAM用户',
-        actions: '操作',
-        result: '结果',
-      },
-      labels: {
-        instance: '实例',
-      },
+    report: {
+      title: '工单统计报表',
+      monthlyReport: '工单月度统计',
+      nameReport: '工单名称统计',
+      timeRange: '时间范围',
+      totalCount: '总计',
+      noData: '暂无数据',
+      loading: '加载中...',
+      saveAsImage: '保存为图片',
+      dataView: '数据视图',
+      switchToLine: '切换为折线图',
+      switchToBar: '切换为柱状图',
+      switchToStack: '切换为堆叠',
+      restore: '还原',
+      selectAll: '全选',
+      inverse: '反选',
+      workOrderCount: '工单数量',
+      refreshData: '刷新数据',
+      refreshing: '刷新中...',
+      exportData: '导出数据',
+      lastRefresh: '上次刷新',
+      nameReportDesc: '展示各类型工单数量占比',
+      monthlyReportDesc: '展示各月份工单数量趋势',
+      dataType: '数据类型',
+      name: '名称',
+      unknown: '未知',
+      exportFailed: '导出数据失败，请查看控制台了解详情'
     },
     cloudIdentityReset: {
       headers: {

@@ -38,16 +38,33 @@ export default {
       inProgress: 'IN PROGRESS',
       completed: 'COMPLETED',
     },
-    aliyunDataworks: {
-      headers: {
-        aliyunInstance: 'Aliyun Instance',
-        akRamUser: 'AK RAM User',
-        actions: 'Actions',
-        result: 'Result',
-      },
-      labels: {
-        instance: 'Instance',
-      },
+    report: {
+      title: 'Work Order Reports',
+      monthlyReport: 'Work Order Monthly Report',
+      nameReport: 'Work Order Name Report',
+      timeRange: 'Time Range',
+      totalCount: 'Total',
+      noData: 'No Data',
+      loading: 'Loading...',
+      saveAsImage: 'Save as Image',
+      dataView: 'Data View',
+      switchToLine: 'Switch to Line Chart',
+      switchToBar: 'Switch to Bar Chart',
+      switchToStack: 'Switch to Stack',
+      restore: 'Restore',
+      selectAll: 'Select All',
+      inverse: 'Inverse',
+      workOrderCount: 'Work Order Count',
+      refreshData: 'Refresh Data',
+      refreshing: 'Refreshing...',
+      exportData: 'Export Data',
+      lastRefresh: 'Last Refresh',
+      nameReportDesc: 'Shows the proportion of each type of work order',
+      monthlyReportDesc: 'Shows the trend of work orders by month',
+      dataType: 'Data Type',
+      name: 'Name',
+      unknown: 'Unknown',
+      exportFailed: 'Failed to export data, please check the console for details'
     },
     cloudIdentityReset: {
       headers: {

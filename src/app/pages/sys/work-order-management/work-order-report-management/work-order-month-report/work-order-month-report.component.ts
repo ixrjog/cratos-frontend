@@ -12,6 +12,7 @@ import * as echarts from 'echarts';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { isDark } from '../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-work-order-month-report',
@@ -30,6 +31,7 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
 
   private destroy$ = new Subject<void>();
   i18n: any = {};
+  private resizeObserver: ResizeObserver | null = null;
 
   constructor(
     private workOrderService: WorkOrderService,
@@ -58,8 +60,6 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
-  private resizeObserver: ResizeObserver | null = null;
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -70,9 +70,42 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
       this.resizeObserver = null;
     }
 
+    // Remove theme change listener
+    window.removeEventListener('storage', this.handleThemeChange.bind(this));
+
     // 清理图表实例
     if (this.chartInstance) {
       this.chartInstance.dispose();
+    }
+  }
+
+  // Handle theme changes
+  private handleThemeChange(event: StorageEvent): void {
+    if (event.key === 'theme' || event.key === 'user-custom-theme-config') {
+      // Dispose the old chart instance
+      if (this.chartInstance) {
+        const container = this.chartContainer.nativeElement;
+        const containerWidth = container.clientWidth || container.offsetWidth;
+        const data = this.reportData;
+        
+        // Dispose the old chart
+        this.chartInstance.dispose();
+        
+        // Reinitialize with the new theme
+        const theme = isDark() ? 'dark' : undefined;
+        this.chartInstance = echarts.init(container, theme, {
+          renderer: 'canvas',
+          width: containerWidth,
+          height: 600
+        });
+        
+        // Re-render the chart with the existing data
+        if (data) {
+          this.renderChart(data);
+        } else {
+          this.renderEmptyChart();
+        }
+      }
     }
   }
 
@@ -120,8 +153,9 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
           return;
         }
 
-        // 使用更多选项初始化图表
-        this.chartInstance = echarts.init(container, null, {
+        // 使用更多选项初始化图表，并根据当前主题设置
+        const theme = isDark() ? 'dark' : undefined;
+        this.chartInstance = echarts.init(container, theme, {
           renderer: 'canvas',
           useDirtyRect: false,
           width: containerWidth,
@@ -187,6 +221,9 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
             this.chartInstance.resize();
           }
         }, 200);
+        
+        // 监听主题变化
+        window.addEventListener('storage', this.handleThemeChange.bind(this));
       } catch (error) {
         // 错误处理
       }
@@ -250,13 +287,19 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
       return;
     }
 
+    // 根据当前主题设置文本颜色
+    const isDarkMode = isDark();
+    const textColor = isDarkMode ? '#e1e1e1' : '#333';
+    const splitLineColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
     this.chartOptions = {
       title: {
         text: this.i18n.monthlyReport || '工单月度统计报表',
         left: 'center',
         textStyle: {
           fontSize: 16,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: textColor
         }
       },
       tooltip: {
@@ -268,10 +311,30 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
       xAxis: {
         type: 'category',
         data: [],
+        axisLabel: {
+          color: textColor
+        },
+        axisLine: {
+          lineStyle: {
+            color: isDarkMode ? '#555' : '#333'
+          }
+        }
       },
       yAxis: {
         type: 'value',
         name: this.i18n.workOrderCount || '工单数量',
+        nameTextStyle: {
+          color: textColor
+        },
+        axisLabel: {
+          color: textColor
+        },
+        splitLine: {
+          lineStyle: {
+            type: 'dashed',
+            color: splitLineColor
+          }
+        }
       },
       series: [],
     };
@@ -370,6 +433,12 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
 
       // 选择关键时间点作为标记
       const keyTimePoints = this.selectKeyTimePoints(formattedDates);
+      
+      // 根据当前主题设置文本颜色
+      const isDarkMode = isDark();
+      const textColor = isDarkMode ? '#e1e1e1' : '#333';
+      const subtextColor = isDarkMode ? '#aaa' : '#666';
+      const splitLineColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
       this.chartOptions = {
         title: {
@@ -378,12 +447,13 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
           top: 10,
           textStyle: {
             fontSize: 16,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            color: textColor
           },
           subtext: this.timeRangeText,
           subtextStyle: {
             fontSize: 12,
-            color: '#666'
+            color: subtextColor
           }
         },
         tooltip: {
@@ -411,11 +481,14 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
           pageButtonPosition: 'end',
           pageButtonGap: 5,
           pageButtonItemGap: 5,
-          pageIconColor: '#888',
-          pageIconInactiveColor: '#ccc',
+          pageIconColor: isDarkMode ? '#aaa' : '#888',
+          pageIconInactiveColor: isDarkMode ? '#555' : '#ccc',
           pageIconSize: 12,
           pageTextStyle: {
-            color: '#333'
+            color: textColor
+          },
+          textStyle: {
+            color: textColor
           },
           selector: [
             {
@@ -444,12 +517,18 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
             fontSize: 10,
             margin: 8,
             hideOverlap: true,
-            align: 'right'
+            align: 'right',
+            color: textColor
           },
           axisTick: {
             alignWithLabel: true
           },
-          position: 'bottom'
+          position: 'bottom',
+          axisLine: {
+            lineStyle: {
+              color: isDarkMode ? '#555' : '#333'
+            }
+          }
         },
         yAxis: {
           type: 'value',
@@ -457,8 +536,15 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
           minInterval: 1,
           splitLine: {
             lineStyle: {
-              type: 'dashed'
+              type: 'dashed',
+              color: splitLineColor
             }
+          },
+          axisLabel: {
+            color: textColor
+          },
+          nameTextStyle: {
+            color: textColor
           }
         },
         dataZoom: [
@@ -475,11 +561,11 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
               color: '#5470c6'
             },
             textStyle: {
-              color: '#333'
+              color: textColor
             },
-            borderColor: '#ccc',
-            backgroundColor: '#f7f7f7',
-            fillerColor: 'rgba(84,112,198,0.2)',
+            borderColor: isDarkMode ? '#555' : '#ccc',
+            backgroundColor: isDarkMode ? '#333' : '#f7f7f7',
+            fillerColor: isDarkMode ? 'rgba(84,112,198,0.1)' : 'rgba(84,112,198,0.2)',
             moveHandleSize: 6
           },
           {
@@ -512,7 +598,16 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
             }
           },
           right: 20,
-          top: 20
+          top: 20,
+          iconStyle: {
+            color: textColor,
+            borderColor: isDarkMode ? '#666' : '#ccc'
+          },
+          emphasis: {
+            iconStyle: {
+              color: isDarkMode ? '#fff' : '#333'
+            }
+          }
         },
         series: series
       };
@@ -527,13 +622,13 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
             position: 'insideBottom',
             formatter: '{b}',
             fontSize: 10,
-            color: '#666',
-            backgroundColor: 'rgba(255,255,255,0.7)',
+            color: isDarkMode ? '#ccc' : '#666',
+            backgroundColor: isDarkMode ? 'rgba(50,50,50,0.7)' : 'rgba(255,255,255,0.7)',
             padding: [2, 4]
           },
           lineStyle: {
             type: 'dashed' as 'solid' | 'dashed' | 'dotted',  // 使用联合类型断言
-            color: '#ccc',
+            color: isDarkMode ? '#555' : '#ccc',
             width: 1
           },
           data: keyTimePoints.map(point => ({
@@ -653,6 +748,11 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
 
       // 选择要显示的关键时间点
       const keyPoints = this.selectKeyTimePoints(dates);
+      
+      // 根据当前主题设置颜色
+      const isDarkMode = isDark();
+      const textColor = isDarkMode ? '#aaa' : '#666';
+      const lineColor = isDarkMode ? '#555' : '#666';
 
       // 添加标记
       keyPoints.forEach(point => {
@@ -671,7 +771,7 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
         line.className = 'marker-line';
         line.style.width = '2px';
         line.style.height = '8px';
-        line.style.backgroundColor = '#666';
+        line.style.backgroundColor = lineColor;
         line.style.margin = '0 auto';
         marker.appendChild(line);
 
@@ -680,7 +780,7 @@ export class WorkOrderMonthReportComponent implements OnInit, AfterViewInit, OnD
         label.className = 'marker-label';
         label.textContent = point.date;
         label.style.fontSize = '10px';
-        label.style.color = '#666';
+        label.style.color = textColor;
         label.style.whiteSpace = 'nowrap';
         label.style.textAlign = 'center';
         marker.appendChild(label);

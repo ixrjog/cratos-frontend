@@ -11,6 +11,7 @@ import * as echarts from 'echarts';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { isDark } from '../../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-work-order-name-report',
@@ -97,8 +98,41 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
       this.chartInstance.dispose();
     }
     
+    // Remove theme change listener
+    window.removeEventListener('storage', this.handleThemeChange.bind(this));
+    
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  // Handle theme changes
+  private handleThemeChange(event: StorageEvent): void {
+    if (event.key === 'theme' || event.key === 'user-custom-theme-config') {
+      // Dispose the old chart instance
+      if (this.chartInstance) {
+        const container = this.chartContainer.nativeElement;
+        const containerWidth = container.clientWidth || container.offsetWidth;
+        const data = this.reportData;
+        
+        // Dispose the old chart
+        this.chartInstance.dispose();
+        
+        // Reinitialize with the new theme
+        const theme = isDark() ? 'dark' : undefined;
+        this.chartInstance = echarts.init(container, theme, {
+          renderer: 'canvas',
+          width: containerWidth,
+          height: 500
+        });
+        
+        // Re-render the chart with the existing data
+        if (data && data.length > 0) {
+          this.renderChart(data);
+        } else {
+          this.renderEmptyChart();
+        }
+      }
+    }
   }
 
   // Initialize the chart instance
@@ -115,8 +149,9 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
           return;
         }
         
-        // 使用明确的宽度初始化图表
-        this.chartInstance = echarts.init(container, null, {
+        // 使用明确的宽度初始化图表，并根据当前主题设置
+        const theme = isDark() ? 'dark' : undefined;
+        this.chartInstance = echarts.init(container, theme, {
           renderer: 'canvas',
           width: containerWidth,
           height: 500
@@ -174,6 +209,9 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
             this.chartInstance.resize();
           }
         }, 200);
+
+        // 监听主题变化
+        window.addEventListener('storage', this.handleThemeChange.bind(this));
       } catch (error) {
         console.error('Error initializing chart:', error);
       }
@@ -230,6 +268,10 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
       return;
     }
 
+    // 根据当前主题设置文本颜色
+    const isDarkMode = isDark();
+    const textColor = isDarkMode ? '#e1e1e1' : '#333';
+
     this.chartOptions = {
       title: {
         text: this.i18n.nameReport || '工单名称统计报表',
@@ -237,6 +279,7 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
         textStyle: {
           fontSize: 16,
           fontWeight: 'bold',
+          color: textColor
         },
       },
       tooltip: {
@@ -349,6 +392,11 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
       legendTop = 'bottom';
     }
 
+    // 根据当前主题设置文本颜色
+    const isDarkMode = isDark();
+    const textColor = isDarkMode ? '#e1e1e1' : '#333';
+    const borderColor = isDarkMode ? '#444' : '#fff';
+
     this.chartOptions = {
       title: {
         text: this.i18n.nameReport || '工单名称统计报表',
@@ -356,6 +404,7 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
         textStyle: {
           fontSize: 16,
           fontWeight: 'bold',
+          color: textColor
         },
       },
       tooltip: {
@@ -376,6 +425,7 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
         itemHeight: 10,
         textStyle: {
           fontSize: 12,
+          color: textColor
         },
         formatter: (name: string) => {
           const item = formattedData.find(d => d.name === name);
@@ -404,7 +454,7 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 4,
-            borderColor: '#fff',
+            borderColor: borderColor,
             borderWidth: 2,
           },
           label: {
@@ -438,7 +488,7 @@ export class WorkOrderNameReportComponent implements OnInit, AfterViewInit, OnDe
           style: {
             text: `${this.i18n.totalCount || '总计'}\n${this.totalCount}`,
             align: 'center',
-            fill: '#333',
+            fill: textColor,
             fontSize: 16,
             fontWeight: 'bold',
           },

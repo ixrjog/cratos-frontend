@@ -4,6 +4,7 @@ import { WorkOrderNameReportComponent } from './work-order-name-report/work-orde
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { isDark } from '../../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-work-order-report-management',
@@ -17,15 +18,24 @@ export class WorkOrderReportManagementComponent implements OnInit, AfterViewInit
   isRefreshing = false;
   lastRefreshTime = '';
   i18n: any = {};
+  isDarkMode = false;
   private destroy$ = new Subject<void>();
 
   constructor(private translate: TranslateService) {
     this.initI18n();
   }
 
+  // 暴露给模板使用的方法
+  public get isDarkTheme(): boolean {
+    return this.isDarkMode;
+  }
+
   ngOnInit(): void {
     // 组件初始化时的逻辑
     this.updateLastRefreshTime();
+    
+    // 检查初始暗色模式
+    this.isDarkMode = isDark();
   }
 
   ngAfterViewInit(): void {

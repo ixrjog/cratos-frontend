@@ -2,6 +2,7 @@
   padding: 16px;
   background-color: #f0f2f5;
   min-height: 100%;
+  transition: background-color 0.3s ease;
 }
 
 .header-actions {
@@ -13,12 +14,15 @@
   padding: 12px 16px;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 1px solid #e8e8e8;
 }
 
 .title {
   font-size: 18px;
   font-weight: 500;
   color: #333;
+  transition: color 0.3s ease;
 }
 
 .actions {
@@ -66,6 +70,7 @@
   font-size: 12px;
   color: #999;
   margin-left: 12px;
+  transition: color 0.3s ease;
 }
 
 .card {
@@ -74,6 +79,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
   margin-bottom: 16px;
   overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 1px solid #e8e8e8;
 }
 
 .card-header {
@@ -88,6 +95,7 @@
   font-weight: 500;
   color: #333;
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 .card-actions {
@@ -98,6 +106,7 @@
 .card-info {
   font-size: 12px;
   color: #999;
+  transition: color 0.3s ease;
 }
 
 @keyframes rotate {
@@ -106,5 +115,54 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Dark Mode Styles */
+.dark-mode {
+  background-color: #1f1f1f;
+  
+  .header-actions {
+    background-color: #2a2a2a;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    border-color: #444;
+  }
+  
+  .title {
+    color: #e1e1e1;
+  }
+  
+  .action-button {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #e1e1e1;
+    
+    &:hover:not([disabled]) {
+      background-color: #3a3a3a;
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+    
+    &[disabled] {
+      color: #777;
+    }
+  }
+  
+  .refresh-time {
+    color: #888;
+  }
+  
+  .card {
+    background-color: #2a2a2a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border-color: #444;
+  }
+  
+  .section-title {
+    color: #e1e1e1;
+  }
+  
+  .card-info {
+    color: #888;
   }
 }

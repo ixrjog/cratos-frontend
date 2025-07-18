@@ -7,6 +7,8 @@
   min-width: 800px; /* 确保容器有最小宽度 */
   width: 100%;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border: 1px solid #e8e8e8;
 }
 
 #workOrderNameChart {
@@ -26,6 +28,7 @@
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.7);
   z-index: 1;
+  transition: background-color 0.3s ease;
 }
 
 .loading-spinner {
@@ -42,6 +45,7 @@
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px dashed #e8e8e8;
+  transition: border-color 0.3s ease;
 }
 
 .summary-item {
@@ -54,12 +58,14 @@
   font-size: 14px;
   color: #666;
   margin-right: 4px;
+  transition: color 0.3s ease;
 }
 
 .summary-value {
   font-size: 16px;
   font-weight: 500;
   color: #333;
+  transition: color 0.3s ease;
 }
 
 @keyframes spin {
@@ -71,5 +77,29 @@
   }
   100% {
     opacity: 0.3;
+  }
+}
+
+/* 暗色模式样式 */
+:host-context(.dark-mode) {
+  .chart-container {
+    background-color: #2a2a2a;
+    border-color: #444;
+  }
+  
+  .loading-container {
+    background-color: rgba(42, 42, 42, 0.7);
+  }
+  
+  .chart-summary {
+    border-top-color: #444;
+  }
+  
+  .summary-label {
+    color: #aaa;
+  }
+  
+  .summary-value {
+    color: #e1e1e1;
   }
 }

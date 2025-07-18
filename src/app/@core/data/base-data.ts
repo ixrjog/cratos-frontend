@@ -84,3 +84,9 @@ export interface I18nDataAlias {
   displayName: string;
   desc: string;
 }
+
+export interface ReportBaseData {
+  cName: string
+  value: string
+  color: string
+}

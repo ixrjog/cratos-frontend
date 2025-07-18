@@ -8,6 +8,9 @@ import {
 import {
   WorkOrderManagementDataTableComponent
 } from './work-order-management-data-table/work-order-management-data-table.component';
+import {
+  WorkOrderReportManagementComponent
+} from './work-order-report-management/work-order-report-management.component';
 
 @Component({
   selector: 'app-work-order-management',
@@ -19,7 +22,6 @@ export class WorkOrderManagementComponent {
   @ViewChild('workOrderGroup') private workOrderGroup: WorkOrderGroupManagementDataTableComponent;
   @ViewChild('workOrder') private workOrder: WorkOrderManagementDataTableComponent;
   @ViewChild('workOrderTicket') private workOrderTicket: WorkOrderTicketManagementDataTableComponent;
-
 
   tabActiveId: string | number = 'work-order-group';
 

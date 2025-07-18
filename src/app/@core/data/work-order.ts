@@ -1,4 +1,13 @@
-import { BaseVO, DataTable, HttpResult, I18nData, I18nDataAlias, PageQuery, ValidVO } from './base-data';
+import {
+  BaseVO,
+  DataTable,
+  HttpResult,
+  I18nData,
+  I18nDataAlias,
+  PageQuery,
+  ReportBaseData,
+  ValidVO,
+} from './base-data';
 import { BusinessDocsVO } from './business-doc';
 import { BusinessTagsVO } from './business-tag';
 import { Observable } from 'rxjs';
@@ -87,6 +96,16 @@ export interface WorkOrderGroupPageQuery extends PageQuery {
   queryName: string;
 }
 
+export interface WorkOrderReportMonthlyVO {
+  dates: string[];
+  nameCat: Map<string, MonthlyStatistics>;
+}
+
+export interface MonthlyStatistics {
+  values: number[];
+  color: string;
+}
+
 
 export abstract class WorkOrderData {
 
@@ -99,6 +118,10 @@ export abstract class WorkOrderData {
   abstract queryWorkOrderPage(param: WorkOrderPageQuery): Observable<DataTable<WorkOrderVO>>;
 
   abstract queryWorkOrderGroupPage(param: WorkOrderGroupPageQuery): Observable<DataTable<WorkOrderGroupVO>>;
+
+  abstract getWorkOrderNameReport(): Observable<HttpResult<Array<ReportBaseData>>>;
+
+  abstract getWorkOrderMonthlyReport(): Observable<HttpResult<WorkOrderReportMonthlyVO>>;
 
 }
 

@@ -16,6 +16,11 @@
         <app-work-order-ticket-management-data-table #workOrderTicket></app-work-order-ticket-management-data-table>
       </div>
       </d-tab>
+      <d-tab [id]="'work-order-report'" [title]="'Work Order Report'">
+        <div class="app-data-table">
+          <app-work-order-report-management #workOrderReport></app-work-order-report-management>
+        </div>
+      </d-tab>
     </d-tabs>
   </da-col-item>
 </da-layout-row>

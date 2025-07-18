@@ -7,11 +7,11 @@ import {
   WorkOrderGroupPageQuery,
   WorkOrderGroupVO,
   WorkOrderMenuVO,
-  WorkOrderPageQuery,
+  WorkOrderPageQuery, WorkOrderReportMonthlyVO,
   WorkOrderVO,
 } from '../data/work-order';
 import { Observable } from 'rxjs';
-import { DataTable, HttpResult } from '../data/base-data';
+import { DataTable, HttpResult, ReportBaseData } from '../data/base-data';
 
 @Injectable()
 export class WorkOrderService extends WorkOrderData {
@@ -40,6 +40,14 @@ export class WorkOrderService extends WorkOrderData {
 
   updateWorkOrderGroup(param: UpdateWorkOrderGroup): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/group/update', param);
+  }
+
+  getWorkOrderNameReport(): Observable<HttpResult<Array<ReportBaseData>>> {
+    return this.apiService.get(this.baseUrl, '/report/name', {});
+  }
+
+  getWorkOrderMonthlyReport(): Observable<HttpResult<WorkOrderReportMonthlyVO>> {
+    return this.apiService.get(this.baseUrl, '/report/monthly', {});
   }
 
 }

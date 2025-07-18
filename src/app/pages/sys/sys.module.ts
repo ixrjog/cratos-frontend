@@ -70,6 +70,9 @@ import {
 import { WorkbenchModule } from '../workbench/workbench.module';
 import { WorkOrderGroupManagementEditorComponent } from './work-order-management/work-order-group-management-data-table/work-order-group-management-editor/work-order-group-management-editor.component';
 import { WorkOrderManagementEditorComponent } from './work-order-management/work-order-management-data-table/work-order-management-editor/work-order-management-editor.component';
+import { WorkOrderReportManagementComponent } from './work-order-management/work-order-report-management/work-order-report-management.component';
+import { WorkOrderNameReportComponent } from './work-order-management/work-order-report-management/work-order-name-report/work-order-name-report.component';
+import { WorkOrderMonthReportComponent } from './work-order-management/work-order-report-management/work-order-month-report/work-order-month-report.component';
 
 
 @NgModule({
@@ -111,6 +114,9 @@ import { WorkOrderManagementEditorComponent } from './work-order-management/work
     WorkOrderTicketManagementDataTableComponent,
     WorkOrderGroupManagementEditorComponent,
     WorkOrderManagementEditorComponent,
+    WorkOrderReportManagementComponent,
+    WorkOrderNameReportComponent,
+    WorkOrderMonthReportComponent,
   ],
   imports: [
     CommonModule,

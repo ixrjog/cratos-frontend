@@ -10,6 +10,7 @@ export default {
     actions: {
       favorite: 'Favorite',
       filter: 'Filter',
+      share: 'Share',
       scan: 'Scan',
       exec: 'Exec',
       logs: 'Logs',

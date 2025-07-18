@@ -425,7 +425,7 @@ export class WorkOrderDataTableComponent implements OnInit {
     return 'blue-w98';
   }
 
-  onGetTicketUri(ticketNo: string): string {
+  onGetTicketUrl(ticketNo: string): string {
     const href = window.location.href;
     return href + '?ticketNo=' + ticketNo;
   }

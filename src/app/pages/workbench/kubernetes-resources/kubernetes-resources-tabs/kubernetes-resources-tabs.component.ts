@@ -139,6 +139,15 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.onAddApplicationFavorite(application.id);
   }
 
+  onGetShareUrl(): string {
+    const origin = window.location.origin;
+    let url =  origin + `/#/pages/workbench/kubernetes-resources?applicationName=${this.queryParam.applicationName}&namespace=${this.queryParam.namespace}`
+    if (this.queryParam.name !== '') {
+      url += `&name=${this.queryParam.name}`;
+    }
+    return url;
+  }
+
   fetchData() {
     this.show = false;
     this.kubernetesDetails = null;

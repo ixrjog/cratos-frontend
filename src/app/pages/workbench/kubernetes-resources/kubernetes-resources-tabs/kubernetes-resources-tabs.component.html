@@ -54,6 +54,14 @@
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''"
   >{{ 'kubernetes.actions.filter' | translate }}
   </d-button>
+
+
+  <d-button class="button" bsStyle="common" dClipboard [content]="onGetShareUrl()"
+            [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''"
+  >{{ 'kubernetes.actions.share' | translate }}
+  </d-button>
+
+
   <span class="right-button">
       <d-button class="button" bsStyle="primary" (click)="onScanData()"
                 [disabled]="queryParam.applicationName ==='' "

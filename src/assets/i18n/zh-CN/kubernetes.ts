@@ -10,6 +10,7 @@ export default {
     actions: {
       favorite: '收藏',
       filter: '筛选',
+      share: '分享',
       scan: '扫描',
       exec: '执行',
       logs: '日志',

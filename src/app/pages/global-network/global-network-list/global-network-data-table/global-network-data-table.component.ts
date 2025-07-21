@@ -193,27 +193,21 @@ export class GlobalNetworkDataTableComponent implements OnInit {
   }
 
   onCheckCidrBlock(rowItem: GlobalNetworkVO) {
-    this.globalNetworkService.checkGlobalNetworkById({ id: rowItem.id })
-      .subscribe(({ body }) => {
-        if (JSON.stringify(body) === '[]') {
-          return;
-        }
-        const config = {
-          id: 'check-cidr-block',
-          width: '346px',
-          maxHeight: '800px',
-          dialogtype: 'warning',
-          showAnimation: true,
-          content: GlobalNetworkCheckCidrComponent,
-          backdropCloseable: true,
-          showCloseBtn: false,
-          data: { globalNetworkList: body },
-        };
-        this.dialogService.open({
-          ...config,
-          buttons: [],
-        });
-      });
+    const config = {
+      id: 'check-cidr-block',
+      width: '600px',
+      maxHeight: '800px',
+      dialogtype: 'info',
+      showAnimation: true,
+      content: GlobalNetworkCheckCidrComponent,
+      backdropCloseable: true,
+      showCloseBtn: false,
+      data: { globalNetwork: rowItem, },
+    };
+    this.dialogService.open({
+      ...config,
+      buttons: [],
+    });
   }
 
 }

@@ -12,7 +12,7 @@ import {
   GlobalNetworkSubnetEdit,
   GlobalNetworkSubnetPageQuery,
   GlobalNetworkSubnetVO,
-  GlobalNetworkVO, NetworkDetails,
+  GlobalNetworkVO, NetworkDetails, NetworkInfoVO,
 } from '../data/global-network';
 
 @Injectable()
@@ -94,6 +94,10 @@ export class GlobalNetworkService extends GlobalNetworkData {
 
   checkGlobalNetworkById(param: { id: number }): Observable<HttpResult<Array<GlobalNetworkVO>>> {
     return this.apiService.get(this.baseUrl, '/id/check', param);
+  }
+
+  calcNetwork(param: { cidr: string }): Observable<HttpResult<NetworkInfoVO>> {
+    return this.apiService.post(this.baseUrl, '/info/calc', param);
   }
 
 }

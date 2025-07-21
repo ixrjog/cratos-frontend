@@ -22,11 +22,8 @@
       <d-form-control [suffixTemplate]="suffixTemplate">
         <input dTextInput name="cidrBlock" [(ngModel)]="formData.cidrBlock"/>
       </d-form-control>
-      <app-global-network-check-cidr
-        *ngIf="JSON.stringify(this.globalNetworkList) !== '[]'"
-        [globalNetworkList]="globalNetworkList"
-        style="margin-top: 10px">
-      </app-global-network-check-cidr>
+      <app-global-network-check-cidr *ngIf="showNetworkCheck"
+                                     [data]="{ globalNetwork: formData }"></app-global-network-check-cidr>
       <ng-template #suffixTemplate>
         <i class="icon icon-search" (click)="onCheckCidrBlock()"></i>
       </ng-template>

@@ -102,6 +102,15 @@ export interface PlanningDetails extends ValidVO {
   subnetTable: string;
 }
 
+export interface NetworkInfoVO {
+  cidr: string;
+  networkAddress: string;
+  subnetMask: string;
+  ipRange: string;
+  broadcastAddress: string;
+  details: string;
+}
+
 export abstract class GlobalNetworkData {
 
   abstract queryGlobalNetworkPage(param: GlobalNetworkPageQuery): Observable<DataTable<GlobalNetworkVO>>;
@@ -139,5 +148,7 @@ export abstract class GlobalNetworkData {
   abstract checkGlobalNetworkById(param: { id: number }): Observable<HttpResult<Array<GlobalNetworkVO>>>;
 
   abstract checkGlobalNetworkByCidrBlock(param: { cidrBlock: string }): Observable<HttpResult<Array<GlobalNetworkVO>>>;
+
+  abstract calcNetwork(param: { cidr: string }): Observable<HttpResult<NetworkInfoVO>>;
 
 }

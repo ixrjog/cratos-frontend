@@ -16,6 +16,7 @@ export class GlobalNetworkEditorComponent implements OnInit {
   formData: GlobalNetworkVO;
   operationType: boolean;
   globalNetworkList: GlobalNetworkVO[] = [];
+  showNetworkCheck: boolean = false;
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -47,13 +48,12 @@ export class GlobalNetworkEditorComponent implements OnInit {
   }
 
   onCheckCidrBlock() {
-    if (this.formData.cidrBlock) {
-      this.globalNetworkList = [];
-      this.globalNetworkService.checkGlobalNetworkByCidrBlock({ cidrBlock: this.formData.cidrBlock })
-        .subscribe(({ body }) => {
-          this.globalNetworkList = body
-        });
-    }
+    this.showNetworkCheck = false;
+
+    // Force Angular change detection by using setTimeout
+    setTimeout(() => {
+      this.showNetworkCheck = true;
+    }, 300);
   }
 
   protected readonly JSON = JSON;

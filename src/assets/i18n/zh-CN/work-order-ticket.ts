@@ -414,6 +414,30 @@ export default {
         title: '标题',
         content: '内容',
       }
+    },
+    aliyunDataworks: {
+      headers: {
+        aliyunInstance: '阿里云实例',
+        akRamUser: 'AK RAM用户',
+        actions: '操作',
+        result: '结果'
+      },
+      labels: {
+        instance: '实例'
+      }
+    },
+    userPasswordReset: {
+      headers: {
+        username: '用户名',
+        name: '姓名',
+        displayName: '显示名称',
+        email: '邮箱',
+        actions: '操作',
+        result: '结果'
+      },
+      labels: {
+        user: '用户'
+      }
     }
   },
 };

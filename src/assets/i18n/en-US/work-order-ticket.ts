@@ -413,6 +413,30 @@ export default {
         title: 'Title',
         content: 'Content',
       }
+    },
+    aliyunDataworks: {
+      headers: {
+        aliyunInstance: 'Aliyun Instance',
+        akRamUser: 'AK RAM User',
+        actions: 'Actions',
+        result: 'Result'
+      },
+      labels: {
+        instance: 'Instance'
+      }
+    },
+    userPasswordReset: {
+      headers: {
+        username: 'Username',
+        name: 'Name',
+        displayName: 'Display Name',
+        email: 'Email',
+        actions: 'Actions',
+        result: 'Result'
+      },
+      labels: {
+        user: 'User'
+      }
     }
   },
 };

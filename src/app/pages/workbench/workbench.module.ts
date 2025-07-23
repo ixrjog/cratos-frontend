@@ -169,6 +169,7 @@ import { WorkOrderAliyunKmsSecretTicketComponent } from './work-order/work-order
 import { WorkOrderRiskChangeTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
 import { WorkOrderAliyunKmsSecretUpdateTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-kms-secret-update-ticket/work-order-aliyun-kms-secret-update-ticket.component';
 import { WorkOrderApplicationRedeployTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
+import { WorkOrderUserPasswordResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-password-reset-ticket/work-order-user-password-reset-ticket.component';
 
 @NgModule({
   declarations: [
@@ -238,6 +239,7 @@ import { WorkOrderApplicationRedeployTicketComponent } from './work-order/work-o
     WorkOrderRiskChangeTicketComponent,
     WorkOrderAliyunKmsSecretUpdateTicketComponent,
     WorkOrderApplicationRedeployTicketComponent,
+    WorkOrderUserPasswordResetTicketComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
@@ -7,20 +7,20 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
 import { map } from 'rxjs/operators';
 import { FormLayout } from 'ng-devui/form';
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
-import { EdsInstanceVO } from '../../../../../../@core/data/ext-datasource';
-
+import { UserPageQuery, UserVO } from '../../../../../../@core/data/user';
+import { UserService } from '../../../../../../@core/services/user.service';
 
 @Component({
-  selector: 'app-work-order-aliyun-dataworks-ticket',
-  templateUrl: './work-order-aliyun-dataworks-ticket.component.html',
-  styleUrls: [ './work-order-aliyun-dataworks-ticket.component.less' ],
+  selector: 'app-work-order-user-password-reset-ticket',
+  templateUrl: './work-order-user-password-reset-ticket.component.html',
+  styleUrls: [ './work-order-user-password-reset-ticket.component.less' ],
 })
-export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
+export class WorkOrderUserPasswordResetTicketComponent implements OnInit {
 
   @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() data: any;
   ticketDetails: WorkOrderTicketDetailsVO;
-  instance: EdsInstanceVO;
+  user: UserVO;
 
   dialogDate = {
     warningOperateData: {
@@ -33,6 +33,7 @@ export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
 
   constructor(
     private workOrderTicketEntryService: WorkOrderTicketEntryService,
+    private userService: UserService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil) {
   }
@@ -41,11 +42,14 @@ export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
     this.ticketDetails = this.data['formData'];
   }
 
-  onSearchInstance = (term: string) => {
-    return this.workOrderTicketEntryService.queryDataWorksInstanceTicketEntry()
+  onSearchUser = (term: string) => {
+    const param: UserPageQuery = {
+      length: 10, page: 1, queryName: term, valid: true,
+    };
+    return this.userService.queryUserPage(param)
       .pipe(
         map(({ body }) =>
-          body.map((instance, index) => ({ id: index, option: instance })),
+          body.data.map((user, index) => ({ id: index, option: user })),
         ),
       );
   };
@@ -53,12 +57,9 @@ export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
   protected readonly FormLayout = FormLayout;
 
   onRowAdd() {
-    this.workOrderTicketEntryService.addDataWorksInstanceTicketEntry({
+    this.workOrderTicketEntryService.addResetUserPasswordTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
-      instanceId: this.instance.id,
-      detail: {
-        edsInstance: this.instance,
-      },
+      detail: this.user,
     }).subscribe(() => {
       this.onFetchData();
     });
@@ -93,4 +94,3 @@ export class WorkOrderAliyunDataworksTicketComponent implements OnInit {
   protected readonly JSON = JSON;
   protected readonly WorkOrderStatus = WorkOrderStatus;
 }
-

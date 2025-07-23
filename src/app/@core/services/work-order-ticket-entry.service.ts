@@ -19,7 +19,7 @@ import {
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
   AddResetAliyunRamUserTicketEntry,
-  AddResetAwsIamUserTicketEntry,
+  AddResetAwsIamUserTicketEntry, AddResetUserPasswordTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   AddRiskChangeTicketEntry,
   AddUpdateAliyunKmsSecretTicketEntry,
@@ -184,6 +184,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addApplicationRedeployTicketEntry(param: AddApplicationRedeployTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/application/redeploy/add', param);
+  }
+
+  addResetUserPasswordTicketEntry(param: AddResetUserPasswordTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/user/reset/password/add', param);
   }
 
 }

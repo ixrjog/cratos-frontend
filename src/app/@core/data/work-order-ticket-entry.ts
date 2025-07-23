@@ -54,6 +54,7 @@ export interface AddDeploymentElasticScalingTicketEntry {
 
 export interface AddAliyunDataWorksInstanceTicketEntry {
   ticketId: number;
+  instanceId: number;
   detail: {
     edsInstance: EdsInstanceVO
   };
@@ -233,6 +234,11 @@ export interface UpdateAliyunKmsSecret {
   confirmTheRiskOfChange: boolean;
 }
 
+export interface AddResetUserPasswordTicketEntry {
+  ticketId: number;
+  detail: UserVO;
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -309,5 +315,7 @@ export abstract class WorkOrderTicketEntryData {
   abstract addUpdateAliyunKmsSecretTicketEntry(param: AddUpdateAliyunKmsSecretTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addApplicationRedeployTicketEntry(param: AddApplicationRedeployTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addResetUserPasswordTicketEntry(param: AddResetUserPasswordTicketEntry): Observable<HttpResult<Boolean>>;
 
 }

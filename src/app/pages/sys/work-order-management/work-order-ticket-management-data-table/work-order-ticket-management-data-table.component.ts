@@ -92,6 +92,9 @@ import {
 import {
   WorkOrderApplicationRedeployTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
+import {
+  WorkOrderUserPasswordResetTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-user-password-reset-ticket/work-order-user-password-reset-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -416,6 +419,12 @@ export class WorkOrderTicketManagementDataTableComponent {
         break;
       case WorkOrderKeyEnum.APPLICATION_REDEPLOY:
         dialogDate['content'] = WorkOrderApplicationRedeployTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.USER_RESET_PASSWORD:
+        dialogDate['content'] = WorkOrderUserPasswordResetTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

@@ -24,6 +24,7 @@ export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO,
 
 export interface UserPageQuery extends PageQuery {
   queryName: string;
+  valid?: boolean;
 }
 
 export interface UserEdit {

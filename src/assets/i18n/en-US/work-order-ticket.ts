@@ -122,6 +122,7 @@ export default {
         encryptionKeyId: 'Encryption Key ID',
         configCenterValue: 'Config Center Value',
         description: 'Description',
+        repeated: 'Repeated',
         actions: 'Actions',
         result: 'Result',
       },

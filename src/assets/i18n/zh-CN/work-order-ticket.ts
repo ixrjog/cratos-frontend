@@ -122,6 +122,7 @@ export default {
         encryptionKeyId: '加密密钥ID',
         configCenterValue: '配置中心值',
         description: '描述',
+        repeated: '是否重复',
         actions: '操作',
         result: '结果',
       },

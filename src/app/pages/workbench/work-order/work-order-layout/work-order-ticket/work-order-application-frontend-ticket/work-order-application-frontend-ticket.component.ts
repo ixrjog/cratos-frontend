@@ -214,7 +214,7 @@ export class WorkOrderApplicationFrontendTicketComponent implements OnInit {
   }
 
   onGetConvertUrl(recordName: string, mappingsPath: string) {
-    const normalizedPath = '/' + mappingsPath.replace(/^\/+|\/+$/g, '') + '/';
+    const normalizedPath = mappingsPath === '/' ? '/' : '/' + mappingsPath.replace(/^\/+|\/+$/g, '') + '/';
     return `https://${recordName}${normalizedPath}`;
   }
 }

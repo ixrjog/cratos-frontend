@@ -43,11 +43,11 @@
   <d-select
     class="select"
     [placeholder]="'kubernetes.form.selectResourceName' | translate"
-    style="max-width: 250px;width: 250px"
+    style="max-width: 450px;width: 450px"
     [allowClear]="true"
+    [filterKey]="'label'"
     [searchFn]="onSelectResourceName"
     [isSearch]="true"
-    [(ngModel)]="queryParam.name"
     (valueChange)="onResourceNameChange($event)"
   ></d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()"

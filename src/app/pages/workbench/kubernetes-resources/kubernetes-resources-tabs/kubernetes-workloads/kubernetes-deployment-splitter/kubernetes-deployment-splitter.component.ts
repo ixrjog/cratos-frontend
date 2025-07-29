@@ -150,14 +150,15 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       ...this.dialogData.warningOperateData,
       content: this.dialogData.content.redeploy,
     };
-    
+
     this.dialogUtil.onDialog(dialogData, () => {
       const param: RedeployKubernetesDeployment = {
         applicationName: this.application.name,
+        instanceName: this.kubernetesDeployment.kubernetesCluster.name,
         namespace: this.kubernetesDeployment.metadata.namespace,
         deploymentName: this.kubernetesDeployment.metadata.name,
       };
-      
+
       this.applicationResourceService.redeployApplicationResourceKubernetesDeployment(param)
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.REDEPLOY);

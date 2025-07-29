@@ -70,7 +70,12 @@ export class DeploymentElasticScalingComponent {
     this.workOrderTicketEntryService.queryApplicationResourceDeploymentTicketEntry({
       applicationName: this.application.name,
       namespace: this.namespace,
-    }).subscribe(({ body }) => this.deploymentOptions = body);
+    }).subscribe(({ body }) => {
+      body.forEach((asset) => {
+        asset['$unique'] = asset['edsInstance'].instanceName + ':' + asset.assetKey;
+        this.deploymentOptions.push(asset);
+      });
+    });
   }
 
   onRowAdd() {

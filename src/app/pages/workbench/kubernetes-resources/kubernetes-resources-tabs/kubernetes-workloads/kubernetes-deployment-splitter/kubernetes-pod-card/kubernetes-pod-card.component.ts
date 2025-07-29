@@ -115,6 +115,7 @@ export class KubernetesPodCardComponent {
     this.dialogUtil.onDialog(dialogDate, () => {
       const param: DeleteKubernetesDeploymentPod = {
           applicationName: this.application.name,
+          instanceName: this.kubernetesDeployment.kubernetesCluster.name,
           namespace: this.kubernetesDeployment.metadata.namespace,
           deploymentName: this.kubernetesDeployment.metadata.name,
           podName: this.kubernetesPod.metadata.name,

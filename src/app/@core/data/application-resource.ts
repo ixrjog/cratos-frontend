@@ -4,6 +4,7 @@ import { KubernetesDetailsVO } from './kubernetes';
 
 export interface QueryApplicationResourceKubernetesDetails {
   applicationName: string;
+  instanceName: string;
   namespace: string;
   name: string;
 }
@@ -22,6 +23,7 @@ export interface KubernetesDeploymentImageVersion {
 
 export interface DeleteKubernetesDeploymentPod {
   applicationName: string;
+  instanceName: string;
   namespace: string;
   deploymentName: string;
   podName: string;
@@ -29,6 +31,7 @@ export interface DeleteKubernetesDeploymentPod {
 
 export interface RedeployKubernetesDeployment {
   applicationName: string
+  instanceName: string;
   namespace: string
   deploymentName: string
 }

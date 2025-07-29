@@ -45,7 +45,7 @@
         <d-select
           name="deployment"
           [options]="deploymentOptions"
-          [filterKey]="'name'"
+          [filterKey]="'$unique'"
           [appendToBody]="true"
           [(ngModel)]="deployment"
         >

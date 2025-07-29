@@ -32,6 +32,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
   queryParam = {
     applicationName: '',
+    instanceName: '',
     namespace: '',
     name: '',
   };
@@ -82,6 +83,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
             }
             this.getResourceNamespaceOptions();
             this.queryParam.name = param['name'] !== undefined ? param['name'] : '';
+            this.queryParam.instanceName = param['instanceName'] !== undefined ? param['instanceName'] : '';
 
             const parma: QueryKubernetesDeploymentOptions = {
               applicationName: this.application.name,
@@ -89,7 +91,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
             };
             this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
               .subscribe(({ body }) => {
-                this.resourceNameOptions = body.options.map(item => item.value);
+                this.resourceNameOptions = body.options;
               });
 
             this.fetchData();
@@ -144,6 +146,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     let url =  origin + `/#/pages/workbench/kubernetes-resources?applicationName=${this.queryParam.applicationName}&namespace=${this.queryParam.namespace}`
     if (this.queryParam.name !== '') {
       url += `&name=${this.queryParam.name}`;
+    }
+    if (this.queryParam.instanceName !== '') {
+      url += `&instanceName=${this.queryParam.instanceName}`;
     }
     return url;
   }
@@ -229,11 +234,13 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     return of(
       this.resourceNameOptions
         .map((option, index) => ({ id: index, option: option }))
-        .filter((item) => item.option.toLowerCase().indexOf(term.toLowerCase()) !== -1),
+        .filter((item) => item.option.label.toLowerCase().indexOf(term.toLowerCase()) !== -1),
     );
   };
 
-  onResourceNameChange(name: string) {
+  onResourceNameChange(name: any) {
+    this.queryParam.name = name['value'];
+    this.queryParam.instanceName = name['label'].split(':')[0];
     this.wsOnUnsubSend();
     this.fetchData();
   }
@@ -248,7 +255,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     };
     this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
       .subscribe(({ body }) => {
-        this.resourceNameOptions = body.options.map(item => item.value);
+        this.resourceNameOptions = body.options;
       });
   }
 

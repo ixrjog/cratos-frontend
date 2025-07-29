@@ -124,6 +124,13 @@
           </ng-template>
         </d-cell>
       </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.namespace' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['namespace'] | dSafeNullPipe }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
       <d-column field="detail" [header]="'workOrderTicket.elasticScaling.headers.deployment' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">

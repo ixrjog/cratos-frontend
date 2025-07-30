@@ -144,7 +144,8 @@ export interface EdsAssetFieldDesc {
   required: boolean;
 }
 
-export interface AddCratosAsset {
+export interface CratosAssetEdit {
+  id?: number;
   instanceId: number;
   assetType: string;
   name: string;
@@ -209,6 +210,8 @@ export abstract class EdsData {
     assetType: string
   }): Observable<HttpResult<EdsSupportManualAssetVO>>;
 
-  abstract addInstanceCratosAsset(param: AddCratosAsset): Observable<HttpResult<Boolean>>;
+  abstract addInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>>;
+
+  abstract updateInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>>;
 
 }

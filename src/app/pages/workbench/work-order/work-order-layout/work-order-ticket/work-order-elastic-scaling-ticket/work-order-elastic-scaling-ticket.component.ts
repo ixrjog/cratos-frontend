@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
@@ -7,7 +7,6 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
 import { BusinessTypeEnum } from '../../../../../../@core/data/business';
 import { WorkOrderStatus } from '../../../../../../@core/data/work-order';
 import { FormLayout } from 'ng-devui/form';
-import { GitLabPermission } from '../../../../../../@core/data/work-order-ticket-entry';
 
 @Component({
   selector: 'app-work-order-elastic-scaling-ticket',

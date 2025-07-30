@@ -22,6 +22,15 @@
   <app-business-cascader #businessCascader [businessType]="businessType"
                          (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+
+  <d-checkbox
+    class="checkbox"
+    label="easy edit"
+    [isShowTitle]="false"
+    [(ngModel)]="easyEdit"
+  ></d-checkbox>
+
+
   <span class="right-button">
     <d-button bsStyle="danger" (click)="onInstanceAssetDelete()">Delete</d-button>
   </span>
@@ -100,7 +109,12 @@
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+          <div
+            dDroppable
+            (dropEvent)="onDrop($event,rowItem)"
+          >
+            <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>
@@ -108,6 +122,8 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
+            <d-icon *ngIf="supportManualAsset?.valid === true" [icon]="'icon-edit'" [operable]="true"
+                    (click)="onAssetEdit(rowItem)"></d-icon>
             <d-icon
               *ngIf="rowItem['toBusiness'] !== null && !rowItem['toBusiness']['bind']"
               [icon]="'icon-import'"

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
-  AddCratosAsset,
   AssetPageQuery,
   AssetToBusiness,
+  CratosAssetEdit,
   DeleteInstanceAsset,
   EdsAssetIndexVO,
   EdsAssetVO,
@@ -11,7 +11,8 @@ import {
   EdsConfigPageQuery,
   EdsConfigVO,
   EdsData,
-  EdsInstanceVO, EdsSupportManualAssetVO,
+  EdsInstanceVO,
+  EdsSupportManualAssetVO,
   ImportInstanceAsset,
   InstanceEdit,
   InstancePageQuery,
@@ -115,8 +116,12 @@ export class EdsService extends EdsData {
     return this.apiService.get(this.baseUrl, '/instance/asset/support/manual/get', param);
   }
 
-  addInstanceCratosAsset(param: AddCratosAsset): Observable<HttpResult<Boolean>> {
+  addInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/instance/cratos/asset/add', param);
+  }
+
+  updateInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/instance/cratos/asset/update', param);
   }
 
 }

@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import {
-  AddCratosAsset,
+  CratosAssetEdit,
   EdsAssetFieldDesc,
   EdsSupportManualAssetVO,
 } from '../../../../../../@core/data/ext-datasource';
 import { EdsService } from '../../../../../../@core/services/ext-datasource.service.s';
+import { ApplicationEdit } from '../../../../../../@core/data/application';
 
 @Component({
   selector: 'app-eds-asset-manual-editor',
@@ -16,7 +17,7 @@ export class EdsAssetManualEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
-  formData: AddCratosAsset;
+  formData: CratosAssetEdit;
   supportManualAsset: EdsSupportManualAssetVO;
   operationType: boolean;
 
@@ -46,10 +47,17 @@ export class EdsAssetManualEditorComponent implements OnInit {
   }
 
   addForm() {
-    const param: AddCratosAsset = {
+    const param: CratosAssetEdit = {
       ...this.formData,
     };
     return this.edsService.addInstanceCratosAsset(param);
+  }
+
+  updateForm() {
+    const param: CratosAssetEdit = {
+      ...this.formData,
+    };
+    return this.edsService.updateInstanceCratosAsset(param);
   }
 
 }

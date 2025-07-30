@@ -155,8 +155,7 @@
       <d-column
         [header]="'workOrderTicket.elasticScaling.headers.actions' | translate"
         [width]="'80px'"
-        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW
-        && tabActiveId === 'deployment'"
+        *ngIf="ticketDetails.ticket.ticketState === WorkOrderStatus.NEW && ticketDetails.entries.length === 1"
       >
         <d-cell>
           <ng-template let-rowItem="rowItem">

@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../../@core/data/base-data';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import {
-  AddCratosAsset,
+  CratosAssetEdit,
   AssetPageQuery,
   DeleteInstanceAsset,
   EdsAssetIndexVO,
@@ -32,6 +32,9 @@ import {
 import { RELATIVE_TIME_LIMIT } from '../../../../../@shared/constant/date.constant';
 import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 import { EdsAssetManualEditorComponent } from './eds-asset-manual-editor/eds-asset-manual-editor.component';
+import { BusinessTagService } from '../../../../../@core/services/business-tag.service';
+import { BusinessTagEdit } from '../../../../../@core/data/business-tag';
+import { WorkOrderGroupVO } from '../../../../../@core/data/work-order';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -51,6 +54,8 @@ export class EdsAssetDataTableComponent implements OnChanges {
   assetIndexTable: EdsAssetIndexVO[] = [];
   businessType: string = BusinessTypeEnum.EDS_ASSET;
   supportManualAsset: EdsSupportManualAssetVO;
+
+  easyEdit: boolean = false;
 
   queryParam = {
     queryName: '',
@@ -72,6 +77,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     manualEditData: {
       ...DIALOG_DATA.editorData,
       content: EdsAssetManualEditorComponent,
+      title: 'Manual Eds Asset Edit',
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -81,7 +87,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     },
   };
 
-  newEdsAsset: AddCratosAsset = {
+  newEdsAsset: CratosAssetEdit = {
     instanceId: null,
     assetType: '',
     name: '',
@@ -100,6 +106,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
   };
 
   constructor(
+    private businessTagService: BusinessTagService,
     private edsService: EdsService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
@@ -136,7 +143,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
   onAssetNew() {
     const dialogDate = {
       ...this.dialogDate.manualEditData,
-      title: 'Manual Eds Asset Edit',
+
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -146,6 +153,20 @@ export class EdsAssetDataTableComponent implements OnChanges {
       assetType: this.assetType,
     }, { supportManualAsset: this.supportManualAsset });
   }
+
+  onAssetEdit(rowItem: EdsAssetVO) {
+    const dialogDate = {
+      ...this.dialogDate.manualEditData,
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, {
+      ...rowItem,
+      instanceId: this.instanceId,
+      assetType: this.assetType,
+    }, { supportManualAsset: this.supportManualAsset });
+  }
+
 
   fetchData() {
     const param: AssetPageQuery = {
@@ -314,4 +335,20 @@ export class EdsAssetDataTableComponent implements OnChanges {
   }
 
   protected readonly getPopoverStyle = getPopoverStyle;
+
+  onDrop(tag: any, target) {
+    if (this.easyEdit) {
+      const param: BusinessTagEdit = {
+        businessId: target.businessId,
+        businessType: target.businessType,
+        tagId: tag.dragData.tagId,
+        tagValue:  tag.dragData.tagValue,
+      };
+      this.businessTagService.saveBusinessTag(param)
+        .subscribe(() => {
+          this.fetchData();
+        });
+    }
+  }
+
 }

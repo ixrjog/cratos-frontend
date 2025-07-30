@@ -1,5 +1,7 @@
 <d-tag
   *ngFor="let businessTag of businessTags"
+  dDraggable
+  [dragData]="businessTag"
   style="margin:0 5px 5px 0"
   [tag]="getTagValue(businessTag)"
   [maxWidth]="'150px'"

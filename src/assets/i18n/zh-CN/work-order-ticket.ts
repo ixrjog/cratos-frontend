@@ -117,7 +117,7 @@ export default {
     aliyunKmsSecret: {
       headers: {
         aliyunInstance: '阿里云实例',
-        secretName: '密钥名称',
+        secretName: '凭据名称',
         version: '版本',
         encryptionKeyId: '加密密钥ID',
         configCenterValue: '配置中心值',
@@ -132,8 +132,8 @@ export default {
         kmsEncryptionKey: 'KMS加密密钥',
         application: '应用',
         env: '环境',
-        secretName: '密钥名称',
-        secretData: '密钥数据',
+        secretName: '凭据名称',
+        secretData: '凭据值',
         version: '版本',
         description: '描述',
       },
@@ -150,7 +150,7 @@ export default {
     aliyunKmsSecretUpdate: {
       headers: {
         aliyunInstance: '阿里云实例',
-        secretName: '密钥名称',
+        secretName: '凭据名称',
         version: '版本',
         configCenterValue: '配置中心值',
         description: '描述',
@@ -159,8 +159,8 @@ export default {
       },
       labels: {
         instance: '实例',
-        kmsSecret: 'KMS 密钥',
-        secretData: '密钥数据',
+        kmsSecret: '凭据名称',
+        secretData: '凭据值',
         version: '版本',
       },
       riskTips: '检测到您不是改密钥创建者！',

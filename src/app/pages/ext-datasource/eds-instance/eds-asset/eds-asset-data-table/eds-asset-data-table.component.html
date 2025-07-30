@@ -29,7 +29,10 @@
     [(ngModel)]="easyEdit"
   ></d-checkbox>
   <span class="right-button">
-    <d-button bsStyle="danger" (click)="onInstanceAssetDelete()">Delete</d-button>
+    <d-button
+      *ngIf="supportManualAsset?.valid === false"
+      bsStyle="danger"
+      (click)="onInstanceAssetDelete()">Delete</d-button>
   </span>
 </div>
 <div class="spacing-table">

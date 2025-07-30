@@ -22,15 +22,12 @@
   <app-business-cascader #businessCascader [businessType]="businessType"
                          (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
-
   <d-checkbox
     class="checkbox"
     label="easy edit"
     [isShowTitle]="false"
     [(ngModel)]="easyEdit"
   ></d-checkbox>
-
-
   <span class="right-button">
     <d-button bsStyle="danger" (click)="onInstanceAssetDelete()">Delete</d-button>
   </span>
@@ -113,6 +110,10 @@
             dDroppable
             (dropEvent)="onDrop($event,rowItem)"
           >
+            <d-tag
+              *ngIf="JSON.stringify(rowItem['businessTags']) === '[]'"
+              [tag]="'--'"
+            ></d-tag>
             <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
           </div>
         </ng-template>

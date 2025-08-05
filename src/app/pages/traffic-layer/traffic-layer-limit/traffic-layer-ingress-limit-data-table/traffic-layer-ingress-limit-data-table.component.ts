@@ -10,6 +10,9 @@ import {
 } from './traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
 import { HelperUtils } from 'ng-devui';
 import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
+import { AssetMaturityVO } from '../../../../@core/data/asset-maturity';
+import { EdsAssetVO } from '../../../../@core/data/ext-datasource';
+import { BusinessTypeEnum } from '../../../../@core/data/business';
 
 @Component({
   selector: 'app-traffic-layer-ingress-limit-data-table',
@@ -72,6 +75,11 @@ export class TrafficLayerIngressLimitDataTableComponent implements OnInit {
 
   onRouteGrafana() {
     HelperUtils.jumpOuterUrl('https://grafana.palmpay-inc.com/d/1859120988191686-279454-30546ee3bf/alb?orgId=1');
+  }
+
+
+  onRowBusinessDoc(rowItem: EdsAssetVO) {
+    this.dialogUtil.onBusinessDocsEditDialog(BusinessTypeEnum.EDS_ASSET, rowItem, () => this.fetchData());
   }
 
   protected readonly getPopoverStyle = getPopoverStyle;

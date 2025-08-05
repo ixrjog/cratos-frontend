@@ -7,8 +7,8 @@ import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data
 import { Observable, zip } from 'rxjs';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import {
-  CratosAssetEdit,
   AssetPageQuery,
+  CratosAssetEdit,
   DeleteInstanceAsset,
   EdsAssetIndexVO,
   EdsAssetVO,
@@ -34,7 +34,6 @@ import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 import { EdsAssetManualEditorComponent } from './eds-asset-manual-editor/eds-asset-manual-editor.component';
 import { BusinessTagService } from '../../../../../@core/services/business-tag.service';
 import { BusinessTagEdit } from '../../../../../@core/data/business-tag';
-import { WorkOrderGroupVO } from '../../../../../@core/data/work-order';
 
 @Component({
   selector: 'app-eds-asset-data-table',

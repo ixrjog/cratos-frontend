@@ -1,5 +1,6 @@
 <d-card style="padding: 8px;width: 500px" *ngIf="show">
   <d-card-header>
+    <d-avatar dCardAvatar [imgSrc]="user.avatar?.url"></d-avatar>
     <d-card-title>{{ user.name }}</d-card-title>
   </d-card-header>
   <d-card-content>

@@ -20,6 +20,13 @@ export interface UserVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO,
   comment: string;
   expiredTime: Date;
   rbacRoles: RbacRoleVO[];
+  avatar: UserAvatarVO;
+}
+
+export interface UserAvatarVO {
+  valid: boolean;
+  source: string;
+  url: string;
 }
 
 export interface UserPageQuery extends PageQuery {

@@ -124,4 +124,8 @@ export class EdsService extends EdsData {
     return this.apiService.put(this.baseUrl, '/instance/cratos/asset/update', param);
   }
 
+  getEdsInstanceAsset(param: { id: number }): Observable<HttpResult<EdsAssetVO>> {
+    return this.apiService.get(this.baseUrl, '/instance/asset/get', param);
+  }
+
 }

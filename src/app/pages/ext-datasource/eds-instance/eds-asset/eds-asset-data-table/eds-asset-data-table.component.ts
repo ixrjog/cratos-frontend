@@ -345,7 +345,15 @@ export class EdsAssetDataTableComponent implements OnChanges {
       };
       this.businessTagService.saveBusinessTag(param)
         .subscribe(() => {
-          this.fetchData();
+          // 使用 getEdsInstanceAsset 刷新单行数据，替换重量级的 fetchData()
+          this.edsService.getEdsInstanceAsset({ id: target.id })
+            .subscribe(({ body }) => {
+              // 找到表格中对应的行并更新数据
+              const index = this.table.data.findIndex(item => item.id === target.id);
+              if (index !== -1) {
+                this.table.data[index] = body;
+              }
+            });
         });
     }
   }

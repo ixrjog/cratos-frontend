@@ -214,4 +214,6 @@ export abstract class EdsData {
 
   abstract updateInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>>;
 
+  abstract getEdsInstanceAsset(param: { id: number }): Observable<HttpResult<EdsAssetVO>>
+
 }

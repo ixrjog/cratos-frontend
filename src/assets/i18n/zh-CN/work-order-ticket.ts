@@ -85,8 +85,10 @@ export default {
     applicationFrontend: {
       headers: {
         applicationName: '应用名称',
-        type: '类型',
+        cloneOf: '克隆自',
         level: '级别',
+        domain: '域名',
+        mappingsPath: '映射路径',
         repositorySshUrl: '仓库SSH地址',
         description: '描述',
         actions: '操作',
@@ -139,7 +141,8 @@ export default {
       },
       tips: '点击查看更多应用凭据',
       secretName: {
-        tips: '{环境}_{应用名称}_{租户}_{国家码}_{云服务}_{凭据类型}_{用户自定义}',
+        tips: '支持字母、数字以及字符_/+=.@-',
+        tips1: '{环境}_{应用名称}_{租户}_{国家码}_{云服务}_{凭据类型}_{用户自定义}',
         envTips: '● 环境: dev | daily | sit | pre | prod',
         countryCodeTips: '● 国家码<可选>: ng | gh | bd | tz | ...',
         cloudServiceTips: '● 云服务<可选>: oss | ons | s3 | sqs | sns | rds | ...',

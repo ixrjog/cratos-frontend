@@ -169,10 +169,10 @@
       [tableOverflowType]="'overlay'"
     >
       <d-column field="displayName" [header]="'workOrderTicket.applicationFrontend.headers.applicationName' | translate"></d-column>
-      <d-column [header]="'workOrderTicket.applicationFrontend.headers.type' | translate">
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.cloneOf' | translate">
         <d-cell>
-          <ng-template>
-            <span>FrontEnd</span>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['copyFromApplication'] | dSafeNullPipe }}</span>
           </ng-template>
         </d-cell>
       </d-column>
@@ -180,6 +180,20 @@
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span>{{ cellItem['tags'].Level }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.domain' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['domain'] }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.applicationFrontend.headers.mappingsPath' | translate">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem['mappingsPath'] }}</span>
           </ng-template>
         </d-cell>
       </d-column>

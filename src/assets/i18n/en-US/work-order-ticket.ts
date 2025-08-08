@@ -85,8 +85,10 @@ export default {
     applicationFrontend: {
       headers: {
         applicationName: 'Application Name',
-        type: 'Type',
+        cloneOf: 'Clone of',
         level: 'Level',
+        domain: 'Domain',
+        mappingsPath: 'Mappings Path',
         repositorySshUrl: 'Repository SSH URL',
         description: 'Description',
         actions: 'Actions',
@@ -139,7 +141,8 @@ export default {
       },
       tips: 'see more application credential , please click here',
       secretName: {
-        tips: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
+        tips: 'The name can contain letters, digits, and the following special characters: _ / + = . @ -',
+        tips1: '{env}_{applicationName}_{tenant}_{countryCode}_{cloudService}_{secretType}_{userCustom}',
         envTips: '● env: dev | daily | sit | pre | prod',
         countryCodeTips: '● countryCode<optional>: ng | gh | bd | tz | ...',
         cloudServiceTips: '● cloudService<optional>: oss | ons | s3 | sqs | sns | ...',

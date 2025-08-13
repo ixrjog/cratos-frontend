@@ -5,6 +5,7 @@ import { KubernetesNodesComponent } from './kubernetes-nodes/kubernetes-nodes.co
 import { CommandExecComponent } from './command-exec/command-exec.component';
 import { WorkOrderComponent } from './work-order/work-order.component';
 import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
+import { WebTerminalComponent } from './web-terminal/web-terminal.component';
 
 const routes: Routes = [
   { path: 'kubernetes-resources', component: KubernetesResourcesComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'command-exec', component: CommandExecComponent },
   { path: 'work-order', component: WorkOrderComponent },
   { path: 'application-credential', component: ApplicationCredentialComponent },
+  { path: 'web-terminal', component: WebTerminalComponent },
 ];
 
 @NgModule({

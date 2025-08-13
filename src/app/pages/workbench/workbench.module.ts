@@ -170,6 +170,10 @@ import { WorkOrderRiskChangeTicketComponent } from './work-order/work-order-layo
 import { WorkOrderAliyunKmsSecretUpdateTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-aliyun-kms-secret-update-ticket/work-order-aliyun-kms-secret-update-ticket.component';
 import { WorkOrderApplicationRedeployTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
 import { WorkOrderUserPasswordResetTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-user-password-reset-ticket/work-order-user-password-reset-ticket.component';
+import { WebTerminalComponent } from './web-terminal/web-terminal.component';
+import { WebTerminalManagementComponent } from './web-terminal/web-terminal-management/web-terminal-management.component';
+import { WebTerminalItemComponent } from './web-terminal/web-terminal-management/web-terminal-item/web-terminal-item.component';
+import { WebTerminalDrawerComponent } from './web-terminal/web-terminal-management/web-terminal-drawer/web-terminal-drawer.component';
 
 @NgModule({
   declarations: [
@@ -240,6 +244,10 @@ import { WorkOrderUserPasswordResetTicketComponent } from './work-order/work-ord
     WorkOrderAliyunKmsSecretUpdateTicketComponent,
     WorkOrderApplicationRedeployTicketComponent,
     WorkOrderUserPasswordResetTicketComponent,
+    WebTerminalComponent,
+    WebTerminalManagementComponent,
+    WebTerminalItemComponent,
+    WebTerminalDrawerComponent,
   ],
   imports: [
     CommonModule,

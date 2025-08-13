@@ -142,6 +142,18 @@ export class WorkOrderAliyunKmsSecretTicketComponent implements OnInit {
   protected readonly FormLayout = FormLayout;
 
   onRowAdd() {
+    if (this.aliyunInstance === undefined) {
+      this.toastUtil.onErrorToast('Choose at least one aliyun instance');
+      return;
+    }
+    if (this.kmsInstance === undefined) {
+      this.toastUtil.onErrorToast('Choose at least one KMS instance');
+      return;
+    }
+    if (this.encryptionKey === undefined) {
+      this.toastUtil.onErrorToast('Choose at least one encryption key');
+      return;
+    }
     this.workOrderTicketEntryService.addCreateAliyunKmsSecretTicketEntry({
       ticketId: this.ticketDetails.ticket.id,
       instanceId: this.aliyunInstance.id,

@@ -1,1 +1,61 @@
-<p>web-terminal-management works!</p>
+<section class="web-terminal-management">
+  <div class="terminal-header">
+    <div class="terminal-actions">
+      <d-button
+        bsStyle="primary"
+        (click)="onOpenAssetDrawer()">
+        {{ 'webTerminal.addTerminal' | translate }}
+      </d-button>
+      <d-button
+        bsStyle="common"
+        [disabled]="terminals.length === 0"
+        (click)="onSelectAll()">
+        {{ 'webTerminal.selectAll' | translate }}
+      </d-button>
+      <d-button
+        bsStyle="common"
+        [disabled]="selectedTerminals.length === 0"
+        (click)="onClearSelection()">
+        {{ 'webTerminal.clearSelection' | translate }}
+      </d-button>
+      <d-button
+        bsStyle="danger"
+        [disabled]="selectedTerminals.length === 0"
+        (click)="onCloseSelectedTerminals()">
+        {{ 'webTerminal.closeSelected' | translate }}
+      </d-button>
+    </div>
+    <div class="terminal-info">
+      <span>{{ 'webTerminal.totalTerminals' | translate }}: {{ terminals.length }}</span>
+      <span>{{ 'webTerminal.selectedTerminals' | translate }}: {{ selectedTerminals.length }}</span>
+      <span *ngIf="selectedTerminals.length > 1" class="group-control-hint">
+        {{ 'webTerminal.groupControlHint' | translate }}
+      </span>
+    </div>
+  </div>
+
+  <div class="terminal-container" *ngIf="terminals.length > 0">
+    <div class="terminal-grid">
+      <app-web-terminal-item
+        *ngFor="let terminal of terminals; trackBy: trackByTerminalId"
+        [terminal]="terminal"
+        [isSelected]="isTerminalSelected(terminal.instanceId)"
+        [isGroupControlMode]="selectedTerminals.length > 1"
+        (onSelect)="onTerminalSelect($event)"
+        (onClose)="onTerminalClose($event)"
+        (onCommand)="onTerminalCommand($event)"
+        (onResizeEvent)="onTerminalResize($event)">
+      </app-web-terminal-item>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="terminals.length === 0">
+    <div class="empty-content">
+      <div class="empty-icon">
+        <i class="icon icon-terminal" style="font-size: 64px; color: #ccc;"></i>
+      </div>
+      <h3>{{ 'webTerminal.noTerminals' | translate }}</h3>
+      <p>{{ 'webTerminal.clickAddToStart' | translate }}</p>
+    </div>
+  </div>
+</section>

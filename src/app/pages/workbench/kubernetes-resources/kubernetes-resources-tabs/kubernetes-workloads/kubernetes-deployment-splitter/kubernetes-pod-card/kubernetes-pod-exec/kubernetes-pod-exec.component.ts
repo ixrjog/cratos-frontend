@@ -160,9 +160,6 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
         .forEach(msg => {
           if (msg.errorMsg === null && msg.output) {
             this.terminal.write(msg.output);
-          } else if (msg.errorMsg) {
-            console.error('Session error:', msg.errorMsg);
-            this.terminal.write(`\r\n\x1b[31mError: ${msg.errorMsg}\x1b[0m\r\n`);
           }
         });
     } catch (error) {

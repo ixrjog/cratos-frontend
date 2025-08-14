@@ -1,1 +1,148 @@
-<p>web-terminal-drawer works!</p>
+<div class="drawer-header">
+  <div class="header-content">
+    <h3>{{ 'webTerminal.selectAsset' | translate }}</h3>
+    <p class="header-hint">{{ 'webTerminal.multiSelectHint' | translate }}</p>
+  </div>
+  <d-button
+    bsStyle="primary"
+    (click)="onDrawerClose()"
+    class="close-button">
+    {{ 'webTerminal.close' | translate }}
+  </d-button>
+</div>
+
+<div class="asset-search-container" [ngClass]="{'compact-mode': isCompactMode}">
+  <!-- 搜索和筛选 -->
+  <div class="search-filters">
+    <d-select
+      class="select"
+      [filterKey]="'value'"
+      [appendToBody]="true"
+      [searchFn]="onSearchTagGroup"
+      [isSearch]="true"
+      placeholder="Select tag group"
+      (valueChange)="onTagGroupChange($event)">
+    </d-select>
+
+    <d-search
+      class="search"
+      [(ngModel)]="queryParam.queryName"
+      [iconPosition]="'left'"
+      (ngModelChange)="onSearch($event)">
+    </d-search>
+
+    <d-button
+      class="button"
+      bsStyle="common"
+      (click)="fetchData()"
+      [disabled]="queryParam.tagGroup===''">
+      Filter
+    </d-button>
+  </div>
+
+  <!-- 资产表格 -->
+  <div class="asset-table-container">
+    <d-data-table
+      #datatable
+      dLoading
+      [dataSource]="table.data"
+      [tableOverflowType]="'overlay'"
+      [backdrop]="true"
+      [scrollable]="true"
+      [loadingStyle]="'infinity'"
+      [loading]="table.loading"
+      [checkable]="true">
+
+      <d-column field="name" header="Name" [width]="'200px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
+            <span
+              class="asset-name-link"
+              (click)="onAssetClick(rowItem)"
+              [title]="cellItem">
+              {{ cellItem }}
+            </span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+
+      <d-column field="assetKey" header="Asset Key" [width]="'200px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span class="asset-key" [title]="cellItem">{{ cellItem }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+
+      <d-column header="Tags" [width]="'300px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+          </ng-template>
+        </d-cell>
+      </d-column>
+
+      <d-column header="Actions" [width]="'100px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-button
+              variant="solid"
+              color="primary"
+              size="sm"
+              (click)="onAssetClick(rowItem)">
+              {{ 'webTerminal.select' | translate }}
+            </d-button>
+          </ng-template>
+        </d-cell>
+      </d-column>
+
+      <ng-template #noResultTemplateRef>
+        <div class="no-data">
+          <div class="empty-icon">
+            <i class="icon icon-server" style="font-size: 48px; color: #ccc;"></i>
+          </div>
+          <h4>{{ 'webTerminal.noAssetsFound' | translate }}</h4>
+          <p>{{ 'webTerminal.tryDifferentSearch' | translate }}</p>
+        </div>
+      </ng-template>
+    </d-data-table>
+  </div>
+
+  <!-- 分页和批量操作 -->
+  <div class="asset-pagination">
+    <!-- 批量选择按钮 -->
+    <div class="batch-operations">
+      <div dDropDown class="batch-button">
+        <d-button-group>
+          <d-button
+            bsStyle="common"
+            dDropDownToggle
+            [disabled]="getCheckedRowsCount() === 0">
+            {{ 'webTerminal.batchSelect' | translate }} ({{ getCheckedRowsCount() }})
+            <span class="icon icon-select-arrow"></span>
+          </d-button>
+        </d-button-group>
+        <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+          <li role="menuitem" (click)="onBatchSelect()">
+            <a dDropDownMenuItem>
+              <span class="icon icon-plus" style="padding-right: 5px; vertical-align: middle"></span>
+              {{ 'webTerminal.addSelectedTerminals' | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <d-pagination
+      class="pagination"
+      [total]="table.pager.total"
+      [(pageSize)]="table.pager.pageSize"
+      [(pageIndex)]="table.pager.pageIndex"
+      [canViewTotal]="true"
+      [canChangePageSize]="true"
+      [maxItems]="5"
+      (pageIndexChange)="onPageIndexChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)">
+    </d-pagination>
+  </div>
+</div>

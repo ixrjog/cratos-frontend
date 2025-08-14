@@ -1,0 +1,270 @@
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+
+  .header-content {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .header-hint {
+      margin: 0;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+  }
+
+  .close-button {
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+    margin-left: 16px;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+      border-radius: 4px;
+    }
+  }
+}
+
+.asset-search-container {
+  max-height: calc(100vh - 80px);
+  min-height: 400px; // 设置最小高度
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+
+  .search-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    align-items: center;
+    flex-shrink: 0; // 防止搜索区域被压缩
+
+    .select {
+      min-width: 200px;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .button {
+      min-width: 80px;
+    }
+  }
+
+  .asset-table-container {
+    flex: 0 1 auto; // 改为自适应高度
+    min-height: 200px; // 设置最小高度
+    max-height: calc(100vh - 300px); // 设置最大高度，为页脚留出空间
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+
+    d-data-table {
+      height: 100%;
+
+      :deep(.devui-table) {
+        height: auto; // 改为自动高度
+        min-height: 200px;
+
+        .devui-table-view {
+          height: auto; // 改为自动高度
+          max-height: calc(100vh - 350px); // 限制最大高度
+          overflow-y: auto; // 添加垂直滚动
+        }
+
+        // 当数据较少时，减少表格高度
+        .devui-table-body {
+          min-height: auto;
+        }
+      }
+    }
+
+    .asset-name-link {
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    }
+
+    .asset-key {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #666;
+      word-break: break-all;
+    }
+
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      color: #666;
+
+      .empty-icon {
+        margin-bottom: 16px;
+      }
+
+      h4 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: #999;
+      }
+    }
+  }
+
+  .asset-pagination {
+    margin-top: 12px; // 减少上边距
+    padding: 12px 0; // 减少内边距
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; // 防止分页区域被压缩
+    background: #fff; // 确保背景色
+    position: sticky; // 让分页区域粘在底部
+    bottom: 0;
+    z-index: 1;
+
+    .batch-operations {
+      display: flex;
+      align-items: center;
+
+      .batch-button {
+        .devui-dropdown-menu {
+          min-width: 180px;
+
+          li {
+            padding: 0;
+
+            a {
+              display: flex;
+              align-items: center;
+              padding: 8px 12px;
+              color: #333;
+              text-decoration: none;
+              transition: all 0.2s ease;
+
+              &:hover {
+                background-color: #f0f0f0;
+                color: #007bff;
+              }
+
+              .icon {
+                margin-right: 8px;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+
+        d-button {
+          &[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+
+          &:not([disabled]):hover {
+            background-color: #e6f3ff;
+            border-color: #007bff;
+            color: #007bff;
+          }
+        }
+      }
+    }
+
+    .pagination {
+      margin: 0;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// 表格自适应高度优化
+.asset-search-container {
+  // 当表格数据较少时，让容器自动收缩
+  &.compact-mode {
+    .asset-table-container {
+      flex: 0 0 auto;
+      height: auto;
+      
+      d-data-table {
+        height: auto;
+        
+        :deep(.devui-table) {
+          height: auto;
+          
+          .devui-table-view {
+            height: auto;
+            max-height: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 优化空数据状态的显示
+.asset-table-container {
+  .no-data {
+    height: 200px !important; // 减少空数据状态的高度
+    padding: 20px;
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .asset-search-container {
+    padding: 12px 16px;
+
+    .search-filters {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 12px;
+
+      .select,
+      .search,
+      .button {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+
+    .asset-table-container {
+      :deep(.devui-table) {
+        .devui-table-view {
+          overflow-x: auto;
+        }
+      }
+    }
+  }
+}

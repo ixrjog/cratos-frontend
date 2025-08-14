@@ -1,1 +1,47 @@
-<p>web-terminal-item works!</p>
+<section class="web-terminal-item" [ngClass]="{'selected': isSelected, 'group-control-mode': isGroupControlMode}">
+  <d-card [ngClass]="{'selected-card': isSelected}">
+    <d-card-header class="terminal-header" style="position: relative;margin-bottom: 5px;height: 28px">
+      <d-card-subtitle class="terminal-title">
+        <div style="display: flex; align-items: center; flex: 1;">
+          <d-checkbox
+            style="margin-right: 8px;"
+            [(ngModel)]="isSelected"
+            (ngModelChange)="onSelectionChange($event)">
+          </d-checkbox>
+          <span class="font-color-name" style="height: 22px; line-height: 22px;">{{ terminal.assetName }}</span>
+        </div>
+
+        <d-button
+          style="position: absolute;right: 0;top: 0"
+          bsStyle="text"
+          (click)="onCloseTerminal()">
+          {{ 'webTerminal.close' | translate }}
+        </d-button>
+      </d-card-subtitle>
+    </d-card-header>
+
+    <d-card-content class="terminal-content">
+      <div class="terminal-info">
+        <div class="info-item">
+          <span class="label">{{ 'webTerminal.assetId' | translate }}:</span>
+          <span class="value">{{ terminal.assetId }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">{{ 'webTerminal.instanceId' | translate }}:</span>
+          <span class="value">{{ terminal.instanceId }}</span>
+        </div>
+      </div>
+
+      <div class="group-control-hint" *ngIf="isGroupControlMode && isSelected">
+        <i class="icon icon-broadcast"></i>
+        <span>{{ 'webTerminal.groupControlActive' | translate }}</span>
+      </div>
+
+      <div
+        class="terminal-container"
+        [id]="'terminal-' + terminal.instanceId"
+        (window:resize)="onResize($event)">
+      </div>
+    </d-card-content>
+  </d-card>
+</section>

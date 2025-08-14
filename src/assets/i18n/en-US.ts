@@ -8,6 +8,7 @@ import login from './en-US/login';
 import register from './en-US/register';
 import workOrderTicket from './en-US/work-order-ticket';
 import kubernetes from './en-US/kubernetes';
+import { webTerminal } from './en-US/web-terminal';
 
 export default {
   ...pages,
@@ -20,4 +21,5 @@ export default {
   ...register,
   ...workOrderTicket,
   ...kubernetes,
+  webTerminal,
 };

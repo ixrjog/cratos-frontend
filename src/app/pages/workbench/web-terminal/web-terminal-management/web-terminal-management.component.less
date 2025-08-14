@@ -1,0 +1,155 @@
+.web-terminal-management {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  .terminal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+
+    .terminal-actions {
+      display: flex;
+      gap: 8px;
+      
+      // 关闭选中按钮的特殊样式
+      d-button[color="danger"] {
+        transition: all 0.2s ease;
+        
+        &:not([disabled]):hover {
+          background-color: #dc3545;
+          border-color: #dc3545;
+          color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        &[disabled] {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .terminal-info {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 14px;
+      color: #666;
+
+      .group-control-hint {
+        color: #007bff;
+        font-weight: 500;
+        padding: 4px 8px;
+        background: rgba(0, 123, 255, 0.1);
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .terminal-container {
+    flex: 1;
+    overflow: auto;
+
+    .terminal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; // 固定为两列
+      gap: 16px;
+      padding: 8px;
+      
+      // 确保每个终端窗体有合适的最小宽度
+      > * {
+        min-width: 0; // 允许flex项目缩小
+      }
+    }
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .empty-content {
+      text-align: center;
+      color: #666;
+
+      .empty-icon {
+        margin-bottom: 16px;
+      }
+
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: #999;
+      }
+    }
+  }
+}
+
+// 中等屏幕：保持两列布局，但调整间距
+@media (max-width: 1200px) {
+  .web-terminal-management .terminal-container .terminal-grid {
+    gap: 12px;
+  }
+}
+
+// 小屏幕：改为单列布局
+@media (max-width: 768px) {
+  .web-terminal-management {
+    .terminal-container .terminal-grid {
+      grid-template-columns: 1fr; // 小屏幕时改为单列
+      gap: 12px;
+    }
+
+    .terminal-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+
+      .terminal-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .terminal-info {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+// 超小屏幕：进一步优化
+@media (max-width: 480px) {
+  .web-terminal-management {
+    padding: 8px;
+    
+    .terminal-container .terminal-grid {
+      padding: 4px;
+      gap: 8px;
+    }
+    
+    .terminal-header .terminal-actions {
+      gap: 6px;
+      
+      d-button {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  }
+}

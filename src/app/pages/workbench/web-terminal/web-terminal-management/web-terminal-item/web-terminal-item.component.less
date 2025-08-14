@@ -1,0 +1,262 @@
+.web-terminal-item {
+  width: 100%;
+  min-height: 400px;
+  max-height: 600px; // 添加最大高度限制
+  transition: all 0.3s ease;
+
+  // 移除选中时的放大效果
+  &.selected {
+    // transform: scale(1.02); // 移除放大
+  }
+
+  &.group-control-mode {
+    &.selected {
+      // 移除原有的静态边框，使用呼吸灯效果
+      // box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+      border-radius: 8px;
+    }
+  }
+
+  d-card {
+    height: 100%;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &.selected-card {
+      // 使用呼吸灯边框效果
+      border-color: #007bff;
+      animation: breathing-border 2s ease-in-out infinite;
+      // 移除静态阴影，使用动态阴影
+      // box-shadow: 0 4px 20px rgba(0, 123, 255, 0.2);
+    }
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  .terminal-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+
+    .terminal-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+
+      .title-left {
+        display: flex;
+        align-items: center;
+        gap: 8px; // 减小间距以适应两列布局
+        flex-wrap: wrap;
+
+        .terminal-name {
+          font-weight: 600;
+          font-size: 13px; // 稍微减小字体
+          color: #333;
+          // 添加文本截断
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .group-control-tag {
+          animation: pulse 2s infinite;
+          font-size: 11px; // 减小标签字体
+        }
+      }
+
+      .title-right {
+        display: flex;
+        gap: 2px; // 减小按钮间距
+
+        d-button {
+          padding: 2px;
+          min-width: auto;
+          width: 24px; // 固定按钮宽度
+          height: 24px; // 固定按钮高度
+        }
+      }
+    }
+  }
+
+  .terminal-content {
+    padding: 0;
+    height: calc(100% - 50px); // 调整高度计算
+    display: flex;
+    flex-direction: column;
+
+    .terminal-info {
+      padding: 4px 6px; // 减小内边距
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px; // 减小间距
+      font-size: 11px; // 减小字体
+
+      .info-item {
+        display: flex;
+        gap: 4px;
+
+        .label {
+          color: #666;
+          font-weight: 500;
+        }
+
+        .value {
+          color: #333;
+          font-family: 'Courier New', monospace;
+          // 添加文本截断
+          max-width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .group-control-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 6px 12px; // 减小边距
+      padding: 4px 8px; // 减小内边距
+      background: rgba(0, 123, 255, 0.1);
+      border-radius: 4px;
+      font-size: 11px; // 减小字体
+      color: #007bff;
+      font-weight: 500;
+
+      i {
+        animation: broadcast 1.5s infinite;
+      }
+    }
+
+    .terminal-container {
+      flex: 1;
+      background: #000;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 12px; // 稍微减小终端字体
+      line-height: 1.2;
+      padding: 6px; // 减小内边距
+      overflow: hidden;
+      position: relative;
+
+      // xterm.js 样式覆盖
+      :deep(.xterm) {
+        height: 100%;
+
+        .xterm-viewport {
+          background-color: #000;
+        }
+
+        .xterm-screen {
+          background-color: #000;
+        }
+
+        .xterm-cursor-layer .xterm-cursor {
+          background-color: #fff;
+        }
+      }
+    }
+  }
+}
+
+// 呼吸灯边框动画效果
+@keyframes breathing-border {
+  0% {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+  }
+  50% {
+    border-color: #0056b3;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  }
+  100% {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+  }
+}
+
+// 标签脉冲动画
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// 广播图标动画
+@keyframes broadcast {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .web-terminal-item {
+    min-height: 350px; // 小屏幕时减小高度
+    max-height: 500px;
+
+    .terminal-header .terminal-title .title-left {
+      gap: 6px;
+
+      .terminal-name {
+        font-size: 12px;
+        max-width: 100px;
+      }
+    }
+
+    .terminal-content {
+      .terminal-info {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 10px;
+      }
+
+      .terminal-container {
+        font-size: 11px;
+        padding: 4px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .web-terminal-item {
+    min-height: 300px;
+    max-height: 400px;
+
+    .terminal-header {
+      padding: 6px 8px;
+
+      .terminal-title .title-left .terminal-name {
+        font-size: 11px;
+        max-width: 80px;
+      }
+    }
+
+    .terminal-content .terminal-container {
+      font-size: 10px;
+    }
+  }
+}

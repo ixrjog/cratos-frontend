@@ -51,12 +51,9 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   ) {
     // 从静态变量获取数据
     this.data = WebTerminalDrawerComponent.drawerData;
-    console.log('Drawer constructor, received data:', this.data);
   }
 
   ngOnInit(): void {
-    console.log('WebTerminalDrawerComponent ngOnInit, visible:', this.visible);
-
     // 设置搜索防抖
     this.searchSubject.pipe(
       debounceTime(300),
@@ -97,7 +94,6 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
       }
     }
     
-    console.log(`Table height adjusted: dataLength=${dataLength}, pageSize=${pageSize}, compactMode=${this.isCompactMode}`);
     this.cdr.detectChanges();
   }
 
@@ -151,12 +147,8 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onAssetClick(asset: EdsAssetVO): void {
-    console.log('onAssetClick called with asset:', asset);
-    console.log('data object:', this.data);
-
     // 优先使用DrawerService传递的回调函数
     if (this.data && this.data.onAssetSelect) {
-      console.log('Using DrawerService callback');
       this.data.onAssetSelect(asset);
 
       // 显示成功提示
@@ -168,7 +160,6 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
       // }
     } else {
       // Fallback到Output事件（用于传统的父子组件通信）
-      console.log('Using Output events');
       this.onAssetSelect.emit(asset);
 
       // 显示成功提示
@@ -180,14 +171,11 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private showSuccessMessage(assetName: string): void {
-    // 创建一个简单的成功提示
+    // Create a simple success message
     const message = `Terminal for "${assetName}" has been added successfully!`;
 
-    // 可以使用toast或者其他提示方式
-    // 这里先用console.log，你可以根据项目的toast组件来替换
-    console.log(message);
-
-    // 如果有toast服务，可以这样使用：
+    // You can use toast or other notification methods
+    // If you have toast service, you can use it like this:
     // this.toastService.success(message);
   }
 
@@ -225,11 +213,9 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     checkedRows.forEach((asset: EdsAssetVO) => {
       // 优先使用DrawerService传递的回调函数
       if (this.data && this.data.onAssetSelect) {
-        console.log('Using DrawerService callback for asset:', asset.name);
         this.data.onAssetSelect(asset);
       } else {
         // Fallback到Output事件
-        console.log('Using Output events for asset:', asset.name);
         this.onAssetSelect.emit(asset);
       }
     });
@@ -243,9 +229,8 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
 
   private showBatchSuccessMessage(count: number): void {
     const message = `Successfully added ${count} terminals!`;
-    console.log(message);
 
-    // 如果有toast服务，可以这样使用：
-    // this.toastService.success(`已成功添加 ${count} 个终端`);
+    // If you have toast service, you can use it like this:
+    // this.toastService.success(`Successfully added ${count} terminals`);
   }
 }

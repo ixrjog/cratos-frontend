@@ -10,6 +10,8 @@ export const webTerminal = {
   clickAddToStart: 'Click "Add Terminal" to get started',
   groupControlHint: 'Group Control Mode: Commands entered in any selected terminal will be sent to all selected terminals',
   send: 'Send',
+  correctTerminals: 'Correct Terminals',
+  correctTerminalsHint: 'Resend terminal size information to backend to correct terminal display',
 
   // Asset selection drawer
   selectAsset: 'Select Asset',
@@ -30,11 +32,15 @@ export const webTerminal = {
   groupCommandPlaceholder: 'Enter group command (will be sent to all selected terminals)...',
   groupControl: 'Group Control',
   groupControlActive: 'Group Control Active - Commands will be sent to all selected terminals',
+  enterWideScreen: 'Wide Screen',
+  exitWideScreen: 'Exit Wide Screen',
 
   // Connection status
   connected: 'Connected',
   disconnected: 'Disconnected',
   connecting: 'Connecting',
+  connectingTo: 'Connecting to',
+  closingConnection: 'Closing terminal connection...',
 
   // Messages
   connectionFailed: 'Connection Failed',

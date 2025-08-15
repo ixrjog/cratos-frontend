@@ -1,8 +1,51 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
 .web-terminal-item {
   width: 100%;
   min-height: 400px;
-  max-height: 600px; // 添加最大高度限制
-  transition: all 0.3s ease;
+  max-height: 600px;
+  height: auto; // 确保有默认高度行为
+  transition: min-height 0.3s ease, max-height 0.3s ease;
+
+  // 宽屏模式样式
+  &.wide-screen {
+    min-height: 500px !important;
+    max-height: 700px !important;
+
+    .terminal-content .terminal-container {
+      font-size: 14px !important;
+      padding: 8px !important;
+    }
+  }
+
+  // 确保非宽屏模式的样式 - 使用更高的优先级
+  &:not(.wide-screen) {
+    min-height: 400px !important;
+    max-height: 600px !important;
+
+    .terminal-content .terminal-container {
+      font-size: 12px !important;
+      padding: 6px !important;
+    }
+  }
+
+  // 强制重置类 - 确保恢复到正常状态
+  &.force-reset {
+    min-height: 400px !important;
+    max-height: 600px !important;
+    height: auto !important;
+
+    .terminal-content {
+      height: auto !important;
+
+      .terminal-container {
+        font-size: 12px !important;
+        padding: 6px !important;
+        height: auto !important;
+        min-height: 300px !important; // 确保终端容器有最小高度
+      }
+    }
+  }
 
   // 移除选中时的放大效果
   &.selected {
@@ -39,8 +82,8 @@
 
   .terminal-header {
     padding: 8px 12px;
-    border-bottom: 1px solid #e9ecef;
-    background: #f8f9fa;
+    border-bottom: 1px solid @devui-dividing-line;;
+    background: @devui-base-bg;
 
     .terminal-title {
       display: flex;
@@ -57,7 +100,7 @@
         .terminal-name {
           font-weight: 600;
           font-size: 13px; // 稍微减小字体
-          color: #333;
+          color: @devui-text;
           // 添加文本截断
           max-width: 120px;
           overflow: hidden;
@@ -71,15 +114,19 @@
         }
       }
 
-      .title-right {
+      .terminal-actions {
         display: flex;
-        gap: 2px; // 减小按钮间距
+        align-items: center;
+        gap: 4px;
 
         d-button {
-          padding: 2px;
+          padding: 2px 4px;
           min-width: auto;
-          width: 24px; // 固定按钮宽度
-          height: 24px; // 固定按钮高度
+          height: 24px;
+
+          i {
+            font-size: 12px;
+          }
         }
       }
     }
@@ -93,8 +140,8 @@
 
     .terminal-info {
       padding: 4px 6px; // 减小内边距
-      background: #f8f9fa;
-      border-bottom: 1px solid #e9ecef;
+      background: @devui-base-bg;
+      border-bottom: 1px solid @devui-dividing-line;;
       display: flex;
       flex-wrap: wrap;
       gap: 12px; // 减小间距
@@ -105,12 +152,12 @@
         gap: 4px;
 
         .label {
-          color: #666;
+          color: @devui-text;
           font-weight: 500;
         }
 
         .value {
-          color: #333;
+          color: @devui-text;
           font-family: 'Courier New', monospace;
           // 添加文本截断
           max-width: 200px;
@@ -121,27 +168,10 @@
       }
     }
 
-    .group-control-hint {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin: 6px 12px; // 减小边距
-      padding: 4px 8px; // 减小内边距
-      background: rgba(0, 123, 255, 0.1);
-      border-radius: 4px;
-      font-size: 11px; // 减小字体
-      color: #007bff;
-      font-weight: 500;
-
-      i {
-        animation: broadcast 1.5s infinite;
-      }
-    }
-
     .terminal-container {
       flex: 1;
-      background: #000;
-      color: #fff;
+      background: @devui-base-bg;
+      color: @devui-text;
       font-family: 'Courier New', monospace;
       font-size: 12px; // 稍微减小终端字体
       line-height: 1.2;
@@ -154,15 +184,15 @@
         height: 100%;
 
         .xterm-viewport {
-          background-color: #000;
+          background-color: @devui-base-bg;
         }
 
         .xterm-screen {
-          background-color: #000;
+          background-color: @devui-base-bg;
         }
 
         .xterm-cursor-layer .xterm-cursor {
-          background-color: #fff;
+          background-color: @devui-base-bg;
         }
       }
     }

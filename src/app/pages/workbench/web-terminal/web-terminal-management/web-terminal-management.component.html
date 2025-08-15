@@ -24,6 +24,13 @@
         (click)="onCloseSelectedTerminals()">
         {{ 'webTerminal.closeSelected' | translate }}
       </d-button>
+      <!-- 终端窗体矫正功能 -->
+      <d-button
+        bsStyle="common"
+        [disabled]="terminals.length === 0"
+        (click)="onCorrectAllTerminals()">
+        {{ 'webTerminal.correctTerminals' | translate }}
+      </d-button>
     </div>
     <div class="terminal-info">
       <span>{{ 'webTerminal.totalTerminals' | translate }}: {{ terminals.length }}</span>
@@ -41,11 +48,13 @@
         [terminal]="terminal"
         [isSelected]="isTerminalSelected(terminal.instanceId)"
         [isGroupControlMode]="selectedTerminals.length > 1"
+        [attr.data-terminal-id]="terminal.instanceId"
         (onSelect)="onTerminalSelect($event)"
         (onClose)="onTerminalClose($event)"
         (onCommand)="onTerminalCommand($event)"
         (onResizeEvent)="onTerminalResize($event)"
-        (onReady)="onTerminalReady($event)">
+        (onReady)="onTerminalReady($event)"
+        (onWideScreenToggle)="onTerminalWideScreenToggle($event)">
       </app-web-terminal-item>
     </div>
   </div>

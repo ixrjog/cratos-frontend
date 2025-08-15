@@ -46,6 +46,9 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
   terminals: TerminalInstance[] = [];
   selectedTerminals: string[] = [];
+  
+  // 宽屏模式终端集合
+  wideScreenTerminals: Set<string> = new Set();
 
   constructor(
     private drawerService: DrawerService,
@@ -261,6 +264,11 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     // 发送OPEN事件到后端
     this.sendTerminalOpenRequest(terminal);
+    
+    // 延迟更新布局，确保DOM已渲染
+    setTimeout(() => {
+      this.updateGridLayout();
+    }, 200);
   }
 
   private sendTerminalOpenRequest(terminal: TerminalInstance): void {
@@ -302,8 +310,14 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       // 从列表中移除
       this.terminals = this.terminals.filter(t => t.instanceId !== instanceId);
       this.selectedTerminals = this.selectedTerminals.filter(id => id !== instanceId);
-
-      console.log(`Sent ${WebTerminalStatus.CLOSE} event for terminal: ${instanceId}`);
+      
+      // 从宽屏集合中移除
+      this.wideScreenTerminals.delete(instanceId);
+      
+      // 更新布局
+      setTimeout(() => {
+        this.updateGridLayout();
+      }, 50);
     }
   }
 
@@ -329,7 +343,6 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       
       // 发送RESIZE事件到后端
       this.sendTerminalResizeRequest(terminal, data.width, data.height);
-      console.log(`Sent ${WebTerminalStatus.RESIZE} event for terminal: ${data.instanceId} (${data.width}x${data.height})`);
     }
   }
 
@@ -451,5 +464,114 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
   trackByTerminalId(index: number, terminal: TerminalInstance): string {
     return terminal.instanceId;
+  }
+
+  // 处理终端宽屏模式切换
+  onTerminalWideScreenToggle(data: { instanceId: string, isWideScreen: boolean }): void {
+    if (data.isWideScreen) {
+      this.wideScreenTerminals.add(data.instanceId);
+    } else {
+      this.wideScreenTerminals.delete(data.instanceId);
+    }
+    
+    // 延迟重新计算布局
+    setTimeout(() => {
+      this.updateGridLayout();
+    }, 50);
+  }
+
+  // 动态更新网格布局
+  private updateGridLayout(): void {
+    const gridElement = document.querySelector('.terminal-grid') as HTMLElement;
+    if (!gridElement) return;
+
+    // 重置网格容器的样式
+    gridElement.style.gridAutoRows = '';
+    
+    // 重置所有终端的网格位置和样式
+    const terminalElements = gridElement.querySelectorAll('.web-terminal-item');
+    terminalElements.forEach((element: Element) => {
+      const htmlElement = element as HTMLElement;
+      htmlElement.style.gridColumn = '';
+      htmlElement.style.gridRow = '';
+      htmlElement.style.minHeight = '';
+      htmlElement.style.maxHeight = '';
+      htmlElement.style.height = '';
+    });
+
+    // 强制重新计算布局
+    setTimeout(() => {
+      this.calculateGridPositions();
+    }, 10);
+  }
+
+  // 分离布局计算逻辑
+  private calculateGridPositions(): void {
+    let currentRow = 1;
+    let currentCol = 1;
+
+    this.terminals.forEach((terminal, index) => {
+      const element = document.querySelector(`[data-terminal-id="${terminal.instanceId}"]`) as HTMLElement;
+      if (!element) return;
+
+      if (this.wideScreenTerminals.has(terminal.instanceId)) {
+        // 如果当前行已经有终端，需要换到下一行
+        if (currentCol > 1) {
+          currentRow++;
+          currentCol = 1;
+        }
+        
+        // 宽屏终端：占据整行
+        element.style.gridColumn = '1 / -1';
+        element.style.gridRow = `${currentRow}`;
+        currentRow++; // 宽屏终端占用一行后，下一个终端从新行开始
+        currentCol = 1;
+      } else {
+        // 普通终端：按两列布局
+        element.style.gridColumn = `${currentCol}`;
+        element.style.gridRow = `${currentRow}`;
+        
+        if (currentCol === 2) {
+          currentRow++;
+          currentCol = 1;
+        } else {
+          currentCol++;
+        }
+      }
+    });
+  }
+
+  // 矫正所有终端窗体
+  onCorrectAllTerminals(): void {
+    if (this.terminals.length === 0) {
+      return;
+    }
+
+    console.log('Starting terminal correction for all terminals...');
+    
+    let correctedCount = 0;
+    const totalTerminals = this.terminals.length;
+
+    this.terminals.forEach((terminal, index) => {
+      // 延迟发送，避免同时发送太多请求
+      setTimeout(() => {
+        if (terminal.rows && terminal.cols) {
+          // 发送当前尺寸的resize请求来矫正终端
+          this.sendTerminalResizeRequest(terminal, terminal.cols, terminal.rows);
+          correctedCount++;
+          
+          console.log(`Corrected terminal ${terminal.instanceId} (${terminal.cols}x${terminal.rows}) - ${correctedCount}/${totalTerminals}`);
+          
+          // 如果是最后一个终端，显示完成消息
+          if (correctedCount === totalTerminals) {
+            console.log(`Terminal correction completed! Corrected ${correctedCount} terminals.`);
+            // 可以添加成功提示
+            // this.toastService.success(`已矫正 ${correctedCount} 个终端窗体`);
+          }
+        } else {
+          console.warn(`Terminal ${terminal.instanceId} has no size information, skipping correction`);
+        }
+      }, index * 100); // 每个终端间隔100ms
+    });
   }
 }

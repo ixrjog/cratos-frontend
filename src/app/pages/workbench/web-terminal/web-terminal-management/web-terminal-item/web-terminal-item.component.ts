@@ -6,13 +6,15 @@ import {
   OnInit,
   OnDestroy,
   AfterViewInit,
-  OnChanges
+  OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
+import { TranslateService } from '@ngx-translate/core';
 import { TerminalInstance } from '../web-terminal-management.component';
 
 @Component({
@@ -31,10 +33,23 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   @Output() onCommand = new EventEmitter<{ instanceId: string, command: string }>();
   @Output() onResizeEvent = new EventEmitter<{ instanceId: string, width: number, height: number }>();
   @Output() onReady = new EventEmitter<{ instanceId: string, width: number, height: number }>();
+  @Output() onWideScreenToggle = new EventEmitter<{ instanceId: string, isWideScreen: boolean }>();
+
+  // 宽屏模式状态
+  isWideScreen = false;
+  
+  // 保存原始终端尺寸
+  private originalRows: number = 24;
+  private originalCols: number = 80;
 
   private destroy$ = new Subject<void>();
   private xterm!: Terminal;
   private fitAddon!: FitAddon;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.initTerminal();
@@ -96,8 +111,7 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
 
     // 监听终端大小变化
     this.xterm.onResize((size) => {
-      // 可以在这里通知后端终端大小变化
-      console.log(`Terminal ${this.terminal.instanceId} resized to ${size.cols}x${size.rows}`);
+      // 终端大小变化时的处理
     });
   }
 
@@ -108,9 +122,16 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
         this.xterm.open(container);
         this.fitAddon.fit();
 
-        // 只在连接时显示简洁的欢迎信息
-        this.xterm.writeln(`\x1b[32m正在连接到 ${this.terminal.assetName}...\x1b[0m`);
-        this.xterm.writeln(`\x1b[36m实例ID: ${this.terminal.instanceId}\x1b[0m`);
+        // 保存初始尺寸作为原始尺寸
+        this.originalRows = this.xterm.rows;
+        this.originalCols = this.xterm.cols;
+
+        // 使用 i18n 显示连接信息
+        const connectingMsg = this.translate.instant('webTerminal.connectingTo');
+        const instanceIdLabel = this.translate.instant('webTerminal.instanceId');
+        
+        this.xterm.writeln(`\x1b[32m${connectingMsg} ${this.terminal.assetName}...\x1b[0m`);
+        this.xterm.writeln(`\x1b[36m${instanceIdLabel}: ${this.terminal.instanceId}\x1b[0m`);
         this.xterm.writeln('');
 
         // 设置焦点到终端
@@ -125,7 +146,6 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
             width: cols,
             height: rows
           });
-          console.log(`Terminal ${this.terminal.instanceId} ready with dimensions: ${cols}x${rows}`);
         }, 50);
       } catch (error) {
         console.error('Failed to attach terminal:', error);
@@ -196,31 +216,152 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onCloseTerminal(): void {
-    // 只在关闭时写入中断信息
+    // 使用 i18n 显示关闭信息
     if (this.xterm) {
-      this.xterm.writeln(`\r\n\x1b[31m正在关闭终端连接...\x1b[0m`);
+      const closingMsg = this.translate.instant('webTerminal.closingConnection');
+      this.xterm.writeln(`\r\n\x1b[31m${closingMsg}\x1b[0m`);
     }
     this.onClose.emit(this.terminal.instanceId);
+  }
+
+  // 切换宽屏模式
+  toggleWideScreen(): void {
+    this.isWideScreen = !this.isWideScreen;
+    
+    // 手动触发变更检测
+    this.cdr.detectChanges();
+    
+    // 通知父组件宽屏模式变化
+    this.onWideScreenToggle.emit({
+      instanceId: this.terminal.instanceId,
+      isWideScreen: this.isWideScreen
+    });
+
+    // 如果退出宽屏模式，进行温和的重置
+    if (!this.isWideScreen) {
+      setTimeout(() => {
+        this.forceResetTerminalHeight();
+      }, 50);
+    }
+
+    // 延迟调整终端尺寸以适应新的布局
+    setTimeout(() => {
+      this.onResize();
+    }, this.isWideScreen ? 200 : 400); // 退出宽屏模式时给更多时间
+  }
+
+  // 强制重置终端高度
+  private forceResetTerminalHeight(): void {
+    const element = document.querySelector(`[data-terminal-id="${this.terminal.instanceId}"]`) as HTMLElement;
+    if (!element) return;
+
+    // 移除宽屏类
+    element.classList.remove('wide-screen');
+    
+    // 清除可能的内联样式
+    element.style.minHeight = '';
+    element.style.maxHeight = '';
+    element.style.height = '';
+    element.style.gridColumn = '';
+    element.style.gridRow = '';
+    
+    // 强制应用正常模式样式
+    element.classList.add('force-reset');
+    
+    // 触发重排
+    element.offsetHeight;
+    
+    // 短暂延迟后移除强制重置类
+    setTimeout(() => {
+      element.classList.remove('force-reset');
+      
+      // 强制恢复到原始行数
+      setTimeout(() => {
+        this.restoreOriginalSize();
+      }, 100);
+    }, 100);
+  }
+
+  // 恢复原始尺寸
+  private restoreOriginalSize(): void {
+    if (this.fitAddon && this.xterm) {
+      try {
+        // 先进行正常的fit
+        this.fitAddon.fit();
+        
+        const currentRows = this.xterm.rows;
+        const currentCols = this.xterm.cols;
+        
+        // 如果行数不匹配，尝试手动调整
+        if (currentRows !== this.originalRows) {
+          // 手动设置终端尺寸
+          this.xterm.resize(this.originalCols, this.originalRows);
+          
+          // 更新终端实例的尺寸信息
+          this.terminal.cols = this.originalCols;
+          this.terminal.rows = this.originalRows;
+          
+          // 发送RESIZE事件到父组件
+          this.onResizeEvent.emit({
+            instanceId: this.terminal.instanceId,
+            width: this.originalCols,
+            height: this.originalRows
+          });
+        }
+      } catch (error) {
+        console.error('Failed to restore original size:', error);
+      }
+    }
   }
 
   onResize(event?: Event): void {
     if (this.fitAddon && this.xterm) {
       try {
         setTimeout(() => {
-          this.fitAddon.fit();
-          
-          // 获取调整后的终端尺寸
-          const cols = this.xterm.cols;
-          const rows = this.xterm.rows;
-          
-          // 发送RESIZE事件到父组件
-          this.onResizeEvent.emit({
-            instanceId: this.terminal.instanceId,
-            width: cols,
-            height: rows
-          });
-          
-          console.log(`Terminal ${this.terminal.instanceId} resized to ${cols}x${rows}`);
+          // 如果不是宽屏模式，且我们有原始尺寸，尝试保持原始行数
+          if (!this.isWideScreen && this.originalRows > 0) {
+            // 先进行fit以获取最佳列数
+            this.fitAddon.fit();
+            const newCols = this.xterm.cols;
+            
+            // 但保持原始行数
+            if (this.xterm.rows !== this.originalRows) {
+              this.xterm.resize(newCols, this.originalRows);
+            }
+            
+            // 使用实际的尺寸
+            const cols = this.xterm.cols;
+            const rows = this.xterm.rows;
+            
+            // 发送RESIZE事件到父组件
+            this.onResizeEvent.emit({
+              instanceId: this.terminal.instanceId,
+              width: cols,
+              height: rows
+            });
+            
+            // 更新终端实例的尺寸信息
+            this.terminal.cols = cols;
+            this.terminal.rows = rows;
+          } else {
+            // 宽屏模式或没有原始尺寸时，正常处理
+            this.fitAddon.fit();
+            
+            // 获取调整后的终端尺寸
+            const cols = this.xterm.cols;
+            const rows = this.xterm.rows;
+            
+            // 发送RESIZE事件到父组件
+            this.onResizeEvent.emit({
+              instanceId: this.terminal.instanceId,
+              width: cols,
+              height: rows
+            });
+            
+            // 更新终端实例的尺寸信息
+            this.terminal.cols = cols;
+            this.terminal.rows = rows;
+          }
         }, 100);
       } catch (error) {
         console.error('Failed to resize terminal:', error);

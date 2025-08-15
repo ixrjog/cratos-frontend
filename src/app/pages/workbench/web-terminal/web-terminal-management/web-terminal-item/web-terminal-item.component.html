@@ -1,4 +1,5 @@
-<section class="web-terminal-item" [ngClass]="{'selected': isSelected, 'group-control-mode': isGroupControlMode}">
+<section class="web-terminal-item"
+         [ngClass]="{'selected': isSelected, 'group-control-mode': isGroupControlMode, 'wide-screen': isWideScreen}">
   <d-card [ngClass]="{'selected-card': isSelected}">
     <d-card-header class="terminal-header" style="position: relative;margin-bottom: 5px;height: 28px">
       <d-card-subtitle class="terminal-title">
@@ -9,14 +10,31 @@
             (ngModelChange)="onSelectionChange($event)">
           </d-checkbox>
           <span class="font-color-name" style="height: 22px; line-height: 22px;">{{ terminal.assetName }}</span>
+          <!-- 群控模式标签 -->
+          <d-tag *ngIf="isGroupControlMode && isSelected"
+                 [labelStyle]="'blue-w98'"
+                 [tag]="'webTerminal.groupControl' | translate"
+                 style="margin-left: 8px;">
+          </d-tag>
         </div>
 
-        <d-button
-          style="position: absolute;right: 0;top: 0"
-          bsStyle="text"
-          (click)="onCloseTerminal()">
-          {{ 'webTerminal.close' | translate }}
-        </d-button>
+        <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
+          <!-- 宽屏模式切换按钮 -->
+          <d-button
+            bsStyle="text"
+            size="sm"
+            (click)="toggleWideScreen()"
+            [title]="isWideScreen ? ('webTerminal.exitWideScreen' | translate) : ('webTerminal.enterWideScreen' | translate)"
+            style="margin-right: 4px;">
+            <i [class]="isWideScreen ? 'icon-minimize' : 'icon-maxmize'"></i>
+          </d-button>
+
+          <d-button
+            bsStyle="text"
+            (click)="onCloseTerminal()">
+            {{ 'webTerminal.close' | translate }}
+          </d-button>
+        </div>
       </d-card-subtitle>
     </d-card-header>
 
@@ -30,11 +48,6 @@
           <span class="label">{{ 'webTerminal.instanceId' | translate }}:</span>
           <span class="value">{{ terminal.instanceId }}</span>
         </div>
-      </div>
-
-      <div class="group-control-hint" *ngIf="isGroupControlMode && isSelected">
-        <i class="icon icon-broadcast"></i>
-        <span>{{ 'webTerminal.groupControlActive' | translate }}</span>
       </div>
 
       <div

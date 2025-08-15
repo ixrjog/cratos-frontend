@@ -1,8 +1,9 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
 .web-terminal-management {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px;
 
   .terminal-header {
     display: flex;
@@ -10,25 +11,25 @@
     align-items: center;
     margin-bottom: 16px;
     padding: 12px 16px;
-    background: #f8f9fa;
+    background: @devui-base-bg;
     border-radius: 6px;
 
     .terminal-actions {
       display: flex;
       gap: 8px;
-      
+
       // 关闭选中按钮的特殊样式
       d-button[color="danger"] {
         transition: all 0.2s ease;
-        
+
         &:not([disabled]):hover {
           background-color: #dc3545;
           border-color: #dc3545;
-          color: white;
+          color: @devui-text;
           transform: translateY(-1px);
           box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
         }
-        
+
         &[disabled] {
           opacity: 0.5;
           cursor: not-allowed;
@@ -60,10 +61,11 @@
 
     .terminal-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr; // 固定为两列
+      grid-template-columns: 1fr 1fr; // 保持两列布局
       gap: 16px;
       padding: 8px;
-      
+      // 移除固定的 grid-auto-rows，让每行根据内容自适应高度
+
       // 确保每个终端窗体有合适的最小宽度
       > * {
         min-width: 0; // 允许flex项目缩小
@@ -137,15 +139,15 @@
 @media (max-width: 480px) {
   .web-terminal-management {
     padding: 8px;
-    
+
     .terminal-container .terminal-grid {
       padding: 4px;
       gap: 8px;
     }
-    
+
     .terminal-header .terminal-actions {
       gap: 6px;
-      
+
       d-button {
         font-size: 12px;
         padding: 6px 12px;

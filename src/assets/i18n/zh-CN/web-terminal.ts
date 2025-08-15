@@ -10,6 +10,8 @@ export const webTerminal = {
   clickAddToStart: '点击"添加终端"开始使用',
   groupControlHint: '群控模式：在任意选中的终端中输入命令将同时发送到所有选中的终端',
   send: '发送',
+  correctTerminals: '矫正终端',
+  correctTerminalsHint: '重新发送终端尺寸信息到后端，矫正终端显示',
 
   // 资产选择抽屉
   selectAsset: '选择资产',
@@ -30,11 +32,15 @@ export const webTerminal = {
   groupCommandPlaceholder: '输入群控命令（将发送到所有选中的终端）...',
   groupControl: '群控',
   groupControlActive: '群控模式激活 - 命令将发送到所有选中的终端',
+  enterWideScreen: '宽屏模式',
+  exitWideScreen: '退出宽屏',
 
   // 连接状态
   connected: '已连接',
   disconnected: '已断开',
   connecting: '连接中',
+  connectingTo: '正在连接到',
+  closingConnection: '正在关闭终端连接...',
 
   // 消息提示
   connectionFailed: '连接失败',

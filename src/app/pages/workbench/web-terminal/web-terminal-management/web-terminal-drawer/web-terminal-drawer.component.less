@@ -1,10 +1,12 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px 24px;
-  border-bottom: 1px solid #e9ecef;
-  background: #f8f9fa;
+  border-bottom: 1px solid @devui-dividing-line;;
+  background: @devui-base-bg;
 
   .header-content {
     flex: 1;
@@ -13,13 +15,13 @@
       margin: 0 0 4px 0;
       font-size: 18px;
       font-weight: 600;
-      color: #333;
+      color: @devui-text;
     }
 
     .header-hint {
       margin: 0;
       font-size: 12px;
-      color: #666;
+      color: @devui-text;
       line-height: 1.4;
     }
   }
@@ -49,8 +51,7 @@
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
-    padding: 16px;
-    background: #f8f9fa;
+    background: @devui-base-bg;
     border-radius: 6px;
     align-items: center;
     flex-shrink: 0; // 防止搜索区域被压缩
@@ -74,7 +75,7 @@
     min-height: 200px; // 设置最小高度
     max-height: calc(100vh - 300px); // 设置最大高度，为页脚留出空间
     overflow: hidden;
-    border: 1px solid #e9ecef;
+    border: 1px solid @devui-dividing-line;
     border-radius: 6px;
 
     d-data-table {
@@ -112,7 +113,7 @@
     .asset-key {
       font-family: 'Courier New', monospace;
       font-size: 12px;
-      color: #666;
+      color: @devui-text;
       word-break: break-all;
     }
 
@@ -122,7 +123,7 @@
       align-items: center;
       justify-content: center;
       height: 300px;
-      color: #666;
+      color: @devui-text;
 
       .empty-icon {
         margin-bottom: 16px;
@@ -137,7 +138,7 @@
       p {
         margin: 0;
         font-size: 14px;
-        color: #999;
+        color: @devui-text;
       }
     }
   }
@@ -145,12 +146,12 @@
   .asset-pagination {
     margin-top: 12px; // 减少上边距
     padding: 12px 0; // 减少内边距
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid @devui-dividing-line;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0; // 防止分页区域被压缩
-    background: #fff; // 确保背景色
+    background: @devui-base-bg; // 确保背景色
     position: sticky; // 让分页区域粘在底部
     bottom: 0;
     z-index: 1;
@@ -175,7 +176,7 @@
               transition: all 0.2s ease;
 
               &:hover {
-                background-color: #f0f0f0;
+                background-color: @devui-base-bg;
                 color: #007bff;
               }
 
@@ -194,7 +195,7 @@
           }
 
           &:not([disabled]):hover {
-            background-color: #e6f3ff;
+            background-color: @devui-base-bg;
             border-color: #007bff;
             color: #007bff;
           }
@@ -216,13 +217,13 @@
     .asset-table-container {
       flex: 0 0 auto;
       height: auto;
-      
+
       d-data-table {
         height: auto;
-        
+
         :deep(.devui-table) {
           height: auto;
-          
+
           .devui-table-view {
             height: auto;
             max-height: none;

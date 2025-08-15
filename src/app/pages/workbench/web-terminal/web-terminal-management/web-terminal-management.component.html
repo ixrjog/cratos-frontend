@@ -38,6 +38,14 @@
       <span *ngIf="selectedTerminals.length > 1" class="group-control-hint">
         {{ 'webTerminal.groupControlHint' | translate }}
       </span>
+      <!-- WebSocket连接状态显示 -->
+      <span class="ws-status" [ngClass]="getWsStatusClass()">
+        <i class="ws-status-icon"></i>
+        WebSocket: {{ getWsStatusText() }}
+        <span *ngIf="wsConnectionStatus === 'connected' && wsConnectionTime" class="ws-duration">
+          ({{ getConnectionDuration() }})
+        </span>
+      </span>
     </div>
   </div>
 

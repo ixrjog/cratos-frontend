@@ -51,6 +51,84 @@
         border-radius: 4px;
         font-size: 12px;
       }
+
+      // WebSocket连接状态样式
+      .ws-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        .ws-status-icon {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          display: inline-block;
+          animation: pulse 2s infinite;
+        }
+
+        .ws-duration {
+          font-size: 11px;
+          opacity: 0.8;
+        }
+
+        // 连接状态样式
+        &.ws-status-connected {
+          color: #28a745;
+          background: rgba(40, 167, 69, 0.1);
+          
+          .ws-status-icon {
+            background-color: #28a745;
+          }
+        }
+
+        &.ws-status-connecting {
+          color: #ffc107;
+          background: rgba(255, 193, 7, 0.1);
+          
+          .ws-status-icon {
+            background-color: #ffc107;
+            animation: pulse 1s infinite;
+          }
+        }
+
+        &.ws-status-error {
+          color: #dc3545;
+          background: rgba(220, 53, 69, 0.1);
+          
+          .ws-status-icon {
+            background-color: #dc3545;
+            animation: none;
+          }
+        }
+
+        &.ws-status-disconnected {
+          color: #6c757d;
+          background: rgba(108, 117, 125, 0.1);
+          
+          .ws-status-icon {
+            background-color: #6c757d;
+            animation: none;
+          }
+        }
+      }
+
+      // 脉冲动画
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
     }
   }
 

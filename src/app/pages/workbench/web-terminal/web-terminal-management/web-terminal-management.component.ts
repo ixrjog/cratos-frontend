@@ -15,6 +15,7 @@ import { WebTerminalDrawerComponent } from './web-terminal-drawer/web-terminal-d
 import { WebSocketApiService } from '../../../../@core/services/ws.api.service';
 import { UuidUtil } from '../../../../@shared/utils/uuid.util';
 import { WS_HEART_INTERVAL } from '../../../../@shared/constant/ws.constant';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface TerminalInstance {
   instanceId: string;
@@ -43,6 +44,12 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   private heartbeatSubscription: Subscription | null = null;
   private lastHeartbeatTime: number = 0;
   private readonly HEARTBEAT_TIMEOUT = 30000; // 30秒超时检测
+  private isWebSocketInitialized: boolean = false; // 标记WebSocket是否已初始化
+  private pendingMessages: any[] = []; // 待发送的消息队列
+  
+  // WebSocket连接状态显示
+  wsConnectionStatus: 'disconnected' | 'connecting' | 'connected' | 'error' = 'disconnected';
+  wsConnectionTime: Date | null = null;
 
   terminals: TerminalInstance[] = [];
   selectedTerminals: string[] = [];
@@ -54,12 +61,12 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     private drawerService: DrawerService,
     private wsApiService: WebSocketApiService,
     private uuidUtil: UuidUtil,
+    private translateService: TranslateService,
   ) {
   }
 
   ngOnInit(): void {
-    this.initializeWebSocket();
-    this.startHeartbeat();
+    // 页面初始化时不再初始化WebSocket，等到第一次打开终端时再初始化
   }
 
   ngOnDestroy(): void {
@@ -69,11 +76,22 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   }
 
   private initializeWebSocket(): void {
+    // 如果已经初始化过，直接返回
+    if (this.isWebSocketInitialized && this.ws && this.ws.readyState === WebSocket.OPEN) {
+      return;
+    }
+
     try {
+      this.wsConnectionStatus = 'connecting';
       this.ws = this.wsApiService.createWsClient('/ssh/crystal');
       this.setupWebSocketEventHandlers();
+      this.startHeartbeat();
+      this.isWebSocketInitialized = true;
+      console.log('WebSocket client initialized');
     } catch (error) {
       console.error('Failed to create WebSocket:', error);
+      this.isWebSocketInitialized = false;
+      this.wsConnectionStatus = 'error';
     }
   }
 
@@ -82,7 +100,12 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     this.ws.onopen = (event) => {
       console.log('WebSocket connected');
+      this.wsConnectionStatus = 'connected';
+      this.wsConnectionTime = new Date();
       this.lastHeartbeatTime = Date.now();
+      
+      // 发送待发送的消息
+      this.processPendingMessages();
     };
 
     this.ws.onmessage = (event) => {
@@ -91,19 +114,17 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     this.ws.onerror = (error) => {
       console.error('WebSocket error:', error);
+      this.wsConnectionStatus = 'error';
     };
 
     this.ws.onclose = (event) => {
       console.log('WebSocket closed:', event.code, event.reason);
-      if (event.code !== 1000) {
-        // 非正常关闭，尝试重连
-        console.log('Attempting to reconnect in 3 seconds...');
-        setTimeout(() => {
-          if (!this.destroy$.closed) {
-            this.initializeWebSocket();
-          }
-        }, 3000);
-      }
+      // 重置初始化状态，不进行重连
+      this.isWebSocketInitialized = false;
+      this.wsConnectionStatus = 'disconnected';
+      this.wsConnectionTime = null;
+      // 清空待发送消息队列
+      this.pendingMessages = [];
     };
   }
 
@@ -176,9 +197,31 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     if (this.ws?.readyState === WebSocket.OPEN) {
       try {
         this.ws.send(JSON.stringify(message));
+        console.log('WebSocket message sent:', message);
       } catch (error) {
         console.error('Failed to send WebSocket message:', error);
       }
+    } else {
+      // WebSocket未连接，将消息加入待发送队列
+      console.log('WebSocket not ready, adding message to pending queue:', message);
+      this.pendingMessages.push(message);
+    }
+  }
+
+  private processPendingMessages(): void {
+    if (this.pendingMessages.length > 0) {
+      console.log(`Processing ${this.pendingMessages.length} pending messages`);
+      const messages = [...this.pendingMessages];
+      this.pendingMessages = [];
+      
+      messages.forEach(message => {
+        try {
+          this.ws?.send(JSON.stringify(message));
+          console.log('Pending message sent:', message);
+        } catch (error) {
+          console.error('Failed to send pending message:', error);
+        }
+      });
     }
   }
 
@@ -206,6 +249,13 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       }
       this.ws = null;
     }
+
+    // 重置初始化状态和连接状态
+    this.isWebSocketInitialized = false;
+    this.wsConnectionStatus = 'disconnected';
+    this.wsConnectionTime = null;
+    // 清空待发送消息队列
+    this.pendingMessages = [];
   }
 
   private generateInstanceId(assetName: string): string {
@@ -246,6 +296,12 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   }
 
   onAssetSelect(asset: EdsAssetVO): void {
+    // 如果是第一次打开终端，需要初始化WebSocket客户端
+    if (!this.isWebSocketInitialized) {
+      console.log('First terminal opening, initializing WebSocket client...');
+      this.initializeWebSocket();
+    }
+
     const instanceId = this.generateInstanceId(asset.name);
 
     const terminal: TerminalInstance = {
@@ -573,5 +629,56 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
         }
       }, index * 100); // 每个终端间隔100ms
     });
+  }
+
+  // 获取WebSocket连接状态显示文本
+  getWsStatusText(): string {
+    switch (this.wsConnectionStatus) {
+      case 'connected':
+        return this.translateService.instant('webTerminal.wsStatus.connected');
+      case 'connecting':
+        return this.translateService.instant('webTerminal.wsStatus.connecting');
+      case 'error':
+        return this.translateService.instant('webTerminal.wsStatus.error');
+      case 'disconnected':
+      default:
+        return this.translateService.instant('webTerminal.wsStatus.disconnected');
+    }
+  }
+
+  // 获取WebSocket连接状态样式类
+  getWsStatusClass(): string {
+    switch (this.wsConnectionStatus) {
+      case 'connected':
+        return 'ws-status-connected';
+      case 'connecting':
+        return 'ws-status-connecting';
+      case 'error':
+        return 'ws-status-error';
+      case 'disconnected':
+      default:
+        return 'ws-status-disconnected';
+    }
+  }
+
+  // 获取连接时长显示
+  getConnectionDuration(): string {
+    if (!this.wsConnectionTime || this.wsConnectionStatus !== 'connected') {
+      return '';
+    }
+    
+    const now = new Date();
+    const duration = now.getTime() - this.wsConnectionTime.getTime();
+    const seconds = Math.floor(duration / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    
+    if (hours > 0) {
+      return `${hours}小时${minutes % 60}分钟`;
+    } else if (minutes > 0) {
+      return `${minutes}分钟${seconds % 60}秒`;
+    } else {
+      return `${seconds}秒`;
+    }
   }
 }

@@ -13,6 +13,14 @@ export const webTerminal = {
   correctTerminals: '矫正终端',
   correctTerminalsHint: '重新发送终端尺寸信息到后端，矫正终端显示',
 
+  // WebSocket连接状态
+  wsStatus: {
+    connected: '已连接',
+    connecting: '连接中...',
+    error: '连接错误',
+    disconnected: '未连接',
+  },
+
   // 资产选择抽屉
   selectAsset: '选择资产',
   searchAssetPlaceholder: '搜索资产名称...',

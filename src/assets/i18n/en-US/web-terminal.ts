@@ -13,6 +13,14 @@ export const webTerminal = {
   correctTerminals: 'Correct Terminals',
   correctTerminalsHint: 'Resend terminal size information to backend to correct terminal display',
 
+  // WebSocket connection status
+  wsStatus: {
+    connected: 'Connected',
+    connecting: 'Connecting...',
+    error: 'Connection Error',
+    disconnected: 'Disconnected',
+  },
+
   // Asset selection drawer
   selectAsset: 'Select Asset',
   searchAssetPlaceholder: 'Search asset name...',

@@ -30,6 +30,7 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   @Output() onClose = new EventEmitter<string>();
   @Output() onCommand = new EventEmitter<{ instanceId: string, command: string }>();
   @Output() onResizeEvent = new EventEmitter<{ instanceId: string, width: number, height: number }>();
+  @Output() onReady = new EventEmitter<{ instanceId: string, width: number, height: number }>();
 
   private destroy$ = new Subject<void>();
   private xterm!: Terminal;
@@ -114,6 +115,18 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
 
         // 设置焦点到终端
         this.xterm.focus();
+
+        // 发送终端初始化完成事件，包含实际尺寸
+        setTimeout(() => {
+          const cols = this.xterm.cols;
+          const rows = this.xterm.rows;
+          this.onReady.emit({
+            instanceId: this.terminal.instanceId,
+            width: cols,
+            height: rows
+          });
+          console.log(`Terminal ${this.terminal.instanceId} ready with dimensions: ${cols}x${rows}`);
+        }, 50);
       } catch (error) {
         console.error('Failed to attach terminal:', error);
       }

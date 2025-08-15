@@ -19,8 +19,8 @@ export interface WebTerminalCloseRequest extends WebTerminalBaseRequest {
 export interface WebTerminalBaseRequest {
   state: string;
   terminal: {
-    width: number
-    height: number
+    rows: number
+    cols: number
   };
 }
 

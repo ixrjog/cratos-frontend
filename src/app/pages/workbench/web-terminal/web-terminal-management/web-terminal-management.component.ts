@@ -24,6 +24,8 @@ export interface TerminalInstance {
   isSelected: boolean;
   isConnected: boolean;
   lastActivity: Date;
+  rows?: number;
+  cols?: number;
 }
 
 @Component({
@@ -251,6 +253,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       isSelected: false,
       isConnected: false,
       lastActivity: new Date(),
+      rows: 24,  // 默认行数
+      cols: 80,  // 默认列数
     };
 
     this.terminals.push(terminal);
@@ -263,8 +267,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     const request: WebTerminalOpenRequest = {
       state: WebTerminalStatus.OPEN,
       terminal: {
-        width: 60,
-        height: 20,
+        rows: terminal.rows || 24,
+        cols: terminal.cols || 80,
       },
       assetId: terminal.assetId,
       instanceId: terminal.instanceId,
@@ -307,8 +311,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     const request: WebTerminalCloseRequest = {
       state: WebTerminalStatus.CLOSE,
       terminal: {
-        width: 60,
-        height: 20,
+        rows: terminal.rows || 24,
+        cols: terminal.cols || 80,
       },
       instanceId: terminal.instanceId,
     };
@@ -319,9 +323,28 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   onTerminalResize(data: { instanceId: string, width: number, height: number }): void {
     const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
     if (terminal) {
+      // 更新终端实例中的尺寸信息
+      terminal.cols = data.width;
+      terminal.rows = data.height;
+      
       // 发送RESIZE事件到后端
       this.sendTerminalResizeRequest(terminal, data.width, data.height);
       console.log(`Sent ${WebTerminalStatus.RESIZE} event for terminal: ${data.instanceId} (${data.width}x${data.height})`);
+    }
+  }
+
+  // 处理终端初始化完成后的尺寸设置
+  onTerminalReady(data: { instanceId: string, width: number, height: number }): void {
+    const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
+    if (terminal) {
+      // 更新终端实例中的尺寸信息
+      terminal.cols = data.width;
+      terminal.rows = data.height;
+      
+      console.log(`Terminal ${data.instanceId} initialized with dimensions: ${data.width}x${data.height}`);
+      
+      // 如果需要，可以重新发送OPEN请求以确保后端获得正确的尺寸
+      // this.sendTerminalOpenRequest(terminal);
     }
   }
 
@@ -329,8 +352,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     const request: WebTerminalResizeRequest = {
       state: WebTerminalStatus.RESIZE,
       terminal: {
-        width: width,
-        height: height,
+        cols: width,
+        rows: height,
       },
       instanceId: terminal.instanceId,
     };
@@ -358,8 +381,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       const request: WebTerminalCommandRequest = {
         state: WebTerminalStatus.COMMAND,
         terminal: {
-          width: 60,
-          height: 20,
+          rows: terminal.rows || 24,
+          cols: terminal.cols || 80,
         },
         instanceId: terminal.instanceId,
         input: command,

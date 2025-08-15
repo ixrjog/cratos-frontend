@@ -1,13 +1,13 @@
 export const webTerminal = {
   // Main page
-  addTerminal: 'Add Terminal',
+  addTerminal: 'Open Terminal',
   selectAll: 'Select All',
   clearSelection: 'Clear Selection',
   closeSelected: 'Close Selected',
   totalTerminals: 'Total Terminals',
   selectedTerminals: 'Selected',
   noTerminals: 'No Terminals',
-  clickAddToStart: 'Click "Add Terminal" to get started',
+  clickAddToStart: 'Click "Open Terminal" to get started',
   groupControlHint: 'Group Control Mode: Commands entered in any selected terminal will be sent to all selected terminals',
   send: 'Send',
   correctTerminals: 'Correct Terminals',

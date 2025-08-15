@@ -1,13 +1,13 @@
 export const webTerminal = {
   // 主页面
-  addTerminal: '添加终端',
+  addTerminal: '打开终端',
   selectAll: '全选',
   clearSelection: '清除选择',
   closeSelected: '关闭选中',
   totalTerminals: '终端总数',
   selectedTerminals: '已选择',
   noTerminals: '暂无终端',
-  clickAddToStart: '点击"添加终端"开始使用',
+  clickAddToStart: '点击"打开终端"开始使用',
   groupControlHint: '群控模式：在任意选中的终端中输入命令将同时发送到所有选中的终端',
   send: '发送',
   correctTerminals: '矫正终端',

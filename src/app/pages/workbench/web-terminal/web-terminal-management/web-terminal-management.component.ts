@@ -669,16 +669,15 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     
     const now = new Date();
     const duration = now.getTime() - this.wsConnectionTime.getTime();
-    const seconds = Math.floor(duration / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
+    const totalSeconds = Math.floor(duration / 1000);
     
-    if (hours > 0) {
-      return `${hours}小时${minutes % 60}分钟`;
-    } else if (minutes > 0) {
-      return `${minutes}分钟${seconds % 60}秒`;
-    } else {
-      return `${seconds}秒`;
-    }
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    // 格式化为 HH:MM:SS
+    const formatTime = (num: number): string => num.toString().padStart(2, '0');
+    
+    return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
   }
 }

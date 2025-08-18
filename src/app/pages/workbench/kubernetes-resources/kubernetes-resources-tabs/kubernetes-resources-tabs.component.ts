@@ -65,7 +65,6 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     private applicationService: ApplicationService,
     private wsApiService: WebSocketApiService,
     private toastUtil: ToastUtil,
-
   ) {
   }
 
@@ -132,7 +131,6 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
         }
         this.onGetUserFavorite();
       });
-
   }
 
   onClick(application: ApplicationVO) {

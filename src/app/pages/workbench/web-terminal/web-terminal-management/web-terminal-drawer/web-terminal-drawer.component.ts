@@ -1,14 +1,27 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { EdsAssetVO } from '../../../../../@core/data/ext-datasource';
 import { Table, TABLE_DATA } from '../../../../../@core/data/base-data';
-import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import { onFetchData } from '../../../../../@shared/utils/data-table.utli';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 import { TagGroupService } from '../../../../../@core/services/tag-group.service';
 import { GetGroupOptions, TagGroupAssetPageQuery } from '../../../../../@core/data/tag-group';
-import { map } from 'rxjs/operators';
 import { DataTableComponent } from 'ng-devui';
+import { AddUserFavorite, FavoriteGroupVO, RemoveUserFavorite } from '../../../../../@core/data/user-favorite';
+import { BusinessTypeEnum } from '../../../../../@core/data/business';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
+import { UserFavoriteService } from '../../../../../@core/services/user-favorite.service';
 
 @Component({
   selector: 'app-web-terminal-drawer',
@@ -33,6 +46,10 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   // 用于接收DrawerService传递的data
   public data: any = {};
 
+  isFavorite: boolean;
+  favoriteGroupList: FavoriteGroupVO[] = [];
+  isCollapsed = true;
+
   queryParam = {
     tagGroup: '',
     queryName: '',
@@ -44,10 +61,11 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   public isCompactMode = false;
 
   constructor(
-    private edsService: EdsService,
+    private userFavoriteService: UserFavoriteService,
     private tagGroupService: TagGroupService,
     private elementRef: ElementRef,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toastUtil: ToastUtil,
   ) {
     // 从静态变量获取数据
     this.data = WebTerminalDrawerComponent.drawerData;
@@ -63,6 +81,8 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
       this.queryParam.queryName = searchValue;
       this.table.pager.pageIndex = 1;
     });
+
+    this.onGetUserFavorite();
   }
 
   ngAfterViewInit(): void {
@@ -80,10 +100,10 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   private adjustTableHeight(): void {
     const dataLength = this.table.data?.length || 0;
     const pageSize = this.table.pager.pageSize;
-    
+
     // 如果数据量少于页面大小的一半，启用紧凑模式
     this.isCompactMode = dataLength > 0 && dataLength < Math.ceil(pageSize / 2);
-    
+
     // 应用CSS类
     const container = this.elementRef.nativeElement.querySelector('.asset-search-container');
     if (container) {
@@ -93,7 +113,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
         container.classList.remove('compact-mode');
       }
     }
-    
+
     this.cdr.detectChanges();
   }
 
@@ -105,8 +125,8 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     };
 
     // 使用真实的API调用
-    onFetchData(this.table, this.tagGroupService.queryTagGroupAssetPage(param));
-    
+    onFetchData(this.table, this.tagGroupService.queryMyGroupAssetPage(param));
+
     // 在数据加载完成后调整表格高度
     setTimeout(() => {
       this.adjustTableHeight();
@@ -117,7 +137,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     const param: GetGroupOptions = {
       queryName: term,
     };
-    return this.tagGroupService.getGroupOptions(param)
+    return this.tagGroupService.getMyGroupOptions(param)
       .pipe(
         map(({ body }) =>
           body.options.map((option, index) => ({ id: index, option: option })),
@@ -233,4 +253,54 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     // If you have toast service, you can use it like this:
     // this.toastService.success(`Successfully added ${count} terminals`);
   }
+
+  onFavoriteClick() {
+    this.isFavorite = !this.isFavorite;
+    if (this.isFavorite) {
+      this.onAddGroupFavorite(this.queryParam.tagGroup);
+    } else {
+      this.onRemoveGroupFavorite(this.queryParam.tagGroup);
+    }
+  }
+
+  onAddGroupFavorite(tagGroup: string) {
+    const param: AddUserFavorite = {
+      businessType: BusinessTypeEnum.TAG_GROUP,
+      name: tagGroup,
+    };
+    this.userFavoriteService.addGroupFavorite(param)
+      .subscribe(() => {
+        this.onGetUserFavorite();
+      });
+  }
+
+  onRemoveGroupFavorite(tagGroup: string) {
+    const param: RemoveUserFavorite = {
+      businessType: BusinessTypeEnum.TAG_GROUP,
+      name: tagGroup,
+    };
+    this.userFavoriteService.removeGroupFavorite(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+        if (this.queryParam.tagGroup === tagGroup) {
+          this.isFavorite = false;
+        }
+        this.onGetUserFavorite();
+      });
+  }
+
+  onClick(group: FavoriteGroupVO) {
+    this.queryParam.tagGroup = group.name;
+    this.fetchData();
+    this.onAddGroupFavorite(group.name);
+  }
+
+  onGetUserFavorite() {
+    this.userFavoriteService.getMyFavoriteGroup()
+      .subscribe(({ body }) => {
+        this.favoriteGroupList = body;
+      });
+  }
+
+  protected readonly JSON = JSON;
 }

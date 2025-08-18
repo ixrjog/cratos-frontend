@@ -17,4 +17,8 @@ export abstract class TagGroupData {
 
   abstract queryTagGroupAssetPage(param: TagGroupAssetPageQuery): Observable<DataTable<EdsAssetVO>>;
 
+  abstract getMyGroupOptions(param: GetGroupOptions): Observable<HttpResult<OptionsVO>>;
+
+  abstract queryMyGroupAssetPage(param: TagGroupAssetPageQuery): Observable<DataTable<EdsAssetVO>>;
+
 }

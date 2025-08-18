@@ -14,6 +14,15 @@
 <div class="asset-search-container" [ngClass]="{'compact-mode': isCompactMode}">
   <!-- 搜索和筛选 -->
   <div class="search-filters">
+    <d-button
+      [disabled]="queryParam.tagGroup  ===''"
+      class="button"
+      bsStyle="common"
+      (click)="onFavoriteClick()"
+    >
+      <i class="icon" [ngClass]="isFavorite?'icon-star':'icon-star-o'"></i>
+      {{ 'kubernetes.actions.favorite' | translate }}
+    </d-button>
     <d-select
       class="select"
       [filterKey]="'value'"
@@ -39,6 +48,29 @@
       Filter
     </d-button>
   </div>
+
+  <d-panel #anotherPanel [isCollapsed]="isCollapsed" [hasLeftPadding]="false" [showAnimation]="true"
+           *ngIf="JSON.stringify(favoriteGroupList) !== '[]'" style="margin-bottom: 10px">
+    <d-panel-header>
+      <em class="icon icon-select-arrow" [ngClass]="{ open: anotherPanel.isCollapsed }"></em>
+      {{ 'kubernetes.messages.myFavorites' | translate }}
+    </d-panel-header>
+    <d-panel-body style="padding: 5px">
+      <d-tag
+        *ngFor="let group of favoriteGroupList"
+        style="margin: 5px 5px 0 0"
+        [tag]="group"
+        [customViewTemplate]="customTag"
+        [labelStyle]="'blue-w98'"
+      >
+      </d-tag>
+      <ng-template #customTag let-tag="tag">
+        <span (click)="onClick(tag)">{{ tag.name }}</span>
+        <span class="icon-close" style="vertical-align: center; padding-left: 4px"
+              (click)="onRemoveGroupFavorite(tag.name)"></span>
+      </ng-template>
+    </d-panel-body>
+  </d-panel>
 
   <!-- 资产表格 -->
   <div class="asset-table-container">

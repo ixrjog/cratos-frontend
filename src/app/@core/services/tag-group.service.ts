@@ -22,4 +22,12 @@ export class TagGroupService extends TagGroupData {
     return this.apiService.post(this.baseUrl, '/page/query', param);
   }
 
+  getMyGroupOptions(param: GetGroupOptions): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.post(this.baseUrl, '/my/options/get', param);
+  }
+
+  queryMyGroupAssetPage(param: TagGroupAssetPageQuery): Observable<DataTable<EdsAssetVO>> {
+    return this.apiService.post(this.baseUrl, '/my/page/query', param);
+  }
+
 }

@@ -1,0 +1,60 @@
+<div class="theme-settings-container">
+  <div class="theme-settings-header">
+    <h3>终端主题设置</h3>
+    <d-button
+      bsStyle="text"
+      icon="icon-close"
+      (click)="close()">
+    </d-button>
+  </div>
+
+  <div class="theme-settings-content">
+    <!-- 主题选择区域 -->
+    <div class="theme-selection-section">
+      <h4>选择主题</h4>
+      <div class="theme-grid">
+        <div 
+          *ngFor="let theme of presetThemes"
+          class="theme-card"
+          [ngClass]="{'selected': selectedThemeId === theme.id}"
+          (click)="onThemeSelect(theme.id)">
+          <div class="theme-preview" 
+               [style.background-color]="theme.colors.background" 
+               [style.color]="theme.colors.foreground">
+            <div class="preview-line">$ echo "{{theme.name}}"</div>
+            <div class="preview-line">{{theme.name}}</div>
+            <div class="preview-cursor" [style.background-color]="theme.colors.cursor"></div>
+          </div>
+          <div class="theme-info">
+            <div class="theme-name">{{theme.name}}</div>
+            <div class="theme-description" *ngIf="theme.description">{{theme.description}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 预览区域 -->
+    <div class="theme-preview-section">
+      <h4>预览效果</h4>
+      <div class="terminal-preview" [ngStyle]="getPreviewStyle()">
+        <pre>{{previewText}}</pre>
+      </div>
+    </div>
+
+    <!-- 底部操作 -->
+    <div class="theme-settings-footer">
+      <d-button
+        bsStyle="danger"
+        size="sm"
+        (click)="onResetToDefault()">
+        重置为默认主题
+      </d-button>
+      
+      <div class="footer-info">
+        <span *ngIf="currentTheme">
+          当前主题: {{currentTheme.name}}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

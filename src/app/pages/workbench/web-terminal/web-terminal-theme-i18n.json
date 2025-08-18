@@ -1,0 +1,29 @@
+{
+  "webTerminal": {
+    "themeSettings": {
+      "title": "主题设置",
+      "presetThemes": "预设主题",
+      "customThemes": "自定义主题",
+      "themeEditor": "主题编辑器",
+      "createCustomTheme": "创建自定义主题",
+      "importTheme": "导入主题",
+      "exportTheme": "导出主题",
+      "noCustomThemes": "暂无自定义主题",
+      "createFirstCustomTheme": "点击上方按钮创建您的第一个自定义主题",
+      "themeName": "主题名称",
+      "basicSettings": "基本设置",
+      "fontSize": "字体大小",
+      "fontFamily": "字体族",
+      "lineHeight": "行高",
+      "colorSettings": "颜色设置",
+      "basicColors": "基本颜色",
+      "standardColors": "标准颜色",
+      "brightColors": "亮色",
+      "preview": "预览",
+      "resetToDefault": "重置为默认",
+      "currentTheme": "当前主题",
+      "selectColor": "选择颜色",
+      "cancel": "取消"
+    }
+  }
+}

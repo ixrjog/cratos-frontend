@@ -31,6 +31,13 @@
         (click)="onCorrectAllTerminals()">
         {{ 'webTerminal.correctTerminals' | translate }}
       </d-button>
+      <!-- 主题设置按钮 -->
+      <d-button
+        bsStyle="common"
+        icon="icon-palette"
+        (click)="onOpenThemeSettings()">
+        主题设置
+      </d-button>
     </div>
     <div class="terminal-info">
       <span>{{ 'webTerminal.totalTerminals' | translate }}: {{ terminals.length }}</span>
@@ -74,6 +81,15 @@
       </div>
       <h3>{{ 'webTerminal.noTerminals' | translate }}</h3>
       <p>{{ 'webTerminal.clickAddToStart' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- 主题设置面板 -->
+  <div class="theme-settings-overlay" *ngIf="showThemeSettings" (click)="onCloseThemeSettings()">
+    <div class="theme-settings-panel" (click)="$event.stopPropagation()">
+      <app-web-terminal-theme-settings
+        (onClose)="onCloseThemeSettings()">
+      </app-web-terminal-theme-settings>
     </div>
   </div>
 </section>

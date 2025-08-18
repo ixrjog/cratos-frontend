@@ -57,6 +57,9 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   // 宽屏模式终端集合
   wideScreenTerminals: Set<string> = new Set();
 
+  // 主题设置相关
+  showThemeSettings = false;
+
   constructor(
     private drawerService: DrawerService,
     private wsApiService: WebSocketApiService,
@@ -312,94 +315,17 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       isSelected: false,
       isConnected: false,
       lastActivity: new Date(),
-      rows: 24,  // 默认行数
-      cols: 80,  // 默认列数
+      // 不设置初始rows/cols，等待从xterm.js实体中获取真实尺寸
     };
 
     this.terminals.push(terminal);
 
-    // 发送OPEN事件到后端
-    this.sendTerminalOpenRequest(terminal);
+    // 不立即发送OPEN事件，等待终端准备就绪后发送
     
     // 延迟更新布局，确保DOM已渲染
     setTimeout(() => {
       this.updateGridLayout();
     }, 200);
-  }
-
-  private sendTerminalOpenRequest(terminal: TerminalInstance): void {
-    const request: WebTerminalOpenRequest = {
-      state: WebTerminalStatus.OPEN,
-      terminal: {
-        rows: terminal.rows || 24,
-        cols: terminal.cols || 80,
-      },
-      assetId: terminal.assetId,
-      instanceId: terminal.instanceId,
-    };
-
-    this.sendWebSocketMessage(request);
-    console.log(`Sent ${WebTerminalStatus.OPEN} event for terminal: ${terminal.instanceId}`);
-  }
-
-  onTerminalSelect(data: { instanceId: string, selected: boolean }): void {
-    const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
-    if (terminal) {
-      terminal.isSelected = data.selected;
-
-      if (data.selected) {
-        if (!this.selectedTerminals.includes(data.instanceId)) {
-          this.selectedTerminals.push(data.instanceId);
-        }
-      } else {
-        this.selectedTerminals = this.selectedTerminals.filter(id => id !== data.instanceId);
-      }
-    }
-  }
-
-  onTerminalClose(instanceId: string): void {
-    const terminal = this.terminals.find(t => t.instanceId === instanceId);
-    if (terminal) {
-      // 发送CLOSE事件到后端
-      this.sendTerminalCloseRequest(terminal);
-
-      // 从列表中移除
-      this.terminals = this.terminals.filter(t => t.instanceId !== instanceId);
-      this.selectedTerminals = this.selectedTerminals.filter(id => id !== instanceId);
-      
-      // 从宽屏集合中移除
-      this.wideScreenTerminals.delete(instanceId);
-      
-      // 更新布局
-      setTimeout(() => {
-        this.updateGridLayout();
-      }, 50);
-    }
-  }
-
-  private sendTerminalCloseRequest(terminal: TerminalInstance): void {
-    const request: WebTerminalCloseRequest = {
-      state: WebTerminalStatus.CLOSE,
-      terminal: {
-        rows: terminal.rows || 24,
-        cols: terminal.cols || 80,
-      },
-      instanceId: terminal.instanceId,
-    };
-
-    this.sendWebSocketMessage(request);
-  }
-
-  onTerminalResize(data: { instanceId: string, width: number, height: number }): void {
-    const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
-    if (terminal) {
-      // 更新终端实例中的尺寸信息
-      terminal.cols = data.width;
-      terminal.rows = data.height;
-      
-      // 发送RESIZE事件到后端
-      this.sendTerminalResizeRequest(terminal, data.width, data.height);
-    }
   }
 
   // 处理终端初始化完成后的尺寸设置
@@ -412,9 +338,30 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       
       console.log(`Terminal ${data.instanceId} initialized with dimensions: ${data.width}x${data.height}`);
       
-      // 如果需要，可以重新发送OPEN请求以确保后端获得正确的尺寸
-      // this.sendTerminalOpenRequest(terminal);
+      // 现在发送OPEN请求，使用从xterm.js获取的真实尺寸
+      this.sendTerminalOpenRequest(terminal);
     }
+  }
+
+  private sendTerminalOpenRequest(terminal: TerminalInstance): void {
+    // 确保有有效的尺寸信息
+    if (!terminal.rows || !terminal.cols) {
+      console.warn(`Terminal ${terminal.instanceId} does not have valid dimensions, skipping OPEN request`);
+      return;
+    }
+
+    const request: WebTerminalOpenRequest = {
+      state: WebTerminalStatus.OPEN,
+      terminal: {
+        rows: terminal.rows,
+        cols: terminal.cols,
+      },
+      assetId: terminal.assetId,
+      instanceId: terminal.instanceId,
+    };
+
+    this.sendWebSocketMessage(request);
+    console.log(`Sent ${WebTerminalStatus.OPEN} event for terminal: ${terminal.instanceId} with dimensions: ${terminal.cols}x${terminal.rows}`);
   }
 
   private sendTerminalResizeRequest(terminal: TerminalInstance, width: number, height: number): void {
@@ -447,17 +394,89 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   private sendTerminalCommandRequest(instanceId: string, command: string): void {
     const terminal = this.terminals.find(t => t.instanceId === instanceId);
     if (terminal) {
+      // 确保有有效的尺寸信息
+      if (!terminal.rows || !terminal.cols) {
+        console.warn(`Terminal ${terminal.instanceId} does not have valid dimensions for COMMAND request`);
+        return;
+      }
+
       const request: WebTerminalCommandRequest = {
         state: WebTerminalStatus.COMMAND,
         terminal: {
-          rows: terminal.rows || 24,
-          cols: terminal.cols || 80,
+          rows: terminal.rows,
+          cols: terminal.cols,
         },
         instanceId: terminal.instanceId,
         input: command,
       };
 
       this.sendWebSocketMessage(request);
+    }
+  }
+
+  onTerminalClose(instanceId: string): void {
+    const terminal = this.terminals.find(t => t.instanceId === instanceId);
+    if (terminal) {
+      // 发送CLOSE事件到后端
+      this.sendTerminalCloseRequest(terminal);
+
+      // 从列表中移除
+      this.terminals = this.terminals.filter(t => t.instanceId !== instanceId);
+      this.selectedTerminals = this.selectedTerminals.filter(id => id !== instanceId);
+      
+      // 从宽屏集合中移除
+      this.wideScreenTerminals.delete(instanceId);
+      
+      // 更新布局
+      setTimeout(() => {
+        this.updateGridLayout();
+      }, 50);
+    }
+  }
+
+  private sendTerminalCloseRequest(terminal: TerminalInstance): void {
+    // 确保有有效的尺寸信息
+    if (!terminal.rows || !terminal.cols) {
+      console.warn(`Terminal ${terminal.instanceId} does not have valid dimensions for CLOSE request`);
+      return;
+    }
+
+    const request: WebTerminalCloseRequest = {
+      state: WebTerminalStatus.CLOSE,
+      terminal: {
+        rows: terminal.rows,
+        cols: terminal.cols,
+      },
+      instanceId: terminal.instanceId,
+    };
+
+    this.sendWebSocketMessage(request);
+  }
+
+  onTerminalSelect(data: { instanceId: string, selected: boolean }): void {
+    const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
+    if (terminal) {
+      terminal.isSelected = data.selected;
+
+      if (data.selected) {
+        if (!this.selectedTerminals.includes(data.instanceId)) {
+          this.selectedTerminals.push(data.instanceId);
+        }
+      } else {
+        this.selectedTerminals = this.selectedTerminals.filter(id => id !== data.instanceId);
+      }
+    }
+  }
+
+  onTerminalResize(data: { instanceId: string, width: number, height: number }): void {
+    const terminal = this.terminals.find(t => t.instanceId === data.instanceId);
+    if (terminal) {
+      // 更新终端实例中的尺寸信息
+      terminal.cols = data.width;
+      terminal.rows = data.height;
+      
+      // 发送RESIZE事件到后端
+      this.sendTerminalResizeRequest(terminal, data.width, data.height);
     }
   }
 
@@ -679,5 +698,14 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     const formatTime = (num: number): string => num.toString().padStart(2, '0');
     
     return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+  }
+
+  // 主题设置相关方法
+  onOpenThemeSettings(): void {
+    this.showThemeSettings = true;
+  }
+
+  onCloseThemeSettings(): void {
+    this.showThemeSettings = false;
   }
 }

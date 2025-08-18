@@ -16,6 +16,8 @@ import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { TranslateService } from '@ngx-translate/core';
 import { TerminalInstance } from '../web-terminal-management.component';
+import { TerminalThemeService } from '../terminal-theme.service';
+import { TerminalTheme } from '../terminal-themes.config';
 
 @Component({
   selector: 'app-web-terminal-item',
@@ -48,12 +50,14 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private themeService: TerminalThemeService
   ) {}
 
   ngOnInit(): void {
     this.initTerminal();
     this.setupEventListeners();
+    this.subscribeToThemeChanges();
   }
 
   ngAfterViewInit(): void {
@@ -78,11 +82,14 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private initTerminal(): void {
+    // 获取当前主题
+    const currentTheme = this.themeService.getCurrentTheme();
+    
     this.xterm = new Terminal({
       rows: 20, // 减少行数以适应两列布局
       cols: 60, // 减少列数以适应较小宽度
       fontFamily: '"Courier New", "DejaVu Sans Mono", "Liberation Mono", monospace',
-      fontSize: 12, // 减小字体大小
+      fontSize: 12, // 保持原始字体大小
       lineHeight: 1.2,
       cursorBlink: true,
       cursorStyle: 'block',
@@ -93,7 +100,28 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
       macOptionIsMeta: true,
       rightClickSelectsWord: true,
       scrollOnUserInput: true,
-      tabStopWidth: 8
+      tabStopWidth: 8,
+      theme: {
+        foreground: currentTheme.colors.foreground,
+        background: currentTheme.colors.background,
+        cursor: currentTheme.colors.cursor,
+        black: currentTheme.colors.black,
+        red: currentTheme.colors.red,
+        green: currentTheme.colors.green,
+        yellow: currentTheme.colors.yellow,
+        blue: currentTheme.colors.blue,
+        magenta: currentTheme.colors.magenta,
+        cyan: currentTheme.colors.cyan,
+        white: currentTheme.colors.white,
+        brightBlack: currentTheme.colors.brightBlack,
+        brightRed: currentTheme.colors.brightRed,
+        brightGreen: currentTheme.colors.brightGreen,
+        brightYellow: currentTheme.colors.brightYellow,
+        brightBlue: currentTheme.colors.brightBlue,
+        brightMagenta: currentTheme.colors.brightMagenta,
+        brightCyan: currentTheme.colors.brightCyan,
+        brightWhite: currentTheme.colors.brightWhite
+      }
     });
 
     this.fitAddon = new FitAddon();
@@ -113,6 +141,44 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
     this.xterm.onResize((size) => {
       // 终端大小变化时的处理
     });
+  }
+
+  private subscribeToThemeChanges(): void {
+    this.themeService.currentTheme$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(theme => {
+        this.applyTheme(theme);
+      });
+  }
+
+  private applyTheme(theme: TerminalTheme): void {
+    if (!this.xterm) return;
+
+    // 更新终端主题 - 只更新颜色，不改变字体设置
+    this.xterm.options.theme = {
+      foreground: theme.colors.foreground,
+      background: theme.colors.background,
+      cursor: theme.colors.cursor,
+      black: theme.colors.black,
+      red: theme.colors.red,
+      green: theme.colors.green,
+      yellow: theme.colors.yellow,
+      blue: theme.colors.blue,
+      magenta: theme.colors.magenta,
+      cyan: theme.colors.cyan,
+      white: theme.colors.white,
+      brightBlack: theme.colors.brightBlack,
+      brightRed: theme.colors.brightRed,
+      brightGreen: theme.colors.brightGreen,
+      brightYellow: theme.colors.brightYellow,
+      brightBlue: theme.colors.brightBlue,
+      brightMagenta: theme.colors.brightMagenta,
+      brightCyan: theme.colors.brightCyan,
+      brightWhite: theme.colors.brightWhite
+    };
+
+    // 刷新终端显示
+    this.xterm.refresh(0, this.xterm.rows - 1);
   }
 
   private attachTerminal(): void {

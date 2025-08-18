@@ -1,0 +1,181 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.theme-settings-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: @devui-base-bg;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .theme-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid @devui-dividing-line;
+    background: @devui-base-bg-dark;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: @devui-text;
+    }
+  }
+
+  .theme-settings-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 20px;
+  }
+
+  // 主题选择区域
+  .theme-selection-section {
+    margin-bottom: 24px;
+
+    h4 {
+      margin: 0 0 16px 0;
+      color: @devui-text;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 1px solid @devui-dividing-line;
+      padding-bottom: 8px;
+    }
+  }
+
+  // 主题网格
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+
+    .theme-card {
+      border: 2px solid @devui-dividing-line;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: @devui-base-bg;
+
+      &:hover {
+        border-color: @devui-brand-active;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.selected {
+        border-color: @devui-brand;
+        box-shadow: 0 0 0 1px @devui-brand;
+      }
+
+      .theme-preview {
+        height: 80px;
+        padding: 12px;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 12px;
+        line-height: 1.4;
+        position: relative;
+        overflow: hidden;
+
+        .preview-line {
+          margin-bottom: 4px;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+
+        .preview-cursor {
+          position: absolute;
+          bottom: 12px;
+          right: 12px;
+          width: 8px;
+          height: 12px;
+          animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+          0%, 50% { opacity: 1; }
+          51%, 100% { opacity: 0; }
+        }
+      }
+
+      .theme-info {
+        padding: 12px;
+        border-top: 1px solid @devui-dividing-line;
+
+        .theme-name {
+          font-weight: 600;
+          color: @devui-text;
+          margin-bottom: 4px;
+        }
+
+        .theme-description {
+          font-size: 12px;
+          color: @devui-text-weak;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+
+  // 预览区域
+  .theme-preview-section {
+    margin-bottom: 24px;
+
+    h4 {
+      margin: 0 0 12px 0;
+      color: @devui-text;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .terminal-preview {
+      border: 1px solid @devui-dividing-line;
+      border-radius: 6px;
+      padding: 16px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      height: 200px;
+      overflow-y: auto;
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    }
+  }
+
+  // 底部操作
+  .theme-settings-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid @devui-dividing-line;
+
+    .footer-info {
+      font-size: 14px;
+      color: @devui-text-weak;
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .theme-settings-container {
+    .theme-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .theme-settings-footer {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+    }
+  }
+}

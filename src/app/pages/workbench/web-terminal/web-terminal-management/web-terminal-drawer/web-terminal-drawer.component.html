@@ -16,7 +16,6 @@
   <div class="search-filters">
     <d-button
       [disabled]="queryParam.tagGroup  ===''"
-      class="button"
       bsStyle="common"
       (click)="onFavoriteClick()"
     >
@@ -41,11 +40,17 @@
     </d-search>
 
     <d-button
-      class="button"
       bsStyle="common"
       (click)="fetchData()"
       [disabled]="queryParam.tagGroup===''">
       Filter
+    </d-button>
+
+    <d-button
+      bsStyle="primary"
+      (click)="onBatchSelect()"
+      [disabled]="getCheckedRowsCount() === 0">
+      Open
     </d-button>
   </div>
 
@@ -85,7 +90,7 @@
       [loading]="table.loading"
       [checkable]="true">
 
-      <d-column field="name" header="Name" [width]="'200px'">
+      <d-column field="name" header="Name" [width]="'180px'">
         <d-cell>
           <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
             <span
@@ -98,7 +103,7 @@
         </d-cell>
       </d-column>
 
-      <d-column field="assetKey" header="Asset Key" [width]="'200px'">
+      <d-column field="assetKey" header="IP" [width]="'180px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span class="asset-key" [title]="cellItem">{{ cellItem }}</span>
@@ -110,20 +115,6 @@
         <d-cell>
           <ng-template let-rowItem="rowItem">
             <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
-          </ng-template>
-        </d-cell>
-      </d-column>
-
-      <d-column header="Actions" [width]="'100px'">
-        <d-cell>
-          <ng-template let-rowItem="rowItem">
-            <d-button
-              variant="solid"
-              color="primary"
-              size="sm"
-              (click)="onAssetClick(rowItem)">
-              {{ 'webTerminal.select' | translate }}
-            </d-button>
           </ng-template>
         </d-cell>
       </d-column>
@@ -140,31 +131,7 @@
     </d-data-table>
   </div>
 
-  <!-- 分页和批量操作 -->
   <div class="asset-pagination">
-    <!-- 批量选择按钮 -->
-    <div class="batch-operations">
-      <div dDropDown class="batch-button">
-        <d-button-group>
-          <d-button
-            bsStyle="common"
-            dDropDownToggle
-            [disabled]="getCheckedRowsCount() === 0">
-            {{ 'webTerminal.batchSelect' | translate }} ({{ getCheckedRowsCount() }})
-            <span class="icon icon-select-arrow"></span>
-          </d-button>
-        </d-button-group>
-        <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
-          <li role="menuitem" (click)="onBatchSelect()">
-            <a dDropDownMenuItem>
-              <span class="icon icon-plus" style="padding-right: 5px; vertical-align: middle"></span>
-              {{ 'webTerminal.addSelectedTerminals' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
     <d-pagination
       class="pagination"
       [total]="table.pager.total"

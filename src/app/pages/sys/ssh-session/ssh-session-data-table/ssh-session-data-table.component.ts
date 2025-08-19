@@ -38,6 +38,8 @@ export class SshSessionDataTableComponent implements OnInit {
 
   sessionTypeOptions = [
     SshSessionTypeEnum.SSH_SERVER,
+    SshSessionTypeEnum.WEB_SHELL,
+    SshSessionTypeEnum.WEB_KUBERNETES_SHELL,
   ];
 
   sessionStatusOptions = [

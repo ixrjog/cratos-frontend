@@ -46,14 +46,14 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   private readonly HEARTBEAT_TIMEOUT = 30000; // 30秒超时检测
   private isWebSocketInitialized: boolean = false; // 标记WebSocket是否已初始化
   private pendingMessages: any[] = []; // 待发送的消息队列
-  
+
   // WebSocket连接状态显示
   wsConnectionStatus: 'disconnected' | 'connecting' | 'connected' | 'error' = 'disconnected';
   wsConnectionTime: Date | null = null;
 
   terminals: TerminalInstance[] = [];
   selectedTerminals: string[] = [];
-  
+
   // 宽屏模式终端集合
   wideScreenTerminals: Set<string> = new Set();
 
@@ -106,7 +106,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       this.wsConnectionStatus = 'connected';
       this.wsConnectionTime = new Date();
       this.lastHeartbeatTime = Date.now();
-      
+
       // 发送待发送的消息
       this.processPendingMessages();
     };
@@ -216,7 +216,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       console.log(`Processing ${this.pendingMessages.length} pending messages`);
       const messages = [...this.pendingMessages];
       this.pendingMessages = [];
-      
+
       messages.forEach(message => {
         try {
           this.ws?.send(JSON.stringify(message));
@@ -283,7 +283,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     drawerRef = this.drawerService.open({
       drawerContentComponent: WebTerminalDrawerComponent,
-      width: '1400px',
+      width: '1000px',
       zIndex: 1000,
       isCover: true,
       fullScreen: false,
@@ -321,7 +321,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     this.terminals.push(terminal);
 
     // 不立即发送OPEN事件，等待终端准备就绪后发送
-    
+
     // 延迟更新布局，确保DOM已渲染
     setTimeout(() => {
       this.updateGridLayout();
@@ -335,9 +335,9 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       // 更新终端实例中的尺寸信息
       terminal.cols = data.width;
       terminal.rows = data.height;
-      
+
       console.log(`Terminal ${data.instanceId} initialized with dimensions: ${data.width}x${data.height}`);
-      
+
       // 现在发送OPEN请求，使用从xterm.js获取的真实尺寸
       this.sendTerminalOpenRequest(terminal);
     }
@@ -423,10 +423,10 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       // 从列表中移除
       this.terminals = this.terminals.filter(t => t.instanceId !== instanceId);
       this.selectedTerminals = this.selectedTerminals.filter(id => id !== instanceId);
-      
+
       // 从宽屏集合中移除
       this.wideScreenTerminals.delete(instanceId);
-      
+
       // 更新布局
       setTimeout(() => {
         this.updateGridLayout();
@@ -474,7 +474,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       // 更新终端实例中的尺寸信息
       terminal.cols = data.width;
       terminal.rows = data.height;
-      
+
       // 发送RESIZE事件到后端
       this.sendTerminalResizeRequest(terminal, data.width, data.height);
     }
@@ -548,7 +548,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     } else {
       this.wideScreenTerminals.delete(data.instanceId);
     }
-    
+
     // 延迟重新计算布局
     setTimeout(() => {
       this.updateGridLayout();
@@ -562,7 +562,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     // 重置网格容器的样式
     gridElement.style.gridAutoRows = '';
-    
+
     // 重置所有终端的网格位置和样式
     const terminalElements = gridElement.querySelectorAll('.web-terminal-item');
     terminalElements.forEach((element: Element) => {
@@ -595,7 +595,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
           currentRow++;
           currentCol = 1;
         }
-        
+
         // 宽屏终端：占据整行
         element.style.gridColumn = '1 / -1';
         element.style.gridRow = `${currentRow}`;
@@ -605,7 +605,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
         // 普通终端：按两列布局
         element.style.gridColumn = `${currentCol}`;
         element.style.gridRow = `${currentRow}`;
-        
+
         if (currentCol === 2) {
           currentRow++;
           currentCol = 1;
@@ -623,7 +623,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     }
 
     console.log('Starting terminal correction for all terminals...');
-    
+
     let correctedCount = 0;
     const totalTerminals = this.terminals.length;
 
@@ -634,9 +634,9 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
           // 发送当前尺寸的resize请求来矫正终端
           this.sendTerminalResizeRequest(terminal, terminal.cols, terminal.rows);
           correctedCount++;
-          
+
           console.log(`Corrected terminal ${terminal.instanceId} (${terminal.cols}x${terminal.rows}) - ${correctedCount}/${totalTerminals}`);
-          
+
           // 如果是最后一个终端，显示完成消息
           if (correctedCount === totalTerminals) {
             console.log(`Terminal correction completed! Corrected ${correctedCount} terminals.`);
@@ -685,18 +685,18 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
     if (!this.wsConnectionTime || this.wsConnectionStatus !== 'connected') {
       return '';
     }
-    
+
     const now = new Date();
     const duration = now.getTime() - this.wsConnectionTime.getTime();
     const totalSeconds = Math.floor(duration / 1000);
-    
+
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    
+
     // 格式化为 HH:MM:SS
     const formatTime = (num: number): string => num.toString().padStart(2, '0');
-    
+
     return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
   }
 

@@ -73,7 +73,9 @@ export abstract class SshSessionData {
 }
 
 export enum SshSessionTypeEnum {
-  SSH_SERVER = 'SSH_SERVER'
+  SSH_SERVER = 'SSH_SERVER',
+  WEB_SHELL = 'WEB_SHELL',
+  WEB_KUBERNETES_SHELL = 'WEB_KUBERNETES_SHELL'
 }
 
 export enum SshShellEventType {

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import { TerminalTheme, TERMINAL_THEMES } from '../terminal-themes.config';
 import { TerminalThemeService } from '../terminal-theme.service';
 
@@ -31,7 +32,8 @@ $ npm start
 ✓ Server running on http://localhost:3000`;
 
   constructor(
-    private themeService: TerminalThemeService
+    private themeService: TerminalThemeService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +84,8 @@ $ npm start
 
   // 重置
   onResetToDefault(): void {
-    if (confirm('确定要重置为默认主题吗？')) {
+    const confirmMessage = this.translate.instant('webTerminal.themeSettings.resetConfirmation');
+    if (confirm(confirmMessage)) {
       try {
         this.themeService.resetToDefault();
       } catch (error) {

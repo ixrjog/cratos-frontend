@@ -62,4 +62,15 @@ export const webTerminal = {
   terminalError: 'Terminal Error',
   assetNotFound: 'Asset Not Found',
   permissionDenied: 'Permission Denied',
+
+  // Theme settings
+  themeSettings: {
+    button: 'Theme Settings',
+    title: 'Terminal Theme Settings',
+    selectTheme: 'Select Theme',
+    previewEffect: 'Preview Effect',
+    resetToDefault: 'Reset to Default Theme',
+    currentTheme: 'Current Theme',
+    resetConfirmation: 'Are you sure you want to reset to the default theme?',
+  },
 };

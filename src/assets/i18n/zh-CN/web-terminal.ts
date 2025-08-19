@@ -62,4 +62,15 @@ export const webTerminal = {
   terminalError: '终端错误',
   assetNotFound: '资产未找到',
   permissionDenied: '权限不足',
+
+  // 主题设置
+  themeSettings: {
+    button: '主题设置',
+    title: '终端主题设置',
+    selectTheme: '选择主题',
+    previewEffect: '预览效果',
+    resetToDefault: '重置为默认主题',
+    currentTheme: '当前主题',
+    resetConfirmation: '确定要重置为默认主题吗？',
+  },
 };

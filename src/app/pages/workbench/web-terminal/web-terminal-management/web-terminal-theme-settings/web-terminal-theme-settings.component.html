@@ -1,6 +1,6 @@
 <div class="theme-settings-container">
   <div class="theme-settings-header">
-    <h3>终端主题设置</h3>
+    <h3>{{ 'webTerminal.themeSettings.title' | translate }}</h3>
     <d-button
       bsStyle="text"
       icon="icon-close"
@@ -11,7 +11,7 @@
   <div class="theme-settings-content">
     <!-- 主题选择区域 -->
     <div class="theme-selection-section">
-      <h4>选择主题</h4>
+      <h4>{{ 'webTerminal.themeSettings.selectTheme' | translate }}</h4>
       <div class="theme-grid">
         <div 
           *ngFor="let theme of presetThemes"
@@ -35,7 +35,7 @@
 
     <!-- 预览区域 -->
     <div class="theme-preview-section">
-      <h4>预览效果</h4>
+      <h4>{{ 'webTerminal.themeSettings.previewEffect' | translate }}</h4>
       <div class="terminal-preview" [ngStyle]="getPreviewStyle()">
         <pre>{{previewText}}</pre>
       </div>
@@ -47,12 +47,12 @@
         bsStyle="danger"
         size="sm"
         (click)="onResetToDefault()">
-        重置为默认主题
+        {{ 'webTerminal.themeSettings.resetToDefault' | translate }}
       </d-button>
       
       <div class="footer-info">
         <span *ngIf="currentTheme">
-          当前主题: {{currentTheme.name}}
+          {{ 'webTerminal.themeSettings.currentTheme' | translate }}: {{currentTheme.name}}
         </span>
       </div>
     </div>

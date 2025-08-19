@@ -69,7 +69,7 @@ export class UserSshKeySettingsComponent implements OnInit {
       content: this.dialogDate.content.delete,
     };
     this.dialogUtil.onDialog(dialogDate, () => {
-      this.credentialService.deleteCredentialById({ id: rowItem.id })
+      this.credentialService.deleteMyCredentialById({ id: rowItem.id })
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();

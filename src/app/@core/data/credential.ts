@@ -59,6 +59,8 @@ export abstract class CredentialData {
 
   abstract updateCredential(param: CredentialUpdate): Observable<HttpResult<Boolean>>;
 
+  abstract deleteMyCredentialById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
 }
 
 export enum CredentialTypeEnum {

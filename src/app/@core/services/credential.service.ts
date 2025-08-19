@@ -37,4 +37,8 @@ export class CredentialService extends CredentialData {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
+  deleteMyCredentialById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/my/del', param);
+  }
+
 }

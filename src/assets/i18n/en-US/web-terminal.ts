@@ -31,6 +31,8 @@ export const webTerminal = {
   multiSelectHint: 'You can select multiple assets to create multiple terminals. Click the close button in the top right when finished.',
   batchSelect: 'Batch Operations',
   addSelectedTerminals: 'Add Selected Terminals',
+  filter: 'Filter',
+  open: 'Open',
 
   // Terminal item
   close: 'Close',

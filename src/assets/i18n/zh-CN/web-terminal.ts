@@ -31,6 +31,8 @@ export const webTerminal = {
   multiSelectHint: '可以选择多个资产创建多个终端，选择完成后点击右上角关闭按钮',
   batchSelect: '批量操作',
   addSelectedTerminals: '添加选中的终端',
+  filter: '筛选',
+  open: '打开',
 
   // 终端窗体
   close: '关闭',

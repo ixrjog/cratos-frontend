@@ -43,14 +43,14 @@
       bsStyle="common"
       (click)="fetchData()"
       [disabled]="queryParam.tagGroup===''">
-      Filter
+      {{ 'webTerminal.filter' | translate }}
     </d-button>
 
     <d-button
       bsStyle="primary"
       (click)="onBatchSelect()"
       [disabled]="getCheckedRowsCount() === 0">
-      Open
+      {{ 'webTerminal.open' | translate }}
     </d-button>
   </div>
 

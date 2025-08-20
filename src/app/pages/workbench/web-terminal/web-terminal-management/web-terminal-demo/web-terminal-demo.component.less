@@ -50,13 +50,16 @@
         height: 100%;
         border: 2px solid transparent;
         transition: all 0.2s ease;
+        cursor: pointer;
         
-        // Demo特殊样式 - 添加绿色边框表示demo状态
-        border-color: rgba(40, 202, 66, 0.3);
-        box-shadow: 0 2px 8px rgba(40, 202, 66, 0.1);
+        &.selected-card {
+          // 使用呼吸灯边框效果 - 与实际终端一致
+          border-color: #007bff;
+          animation: breathing-border 2s ease-in-out infinite;
+        }
 
         &:hover {
-          box-shadow: 0 4px 12px rgba(40, 202, 66, 0.2);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
           transform: translateY(-2px);
         }
       }
@@ -127,71 +130,65 @@
           overflow: hidden;
           position: relative;
 
-          // Demo终端输出样式
-          &.demo-terminal-output {
-            overflow-y: auto;
-            scroll-behavior: smooth; // 平滑滚动
-            // 移除硬编码的背景色和文字颜色，让主题服务动态设置
-            // background: @devui-base-bg;
-            // color: @devui-text;
-            font-family: 'Courier New', monospace;
-            font-size: 12px; // 确保demo终端字体为12px
-            line-height: 1.2;
-            padding: 6px;
+          // Demo终端输出样式 - 现在直接应用到terminal-container
+          overflow-y: auto;
+          scroll-behavior: smooth; // 平滑滚动
+          // 移除硬编码的背景色和文字颜色，让主题服务动态设置
+          // background: @devui-base-bg;
+          // color: @devui-text;
 
-            // 支持文本选择颜色
+          // 支持文本选择颜色
+          &::selection {
+            background: var(--selection-color, rgba(255, 255, 255, 0.3));
+          }
+
+          .demo-output-line {
+            margin-bottom: 2px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            // color: @devui-text; // 移除硬编码颜色
+
+            &::selection {
+              background: var(--selection-color, rgba(255, 255, 255, 0.3));
+            }
+          }
+
+          .demo-current-line {
+            margin-bottom: 2px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            // color: @devui-text; // 移除硬编码颜色
+
             &::selection {
               background: var(--selection-color, rgba(255, 255, 255, 0.3));
             }
 
-            .demo-output-line {
-              margin-bottom: 2px;
-              white-space: pre-wrap;
-              word-break: break-all;
+            .demo-cursor {
               // color: @devui-text; // 移除硬编码颜色
-
-              &::selection {
-                background: var(--selection-color, rgba(255, 255, 255, 0.3));
+              animation: none;
+              
+              &.demo-cursor-blink {
+                animation: demo-cursor-blink 1s infinite;
               }
             }
+          }
 
-            .demo-current-line {
-              margin-bottom: 2px;
-              white-space: pre-wrap;
-              word-break: break-all;
-              // color: @devui-text; // 移除硬编码颜色
+          // 确保滚动条样式
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
 
-              &::selection {
-                background: var(--selection-color, rgba(255, 255, 255, 0.3));
-              }
+          &::-webkit-scrollbar-track {
+            background: @devui-base-bg;
+          }
 
-              .demo-cursor {
-                // color: @devui-text; // 移除硬编码颜色
-                animation: none;
-                
-                &.demo-cursor-blink {
-                  animation: demo-cursor-blink 1s infinite;
-                }
-              }
-            }
+          &::-webkit-scrollbar-thumb {
+            background: @devui-dividing-line;
+            border-radius: 3px;
+          }
 
-            // 确保滚动条样式
-            &::-webkit-scrollbar {
-              width: 6px;
-            }
-
-            &::-webkit-scrollbar-track {
-              background: @devui-base-bg;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: @devui-dividing-line;
-              border-radius: 3px;
-            }
-
-            &::-webkit-scrollbar-thumb:hover {
-              background: @devui-text-weak;
-            }
+          &::-webkit-scrollbar-thumb:hover {
+            background: @devui-text-weak;
           }
         }
       }
@@ -244,6 +241,22 @@
   }
   51%, 100% {
     opacity: 0;
+  }
+}
+
+// 呼吸灯边框动画 - 与实际终端一致
+@keyframes breathing-border {
+  0% {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+  }
+  50% {
+    border-color: rgba(0, 123, 255, 0.7);
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+  }
+  100% {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 }
 

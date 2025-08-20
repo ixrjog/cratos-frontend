@@ -22,6 +22,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   // 主题相关
   currentTheme: TerminalTheme | null = null;
   private themeSubscription: Subscription | null = null;
+  private themeApplyTimeout: any = null; // 防抖定时器
 
   terminals: DemoTerminal[] = [
     {
@@ -153,13 +154,32 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   constructor(private themeService: TerminalThemeService) {}
 
   ngOnInit(): void {
-    // 订阅主题变化
-    this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
-      this.currentTheme = theme;
-      this.applyThemeToTerminals();
-    });
-    
+    // 先启动demo动画
     this.startDemoAnimation();
+    
+    // 延迟订阅主题变化，确保DOM已经渲染并且用户已经看到初始状态
+    setTimeout(() => {
+      // 先获取当前主题，避免订阅时的突然变化
+      this.currentTheme = this.themeService.getCurrentTheme();
+      
+      // 然后订阅主题变化
+      this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
+        // 只有当主题真正发生变化时才应用
+        if (this.currentTheme?.id !== theme.id) {
+          this.currentTheme = theme;
+          // 使用防抖机制，避免频繁应用主题
+          if (this.themeApplyTimeout) {
+            clearTimeout(this.themeApplyTimeout);
+          }
+          this.themeApplyTimeout = setTimeout(() => {
+            this.applyThemeToTerminals();
+          }, 100);
+        }
+      });
+      
+      // 初始应用主题
+      this.applyThemeToTerminals();
+    }, 1000); // 延迟1秒确保用户看到初始状态
   }
 
   ngOnDestroy(): void {
@@ -170,6 +190,11 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 清理主题订阅
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
+    }
+    
+    // 清理防抖定时器
+    if (this.themeApplyTimeout) {
+      clearTimeout(this.themeApplyTimeout);
     }
   }
 
@@ -277,9 +302,6 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         // 滚动到底部
         this.scrollToBottom();
         
-        // 重新应用主题到新内容
-        this.applyThemeToTerminals();
-        
         this.isGroupTyping = false;
         
         // 延迟后执行下一个命令
@@ -305,9 +327,6 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     
     // 滚动到底部
     this.scrollToBottom();
-    
-    // 重新应用主题到新内容
-    this.applyThemeToTerminals();
     
     // 短暂延迟后继续下一行
     setTimeout(() => {
@@ -338,7 +357,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 使用setTimeout确保DOM更新后再滚动
     setTimeout(() => {
       this.terminals.forEach((terminal, index) => {
-        const terminalElement = document.querySelector(`[data-terminal-id="${terminal.id}"] .demo-terminal-output`) as HTMLElement;
+        const terminalElement = document.querySelector(`#demo-terminal-${terminal.id}`) as HTMLElement;
         if (terminalElement) {
           // 使用平滑滚动到底部
           terminalElement.scrollTo({
@@ -355,7 +374,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     
     setTimeout(() => {
       this.terminals.forEach(terminal => {
-        const terminalElement = document.querySelector(`[data-terminal-id="${terminal.id}"] .demo-terminal-output`) as HTMLElement;
+        const terminalElement = document.querySelector(`#demo-terminal-${terminal.id}`) as HTMLElement;
         if (terminalElement) {
           // 应用主题颜色
           terminalElement.style.backgroundColor = this.currentTheme!.colors.background;

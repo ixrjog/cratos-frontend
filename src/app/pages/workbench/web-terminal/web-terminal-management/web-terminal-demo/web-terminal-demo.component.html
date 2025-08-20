@@ -10,8 +10,9 @@
   <div class="demo-terminals-grid">
     <section class="web-terminal-item demo-terminal-item" 
              *ngFor="let terminal of terminals; trackBy: trackByTerminalId"
-             [attr.data-terminal-id]="terminal.id">
-      <d-card style="padding: 0">
+             [attr.data-terminal-id]="terminal.id"
+             [ngClass]="{'selected': true, 'group-control-mode': true}">
+      <d-card style="padding: 0" [ngClass]="{'selected-card': true}">
         <d-card-header class="terminal-header" style="position: relative;margin-bottom: 0;height: 28px">
           <d-card-subtitle class="terminal-title">
             <div style="display: flex; align-items: center; flex: 1;">
@@ -21,6 +22,12 @@
                 [disabled]="true">
               </d-checkbox>
               <span class="font-color-name" style="height: 22px; line-height: 22px;">{{ terminal.title }}</span>
+              <!-- 群控模式标签 -->
+              <d-tag
+                [labelStyle]="'blue-w98'"
+                [tag]="'webTerminal.groupControl' | translate"
+                style="margin-left: 8px;">
+              </d-tag>
               <!-- Demo标签 -->
               <d-tag
                 [labelStyle]="'green-w98'"
@@ -30,10 +37,12 @@
             </div>
 
             <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
+              <!-- 宽屏模式切换按钮 -->
               <d-button
                 bsStyle="text"
                 size="sm"
                 [disabled]="true"
+                [title]="'webTerminal.enterWideScreen' | translate"
                 style="margin-right: 4px;">
                 <i class="icon-maxmize"></i>
               </d-button>
@@ -59,7 +68,9 @@
             </div>
           </div>
 
-          <div class="terminal-container demo-terminal-output">
+          <div
+            class="terminal-container"
+            [id]="'demo-terminal-' + terminal.id">
             <div class="demo-output-line" *ngFor="let line of terminal.content">
               {{ line }}
             </div>

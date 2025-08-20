@@ -174,6 +174,7 @@ import { WebTerminalComponent } from './web-terminal/web-terminal.component';
 import { WebTerminalManagementComponent } from './web-terminal/web-terminal-management/web-terminal-management.component';
 import { WebTerminalItemComponent } from './web-terminal/web-terminal-management/web-terminal-item/web-terminal-item.component';
 import { WebTerminalDrawerComponent } from './web-terminal/web-terminal-management/web-terminal-drawer/web-terminal-drawer.component';
+import { WebTerminalDemoComponent } from './web-terminal/web-terminal-management/web-terminal-demo/web-terminal-demo.component';
 import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-management/web-terminal-theme-settings/web-terminal-theme-settings.component';
 
 @NgModule({
@@ -249,6 +250,7 @@ import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-m
     WebTerminalManagementComponent,
     WebTerminalItemComponent,
     WebTerminalDrawerComponent,
+    WebTerminalDemoComponent,
     WebTerminalThemeSettingsComponent,
   ],
   imports: [

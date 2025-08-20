@@ -1,0 +1,290 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.web-terminal-demo {
+  margin-top: 40px;
+  padding: 24px;
+  background: @devui-base-bg;
+  border-radius: 8px;
+  border: 1px solid @devui-dividing-line;
+
+  .demo-header {
+    text-align: center;
+    margin-bottom: 32px;
+
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: @devui-text;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      i {
+        font-size: 24px;
+        color: @devui-brand;
+      }
+    }
+
+    .demo-description {
+      margin: 0;
+      color: @devui-text-weak;
+      font-size: 14px;
+    }
+  }
+
+  .demo-terminals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+
+    // 使用与真实终端相同的样式
+    .demo-terminal-item {
+      width: 100%;
+      height: 400px; // 固定高度
+      transition: all 0.3s ease;
+
+      d-card {
+        height: 100%;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+        
+        // Demo特殊样式 - 添加绿色边框表示demo状态
+        border-color: rgba(40, 202, 66, 0.3);
+        box-shadow: 0 2px 8px rgba(40, 202, 66, 0.1);
+
+        &:hover {
+          box-shadow: 0 4px 12px rgba(40, 202, 66, 0.2);
+          transform: translateY(-2px);
+        }
+      }
+
+      .terminal-header {
+        padding: 8px 12px;
+        border-bottom: 1px solid @devui-dividing-line;
+        background: @devui-base-bg;
+
+        .terminal-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 0;
+        }
+
+        .terminal-actions {
+          d-button {
+            opacity: 0.6; // 禁用状态的视觉效果
+          }
+        }
+      }
+
+      .terminal-content {
+        padding: 0;
+        height: calc(100% - 50px);
+        display: flex;
+        flex-direction: column;
+
+        .terminal-info {
+          padding: 4px 6px;
+          background: @devui-base-bg;
+          border-bottom: 1px solid @devui-dividing-line;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          font-size: 11px;
+
+          .info-item {
+            display: flex;
+            gap: 4px;
+
+            .label {
+              color: @devui-text;
+              font-weight: 500;
+            }
+
+            .value {
+              color: @devui-text;
+              font-family: 'Courier New', monospace;
+              max-width: 200px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+
+        .terminal-container {
+          flex: 1;
+          // 移除硬编码的背景色和文字颜色，让主题服务动态设置
+          // background: @devui-base-bg;
+          // color: @devui-text;
+          font-family: 'Courier New', monospace;
+          font-size: 12px;
+          line-height: 1.2;
+          padding: 6px;
+          overflow: hidden;
+          position: relative;
+
+          // Demo终端输出样式
+          &.demo-terminal-output {
+            overflow-y: auto;
+            scroll-behavior: smooth; // 平滑滚动
+            // 移除硬编码的背景色和文字颜色，让主题服务动态设置
+            // background: @devui-base-bg;
+            // color: @devui-text;
+            font-family: 'Courier New', monospace;
+            font-size: 12px; // 确保demo终端字体为12px
+            line-height: 1.2;
+            padding: 6px;
+
+            // 支持文本选择颜色
+            &::selection {
+              background: var(--selection-color, rgba(255, 255, 255, 0.3));
+            }
+
+            .demo-output-line {
+              margin-bottom: 2px;
+              white-space: pre-wrap;
+              word-break: break-all;
+              // color: @devui-text; // 移除硬编码颜色
+
+              &::selection {
+                background: var(--selection-color, rgba(255, 255, 255, 0.3));
+              }
+            }
+
+            .demo-current-line {
+              margin-bottom: 2px;
+              white-space: pre-wrap;
+              word-break: break-all;
+              // color: @devui-text; // 移除硬编码颜色
+
+              &::selection {
+                background: var(--selection-color, rgba(255, 255, 255, 0.3));
+              }
+
+              .demo-cursor {
+                // color: @devui-text; // 移除硬编码颜色
+                animation: none;
+                
+                &.demo-cursor-blink {
+                  animation: demo-cursor-blink 1s infinite;
+                }
+              }
+            }
+
+            // 确保滚动条样式
+            &::-webkit-scrollbar {
+              width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: @devui-base-bg;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background: @devui-dividing-line;
+              border-radius: 3px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+              background: @devui-text-weak;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .demo-footer {
+    border-top: 1px solid @devui-dividing-line;
+    padding-top: 20px;
+
+    .demo-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 16px;
+
+      .demo-stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: @devui-text;
+        font-size: 14px;
+
+        i {
+          color: @devui-brand;
+          font-size: 16px;
+        }
+      }
+    }
+
+    .demo-hint {
+      text-align: center;
+      color: @devui-text-weak;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+
+      i {
+        color: @devui-info;
+      }
+    }
+  }
+}
+
+@keyframes demo-cursor-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+// 响应式设计
+@media (max-width: 1200px) {
+  .web-terminal-demo {
+    .demo-terminals-grid {
+      gap: 16px;
+      
+      .demo-terminal-item {
+        height: 350px; // 固定高度
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .web-terminal-demo {
+    padding: 16px;
+    margin-top: 24px;
+
+    .demo-terminals-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      
+      .demo-terminal-item {
+        height: 300px; // 固定高度
+        
+        .terminal-content .terminal-container {
+          font-size: 11px;
+          padding: 4px;
+        }
+      }
+    }
+
+    .demo-footer {
+      .demo-stats {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+      }
+    }
+  }
+}

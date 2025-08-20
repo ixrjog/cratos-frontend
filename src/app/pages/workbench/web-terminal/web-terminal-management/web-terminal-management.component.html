@@ -84,6 +84,9 @@
     </div>
   </div>
 
+  <!-- Demo组件 - 显示模拟终端 -->
+  <app-web-terminal-demo *ngIf="terminals.length === 0"></app-web-terminal-demo>
+
   <!-- 主题设置面板 -->
   <div class="theme-settings-overlay" *ngIf="showThemeSettings" (click)="onCloseThemeSettings()">
     <div class="theme-settings-panel" (click)="$event.stopPropagation()">

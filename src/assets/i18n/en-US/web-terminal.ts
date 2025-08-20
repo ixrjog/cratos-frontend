@@ -13,6 +13,16 @@ export const webTerminal = {
   correctTerminals: 'Correct Terminals',
   correctTerminalsHint: 'Resend terminal size information to backend to correct terminal display',
 
+  // Demo showcase
+  demo: {
+    title: 'Group Control Demo',
+    description: 'Experience synchronized multi-terminal management and watch real-time group control execution',
+    servers: 'Servers',
+    allConnected: 'Group Control',
+    realTime: 'Synchronized',
+    hint: 'This is a group control demo where all terminals execute the same commands synchronously. Click "Open Terminal" to start real terminal sessions',
+  },
+
   // WebSocket connection status
   wsStatus: {
     connected: 'Connected',

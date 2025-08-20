@@ -13,6 +13,16 @@ export const webTerminal = {
   correctTerminals: '矫正终端',
   correctTerminalsHint: '重新发送终端尺寸信息到后端，矫正终端显示',
 
+  // Demo演示
+  demo: {
+    title: '群控终端演示',
+    description: '体验多终端同步管理功能，观看实时群控命令执行效果',
+    servers: '台服务器',
+    allConnected: '群控模式',
+    realTime: '同步执行',
+    hint: '这是群控演示效果，所有终端同步执行相同命令，点击"打开终端"开始真实的终端会话',
+  },
+
   // WebSocket连接状态
   wsStatus: {
     connected: '已连接',

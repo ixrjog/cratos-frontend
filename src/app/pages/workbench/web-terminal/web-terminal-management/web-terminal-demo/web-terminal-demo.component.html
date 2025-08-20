@@ -1,0 +1,95 @@
+<div class="web-terminal-demo">
+  <div class="demo-header">
+    <h3>
+      <i class="icon icon-terminal"></i>
+      {{ 'webTerminal.demo.title' | translate }}
+    </h3>
+    <p class="demo-description">{{ 'webTerminal.demo.description' | translate }}</p>
+  </div>
+  
+  <div class="demo-terminals-grid">
+    <section class="web-terminal-item demo-terminal-item" 
+             *ngFor="let terminal of terminals; trackBy: trackByTerminalId"
+             [attr.data-terminal-id]="terminal.id">
+      <d-card style="padding: 0">
+        <d-card-header class="terminal-header" style="position: relative;margin-bottom: 0;height: 28px">
+          <d-card-subtitle class="terminal-title">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <d-checkbox
+                style="margin-right: 8px;"
+                [ngModel]="true"
+                [disabled]="true">
+              </d-checkbox>
+              <span class="font-color-name" style="height: 22px; line-height: 22px;">{{ terminal.title }}</span>
+              <!-- Demo标签 -->
+              <d-tag
+                [labelStyle]="'green-w98'"
+                tag="DEMO"
+                style="margin-left: 8px;">
+              </d-tag>
+            </div>
+
+            <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
+              <d-button
+                bsStyle="text"
+                size="sm"
+                [disabled]="true"
+                style="margin-right: 4px;">
+                <i class="icon-maxmize"></i>
+              </d-button>
+
+              <d-button
+                bsStyle="text"
+                [disabled]="true">
+                {{ 'webTerminal.close' | translate }}
+              </d-button>
+            </div>
+          </d-card-subtitle>
+        </d-card-header>
+
+        <d-card-content class="terminal-content">
+          <div class="terminal-info">
+            <div class="info-item">
+              <span class="label">{{ 'webTerminal.assetId' | translate }}:</span>
+              <span class="value">{{ terminal.id.split('-')[1] }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">{{ 'webTerminal.instanceId' | translate }}:</span>
+              <span class="value">{{ terminal.id }}</span>
+            </div>
+          </div>
+
+          <div class="terminal-container demo-terminal-output">
+            <div class="demo-output-line" *ngFor="let line of terminal.content">
+              {{ line }}
+            </div>
+            <div class="demo-current-line" *ngIf="terminal.currentLine || terminal.cursor">
+              {{ terminal.currentLine }}<span class="demo-cursor" [class.demo-cursor-blink]="terminal.cursor">█</span>
+            </div>
+          </div>
+        </d-card-content>
+      </d-card>
+    </section>
+  </div>
+  
+  <div class="demo-footer">
+    <div class="demo-stats">
+      <div class="demo-stat-item">
+        <i class="icon icon-server"></i>
+        <span>4 {{ 'webTerminal.demo.servers' | translate }}</span>
+      </div>
+      <div class="demo-stat-item">
+        <i class="icon icon-link"></i>
+        <span>{{ 'webTerminal.demo.allConnected' | translate }}</span>
+      </div>
+      <div class="demo-stat-item">
+        <i class="icon icon-time"></i>
+        <span>{{ 'webTerminal.demo.realTime' | translate }}</span>
+      </div>
+    </div>
+    <div class="demo-hint">
+      <i class="icon icon-info"></i>
+      {{ 'webTerminal.demo.hint' | translate }}
+    </div>
+  </div>
+</div>

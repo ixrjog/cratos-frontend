@@ -19,10 +19,17 @@
         </div>
 
         <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
+
+          <d-button
+            bsStyle="text"
+            (click)="onRowBusinessDoc()"
+            style="margin-right: 4px;">
+            <i [class]="'icon-go-document'"></i>
+          </d-button>
+
           <!-- 宽屏模式切换按钮 -->
           <d-button
             bsStyle="text"
-            size="sm"
             (click)="toggleWideScreen()"
             [title]="isWideScreen ? ('webTerminal.exitWideScreen' | translate) : ('webTerminal.enterWideScreen' | translate)"
             style="margin-right: 4px;">

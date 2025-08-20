@@ -36,9 +36,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         'total 28',
         'drwx------  4 root root 4096 Aug 19 10:30 .',
         'drwxr-xr-x 18 root root 4096 Aug 19 09:15 ..',
-        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history',
-        '-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc',
-        'drwx------  2 root root 4096 Aug 19 09:20 .ssh'
+        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history'
+        // 进一步减少初始内容，为当前输入行预留更多空间
       ],
       currentLine: '',
       isTyping: false,
@@ -55,9 +54,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         'total 28',
         'drwx------  4 root root 4096 Aug 19 10:30 .',
         'drwxr-xr-x 18 root root 4096 Aug 19 09:15 ..',
-        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history',
-        '-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc',
-        'drwx------  2 root root 4096 Aug 19 09:20 .ssh'
+        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history'
+        // 进一步减少初始内容，为当前输入行预留更多空间
       ],
       currentLine: '',
       isTyping: false,
@@ -74,9 +72,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         'total 28',
         'drwx------  4 root root 4096 Aug 19 10:30 .',
         'drwxr-xr-x 18 root root 4096 Aug 19 09:15 ..',
-        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history',
-        '-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc',
-        'drwx------  2 root root 4096 Aug 19 09:20 .ssh'
+        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history'
+        // 进一步减少初始内容，为当前输入行预留更多空间
       ],
       currentLine: '',
       isTyping: false,
@@ -93,9 +90,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         'total 28',
         'drwx------  4 root root 4096 Aug 19 10:30 .',
         'drwxr-xr-x 18 root root 4096 Aug 19 09:15 ..',
-        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history',
-        '-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc',
-        'drwx------  2 root root 4096 Aug 19 09:20 .ssh'
+        '-rw-------  1 root root 1234 Aug 19 10:25 .bash_history'
+        // 进一步减少初始内容，为当前输入行预留更多空间
       ],
       currentLine: '',
       isTyping: false,
@@ -202,10 +198,10 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 启动光标闪烁动画
     this.startCursorBlinking();
     
-    // 延迟启动群控打字机效果
+    // 延迟启动群控打字机效果 - 提高1.5倍速度：2000ms -> 1333ms
     setTimeout(() => {
       this.startGroupControlTypewriter();
-    }, 2000);
+    }, 1333);
   }
 
   private startCursorBlinking(): void {
@@ -278,11 +274,6 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
           terminal.currentLine += command[charIndex];
         });
         
-        // 在打字过程中也滚动到底部
-        if (charIndex % 5 === 0) { // 每5个字符滚动一次，避免过于频繁
-          this.scrollToBottom();
-        }
-        
         charIndex++;
       } else {
         clearInterval(typeInterval);
@@ -293,23 +284,20 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
           terminal.currentLine = '';
           terminal.isTyping = false;
           
-          // 保持内容在合理范围内
-          if (terminal.content.length > 25) {
-            terminal.content.shift();
-          }
+          // 优化内容管理：批量处理，减少频繁的数组操作
+          this.manageTerminalContent(terminal);
         });
         
-        // 滚动到底部
-        this.scrollToBottom();
+        // 移除滚动调用，避免抖动
         
         this.isGroupTyping = false;
         
-        // 延迟后执行下一个命令
+        // 延迟后执行下一个命令 - 提高1.5倍速度：1500ms -> 1000ms
         setTimeout(() => {
           this.executeNextGroupCommand();
-        }, 1500);
+        }, 1000);
       }
-    }, 80); // 统一的打字速度
+    }, 53); // 提高1.5倍速度：80ms -> 53ms (80/1.5≈53)
 
     this.typewriterIntervals.push(typeInterval);
   }
@@ -319,19 +307,27 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     this.terminals.forEach(terminal => {
       terminal.content.push(output);
       
-      // 保持内容在合理范围内
-      if (terminal.content.length > 25) {
-        terminal.content.shift();
-      }
+      // 优化内容管理：批量处理，减少频繁的数组操作
+      this.manageTerminalContent(terminal);
     });
     
-    // 滚动到底部
-    this.scrollToBottom();
+    // 移除滚动调用，避免抖动
     
-    // 短暂延迟后继续下一行
+    // 短暂延迟后继续下一行 - 提高1.5倍速度：300ms -> 200ms
     setTimeout(() => {
       this.executeNextGroupCommand();
-    }, 300);
+    }, 200);
+  }
+
+  // 新增：优化的内容管理方法
+  private manageTerminalContent(terminal: DemoTerminal): void {
+    // 考虑当前输入行，确保总显示行数不超过容器高度
+    const maxVisibleLines = 18; // 减少到18行，为当前输入行预留空间
+    
+    if (terminal.content.length > maxVisibleLines) {
+      // 保持固定行数，移除最旧的行
+      terminal.content = terminal.content.slice(-maxVisibleLines);
+    }
   }
 
   private getCurrentPath(): string {
@@ -354,19 +350,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   }
 
   private scrollToBottom(): void {
-    // 使用setTimeout确保DOM更新后再滚动
-    setTimeout(() => {
-      this.terminals.forEach((terminal, index) => {
-        const terminalElement = document.querySelector(`#demo-terminal-${terminal.id}`) as HTMLElement;
-        if (terminalElement) {
-          // 使用平滑滚动到底部
-          terminalElement.scrollTo({
-            top: terminalElement.scrollHeight,
-            behavior: 'smooth'
-          });
-        }
-      });
-    }, 10); // 减少延迟，使滚动更及时
+    // 完全禁用自动滚动，让内容在固定区域内显示
+    // 不再进行任何滚动操作，避免抖动
   }
 
   private applyThemeToTerminals(): void {

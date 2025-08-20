@@ -2,7 +2,7 @@
 
 .web-terminal-demo {
   margin-top: 40px;
-  padding: 24px;
+  padding: 12px;
   background: @devui-base-bg;
   border-radius: 8px;
   border: 1px solid @devui-dividing-line;
@@ -36,22 +36,24 @@
 
   .demo-terminals-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; // 保持两列布局
+    gap: 16px; // 与实际终端保持一致
     margin-bottom: 32px;
 
     // 使用与真实终端相同的样式
     .demo-terminal-item {
       width: 100%;
-      height: 400px; // 固定高度
-      transition: all 0.3s ease;
+      min-height: 400px; // 与实际终端保持一致
+      max-height: 600px;
+      height: auto;
+      transition: min-height 0.3s ease, max-height 0.3s ease; // 与实际终端保持一致
 
       d-card {
         height: 100%;
         border: 2px solid transparent;
         transition: all 0.2s ease;
         cursor: pointer;
-        
+
         &.selected-card {
           // 使用呼吸灯边框效果 - 与实际终端一致
           border-color: #007bff;
@@ -60,12 +62,13 @@
 
         &:hover {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          transform: translateY(-2px);
+          // 移除向上移动的动画效果，与实际终端保持一致
+          // transform: translateY(-2px);
         }
       }
 
       .terminal-header {
-        padding: 8px 12px;
+        padding: 8px 12px; // 与实际终端保持一致
         border-bottom: 1px solid @devui-dividing-line;
         background: @devui-base-bg;
 
@@ -74,29 +77,57 @@
           justify-content: space-between;
           align-items: center;
           margin: 0;
-        }
 
-        .terminal-actions {
-          d-button {
-            opacity: 0.6; // 禁用状态的视觉效果
+          .title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px; // 与实际终端保持一致
+            flex-wrap: wrap;
+
+            .terminal-name {
+              font-weight: 600;
+              font-size: 13px; // 与实际终端保持一致
+              color: @devui-text;
+              max-width: 120px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          .terminal-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            d-button {
+              padding: 2px 4px;
+              min-width: auto;
+              height: 24px;
+              opacity: 0.6; // 禁用状态的视觉效果
+
+              i {
+                font-size: 12px;
+              }
+            }
           }
         }
       }
 
       .terminal-content {
         padding: 0;
-        height: calc(100% - 50px);
+        height: 342px; // 与实际终端保持一致
         display: flex;
         flex-direction: column;
 
         .terminal-info {
-          padding: 4px 6px;
+          padding: 4px 6px; // 与实际终端保持一致
           background: @devui-base-bg;
           border-bottom: 1px solid @devui-dividing-line;
           display: flex;
           flex-wrap: wrap;
-          gap: 12px;
-          font-size: 11px;
+          gap: 12px; // 与实际终端保持一致
+          font-size: 11px; // 与实际终端保持一致
 
           .info-item {
             display: flex;
@@ -120,22 +151,20 @@
 
         .terminal-container {
           flex: 1;
-          // 移除硬编码的背景色和文字颜色，让主题服务动态设置
-          // background: @devui-base-bg;
-          // color: @devui-text;
           font-family: 'Courier New', monospace;
-          font-size: 12px;
+          font-size: 12px; // 与实际终端保持一致
           line-height: 1.2;
-          padding: 6px;
-          overflow: hidden;
+          padding: 6px; // 与实际终端保持一致
+          overflow: hidden; // 完全禁用滚动
           position: relative;
 
-          // Demo终端输出样式 - 现在直接应用到terminal-container
-          overflow-y: auto;
-          scroll-behavior: smooth; // 平滑滚动
-          // 移除硬编码的背景色和文字颜色，让主题服务动态设置
-          // background: @devui-base-bg;
-          // color: @devui-text;
+          // 确保容器有固定的最大高度
+          max-height: 340px; // 约19-20行的高度
+          min-height: 340px; // 保持固定高度
+
+          // 优化渲染性能
+          will-change: auto;
+          transform: translateZ(0); // 启用硬件加速
 
           // 支持文本选择颜色
           &::selection {
@@ -146,7 +175,8 @@
             margin-bottom: 2px;
             white-space: pre-wrap;
             word-break: break-all;
-            // color: @devui-text; // 移除硬编码颜色
+            // 优化渲染性能
+            contain: layout style;
 
             &::selection {
               background: var(--selection-color, rgba(255, 255, 255, 0.3));
@@ -157,38 +187,25 @@
             margin-bottom: 2px;
             white-space: pre-wrap;
             word-break: break-all;
-            // color: @devui-text; // 移除硬编码颜色
+            // 优化渲染性能
+            contain: layout style;
+
+            // 确保当前输入行有最小高度，避免被隐藏
+            min-height: 16px; // 至少一行的高度
 
             &::selection {
               background: var(--selection-color, rgba(255, 255, 255, 0.3));
             }
 
             .demo-cursor {
-              // color: @devui-text; // 移除硬编码颜色
               animation: none;
-              
+              // 优化光标渲染
+              will-change: opacity;
+
               &.demo-cursor-blink {
                 animation: demo-cursor-blink 1s infinite;
               }
             }
-          }
-
-          // 确保滚动条样式
-          &::-webkit-scrollbar {
-            width: 6px;
-          }
-
-          &::-webkit-scrollbar-track {
-            background: @devui-base-bg;
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background: @devui-dividing-line;
-            border-radius: 3px;
-          }
-
-          &::-webkit-scrollbar-thumb:hover {
-            background: @devui-text-weak;
           }
         }
       }
@@ -248,46 +265,61 @@
 @keyframes breathing-border {
   0% {
     border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
   }
   50% {
-    border-color: rgba(0, 123, 255, 0.7);
-    box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+    border-color: #0056b3;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
   }
   100% {
     border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
   }
 }
 
-// 响应式设计
+// 中等屏幕：保持两列布局，但调整间距 - 与实际终端保持一致
 @media (max-width: 1200px) {
   .web-terminal-demo {
     .demo-terminals-grid {
-      gap: 16px;
-      
-      .demo-terminal-item {
-        height: 350px; // 固定高度
-      }
+      gap: 4px; // 与实际终端保持一致
     }
   }
 }
 
+// 小屏幕：改为单列布局 - 与实际终端保持一致
 @media (max-width: 768px) {
   .web-terminal-demo {
     padding: 16px;
     margin-top: 24px;
 
     .demo-terminals-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
-      
+      grid-template-columns: 1fr; // 小屏幕时改为单列
+      gap: 2px; // 与实际终端保持一致;
+
       .demo-terminal-item {
-        height: 300px; // 固定高度
-        
-        .terminal-content .terminal-container {
-          font-size: 11px;
-          padding: 4px;
+        min-height: 350px; // 与实际终端保持一致
+        max-height: 500px;
+
+        .terminal-header .terminal-title .title-left {
+          gap: 6px;
+
+          .terminal-name {
+            font-size: 12px;
+            max-width: 100px;
+          }
+        }
+
+        .terminal-content {
+          .terminal-info {
+            flex-direction: column;
+            gap: 6px;
+            font-size: 10px;
+          }
+
+          .terminal-container {
+            font-size: 11px;
+            padding: 4px;
+          }
         }
       }
     }
@@ -297,6 +329,38 @@
         flex-direction: column;
         gap: 12px;
         align-items: center;
+      }
+    }
+  }
+}
+
+// 超小屏幕：进一步优化 - 与实际终端保持一致
+@media (max-width: 480px) {
+  .web-terminal-demo {
+    .demo-terminals-grid {
+      gap: 2px;
+
+      .demo-terminal-item {
+        min-height: 300px; // 与实际终端保持一致
+        max-height: 400px;
+
+        .terminal-header {
+          padding: 6px 8px;
+
+          .terminal-title .title-left .terminal-name {
+            font-size: 11px;
+            max-width: 80px;
+          }
+
+          .terminal-actions d-button {
+            font-size: 12px;
+            padding: 6px 12px;
+          }
+        }
+
+        .terminal-content .terminal-container {
+          font-size: 10px;
+        }
       }
     }
   }

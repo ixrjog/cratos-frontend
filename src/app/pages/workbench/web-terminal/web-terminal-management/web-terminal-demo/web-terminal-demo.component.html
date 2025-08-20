@@ -6,33 +6,32 @@
     </h3>
     <p class="demo-description">{{ 'webTerminal.demo.description' | translate }}</p>
   </div>
-  
+
   <div class="demo-terminals-grid">
-    <section class="web-terminal-item demo-terminal-item" 
+    <section class="web-terminal-item demo-terminal-item"
              *ngFor="let terminal of terminals; trackBy: trackByTerminalId"
              [attr.data-terminal-id]="terminal.id"
              [ngClass]="{'selected': true, 'group-control-mode': true}">
       <d-card style="padding: 0" [ngClass]="{'selected-card': true}">
         <d-card-header class="terminal-header" style="position: relative;margin-bottom: 0;height: 28px">
           <d-card-subtitle class="terminal-title">
-            <div style="display: flex; align-items: center; flex: 1;">
+            <div class="title-left">
               <d-checkbox
                 style="margin-right: 8px;"
                 [ngModel]="true"
                 [disabled]="true">
               </d-checkbox>
-              <span class="font-color-name" style="height: 22px; line-height: 22px;">{{ terminal.title }}</span>
+              <span class="terminal-name">{{ terminal.title }}</span>
               <!-- 群控模式标签 -->
               <d-tag
                 [labelStyle]="'blue-w98'"
                 [tag]="'webTerminal.groupControl' | translate"
-                style="margin-left: 8px;">
+                class="group-control-tag">
               </d-tag>
               <!-- Demo标签 -->
               <d-tag
                 [labelStyle]="'green-w98'"
-                tag="DEMO"
-                style="margin-left: 8px;">
+                tag="DEMO">
               </d-tag>
             </div>
 
@@ -40,10 +39,8 @@
               <!-- 宽屏模式切换按钮 -->
               <d-button
                 bsStyle="text"
-                size="sm"
                 [disabled]="true"
-                [title]="'webTerminal.enterWideScreen' | translate"
-                style="margin-right: 4px;">
+                [title]="'webTerminal.enterWideScreen' | translate">
                 <i class="icon-maxmize"></i>
               </d-button>
 
@@ -82,7 +79,7 @@
       </d-card>
     </section>
   </div>
-  
+
   <div class="demo-footer">
     <div class="demo-stats">
       <div class="demo-stat-item">

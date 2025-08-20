@@ -41,7 +41,7 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   isWideScreen = false;
   
   // 保存原始终端尺寸
-  private originalRows: number = 24;
+  private originalRows: number = 25;
   private originalCols: number = 80;
 
   private destroy$ = new Subject<void>();
@@ -86,7 +86,7 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
     const currentTheme = this.themeService.getCurrentTheme();
     
     this.xterm = new Terminal({
-      rows: 20, // 减少行数以适应两列布局
+      rows: 25, // 增加行数以显示更多内容
       cols: 60, // 减少列数以适应较小宽度
       fontFamily: '"Courier New", "DejaVu Sans Mono", "Liberation Mono", monospace',
       fontSize: 12, // 保持原始字体大小

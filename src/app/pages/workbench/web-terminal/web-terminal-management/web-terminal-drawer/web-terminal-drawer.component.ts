@@ -199,14 +199,6 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     // this.toastService.success(message);
   }
 
-  onDrawerClose(): void {
-    if (this.data && this.data.close) {
-      this.data.close();
-    } else {
-      this.onClose.emit();
-    }
-  }
-
   getCheckedRowsCount(): number {
     if (!this.datatable) {
       return 0;

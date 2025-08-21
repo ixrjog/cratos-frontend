@@ -130,6 +130,7 @@ export class UserPermissionsEditorComponent {
 
   onBusinessTypeChange(businessType: string) {
     this.onUserPermission();
+    this.userBusinessPermission = null;
   }
 
   onSave() {

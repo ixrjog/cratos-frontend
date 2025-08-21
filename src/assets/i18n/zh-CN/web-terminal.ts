@@ -43,6 +43,7 @@ export const webTerminal = {
   addSelectedTerminals: '添加选中的终端',
   filter: '筛选',
   open: '打开',
+  opened: '已打开',
 
   // 终端窗体
   close: '关闭',

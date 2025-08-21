@@ -43,6 +43,7 @@ export const webTerminal = {
   addSelectedTerminals: 'Add Selected Terminals',
   filter: 'Filter',
   open: 'Open',
+  opened: 'Opened',
 
   // Terminal item
   close: 'Close',

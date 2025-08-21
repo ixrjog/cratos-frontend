@@ -60,6 +60,9 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   // 添加表格高度控制属性
   public isCompactMode = false;
 
+  // 跟踪已打开的终端
+  private openedTerminals = new Set<string>();
+
   constructor(
     private userFavoriteService: UserFavoriteService,
     private tagGroupService: TagGroupService,
@@ -167,6 +170,9 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onAssetClick(asset: EdsAssetVO): void {
+    // 标记该终端为已打开
+    this.markTerminalAsOpened(asset);
+
     // 优先使用DrawerService传递的回调函数
     if (this.data && this.data.onAssetSelect) {
       this.data.onAssetSelect(asset);
@@ -223,6 +229,9 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
 
     // 批量添加选中的资产
     checkedRows.forEach((asset: EdsAssetVO) => {
+      // 标记该终端为已打开
+      this.markTerminalAsOpened(asset);
+
       // 优先使用DrawerService传递的回调函数
       if (this.data && this.data.onAssetSelect) {
         this.data.onAssetSelect(asset);
@@ -292,6 +301,33 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
       .subscribe(({ body }) => {
         this.favoriteGroupList = body;
       });
+  }
+
+  /**
+   * 标记终端为已打开状态
+   * @param asset 资产对象
+   */
+  private markTerminalAsOpened(asset: EdsAssetVO): void {
+    // 使用资产的唯一标识符（如ID或assetKey）作为键
+    const terminalKey = String(asset.id || asset.assetKey || asset.name);
+    this.openedTerminals.add(terminalKey);
+  }
+
+  /**
+   * 检查终端是否已打开
+   * @param asset 资产对象
+   * @returns 是否已打开
+   */
+  public isTerminalOpened(asset: EdsAssetVO): boolean {
+    const terminalKey = String(asset.id || asset.assetKey || asset.name);
+    return this.openedTerminals.has(terminalKey);
+  }
+
+  /**
+   * 清除已打开终端的标记（可选，用于重置状态）
+   */
+  public clearOpenedTerminals(): void {
+    this.openedTerminals.clear();
   }
 
   protected readonly JSON = JSON;

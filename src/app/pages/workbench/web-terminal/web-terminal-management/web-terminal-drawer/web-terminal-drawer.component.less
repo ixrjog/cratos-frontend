@@ -110,6 +110,28 @@
       }
     }
 
+    .asset-name-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .asset-name-link {
+        flex: 1;
+      }
+
+      .opened-tag {
+        flex-shrink: 0;
+        font-size: 11px;
+        
+        :deep(.devui-tag) {
+          padding: 2px 6px;
+          font-size: 11px;
+          line-height: 1.2;
+          border-radius: 10px;
+        }
+      }
+    }
+
     .asset-key {
       font-family: 'Courier New', monospace;
       font-size: 12px;

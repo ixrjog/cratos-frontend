@@ -87,12 +87,20 @@
       <d-column field="name" header="Name" [width]="'180px'">
         <d-cell>
           <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
-            <span
-              class="asset-name-link"
-              (click)="onAssetClick(rowItem)"
-              [title]="cellItem">
-              {{ cellItem }}
-            </span>
+            <div class="asset-name-container">
+              <span
+                class="asset-name-link"
+                (click)="onAssetClick(rowItem)"
+                [title]="cellItem">
+                {{ cellItem }}
+              </span>
+              <d-tag
+                *ngIf="isTerminalOpened(rowItem)"
+                class="opened-tag"
+                [labelStyle]="'green-w98'"
+                [tag]="{ name: 'webTerminal.opened' | translate }">
+              </d-tag>
+            </div>
           </ng-template>
         </d-cell>
       </d-column>

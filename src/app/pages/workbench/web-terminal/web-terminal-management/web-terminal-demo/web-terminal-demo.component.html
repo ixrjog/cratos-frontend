@@ -36,6 +36,13 @@
             </div>
 
             <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
+
+              <d-button
+                bsStyle="text"
+                [disabled]="true">
+                <i [class]="'icon-go-document'"></i>
+              </d-button>
+
               <!-- 宽屏模式切换按钮 -->
               <d-button
                 bsStyle="text"
@@ -83,12 +90,12 @@
   <div class="demo-footer">
     <div class="demo-stats">
       <div class="demo-stat-item">
-        <i class="icon icon-server"></i>
-        <span>4 {{ 'webTerminal.demo.servers' | translate }}</span>
+        <i class="icon icon-connect"></i>
+        <span>{{ 'webTerminal.demo.allConnected' | translate }}</span>
       </div>
       <div class="demo-stat-item">
-        <i class="icon icon-link"></i>
-        <span>{{ 'webTerminal.demo.allConnected' | translate }}</span>
+        <i class="icon icon-go-document"></i>
+        <span>{{ 'webTerminal.demo.document' | translate }}</span>
       </div>
       <div class="demo-stat-item">
         <i class="icon icon-time"></i>

@@ -17,8 +17,8 @@ export const webTerminal = {
   demo: {
     title: 'Group Control Demo',
     description: 'Experience synchronized multi-terminal management and watch real-time group control execution',
-    servers: 'Servers',
     allConnected: 'Group Control',
+    document: 'Document Anywhere',
     realTime: 'Synchronized',
     hint: 'This is a group control demo where all terminals execute the same commands synchronously. Click "Open Terminal" to start real terminal sessions',
   },

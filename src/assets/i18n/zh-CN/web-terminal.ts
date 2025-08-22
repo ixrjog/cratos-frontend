@@ -17,8 +17,8 @@ export const webTerminal = {
   demo: {
     title: '群控终端演示',
     description: '体验多终端同步管理功能，观看实时群控命令执行效果',
-    servers: '台服务器',
     allConnected: '群控模式',
+    document: '平台文档',
     realTime: '同步执行',
     hint: '这是群控演示效果，所有终端同步执行相同命令，点击"打开终端"开始真实的终端会话',
   },

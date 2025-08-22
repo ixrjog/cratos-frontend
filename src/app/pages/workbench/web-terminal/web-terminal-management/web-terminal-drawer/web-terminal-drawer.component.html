@@ -21,6 +21,7 @@
       [filterKey]="'value'"
       [appendToBody]="true"
       [searchFn]="onSearchTagGroup"
+      [(ngModel)]="queryParam.tagGroup"
       [isSearch]="true"
       placeholder="Select tag group"
       (valueChange)="onTagGroupChange($event)">
@@ -30,7 +31,9 @@
       class="search"
       [(ngModel)]="queryParam.queryName"
       [iconPosition]="'left'"
-      (ngModelChange)="onSearch($event)">
+      (searchFn)="fetchData()"
+      (change)="fetchData()"
+    >
     </d-search>
 
     <d-button

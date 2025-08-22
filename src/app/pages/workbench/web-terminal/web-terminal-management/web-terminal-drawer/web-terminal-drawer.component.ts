@@ -149,13 +149,10 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   };
 
   onTagGroupChange(option: any): void {
+    this.isFavorite = option?.favorited|| false;
     this.queryParam.tagGroup = option?.value || '';
     this.table.pager.pageIndex = 1;
     this.fetchData();
-  }
-
-  onSearch(searchValue: string): void {
-    this.searchSubject.next(searchValue);
   }
 
   onPageIndexChange(pageIndex: number): void {
@@ -291,6 +288,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   onClick(group: FavoriteGroupVO) {
+    this.isFavorite = true
     this.queryParam.tagGroup = group.name;
     this.fetchData();
     this.onAddGroupFavorite(group.name);

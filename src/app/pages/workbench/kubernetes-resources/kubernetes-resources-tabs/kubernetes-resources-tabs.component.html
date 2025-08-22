@@ -46,6 +46,7 @@
     style="max-width: 450px;width: 450px"
     [allowClear]="true"
     [filterKey]="'label'"
+    [(ngModel)]="queryParam.name"
     [searchFn]="onSelectResourceName"
     [isSearch]="true"
     (valueChange)="onResourceNameChange($event)"

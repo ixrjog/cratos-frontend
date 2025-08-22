@@ -225,6 +225,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.fetchData()
     if (this.queryParam.applicationName) {
       this.getResourceNamespaceOptions();
+      this.queryParam.name = '';
     }
   }
 

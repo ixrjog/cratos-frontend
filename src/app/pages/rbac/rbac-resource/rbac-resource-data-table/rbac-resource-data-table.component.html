@@ -3,6 +3,7 @@
     class="search"
     [(ngModel)]="queryParam.queryName"
     [iconPosition]="'left'"
+    [placeholder]="'rbac.resource.form.resourceNamePlaceholder' | translate"
     (searchFn)="fetchData()"
   >
   </d-search>
@@ -13,11 +14,11 @@
     [(ngModel)]="group"
     [searchFn]="onSearchRbacGroup"
     [isSearch]="true"
-    placeholder="Select rbac group"
+    [placeholder]="'rbac.resource.form.groupIdPlaceholder' | translate"
     (valueChange)="onRbacGroupChange($event)"
   >
   </d-select>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'rbac.common.filter' | translate }}</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -30,18 +31,30 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column header="RBAC Group">
+    <d-column [header]="'rbac.resource.table.groupName' | translate">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span>{{ rowItem.rbacGroup?.groupName }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="resourceName" header="Resource Name"></d-column>
-    <d-column field="uiPoint" header="UI Point"></d-column>
-    <d-column field="valid" header="Valid"></d-column>
-    <d-column field="comment" header="Comment"></d-column>
-    <d-column field="createTime" header="Create Time" [fieldType]="'date'">
+    <d-column field="resourceName" [header]="'rbac.resource.table.resourceName' | translate"></d-column>
+    <d-column field="uiPoint" [header]="'rbac.resource.table.uiPoint' | translate">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem ? ('rbac.resource.uiPoint.yes' | translate) : ('rbac.resource.uiPoint.no' | translate) }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" [header]="'rbac.resource.table.valid' | translate">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem ? ('rbac.common.valid' | translate) : ('rbac.common.invalid' | translate) }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" [header]="'rbac.resource.table.comment' | translate"></d-column>
+    <d-column field="createTime" [header]="'rbac.resource.table.createTime' | translate" [fieldType]="'date'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
@@ -50,25 +63,26 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column [header]="'rbac.resource.table.actions' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" [title]="'rbac.common.edit' | translate"></d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"
               [color]="getRowColor(rowItem['valid'])"
+              [title]="rowItem['valid'] ? ('rbac.common.disable' | translate) : ('rbac.common.enable' | translate)"
               (click)="onRowValid(rowItem)"
             >
             </d-icon>
-            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)" [title]="'rbac.common.delete' | translate"></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class="no-data">{{ 'rbac.common.noData' | translate }}</div>
     </ng-template>
   </d-data-table>
 </div>
@@ -76,14 +90,14 @@
   <div dDropDown class="batch-button">
     <d-button-group>
       <d-button bsStyle="common" dDropDownToggle>
-        Batch
+        {{ 'rbac.common.batch' | translate }}
         <span class="icon icon-select-arrow"></span>
       </d-button>
     </d-button-group>
     <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
       <li role="menuitem" (click)="onBatchDelete()">
         <a dDropDownMenuItem>
-          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle">{{ 'rbac.common.delete' | translate }}</span>
         </a>
       </li>
     </ul>

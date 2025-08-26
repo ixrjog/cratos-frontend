@@ -5,7 +5,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px 24px;
-  border-bottom: 1px solid @devui-dividing-line;;
+  border-bottom: 1px solid @devui-dividing-line;
   background: @devui-base-bg;
 
   .header-content {
@@ -99,13 +99,13 @@
     }
 
     .asset-name-link {
-      color: #007bff;
+      color: @devui-info;
       cursor: pointer;
       text-decoration: none;
       font-weight: 500;
 
       &:hover {
-        color: #0056b3;
+        color: @devui-info;
         text-decoration: underline;
       }
     }
@@ -122,7 +122,7 @@
       .opened-tag {
         flex-shrink: 0;
         font-size: 11px;
-        
+
         :deep(.devui-tag) {
           padding: 2px 6px;
           font-size: 11px;

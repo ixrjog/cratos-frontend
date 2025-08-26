@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
+import { TranslateService } from '@ngx-translate/core';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
@@ -108,7 +109,7 @@ export class RbacRoleDataTableComponent implements OnInit {
       ...this.dialogDate.menuData,
       title: 'Edit RBAC Role Menu',
     };
-    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, null, rowItem);
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => null, rowItem);
   }
 
   onRowDetails(rowItem: RbacRoleVO) {
@@ -116,7 +117,7 @@ export class RbacRoleDataTableComponent implements OnInit {
       ...this.dialogDate.detailsData,
       title: 'RBAC Role Details',
     };
-    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, null, rowItem);
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, rowItem);
   }
 
   onRowDelete(rowItem: RbacRoleVO) {

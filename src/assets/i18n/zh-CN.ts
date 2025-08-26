@@ -9,7 +9,7 @@ import register from './zh-CN/register';
 import workOrderTicket from './zh-CN/work-order-ticket';
 import kubernetes from './zh-CN/kubernetes';
 import webTerminal from './zh-CN/web-terminal';
-import rbacRole from './zh-CN/rbac-role';
+import rbac from './zh-CN/rbac';
 
 export default {
   ...pages,
@@ -23,5 +23,5 @@ export default {
   ...workOrderTicket,
   ...kubernetes,
   ...webTerminal,
-  ...rbacRole,
+  ...rbac,
 };

@@ -6,17 +6,18 @@
     [layout]="layoutDirection"
   >
     <d-form-item>
-      <d-form-label [required]="true">Role Name</d-form-label>
+      <d-form-label [required]="true">{{ 'rbac.role.form.roleName' | translate }}</d-form-label>
       <d-form-control>
         <input
           dTextInput
           name="groupName"
           [(ngModel)]="formData.roleName"
+          [placeholder]="'rbac.role.form.roleNamePlaceholder' | translate"
           [dValidateRules]="formRules['roleName']" />
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Access Level</d-form-label>
+      <d-form-label [required]="true">{{ 'rbac.role.form.accessLevel' | translate }}</d-form-label>
       <d-form-control>
         <d-input-number
           name="accessLevel"
@@ -29,19 +30,20 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>WorkOrder Visible</d-form-label>
+      <d-form-label>{{ 'rbac.role.form.workOrderVisible' | translate }}</d-form-label>
       <d-form-control>
         <d-toggle name="workOrderVisible" [(ngModel)]="formData.workOrderVisible"></d-toggle>
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Description</d-form-label>
+      <d-form-label>{{ 'rbac.role.form.comment' | translate }}</d-form-label>
       <d-form-control>
         <textarea
           dTextarea
           name="comment"
           maxlength="200"
           style="height: 80px"
+          [placeholder]="'rbac.role.form.commentPlaceholder' | translate"
           [(ngModel)]="formData.comment"
         ></textarea>
       </d-form-control>

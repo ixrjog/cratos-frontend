@@ -1,14 +1,15 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">{{ 'rbac.role.add' | translate }}</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.roleName"
     [iconPosition]="'left'"
+    [placeholder]="'rbac.role.form.roleNamePlaceholder' | translate"
     (searchFn)="fetchData()"
     (change)="fetchData()"
   >
   </d-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'rbac.common.filter' | translate }}</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -21,11 +22,17 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="roleName" header="Role Name"></d-column>
-    <d-column field="accessLevel" header="Access Level"></d-column>
-    <d-column field="workOrderVisible" header="WorkOrder Visible"></d-column>
-    <d-column field="comment" header="Comment"></d-column>
-    <d-column field="createTime" header="Create Time" [fieldType]="'date'">
+    <d-column field="roleName" [header]="'rbac.role.table.roleName' | translate"></d-column>
+    <d-column field="accessLevel" [header]="'rbac.role.table.accessLevel' | translate"></d-column>
+    <d-column field="workOrderVisible" [header]="'rbac.role.table.workOrderVisible' | translate">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem ? ('rbac.role.workOrderVisible.visible' | translate) : ('rbac.role.workOrderVisible.invisible' | translate) }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" [header]="'rbac.role.table.comment' | translate"></d-column>
+    <d-column field="createTime" [header]="'rbac.role.table.createTime' | translate" [fieldType]="'date'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
@@ -34,20 +41,20 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column [header]="'rbac.role.table.actions' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-all-project'" [operable]="true" (click)="onRowDetails(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowMenu(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" [title]="'rbac.common.edit' | translate"></d-icon>
+            <d-icon [icon]="'icon-all-project'" [operable]="true" (click)="onRowDetails(rowItem)" [title]="'rbac.role.details' | translate"></d-icon>
+            <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowMenu(rowItem)" [title]="'rbac.role.menu' | translate"></d-icon>
+            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)" [title]="'rbac.common.delete' | translate"></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class="no-data">{{ 'rbac.common.noData' | translate }}</div>
     </ng-template>
   </d-data-table>
 </div>

@@ -141,7 +141,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       console.log('WebSocket closed:', event.code, event.reason);
       if (event.code !== 1000) {
         // 非正常关闭
-        this.terminal.write('\r\n\x1b[31mConnection closed unexpectedly [${new Date().toLocaleString()}] \x1b[0m\r\n');
+        this.terminal.write(`\r\n\x1b[31mConnection closed unexpectedly [${new Date().toLocaleString()}] \x1b[0m\r\n`);
       }
     };
   }

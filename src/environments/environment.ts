@@ -1,4 +1,4 @@
 export const environment = {
-  wsUrl: 'wss://cratos.palmpay-inc.com',
+  wsUrl: 'ws://localhost:8081',
   production: false,
 };

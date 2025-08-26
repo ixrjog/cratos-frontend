@@ -90,6 +90,16 @@ export interface SaveRoleMenu {
   menuIds: number[];
 }
 
+export interface RoleDetailsVO {
+  role: RbacRoleVO;
+  groupResources: RoleGroupResourceVO[];
+}
+
+export interface RoleGroupResourceVO {
+  group: RbacGroupVO;
+  resources: RbacResourceVO[];
+}
+
 export abstract class RbacData {
 
   abstract queryRolePage(param: RolePageQuery): Observable<DataTable<RbacRoleVO>>;
@@ -125,5 +135,7 @@ export abstract class RbacData {
   abstract deleteUserRole(param: UserRoleEdit): Observable<HttpResult<Boolean>>;
 
   abstract saveRoleMenu(param: SaveRoleMenu): Observable<HttpResult<Boolean>>;
+
+  abstract queryRoleDetails(param: { roleId: number }): Observable<HttpResult<RoleDetailsVO>>;
 
 }

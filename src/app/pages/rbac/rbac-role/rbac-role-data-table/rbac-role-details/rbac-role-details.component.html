@@ -1,0 +1,105 @@
+<div class="role-details-container" *ngIf="roleDetails">
+  <!-- 角色基本信息 -->
+  <d-card class="role-info-card">
+    <d-card-header>
+      <d-card-title>{{ 'rbacRoleDetails.roleInfo.title' | translate }}</d-card-title>
+    </d-card-header>
+    <d-card-content>
+      <div class="role-info-grid">
+        <div class="info-item">
+          <label class="info-label">{{ 'rbacRoleDetails.roleInfo.roleName' | translate }}：</label>
+          <span class="info-value">{{ roleDetails.role.roleName }}</span>
+        </div>
+        <div class="info-item">
+          <label class="info-label">{{ 'rbacRoleDetails.roleInfo.accessLevel' | translate }}：</label>
+          <d-tag
+            [tag]="getAccessLevelText(roleDetails.role.accessLevel)"
+            [labelStyle]="getAccessLevelStyle(roleDetails.role.accessLevel)">
+          </d-tag>
+        </div>
+        <div class="info-item">
+          <label class="info-label">{{ 'rbacRoleDetails.roleInfo.workOrderVisible' | translate }}：</label>
+          <d-tag
+            [tag]="roleDetails.role.workOrderVisible ? ('rbacRoleDetails.roleInfo.visible' | translate) : ('rbacRoleDetails.roleInfo.invisible' | translate)"
+            [labelStyle]="roleDetails.role.workOrderVisible ? 'green-w98' : 'red-w98'">
+          </d-tag>
+        </div>
+        <div class="info-item full-width">
+          <label class="info-label">{{ 'rbacRoleDetails.roleInfo.comment' | translate }}：</label>
+          <span class="info-value">{{ roleDetails.role.comment }}</span>
+        </div>
+      </div>
+    </d-card-content>
+  </d-card>
+
+  <!-- 资源权限信息 -->
+  <d-card class="resources-card">
+    <d-card-header>
+      <d-card-title>{{ 'rbacRoleDetails.resourcePermissions.title' | translate }}</d-card-title>
+    </d-card-header>
+    <d-card-content>
+
+      <!-- 当有数据时显示 -->
+      <div class="resources-content" *ngIf="roleDetails && roleDetails.groupResources && roleDetails.groupResources.length > 0; else noResources">
+        <div class="simple-list">
+          <div *ngFor="let groupResource of roleDetails.groupResources; let i = index" class="group-item">
+            <h4>{{ groupResource.group?.groupName || ('rbacRoleDetails.resourcePermissions.groupName' | translate) }} ({{ groupResource.resources?.length || 0 }}{{ 'rbacRoleDetails.resourcePermissions.resources' | translate }})</h4>
+
+            <div *ngIf="groupResource.resources && groupResource.resources.length > 0" class="simple-table">
+              <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <thead>
+                  <tr style="background-color: #f5f5f5;">
+                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.resourceName' | translate }}</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.uiPoint' | translate }}</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.valid' | translate }}</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.comment' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let resource of groupResource.resources">
+                    <td style="border: 1px solid #ddd; padding: 8px;">{{ resource.resourceName }}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                      <span [style.color]="resource.uiPoint ? 'green' : 'blue'">
+                        {{ resource.uiPoint ? ('rbacRoleDetails.table.uiNode' | translate) : ('rbacRoleDetails.table.nonUiNode' | translate) }}
+                      </span>
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                      <span [style.color]="resource.valid ? 'green' : 'red'">
+                        {{ resource.valid ? ('rbacRoleDetails.table.active' | translate) : ('rbacRoleDetails.table.inactive' | translate) }}
+                      </span>
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{{ resource.comment || ('rbacRoleDetails.table.noComment' | translate) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div *ngIf="!groupResource.resources || groupResource.resources.length === 0" class="no-resources-simple">
+              <p style="color: #999; text-align: center; padding: 20px;">{{ 'rbacRoleDetails.empty.noResourcesDesc' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 无资源提示 -->
+      <ng-template #noResources>
+        <div class="no-resources">
+          <div class="empty-content">
+            <div class="empty-icon">
+              <i class="icon icon-shield-exclamation" style="font-size: 48px; color: #ccc;"></i>
+            </div>
+            <div class="empty-title">{{ 'rbacRoleDetails.empty.noPermissions' | translate }}</div>
+            <div class="empty-description">{{ 'rbacRoleDetails.empty.noPermissionsDesc' | translate }}</div>
+          </div>
+        </div>
+      </ng-template>
+    </d-card-content>
+  </d-card>
+</div>
+
+<!-- 加载状态 -->
+<div class="loading-container" *ngIf="!roleDetails">
+  <d-loading dLoading [loading]="true" [message]="'rbacRoleDetails.loading' | translate">
+    <div class="loading-content"></div>
+  </d-loading>
+</div>

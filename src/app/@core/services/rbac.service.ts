@@ -10,6 +10,7 @@ import {
   RbacRoleEdit,
   RbacRoleVO,
   ResourcePageQuery,
+  RoleDetailsVO,
   RolePageQuery,
   RoleResourceEdit,
   RoleResourcePageQuery,
@@ -93,6 +94,10 @@ export class RbacService extends RbacData {
 
   saveRoleMenu(param: SaveRoleMenu): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/role/menu/save', param);
+  }
+
+  queryRoleDetails(param: { roleId: number }): Observable<HttpResult<RoleDetailsVO>> {
+    return this.apiService.get(this.baseUrl, '/role/details/query', param);
   }
 
 }

@@ -9,6 +9,7 @@ import { RbacRoleEditorComponent } from './rbac-role-editor/rbac-role-editor.com
 import { RbacService } from '../../../../@core/services/rbac.service';
 import { RbacRoleMenuComponent } from './rbac-role-menu/rbac-role-menu.component';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
+import { RbacRoleDetailsComponent } from './rbac-role-details/rbac-role-details.component';
 
 @Component({
   selector: 'app-rbac-role-data-table',
@@ -32,7 +33,13 @@ export class RbacRoleDataTableComponent implements OnInit {
     },
     menuData: {
       ...DIALOG_DATA.editorData,
+      width: '40%',
       content: RbacRoleMenuComponent,
+    },
+    detailsData: {
+      ...DIALOG_DATA.editorData,
+      width: '50%',
+      content: RbacRoleDetailsComponent,
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -102,6 +109,14 @@ export class RbacRoleDataTableComponent implements OnInit {
       title: 'Edit RBAC Role Menu',
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, null, rowItem);
+  }
+
+  onRowDetails(rowItem: RbacRoleVO) {
+    const dialogDate = {
+      ...this.dialogDate.detailsData,
+      title: 'RBAC Role Details',
+    };
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, null, rowItem);
   }
 
   onRowDelete(rowItem: RbacRoleVO) {

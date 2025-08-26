@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">{{ 'user.common.new' | translate }}</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -12,7 +12,7 @@
                          (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-checkbox
     class="checkbox"
-    label="show only external user"
+    [label]="'user.common.showOnlyExternalUser' | translate"
     [isShowTitle]="false"
     [(ngModel)]="isExternal"
     (change)="onChangeExternal($event)"
@@ -29,7 +29,7 @@
       [title]="item.title"
     ></d-tab>
   </d-tabs>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'user.common.filter' | translate }}</d-button>
   <span class="right-button">
     <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onRefreshAll()"></d-icon>
   </span>
@@ -46,7 +46,7 @@
     [checkable]="true"
     (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column header="Name" [width]="'260px'">
+    <d-column [header]="'user.list.table.name' | translate" [width]="'260px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div dLoading [loading]="rowItem['$userInfoLoading']">

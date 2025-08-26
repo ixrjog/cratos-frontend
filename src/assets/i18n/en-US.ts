@@ -10,6 +10,7 @@ import workOrderTicket from './en-US/work-order-ticket';
 import kubernetes from './en-US/kubernetes';
 import webTerminal from './en-US/web-terminal';
 import rbac from './en-US/rbac';
+import user from './en-US/user';
 
 export default {
   ...pages,
@@ -24,4 +25,5 @@ export default {
   ...kubernetes,
   ...webTerminal,
   ...rbac,
+  ...user,
 };

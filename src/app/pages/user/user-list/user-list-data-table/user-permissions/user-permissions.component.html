@@ -2,28 +2,46 @@
   <span *ngFor="let permission of permissionMap| keyvalue">
     <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
     <span *ngIf="JSON.stringify(permission.value) === '[]'">
-      <d-tag [tag]="'No permissions'"></d-tag>
+      <d-tag [tag]="'user.permissions.noPermissions' | translate"></d-tag>
     </span>
     <div class="permissions">
       <d-card *ngFor="let item of permission.value" class="permissions-card">
         <d-card-content>
-          <d-tag
-            dClipboard
-            [content]="item.name"
-            style="margin-right: 8px"
-            [tag]="item.name"
-            [labelStyle]="'blue-w98'"
-          >
-          </d-tag>
-          <d-tag
-            *ngFor="let role of item.userPermissions"
-            style="margin-right: 5px;"
-            [tag]="role"
-            [customViewTemplate]="customTag"
-            [labelStyle]="role.id !== null?'green-w98':''"
-            (click)="onRowRemove(role)"
-          >
-          </d-tag>
+          <div class="permission-row">
+            <d-tag
+              dClipboard
+              [content]="item.name"
+              style="margin-right: 8px;"
+              [tag]="item.name"
+              [labelStyle]="'blue-w98'"
+            >
+            </d-tag>
+            
+            <span 
+              *ngFor="let role of item.userPermissions" 
+              class="role-compact"
+              style="display: inline-block; margin-right: 8px;"
+            >
+              <d-tag
+                [tag]="role"
+                [customViewTemplate]="customTag"
+                [labelStyle]="role.id !== null?'green-w98':''"
+                (click)="onRowRemove(role)"
+                style="margin-right: 4px;"
+              >
+              </d-tag>
+              <span 
+                *ngIf="role.expiredTime"
+                class="expiration-compact" 
+                [style.color]="getExpirationColor(role.expiredTime)"
+                [title]="getExpirationTooltip(role.expiredTime)"
+                style="font-size: 11px; white-space: nowrap;"
+              >
+                {{ getCompactExpirationText(role.expiredTime) }}
+              </span>
+            </span>
+          </div>
+          
           <ng-template #customTag let-tag="tag">
             <div>
               <span class="progress-container circle-type">
@@ -31,7 +49,7 @@
                   [type]="'circle'"
                   [strokeWidth]="18"
                   [percentage]="tag.lifeCycleExpires?.survivalRate"
-                  [strokeColor]="'#50d4ab'"
+                  [strokeColor]="getProgressColor(tag.expiredTime)"
                   [showContent]="false"
                   style="display: inline-block"
                   *ngIf="tag.id !== null"

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../@core/services/user.service';
 import { UserVO } from '../../../@core/data/user';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-settings',
@@ -15,36 +16,52 @@ export class UserSettingsComponent implements OnInit {
   menus = [
     {
       isActive: true,
-      title: 'Base',
+      title: '',
+      key: 'user.settings.menu.base'
     },
     {
       isActive: false,
-      title: 'Permissions',
+      title: '',
+      key: 'user.settings.menu.permissions'
     },
     {
       isActive: false,
-      title: 'Cloud Identity',
+      title: '',
+      key: 'user.settings.menu.cloudIdentity'
     },
     {
       isActive: false,
-      title: 'Identity',
+      title: '',
+      key: 'user.settings.menu.identity'
     },
     {
       isActive: false,
-      title: 'SSH Key',
+      title: '',
+      key: 'user.settings.menu.sshKey'
     },
     {
       isActive: false,
-      title: 'Robot',
+      title: '',
+      key: 'user.settings.menu.robot'
     },
   ];
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private translate: TranslateService
+  ) {
   }
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username');
-    this.fetchData()
+    this.initializeMenuTitles();
+    this.fetchData();
+  }
+
+  private initializeMenuTitles(): void {
+    this.menus.forEach(menu => {
+      menu.title = this.translate.instant(menu.key);
+    });
   }
 
   fetchData() {

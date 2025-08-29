@@ -32,8 +32,9 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   closeHandler: Function;
 
   serverAccounts: ServerAccountVO[] = [];
-  selectedServerAccount: string = '';
+  selectedServerAccount: string | ServerAccountVO = '';
   isConnected = false;
+  hasError = false;
 
   private ws: WebSocket | null = null;
   private heartbeatSubscription: Subscription | null = null;
@@ -58,19 +59,19 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnInit(): void {
-    this.closeHandler = this.data['closeHandler'];
+    this.closeHandler = this.data['hideDialog'];
     this.formData = this.data['formData'];
-    this.uuid = this.uuidUtil.uuid(8, 10);
-    this.instanceId = this.formData.name + '#' + this.uuid;
-
     this.initServerAccount();
   }
 
   ngAfterViewInit(): void {
-    this.terminal.open(document.getElementById('edsAssetSshTerminal'));
-    fromEvent(window, 'resize')
-      .pipe(debounceTime(300), takeUntil(this.destroy$))
-      .subscribe(() => this.handleTerminalResize());
+    setTimeout(() => {
+      this.terminal.open(document.getElementById('edsAssetSshTerminal'));
+      this.fitAddon.fit();
+      fromEvent(window, 'resize')
+        .pipe(debounceTime(300), takeUntil(this.destroy$))
+        .subscribe(() => this.handleTerminalResize());
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -82,17 +83,22 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   private initServerAccount(): void {
     // 从businessTags中查找serverAccount
     const serverAccountTag = this.formData.businessTags?.find(tag => tag.tag.tagKey === 'ServerAccount');
+
     if (serverAccountTag?.tagValue) {
       this.selectedServerAccount = serverAccountTag.tagValue;
-      this.connectTerminal();
+      setTimeout(() => {
+        this.connectTerminal();
+        this.terminal.focus();
+      }, 100);
     }
     this.loadServerAccounts();
+
   }
 
   private loadServerAccounts(): void {
     const query: ServerAccountPageQuery = {
       page: 1,
-      length: 100,
+      length: 20,
       queryName: '',
       valid: true,
       protocol: 'SSH',
@@ -100,30 +106,37 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
     this.serverAccountService.queryServerAccountPage(query)
       .subscribe(({ body }) => {
-        this.serverAccounts = body.data || [];
-        if (this.serverAccounts.length > 0 && this.selectedServerAccount !== '') {
-          this.selectedServerAccount = this.serverAccounts[0].name;
-          this.connectTerminal();
-        }
+        this.serverAccounts = body.data;
       });
   }
 
   onServerAccountChange(account: ServerAccountVO): void {
-    this.selectedServerAccount = account.name;
+    this.selectedServerAccount = account;
     if (this.isConnected) {
-      this.cleanup();
+      this.cleanupConnection();
       this.isConnected = false;
     }
     if (this.selectedServerAccount) {
-      this.connectTerminal();
+      setTimeout(() => {
+        this.terminal.clear();
+        this.connectTerminal();
+        this.terminal.focus();
+      }, 200);
     }
   }
 
   private connectTerminal(): void {
     if (!this.selectedServerAccount) return;
+    this.hasError = false;
+    this.initializeInstanceId();
     this.initializeWebSocket();
     this.startHeartbeat();
     this.isConnected = true;
+  }
+
+  private initializeInstanceId() {
+    this.uuid = this.uuidUtil.uuid(8, 10);
+    this.instanceId = this.formData.name + '#' + this.uuid;
   }
 
   private initializeWebSocket(): void {
@@ -132,6 +145,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     this.ws.onopen = () => {
       this.initializeSSHSession();
       this.setupTerminalInput();
+      setTimeout(() => this.terminal.focus(), 200);
     };
 
     this.ws.onmessage = (event) => {
@@ -142,7 +156,10 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
         msgList
           .filter(msg => msg.instanceId === this.instanceId)
           .forEach(msg => {
-            if (msg.errorMsg === null && msg.output) {
+            if (msg.errorMsg) {
+              this.terminal.write(`\r\n\x1b[31mError: ${msg.errorMsg}\x1b[0m\r\n`);
+              this.hasError = true;
+            } else if (msg.output) {
               this.terminal.write(msg.output);
             }
           });
@@ -180,11 +197,15 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
       this.terminal.resize(this.terminal.cols, Math.min(this.rows, this.feedLines));
     });
 
+    const serverAccountName = typeof this.selectedServerAccount === 'string'
+      ? this.selectedServerAccount
+      : this.selectedServerAccount?.name || 'root';
+
     const param: WebTerminalSuperOpenRequest = {
       state: WebTerminalStatus.SUPER_OPEN,
       assetId: this.formData.id,
       instanceId: this.instanceId,
-      serverAccount: this.selectedServerAccount,
+      serverAccount: serverAccountName,
       terminal: {
         cols: this.terminal.cols,
         rows: this.rows,
@@ -196,6 +217,8 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   private setupTerminalInput(): void {
     this.terminal.onData((event) => {
+      if (this.hasError) return;
+      
       this.sendMessage({
         state: WebTerminalStatus.COMMAND,
         instanceId: this.instanceId,
@@ -224,7 +247,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     }
   }
 
-  private cleanup(): void {
+  private cleanupConnection(): void {
     this.heartbeatSubscription?.unsubscribe();
 
     if (this.ws) {
@@ -234,11 +257,14 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
           instanceId: this.instanceId,
           terminal: { cols: this.terminal.cols, rows: this.rows },
         });
-        this.ws.close(1000, 'Component destroyed');
+        this.ws.close(1000, 'Switching account');
       }
       this.ws = null;
     }
+  }
 
+  private cleanup(): void {
+    this.cleanupConnection();
     this.terminal?.dispose();
   }
 
@@ -248,6 +274,8 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   onRowExit(): void {
     this.cleanup();
-    this.closeHandler?.();
+    if (this.closeHandler && typeof this.closeHandler === 'function') {
+      this.closeHandler();
+    }
   }
 }

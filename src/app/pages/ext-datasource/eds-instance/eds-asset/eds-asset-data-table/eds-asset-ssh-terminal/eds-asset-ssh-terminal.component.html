@@ -1,5 +1,5 @@
-<section>
-  <d-card style="padding: 5px 10px">
+<section style="height: 100%; min-height: 600px;">
+  <d-card style="padding: 5px 10px; height: 100%;">
     <d-card-header style="position: relative;margin-bottom: 5px;height: 28px">
       <d-card-subtitle>
         <div style="position: absolute;left: 0px;top: 0;display: flex;align-items: center;gap: 8px">
@@ -21,7 +21,7 @@
         </d-button>
       </d-card-subtitle>
     </d-card-header>
-    <d-card-content>
+    <d-card-content style="height: calc(100% - 40px); padding: 0;">
       <div class="eds-asset-ssh-terminal" id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
     </d-card-content>
   </d-card>

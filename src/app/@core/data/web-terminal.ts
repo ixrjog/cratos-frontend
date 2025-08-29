@@ -3,6 +3,12 @@ export interface WebTerminalOpenRequest extends WebTerminalBaseRequest {
   instanceId: string;
 }
 
+export interface WebTerminalSuperOpenRequest extends WebTerminalBaseRequest {
+  assetId: number;
+  instanceId: string;
+  serverAccount: string;
+}
+
 export interface WebTerminalResizeRequest extends WebTerminalBaseRequest {
   instanceId: string;
 }
@@ -26,6 +32,7 @@ export interface WebTerminalBaseRequest {
 
 export enum WebTerminalStatus {
   OPEN = 'OPEN',
+  SUPER_OPEN = 'SUPER_OPEN',
   RESIZE = 'RESIZE',
   CLOSE = 'CLOSE',
   COMMAND = 'COMMAND'

@@ -34,6 +34,7 @@ import { getPopoverStyle } from '../../../../../@shared/utils/theme.util';
 import { EdsAssetManualEditorComponent } from './eds-asset-manual-editor/eds-asset-manual-editor.component';
 import { BusinessTagService } from '../../../../../@core/services/business-tag.service';
 import { BusinessTagEdit } from '../../../../../@core/data/business-tag';
+import { EdsAssetSshTerminalComponent } from './eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -77,6 +78,12 @@ export class EdsAssetDataTableComponent implements OnChanges {
       ...DIALOG_DATA.editorData,
       content: EdsAssetManualEditorComponent,
       title: 'Manual Eds Asset Edit',
+    },
+    loginEditData: {
+      ...DIALOG_DATA.editorData,
+      width: '60%',
+      content: EdsAssetSshTerminalComponent,
+      title: 'Asset Login',
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -166,6 +173,14 @@ export class EdsAssetDataTableComponent implements OnChanges {
     }, { supportManualAsset: this.supportManualAsset });
   }
 
+  onAssetLogin(rowItem: EdsAssetVO) {
+    const dialogDate = {
+      ...this.dialogDate.loginEditData,
+    };
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
 
   fetchData() {
     const param: AssetPageQuery = {

@@ -135,6 +135,13 @@
               (click)="onRowImport(rowItem)"
             >
             </d-icon>
+            <d-icon
+              *ngIf="rowItem['loginServer'] !== null && rowItem['loginServer']['valid']"
+              [icon]="'icon-connect'"
+              [operable]="true"
+              (click)="onAssetLogin(rowItem)"
+            >
+            </d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
             <d-icon

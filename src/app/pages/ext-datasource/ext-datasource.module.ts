@@ -63,6 +63,7 @@ import { UserModule } from '../user/user.module';
 import { DomainModule } from '../domain/domain.module';
 import { CertificateModule } from '../certificate/certificate.module';
 import { EdsAssetManualEditorComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-manual-editor/eds-asset-manual-editor.component';
+import { EdsAssetSshTerminalComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 
 
 @NgModule({
@@ -88,6 +89,7 @@ import { EdsAssetManualEditorComponent } from './eds-instance/eds-asset/eds-asse
     KubernetesResourcesCreateComponent,
     KubernetesResourcesTemplateCloneComponent,
     EdsAssetManualEditorComponent,
+    EdsAssetSshTerminalComponent,
   ],
   imports: [
     CommonModule,

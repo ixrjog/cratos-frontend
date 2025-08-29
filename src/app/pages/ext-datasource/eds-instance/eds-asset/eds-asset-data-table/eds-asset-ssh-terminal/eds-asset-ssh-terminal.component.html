@@ -1,1 +1,28 @@
-<p>eds-asset-ssh-terminal works!</p>
+<section>
+  <d-card style="padding: 5px 10px">
+    <d-card-header style="position: relative;margin-bottom: 5px;height: 28px">
+      <d-card-subtitle>
+        <div style="position: absolute;left: 0px;top: 0;display: flex;align-items: center;gap: 8px">
+          <span style="font-size: 12px;color: #666">Account:</span>
+          <d-select
+            [filterKey]="'name'"
+            [options]="serverAccounts"
+            [(ngModel)]="selectedServerAccount"
+            (valueChange)="onServerAccountChange($event)"
+            style="width: 120px">
+          </d-select>
+          <span class="font-color-name" style="height: 22px">{{ formData.name }}</span>
+        </div>
+        <d-button
+          style="position: absolute;right: 0;top: 0"
+          bsStyle="text"
+          (click)="onRowExit()"
+        >Exit
+        </d-button>
+      </d-card-subtitle>
+    </d-card-header>
+    <d-card-content>
+      <div class="eds-asset-ssh-terminal" id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
+    </d-card-content>
+  </d-card>
+</section>

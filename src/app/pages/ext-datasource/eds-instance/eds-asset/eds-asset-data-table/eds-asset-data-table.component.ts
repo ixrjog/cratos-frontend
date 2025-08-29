@@ -177,9 +177,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     const dialogDate = {
       ...this.dialogDate.loginEditData,
     };
-    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => {
-      this.fetchData();
-    }, rowItem);
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, rowItem);
   }
 
   fetchData() {

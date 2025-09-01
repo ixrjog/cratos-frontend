@@ -82,6 +82,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
     loginEditData: {
       ...DIALOG_DATA.editorData,
       width: '60%',
+      height: '600px',
       content: EdsAssetSshTerminalComponent,
       title: 'Asset Login',
     },

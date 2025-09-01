@@ -16,11 +16,13 @@
 section {
   height: 100%;
   min-height: 600px;
+  max-height: 600px;
+  overflow: hidden;
 }
 
 d-card {
   height: 100%;
-  
+
   d-card-content {
     height: calc(100% - 40px);
     padding: 0 !important;
@@ -32,7 +34,7 @@ d-card-header {
     ::ng-deep .devui-select {
       height: 24px;
       line-height: 22px;
-      
+
       .devui-select-input {
         height: 24px;
         line-height: 22px;

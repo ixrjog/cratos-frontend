@@ -27,7 +27,13 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   uuid: string;
   instanceId: string;
   feedLines = 40;
-  rows: number = 40;
+  rows: number = 24;
+
+  private calculateRows(): number {
+    // 使用fitAddon来获取准确的终端尺寸
+    this.fitAddon.fit();
+    return this.terminal.rows;
+  }
   formData: EdsAssetVO;
   closeHandler: Function;
 
@@ -67,7 +73,8 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.terminal.open(document.getElementById('edsAssetSshTerminal'));
-      this.fitAddon.fit();
+      this.rows = this.calculateRows();
+      
       fromEvent(window, 'resize')
         .pipe(debounceTime(300), takeUntil(this.destroy$))
         .subscribe(() => this.handleTerminalResize());
@@ -162,6 +169,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
             } else if (msg.output) {
               this.terminal.write(msg.output);
             }
+            this.terminal.scrollToBottom();
           });
       } catch (error) {
         console.error('Failed to parse WebSocket message:', error);
@@ -189,13 +197,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private initializeSSHSession(): void {
-    this.fitAddon.fit();
-    this.terminal.resize(this.terminal.cols, Math.min(this.rows, this.feedLines));
-
-    this.terminal.onLineFeed(() => {
-      this.feedLines++;
-      this.terminal.resize(this.terminal.cols, Math.min(this.rows, this.feedLines));
-    });
+    this.terminal.resize(this.terminal.cols, this.rows);
 
     const serverAccountName = typeof this.selectedServerAccount === 'string'
       ? this.selectedServerAccount
@@ -231,8 +233,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   private handleTerminalResize(): void {
     if (this.ws?.readyState !== WebSocket.OPEN) return;
 
-    this.fitAddon.fit();
-    this.terminal.resize(this.terminal.cols, Math.min(this.rows, this.feedLines));
+    this.rows = this.calculateRows();
 
     this.sendMessage({
       state: WebTerminalStatus.RESIZE,

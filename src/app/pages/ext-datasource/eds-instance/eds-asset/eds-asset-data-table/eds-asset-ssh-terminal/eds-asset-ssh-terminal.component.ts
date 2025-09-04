@@ -119,11 +119,17 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   onServerAccountChange(account: ServerAccountVO): void {
     this.selectedServerAccount = account;
+    
+    // 清理现有连接
     if (this.isConnected) {
       this.cleanupConnection();
       this.isConnected = false;
     }
+    
     if (this.selectedServerAccount) {
+      // 重新生成instanceId
+      this.initializeInstanceId();
+      
       setTimeout(() => {
         this.terminal.clear();
         this.connectTerminal();
@@ -217,8 +223,15 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     this.sendMessage(param);
   }
 
+  private terminalInputDisposable: any = null;
+
   private setupTerminalInput(): void {
-    this.terminal.onData((event) => {
+    // 清理之前的输入监听器
+    if (this.terminalInputDisposable) {
+      this.terminalInputDisposable.dispose();
+    }
+    
+    this.terminalInputDisposable = this.terminal.onData((event) => {
       if (this.hasError) return;
       
       this.sendMessage({
@@ -266,6 +279,13 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   private cleanup(): void {
     this.cleanupConnection();
+    
+    // 清理输入监听器
+    if (this.terminalInputDisposable) {
+      this.terminalInputDisposable.dispose();
+      this.terminalInputDisposable = null;
+    }
+    
     this.terminal?.dispose();
   }
 

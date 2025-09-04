@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://cratos-pre.palmpay-inc.com",
+    "target": "https://cratos.palmpay-inc.com",
     "secure": true,
     "changeOrigin": true
   }

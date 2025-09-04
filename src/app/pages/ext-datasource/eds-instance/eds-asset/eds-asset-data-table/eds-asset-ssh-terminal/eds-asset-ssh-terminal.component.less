@@ -13,6 +13,11 @@
   font-weight: 500;
 }
 
+.asset-info {
+  color: #999;
+  font-size: 11px;
+}
+
 section {
   height: 100%;
   min-height: 600px;
@@ -24,8 +29,8 @@ d-card {
   height: 100%;
 
   d-card-content {
-    height: calc(100% - 40px);
     padding: 0 !important;
+    transition: height 0.3s ease;
   }
 }
 
@@ -41,5 +46,97 @@ d-card-header {
         font-size: 12px;
       }
     }
+  }
+}
+
+// 资产详情面板样式 - 移到顶部
+.asset-details-panel {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+.asset-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e9ecef;
+  background: #fff;
+  border-radius: 4px 4px 0 0;
+
+  .panel-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .toggle-details-btn {
+    padding: 2px 6px;
+    font-size: 12px;
+    
+    .icon {
+      font-size: 12px;
+    }
+  }
+}
+
+.asset-details-content {
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px 16px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+
+  .label {
+    color: #666;
+    font-weight: 500;
+    min-width: 80px;
+    margin-right: 8px;
+  }
+
+  .value {
+    color: #333;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    
+    &.status {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      
+      &.running {
+        background: #d4edda;
+        color: #155724;
+      }
+      
+      &.stopped {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      
+      &.pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

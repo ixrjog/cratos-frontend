@@ -41,6 +41,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   selectedServerAccount: string | ServerAccountVO = '';
   isConnected = false;
   hasError = false;
+  showAssetDetails = false;
 
   private ws: WebSocket | null = null;
   private heartbeatSubscription: Subscription | null = null;
@@ -298,5 +299,32 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     if (this.closeHandler && typeof this.closeHandler === 'function') {
       this.closeHandler();
     }
+  }
+
+  toggleAssetDetails(): void {
+    this.showAssetDetails = !this.showAssetDetails;
+    // 延迟调整终端大小以适应新的布局
+    setTimeout(() => {
+      this.handleTerminalResize();
+    }, 300);
+  }
+
+  getAssetProperty(key: string): string {
+    return this.formData.originalAsset?.[key] || '';
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return '';
+    const statusLower = status.toLowerCase();
+    if (statusLower.includes('running') || statusLower.includes('active')) {
+      return 'running';
+    }
+    if (statusLower.includes('stopped') || statusLower.includes('inactive')) {
+      return 'stopped';
+    }
+    if (statusLower.includes('pending') || statusLower.includes('starting')) {
+      return 'pending';
+    }
+    return '';
   }
 }

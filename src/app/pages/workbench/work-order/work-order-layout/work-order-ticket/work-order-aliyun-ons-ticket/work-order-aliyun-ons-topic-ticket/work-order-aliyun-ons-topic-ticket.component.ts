@@ -6,6 +6,10 @@ import { WorkOrderAliyunOnsTicketComponent } from '../work-order-aliyun-ons-tick
 import { CreateAliyunOnsResource } from '../../../../../../../@core/data/work-order-ticket-entry';
 import { TranslateService } from '@ngx-translate/core';
 import { WorkOrderStatus } from '../../../../../../../@core/data/work-order';
+import { getResourceCountColor, parseResourceCount } from '../../../../../../../@shared/utils/resource-count.util';
+import { getPopoverStyle } from '../../../../../../../@shared/utils/theme.util';
+import { EdsAssetIndexVO, EdsAssetVO } from '../../../../../../../@core/data/ext-datasource';
+import { EdsService } from '../../../../../../../@core/services/ext-datasource.service.s';
 
 @Component({
   selector: 'app-work-order-aliyun-ons-topic-ticket',
@@ -21,8 +25,10 @@ export class WorkOrderAliyunOnsTopicTicketComponent implements OnInit {
   messageType: string = 'NORMAL';
   tabActiveId: string | number = 'NORMAL';
   messageTypeOptions = [];
+  assetIndexTable: EdsAssetIndexVO[] = [];
 
   constructor(private workOrderTicketEntryService: WorkOrderTicketEntryService,
+              private edsService:EdsService,
               private toastUtil: ToastUtil,
               private translate: TranslateService) {
   }
@@ -98,4 +104,16 @@ export class WorkOrderAliyunOnsTopicTicketComponent implements OnInit {
 
   protected readonly WorkOrderStatus = WorkOrderStatus;
   protected readonly JSON = JSON;
+  protected readonly getResourceCountColor = getResourceCountColor;
+  protected readonly parseResourceCount = parseResourceCount;
+  protected readonly getPopoverStyle = getPopoverStyle;
+
+  onQueryAssetIndex(rowItem: EdsAssetVO) {
+    this.assetIndexTable = [];
+    if (!parseResourceCount(rowItem)) {
+      return;
+    }
+    this.edsService.queryAssetIndexByAssetId({ assetId: rowItem.id })
+      .subscribe(({ body }) => this.assetIndexTable = body);
+  }
 }

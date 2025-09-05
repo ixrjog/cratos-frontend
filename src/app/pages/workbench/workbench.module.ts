@@ -176,6 +176,7 @@ import { WebTerminalItemComponent } from './web-terminal/web-terminal-management
 import { WebTerminalDrawerComponent } from './web-terminal/web-terminal-management/web-terminal-drawer/web-terminal-drawer.component';
 import { WebTerminalDemoComponent } from './web-terminal/web-terminal-management/web-terminal-demo/web-terminal-demo.component';
 import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-management/web-terminal-theme-settings/web-terminal-theme-settings.component';
+import { ExtDatasourceModule } from '../ext-datasource/ext-datasource.module';
 
 @NgModule({
   declarations: [
@@ -258,6 +259,7 @@ import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-m
     WorkbenchRoutingModule,
     SharedModule,
     MarkdownModule,
+    ExtDatasourceModule,
   ],
 })
 export class WorkbenchModule { }

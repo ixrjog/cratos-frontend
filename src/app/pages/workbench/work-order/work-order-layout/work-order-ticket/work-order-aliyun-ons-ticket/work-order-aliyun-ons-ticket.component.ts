@@ -97,6 +97,7 @@ export class WorkOrderAliyunOnsTicketComponent implements OnInit {
     }
     const createAliyunOnsResource: CreateAliyunOnsResource = {
       edsInstance: this.aliyunInstance,
+      onsInstance: this.onsInstance,
       regionId: this.onsInstance.region,
       onsInstanceName: this.onsInstance.name,
       onsInstanceId: this.onsInstance.assetKey,

@@ -106,7 +106,10 @@ import { EdsAssetSshTerminalComponent } from './eds-instance/eds-asset/eds-asset
     MarkdownModule,
     UserModule,
     DomainModule,
-    CertificateModule
+    CertificateModule,
+  ],
+  exports: [
+    EdsAssetIndexDataTableComponent,
   ],
 })
 export class ExtDatasourceModule { }

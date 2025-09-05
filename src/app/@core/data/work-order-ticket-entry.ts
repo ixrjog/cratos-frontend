@@ -169,6 +169,7 @@ export interface AddCreateAliyunOnsTopic extends CreateAliyunOnsResource {
 
 export interface CreateAliyunOnsResource {
   edsInstance: EdsInstanceVO;
+  onsInstance: EdsAssetVO;
   regionId: string;
   onsInstanceName: string;
   onsInstanceId: string;

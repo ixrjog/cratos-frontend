@@ -85,8 +85,27 @@
       </d-column>
       <d-column field="detail" [header]="'workOrderTicket.aliyunOns.headers.onsInstance' | translate">
         <d-cell>
-          <ng-template let-cellItem="cellItem">
-            <span>{{ cellItem['onsInstanceName'] }}</span>
+          <d-cell>
+            <ng-template let-cellItem="cellItem">
+              <span>{{ cellItem['onsInstanceName'] }}</span>
+              <span *ngIf="cellItem['onsInstance']">
+                <d-icon
+                  style="vertical-align: middle;margin-right: 5px"
+                  dPopover
+                  [icon]="'icon-star'"
+                  [content]="assetIndexTemplate"
+                  [position]="'left-top'"
+                  [color]="getResourceCountColor(cellItem['onsInstance'])"
+                  (click)="onQueryAssetIndex(cellItem['onsInstance'])"
+                  [disabled]="!parseResourceCount(cellItem['onsInstance'])"
+                  [controlled]="true"
+                  [popoverStyle]="getPopoverStyle({width: '1000px'})"
+                ></d-icon>
+            </span>
+            </ng-template>
+          </d-cell>
+          <ng-template #assetIndexTemplate>
+            <app-eds-asset-index-data-table [dataTable]="assetIndexTable"></app-eds-asset-index-data-table>
           </ng-template>
         </d-cell>
       </d-column>

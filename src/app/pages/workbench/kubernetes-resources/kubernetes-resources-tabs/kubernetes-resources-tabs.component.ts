@@ -220,12 +220,34 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     }
     this.isFavorite = application.favorited;
     this.queryParam.applicationName = application?.name;
-    this.queryParam.namespace = ''
+    const currentNamespace = this.queryParam.namespace;
     this.wsOnUnsubSend();
-    this.fetchData()
+    
     if (this.queryParam.applicationName) {
-      this.getResourceNamespaceOptions();
-      this.queryParam.name = '';
+      this.applicationService.getMyResourceNamespaceOptions({ applicationName: application.name })
+        .subscribe(({ body }) => {
+          this.resourceNamespaceOptions = body.options;
+          const namespaceExists = body.options.some(option => option.value === currentNamespace);
+          
+          if (namespaceExists) {
+            this.queryParam.namespace = currentNamespace;
+            // 获取对应namespace的resourceNameOptions
+            const param: QueryKubernetesDeploymentOptions = {
+              applicationName: application.name,
+              namespace: currentNamespace,
+            };
+            this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(param)
+              .subscribe(({ body }) => {
+                this.resourceNameOptions = body.options;
+              });
+          } else {
+            this.queryParam.namespace = '';
+            this.resourceNameOptions = [];
+          }
+          
+          this.queryParam.name = '';
+          this.fetchData();
+        });
     }
   }
 

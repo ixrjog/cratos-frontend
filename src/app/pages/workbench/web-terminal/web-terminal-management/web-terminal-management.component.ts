@@ -21,6 +21,7 @@ export interface TerminalInstance {
   instanceId: string;
   assetId: number;
   assetName: string;
+  ip: string;
   asset: EdsAssetVO;
   isSelected: boolean;
   isConnected: boolean;
@@ -311,6 +312,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       instanceId,
       assetId: asset.id,
       assetName: asset.name,
+      ip: asset.assetKey,
       asset,
       isSelected: false,
       isConnected: false,

@@ -13,33 +13,51 @@
              [attr.data-terminal-id]="terminal.id"
              [ngClass]="{'selected': true, 'group-control-mode': true}">
       <d-card style="padding: 0" [ngClass]="{'selected-card': true}">
-        <d-card-header class="terminal-header" style="position: relative;margin-bottom: 0;height: 28px">
+        <d-card-header class="terminal-header" style="position: relative;margin-bottom: 0;height: auto;min-height: 28px;padding: 8px 12px;">
           <d-card-subtitle class="terminal-title">
-            <div class="title-left">
+            <div style="display: flex; align-items: center; flex: 1; flex-wrap: wrap; gap: 8px;">
               <d-checkbox
                 style="margin-right: 8px;"
                 [ngModel]="true"
                 [disabled]="true">
               </d-checkbox>
-              <span class="terminal-name">{{ terminal.title }}</span>
-              <!-- 群控模式标签 -->
-              <d-tag
-                [labelStyle]="'blue-w98'"
-                [tag]="'webTerminal.groupControl' | translate"
-                class="group-control-tag">
-              </d-tag>
-              <!-- Demo标签 -->
-              <d-tag
-                [labelStyle]="'green-w98'"
-                tag="DEMO">
-              </d-tag>
+
+              <!-- 主要信息行 -->
+              <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
+                <span class="font-color-name" style="height: 22px; line-height: 22px; font-weight: 500;">{{ terminal.title }}</span>
+
+                <!-- 群控模式标签 -->
+                <d-tag
+                  [labelStyle]="'blue-w98'"
+                  [tag]="'webTerminal.groupControl' | translate"
+                  style="margin-left: 8px;">
+                </d-tag>
+                <!-- Demo标签 -->
+                <d-tag
+                  [labelStyle]="'green-w98'"
+                  tag="DEMO"
+                  style="margin-left: 8px;">
+                </d-tag>
+              </div>
+
+              <!-- 详细信息行 -->
+              <div style="display: flex; align-items: center; gap: 16px; font-size: 12px; color: #666;">
+                <span>
+                  <span style="color: #999;">{{ 'webTerminal.assetName' | translate }}:</span>
+                  <span style="margin-left: 4px;">{{ terminal.id }}</span>
+                </span>
+                <span>
+                  <span style="color: #999;">{{ 'webTerminal.instanceId' | translate }}:</span>
+                  <span style="margin-left: 4px;">{{ terminal.id.split('-')[1] }}</span>
+                </span>
+              </div>
             </div>
 
-            <div class="terminal-actions" style="position: absolute;right: 0;top: 0; display: flex; align-items: center;">
-
+            <div class="terminal-actions" style="position: absolute;right: 12px;top: 8px; display: flex; align-items: center;">
               <d-button
                 bsStyle="text"
-                [disabled]="true">
+                [disabled]="true"
+                style="margin-right: 4px;">
                 <i [class]="'icon-go-document'"></i>
               </d-button>
 
@@ -47,7 +65,8 @@
               <d-button
                 bsStyle="text"
                 [disabled]="true"
-                [title]="'webTerminal.enterWideScreen' | translate">
+                [title]="'webTerminal.enterWideScreen' | translate"
+                style="margin-right: 4px;">
                 <i class="icon-maxmize"></i>
               </d-button>
 
@@ -61,17 +80,6 @@
         </d-card-header>
 
         <d-card-content class="terminal-content">
-          <div class="terminal-info">
-            <div class="info-item">
-              <span class="label">{{ 'webTerminal.assetId' | translate }}:</span>
-              <span class="value">{{ terminal.id.split('-')[1] }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">{{ 'webTerminal.instanceId' | translate }}:</span>
-              <span class="value">{{ terminal.id }}</span>
-            </div>
-          </div>
-
           <div
             class="terminal-container"
             [id]="'demo-terminal-' + terminal.id">

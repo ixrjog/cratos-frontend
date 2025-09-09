@@ -13,6 +13,9 @@ export default {
     send: '发送',
     correctTerminals: '矫正终端',
     correctTerminalsHint: '重新发送终端尺寸信息到后端，矫正终端显示',
+    confirmCloseTerminal: '确定要关闭选中的终端吗？',
+    confirmCloseTerminals: '确定要关闭选中的 {{count}} 个终端吗？',
+    closeTerminalsSuccess: '已成功关闭 {{count}} 个终端',
 
     // Demo演示
     demo: {
@@ -49,6 +52,7 @@ export default {
     // 终端窗体
     close: '关闭',
     assetId: '资产ID',
+    assetName: '服务器名称',
     instanceId: '实例ID',
     commandPlaceholder: '输入命令...',
     groupCommandPlaceholder: '输入群控命令（将发送到所有选中的终端）...',

@@ -26,8 +26,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
   terminals: DemoTerminal[] = [
     {
-      id: 'demo-1',
-      title: 'demo-server-1',
+      id: 'demo-server-1',
+      title: '192.168.0.1',
       content: [
         'Last login: Mon Aug 19 10:30:15 2025 from 192.168.1.100',
         '[root@demo-server-1 ~]# pwd',
@@ -44,8 +44,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
       cursor: true
     },
     {
-      id: 'demo-2', 
-      title: 'demo-server-2',
+      id: 'demo-server-2',
+      title: '192.168.0.2',
       content: [
         'Last login: Mon Aug 19 10:30:15 2025 from 192.168.1.100',
         '[root@demo-server-2 ~]# pwd',
@@ -62,8 +62,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
       cursor: true
     },
     {
-      id: 'demo-3',
-      title: 'demo-server-3', 
+      id: 'demo-server-3',
+      title: '192.168.0.3',
       content: [
         'Last login: Mon Aug 19 10:30:15 2025 from 192.168.1.100',
         '[root@demo-server-3 ~]# pwd',
@@ -80,8 +80,8 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
       cursor: true
     },
     {
-      id: 'demo-4',
-      title: 'demo-server-4',
+      id: 'demo-server-4',
+      title: '192.168.0.4',
       content: [
         'Last login: Mon Aug 19 10:30:15 2025 from 192.168.1.100',
         '[root@demo-server-4 ~]# pwd',
@@ -134,7 +134,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   // 模拟命令队列 - 现在所有终端使用相同的命令
   private commandQueues = [
     [...this.groupControlCommands], // Demo Server 1
-    [...this.groupControlCommands], // Demo Server 2  
+    [...this.groupControlCommands], // Demo Server 2
     [...this.groupControlCommands], // Demo Server 3
     [...this.groupControlCommands]  // Demo Server 4
   ];
@@ -152,12 +152,12 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // 先启动demo动画
     this.startDemoAnimation();
-    
+
     // 延迟订阅主题变化，确保DOM已经渲染并且用户已经看到初始状态
     setTimeout(() => {
       // 先获取当前主题，避免订阅时的突然变化
       this.currentTheme = this.themeService.getCurrentTheme();
-      
+
       // 然后订阅主题变化
       this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
         // 只有当主题真正发生变化时才应用
@@ -172,7 +172,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
           }, 100);
         }
       });
-      
+
       // 初始应用主题
       this.applyThemeToTerminals();
     }, 1000); // 延迟1秒确保用户看到初始状态
@@ -182,12 +182,12 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 清理所有定时器
     this.intervals.forEach(interval => clearInterval(interval));
     this.typewriterIntervals.forEach(interval => clearInterval(interval));
-    
+
     // 清理主题订阅
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
     }
-    
+
     // 清理防抖定时器
     if (this.themeApplyTimeout) {
       clearTimeout(this.themeApplyTimeout);
@@ -197,7 +197,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   private startDemoAnimation(): void {
     // 启动光标闪烁动画
     this.startCursorBlinking();
-    
+
     // 延迟启动群控打字机效果 - 提高1.5倍速度：2000ms -> 1333ms
     setTimeout(() => {
       this.startGroupControlTypewriter();
@@ -219,7 +219,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
   private executeNextGroupCommand(): void {
     if (this.isGroupTyping) return;
-    
+
     // 检查是否需要重置命令队列
     if (this.currentCommandIndex >= this.groupControlCommands.length) {
       this.currentCommandIndex = 0;
@@ -230,7 +230,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
     // 判断是否是命令还是输出
     const isCommand = this.isCommandLine(command);
-    
+
     if (isCommand) {
       // 同步在所有终端输入命令
       this.typeCommandInAllTerminals(command);
@@ -242,11 +242,11 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
   private isCommandLine(text: string): boolean {
     // 判断是否是命令行（不包含特殊输出格式）
-    return !text.includes('total ') && 
-           !text.includes('drwx') && 
-           !text.includes('-rw-') && 
-           !text.includes('├──') && 
-           !text.includes('└──') && 
+    return !text.includes('total ') &&
+           !text.includes('drwx') &&
+           !text.includes('-rw-') &&
+           !text.includes('├──') &&
+           !text.includes('└──') &&
            !text.includes('directories') &&
            !text.startsWith('/') &&
            !text.startsWith('#') &&
@@ -256,7 +256,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
   private typeCommandInAllTerminals(command: string): void {
     this.isGroupTyping = true;
-    
+
     // 首先为所有终端添加提示符
     this.terminals.forEach((terminal, index) => {
       const serverNum = index + 1;
@@ -273,25 +273,25 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
         this.terminals.forEach(terminal => {
           terminal.currentLine += command[charIndex];
         });
-        
+
         charIndex++;
       } else {
         clearInterval(typeInterval);
-        
+
         // 完成输入后，将完整的行（提示符+命令）添加到内容中
         this.terminals.forEach((terminal, index) => {
           terminal.content.push(terminal.currentLine);
           terminal.currentLine = '';
           terminal.isTyping = false;
-          
+
           // 优化内容管理：批量处理，减少频繁的数组操作
           this.manageTerminalContent(terminal);
         });
-        
+
         // 移除滚动调用，避免抖动
-        
+
         this.isGroupTyping = false;
-        
+
         // 延迟后执行下一个命令 - 提高1.5倍速度：1500ms -> 1000ms
         setTimeout(() => {
           this.executeNextGroupCommand();
@@ -306,13 +306,13 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 直接在所有终端显示输出
     this.terminals.forEach(terminal => {
       terminal.content.push(output);
-      
+
       // 优化内容管理：批量处理，减少频繁的数组操作
       this.manageTerminalContent(terminal);
     });
-    
+
     // 移除滚动调用，避免抖动
-    
+
     // 短暂延迟后继续下一行 - 提高1.5倍速度：300ms -> 200ms
     setTimeout(() => {
       this.executeNextGroupCommand();
@@ -323,7 +323,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
   private manageTerminalContent(terminal: DemoTerminal): void {
     // 考虑当前输入行，确保总显示行数不超过容器高度
     const maxVisibleLines = 18; // 减少到18行，为当前输入行预留空间
-    
+
     if (terminal.content.length > maxVisibleLines) {
       // 保持固定行数，移除最旧的行
       terminal.content = terminal.content.slice(-maxVisibleLines);
@@ -334,18 +334,18 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
     // 根据当前命令索引判断当前路径
     const commandsSoFar = this.groupControlCommands.slice(0, this.currentCommandIndex);
     const cdCommands = commandsSoFar.filter(cmd => cmd.startsWith('cd '));
-    
+
     if (cdCommands.length === 0) {
       return '~';
     }
-    
+
     const lastCdCommand = cdCommands[cdCommands.length - 1];
     if (lastCdCommand.includes('/opt/cratos/demo')) {
       return 'demo';
     } else if (lastCdCommand.includes('~')) {
       return '~';
     }
-    
+
     return '~';
   }
 
@@ -356,7 +356,7 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
 
   private applyThemeToTerminals(): void {
     if (!this.currentTheme) return;
-    
+
     setTimeout(() => {
       this.terminals.forEach(terminal => {
         const terminalElement = document.querySelector(`#demo-terminal-${terminal.id}`) as HTMLElement;
@@ -364,14 +364,14 @@ export class WebTerminalDemoComponent implements OnInit, OnDestroy {
           // 应用主题颜色
           terminalElement.style.backgroundColor = this.currentTheme!.colors.background;
           terminalElement.style.color = this.currentTheme!.colors.foreground;
-          
+
           // 应用字体设置
           if (this.currentTheme!.fontFamily) {
             terminalElement.style.fontFamily = this.currentTheme!.fontFamily;
           }
           // Demo终端固定使用12px字体大小
           terminalElement.style.fontSize = '12px';
-          
+
           if (this.currentTheme!.lineHeight) {
             terminalElement.style.lineHeight = this.currentTheme!.lineHeight.toString();
           }

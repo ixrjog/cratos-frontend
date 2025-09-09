@@ -13,6 +13,9 @@ export default {
     send: 'Send',
     correctTerminals: 'Correct Terminals',
     correctTerminalsHint: 'Resend terminal size information to backend to correct terminal display',
+    confirmCloseTerminal: 'Are you sure you want to close the selected terminal?',
+    confirmCloseTerminals: 'Are you sure you want to close the selected {{count}} terminals?',
+    closeTerminalsSuccess: 'Successfully closed {{count}} terminals',
 
     // Demo showcase
     demo: {
@@ -49,6 +52,7 @@ export default {
     // Terminal item
     close: 'Close',
     assetId: 'Asset ID',
+    assetName: 'Server Name',
     instanceId: 'Instance ID',
     commandPlaceholder: 'Enter command...',
     groupCommandPlaceholder: 'Enter group command (will be sent to all selected terminals)...',

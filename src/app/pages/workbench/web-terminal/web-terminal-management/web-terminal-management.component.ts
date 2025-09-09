@@ -16,6 +16,8 @@ import { WebSocketApiService } from '../../../../@core/services/ws.api.service';
 import { UuidUtil } from '../../../../@shared/utils/uuid.util';
 import { WS_HEART_INTERVAL } from '../../../../@shared/constant/ws.constant';
 import { TranslateService } from '@ngx-translate/core';
+import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 
 export interface TerminalInstance {
   instanceId: string;
@@ -61,11 +63,19 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   // 主题设置相关
   showThemeSettings = false;
 
+  dialogData = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+  };
+
   constructor(
     private drawerService: DrawerService,
     private wsApiService: WebSocketApiService,
     private uuidUtil: UuidUtil,
     private translateService: TranslateService,
+    private dialogUtil: DialogUtil,
+    private toastUtil: ToastUtil,
   ) {
   }
 
@@ -501,38 +511,23 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // 获取选中终端的详细信息
-    const selectedTerminals = this.terminals.filter(t =>
-      this.selectedTerminals.includes(t.instanceId),
-    );
+    const selectedCount = this.selectedTerminals.length;
+    const dialogData = {
+      ...this.dialogData.warningOperateData,
+      content: selectedCount === 1 
+        ? this.translateService.instant('webTerminal.confirmCloseTerminal')
+        : this.translateService.instant('webTerminal.confirmCloseTerminals', { count: selectedCount }),
+    };
 
-    const selectedCount = selectedTerminals.length;
-    const terminalNames = selectedTerminals.map(t => t.assetName).join(', ');
-
-    // 构建确认消息
-    let confirmMessage: string;
-    if (selectedCount === 1) {
-      confirmMessage = `确定要关闭终端 "${terminalNames}" 吗？`;
-    } else if (selectedCount <= 3) {
-      confirmMessage = `确定要关闭以下 ${selectedCount} 个终端吗？\n${terminalNames}`;
-    } else {
-      const firstThree = selectedTerminals.slice(0, 3).map(t => t.assetName).join(', ');
-      confirmMessage = `确定要关闭 ${selectedCount} 个终端吗？\n包括：${firstThree} 等...`;
-    }
-
-    if (confirm(confirmMessage)) {
-      // 批量关闭选中的终端
-      const terminalsToClose = [ ...this.selectedTerminals ]; // 创建副本避免迭代时修改数组
-
+    this.dialogUtil.onDialog(dialogData, () => {
+      const terminalsToClose = [...this.selectedTerminals];
       terminalsToClose.forEach(instanceId => {
         this.onTerminalClose(instanceId);
       });
-
-      console.log(`Successfully closed ${terminalsToClose.length} selected terminals`);
-
-      // 可以添加成功提示
-      // this.toastService.success(`已成功关闭 ${terminalsToClose.length} 个终端`);
-    }
+      this.toastUtil.onSuccessToast(
+        this.translateService.instant('webTerminal.closeTerminalsSuccess', { count: terminalsToClose.length })
+      );
+    });
   }
 
   isTerminalSelected(instanceId: string): boolean {

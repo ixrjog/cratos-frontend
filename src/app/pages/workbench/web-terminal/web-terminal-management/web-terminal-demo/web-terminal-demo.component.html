@@ -9,7 +9,7 @@
 
   <div class="demo-terminals-grid">
     <section class="web-terminal-item demo-terminal-item"
-             *ngFor="let terminal of terminals; trackBy: trackByTerminalId"
+             *ngFor="let terminal of terminals; trackBy: trackByTerminalId;index as i"
              [attr.data-terminal-id]="terminal.id"
              [ngClass]="{'selected': true, 'group-control-mode': true}">
       <d-card style="padding: 0" [ngClass]="{'selected-card': true}">
@@ -22,24 +22,6 @@
                 [disabled]="true">
               </d-checkbox>
 
-              <!-- 主要信息行 -->
-              <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
-                <span class="font-color-name" style="height: 22px; line-height: 22px; font-weight: 500;">{{ terminal.title }}</span>
-
-                <!-- 群控模式标签 -->
-                <d-tag
-                  [labelStyle]="'blue-w98'"
-                  [tag]="'webTerminal.groupControl' | translate"
-                  style="margin-left: 8px;">
-                </d-tag>
-                <!-- Demo标签 -->
-                <d-tag
-                  [labelStyle]="'green-w98'"
-                  tag="DEMO"
-                  style="margin-left: 8px;">
-                </d-tag>
-              </div>
-
               <!-- 详细信息行 -->
               <div style="display: flex; align-items: center; gap: 16px; font-size: 12px; color: #666;">
                 <span>
@@ -47,9 +29,23 @@
                   <span style="margin-left: 4px;">{{ terminal.id }}</span>
                 </span>
                 <span>
-                  <span style="color: #999;">{{ 'webTerminal.instanceId' | translate }}:</span>
-                  <span style="margin-left: 4px;">{{ terminal.id.split('-')[1] }}</span>
+                  <span style="color: #999;">IP:</span>
+                  <span style="margin-left: 4px;">{{ terminal.title }}</span>
                 </span>
+                <span>
+                  <span style="color: #999;">{{ 'webTerminal.instanceId' | translate }}:</span>
+                  <span style="margin-left: 4px;">{{ terminal.id + '#' + (i + 1) }}</span>
+                </span>
+              </div>
+
+              <!-- 主要信息行 -->
+              <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
+                <!-- 群控模式标签 -->
+                <d-tag
+                  [labelStyle]="'blue-w98'"
+                  [tag]="'webTerminal.groupControl' | translate"
+                  style="margin-left: 8px;">
+                </d-tag>
               </div>
             </div>
 

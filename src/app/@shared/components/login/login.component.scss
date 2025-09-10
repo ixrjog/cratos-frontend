@@ -28,6 +28,32 @@
     }
    }
 
+  .da-robot-config {
+    position: absolute;
+    bottom: 22px;
+    right: 28px;
+    outline: none;
+    cursor: pointer;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+
+    svg path {
+      fill: $devui-text;
+      transition: fill 0.2s ease;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      svg path {
+        fill: $devui-brand;
+      }
+    }
+
+    &.has-token svg path {
+      fill: $devui-success;
+    }
+  }
+
   .da-login-form {
     width: 400px;
     font-size: $devui-font-size-card-title;

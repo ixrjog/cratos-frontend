@@ -11,6 +11,7 @@ import { FormLayout } from 'ng-devui/form';
 import { LANGUAGES } from 'src/config/language-config';
 import { LogService } from '../../../@core/services/log.service';
 import { LoginParam } from '../../../@core/data/log';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'da-login',
@@ -29,6 +30,8 @@ export class LoginComponent implements OnInit {
   language: string;
   tabItems: any;
   i18nValues: any;
+  isProduction = environment.production;
+  hasRobotToken = false;
 
   formData: LoginParam = {
     otp: '', password: '', username: '',
@@ -92,6 +95,7 @@ export class LoginComponent implements OnInit {
       });
     this.language = this.translate.currentLang;
     this.personalizeService.setRefTheme(ThemeType.Default);
+    this.checkRobotToken();
 
     this.route.queryParams.pipe(
       map(param => param['code'])
@@ -161,5 +165,26 @@ export class LoginComponent implements OnInit {
       client_id: 'ef3ce924fcf915c50910'
     };
     window.location.href = `${config.oauth_uri}?client_id=${config.client_id}&redirect_uri=${config.redirect_uri}`
+  }
+
+  robotConfig() {
+    const currentToken = localStorage.getItem('robotToken') || '';
+    const message = currentToken ? 
+      `当前Token: ${currentToken.substring(0, 10)}...\n请输入新的Robot Token (留空则清除):` : 
+      '请输入Robot Token:';
+    
+    const token = prompt(message, currentToken);
+    if (token !== null) {
+      if (token.trim()) {
+        localStorage.setItem('robotToken', token.trim());
+      } else {
+        localStorage.removeItem('robotToken');
+      }
+      this.checkRobotToken();
+    }
+  }
+
+  checkRobotToken() {
+    this.hasRobotToken = !!localStorage.getItem('robotToken');
   }
 }

@@ -38,12 +38,20 @@ export class ApiService {
   get headers(): HttpHeaders {
     const headersConfig: any = {
       'Content-Type': 'application/json',
-      // 'Authorization': token ? token: ''
     };
-    let token = localStorage.getItem('id_token');
-    if (token) {
-      headersConfig['Authorization'] = 'Bearer ' + token;
+    
+    const robotToken = localStorage.getItem('robotToken');
+    if (robotToken && robotToken.length > 10) {
+      headersConfig['Authorization'] = `Robot ${robotToken}`;
+    } else {
+      if (robotToken) localStorage.removeItem('robotToken');
+      
+      let token = localStorage.getItem('id_token');
+      if (token) {
+        headersConfig['Authorization'] = 'Bearer ' + token;
+      }
     }
+    
     return new HttpHeaders(headersConfig);
   }
 

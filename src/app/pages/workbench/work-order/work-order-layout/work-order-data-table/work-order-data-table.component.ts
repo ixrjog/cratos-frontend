@@ -134,6 +134,7 @@ export class WorkOrderDataTableComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe(param => {
       if (param['ticketNo'] !== undefined) {
         this.queryParam.ticketNo = param['ticketNo'];
+        this.queryParam.ticketState =  WorkOrderStatus.IN_APPROVAL
       }
     });
     this.fetchData();

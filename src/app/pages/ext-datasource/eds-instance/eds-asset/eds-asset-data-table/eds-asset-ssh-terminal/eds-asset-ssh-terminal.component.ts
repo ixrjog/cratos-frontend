@@ -41,7 +41,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   selectedServerAccount: string | ServerAccountVO = '';
   isConnected = false;
   hasError = false;
-  showAssetDetails = false;
+  showAssetDetails = true;
 
   private ws: WebSocket | null = null;
   private heartbeatSubscription: Subscription | null = null;
@@ -75,7 +75,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     setTimeout(() => {
       this.terminal.open(document.getElementById('edsAssetSshTerminal'));
       this.rows = this.calculateRows();
-      
+
       fromEvent(window, 'resize')
         .pipe(debounceTime(300), takeUntil(this.destroy$))
         .subscribe(() => this.handleTerminalResize());
@@ -120,17 +120,17 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   onServerAccountChange(account: ServerAccountVO): void {
     this.selectedServerAccount = account;
-    
+
     // 清理现有连接
     if (this.isConnected) {
       this.cleanupConnection();
       this.isConnected = false;
     }
-    
+
     if (this.selectedServerAccount) {
       // 重新生成instanceId
       this.initializeInstanceId();
-      
+
       setTimeout(() => {
         this.terminal.clear();
         this.connectTerminal();
@@ -231,10 +231,10 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     if (this.terminalInputDisposable) {
       this.terminalInputDisposable.dispose();
     }
-    
+
     this.terminalInputDisposable = this.terminal.onData((event) => {
       if (this.hasError) return;
-      
+
       this.sendMessage({
         state: WebTerminalStatus.COMMAND,
         instanceId: this.instanceId,
@@ -280,13 +280,13 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   private cleanup(): void {
     this.cleanupConnection();
-    
+
     // 清理输入监听器
     if (this.terminalInputDisposable) {
       this.terminalInputDisposable.dispose();
       this.terminalInputDisposable = null;
     }
-    
+
     this.terminal?.dispose();
   }
 
@@ -294,24 +294,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     this.handleTerminalResize();
   }
 
-  onRowExit(): void {
-    this.cleanup();
-    if (this.closeHandler && typeof this.closeHandler === 'function') {
-      this.closeHandler();
-    }
-  }
 
-  toggleAssetDetails(): void {
-    this.showAssetDetails = !this.showAssetDetails;
-    // 延迟调整终端大小以适应新的布局
-    setTimeout(() => {
-      this.handleTerminalResize();
-    }, 300);
-  }
-
-  getAssetProperty(key: string): string {
-    return this.formData.originalAsset?.[key] || '';
-  }
 
   getStatusClass(status: string): string {
     if (!status) return '';

@@ -1,74 +1,10 @@
 <section style="height: 100%; min-height: 600px;">
   <d-card style="padding: 5px 10px; height: 100%;">
-    
-    <!-- 资产详情信息面板 - 移到顶部 -->
-    <div class="asset-details-panel" *ngIf="showAssetDetails">
-      <div class="asset-details-header">
-        <span class="panel-title">Asset Information</span>
-        <d-button 
-          class="toggle-details-btn"
-          bsStyle="text" 
-          size="sm"
-          (click)="toggleAssetDetails()">
-          <i class="icon icon-chevron-up"></i>
-        </d-button>
-      </div>
-      <div class="asset-details-content">
-        <div class="detail-item" *ngIf="formData.assetId">
-          <span class="label">ID:</span>
-          <span class="value">{{ formData.assetId }}</span>
-        </div>
-        <div class="detail-item" *ngIf="formData.name">
-          <span class="label">Name:</span>
-          <span class="value">{{ formData.name }}</span>
-        </div>
-        <div class="detail-item" *ngIf="formData.assetKey">
-          <span class="label">IP:</span>
-          <span class="value">{{ formData.assetKey }}</span>
-        </div>
-        <div class="detail-item" *ngIf="formData.region">
-          <span class="label">Region:</span>
-          <span class="value">{{ formData.region }}</span>
-        </div>
-        <div class="detail-item" *ngIf="formData.zone">
-          <span class="label">Zone:</span>
-          <span class="value">{{ formData.zone }}</span>
-        </div>
-        <div class="detail-item" *ngIf="getAssetProperty('privateIp')">
-          <span class="label">Private IP:</span>
-          <span class="value">{{ getAssetProperty('privateIp') }}</span>
-        </div>
-        <div class="detail-item" *ngIf="getAssetProperty('publicIp')">
-          <span class="label">Public IP:</span>
-          <span class="value">{{ getAssetProperty('publicIp') }}</span>
-        </div>
-        <div class="detail-item" *ngIf="getAssetProperty('instanceType')">
-          <span class="label">Instance Type:</span>
-          <span class="value">{{ getAssetProperty('instanceType') }}</span>
-        </div>
-        <div class="detail-item" *ngIf="getAssetProperty('status')">
-          <span class="label">Status:</span>
-          <span class="value status" [class]="getStatusClass(getAssetProperty('status'))">
-            {{ getAssetProperty('status') }}
-          </span>
-        </div>
-      </div>
-    </div>
 
     <d-card-header style="position: relative;margin-bottom: 5px;height: 28px">
       <d-card-subtitle>
-        <div style="position: absolute;left: 0px;top: 0;display: flex;align-items: center;gap: 8px">
-          <!-- 切换按钮移到Asset Login前面 -->
-          <d-button 
-            *ngIf="!showAssetDetails"
-            bsStyle="text" 
-            size="sm"
-            (click)="toggleAssetDetails()"
-            title="Show Asset Details"
-            style="padding: 2px 6px; font-size: 11px;">
-            <i class="icon icon-info"></i>
-          </d-button>
-          <span style="font-size: 12px;color: #666">Login:</span>
+        <div style="position: absolute;left: 0px;top: 0;display: flex;align-items: center;gap: 12px;font-size: 12px;">
+          <span style="color: #666">Login:</span>
           <d-select
             [filterKey]="'name'"
             [options]="serverAccounts"
@@ -76,17 +12,14 @@
             (valueChange)="onServerAccountChange($event)"
             style="width: 120px">
           </d-select>
+          <span style="color: #666">|</span>
+          <span style="color: #666">{{ formData.name }}</span>
+          <span style="color: #666" dClipboard [content]="formData.assetKey">{{ formData.assetKey }}</span>
         </div>
-        <d-button
-          style="position: absolute;right: 0;top: 0"
-          bsStyle="text"
-          (click)="onRowExit()"
-        >Exit
-        </d-button>
       </d-card-subtitle>
     </d-card-header>
 
-    <d-card-content [style.height]="showAssetDetails ? 'calc(100% - 120px)' : 'calc(100% - 40px)'" style="padding: 0;">
+    <d-card-content style="height: calc(100% - 40px); padding: 0;">
       <div class="eds-asset-ssh-terminal" id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
     </d-card-content>
   </d-card>

@@ -11,6 +11,7 @@ import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { RedeployKubernetesDeployment } from '../../../../../../@core/data/application-resource';
+import { BusinessTagVO } from '../../../../../../@core/data/business-tag';
 
 @Component({
   selector: 'app-kubernetes-deployment-splitter',
@@ -164,5 +165,15 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.REDEPLOY);
         });
     });
+  }
+
+  getTagValue(businessTag: BusinessTagVO) {
+    if (businessTag.tag.tagKey === 'ConfigMap') {
+      return 'ConfigMap';
+    }
+    if (businessTag.tagValue !== '') {
+      return businessTag.tag.tagKey + ':' + businessTag.tagValue;
+    }
+    return businessTag.tag.tagKey;
   }
 }

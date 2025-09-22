@@ -27,6 +27,16 @@
           <d-tag [tag]="'env:'+ kubernetesDeployment.env.envName" [customColor]="kubernetesDeployment.env.color"></d-tag>
         </div>
 
+        <div class="layout-bottom">
+          <d-tag
+            *ngFor="let businessTag of kubernetesDeployment['businessTags']"
+            style="margin-right: 5px"
+            [tag]="getTagValue(businessTag)"
+            [customColor]="businessTag.tag.color"
+          >
+          </d-tag>
+        </div>
+
         <div class="layout-bottom" style="margin-right: 5px">
           <d-tag [tag]="'replicas x' + kubernetesDeployment.spec.replicas" [labelStyle]="'blue-w98'"></d-tag>
         </div>

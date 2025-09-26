@@ -1,0 +1,28 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    placeholder="Entry host"
+    [(ngModel)]="queryParam.queryService"
+    [iconPosition]="'left'"
+  >
+  </d-search>
+  <d-button
+    [disabled]="queryParam.queryService ===''"
+    class="button"
+    bsStyle="common"
+    (click)="fetchData()"
+  >Fetch
+  </d-button>
+</div>
+<div class="spacing-table" *ngIf="showRecord">
+  <div dLoading [loading]="loading">
+    <div *ngIf="!loading && showRecord">
+      <h3>Ingress Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails"
+        [mode]="'ace/mode/text'"
+      ></app-ace-editor>
+    </div>
+  </div>
+</div>

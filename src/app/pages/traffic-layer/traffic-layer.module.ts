@@ -42,6 +42,8 @@ import {
   TrafficLayerIngressLimitDataTableComponent
 } from './traffic-layer-limit/traffic-layer-ingress-limit-data-table/traffic-layer-ingress-limit-data-table.component';
 import { TrafficLayerIngressLimitEditorComponent } from './traffic-layer-limit/traffic-layer-ingress-limit-data-table/traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
+import { TrafficLayerIngressServiceComponent } from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
+import { TrafficLayerIngressServiceDetailComponent } from './traffic-layer-ingress-service/traffic-layer-ingress-service-detail/traffic-layer-ingress-service-detail.component';
 
 
 @NgModule({
@@ -59,6 +61,8 @@ import { TrafficLayerIngressLimitEditorComponent } from './traffic-layer-limit/t
     TrafficLayerLimitComponent,
     TrafficLayerIngressLimitDataTableComponent,
     TrafficLayerIngressLimitEditorComponent,
+    TrafficLayerIngressServiceComponent,
+    TrafficLayerIngressServiceDetailComponent,
   ],
   imports: [
     CommonModule,

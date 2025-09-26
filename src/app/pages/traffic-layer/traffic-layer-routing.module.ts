@@ -5,6 +5,9 @@ import { TrafficLayerDomainComponent } from './traffic-layer-domain/traffic-laye
 import { TrafficLayerRecordComponent } from './traffic-layer-record/traffic-layer-record.component';
 import { TrafficLayerIngressComponent } from './traffic-layer-ingress/traffic-layer-ingress.component';
 import { TrafficLayerLimitComponent } from './traffic-layer-limit/traffic-layer-limit.component';
+import {
+  TrafficLayerIngressServiceComponent
+} from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
 
 const routes: Routes = [
   {
@@ -14,6 +17,7 @@ const routes: Routes = [
       { path: 'domain', component: TrafficLayerDomainComponent },
       { path: 'record-details', component: TrafficLayerRecordComponent },
       { path: 'ingress-details', component: TrafficLayerIngressComponent },
+      { path: 'ingress-service-details', component: TrafficLayerIngressServiceComponent },
       { path: 'limit', component: TrafficLayerLimitComponent },
     ],
   },

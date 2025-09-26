@@ -144,4 +144,7 @@ export abstract class TrafficLayerData {
   abstract queryIngressTrafficLimitPage(param: TrafficLayerIngressTrafficLimitPageQuery): Observable<DataTable<TrafficLayerIngressTrafficLimitVO>>;
 
   abstract updateIngressTrafficLimit(param: UpdateTrafficLayerIngressTrafficLimit): Observable<HttpResult<Boolean>>;
+
+  abstract queryIngressServiceDetails(param: { queryService: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
+
 }

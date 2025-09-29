@@ -111,6 +111,13 @@ export class CredentialEditorComponent implements OnInit {
           credential2: '',
         };
         break;
+      case CredentialTypeEnum.AZURE_SERVICE_PRINCIPAL:
+        this.credentialData = {
+          showPassphrase: false,
+          credential: 'Client ID',
+          credential2: 'Client Secret',
+        };
+        break;
       default:
         this.credentialData = {
           showPassphrase: false,

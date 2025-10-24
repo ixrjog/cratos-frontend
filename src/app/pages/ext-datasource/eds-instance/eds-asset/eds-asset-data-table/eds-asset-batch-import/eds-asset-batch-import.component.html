@@ -1,0 +1,30 @@
+<section>
+  <form dForm ngForm [layout]="layoutDirection" (dSubmit)="submitForm($event)">
+    <d-form-item>
+      <d-form-label>Import Example</d-form-label>
+      <d-form-control>
+        <d-form-control>
+          <d-alert [type]="'info'" [closeable]="false">
+            <span dClipboard [content]="importExample">格式：{{ importExample }}（每行一条，使用 | 分隔）</span>
+          </d-alert>
+        </d-form-control>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Import Data</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="20"
+          [mode]="'ace/mode/text'"
+          [aceValue]="batchImportData"
+          (onChange)="onDataChange($event)"
+        >
+        </app-ace-editor>
+      </d-form-control>
+    </d-form-item>
+
+    <d-form-operation>
+      <d-button style="margin-right: 8px" dFormSubmit>Import</d-button>
+    </d-form-operation>
+  </form>
+</section>

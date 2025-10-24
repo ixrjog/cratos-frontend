@@ -64,6 +64,7 @@ import { DomainModule } from '../domain/domain.module';
 import { CertificateModule } from '../certificate/certificate.module';
 import { EdsAssetManualEditorComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-manual-editor/eds-asset-manual-editor.component';
 import { EdsAssetSshTerminalComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
+import { EdsAssetBatchImportComponent } from './eds-instance/eds-asset/eds-asset-data-table/eds-asset-batch-import/eds-asset-batch-import.component';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { EdsAssetSshTerminalComponent } from './eds-instance/eds-asset/eds-asset
     KubernetesResourcesTemplateCloneComponent,
     EdsAssetManualEditorComponent,
     EdsAssetSshTerminalComponent,
+    EdsAssetBatchImportComponent,
   ],
   imports: [
     CommonModule,

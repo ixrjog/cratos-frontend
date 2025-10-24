@@ -33,6 +33,11 @@
       *ngIf="supportManualAsset?.valid === false"
       bsStyle="danger"
       (click)="onInstanceAssetDelete()">Delete</d-button>
+
+    <d-button
+      *ngIf="supportManualAsset?.valid === true"
+      bsStyle="primary"
+      (click)="onBatchImport()">Import</d-button>
   </span>
 </div>
 <div class="spacing-table">
@@ -122,7 +127,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'180px'">
+    <d-column header="Actions" [width]="'240px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

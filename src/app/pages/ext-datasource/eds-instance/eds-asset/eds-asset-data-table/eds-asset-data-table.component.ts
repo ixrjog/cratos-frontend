@@ -35,6 +35,7 @@ import { EdsAssetManualEditorComponent } from './eds-asset-manual-editor/eds-ass
 import { BusinessTagService } from '../../../../../@core/services/business-tag.service';
 import { BusinessTagEdit } from '../../../../../@core/data/business-tag';
 import { EdsAssetSshTerminalComponent } from './eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
+import { EdsAssetBatchImportComponent } from './eds-asset-batch-import/eds-asset-batch-import.component';
 
 @Component({
   selector: 'app-eds-asset-data-table',
@@ -78,6 +79,12 @@ export class EdsAssetDataTableComponent implements OnChanges {
       ...DIALOG_DATA.editorData,
       content: EdsAssetManualEditorComponent,
       title: 'Manual Eds Asset Edit',
+    },
+    batchImportData: {
+      ...DIALOG_DATA.editorData,
+      content: EdsAssetBatchImportComponent,
+      title: 'Batch Import Eds Asset',
+      width: '70%',
     },
     loginEditData: {
       ...DIALOG_DATA.editorData,
@@ -150,7 +157,6 @@ export class EdsAssetDataTableComponent implements OnChanges {
   onAssetNew() {
     const dialogDate = {
       ...this.dialogDate.manualEditData,
-
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
@@ -179,6 +185,19 @@ export class EdsAssetDataTableComponent implements OnChanges {
       ...this.dialogDate.loginEditData,
     };
     this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, rowItem);
+  }
+
+  onBatchImport() {
+    const dialogDate = {
+      ...this.dialogDate.batchImportData,
+    };
+    this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, {
+      ...this.newEdsAsset,
+      instanceId: this.instanceId,
+      assetType: this.assetType,
+    });
   }
 
   fetchData() {

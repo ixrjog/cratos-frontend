@@ -89,13 +89,13 @@ import {
 } from '../work-order-ticket/work-order-risk-change-ticket/work-order-risk-change-ticket.component';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  WorkOrderAliyunKmsSecretUpdateTicketComponent
+  WorkOrderAliyunKmsSecretUpdateTicketComponent,
 } from '../work-order-ticket/work-order-aliyun-kms-secret-update-ticket/work-order-aliyun-kms-secret-update-ticket.component';
 import {
-  WorkOrderApplicationRedeployTicketComponent
+  WorkOrderApplicationRedeployTicketComponent,
 } from '../work-order-ticket/work-order-application-redeploy-ticket/work-order-application-redeploy-ticket.component';
 import {
-  WorkOrderUserPasswordResetTicketComponent
+  WorkOrderUserPasswordResetTicketComponent,
 } from '../work-order-ticket/work-order-user-password-reset-ticket/work-order-user-password-reset-ticket.component';
 
 @Component({
@@ -437,6 +437,11 @@ export class WorkOrderDataTableComponent implements OnInit {
 
   onGetTicketUrl(ticketNo: string): string {
     const href = window.location.href;
-    return href + '?ticketNo=' + ticketNo;
+    const [base, hash] = href.split('#');
+    if (!hash) return href + '?ticketNo=' + ticketNo;
+    const [path, query] = hash.split('?');
+    const params = new URLSearchParams(query);
+    params.set('ticketNo', ticketNo);
+    return base + '#' + path + '?' + params.toString();
   }
 }

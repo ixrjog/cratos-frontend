@@ -91,7 +91,8 @@ export class UserPermissionsEditorComponent {
         finalize(() => this.table.loading = false),
       )
       .subscribe(({ body }) => {
-        this.userPermissions = body.userPermissions;
+        this.userPermissions = body.userPermissions
+          .filter(permission => permission.businessType === this.queryParam.businessType);
         this.userPermissions.map(item => {
           let row = {
             name: item.name,

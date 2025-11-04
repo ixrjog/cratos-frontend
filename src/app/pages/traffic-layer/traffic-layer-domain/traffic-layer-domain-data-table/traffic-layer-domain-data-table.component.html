@@ -37,7 +37,25 @@
     <d-column header="Record">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span>{{ countResource(rowItem) }}</span>
+          <div style="display: flex;align-items: center;flex-wrap: wrap;">
+            <d-tag
+              style="margin-right: 8px;"
+              [tag]="countResource(rowItem).toString()"
+              [labelStyle]="'blue-w98'"
+            >
+            </d-tag>
+            <span
+              *ngFor="let role of rowItem['recordEnvs']"
+              style="display: inline-block; margin-right: 8px;"
+            >
+              <d-tag
+                [tag]="role.envName"
+                [labelStyle]="role.valid ? 'green-w98':''"
+                style="margin-right: 4px;"
+              >
+              </d-tag>
+            </span>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

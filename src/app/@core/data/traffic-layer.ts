@@ -16,6 +16,7 @@ export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, 
     consoleUrl: string;
   }[];
   comment: string;
+  recordEnvs: TrafficLayerDomainEnvVO[];
 }
 
 export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagsVO, BusinessDocsVO {

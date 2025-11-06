@@ -192,6 +192,12 @@
               [operable]="true"
               (click)="onRowEdit(rowItem)"
             ></d-icon>
+            <d-icon
+              *ngIf="rowItem['ticketState']===WorkOrderStatus.NEW"
+              [icon]="'icon-close'"
+              [operable]="true"
+              (click)="onRowClose(rowItem)"
+            ></d-icon>
           </d-icon-group>
         </ng-template>
       </d-cell>

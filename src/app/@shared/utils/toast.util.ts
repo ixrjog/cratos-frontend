@@ -38,6 +38,7 @@ export const TOAST_CONTENT = {
   DELETE: 'Delete success',
   REVOKE: 'Revoke success',
   MERGE: 'Merge success',
+  CLOSE: 'Close success',
   REDEPLOY: 'Redeploy success',
   INACTIVE: 'Inactive success',
   IMPORT: 'Importing, please wait',

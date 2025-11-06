@@ -242,7 +242,7 @@ export class WorkOrderTicketManagementDataTableComponent {
     this.dialogUtil.onDialog(dialogDate, () => {
       this.workOrderTicketService.deleteTicketById({ id: rowItem.id })
         .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.CLOSE);
           this.fetchData();
         });
     });

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WorkOrderKeyEnum, WorkOrderService } from '../../../../../@core/services/work-order.service';
 import { WorkOrderPageQuery, WorkOrderStatus, WorkOrderVO } from '../../../../../@core/data/work-order';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
-import { ToastUtil } from '../../../../../@shared/utils/toast.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { WorkOrderTicketService } from '../../../../../@core/services/work-order-ticket.service';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { Table, TABLE_DATA } from '../../../../../@core/data/base-data';
@@ -141,6 +141,12 @@ export class WorkOrderDataTableComponent implements OnInit {
   }
 
   dialogDate = {
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
     editorData: {
       ...DIALOG_DATA.editorData,
       width: '70%',
@@ -247,6 +253,20 @@ export class WorkOrderDataTableComponent implements OnInit {
       .subscribe(({ body }) => {
         this.onRowDialog(rowItem.workOrder.workOrderKey, body);
       });
+  }
+
+  onRowClose(rowItem: WorkOrderTicketVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.close,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.workOrderTicketService.deleteTicketById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.CLOSE);
+          this.fetchData();
+        });
+    });
   }
 
   onRowDialog(workOrderKey: string, ticket: WorkOrderTicketDetailsVO) {

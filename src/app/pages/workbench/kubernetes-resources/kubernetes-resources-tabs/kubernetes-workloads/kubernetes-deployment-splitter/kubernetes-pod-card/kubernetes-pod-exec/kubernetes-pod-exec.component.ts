@@ -93,6 +93,29 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       });
   }
 
+  private setupTerminalFocus(): void {
+    // 初始聚焦
+    this.terminal.focus();
+
+    // 监听点击事件，确保点击终端区域时聚焦
+    const terminalElement = document.getElementById('kubernetesPodExec');
+    if (terminalElement) {
+      fromEvent(terminalElement, 'click')
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => this.terminal.focus());
+    }
+
+    // 监听键盘事件，ESC 后重新聚焦
+    fromEvent(document, 'keydown')
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((event: KeyboardEvent) => event.key === 'Escape')
+      )
+      .subscribe(() => {
+        setTimeout(() => this.terminal.focus(), 0);
+      });
+  }
+
   private initializeWebSocket(): void {
     try {
       this.ws = this.wsApiService.createWsClient('/ssh/kubernetes');
@@ -111,6 +134,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   ngAfterViewInit(): void {
     this.terminal.open(document.getElementById('kubernetesPodExec'));
     this.setupTerminalResize();
+    this.setupTerminalFocus();
   }
 
   ngOnDestroy(): void {

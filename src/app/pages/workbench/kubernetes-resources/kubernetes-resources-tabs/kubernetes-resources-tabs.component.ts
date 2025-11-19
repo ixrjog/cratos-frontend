@@ -37,6 +37,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     name: '',
   };
 
+  resourceName: string = '';
+
   first = false;
   tabActiveId: string | number = 'workloads';
   application: ApplicationVO;
@@ -222,13 +224,13 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.queryParam.applicationName = application?.name;
     const currentNamespace = this.queryParam.namespace;
     this.wsOnUnsubSend();
-    
+
     if (this.queryParam.applicationName) {
       this.applicationService.getMyResourceNamespaceOptions({ applicationName: application.name })
         .subscribe(({ body }) => {
           this.resourceNamespaceOptions = body.options;
           const namespaceExists = body.options.some(option => option.value === currentNamespace);
-          
+
           if (namespaceExists) {
             this.queryParam.namespace = currentNamespace;
             // 获取对应namespace的resourceNameOptions
@@ -244,7 +246,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
             this.queryParam.namespace = '';
             this.resourceNameOptions = [];
           }
-          
+
           this.queryParam.name = '';
           this.fetchData();
         });
@@ -259,9 +261,14 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     );
   };
 
-  onResourceNameChange(name: any) {
-    this.queryParam.name = name['value'];
-    this.queryParam.instanceName = name['label'].split(':')[0];
+  onResourceNameChange(resourceName: any) {
+    if (resourceName === null) {
+      this.queryParam.name = '';
+      this.queryParam.instanceName = '';
+    } else {
+      this.queryParam.name = resourceName['value'];
+      this.queryParam.instanceName = resourceName['label'].split(':')[0];
+    }
     this.wsOnUnsubSend();
     this.fetchData();
   }
@@ -370,6 +377,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       const param: ApplicationKubernetesDetailsRequest = {
         topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS,
         action: WsMessageActionEnum.SUBSCRIPTION,
+        instanceName: this.queryParam.instanceName,
         applicationName: this.queryParam.applicationName,
         namespace: this.queryParam.namespace,
         name: this.queryParam.name,

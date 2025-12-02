@@ -80,6 +80,9 @@ export default {
         account: 'Account',
         password: 'Reset Password',
         mfa: 'Unbind MFA',
+      },
+      mfa: {
+        tips: 'After unbinding MFA, please log back in to set up a new QR code',
       }
     },
     applicationFrontend: {

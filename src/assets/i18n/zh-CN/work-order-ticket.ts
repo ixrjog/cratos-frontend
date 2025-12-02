@@ -80,6 +80,9 @@ export default {
         account: '账户',
         password: '重置密码',
         mfa: '解绑 MFA',
+      },
+      mfa: {
+        tips: '解绑后，请重新登录以设置新的 MFA 二维码',
       }
     },
     applicationFrontend: {

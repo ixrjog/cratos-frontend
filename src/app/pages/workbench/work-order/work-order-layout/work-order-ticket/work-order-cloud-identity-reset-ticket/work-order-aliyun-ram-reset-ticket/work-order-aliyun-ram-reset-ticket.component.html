@@ -20,6 +20,9 @@
     <d-form-label [required]="true">{{ 'workOrderTicket.cloudIdentityReset.labels.mfa' | translate }}</d-form-label>
     <d-form-control>
       <d-toggle name="mfa" [(ngModel)]="unbindMFA"></d-toggle>
+      <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px" *ngIf="unbindMFA">
+        {{ 'workOrderTicket.cloudIdentityReset.mfa.tips' | translate }}
+      </d-alert>
     </d-form-control>
   </d-form-item>
 </ng-template>

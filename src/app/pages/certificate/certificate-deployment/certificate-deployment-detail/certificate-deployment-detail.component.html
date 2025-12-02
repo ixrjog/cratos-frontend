@@ -1,0 +1,115 @@
+<div class="spacing-search">
+  <d-select
+    class="select"
+    [appendToBody]="true"
+    [searchFn]="onSearchCertificateName"
+    style="width: 300px;max-width: 300px"
+    [width]="580"
+    [(ngModel)]="certificateName"
+    [isSearch]="true"
+    placeholder="Select domain"
+    (valueChange)="onCertificateNameChange($event)">
+  </d-select>
+  <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!certificateName">Fetch</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    *ngIf="certificateName"
+    dLoading
+    [dataSource]="detailList"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="loading"
+  >
+    <d-column field="edsInstance" header="Instance">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+
+    <d-column field="certificate" header="Certificate ID">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.certificateId }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="certificate" header="Name">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="certificate" header="Domain Name">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.domainName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="certificate" header="Certificate Type">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag [tag]="cellItem.certificateType" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column
+      [width]="'150px'"
+      field="certificate"
+      header="Not Before"
+      [fieldType]="'date'"
+    >
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.notBefore | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <br>
+          <strong>{{ cellItem.notBefore | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column
+      [width]="'150px'"
+      field="certificate"
+      header="Not After"
+      [fieldType]="'date'"
+    >
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem.notAfter | dDatePipe: 'yyyy/MM/dd' }}</span>
+          <br>
+          <strong>{{ cellItem.notAfter | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="certificate" header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <app-business-tags [businessTags]="cellItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="certificate" header="Actions" [width]="'100px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon-group>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(cellItem['valid'])"
+              (click)="onRowValid(cellItem)"
+            >
+            </d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>

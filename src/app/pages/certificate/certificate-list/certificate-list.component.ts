@@ -1,15 +1,10 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-certificate-list',
   templateUrl: './certificate-list.component.html',
-  styleUrls: [ './certificate-list.component.less' ],
+  styleUrls: ['./certificate-list.component.less']
 })
-export class CertificateListComponent implements AfterViewInit {
-  constructor() {
-  }
+export class CertificateListComponent {
 
-  ngAfterViewInit(): void {
-    window.dispatchEvent(new Event('resize'));
-  }
 }

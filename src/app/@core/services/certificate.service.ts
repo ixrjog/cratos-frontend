@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { CertificateData, CertificateEdit, CertificatePageQuery, CertificateVO } from '../data/certificate';
+import {
+  CertificateData,
+  CertificateDeploymentVO,
+  CertificateEdit,
+  CertificatePageQuery,
+  CertificateVO,
+} from '../data/certificate';
 import { DataTable, HttpResult } from '../data/base-data';
 
 @Injectable()
@@ -31,6 +37,14 @@ export class CertificateService extends CertificateData {
 
   updateCertificate(param: CertificateEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/update', param);
+  }
+
+  getCertificateDeploymentDetails(param: { name: string }): Observable<HttpResult<Array<CertificateDeploymentVO>>> {
+    return this.apiService.post(this.baseUrl, '/deployment/details/get', param);
+  }
+
+  getCertificateNameOptions(param: { queryName: string }): Observable<HttpResult<Array<String>>> {
+    return this.apiService.post(this.baseUrl, '/name/options/get', param);
   }
 
 }

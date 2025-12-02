@@ -16,6 +16,10 @@ import { BasicFormModule } from '../getting-started/sample/basic-form/basic-form
 import {
   CertificateEditorComponent,
 } from './certificate-list/certificate-list-data-table/certificate-editor/certificate-editor.component';
+import { CertificateDeploymentComponent } from './certificate-deployment/certificate-deployment.component';
+import {
+  CertificateDeploymentDetailComponent
+} from './certificate-deployment/certificate-deployment-detail/certificate-deployment-detail.component';
 
 
 @NgModule({
@@ -23,7 +27,9 @@ import {
     CertificateComponent,
     CertificateListComponent,
     CertificateListDataTableComponent,
-    CertificateEditorComponent
+    CertificateEditorComponent,
+    CertificateDeploymentComponent,
+    CertificateDeploymentDetailComponent
   ],
   imports: [
     CommonModule,

@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { BusinessTagsVO } from './business-tag';
 import { BusinessDocsVO } from './business-doc';
+import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
 
 export interface CertificateVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
@@ -33,6 +34,12 @@ export interface CertificateEdit {
   fromAssetId?: number;
 }
 
+export interface CertificateDeploymentVO {
+  certificate: CertificateVO;
+  edsInstance: EdsInstanceVO;
+  asset: EdsAssetVO;
+}
+
 export abstract class CertificateData {
 
   abstract queryCertificatePage(param: CertificatePageQuery): Observable<DataTable<CertificateVO>>;
@@ -44,5 +51,9 @@ export abstract class CertificateData {
   abstract setCertificateValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract deleteCertificateById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract getCertificateNameOptions(param: { queryName: string }): Observable<HttpResult<Array<String>>>;
+
+  abstract getCertificateDeploymentDetails(param: { name: string }): Observable<HttpResult<Array<CertificateDeploymentVO>>>;
 
 }

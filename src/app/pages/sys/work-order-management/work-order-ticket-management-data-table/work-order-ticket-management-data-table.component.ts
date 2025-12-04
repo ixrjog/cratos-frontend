@@ -95,6 +95,9 @@ import {
 import {
   WorkOrderUserPasswordResetTicketComponent
 } from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-user-password-reset-ticket/work-order-user-password-reset-ticket.component';
+import {
+  WorkOrderAwsIamTicketComponent
+} from '../../../workbench/work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aws-iam-ticket/work-order-aws-iam-ticket.component';
 
 @Component({
   selector: 'app-work-order-ticket-management-data-table',
@@ -335,6 +338,12 @@ export class WorkOrderTicketManagementDataTableComponent {
         break;
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_PERMISSION:
         dialogDate['content'] = WorkOrderAliyunRamTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.AWS_IAM_USER_PERMISSION:
+        dialogDate['content'] = WorkOrderAwsIamTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

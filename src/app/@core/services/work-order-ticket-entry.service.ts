@@ -12,6 +12,7 @@ import {
   AddCreateAliyunOnsConsumerGroupTicketEntry,
   AddCreateAliyunOnsTopicTicketEntry,
   AddCreateAliyunRamUserTicketEntry,
+  AddCreateAwsIamUserTicketEntry,
   AddCreateAwsTransferSftpUserTicketEntry,
   AddCreateFrontEndApplicationTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
@@ -19,7 +20,8 @@ import {
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
   AddResetAliyunRamUserTicketEntry,
-  AddResetAwsIamUserTicketEntry, AddResetUserPasswordTicketEntry,
+  AddResetAwsIamUserTicketEntry,
+  AddResetUserPasswordTicketEntry,
   AddRevokeUserPermissionTicketEntry,
   AddRiskChangeTicketEntry,
   AddUpdateAliyunKmsSecretTicketEntry,
@@ -112,6 +114,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addCreateAliyunRamUserTicketEntry(param: AddCreateAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/ram/user/instance/add', param);
+  }
+
+  addCreateAwsIamUserTicketEntry(param: AddCreateAwsIamUserTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/aws/iam/user/instance/add', param);
   }
 
   addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {

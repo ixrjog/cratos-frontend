@@ -177,6 +177,7 @@ import { WebTerminalDrawerComponent } from './web-terminal/web-terminal-manageme
 import { WebTerminalDemoComponent } from './web-terminal/web-terminal-management/web-terminal-demo/web-terminal-demo.component';
 import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-management/web-terminal-theme-settings/web-terminal-theme-settings.component';
 import { ExtDatasourceModule } from '../ext-datasource/ext-datasource.module';
+import { WorkOrderAwsIamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aws-iam-ticket/work-order-aws-iam-ticket.component';
 
 @NgModule({
   declarations: [
@@ -253,6 +254,7 @@ import { ExtDatasourceModule } from '../ext-datasource/ext-datasource.module';
     WebTerminalDrawerComponent,
     WebTerminalDemoComponent,
     WebTerminalThemeSettingsComponent,
+    WorkOrderAwsIamTicketComponent,
   ],
   imports: [
     CommonModule,

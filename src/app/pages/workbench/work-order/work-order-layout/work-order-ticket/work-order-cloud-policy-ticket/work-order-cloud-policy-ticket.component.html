@@ -68,11 +68,11 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="detail" [header]="'workOrderTicket.cloudPolicy.headers.loginUrl' | translate">
+      <d-column field="detail" [header]="'workOrderTicket.cloudPolicy.headers.loginUsername' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            <span *ngIf="edsType==='ALIYUN'">{{ cellItem['loginLink'] }}</span>
-            <span *ngIf="edsType==='AWS'">{{ cellItem['cloudAccount']?.accountLogin.loginUrl }}</span>
+            <span *ngIf="edsType==='ALIYUN'">{{ cellItem['ramLoginUsername'] }}</span>
+            <span *ngIf="edsType==='AWS'">{{ cellItem['cloudAccount']?.accountLogin.loginUsername }}</span>
           </ng-template>
         </d-cell>
       </d-column>

@@ -194,6 +194,7 @@ export default {
     cloudIdentity: {
       headers: {
         instance: 'Instance',
+        accountId: 'Account ID',
         ramLoginUsername: 'RAM Login Username',
         loginLink: 'Login Link',
         actions: 'Actions',
@@ -207,6 +208,7 @@ export default {
       headers: {
         instance: 'Instance',
         loginUrl: 'Login URL',
+        loginUsername: 'Login Username',
         policyName: 'Policy Name',
         policyDesc: 'Policy Desc',
         actions: 'Actions',

@@ -195,6 +195,7 @@ export default {
     cloudIdentity: {
       headers: {
         instance: '实例',
+        accountId: '账户 ID',
         ramLoginUsername: 'RAM登录用户名',
         loginLink: '登录链接',
         actions: '操作',
@@ -208,6 +209,7 @@ export default {
       headers: {
         instance: '实例',
         loginUrl: '登录地址',
+        loginUsername: '登录用户名',
         policyName: '策略名称',
         policyDesc: '策略描述',
         actions: '操作',

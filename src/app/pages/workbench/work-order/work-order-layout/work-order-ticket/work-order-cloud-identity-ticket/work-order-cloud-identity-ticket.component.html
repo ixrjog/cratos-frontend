@@ -49,6 +49,14 @@
           </ng-template>
         </d-cell>
       </d-column>
+      <d-column field="detail" [header]="'workOrderTicket.cloudIdentity.headers.accountId' | translate"
+                *ngIf="edsType === 'AWS'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span>{{ cellItem.accountId }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
       <d-column field="name" [header]="'workOrderTicket.cloudIdentity.headers.ramLoginUsername' | translate"></d-column>
       <d-column field="detail" [header]="'workOrderTicket.cloudIdentity.headers.loginLink' | translate">
         <d-cell>

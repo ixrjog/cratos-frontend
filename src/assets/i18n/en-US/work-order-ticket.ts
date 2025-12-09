@@ -244,6 +244,23 @@ export default {
         tips: 'Specify Deployment to adjust the replica.',
       },
     },
+    applicationJvm: {
+      headers: {
+        instance: 'Instance',
+        application: 'Application',
+        namespace: 'Namespace',
+        deployment: 'Deployment',
+        jvmSpecType: 'Jvm Spec',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        application: 'Application',
+        namespace: 'Namespace',
+        deployment: 'Deployment',
+        jvmSpecType: 'Jvm Spec',
+      },
+    },
     gitlab: {
       headers: {
         instance: 'Instance',

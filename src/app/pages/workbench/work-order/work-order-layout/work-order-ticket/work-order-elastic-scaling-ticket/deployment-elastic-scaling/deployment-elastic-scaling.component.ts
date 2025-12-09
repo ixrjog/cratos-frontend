@@ -19,9 +19,9 @@ export class DeploymentElasticScalingComponent {
   @Output() onFetchData = new EventEmitter<null>();
   protected readonly FormLayout = FormLayout;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
-  application: ApplicationVO;
-  deployment: EdsAssetVO;
-  namespace: string;
+  application: ApplicationVO = null;
+  deployment: EdsAssetVO = null;
+  namespace: string = '';
   resourceNamespaceOptions = [];
   deploymentOptions = [];
   expectedReplicas: number;
@@ -67,6 +67,7 @@ export class DeploymentElasticScalingComponent {
 
   onGetDeployment() {
     this.deploymentOptions = [];
+    this.deployment = null;
     this.workOrderTicketEntryService.queryApplicationResourceDeploymentTicketEntry({
       applicationName: this.application.name,
       namespace: this.namespace,
@@ -79,15 +80,15 @@ export class DeploymentElasticScalingComponent {
   }
 
   onRowAdd() {
-    if (this.application === undefined) {
+    if (this.application === null) {
       this.toastUtil.onErrorToast('application cannot be empty');
       return;
     }
-    if (this.namespace === undefined) {
+    if (this.namespace === '') {
       this.toastUtil.onErrorToast('namespace cannot be empty');
       return;
     }
-    if (this.deployment === undefined) {
+    if (this.deployment === null) {
       this.toastUtil.onErrorToast('deployment cannot be empty');
       return;
     }

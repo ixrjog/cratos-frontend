@@ -16,6 +16,7 @@ import {
   AddCreateAwsTransferSftpUserTicketEntry,
   AddCreateFrontEndApplicationTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
+  AddDeploymentJvmSpecTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
@@ -194,6 +195,14 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addResetUserPasswordTicketEntry(param: AddResetUserPasswordTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/user/reset/password/add', param);
+  }
+
+  addApplicationDeploymentJvmSpecTicketEntry(param: AddDeploymentJvmSpecTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/application/deployment/jvm/spec/add', param);
+  }
+
+  getApplicationDeploymentJvmSpecTypeOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get(this.baseUrl, '/application/deployment/jvm/spec/type/options/get', {});
   }
 
 }

@@ -248,6 +248,15 @@ export interface AddResetUserPasswordTicketEntry {
   detail: UserVO;
 }
 
+export interface AddDeploymentJvmSpecTicketEntry {
+  ticketId: number;
+  detail: {
+    assetId: number
+    applicationName: string;
+    jvmSpecType: string
+  };
+}
+
 export abstract class WorkOrderTicketEntryData {
 
   abstract addApplicationPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
@@ -329,4 +338,7 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract addResetUserPasswordTicketEntry(param: AddResetUserPasswordTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract addApplicationDeploymentJvmSpecTicketEntry(param: AddDeploymentJvmSpecTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract getApplicationDeploymentJvmSpecTypeOptions(): Observable<HttpResult<OptionsVO>>;
 }

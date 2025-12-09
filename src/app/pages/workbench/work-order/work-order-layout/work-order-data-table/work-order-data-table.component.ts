@@ -100,6 +100,9 @@ import {
 import {
   WorkOrderAwsIamTicketComponent
 } from '../work-order-ticket/work-order-cloud-identity-ticket/work-order-aws-iam-ticket/work-order-aws-iam-ticket.component';
+import {
+  WorkOrderApplicationJvmTicketComponent
+} from '../work-order-ticket/work-order-application-jvm-ticket/work-order-application-jvm-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -327,6 +330,12 @@ export class WorkOrderDataTableComponent implements OnInit {
         break;
       case WorkOrderKeyEnum.APPLICATION_ELASTIC_SCALING:
         dialogDate['content'] = WorkOrderElasticScalingTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.APPLICATION_DEPLOYMENT_JVM_SPEC:
+        dialogDate['content'] = WorkOrderApplicationJvmTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

@@ -245,6 +245,23 @@ export default {
         tips: '指定Deployment调整副本大小。',
       },
     },
+    applicationJvm: {
+      headers: {
+        instance: '实例',
+        application: '应用',
+        namespace: '命名空间',
+        deployment: '部署',
+        jvmSpecType: 'JVM 规格',
+        actions: 'Actions',
+        result: 'Result',
+      },
+      labels: {
+        application: '应用',
+        namespace: '命名空间',
+        deployment: '部署',
+        jvmSpecType: 'Jvm 规格',
+      }
+    },
     gitlab: {
       headers: {
         instance: '实例',

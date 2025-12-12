@@ -15,7 +15,7 @@
           [(ngModel)]="approveUser"
           [searchFn]="onSearchCommandExecUser"
           [isSearch]="true"
-          placeholder="Select approve user"
+          placeholder="Search and select approve user"
           (valueChange)="onApproveUserChange($event)"
         >
           <ng-template let-option="option">
@@ -35,7 +35,7 @@
           [(ngModel)]="ccUser"
           [searchFn]="onSearchUser"
           [isSearch]="true"
-          placeholder="Select cc user"
+          placeholder="Search and select cc user"
           (valueChange)="onCCUserChange($event)"
         >
           <ng-template let-option="option">
@@ -57,7 +57,7 @@
               [(ngModel)]="instance"
               [searchFn]="onSearchInstance"
               [isSearch]="true"
-              placeholder="Select instance"
+              placeholder="Search and select instance"
               (valueChange)="onInstanceChange($event)"
             >
             </d-select>

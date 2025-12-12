@@ -27,7 +27,7 @@ export default {
 
     // Form placeholders and labels
     form: {
-      selectApplication: '选择应用',
+      selectApplication: '搜索并选择应用',
       selectResourceName: '选择资源名称',
     },
 

@@ -6,7 +6,7 @@
       [(ngModel)]="queryParam.businessType"
       [options]="businessTypeOptions"
       [isSearch]="true"
-      placeholder="Select business type"
+      placeholder="Search and select business type"
       [searchPlaceholder]="'Search business type'"
       (valueChange)="onBusinessTypeChange($event)"
     >
@@ -20,7 +20,7 @@
       [(ngModel)]="userBusinessPermission"
       [searchFn]="onSearchUserBusinessPermission"
       [isSearch]="true"
-      placeholder="Select user business permission"
+      placeholder="Search and select user business permission"
       [allowClear]="true"
     >
       <ng-template let-option="option">

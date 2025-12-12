@@ -23,7 +23,7 @@
           [(ngModel)]="instance"
           [searchFn]="onSearchInstance"
           [isSearch]="true"
-          placeholder="Select instance"
+          placeholder="Search and select instance"
           (valueChange)="onInstanceChange($event)"
         >
         </d-select>
@@ -39,7 +39,7 @@
           [(ngModel)]="awsTransfer"
           [searchFn]="onSearchAwsTransfer"
           [isSearch]="true"
-          placeholder="Select aws transfer"
+          placeholder="Search and select aws transfer"
           [allowClear]="true"
         >
           <ng-template let-option="option">

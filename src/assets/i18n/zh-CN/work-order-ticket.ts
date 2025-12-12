@@ -2,8 +2,8 @@ export default {
   workOrderTicket: {
     dataTable: {
       searchPlaceholder: '搜索工单号',
-      selectWorkOrder: '选择工单',
-      selectUser: '选择用户',
+      selectWorkOrder: '搜索并选择工单',
+      selectUser: '搜索并选择用户',
       showOnlyMySubmit: '仅显示我提交的',
       filter: '筛选',
       fetchData: '获取数据',

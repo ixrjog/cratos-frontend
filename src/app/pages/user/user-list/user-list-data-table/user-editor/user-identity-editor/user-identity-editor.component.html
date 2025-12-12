@@ -29,7 +29,7 @@
                 [(ngModel)]="edsInstance"
                 [searchFn]="onSearchEdsInstance"
                 [isSearch]="true"
-                placeholder="Select instance"
+                placeholder="Search and select instance"
                 (valueChange)="onEdsInstanceChange($event)"
               >
                 <ng-template let-option="option">
@@ -115,7 +115,7 @@
                 [(ngModel)]="edsAsset"
                 [searchFn]="onSearchEdsInstanceMember"
                 [isSearch]="true"
-                placeholder="Select instance member"
+                placeholder="Search and select instance member"
               >
                 <ng-template let-option="option">
                   <span>{{ option.assetKey }}</span>

@@ -27,7 +27,7 @@ export default {
 
     // Form placeholders and labels
     form: {
-      selectApplication: 'Select application',
+      selectApplication: 'Search and select application',
       selectResourceName: 'Select resource name',
     },
 

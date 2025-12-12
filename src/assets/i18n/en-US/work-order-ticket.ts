@@ -2,8 +2,8 @@ export default {
   workOrderTicket: {
     dataTable: {
       searchPlaceholder: 'Search ticketNo',
-      selectWorkOrder: 'Select work order',
-      selectUser: 'Select user',
+      selectWorkOrder: 'Search and select work order',
+      selectUser: 'Search and select user',
       showOnlyMySubmit: 'show only my submit',
       filter: 'Filter',
       fetchData: 'Fetch Data',

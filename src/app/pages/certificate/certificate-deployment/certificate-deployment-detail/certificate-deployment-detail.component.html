@@ -7,7 +7,7 @@
     [width]="580"
     [(ngModel)]="certificateName"
     [isSearch]="true"
-    placeholder="Select certificate name"
+    placeholder="Search and select certificate name"
     (valueChange)="onCertificateNameChange($event)">
   </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!certificateName">Fetch</d-button>

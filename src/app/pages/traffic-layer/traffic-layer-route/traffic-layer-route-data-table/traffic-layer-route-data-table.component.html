@@ -1,0 +1,158 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <app-business-cascader #businessCascader [businessType]="businessType"
+                         (onChange)="onTagChanges($event)"></app-business-cascader>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+  >
+    <d-column header="Domain">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
+          <br />
+          <d-tag
+            style="margin-right: 5px;"
+            [tag]="rowItem['dnsResolverInstance']?.edsType"
+            [labelStyle]="'blue-w98'"
+          ></d-tag>
+          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="domainRecord" header="Domain Record"></d-column>
+    <d-column field="recordTargets" header="Record Targets">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <div
+            *ngFor="let target of cellItem"
+            dPopover
+            [position]="'right-top'"
+            [trigger]="'hover'"
+            [controlled]="true"
+            [mouseEnterDelay]="500"
+            [content]="recordTargetTemplate"
+            [popoverStyle]="getPopoverStyle({width: '400px'})"
+          >
+            <d-badge [showDot]="true"
+                     [status]="target.active?'success':'warning'"></d-badge>
+            <d-tag style="margin: 0 5px;" [tag]="target.recordType" [labelStyle]="'blue-w98'"></d-tag>
+            <span dClipboard [content]="target.recordValue">{{ target.recordValue }}</span>
+            <ng-template #recordTargetTemplate>
+              <d-card class="record-target-card-content">
+                <d-card-header style="margin-bottom: 2px">
+                  <d-card-title>{{ target.recordValue }}</d-card-title>
+                </d-card-header>
+                <d-card-content>
+                  <div>
+                    <span class="name">Target Type</span>
+                    <span class="value">{{ target.targetType | dSafeNullPipe }}</span>
+                  </div>
+                  <div>
+                    <span class="name">TTL</span>
+                    <span class="value">{{ target.ttl | dSafeNullPipe }}</span>
+                  </div>
+                  <div>
+                    <span class="name">Weight</span>
+                    <span class="value">{{ target.weight | dSafeNullPipe }}</span>
+                  </div>
+                </d-card-content>
+              </d-card>
+            </ng-template>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchValid()">
+        <a dDropDownMenuItem>
+          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchTag()">
+        <a dDropDownMenuItem>
+          <span class="icon-tag" style="padding-right: 5px; vertical-align: middle"> Tag</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

@@ -25,6 +25,11 @@
     <d-column field="edsInstance" header="Instance">
       <d-cell>
         <ng-template let-cellItem="cellItem">
+          <d-tag
+            style="margin-right: 5px;"
+            [tag]="cellItem['edsType']"
+            [labelStyle]="'blue-w98'"
+          ></d-tag>
           <span>{{ cellItem.instanceName }}</span>
         </ng-template>
       </d-cell>

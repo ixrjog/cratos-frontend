@@ -90,3 +90,21 @@ export interface ReportBaseData {
   value: string
   color: string
 }
+
+export interface DnsResourceRecordSetVO {
+  name: string;
+  type: string;
+  isNoData: boolean;
+  resourceRecords: DnsResourceRecordsVO[];
+}
+
+export interface DnsResourceRecordsVO {
+  name: string;
+  type: string;
+  isNoData: boolean;
+  resourceRecords: {
+    value: string
+    weight: number
+    tTL: number
+  }[];
+}

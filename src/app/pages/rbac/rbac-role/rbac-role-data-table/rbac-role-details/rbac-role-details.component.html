@@ -12,7 +12,7 @@
         </div>
         <div class="info-item">
           <label class="info-label">{{ 'rbacRoleDetails.roleInfo.accessLevel' | translate }}：</label>
-          <d-tag [tag]="roleDetails.role.accessLevel" [labelStyle]="'blue-w98'"></d-tag>
+          <d-tag [tag]="(roleDetails.role.accessLevel).toString()" [labelStyle]="'blue-w98'"></d-tag>
         </div>
         <div class="info-item">
           <label class="info-label">{{ 'rbacRoleDetails.roleInfo.workOrderVisible' | translate }}：</label>

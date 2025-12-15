@@ -8,6 +8,7 @@ import { TrafficLayerLimitComponent } from './traffic-layer-limit/traffic-layer-
 import {
   TrafficLayerIngressServiceComponent
 } from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
+import { TrafficLayerRouteComponent } from './traffic-layer-route/traffic-layer-route.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'ingress-details', component: TrafficLayerIngressComponent },
       { path: 'ingress-service-details', component: TrafficLayerIngressServiceComponent },
       { path: 'limit', component: TrafficLayerLimitComponent },
+      { path: 'route', component: TrafficLayerRouteComponent },
     ],
   },
 ];

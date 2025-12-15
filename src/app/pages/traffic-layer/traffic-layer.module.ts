@@ -44,6 +44,10 @@ import {
 import { TrafficLayerIngressLimitEditorComponent } from './traffic-layer-limit/traffic-layer-ingress-limit-data-table/traffic-layer-ingress-limit-editor/traffic-layer-ingress-limit-editor.component';
 import { TrafficLayerIngressServiceComponent } from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
 import { TrafficLayerIngressServiceDetailComponent } from './traffic-layer-ingress-service/traffic-layer-ingress-service-detail/traffic-layer-ingress-service-detail.component';
+import { TrafficLayerRouteComponent } from './traffic-layer-route/traffic-layer-route.component';
+import { TrafficLayerRouteDataTableComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-data-table.component';
+import { TrafficLayerRouteEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-editor/traffic-layer-route-editor.component';
+import { TrafficLayerRouteRecordTargetEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
 
 
 @NgModule({
@@ -63,6 +67,10 @@ import { TrafficLayerIngressServiceDetailComponent } from './traffic-layer-ingre
     TrafficLayerIngressLimitEditorComponent,
     TrafficLayerIngressServiceComponent,
     TrafficLayerIngressServiceDetailComponent,
+    TrafficLayerRouteComponent,
+    TrafficLayerRouteDataTableComponent,
+    TrafficLayerRouteEditorComponent,
+    TrafficLayerRouteRecordTargetEditorComponent,
   ],
   imports: [
     CommonModule,

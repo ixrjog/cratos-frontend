@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import {
+  SwitchRecordTarget,
   TrafficRecordTargetEdit,
   TrafficRouteData,
   TrafficRouteEdit,
@@ -27,8 +28,20 @@ export class TrafficRouteService extends TrafficRouteData {
     return this.apiService.post(this.baseUrl, '/record/target/add', param);
   }
 
+  getTrafficRouteById(param: { id: number }): Observable<HttpResult<TrafficRouteVO>> {
+    return this.apiService.get(this.baseUrl, '/get', param);
+  }
+
+  setTrafficRecordTargetValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/record/target/valid/set', param);
+  }
+
   addTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/add', param);
+  }
+
+  updateTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/update', param);
   }
 
   getTrafficRecordTargetTypeOptions(): Observable<HttpResult<OptionsVO>> {
@@ -39,8 +52,12 @@ export class TrafficRouteService extends TrafficRouteData {
     return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
   }
 
-  deleteTrafficRoute(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete(this.baseUrl, '/del', param);
+  updateTrafficRecordTarget(param: TrafficRecordTargetEdit): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/record/target/update', param);
+  }
+
+  switchToTarget(param: SwitchRecordTarget): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/record/target/switch', param);
   }
 
 }

@@ -1,1 +1,87 @@
-<p>traffic-layer-route-editor works!</p>
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Domain</d-form-label>
+      <d-form-control>
+        <d-select
+          name="domain"
+          [filterKey]="'domain'"
+          [appendToBody]="true"
+          [(ngModel)]="trafficLayerDomain"
+          [searchFn]="onSearchDomain"
+          [isSearch]="true"
+          placeholder="Search and select domain"
+          (valueChange)="onDomainChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="trafficLayerDomain !== undefined">
+      <d-form-label [required]="true">Domain Record</d-form-label>
+      <d-form-control>
+        <d-select
+          name="trafficLayerRecord"
+          [filterKey]="'recordName'"
+          [appendToBody]="true"
+          [(ngModel)]="trafficLayerRecord"
+          [searchFn]="onSearchDomainRecord"
+          [isSearch]="true"
+          placeholder="Search and select domain record"
+          (valueChange)="onDomainRecordChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Record Type</d-form-label>
+      <d-form-control>
+        <d-tabs
+          style="height: 20px"
+          type="options"
+          [activeTab]="recordType"
+          (activeTabChange)="onRecordTypeChange($event)"
+        >
+          <d-tab
+            *ngFor="let item of recordTypeOptions"
+            [id]="item.value"
+            [title]="item.label"
+          ></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">DNS Resolver Instance</d-form-label>
+      <d-form-control>
+        <d-select
+          name="dnsResolverInstanceId"
+          [filterKey]="'instanceName'"
+          [appendToBody]="true"
+          [(ngModel)]="dnsResolverInstance"
+          [searchFn]="onSearchDnsResolverInstance"
+          [isSearch]="true"
+          placeholder="Search and select resolver instance"
+          (valueChange)="onDnsResolverInstanceChange($event)"
+        >
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>
+

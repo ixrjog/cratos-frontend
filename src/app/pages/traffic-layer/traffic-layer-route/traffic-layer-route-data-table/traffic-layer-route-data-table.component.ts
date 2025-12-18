@@ -11,11 +11,22 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
 import { CertificateVO } from '../../../../@core/data/certificate';
-import { TrafficRouteEdit, TrafficRoutePageQuery, TrafficRouteVO } from '../../../../@core/data/traffic-route';
+import {
+  TrafficRecordTargetEdit,
+  TrafficRouteEdit,
+  TrafficRoutePageQuery,
+  TrafficRouteVO,
+} from '../../../../@core/data/traffic-route';
 import { TrafficLayerRouteEditorComponent } from './traffic-layer-route-editor/traffic-layer-route-editor.component';
 import { TrafficRouteService } from '../../../../@core/services/traffic-route.service';
 import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
-import { Router } from '@angular/router';
+import {
+  TrafficLayerRouteRecordTargetEditorComponent,
+} from './traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
+import {
+  TrafficLayerRouteRecordTargetSwitchComponent,
+} from './traffic-layer-route-record-target-switch/traffic-layer-route-record-target-switch.component';
+import { DRAWER_DATA, DrawerUtil } from '../../../../@shared/utils/drawer.util';
 
 @Component({
   selector: 'app-traffic-layer-route-data-table',
@@ -39,6 +50,10 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
   table: Table<TrafficRouteVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   dialogDate = {
+    switchTargetData: {
+      ...DIALOG_DATA.editorData,
+      content: TrafficLayerRouteRecordTargetSwitchComponent,
+    },
     editorData: {
       ...DIALOG_DATA.editorData,
       content: TrafficLayerRouteEditorComponent,
@@ -51,12 +66,19 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     },
   };
 
+  drawerDate = {
+    editTargetData: {
+      ...DRAWER_DATA.editorData,
+      width: '70%',
+      drawerContentComponent: TrafficLayerRouteRecordTargetEditorComponent,
+    },
+  };
+
   newTrafficRoute: TrafficRouteEdit = {
     domainId: null,
     domainRecordId: null,
     domain: '',
     domainRecord: '',
-    name: '',
     dnsResolverInstanceId: null,
     recordType: '',
     comment: '',
@@ -65,9 +87,9 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
   protected readonly getRowColor = getRowColor;
 
   constructor(
-    private route: Router,
     private trafficRouteService: TrafficRouteService,
     private dialogUtil: DialogUtil,
+    private drawerUtil: DrawerUtil,
     private toastUtil: ToastUtil) {
   }
 
@@ -117,25 +139,39 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     }, rowItem);
   }
 
+  onRowEditTarget(rowItem: TrafficRouteVO) {
+    const formData: TrafficRecordTargetEdit = {
+      trafficRouteId: rowItem.id,
+      resourceRecord: '',
+      recordValue: '',
+      recordType: '',
+      targetType: '',
+      origin: false,
+      ttl: 300,
+      comment: '',
+      valid: true,
+    };
+    const drawerDate = {
+      ...this.drawerDate.editTargetData,
+    };
+    this.drawerUtil.onDrawer(drawerDate, formData, () => this.fetchData(), { trafficRoute: rowItem });
+  }
+
+  onRowSwitchTarget(rowItem: TrafficRouteVO) {
+    const dialogDate = {
+      ...this.dialogDate.switchTargetData,
+      title: 'Switch Traffic Layer Route Target',
+    };
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
+
   onRowValid(rowItem: TrafficLayerDomainVO) {
     this.trafficRouteService.setTrafficRouteValidById({ id: rowItem.id })
       .subscribe(() => {
         this.fetchData();
       });
-  }
-
-  onRowDelete(rowItem: TrafficLayerDomainVO) {
-    const dialogDate = {
-      ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.delete,
-    };
-    this.dialogUtil.onDialog(dialogDate, () => {
-      this.trafficRouteService.deleteTrafficRoute({ id: rowItem.id })
-        .subscribe(() => {
-          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
-          this.fetchData();
-        });
-    });
   }
 
   onBatchValid() {
@@ -150,23 +186,6 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
-        this.fetchData();
-      });
-    });
-  }
-
-  onBatchDelete() {
-    const dialogDate = {
-      ...this.dialogDate.warningOperateData,
-      content: this.dialogDate.content.batchDelete,
-    };
-    this.dialogUtil.onDialog(dialogDate, () => {
-      let obList: Observable<HttpResult<Boolean>>[] = [];
-      this.datatable.getCheckedRows().map(row => {
-        obList.push(this.trafficRouteService.deleteTrafficRoute({ id: row.id }));
-      });
-      zip(obList).subscribe(() => {
-        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
         this.fetchData();
       });
     });

@@ -1,0 +1,34 @@
+<section>
+  <form
+    dLoading
+    dForm
+    ngForm
+    [layout]="layoutDirection"
+    [loading]="loading"
+    (dSubmit)="submitForm($event)"
+  >
+    <d-form-item *ngIf="JSON.stringify(recordTargets) !== '[]'">
+      <d-form-label>Record Targets</d-form-label>
+      <d-form-control>
+        <d-radio-group name="channelStatus" [(ngModel)]="recordTarget">
+          <d-radio *ngFor="let item of recordTargets" [name]="'resourceRecord'" [value]="item">
+            <d-badge [showDot]="true"
+                     [status]="item.active?'success':'warning'"></d-badge>
+            <d-tag style="margin: 0 5px;" [tag]="item.targetType" [labelStyle]="'blue-w98'"></d-tag>
+            <div style="margin-left: 2em">
+              <span style="margin-right: 10px">[ {{ item.recordType }} ]</span>
+              <span dClipboard [content]="item.recordValue">{{ item.recordValue }}</span>
+            </div>
+          </d-radio>
+        </d-radio-group>
+      </d-form-control>
+    </d-form-item>
+    <d-form-operation>
+      <d-button
+        [disabled]="recordTarget === undefined"
+        style="margin-right: 8px"
+        dFormSubmit>Confirm
+      </d-button>
+    </d-form-operation>
+  </form>
+</section>

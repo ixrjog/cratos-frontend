@@ -62,6 +62,7 @@ export class DialogUtil {
               content = TOAST_CONTENT.UPDATE;
               ob = results.modalContentInstance.updateForm();
             }
+            debugger
             ob.pipe(
               finalize(() => {
                 results.modalContentInstance.data.canConfirm(true);
@@ -275,6 +276,7 @@ export const DIALOG_DATA = {
     reject: '<strong>Confirm reject this row ?</strong>',
     reset: '<strong>Confirm reset this row ?</strong>',
     create: '<strong>Confirm create this row ?</strong>',
+    switch: '<strong>Confirm switch this row ?</strong>',
     scanAll: '<strong>Confirm scan all these row ?</strong>',
     clear: '<strong>Confirm clear all these row ?</strong>',
     unregister: '<strong>Confirm unregister ?</strong>',

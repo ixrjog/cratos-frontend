@@ -1,1 +1,174 @@
-<p>traffic-layer-route-record-target-editor works!</p>
+<div class="drawer-menu">
+  <h2
+    class="font-color-name"
+    style="margin: 8px 12px;"
+    dClipboard
+    [content]="trafficRoute.domainRecord"
+    [position]="'bottom'"
+  >
+    {{ trafficRoute.domainRecord }}
+  </h2>
+  <div [style.margin]="'20px 20px 0 0'" [style.text-align]="'right'" [style.cursor]="'pointer'">
+    <span
+      [style.margin-right]="'12px'"
+      [className]="showEdit? 'icon-chevron-up':'icon-chevron-down'"
+      (click)="showRouteTarget()"
+    >
+    </span>
+    <span
+      [style.margin-right]="'8px'"
+      title="Fullscreen"
+      (click)="toggleFullScreen()"
+      class="icon"
+      [ngClass]="{ 'icon-maxmize': !isFullScreen, 'icon-minimize': isFullScreen }"
+    >
+    </span>
+    <span (click)="close($event)" title="Close" class="icon icon-close"></span>
+  </div>
+  <div class="operation-area">
+    <div *ngIf="showEdit">
+      <form
+        style="margin-bottom: 10px"
+        dForm
+        ngForm
+        [dValidateRules]="formRules['rule']"
+        [layout]="layoutDirection"
+        #scheduleForm="dValidateRules"
+        (dSubmit)="submitForm($event)"
+      >
+        <d-form-item>
+          <d-form-label [required]="true">Resource Record</d-form-label>
+          <d-form-control>
+            <input dTextInput name="resourceRecord" [(ngModel)]="formData.resourceRecord"
+                   [dValidateRules]="formRules['resourceRecord']" />
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]="true">Record Value</d-form-label>
+          <d-form-control>
+            <input dTextInput name="recordValue" [(ngModel)]="formData.recordValue"
+                   [dValidateRules]="formRules['recordValue']" />
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label [required]="true">Record Type</d-form-label>
+          <d-form-control>
+            <d-tabs
+              style="height: 20px"
+              type="options"
+              [activeTab]="recordType"
+              (activeTabChange)="onRecordTypeChange($event)"
+            >
+              <d-tab
+                *ngFor="let item of recordTypeOptions"
+                [id]="item.value"
+                [title]="item.label"
+              ></d-tab>
+            </d-tabs>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item *ngIf="JSON.stringify(targetTypeOptions) !== '[]'">
+          <d-form-label [required]="true">Target Type</d-form-label>
+          <d-form-control>
+            <d-tabs
+              style="height: 20px"
+              type="options"
+              [activeTab]="targetType"
+              (activeTabChange)="onTargetTypeChange($event)"
+            >
+              <d-tab
+                *ngFor="let item of targetTypeOptions"
+                [id]="item.value"
+                [title]="item.label"
+              ></d-tab>
+            </d-tabs>
+          </d-form-control>
+        </d-form-item>
+        <d-row [dGutter]="12" [dGutterNoOuter]="true">
+          <d-col [dSpan]="8">
+            <d-form-item>
+              <d-form-label [required]="true">Origin</d-form-label>
+              <d-form-control>
+                <d-toggle name="origin" [(ngModel)]="formData.origin"></d-toggle>
+              </d-form-control>
+            </d-form-item>
+          </d-col>
+          <d-col [dSpan]="8">
+            <d-form-item>
+              <d-form-label [required]="true">TTL</d-form-label>
+              <d-form-control>
+                <d-input-number [dValidateRules]="formRules['ttl']" [min]="1" name="ttl" [(ngModel)]="formData.ttl" />
+              </d-form-control>
+            </d-form-item>
+          </d-col>
+          <d-col [dSpan]="8">
+            <d-form-item>
+              <d-form-label [required]="true">Weight</d-form-label>
+              <d-form-control>
+                <d-input-number [allowEmpty]="true" [min]="1" name="weight" [(ngModel)]="formData.weight" />
+              </d-form-control>
+            </d-form-item>
+          </d-col>
+        </d-row>
+        <d-form-operation>
+          <d-button
+            class="mr-element-spacing"
+            [title]="scheduleForm.errorMessage || ''" circled="true"
+            style="margin-right: 8px"
+            dFormSubmit
+          >Save
+          </d-button>
+        </d-form-operation>
+      </form>
+    </div>
+    <div class="spacing-search">
+      <d-button class="button" bsStyle="primary" (click)="onRowNew()" *ngIf="!showEdit">New</d-button>
+    </div>
+    <div class="spacing-table">
+      <d-data-table
+        dLoading
+        [dataSource]="table.data"
+        [tableOverflowType]="'overlay'"
+        [backdrop]="true"
+        [scrollable]="true"
+        [loadingStyle]="'infinity'"
+        [loading]="table.loading"
+      >
+        <d-column field="recordType" header="Record Type"></d-column>
+        <d-column field="resourceRecord" header="Resource Record"></d-column>
+        <d-column field="recordValue" header="Record Value"></d-column>
+        <d-column field="targetType" header="Target Type"></d-column>
+        <d-column field="ttl" header="TTL"></d-column>
+        <d-column field="weight" header="Weight"></d-column>
+        <d-column header="Tags" [width]="'250px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column header="Actions" [width]="'150px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <d-icon-group>
+                <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+                <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
+                <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+                <d-icon
+                  [icon]="'icon-priority'"
+                  [operable]="true"
+                  [color]="getRowColor(rowItem['valid'])"
+                  (click)="onRowValid(rowItem)"
+                >
+                </d-icon>
+              </d-icon-group>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <ng-template #noResultTemplateRef>
+          <div class="no-data">Fetch Data</div>
+        </ng-template>
+      </d-data-table>
+    </div>
+  </div>
+</div>

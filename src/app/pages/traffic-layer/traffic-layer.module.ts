@@ -48,6 +48,7 @@ import { TrafficLayerRouteComponent } from './traffic-layer-route/traffic-layer-
 import { TrafficLayerRouteDataTableComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-data-table.component';
 import { TrafficLayerRouteEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-editor/traffic-layer-route-editor.component';
 import { TrafficLayerRouteRecordTargetEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
+import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-switch/traffic-layer-route-record-target-switch.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { TrafficLayerRouteRecordTargetEditorComponent } from './traffic-layer-ro
     TrafficLayerRouteDataTableComponent,
     TrafficLayerRouteEditorComponent,
     TrafficLayerRouteRecordTargetEditorComponent,
+    TrafficLayerRouteRecordTargetSwitchComponent,
   ],
   imports: [
     CommonModule,

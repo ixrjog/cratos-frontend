@@ -57,8 +57,9 @@ export interface TrafficRouteEdit {
   domainRecordId: number;
   domain: string;
   domainRecord: string;
-  name: string;
+  name?: string;
   dnsResolverInstanceId: number;
+  zoneId?: string;
   recordType: string;
   valid: boolean;
   comment: string;
@@ -66,15 +67,21 @@ export interface TrafficRouteEdit {
 
 export interface TrafficRecordTargetEdit {
   id?: number;
-  domainId: number;
-  domainRecordId: number;
-  domain: string;
-  domainRecord: string;
-  name: string;
-  dnsResolverInstanceId: number;
+  trafficRouteId: number;
+  resourceRecord: string;
+  recordValue: string;
   recordType: string;
+  targetType: string;
+  origin: boolean;
+  ttl: number;
+  weight?: number;
   valid: boolean;
   comment: string;
+}
+
+export interface SwitchRecordTarget {
+  recordTargetId: number;
+  routingOptions: string;
 }
 
 export abstract class TrafficRouteData {
@@ -83,12 +90,25 @@ export abstract class TrafficRouteData {
 
   abstract addTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>>;
 
+  abstract updateTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>>;
+
+  abstract getTrafficRouteById(param: { id: number }): Observable<HttpResult<TrafficRouteVO>>;
+
   abstract getTrafficRecordTargetTypeOptions(): Observable<HttpResult<OptionsVO>>;
 
   abstract addTrafficRecordTarget(param: TrafficRecordTargetEdit): Observable<HttpResult<Boolean>>;
 
+  abstract updateTrafficRecordTarget(param: TrafficRecordTargetEdit): Observable<HttpResult<Boolean>>;
+
   abstract setTrafficRouteValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
-  abstract deleteTrafficRoute(param: { id: number }): Observable<HttpResult<Boolean>>;
+  abstract setTrafficRecordTargetValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
+  abstract switchToTarget(param: SwitchRecordTarget): Observable<HttpResult<Boolean>>;
+
+}
+
+export enum TrafficRoutingOptionEnum {
+  SINGLE_TARGET = 'SINGLE_TARGET',
+  LOAD_BALANCING = 'LOAD_BALANCING'
 }

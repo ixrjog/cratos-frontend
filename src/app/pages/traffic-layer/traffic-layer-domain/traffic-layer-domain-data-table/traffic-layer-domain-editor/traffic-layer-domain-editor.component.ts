@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
-import { RbacGroupEdit, RbacGroupVO } from '../../../../../@core/data/rbac';
 import { DValidateRules } from 'ng-devui';
-import { RbacService } from '../../../../../@core/services/rbac.service';
-import { TrafficLayerService } from '../../../../../@core/services/traffic-layer.service';
 import { TrafficLayerDomainEdit, TrafficLayerDomainVO } from '../../../../../@core/data/traffic-layer';
+import { TrafficLayerService } from '../../../../../@core/services/traffic-layer.service';
 
 @Component({
   selector: 'app-traffic-layer-domain-editor',

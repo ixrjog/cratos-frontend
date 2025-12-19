@@ -7,7 +7,13 @@
     [loading]="loading"
     (dSubmit)="submitForm($event)"
   >
-    <d-form-item *ngIf="JSON.stringify(recordTargets) !== '[]'">
+    <d-form-item>
+      <d-form-label>Domain Record</d-form-label>
+      <d-form-control>
+        <h3 style="margin: 0" class="font-color-name">{{ trafficRoute.domainRecord }}</h3>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Record Targets</d-form-label>
       <d-form-control>
         <d-radio-group name="channelStatus" [(ngModel)]="recordTarget">

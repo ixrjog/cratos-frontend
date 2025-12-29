@@ -17,6 +17,7 @@ export interface TrafficLayerDomainVO extends BaseVO, ValidVO, ResourceCountVO, 
   }[];
   comment: string;
   recordEnvs: TrafficLayerDomainEnvVO[];
+  records?: any[]; // 添加可选的records属性
 }
 
 export interface TrafficLayerRecordVO extends BaseVO, ValidVO, BusinessTagsVO, BusinessDocsVO {

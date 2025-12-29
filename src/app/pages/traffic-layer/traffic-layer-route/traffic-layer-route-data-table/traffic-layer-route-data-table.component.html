@@ -23,37 +23,64 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column header="Domain">
+    <d-column header="Web Site" [width]="'350px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
+          <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
           <br />
-          <d-tag
-            style="margin-right: 5px;"
-            [tag]="rowItem['dnsResolverInstance']?.edsType"
-            [labelStyle]="'blue-w98'"
-          ></d-tag>
-          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>
+          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="domainRecord" header="Domain Record"></d-column>
     <d-column field="recordTargets" header="Record Targets">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <div *ngFor="let target of cellItem">
-            <d-badge [showDot]="true"
-                     [status]="target.active?'success':'warning'"></d-badge>
-            <d-tag style="margin: 0 5px;" [tag]="target.targetType" [labelStyle]="'blue-w98'"></d-tag>
-            <div style="margin-left: 2em">
-              <span style="margin-right: 10px">[ {{ target.recordType }} ]</span>
+<!--            <d-tag style="margin: 0 5px;" [tag]="target.targetType" [labelStyle]="'blue-w98'"/>-->
+            <div>
+              <d-badge [showDot]="true" style="margin-right: 1em"
+                       [status]="target.active?'success':'warning'"/>
+              <span>{{ target.resourceRecord }}</span>
+              <span style="margin-right: 5px; margin-left: 5px">→</span>
+              <span>[ {{ target.recordType }} ]</span>
+              <span style="margin-right: 5px; margin-left: 5px">→</span>
               <span dClipboard [content]="target.recordValue">{{ target.recordValue }}</span>
+              <img *ngIf="target.targetType == 'CLOUDFLARE'" src="assets/icon/cloudflare-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px">
+              <img *ngIf="target.targetType == 'CLOUDFLARE'" src="assets/icon/cloudflare-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px; filter: grayscale(100%);">
+              <img *ngIf="target.targetType == 'ALIYUN_ALB'" src="assets/icon/alibabacloud-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px">
             </div>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="comment" header="Comment"></d-column>
+    <d-column header="DNS" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+<!--          <d-tag-->
+<!--            style="margin-right: 5px;"-->
+<!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
+<!--            [labelStyle]="'blue-w98'"-->
+<!--          ></d-tag>-->
+          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+<!--    <d-column header="Domain">-->
+<!--      <d-cell>-->
+<!--        <ng-template let-rowItem="rowItem">-->
+<!--          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>-->
+<!--          <br />-->
+<!--          <d-tag-->
+<!--            style="margin-right: 5px;"-->
+<!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
+<!--            [labelStyle]="'blue-w98'"-->
+<!--          ></d-tag>-->
+<!--          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>-->
+<!--        </ng-template>-->
+<!--      </d-cell>-->
+<!--    </d-column>-->
+<!--    <d-column field="domainRecord" header="Domain Record"></d-column>-->
+<!--    <d-column field="comment" header="Comment"></d-column>-->
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

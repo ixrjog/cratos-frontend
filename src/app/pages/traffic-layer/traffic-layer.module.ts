@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { TrafficLayerRoutingModule } from './traffic-layer-routing.module';
 import { TrafficLayerComponent } from './traffic-layer.component';
@@ -22,6 +23,7 @@ import {
   PaginationModule,
   SearchModule,
   TabsModule,
+  TagsModule,
 } from 'ng-devui';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
@@ -76,6 +78,7 @@ import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-ro
   ],
   imports: [
     CommonModule,
+    RouterModule,
     TrafficLayerRoutingModule,
     DaGridModule,
     TabsModule,
@@ -90,6 +93,7 @@ import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-ro
     RelativeTimeModule,
     SearchModule,
     SharedModule,
+    TagsModule,
   ],
 })
 export class TrafficLayerModule {

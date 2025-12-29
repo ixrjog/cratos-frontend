@@ -9,6 +9,7 @@ import {
   TrafficLayerDomainEdit,
   TrafficLayerDomainPageQuery,
   TrafficLayerDomainVO,
+  TrafficLayerRecordPageQuery,
 } from '../../../../@core/data/traffic-layer';
 import { TrafficLayerDomainEditorComponent } from './traffic-layer-domain-editor/traffic-layer-domain-editor.component';
 import { TrafficLayerService } from '../../../../@core/services/traffic-layer.service';
@@ -73,7 +74,41 @@ export class TrafficLayerDomainDataTableComponent implements OnInit {
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.trafficLayerService.queryTrafficLayerDomainPage(param));
+    
+    this.table.loading = true;
+    this.trafficLayerService.queryTrafficLayerDomainPage(param).subscribe({
+      next: (result) => {
+        if (result.success) {
+          // 为每个域名获取对应的记录
+          const domains = result.body.data;
+          const recordPromises = domains.map(domain => 
+            this.trafficLayerService.queryTrafficLayerRecordPage({
+              queryName: '',
+              page: 0,
+              length: 1000,
+              domainId: domain.id,
+              hasRouteTrafficTo: false
+            }).toPromise()
+          );
+          
+          Promise.all(recordPromises).then(recordResults => {
+            domains.forEach((domain, index) => {
+              const recordResult = recordResults[index];
+              domain.records = recordResult?.success ? recordResult.body.data : [];
+            });
+            
+            this.table.data = domains;
+            this.table.pager.total = result.body.totalNum;
+            this.table.loading = false;
+          });
+        } else {
+          this.table.loading = false;
+        }
+      },
+      error: () => {
+        this.table.loading = false;
+      }
+    });
   }
 
   onCellEditEnd(event) {

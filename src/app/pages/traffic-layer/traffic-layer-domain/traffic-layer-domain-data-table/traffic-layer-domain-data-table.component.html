@@ -24,7 +24,18 @@
     (cellEditEnd)="onCellEditEnd($event)"
     [checkable]="true"
   >
-    <d-column field="name" header="Name" [editable]="true">
+    <d-column field="name" header="Website" [width]="'300px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div class="website-info">
+            <div class="domain-line">{{ rowItem.domain }}</div>
+            <div class="record-line" *ngFor="let record of rowItem.records">
+              <span class="record-name">{{ record.recordName }}</span>
+              <d-tag [tag]="record.envName" [labelStyle]="record.valid ? 'green-w98' : 'red-w98'" style="margin-left: 8px;"></d-tag>
+            </div>
+          </div>
+        </ng-template>
+      </d-cell>
       <d-cell-edit>
         <ng-template let-rowItem="rowItem" let-column="column">
           <div class="customized-editor edit-padding-fix">
@@ -33,28 +44,14 @@
         </ng-template>
       </d-cell-edit>
     </d-column>
-    <d-column field="domain" header="Domain"></d-column>
-    <d-column header="Record">
+    
+    <d-column header="DNS Provider" [width]="'150px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div style="display: flex;align-items: center;flex-wrap: wrap;">
-            <d-tag
-              style="margin-right: 8px;"
-              [tag]="countResource(rowItem).toString()"
-              [labelStyle]="'blue-w98'"
-            >
-            </d-tag>
-            <span
-              *ngFor="let role of rowItem['recordEnvs']"
-              style="display: inline-block; margin-right: 8px;"
-            >
-              <d-tag
-                [tag]="role.envName"
-                [labelStyle]="role.valid ? 'green-w98':''"
-                style="margin-right: 4px;"
-              >
-              </d-tag>
-            </span>
+          <div *ngFor="let provider of rowItem.dnsProviders">
+            <a class="devui-link-light" [href]="provider.consoleUrl" target="_blank">
+              {{ provider.providerName }}
+            </a>
           </div>
         </ng-template>
       </d-cell>

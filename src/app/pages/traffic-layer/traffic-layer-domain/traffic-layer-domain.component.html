@@ -1,16 +1,7 @@
 <da-layout-row [daGutter]="[12, 12]">
   <da-col-item [daSpan]="24" [daXs]="24">
-    <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
-      <d-tab [id]="'domain'" [title]="'Domain'">
-        <div class="app-data-table">
-          <app-traffic-layer-domain-data-table #domainDataTable></app-traffic-layer-domain-data-table>
-        </div>
-      </d-tab>
-      <d-tab [id]="'record'" [title]="'Record'">
-        <div class="app-data-table">
-          <app-traffic-layer-record-data-table #recordDataTable></app-traffic-layer-record-data-table>
-        </div>
-      </d-tab>
-    </d-tabs>
+    <div class="app-data-table">
+      <app-traffic-layer-domain-data-table #domainDataTable></app-traffic-layer-domain-data-table>
+    </div>
   </da-col-item>
 </da-layout-row>

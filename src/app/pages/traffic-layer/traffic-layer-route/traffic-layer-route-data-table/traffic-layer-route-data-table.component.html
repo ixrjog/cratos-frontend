@@ -1,107 +1,125 @@
-<div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+<div class='spacing-search'>
+  <d-button class='button' bsStyle='primary' (click)='onRowNew()'>New</d-button>
   <d-search
-    class="search"
-    [(ngModel)]="queryParam.queryName"
+    class='search'
+    [(ngModel)]='queryParam.queryName'
     [iconPosition]="'left'"
-    (searchFn)="fetchData()"
-    (change)="fetchData()"
+    (searchFn)='fetchData()'
+    (change)='fetchData()'
   >
   </d-search>
-  <app-business-cascader #businessCascader [businessType]="businessType"
-                         (onChange)="onTagChanges($event)"></app-business-cascader>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <app-business-cascader #businessCascader [businessType]='businessType'
+                         (onChange)='onTagChanges($event)'></app-business-cascader>
+  <d-button class='button' bsStyle='common' (click)='fetchData()'>Filter</d-button>
 </div>
-<div class="spacing-table">
+<div class='spacing-table'>
   <d-data-table
     dLoading
-    [dataSource]="table.data"
+    [dataSource]='table.data'
     [tableOverflowType]="'overlay'"
-    [backdrop]="true"
-    [scrollable]="true"
+    [backdrop]='true'
+    [scrollable]='true'
     [loadingStyle]="'infinity'"
-    [loading]="table.loading"
-    [checkable]="true"
+    [loading]='table.loading'
+    [checkable]='true'
   >
-    <d-column header="Web Site" [width]="'350px'">
+    <d-column header='Web Site' [width]="'350px'">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
+        <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
           <br />
           <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="recordTargets" header="Record Targets">
+    <d-column header='Record Targets'>
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <div *ngFor="let target of cellItem">
-<!--            <d-tag style="margin: 0 5px;" [tag]="target.targetType" [labelStyle]="'blue-w98'"/>-->
+        <ng-template let-rowItem='rowItem'>
+          <div *ngFor='let target of rowItem.recordTargets'>
+            <!--            <d-tag style="margin: 0 5px;" [tag]="target.targetType" [labelStyle]="'blue-w98'"/>-->
             <div>
-              <d-badge [showDot]="true" style="margin-right: 1em"
-                       [status]="target.active?'success':'warning'"/>
+              <d-badge [showDot]='true' style='margin-right: 1em'
+                       [status]="target.active?'success':'common'" />
               <span>{{ target.resourceRecord }}</span>
-              <span style="margin-right: 5px; margin-left: 5px">→</span>
+              <span style='margin-right: 5px; margin-left: 5px'>→</span>
               <span>[ {{ target.recordType }} ]</span>
-              <span style="margin-right: 5px; margin-left: 5px">→</span>
-              <span dClipboard [content]="target.recordValue">{{ target.recordValue }}</span>
-              <img *ngIf="target.targetType == 'CLOUDFLARE'" src="assets/icon/cloudflare-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px">
-              <img *ngIf="target.targetType == 'CLOUDFLARE'" src="assets/icon/cloudflare-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px; filter: grayscale(100%);">
-              <img *ngIf="target.targetType == 'ALIYUN_ALB'" src="assets/icon/alibabacloud-icon.svg" alt="Cloudflare" style="width: 20px; height: 20px; margin-left: 10px">
+              <span style='margin-right: 5px; margin-left: 5px'>→</span>
+              <span *ngIf="target.targetType == 'CLOUDFLARE' && rowItem.dnsResolverInstance.edsType == 'CLOUDFLARE'">
+                  <img *ngIf='target.dnsResourceRecord.proxied == "" || !target.dnsResourceRecord.proxied'
+                       ngSrc='assets/icon/cloudflare-onlydns-icon.svg'
+                       alt='Cloudflare'
+                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+                  <img *ngIf='target.dnsResourceRecord.proxied != "" && target.dnsResourceRecord.proxied'
+                       ngSrc='assets/icon/cloudflare-proxied-icon.svg'
+                       alt='Cloudflare'
+                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+              </span>
+              <span dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+              <span *ngIf="target.targetType == 'CLOUDFLARE'">
+                <img ngSrc='assets/icon/cloudflare-icon.svg'
+                     alt='Cloudflare'
+                     style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64' width='64'>
+              </span>
+              <img *ngIf="target.targetType == 'ALIYUN_ALB'" ngSrc='assets/icon/alibabacloud-icon.svg' alt='Cloudflare'
+                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+              <img *ngIf="target.targetType == 'AWS_ELB'" ngSrc='assets/icon/aws-icon.svg' alt='AWS'
+                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+              <img *ngIf="target.targetType == 'HWC_ELB'" ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
+                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
             </div>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="DNS" [width]="'250px'">
+    <d-column header='DNS' [width]="'150px'">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
-<!--          <d-tag-->
-<!--            style="margin-right: 5px;"-->
-<!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
-<!--            [labelStyle]="'blue-w98'"-->
-<!--          ></d-tag>-->
+        <ng-template let-rowItem='rowItem'>
+          <!--          <d-tag-->
+          <!--            style="margin-right: 5px;"-->
+          <!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
+          <!--            [labelStyle]="'blue-w98'"-->
+          <!--          ></d-tag>-->
           <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-<!--    <d-column header="Domain">-->
-<!--      <d-cell>-->
-<!--        <ng-template let-rowItem="rowItem">-->
-<!--          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>-->
-<!--          <br />-->
-<!--          <d-tag-->
-<!--            style="margin-right: 5px;"-->
-<!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
-<!--            [labelStyle]="'blue-w98'"-->
-<!--          ></d-tag>-->
-<!--          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>-->
-<!--        </ng-template>-->
-<!--      </d-cell>-->
-<!--    </d-column>-->
-<!--    <d-column field="domainRecord" header="Domain Record"></d-column>-->
-<!--    <d-column field="comment" header="Comment"></d-column>-->
-    <d-column header="Tags" [width]="'250px'">
+    <!--    <d-column header="Domain">-->
+    <!--      <d-cell>-->
+    <!--        <ng-template let-rowItem="rowItem">-->
+    <!--          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>-->
+    <!--          <br />-->
+    <!--          <d-tag-->
+    <!--            style="margin-right: 5px;"-->
+    <!--            [tag]="rowItem['dnsResolverInstance']?.edsType"-->
+    <!--            [labelStyle]="'blue-w98'"-->
+    <!--          ></d-tag>-->
+    <!--          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>-->
+    <!--        </ng-template>-->
+    <!--      </d-cell>-->
+    <!--    </d-column>-->
+    <!--    <d-column field="domainRecord" header="Domain Record"></d-column>-->
+    <!--    <d-column field="comment" header="Comment"></d-column>-->
+    <d-column header='Tags' [width]="'250px'">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
+        <ng-template let-rowItem='rowItem'>
           <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'250px'">
+    <d-column header='Actions' [width]="'250px'">
       <d-cell>
-        <ng-template let-rowItem="rowItem">
+        <ng-template let-rowItem='rowItem'>
           <d-icon-group>
-            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowEditTarget(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-switch'" [operable]="true" (click)="onRowSwitchTarget(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-edit'" [operable]='true' (click)='onRowEdit(rowItem)'></d-icon>
+            <d-icon [icon]="'icon-directory'" [operable]='true' (click)='onRowEditTarget(rowItem)'></d-icon>
+            <d-icon [icon]="'icon-switch'" [operable]='true' (click)='onRowSwitchTarget(rowItem)'></d-icon>
+            <d-icon [icon]="'icon-add-label'" [operable]='true' (click)='onRowBusinessTag(rowItem)'></d-icon>
+            <d-icon [icon]="'icon-go-document'" [operable]='true' (click)='onRowBusinessDoc(rowItem)'></d-icon>
             <d-icon
               [icon]="'icon-priority'"
-              [operable]="true"
+              [operable]='true'
               [color]="getRowColor(rowItem['valid'])"
-              (click)="onRowValid(rowItem)"
+              (click)='onRowValid(rowItem)'
             >
             </d-icon>
           </d-icon-group>
@@ -109,41 +127,41 @@
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class='no-data'>Fetch Data</div>
     </ng-template>
   </d-data-table>
 </div>
-<div class="spacing-pagination">
-  <div dDropDown class="batch-button">
+<div class='spacing-pagination'>
+  <div dDropDown class='batch-button'>
     <d-button-group>
-      <d-button bsStyle="common" dDropDownToggle>
+      <d-button bsStyle='common' dDropDownToggle>
         Batch
-        <span class="icon icon-select-arrow"></span>
+        <span class='icon icon-select-arrow'></span>
       </d-button>
     </d-button-group>
-    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
-      <li role="menuitem" (click)="onBatchValid()">
+    <ul dDropDownMenu class='devui-dropdown-menu' role='menu'>
+      <li role='menuitem' (click)='onBatchValid()'>
         <a dDropDownMenuItem>
-          <span class="icon-setup" style="padding-right: 5px; vertical-align: middle"> Valid</span>
+          <span class='icon-setup' style='padding-right: 5px; vertical-align: middle'> Valid</span>
         </a>
       </li>
-      <li role="menuitem" (click)="onBatchTag()">
+      <li role='menuitem' (click)='onBatchTag()'>
         <a dDropDownMenuItem>
-          <span class="icon-tag" style="padding-right: 5px; vertical-align: middle"> Tag</span>
+          <span class='icon-tag' style='padding-right: 5px; vertical-align: middle'> Tag</span>
         </a>
       </li>
     </ul>
   </div>
   <d-pagination
-    class="pagination"
-    [total]="table.pager.total"
-    [(pageSize)]="table.pager.pageSize"
-    [(pageIndex)]="table.pager.pageIndex"
-    [canViewTotal]="true"
-    [canChangePageSize]="true"
-    [maxItems]="5"
-    (pageIndexChange)="pageIndexChange($event)"
-    (pageSizeChange)="pageSizeChange($event)"
+    class='pagination'
+    [total]='table.pager.total'
+    [(pageSize)]='table.pager.pageSize'
+    [(pageIndex)]='table.pager.pageIndex'
+    [canViewTotal]='true'
+    [canChangePageSize]='true'
+    [maxItems]='5'
+    (pageIndexChange)='pageIndexChange($event)'
+    (pageSizeChange)='pageSizeChange($event)'
   >
   </d-pagination>
 </div>

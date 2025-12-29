@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { TrafficLayerRoutingModule } from './traffic-layer-routing.module';
@@ -94,6 +94,7 @@ import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-ro
     SearchModule,
     SharedModule,
     TagsModule,
+    NgOptimizedImage,
   ],
 })
 export class TrafficLayerModule {

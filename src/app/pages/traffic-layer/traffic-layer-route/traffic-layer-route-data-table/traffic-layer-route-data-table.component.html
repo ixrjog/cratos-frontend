@@ -29,6 +29,11 @@
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
           <br />
           <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
+          <span style='margin-right: 5px; margin-left: 5px'>→</span>
+          <span *ngIf='rowItem.dnsResolverInstance != null'>
+               <span>DNS on </span>
+               <d-tag [tag]="rowItem.dnsResolverInstance.instanceName" [labelStyle]="'blue-w98'"/>
+          </span>
         </ng-template>
       </d-cell>
     </d-column>
@@ -71,7 +76,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header='DNS' [width]="'150px'">
+    <d-column *ngIf='false' header='DNS' [width]="'150px'">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <!--          <d-tag-->

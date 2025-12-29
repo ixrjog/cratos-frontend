@@ -29,6 +29,12 @@
         </d-radio-group>
       </d-form-control>
     </d-form-item>
+    <d-form-item *ngIf="needProxyParam()">
+      <d-form-label [required]="true">Proxied</d-form-label>
+      <d-form-control>
+        <d-toggle name="proxied" [(ngModel)]="proxied"></d-toggle>
+      </d-form-control>
+    </d-form-item>
     <d-form-operation>
       <d-button
         [disabled]="recordTarget === undefined"

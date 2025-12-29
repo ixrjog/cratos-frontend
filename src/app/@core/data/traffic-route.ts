@@ -25,6 +25,8 @@ export interface TrafficRouteVO extends BaseVO, ValidVO, ResourceCountVO, Busine
   dnsResolverInstanceId: number;
   recordType: string;
   comment: string;
+  zoneId: string;
+  consoleUrl: string;
   dnsResourceRecordSet: DnsResourceRecordSetVO;
   envName: string;
   env: EnvVO;

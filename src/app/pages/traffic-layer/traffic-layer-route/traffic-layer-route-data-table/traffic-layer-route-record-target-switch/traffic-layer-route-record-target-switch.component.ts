@@ -21,9 +21,10 @@ export class TrafficLayerRouteRecordTargetSwitchComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
   trafficRoute: TrafficRouteVO;
-  recordTarget: TrafficRouteRecordTargetVO;
+  recordTarget: TrafficRouteRecordTargetVO = null;
   recordTargets = [];
   loading: boolean = false;
+  proxied: boolean = false;
 
   dialogDate = {
     warningOperateData: {
@@ -47,6 +48,7 @@ export class TrafficLayerRouteRecordTargetSwitchComponent implements OnInit {
 
   fetchData() {
     this.loading = true;
+    this.recordTarget = null;
     this.trafficRouteService.getTrafficRouteById({ id: this.trafficRoute.id })
       .pipe(
         finalize(() => {
@@ -67,7 +69,7 @@ export class TrafficLayerRouteRecordTargetSwitchComponent implements OnInit {
 
   submitForm({ valid, directive }) {
     if (valid) {
-      if (this.recordTarget === undefined) {
+      if (this.recordTarget === null) {
         this.toastUtil.onErrorToast('Choose one record target');
         return;
       }
@@ -80,14 +82,27 @@ export class TrafficLayerRouteRecordTargetSwitchComponent implements OnInit {
           recordTargetId: this.recordTarget.id,
           routingOptions: TrafficRoutingOptionEnum.SINGLE_TARGET,
         };
+        if (this.needProxyParam()) {
+          param['proxied'] = this.proxied;
+        }
         this.trafficRouteService.switchToTarget(param).subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
           this.fetchData();
+          this.proxied = false;
         });
       });
     } else {
       console.log(directive);
     }
+  }
+
+  needProxyParam() {
+    if (this.trafficRoute?.dnsResolverInstance?.edsType === 'CLOUDFLARE') {
+      if (this.recordTarget?.targetType === 'CLOUDFLARE') {
+        return true;
+      }
+    }
+    return false;
   }
 
   protected readonly JSON = JSON;

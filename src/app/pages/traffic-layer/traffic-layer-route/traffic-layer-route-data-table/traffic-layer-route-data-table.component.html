@@ -28,7 +28,7 @@
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
           <br />
-          <span dClipboard [content]="rowItem['domain']">{{ rowItem['domain'] }}</span>
+          <a dClipboard [content]="rowItem['domain']" [href]="rowItem['consoleUrl']" target="_blank">{{ rowItem['domain'] }}</a>
           <span style='margin-right: 5px; margin-left: 5px'>→</span>
           <span *ngIf='rowItem.dnsResolverInstance != null'>
                <span>DNS on </span>

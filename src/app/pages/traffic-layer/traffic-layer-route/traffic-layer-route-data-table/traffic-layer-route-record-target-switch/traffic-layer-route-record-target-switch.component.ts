@@ -64,7 +64,14 @@ export class TrafficLayerRouteRecordTargetSwitchComponent implements OnInit {
             break;
           }
         }
+
+        if (this.recordTarget === null) {
+          if (this.trafficRoute?.dnsResolverInstance?.edsType === 'CLOUDFLARE') {
+            this.recordTarget = this.recordTargets[0];
+          }
+        }
       });
+
   }
 
   submitForm({ valid, directive }) {

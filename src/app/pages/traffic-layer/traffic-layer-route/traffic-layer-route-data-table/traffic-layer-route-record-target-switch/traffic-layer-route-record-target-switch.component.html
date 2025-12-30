@@ -20,11 +20,22 @@
           <d-radio *ngFor="let item of recordTargets" [name]="'resourceRecord'" [value]="item">
             <d-badge [showDot]="true"
                      [status]="item.active?'success':'warning'"></d-badge>
-            <d-tag style="margin: 0 5px;" [tag]="item.targetType" [labelStyle]="'blue-w98'"></d-tag>
-            <div style="margin-left: 2em">
-              <span style="margin-right: 10px">[ {{ item.recordType }} ]</span>
+            <span style="margin-left: 10px">[ {{ item.recordType }} ]</span>
+            <span> -> </span>
               <span dClipboard [content]="item.recordValue">{{ item.recordValue }}</span>
-            </div>
+            <img *ngIf="item.targetType == 'ALIYUN_ALB'"
+                 ngSrc='assets/icon/alibabacloud-icon.svg' alt='Cloudflare'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: middle' height='10' width='10'>
+            <img *ngIf="item.targetType == 'AWS_ELB'"
+                 ngSrc='assets/icon/aws-icon.svg' alt='AWS'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: middle' height='10' width='10'>
+            <img *ngIf="item.targetType == 'HWC_ELB'"
+                 ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: middle' height='10' width='10'>
+            <img *ngIf="item.targetType == 'CLOUDFLARE'"
+                 ngSrc='assets/icon/cloudflare-icon.svg'
+                 alt='Cloudflare'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: middle' height='64' width='64'>
           </d-radio>
         </d-radio-group>
       </d-form-control>

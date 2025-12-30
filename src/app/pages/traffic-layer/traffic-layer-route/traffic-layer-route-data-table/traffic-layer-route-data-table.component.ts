@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   BusinessCascaderComponent,
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
-import { DataTableComponent } from 'ng-devui';
+import { DataTableComponent, HelperUtils } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
 import { TrafficLayerDomainVO } from '../../../../@core/data/traffic-layer';
@@ -100,6 +100,10 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.trafficRouteService.queryTrafficRoutePage(param));
+  }
+
+  gotoConsoleUrl(rowItem: TrafficRouteVO) {
+    HelperUtils.jumpOuterUrl(rowItem.consoleUrl);
   }
 
   ngOnInit() {

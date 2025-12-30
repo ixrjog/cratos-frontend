@@ -32,7 +32,12 @@
           <span style='margin-right: 5px; margin-left: 5px'>→</span>
           <span *ngIf='rowItem.dnsResolverInstance != null'>
                <span>DNS on </span>
-               <d-tag [tag]="rowItem.dnsResolverInstance.instanceName" [labelStyle]="'blue-w98'"/>
+               <d-tag
+                 [tag]="rowItem.dnsResolverInstance.instanceName"
+                 [labelStyle]="'blue-w98'"
+                 (click)="gotoConsoleUrl(rowItem)"
+               >
+               </d-tag>
           </span>
         </ng-template>
       </d-cell>

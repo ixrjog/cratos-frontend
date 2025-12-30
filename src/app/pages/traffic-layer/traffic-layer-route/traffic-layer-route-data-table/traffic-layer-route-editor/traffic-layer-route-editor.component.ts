@@ -28,6 +28,7 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
   trafficLayerRecord: TrafficLayerRecordVO;
   dnsResolverInstance: EdsInstanceVO;
   recordType: string = 'CNAME';
+  operationType: boolean;
 
   recordTypeOptions = [
     {
@@ -57,6 +58,8 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
+    this.operationType = this.data['operationType'];
+    this.dnsResolverInstance = this.formData['dnsResolverInstance'];
   }
 
   addForm() {

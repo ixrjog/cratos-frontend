@@ -5,7 +5,7 @@
     [dValidateRules]="formRules['rule']"
     [layout]="layoutDirection"
   >
-    <d-form-item>
+    <d-form-item *ngIf="operationType">
       <d-form-label [required]="true">Domain</d-form-label>
       <d-form-control>
         <d-select
@@ -21,7 +21,7 @@
         </d-select>
       </d-form-control>
     </d-form-item>
-    <d-form-item *ngIf="trafficLayerDomain !== undefined">
+    <d-form-item *ngIf="operationType && trafficLayerDomain !== undefined">
       <d-form-label [required]="true">Domain Record</d-form-label>
       <d-form-control>
         <d-select
@@ -35,6 +35,12 @@
           (valueChange)="onDomainRecordChange($event)"
         >
         </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item *ngIf="!operationType">
+      <d-form-label [required]="true">Domain Record</d-form-label>
+      <d-form-control>
+        <span>{{ formData.domainRecord }}</span>
       </d-form-control>
     </d-form-item>
     <d-form-item>

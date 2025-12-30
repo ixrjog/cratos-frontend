@@ -23,7 +23,7 @@
     [loading]='table.loading'
     [checkable]='true'
   >
-    <d-column header='Web Site' [width]="'350px'">
+    <d-column header='Web Site'>
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>

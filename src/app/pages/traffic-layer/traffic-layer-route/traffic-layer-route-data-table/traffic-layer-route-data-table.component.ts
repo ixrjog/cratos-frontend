@@ -5,7 +5,7 @@ import {
 import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { TrafficLayerDomainVO } from '../../../../@core/data/traffic-layer';
+import { TrafficLayerDomainVO, TrafficLayerRecordVO } from '../../../../@core/data/traffic-layer';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
@@ -174,6 +174,20 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
       });
   }
 
+  onRowDelete(rowItem: TrafficLayerDomainVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.trafficRouteService.deleteTrafficRouteById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
+  }
+
   onBatchValid() {
     const dialogDate = {
       ...this.dialogDate.warningOperateData,
@@ -186,6 +200,23 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
       });
       zip(obList).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+        this.fetchData();
+      });
+    });
+  }
+
+  onBatchDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchDelete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.trafficRouteService.deleteTrafficRouteById({ id: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
         this.fetchData();
       });
     });

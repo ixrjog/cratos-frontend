@@ -14,6 +14,7 @@ import {
   TrafficRouteVO,
 } from '../../../../../@core/data/traffic-route';
 import { TrafficRouteService } from '../../../../../@core/services/traffic-route.service';
+import { TrafficLayerDomainVO } from '../../../../../@core/data/traffic-layer';
 
 @Component({
   selector: 'app-traffic-layer-route-record-target-editor',
@@ -186,6 +187,20 @@ export class TrafficLayerRouteRecordTargetEditorComponent implements OnInit {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
         this.fetchData();
       });
+  }
+
+  onRowDelete(rowItem: TrafficRouteRecordTargetVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.trafficRouteService.deleteTrafficRecordTargetById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
   }
 
   onRowBusinessTag(rowItem: RiskEventImpactVO) {

@@ -10,6 +10,7 @@ import {
 } from '../data/traffic-route';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
+import { EdsInstanceVO } from '../data/ext-datasource';
 
 @Injectable()
 export class TrafficRouteService extends TrafficRouteData {
@@ -18,6 +19,10 @@ export class TrafficRouteService extends TrafficRouteData {
 
   constructor(private apiService: ApiService) {
     super();
+  }
+
+  queryDnsResolverInstances(): Observable<HttpResult<Array<EdsInstanceVO>>> {
+    return this.apiService.get(this.baseUrl, '/dns/resolver/instance/query', {});
   }
 
   queryTrafficRoutePage(param: TrafficRoutePageQuery): Observable<DataTable<TrafficRouteVO>> {
@@ -30,6 +35,10 @@ export class TrafficRouteService extends TrafficRouteData {
 
   getTrafficRouteById(param: { id: number }): Observable<HttpResult<TrafficRouteVO>> {
     return this.apiService.get(this.baseUrl, '/get', param);
+  }
+
+  deleteTrafficRouteById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
   setTrafficRecordTargetValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
@@ -50,6 +59,10 @@ export class TrafficRouteService extends TrafficRouteData {
 
   setTrafficRouteValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
+  }
+
+  deleteTrafficRecordTargetById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/record/target/del', param);
   }
 
   updateTrafficRecordTarget(param: TrafficRecordTargetEdit): Observable<HttpResult<Boolean>> {

@@ -11,7 +11,6 @@ import { map } from 'rxjs/operators';
 import { TrafficRouteService } from '../../../../../@core/services/traffic-route.service';
 import { TrafficLayerService } from '../../../../../@core/services/traffic-layer.service';
 import { TrafficRouteEdit, TrafficRouteVO } from '../../../../../@core/data/traffic-route';
-import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
 import { EdsInstanceVO, InstancePageQuery } from '../../../../../@core/data/ext-datasource';
 
 @Component({
@@ -52,7 +51,6 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
   constructor(
     private trafficRouteService: TrafficRouteService,
     private trafficLayerService: TrafficLayerService,
-    private edsService: EdsService,
   ) {
   }
 
@@ -113,13 +111,10 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
   }
 
   onSearchDnsResolverInstance = (term: string) => {
-    const param: InstancePageQuery = {
-      length: 10, page: 1, edsType: '', queryName: term,
-    };
-    return this.edsService.queryEdsInstancePage(param)
+    return this.trafficRouteService.queryDnsResolverInstances()
       .pipe(
         map(({ body }) =>
-          body.data.map((instance, index) => ({ id: index, option: instance })),
+          body.map((instance, index) => ({ id: index, option: instance })),
         ),
       );
   };

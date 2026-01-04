@@ -88,11 +88,15 @@ export interface SwitchRecordTarget {
 
 export abstract class TrafficRouteData {
 
+  abstract queryDnsResolverInstances(): Observable<HttpResult<Array<EdsInstanceVO>>>;
+
   abstract queryTrafficRoutePage(param: TrafficRoutePageQuery): Observable<DataTable<TrafficRouteVO>>;
 
   abstract addTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>>;
 
   abstract updateTrafficRoute(param: TrafficRouteEdit): Observable<HttpResult<Boolean>>;
+
+  abstract deleteTrafficRouteById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract getTrafficRouteById(param: { id: number }): Observable<HttpResult<TrafficRouteVO>>;
 
@@ -105,6 +109,8 @@ export abstract class TrafficRouteData {
   abstract setTrafficRouteValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract setTrafficRecordTargetValidById(param: { id: number }): Observable<HttpResult<Boolean>>;
+
+  abstract deleteTrafficRecordTargetById(param: { id: number }): Observable<HttpResult<Boolean>>;
 
   abstract switchToTarget(param: SwitchRecordTarget): Observable<HttpResult<Boolean>>;
 

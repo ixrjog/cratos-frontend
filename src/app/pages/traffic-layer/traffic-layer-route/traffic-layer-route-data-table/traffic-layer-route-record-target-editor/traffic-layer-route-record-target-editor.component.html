@@ -147,7 +147,7 @@
             </ng-template>
           </d-cell>
         </d-column>
-        <d-column header="Actions" [width]="'150px'">
+        <d-column header="Actions" [width]="'200px'">
           <d-cell>
             <ng-template let-rowItem="rowItem">
               <d-icon-group>
@@ -161,6 +161,12 @@
                   (click)="onRowValid(rowItem)"
                 >
                 </d-icon>
+                <span dDropDown appendToBody>
+                  <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+                  <ul dDropDownMenu>
+                    <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+                  </ul>
+                </span>
               </d-icon-group>
             </ng-template>
           </d-cell>

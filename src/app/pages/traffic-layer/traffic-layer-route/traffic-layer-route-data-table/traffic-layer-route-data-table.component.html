@@ -112,6 +112,12 @@
               (click)='onRowValid(rowItem)'
             >
             </d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
           </d-icon-group>
         </ng-template>
       </d-cell>
@@ -138,6 +144,11 @@
       <li role='menuitem' (click)='onBatchTag()'>
         <a dDropDownMenuItem>
           <span class='icon-tag' style='padding-right: 5px; vertical-align: middle'> Tag</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
         </a>
       </li>
     </ul>

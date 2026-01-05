@@ -22,6 +22,11 @@ export class UserSettingsComponent implements OnInit {
     {
       isActive: false,
       title: '',
+      key: 'user.settings.menu.password'
+    },
+    {
+      isActive: false,
+      title: '',
       key: 'user.settings.menu.permissions'
     },
     {

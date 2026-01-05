@@ -61,6 +61,7 @@ export default {
       title: '用户设置',
       menu: {
         base: '基础信息',
+        password: '密码管理',
         permissions: '权限管理',
         cloudIdentity: '云身份',
         identity: '身份认证',

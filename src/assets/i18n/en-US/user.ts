@@ -61,6 +61,7 @@ export default {
       title: 'User Settings',
       menu: {
         base: 'Base',
+        password: 'Password',
         permissions: 'Permissions',
         cloudIdentity: 'Cloud Identity',
         identity: 'Identity',

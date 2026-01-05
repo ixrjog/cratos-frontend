@@ -101,6 +101,8 @@ export abstract class UserData {
 
   abstract updateMyLanguage(param: { lang: string }): Observable<HttpResult<Boolean>>;
 
+  abstract resetMyAccountPassword(param: { password: string }): Observable<HttpResult<Boolean>>;
+
 }
 
 export enum RenewalExtUserTypeEnum {

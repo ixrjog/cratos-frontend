@@ -75,4 +75,9 @@ export class UserService extends UserData {
     return this.apiService.put(this.baseUrl, '/my/language/update', param);
   }
 
+  resetMyAccountPassword(param: { password: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/my/password/reset', param);
+  }
+
+
 }

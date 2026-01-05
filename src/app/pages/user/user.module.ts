@@ -53,6 +53,7 @@ import { UserDingtalkIdentityCardComponent } from './user-list/user-list-data-ta
 import { UserMailIdentityCardComponent } from './user-list/user-list-data-table/user-identity-card/user-mail-identity-card/user-mail-identity-card.component';
 import { UserMailIdentityComponent } from './user-list/user-list-data-table/user-identity-tag/user-mail-identity/user-mail-identity.component';
 import { UserCloudIdentitySettingsComponent } from './user-settings/user-cloud-identity-settings/user-cloud-identity-settings.component';
+import { UserPasswordSettingsComponent } from './user-settings/user-password-settings/user-password-settings.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { UserCloudIdentitySettingsComponent } from './user-settings/user-cloud-i
     UserMailIdentityCardComponent,
     UserMailIdentityComponent,
     UserCloudIdentitySettingsComponent,
+    UserPasswordSettingsComponent,
   ],
   imports: [
     CommonModule,

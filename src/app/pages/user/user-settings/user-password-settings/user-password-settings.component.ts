@@ -55,7 +55,13 @@ export class UserPasswordSettingsComponent {
         password: this.formData.password,
       };
       this.userService.resetMyAccountPassword(param)
-        .subscribe(() => this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE));
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE)
+          this.formData = {
+            password: '',
+            confirmPassword: '',
+          };
+        });
     } else {
       console.log(directive);
     }

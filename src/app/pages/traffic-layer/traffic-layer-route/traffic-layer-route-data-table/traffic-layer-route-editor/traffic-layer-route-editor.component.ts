@@ -26,19 +26,7 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
   trafficLayerDomain: TrafficLayerDomainVO;
   trafficLayerRecord: TrafficLayerRecordVO;
   dnsResolverInstance: EdsInstanceVO;
-  recordType: string = 'CNAME';
   operationType: boolean;
-
-  recordTypeOptions = [
-    {
-      label: 'A',
-      value: 'A',
-    },
-    {
-      label: 'CNAME',
-      value: 'CNAME',
-    },
-  ];
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -63,7 +51,6 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
   addForm() {
     const param: TrafficRouteEdit = {
       ...this.formData,
-      recordType: this.recordType,
     };
     return this.trafficRouteService.addTrafficRoute(param);
   }
@@ -121,11 +108,6 @@ export class TrafficLayerRouteEditorComponent implements OnInit {
 
   onDnsResolverInstanceChange(instance: EdsInstanceVO) {
     this.formData.dnsResolverInstanceId = instance.id;
-  }
-
-  onRecordTypeChange(tab) {
-    this.recordType = tab;
-    this.formData.recordType = this.recordType;
   }
 
   protected readonly JSON = JSON;

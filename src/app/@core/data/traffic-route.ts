@@ -23,7 +23,6 @@ export interface TrafficRouteVO extends BaseVO, ValidVO, ResourceCountVO, Busine
   domainRecord: string;
   name: string;
   dnsResolverInstanceId: number;
-  recordType: string;
   comment: string;
   zoneId: string;
   consoleUrl: string;
@@ -62,7 +61,6 @@ export interface TrafficRouteEdit {
   name?: string;
   dnsResolverInstanceId: number;
   zoneId?: string;
-  recordType: string;
   valid: boolean;
   comment: string;
 }

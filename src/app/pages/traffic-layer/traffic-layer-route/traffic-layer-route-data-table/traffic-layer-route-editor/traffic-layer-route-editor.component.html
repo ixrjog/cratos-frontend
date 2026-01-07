@@ -44,23 +44,6 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label [required]="true">Record Type</d-form-label>
-      <d-form-control>
-        <d-tabs
-          style="height: 20px"
-          type="options"
-          [activeTab]="recordType"
-          (activeTabChange)="onRecordTypeChange($event)"
-        >
-          <d-tab
-            *ngFor="let item of recordTypeOptions"
-            [id]="item.value"
-            [title]="item.label"
-          ></d-tab>
-        </d-tabs>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
       <d-form-label [required]="true">DNS Resolver Instance</d-form-label>
       <d-form-control>
         <d-select

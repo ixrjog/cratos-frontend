@@ -17,7 +17,6 @@ import {
 } from '../../../../@core/data/traffic-route';
 import { TrafficLayerRouteEditorComponent } from './traffic-layer-route-editor/traffic-layer-route-editor.component';
 import { TrafficRouteService } from '../../../../@core/services/traffic-route.service';
-import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 import {
   TrafficLayerRouteRecordTargetEditorComponent,
 } from './traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
@@ -236,5 +235,4 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     this.queryParam.queryByTag = value;
   }
 
-  protected readonly getPopoverStyle = getPopoverStyle;
 }

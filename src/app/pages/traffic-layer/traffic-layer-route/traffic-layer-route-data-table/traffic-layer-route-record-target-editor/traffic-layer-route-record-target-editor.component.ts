@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RiskEventImpactVO } from '../../../../../@core/data/risk-event';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { FormLayout } from 'ng-devui/form';
 import { DIALOG_DATA, DialogUtil } from '../../../../../@shared/utils/dialog.util';
@@ -14,7 +13,6 @@ import {
   TrafficRouteVO,
 } from '../../../../../@core/data/traffic-route';
 import { TrafficRouteService } from '../../../../../@core/services/traffic-route.service';
-import { TrafficLayerDomainVO } from '../../../../../@core/data/traffic-layer';
 
 @Component({
   selector: 'app-traffic-layer-route-record-target-editor',
@@ -203,11 +201,11 @@ export class TrafficLayerRouteRecordTargetEditorComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: RiskEventImpactVO) {
+  onRowBusinessTag(rowItem: TrafficRouteRecordTargetVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: RiskEventImpactVO) {
+  onRowBusinessDoc(rowItem: TrafficRouteRecordTargetVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 

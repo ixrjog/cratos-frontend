@@ -42,6 +42,7 @@ export interface TrafficRouteRecordTargetVO extends BaseVO, ValidVO, ResourceCou
   recordValue: string;
   targetType: string;
   origin: boolean;
+  originServer: string;
   ttl: number;
   weight: number;
   comment: string;
@@ -75,6 +76,7 @@ export interface TrafficRecordTargetEdit {
   recordType: string;
   targetType: string;
   origin: boolean;
+  originServer: string;
   ttl: number;
   weight?: number;
   valid: boolean;

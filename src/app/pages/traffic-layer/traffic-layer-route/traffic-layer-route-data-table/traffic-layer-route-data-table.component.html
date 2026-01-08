@@ -23,20 +23,20 @@
     [loading]='table.loading'
     [checkable]='true'
   >
-    <d-column header='Web Site'>
+    <d-column header='Web Site' [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
           <br />
-          <a class="devui-link-light"
+          <a class='devui-link-light'
              [href]="rowItem['consoleUrl']"
-             target="_blank"
+             target='_blank'
           >{{ rowItem['domain'] }}</a>
           <span style='margin-right: 5px; margin-left: 5px'>→</span>
           <span *ngIf='rowItem.dnsResolverInstance != null'>
                <span>DNS on </span>
                <d-tag
-                 [tag]="rowItem.dnsResolverInstance.instanceName"
+                 [tag]='rowItem.dnsResolverInstance.instanceName'
                  [labelStyle]="'blue-w98'"
                >
                </d-tag>
@@ -55,21 +55,27 @@
               <span style='margin-right: 5px; margin-left: 5px'>→</span>
               <span>[ {{ target.recordType }} ]</span>
               <span style='margin-right: 5px; margin-left: 5px'>→</span>
-              <span *ngIf="target.targetType == 'CLOUDFLARE' && rowItem['dnsResolverInstance']?.edsType == 'CLOUDFLARE'">
+              <span
+                *ngIf="target.targetType == 'CLOUDFLARE' && rowItem['dnsResolverInstance']?.edsType == 'CLOUDFLARE'">
                   <img *ngIf='target.dnsResourceRecord.proxied == "" || !target.dnsResourceRecord.proxied'
                        ngSrc='assets/icon/cloudflare-onlydns-icon.svg'
                        alt='Cloudflare'
-                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'
+                       width='10'>
                   <img *ngIf='target.dnsResourceRecord.proxied != "" && target.dnsResourceRecord.proxied'
                        ngSrc='assets/icon/cloudflare-proxied-icon.svg'
                        alt='Cloudflare'
-                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'
+                       width='10'>
               </span>
-              <span dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+              <!-- 记录 -->
+              <span *ngIf='!target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+              <d-tag *ngIf='target.origin' [tag]='target.recordValue' [labelStyle]="'blue-w98'"></d-tag>
               <span *ngIf="target.targetType == 'CLOUDFLARE'">
                 <img ngSrc='assets/icon/cloudflare-icon.svg'
                      alt='Cloudflare'
-                     style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64' width='64'>
+                     style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64'
+                     width='64'>
               </span>
               <img *ngIf="target.targetType == 'ALIYUN_ALB'" ngSrc='assets/icon/alibabacloud-icon.svg' alt='Cloudflare'
                    style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
@@ -77,6 +83,12 @@
                    style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
               <img *ngIf="target.targetType == 'HWC_ELB'" ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
                    style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+              <span *ngIf='!target.origin'> →
+                <d-tag *ngIf='target.originServer == null || target.originServer == ""' tag='Origin'
+                       [labelStyle]="'blue-w98'"></d-tag>
+                <d-tag *ngIf='target.originServer != null && target.originServer != ""' [tag]='target.originServer'
+                       [labelStyle]="'blue-w98'"></d-tag>
+              </span>
             </div>
           </div>
         </ng-template>
@@ -113,9 +125,9 @@
             >
             </d-icon>
             <span dDropDown appendToBody>
-              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]='true'></d-icon>
               <ul dDropDownMenu>
-                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+                <li class='devui-dropdown-item' (click)='onRowDelete(rowItem)'>Delete</li>
               </ul>
             </span>
           </d-icon-group>
@@ -146,9 +158,9 @@
           <span class='icon-tag' style='padding-right: 5px; vertical-align: middle'> Tag</span>
         </a>
       </li>
-      <li role="menuitem" (click)="onBatchDelete()">
+      <li role='menuitem' (click)='onBatchDelete()'>
         <a dDropDownMenuItem>
-          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+          <span class='icon-delete' style='padding-right: 5px; vertical-align: middle'> Delete</span>
         </a>
       </li>
     </ul>

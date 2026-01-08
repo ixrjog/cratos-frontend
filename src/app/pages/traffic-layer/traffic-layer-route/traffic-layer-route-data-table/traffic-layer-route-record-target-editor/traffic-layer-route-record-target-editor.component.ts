@@ -60,6 +60,7 @@ export class TrafficLayerRouteRecordTargetEditorComponent implements OnInit {
     recordType: '',
     targetType: '',
     origin: false,
+    originServer: '',
     ttl: 300,
     comment: '',
     valid: true,

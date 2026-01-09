@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { TrafficRouteService } from '../../../../../@core/services/traffic-route.service';
 import { TrafficLayerService } from '../../../../../@core/services/traffic-layer.service';
 import { TrafficRouteEdit, TrafficRouteVO } from '../../../../../@core/data/traffic-route';
-import { EdsInstanceVO, InstancePageQuery } from '../../../../../@core/data/ext-datasource';
+import { EdsInstanceVO } from '../../../../../@core/data/ext-datasource';
 
 @Component({
   selector: 'app-traffic-layer-route-editor',

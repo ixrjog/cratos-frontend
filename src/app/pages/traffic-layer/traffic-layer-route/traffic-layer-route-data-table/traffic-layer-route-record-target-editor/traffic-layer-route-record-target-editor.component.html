@@ -85,25 +85,35 @@
           </d-form-control>
         </d-form-item>
         <d-row [dGutter]="12" [dGutterNoOuter]="true">
-          <d-col [dSpan]="8">
+          <d-col [dSpan]="12">
             <d-form-item>
               <d-form-label [required]="true">Origin</d-form-label>
               <d-form-control>
-                <d-toggle name="origin" [(ngModel)]="formData.origin"></d-toggle>
+                <d-toggle (change)="onOriginChange($event)" name="origin" [(ngModel)]="formData.origin"></d-toggle>
               </d-form-control>
             </d-form-item>
           </d-col>
-          <d-col [dSpan]="8">
+          <d-col [dSpan]="12">
+            <d-form-item *ngIf="formData.origin">
+              <d-form-label >Origin Server</d-form-label>
+              <d-form-control>
+                <d-form-control>
+                  <input dTextInput name="originServer" [(ngModel)]="formData.originServer" />
+                </d-form-control>
+              </d-form-control>
+            </d-form-item>
+          </d-col>
+          <d-col [dSpan]="12">
             <d-form-item>
-              <d-form-label [required]="true">TTL</d-form-label>
+              <d-form-label>TTL</d-form-label>
               <d-form-control>
                 <d-input-number [dValidateRules]="formRules['ttl']" [min]="1" name="ttl" [(ngModel)]="formData.ttl" />
               </d-form-control>
             </d-form-item>
           </d-col>
-          <d-col [dSpan]="8">
+          <d-col [dSpan]="12">
             <d-form-item>
-              <d-form-label [required]="true">Weight</d-form-label>
+              <d-form-label>Weight</d-form-label>
               <d-form-control>
                 <d-input-number [allowEmpty]="true" [min]="1" name="weight" [(ngModel)]="formData.weight" />
               </d-form-control>

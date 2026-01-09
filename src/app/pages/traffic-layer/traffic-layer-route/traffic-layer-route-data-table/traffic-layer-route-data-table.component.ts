@@ -5,12 +5,11 @@ import {
 import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { TrafficLayerDomainVO, TrafficLayerRecordVO } from '../../../../@core/data/traffic-layer';
+import { TrafficLayerDomainVO } from '../../../../@core/data/traffic-layer';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
-import { CertificateVO } from '../../../../@core/data/certificate';
 import {
   TrafficRecordTargetEdit,
   TrafficRouteEdit,
@@ -19,7 +18,6 @@ import {
 } from '../../../../@core/data/traffic-route';
 import { TrafficLayerRouteEditorComponent } from './traffic-layer-route-editor/traffic-layer-route-editor.component';
 import { TrafficRouteService } from '../../../../@core/services/traffic-route.service';
-import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 import {
   TrafficLayerRouteRecordTargetEditorComponent,
 } from './traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
@@ -223,7 +221,7 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     });
   }
 
-  onRowBusinessTag(rowItem: CertificateVO) {
+  onRowBusinessTag(rowItem: TrafficRouteVO) {
     this.dialogUtil.onBusinessTagEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
@@ -232,7 +230,7 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
       this.businessType, this.datatable.getCheckedRows(), () => this.fetchData());
   }
 
-  onRowBusinessDoc(rowItem: CertificateVO) {
+  onRowBusinessDoc(rowItem: TrafficRouteVO) {
     this.dialogUtil.onBusinessDocsEditDialog(this.businessType, rowItem, () => this.fetchData());
   }
 
@@ -240,5 +238,4 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     this.queryParam.queryByTag = value;
   }
 
-  protected readonly getPopoverStyle = getPopoverStyle;
 }

@@ -47,7 +47,7 @@
 
                 <div *ngIf="menus[5].isActive">
                   <div class="da-settings-header">{{ menus[5].title }}</div>
-                  <app-user-ssh-key-settings [username]="username"></app-user-ssh-key-settings>
+                  <app-user-ssh-key-settings [user]="user" [username]="username"></app-user-ssh-key-settings>
                 </div>
 
                 <div *ngIf="menus[6].isActive">

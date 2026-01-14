@@ -7,7 +7,7 @@ import { CredentialService } from '../../../../@core/services/credential.service
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
-import { AddSshKey } from '../../../../@core/data/user';
+import { AddSshKey, UserVO } from '../../../../@core/data/user';
 
 @Component({
   selector: 'app-user-ssh-key-settings',
@@ -17,8 +17,8 @@ import { AddSshKey } from '../../../../@core/data/user';
 export class UserSshKeySettingsComponent implements OnInit {
 
   sshKeyList: CredentialVO[];
-  hostUrl: string;
-
+  sshKeyExample: string = '';
+  sshExample: string = '';
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -35,11 +35,31 @@ export class UserSshKeySettingsComponent implements OnInit {
   }
 
   @Input() username: string;
+  @Input() user: UserVO;
+
   verticalLayout: FormLayout = FormLayout.Vertical;
   sshKey: string;
 
   ngOnInit(): void {
-    this.hostUrl = window.location.hostname;
+    const lab = this.user.email;
+    this.sshKeyExample = `
+    ### For ED25519
+    \`\`\`bash
+    $ ssh-keygen -t ed25519 -C "${lab}"
+    \`\`\`
+
+    ### For  2048-bit RSA
+    \`\`\`bash
+    $ ssh-keygen -t rsa -b 2048 -C "${lab}"
+    \`\`\`
+    `;
+    const hostUrl = window.location.hostname;
+    const username = this.username;
+    this.sshExample = `
+    \`\`\`bash
+    $ ssh ${username}@${hostUrl}
+    \`\`\`
+    `;
     this.fetchData();
   }
 

@@ -43,12 +43,12 @@ export class UserSshKeySettingsComponent implements OnInit {
   ngOnInit(): void {
     const lab = this.user.email;
     this.sshKeyExample = `
-    ### For ED25519
+    #### For ED25519
     \`\`\`bash
     $ ssh-keygen -t ed25519 -C "${lab}"
     \`\`\`
 
-    ### For  2048-bit RSA
+    #### For 2048-bit RSA
     \`\`\`bash
     $ ssh-keygen -t rsa -b 2048 -C "${lab}"
     \`\`\`

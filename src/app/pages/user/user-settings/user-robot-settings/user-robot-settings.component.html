@@ -3,9 +3,9 @@
     <da-col-item [daSpan]="12" [daXs]="10" [daOrder]="2">
       <div *ngIf="robotToken">
         <d-alert [type]="'info'" [closeable]="false">
-          当前页面刷新后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。
+          {{ 'user.robot.tokenWarning' | translate }}
         </d-alert>
-        <h3>Token:
+        <h3>{{ 'user.robot.token' | translate }}:
           <d-icon [icon]="'icon-copy'" dIconHover dClipboard [content]="robotToken.token" [position]="'right'">
             <span iconPrefix class="font-color-comment">{{ robotToken.token }}</span>
           </d-icon>
@@ -19,7 +19,7 @@
         *ngIf="!robotToken"
       >
         <d-form-item>
-          <d-form-label [required]="true">Name</d-form-label>
+          <d-form-label [required]="true">{{ 'user.robot.name' | translate }}</d-form-label>
           <d-form-control>
             <input
               dTextInput
@@ -28,7 +28,7 @@
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label [required]="true">Expired Time</d-form-label>
+          <d-form-label [required]="true">{{ 'user.robot.expiredTime' | translate }}</d-form-label>
           <d-form-control>
             <d-datepicker-pro
               name="expiredTime"
@@ -42,7 +42,7 @@
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Description</d-form-label>
+          <d-form-label>{{ 'user.robot.description' | translate }}</d-form-label>
           <d-form-control>
             <textarea
               dTextarea
@@ -54,9 +54,9 @@
           </d-form-control>
         </d-form-item>
         <d-form-operation>
-          <d-button style="margin-right: 8px" dFormSubmit>Submit
+          <d-button style="margin-right: 8px" dFormSubmit>{{ 'user.robot.submit' | translate }}
           </d-button>
-          <d-button bsStyle="common" circled="true" dFormReset>Reset</d-button>
+          <d-button bsStyle="common" circled="true" dFormReset>{{ 'user.robot.reset' | translate }}</d-button>
         </d-form-operation>
       </form>
     </da-col-item>

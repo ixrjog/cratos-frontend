@@ -3,43 +3,43 @@
     <da-col-item [daSpan]="12" [daXs]="10" [daOrder]="2">
       <form dForm [layout]="verticalLayout" autocomplete="off" (dSubmit)="submitForm($event)">
         <d-form-item>
-          <d-form-label>Username</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.username' | translate }}</d-form-label>
           <d-form-control>
             <input dTextInput name="username" [readonly]="true" [(ngModel)]="fromData.username"/>
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Name</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.name' | translate }}</d-form-label>
           <d-form-control>
             <input dTextInput name="name" [(ngModel)]="fromData.name"/>
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Display Name</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.displayName' | translate }}</d-form-label>
           <d-form-control>
             <input dTextInput name="displayName" [(ngModel)]="fromData.displayName"/>
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Email</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.email' | translate }}</d-form-label>
           <d-form-control>
             <input dTextInput name="email" [(ngModel)]="fromData.email"/>
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Mobile Phone</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.phone' | translate }}</d-form-label>
           <d-form-control>
             <input dTextInput name="mobilePhone" [(ngModel)]="fromData.mobilePhone"/>
           </d-form-control>
         </d-form-item>
         <d-form-item>
-          <d-form-label>Comment</d-form-label>
+          <d-form-label>{{ 'user.baseSettings.form.comment' | translate }}</d-form-label>
           <d-form-control>
             <textarea name="comment" dTextarea maxlength="200" [(ngModel)]="fromData.comment"></textarea>
           </d-form-control>
         </d-form-item>
         <d-form-operation>
-          <d-button style="margin-right: 8px" dFormSubmit>Save</d-button>
+          <d-button style="margin-right: 8px" dFormSubmit>{{ 'user.common.save' | translate }}</d-button>
         </d-form-operation>
       </form>
     </da-col-item>

@@ -3,31 +3,29 @@
     <da-col-item [daSpan]="12" [daXs]="10" [daOrder]="2">
       <form dForm [layout]="verticalLayout" autocomplete="off" (dSubmit)="submitForm($event)">
         <d-form-item>
-          <d-form-label>Public Key</d-form-label>
+          <d-form-label>{{ 'user.sshKey.publicKey' | translate }}</d-form-label>
           <d-form-control>
             <textarea
               name="sshKey"
               style="height: 200px"
               dTextarea
-              placeholder="Please enter public key"
+              [placeholder]="'user.sshKey.publicKeyPlaceholder' | translate"
               resize="vertical"
               [(ngModel)]="sshKey"
             ></textarea>
           </d-form-control>
         </d-form-item>
         <d-form-operation>
-          <d-button style="margin-right: 8px" dFormSubmit>Save</d-button>
+          <d-button style="margin-right: 8px" dFormSubmit>{{ 'user.common.save' | translate }}</d-button>
         </d-form-operation>
       </form>
     </da-col-item>
     <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
-      <div class="font-color-comment">Connecting to Cratos SSH-Server using SSH keys</div>
+      <div class="font-color-comment">{{ 'user.sshKey.connectingInfo' | translate }}</div>
       <markdown lineHighlight mermaid [data]="sshExample"></markdown>
-      <div class="font-color-comment">Generate an SSH key pair
-        Type ssh-keygen -t followed by the key type and an optional comment.This comment is included in the .pub file
-        that's created.You may want to use an email address for the comment.
-      </div>
+      <div class="font-color-comment">{{ 'user.sshKey.generateInfo' | translate }}</div>
       <markdown lineHighlight mermaid [data]="sshKeyExample"></markdown>
+      <div class="font-color-comment">{{ 'user.sshKey.sshKeyList' | translate }}</div>
       <d-card *ngFor="let key of sshKeyList" style="margin-bottom: 10px">
         <span style="float: right; padding: 3px 0">
           <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(key)"></d-icon>

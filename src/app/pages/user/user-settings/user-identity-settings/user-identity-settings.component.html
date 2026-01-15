@@ -2,7 +2,7 @@
   <da-layout-row [daGutter]="[12, 12]">
     <da-col-item [daSpan]="12" [daXs]="24" [daOrder]="2">
       <div *ngIf="JSON.stringify(identity.ldap) !== '[]'">
-        <h3 style="margin: 5px 0" class="font-color-comment">LDAP</h3>
+        <h3 style="margin: 5px 0" class="font-color-comment">{{ 'user.identity.ldapTitle' | translate }}</h3>
         <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
         <app-user-ldap-identity-card
           *ngFor="let identity of identity.ldap"
@@ -12,7 +12,7 @@
       </div>
 
       <div dLoading *ngIf="JSON.stringify(identity.gitlab) !== '[]'">
-        <h3 style="margin: 5px 0" class="font-color-comment">GitLab</h3>
+        <h3 style="margin: 5px 0" class="font-color-comment">{{ 'user.identity.gitlabTitle' | translate }}</h3>
         <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
         <app-user-gitlab-identity-card
           *ngFor="let identity of identity.gitlab"
@@ -23,7 +23,7 @@
       </div>
 
       <div *ngIf="JSON.stringify(identity.dingtalk) !== '[]'">
-        <h3 style="margin: 5px 0" class="font-color-comment">Dingtalk</h3>
+        <h3 style="margin: 5px 0" class="font-color-comment">{{ 'user.identity.dingtalkTitle' | translate }}</h3>
         <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
         <app-user-dingtalk-identity-card
           *ngFor="let identity of identity.dingtalk"
@@ -33,7 +33,7 @@
       </div>
 
       <div *ngIf="JSON.stringify(identity.mail) !== '{}'">
-        <h3 style="margin: 5px 0" class="font-color-comment">Mail</h3>
+        <h3 style="margin: 5px 0" class="font-color-comment">{{ 'user.identity.mailTitle' | translate }}</h3>
         <span *ngFor="let item of identity.mail | keyvalue">
           <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
           <app-user-mail-identity-card

@@ -126,7 +126,11 @@ export default {
       dingtalk: '钉钉身份',
       mail: '邮箱身份',
       sshKey: 'SSH密钥身份',
-      cloud: '云身份'
+      cloud: '云身份',
+      ldapTitle: 'LDAP',
+      gitlabTitle: 'GitLab',
+      dingtalkTitle: '钉钉',
+      mailTitle: '邮箱'
     },
 
     // SSH密钥
@@ -139,7 +143,12 @@ export default {
       keyType: '密钥类型',
       keySize: '密钥长度',
       comment: '备注',
-      createTime: '创建时间'
+      createTime: '创建时间',
+      publicKey: '公钥',
+      publicKeyPlaceholder: '请输入公钥',
+      connectingInfo: '使用SSH密钥连接到Cratos SSH服务器',
+      generateInfo: '生成SSH密钥对 输入ssh-keygen -t，后跟密钥类型和可选注释。此注释包含在创建的.pub文件中。您可能希望使用电子邮件地址作为注释。',
+      sshKeyList: 'SSH密钥列表'
     },
 
     // 机器人设置
@@ -151,7 +160,13 @@ export default {
       generateToken: '生成令牌',
       regenerateToken: '重新生成令牌',
       copyToken: '复制令牌',
-      tokenExpiry: '令牌过期时间'
+      tokenExpiry: '令牌过期时间',
+      tokenWarning: '当前页面刷新后，无法再次查询 Token。如果您遗失这个 Token，可以创建新的来替代。',
+      name: '名称',
+      expiredTime: '过期时间',
+      description: '描述',
+      submit: '提交',
+      reset: '重置'
     },
 
     // 用户编辑器

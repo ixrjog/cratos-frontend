@@ -126,7 +126,11 @@ export default {
       dingtalk: 'DingTalk Identity',
       mail: 'Mail Identity',
       sshKey: 'SSH Key Identity',
-      cloud: 'Cloud Identity'
+      cloud: 'Cloud Identity',
+      ldapTitle: 'LDAP',
+      gitlabTitle: 'GitLab',
+      dingtalkTitle: 'Dingtalk',
+      mailTitle: 'Mail'
     },
 
     // SSH Key
@@ -139,7 +143,12 @@ export default {
       keyType: 'Key Type',
       keySize: 'Key Size',
       comment: 'Comment',
-      createTime: 'Create Time'
+      createTime: 'Create Time',
+      publicKey: 'Public Key',
+      publicKeyPlaceholder: 'Please enter public key',
+      connectingInfo: 'Connecting to Cratos SSH-Server using SSH keys',
+      generateInfo: 'Generate an SSH key pair Type ssh-keygen -t followed by the key type and an optional comment.This comment is included in the .pub file that\'s created.You may want to use an email address for the comment.',
+      sshKeyList: 'SSH key list'
     },
 
     // Robot
@@ -151,7 +160,13 @@ export default {
       generateToken: 'Generate Token',
       regenerateToken: 'Regenerate Token',
       copyToken: 'Copy Token',
-      tokenExpiry: 'Token Expiry'
+      tokenExpiry: 'Token Expiry',
+      tokenWarning: 'After refreshing the current page, the Token cannot be queried again. If you lose this Token, you can create a new one to replace it.',
+      name: 'Name',
+      expiredTime: 'Expired Time',
+      description: 'Description',
+      submit: 'Submit',
+      reset: 'Reset'
     },
 
     // User Editor

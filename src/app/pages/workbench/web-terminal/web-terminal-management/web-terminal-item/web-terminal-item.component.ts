@@ -74,9 +74,13 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
     this.destroy$.next();
     this.destroy$.complete();
 
+    // 清理 xterm.js 及其插件
     if (this.xterm) {
       this.xterm.dispose();
     }
+    
+    // 显式清理插件引用
+    this.fitAddon = null as any;
   }
 
   ngOnChanges(): void {
@@ -96,7 +100,7 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
       lineHeight: 1.2,
       cursorBlink: true,
       cursorStyle: 'block',
-      scrollback: 1000,
+      scrollback: 500, // 减少缓冲区大小，从 1000 降到 500
       allowTransparency: false,
       convertEol: true,
       disableStdin: false,

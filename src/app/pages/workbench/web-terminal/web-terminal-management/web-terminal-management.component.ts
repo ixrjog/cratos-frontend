@@ -49,6 +49,8 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   private readonly HEARTBEAT_TIMEOUT = 30000; // 30秒超时检测
   private isWebSocketInitialized: boolean = false; // 标记WebSocket是否已初始化
   private pendingMessages: any[] = []; // 待发送的消息队列
+  private readonly MAX_PENDING_MESSAGES = 100; // 最大待发送消息数
+  private isPageVisible: boolean = true; // 页面可见性状态
 
   // WebSocket连接状态显示
   wsConnectionStatus: 'disconnected' | 'connecting' | 'connected' | 'error' = 'disconnected';
@@ -81,6 +83,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // 页面初始化时不再初始化WebSocket，等到第一次打开终端时再初始化
+    this.setupPageVisibilityListener();
   }
 
   ngOnDestroy(): void {
@@ -143,6 +146,11 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   }
 
   private handleWebSocketMessage(event: MessageEvent): void {
+    // 页面不可见时跳过消息处理，避免内存泄漏
+    if (!this.isPageVisible) {
+      return;
+    }
+
     try {
       // 空消息作为心跳响应
       if (!event.data || event.data === '') {
@@ -216,9 +224,15 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
         console.error('Failed to send WebSocket message:', error);
       }
     } else {
-      // WebSocket未连接，将消息加入待发送队列
-      console.log('WebSocket not ready, adding message to pending queue:', message);
-      this.pendingMessages.push(message);
+      // WebSocket未连接，将消息加入待发送队列（限制队列大小）
+      if (this.pendingMessages.length < this.MAX_PENDING_MESSAGES) {
+        console.log('WebSocket not ready, adding message to pending queue:', message);
+        this.pendingMessages.push(message);
+      } else {
+        console.warn('Pending message queue is full, dropping oldest message');
+        this.pendingMessages.shift(); // 移除最旧的消息
+        this.pendingMessages.push(message);
+      }
     }
   }
 
@@ -704,5 +718,18 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
   onCloseThemeSettings(): void {
     this.showThemeSettings = false;
+  }
+
+  // 页面可见性监听
+  private setupPageVisibilityListener(): void {
+    document.addEventListener('visibilitychange', () => {
+      this.isPageVisible = !document.hidden;
+      
+      if (!this.isPageVisible) {
+        console.log('Page hidden, pausing message processing');
+      } else {
+        console.log('Page visible, resuming message processing');
+      }
+    });
   }
 }

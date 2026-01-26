@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { EncryptionService } from './encryption.service';
+import { EncryptionConfig } from '../config/encryption.config';
 
 @Injectable({
   providedIn: 'root',
@@ -8,18 +11,57 @@ import { Observable } from 'rxjs';
 export class ApiService {
   apiUrl = '/api';
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private encryptionService: EncryptionService
+  ) {
   }
 
   get(baseUrl: string, url: string, params: any): Observable<any> {
     return this.http.get(`${this.apiUrl}${baseUrl}${url}` + this.initGetParams(params), { headers: this.headers });
   }
 
-  post(baseUrl: string,url: string, data: object = {}): Observable<any> {
+  post(baseUrl: string, url: string, data: object = {}): Observable<any> {
+    // 如果启用加密，则加密 body
+    if (EncryptionConfig.enabled) {
+      return from(this.encryptionService.encryptBody(data)).pipe(
+        switchMap(({ encryptedBody, encryptedKey }) => {
+          const encryptedData = {
+            encryptedBody,
+            encryptedKey
+          };
+          return this.http.post(
+            `${this.apiUrl}${baseUrl}${url}`,
+            JSON.stringify(encryptedData),
+            { headers: this.getEncryptedHeaders() }
+          );
+        })
+      );
+    }
+
+    // 未启用加密，正常发送
     return this.http.post(`${this.apiUrl}${baseUrl}${url}`, JSON.stringify(data), { headers: this.headers });
   }
 
-  put(baseUrl: string,url: string, data: object = {}): Observable<any> {
+  put(baseUrl: string, url: string, data: object = {}): Observable<any> {
+    // 如果启用加密，则加密 body
+    if (EncryptionConfig.enabled) {
+      return from(this.encryptionService.encryptBody(data)).pipe(
+        switchMap(({ encryptedBody, encryptedKey }) => {
+          const encryptedData = {
+            encryptedBody,
+            encryptedKey
+          };
+          return this.http.put(
+            `${this.apiUrl}${baseUrl}${url}`,
+            JSON.stringify(encryptedData),
+            { headers: this.getEncryptedHeaders() }
+          );
+        })
+      );
+    }
+
+    // 未启用加密，正常发送
     return this.http.put(`${this.apiUrl}${baseUrl}${url}`, JSON.stringify(data), { headers: this.headers });
   }
 
@@ -31,13 +73,55 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}${baseUrl}${url}` + this.initGetParams(params), { headers: this.headers });
   }
 
-  deleteByBody(baseUrl: string,url: string, data: object = {}): Observable<any> {
+  deleteByBody(baseUrl: string, url: string, data: object = {}): Observable<any> {
+    // 如果启用加密，则加密 body
+    if (EncryptionConfig.enabled) {
+      return from(this.encryptionService.encryptBody(data)).pipe(
+        switchMap(({ encryptedBody, encryptedKey }) => {
+          const encryptedData = {
+            encryptedBody,
+            encryptedKey
+          };
+          return this.http.delete(
+            `${this.apiUrl}${baseUrl}${url}`,
+            { body: JSON.stringify(encryptedData), headers: this.getEncryptedHeaders() }
+          );
+        })
+      );
+    }
+
+    // 未启用加密，正常发送
     return this.http.delete(`${this.apiUrl}${baseUrl}${url}`, { body: JSON.stringify(data), headers: this.headers });
   }
 
   get headers(): HttpHeaders {
     const headersConfig: any = {
       'Content-Type': 'application/json',
+    };
+    
+    const robotToken = localStorage.getItem('robotToken');
+    if (robotToken && robotToken.length > 10) {
+      headersConfig['Authorization'] = `Robot ${robotToken}`;
+    } else {
+      if (robotToken) localStorage.removeItem('robotToken');
+      
+      let token = localStorage.getItem('id_token');
+      if (token) {
+        headersConfig['Authorization'] = 'Bearer ' + token;
+      }
+    }
+    
+    return new HttpHeaders(headersConfig);
+  }
+
+  /**
+   * 获取加密请求的 Headers（包含加密标识和密钥版本）
+   */
+  private getEncryptedHeaders(): HttpHeaders {
+    const headersConfig: any = {
+      'Content-Type': 'application/json',
+      [EncryptionConfig.encryptionHeader]: 'true',
+      [EncryptionConfig.keyVersionHeader]: EncryptionConfig.keyVersion,
     };
     
     const robotToken = localStorage.getItem('robotToken');

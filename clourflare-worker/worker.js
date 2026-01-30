@@ -1,4 +1,5 @@
 /**
+ * Ver: 1.0.2
  * Cloudflare Worker - 解密请求体并回源
  * 用于解密前端加密的请求，然后转发到源站
  */
@@ -14,10 +15,13 @@ async function handleRequest(request, env) {
   const PRIVATE_KEY_PEM = env.PRIVATE_KEY_PEM;
 
   if (!PRIVATE_KEY_PEM) {
+    console.error('Private key not configured');
     return new Response('Private key not configured', { status: 500 });
   }
-  // 只处理 POST/PUT/PATCH 请求
-  if (!['POST', 'PUT', 'PATCH'].includes(request.method)) {
+  
+  // 只处理 POST/PUT/PATCH/DELETE 请求
+  if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
+    console.log('Non-modifying request, passing through');
     return fetch(request);
   }
 
@@ -26,50 +30,80 @@ async function handleRequest(request, env) {
 
     // 检查是否是加密的请求
     if (!contentType.includes('application/json')) {
+      console.log('Non-JSON request, passing through');
       return fetch(request);
     }
 
-    const body = await request.json();
+    // 克隆请求以便读取 body
+    const clonedRequest = request.clone();
+    const body = await clonedRequest.json();
 
     // 检查是否包含加密字段
     if (!body.encryptedBody || !body.encryptedKey) {
-      // 没有加密，直接转发
+      // 没有加密，直接转发原始请求
+      console.log('Non-encrypted request, passing through');
       return fetch(request);
     }
 
-    // 解密请求体
-    const decryptedBody = await decryptBody(body.encryptedBody, body.encryptedKey, PRIVATE_KEY_PEM);
+    console.log('Encrypted request detected, decrypting...');
+
+    // 检查是否需要加密响应
+    const needEncryptResponse = request.headers.get('X-Response-Encryption-Required') === 'true';
+
+    // 1. 用 RSA 私钥解密 AES 密钥
+    const aesKeyBytes = await decryptWithRSA(body.encryptedKey, PRIVATE_KEY_PEM);
+
+    // 2. 用 AES 密钥解密请求体
+    const decryptedBody = await decryptWithAES(body.encryptedBody, aesKeyBytes);
+
+    console.log('Request decrypted successfully');
+
+    // 3. 创建新的 Headers，移除加密相关的 Header
+    const newHeaders = new Headers(request.headers);
+    newHeaders.delete('X-Body-Encrypted');
+    newHeaders.delete('X-Encryption-Key-Version');
+    newHeaders.delete('X-Response-Encryption-Required');
 
     // 创建新的请求，使用解密后的 body
     const newRequest = new Request(request.url, {
       method: request.method,
-      headers: request.headers,
+      headers: newHeaders,
       body: decryptedBody
     });
 
     // 转发到源站
-    return fetch(newRequest);
+    console.log('Forwarding decrypted request to origin');
+    const response = await fetch(newRequest);
+
+    // 如果需要加密响应且响应成功
+    if (needEncryptResponse && response.ok) {
+      console.log('Encrypting response...');
+      const responseData = await response.json();
+      const encryptedResponse = await encryptResponse(responseData, aesKeyBytes);
+      
+      console.log('Response encrypted successfully');
+      return new Response(JSON.stringify({ encryptedData: encryptedResponse }), {
+        status: response.status,
+        headers: {
+          'Content-Type': 'application/json',
+          ...Object.fromEntries(response.headers)
+        }
+      });
+    }
+
+    console.log('Returning response as-is');
+    return response;
 
   } catch (error) {
-    console.error('Decryption error:', error);
-    return new Response(JSON.stringify({ error: 'Decryption failed' }), {
+    console.error('Worker error:', error.message, error.stack);
+    return new Response(JSON.stringify({ 
+      error: 'Processing failed', 
+      message: error.message 
+    }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
-
-/**
- * 解密 Body
- */
-async function decryptBody(encryptedBody, encryptedKey, privateKeyPem) {
-  // 1. 用 RSA 私钥解密 AES 密钥
-  const aesKey = await decryptWithRSA(encryptedKey, privateKeyPem);
-
-  // 2. 用 AES 密钥解密 Body
-  const decryptedText = await decryptWithAES(encryptedBody, aesKey);
-
-  return decryptedText;
 }
 
 /**
@@ -113,13 +147,48 @@ async function decryptWithAES(encryptedText, aesKeyBytes) {
 
   // AES-GCM 解密
   const decrypted = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: iv },
+    { name: 'AES-GCM', iv: new Uint8Array(iv) },
     aesKey,
     ciphertext
   );
 
   // 转换为字符串
   return new TextDecoder().decode(decrypted);
+}
+
+/**
+ * 加密响应数据
+ */
+async function encryptResponse(data, aesKeyBytes) {
+  // 导入 AES 密钥（用于加密）
+  const aesKey = await crypto.subtle.importKey(
+    'raw',
+    aesKeyBytes,
+    { name: 'AES-GCM' },
+    false,
+    ['encrypt']
+  );
+
+  // 生成随机 IV
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+
+  // 将数据转换为字符串
+  const jsonString = JSON.stringify(data);
+  const encoder = new TextEncoder();
+  const plaintext = encoder.encode(jsonString);
+
+  // AES-GCM 加密
+  const ciphertext = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: iv },
+    aesKey,
+    plaintext
+  );
+
+  // 格式: Base64(IV).Base64(Ciphertext)
+  const ivBase64 = arrayBufferToBase64(iv);
+  const ciphertextBase64 = arrayBufferToBase64(ciphertext);
+
+  return `${ivBase64}.${ciphertextBase64}`;
 }
 
 /**
@@ -158,4 +227,16 @@ function base64ToArrayBuffer(base64) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes.buffer;
+}
+
+/**
+ * ArrayBuffer 转 Base64
+ */
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
 }

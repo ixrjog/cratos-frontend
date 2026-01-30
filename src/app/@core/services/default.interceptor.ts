@@ -29,16 +29,20 @@ export class DefaultInterceptor implements HttpInterceptor {
   };
 
   private handleData(event: HttpResponse<any> | HttpErrorResponse | any): Observable<any> {
-    const result: HttpResult<any> = event instanceof HttpResponse && event.body;
+    const result: any = event instanceof HttpResponse && event.body;
     // 可能会因为 `throw` 导出无法执行 `_HttpClient` 的 `end()` 操作
     // this.injector.get(this.httpClient).end();
     // 业务处理：一些通用操作
     switch (event.status) {
       case 200:
       case 201:
+        // 如果是加密响应，直接返回，不检查 success 字段
+        if (result && result.encryptedData) {
+          return of(event);
+        }
+        
         // 业务层级错误处理，以下假如响应体的 `success` 若不为 true 表示业务级异常
         // 并显示 `msg` 内容
-        const result: HttpResult<any> = event instanceof HttpResponse && event.body;
         if (result && !result.success) {
           this.toastService.open({
             value: [ { severity: 'error', summary: event.url, content: result.msg } ],

@@ -1,0 +1,11 @@
+name = "cratos-encryption-worker"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# 环境变量配置（使用 wrangler secret 设置）
+# PRIVATE_KEY_PEM - RSA 私钥
+
+# 路由配置示例（在 Cloudflare Dashboard 中配置）
+# routes = [
+#   { pattern = "api.yourdomain.com/*", zone_name = "yourdomain.com" }
+# ]

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { EncryptionService } from './encryption.service';
 import { EncryptionConfig } from '../config/encryption.config';
 
@@ -35,6 +35,21 @@ export class ApiService {
             JSON.stringify(encryptedData),
             { headers: this.getEncryptedHeaders() }
           );
+        }),
+        switchMap((response: any) => {
+          // 如果启用了响应加密且响应包含加密数据
+          console.log('Response received:', response);
+          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+            console.log('Decrypting response...');
+            return from(this.encryptionService.decryptResponse(response.encryptedData));
+          }
+          console.log('Response not encrypted, returning as-is');
+          return of(response);
+        }),
+        catchError(error => {
+          console.error('Encryption/Decryption error:', error);
+          this.encryptionService.clearAESKey();
+          throw error;
         })
       );
     }
@@ -57,6 +72,17 @@ export class ApiService {
             JSON.stringify(encryptedData),
             { headers: this.getEncryptedHeaders() }
           );
+        }),
+        switchMap((response: any) => {
+          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+            return from(this.encryptionService.decryptResponse(response.encryptedData));
+          }
+          return of(response);
+        }),
+        catchError((error: any) => {
+          console.error('Encryption/Decryption error:', error);
+          this.encryptionService.clearAESKey();
+          throw error;
         })
       );
     }
@@ -86,6 +112,17 @@ export class ApiService {
             `${this.apiUrl}${baseUrl}${url}`,
             { body: JSON.stringify(encryptedData), headers: this.getEncryptedHeaders() }
           );
+        }),
+        switchMap((response: any) => {
+          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+            return from(this.encryptionService.decryptResponse(response.encryptedData));
+          }
+          return of(response);
+        }),
+        catchError((error: any) => {
+          console.error('Encryption/Decryption error:', error);
+          this.encryptionService.clearAESKey();
+          throw error;
         })
       );
     }
@@ -123,6 +160,11 @@ export class ApiService {
       [EncryptionConfig.encryptionHeader]: 'true',
       [EncryptionConfig.keyVersionHeader]: EncryptionConfig.keyVersion,
     };
+
+    // 如果启用响应加密，添加响应加密请求 Header
+    if (EncryptionConfig.responseEncryptionEnabled) {
+      headersConfig[EncryptionConfig.responseEncryptionHeader] = 'true';
+    }
     
     const robotToken = localStorage.getItem('robotToken');
     if (robotToken && robotToken.length > 10) {

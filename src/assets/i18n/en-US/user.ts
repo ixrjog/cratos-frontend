@@ -148,7 +148,7 @@ export default {
       publicKeyPlaceholder: 'Please enter public key',
       connectingInfo: 'Connecting to Cratos SSH-Server using SSH keys',
       generateInfo: 'Generate an SSH key pair Type ssh-keygen -t followed by the key type and an optional comment.This comment is included in the .pub file that\'s created.You may want to use an email address for the comment.',
-      sshKeyList: 'SSH key list'
+      sshKeyList: 'Authentication Keys'
     },
 
     // Robot

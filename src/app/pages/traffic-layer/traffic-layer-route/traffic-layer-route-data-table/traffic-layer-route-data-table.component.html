@@ -57,12 +57,12 @@
               <span style='margin-right: 5px; margin-left: 5px'>→</span>
               <span
                 *ngIf="target.targetType == 'CLOUDFLARE' && rowItem['dnsResolverInstance']?.edsType == 'CLOUDFLARE'">
-                  <img *ngIf='target.dnsResourceRecord.proxied == "" || !target.dnsResourceRecord.proxied'
+                  <img *ngIf='target.dnsResourceRecord?.proxied == "" || !target.dnsResourceRecord?.proxied'
                        ngSrc='assets/icon/cloudflare-onlydns-icon.svg'
                        alt='Cloudflare'
                        style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'
                        width='10'>
-                  <img *ngIf='target.dnsResourceRecord.proxied != "" && target.dnsResourceRecord.proxied'
+                  <img *ngIf='target.dnsResourceRecord?.proxied != "" && target.dnsResourceRecord?.proxied'
                        ngSrc='assets/icon/cloudflare-proxied-icon.svg'
                        alt='Cloudflare'
                        style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'

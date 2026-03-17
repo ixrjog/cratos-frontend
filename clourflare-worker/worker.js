@@ -1,9 +1,12 @@
 /**
- * Ver: 1.0.2
+ * Ver: 1.0.4
  * Cloudflare Worker - 解密请求体并回源
  * 用于解密前端加密的请求，然后转发到源站
+ * 
+ * Changelog:
+ * - 1.0.4: 添加详细的解密错误信息（区分 encryptedKey 和 encryptedBody 解密失败）
+ * - 1.0.3: 之前版本
  */
-
 export default {
   async fetch(request, env, ctx) {
     return handleRequest(request, env);
@@ -36,7 +39,21 @@ async function handleRequest(request, env) {
 
     // 克隆请求以便读取 body
     const clonedRequest = request.clone();
-    const body = await clonedRequest.json();
+    let body;
+    
+    try {
+      const text = await clonedRequest.text();
+      // 如果 body 为空，直接转发
+      if (!text || text.trim() === '') {
+        console.log('Empty body, passing through');
+        return fetch(request);
+      }
+      body = JSON.parse(text);
+    } catch (e) {
+      // JSON 解析失败，直接转发
+      console.log('Invalid JSON, passing through');
+      return fetch(request);
+    }
 
     // 检查是否包含加密字段
     if (!body.encryptedBody || !body.encryptedKey) {
@@ -96,9 +113,24 @@ async function handleRequest(request, env) {
 
   } catch (error) {
     console.error('Worker error:', error.message, error.stack);
-    return new Response(JSON.stringify({ 
-      error: 'Processing failed', 
-      message: error.message 
+    
+    // 判断错误类型
+    let errorMsg = 'E2EE: ';
+    if (error.message && error.message.includes('decrypt')) {
+      if (error.stack && error.stack.includes('decryptWithRSA')) {
+        errorMsg += 'decrypt encryptedKey fail';
+      } else if (error.stack && error.stack.includes('decryptWithAES')) {
+        errorMsg += 'decrypt encryptedBody fail';
+      } else {
+        errorMsg += error.message;
+      }
+    } else {
+      errorMsg += error.message || 'unknown error';
+    }
+    
+    return new Response(JSON.stringify({
+      code: 400,
+      msg: errorMsg
     }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }

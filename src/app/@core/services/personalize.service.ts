@@ -112,7 +112,9 @@ export class PersonalizeService {
         ? JSON.parse(localStorage.getItem('user-custom-theme-config')!)
         : this.defaultCustom;
       const themeData = this.getCustomThemeData(brand, isDark);
-      this.setTheme((window as { [key: string]: any })['devuiThemes']['customTheme'], themeData, isDark);
+      const baseData = isDark ? this.customThemeService.themeDataDark : this.customThemeService.themeDataLight;
+      const fullData = Object.assign({}, baseData, themeData);
+      this.setTheme((window as { [key: string]: any })['devuiThemes']['customTheme'], fullData, isDark);
       this.configs[0].items = this.themes;
       // 主题设置
       const themeId = localStorage.getItem('theme') || this.themes[0].id;
@@ -186,9 +188,10 @@ export class PersonalizeService {
     const len = this.configs[0].items.length;
     const theme = this.configs[0].items[len - 1];
     const { fontData, radiusData } = this.getSizeAndRadiusData();
-    Object.assign(themeData, fontData, radiusData);
-    this.setTheme(theme, color, isDark);
-    theme.data = Object.assign(theme.data, themeData);
+    // Use the full dark/light theme as base, then overlay brand-derived colors
+    const baseData = isDark ? this.customThemeService.themeDataDark : this.customThemeService.themeDataLight;
+    const fullData = Object.assign({}, baseData, themeData, fontData, radiusData);
+    this.setTheme(theme, fullData, isDark);
     (window as { [key: string]: any })['devuiThemeService'].applyTheme(theme);
     localStorage.setItem('user-custom-theme-config', JSON.stringify({ brand: color, isDark }));
     localStorage.setItem('theme', ThemeType.Custom);

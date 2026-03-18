@@ -148,7 +148,7 @@ export default {
       publicKeyPlaceholder: '请输入公钥',
       connectingInfo: '使用SSH密钥连接到Cratos SSH服务器',
       generateInfo: '生成SSH密钥对 输入ssh-keygen -t，后跟密钥类型和可选注释。此注释包含在创建的.pub文件中。您可能希望使用电子邮件地址作为注释。',
-      sshKeyList: 'SSH密钥列表'
+      sshKeyList: '认证密钥'
     },
 
     // 机器人设置

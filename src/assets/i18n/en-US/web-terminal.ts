@@ -48,6 +48,7 @@ export default {
     filter: 'Filter',
     open: 'Open',
     opened: 'Opened',
+    myFavorites: 'My Favorites',
 
     // Terminal item
     close: 'Close',

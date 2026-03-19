@@ -16,16 +16,6 @@
       <i class="icon" [ngClass]="isFavorite?'icon-star':'icon-star-o'"></i>
       {{ 'kubernetes.actions.favorite' | translate }}
     </d-button>
-<!--    <d-select-->
-<!--      class="select"-->
-<!--      [filterKey]="'value'"-->
-<!--      [appendToBody]="true"-->
-<!--      [searchFn]="onSearchTagGroup"-->
-<!--      [(ngModel)]="queryParam.tagGroup"-->
-<!--      [isSearch]="true"-->
-<!--      placeholder="Search and select tag group"-->
-<!--      (valueChange)="onTagGroupChange($event)">-->
-<!--    </d-select>-->
     <d-search
       class="search"
       [(ngModel)]="queryParam.queryName"

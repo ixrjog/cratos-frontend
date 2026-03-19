@@ -3,10 +3,10 @@
  */
 export const EncryptionConfig = {
   // 是否启用请求加密
-  enabled: true,
+  enabled: false,
 
   // 是否启用响应加密（要求后端返回加密数据）
-  responseEncryptionEnabled: true,
+  responseEncryptionEnabled: false,
 
   // 密钥版本（用于密钥轮换）
   keyVersion: 'v1',

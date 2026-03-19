@@ -56,6 +56,14 @@
     align-items: center;
     flex-shrink: 0; // 防止搜索区域被压缩
 
+    // dAutoComplete 指令会动态插入 d-auto-complete-popup 兄弟元素，
+    // 作为 flex item 会额外占用 gap，导致间距翻倍
+    ::ng-deep d-auto-complete-popup {
+      position: absolute;
+      width: 0;
+      overflow: visible;
+    }
+
     .select {
       min-width: 200px;
     }

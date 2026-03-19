@@ -22,6 +22,7 @@ import { AddUserFavorite, FavoriteGroupVO, RemoveUserFavorite } from '../../../.
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { UserFavoriteService } from '../../../../../@core/services/user-favorite.service';
+import { ListValue } from '../../../../../@core/data/business-tag';
 
 @Component({
   selector: 'app-web-terminal-drawer',
@@ -143,17 +144,26 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     return this.tagGroupService.getMyGroupOptions(param)
       .pipe(
         map(({ body }) =>
-          body.options.map((option, index) => ({ id: index, option: option })),
+          body.options.map((option, index) => ({ id: index, label: option.value })),
         ),
       );
   };
 
+  valueParser($event) {
+    return $event['label'];
+  }
+
   onTagGroupChange(option: any): void {
-    this.isFavorite = option?.favorited|| false;
-    this.queryParam.tagGroup = option?.value || '';
+    this.queryParam.tagGroup = option;
+    this.isFavorite = this.onIsFavorite()
     this.table.pager.pageIndex = 1;
     this.fetchData();
   }
+
+  onIsFavorite() : boolean {
+    return this.favoriteGroupList.some(g => g.name === this.queryParam.tagGroup);
+  }
+
 
   onPageIndexChange(pageIndex: number): void {
     this.table.pager.pageIndex = pageIndex;

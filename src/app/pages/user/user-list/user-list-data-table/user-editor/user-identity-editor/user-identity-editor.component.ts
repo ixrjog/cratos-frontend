@@ -138,7 +138,6 @@ export class UserIdentityEditorComponent {
       )
       .subscribe(({ body }) => {
         this.UserIdentityDetail = body.ldapIdentities;
-        debugger
         if (JSON.stringify(this.UserIdentityDetail) === '[]') {
           this.canCreate = true;
         } else {

@@ -62,7 +62,6 @@ export class DialogUtil {
               content = TOAST_CONTENT.UPDATE;
               ob = results.modalContentInstance.updateForm();
             }
-            debugger
             ob.pipe(
               finalize(() => {
                 results.modalContentInstance.data.canConfirm(true);

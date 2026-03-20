@@ -38,12 +38,12 @@ export class ApiService {
         }),
         switchMap((response: any) => {
           // 如果启用了响应加密且响应包含加密数据
-          console.log('Response received:', response);
+          // console.log('Response received:', response);
           if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
             console.log('Decrypting response...');
             return from(this.encryptionService.decryptResponse(response.encryptedData));
           }
-          console.log('Response not encrypted, returning as-is');
+          // console.log('Response not encrypted, returning as-is');
           return of(response);
         }),
         catchError(error => {
@@ -135,19 +135,19 @@ export class ApiService {
     const headersConfig: any = {
       'Content-Type': 'application/json',
     };
-    
+
     const robotToken = localStorage.getItem('robotToken');
     if (robotToken && robotToken.length > 10) {
       headersConfig['Authorization'] = `Robot ${robotToken}`;
     } else {
       if (robotToken) localStorage.removeItem('robotToken');
-      
+
       let token = localStorage.getItem('id_token');
       if (token) {
         headersConfig['Authorization'] = 'Bearer ' + token;
       }
     }
-    
+
     return new HttpHeaders(headersConfig);
   }
 
@@ -165,19 +165,19 @@ export class ApiService {
     if (EncryptionConfig.responseEncryptionEnabled) {
       headersConfig[EncryptionConfig.responseEncryptionHeader] = 'true';
     }
-    
+
     const robotToken = localStorage.getItem('robotToken');
     if (robotToken && robotToken.length > 10) {
       headersConfig['Authorization'] = `Robot ${robotToken}`;
     } else {
       if (robotToken) localStorage.removeItem('robotToken');
-      
+
       let token = localStorage.getItem('id_token');
       if (token) {
         headersConfig['Authorization'] = 'Bearer ' + token;
       }
     }
-    
+
     return new HttpHeaders(headersConfig);
   }
 

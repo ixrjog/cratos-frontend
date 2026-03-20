@@ -117,11 +117,11 @@ export class EdsService extends EdsData {
   }
 
   addInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.post(this.baseUrl, '/instance/cratos/asset/add', param);
+    return this.apiService.post(this.baseUrl, '/instance/custom/asset/add', param);
   }
 
   updateInstanceCratosAsset(param: CratosAssetEdit): Observable<HttpResult<Boolean>> {
-    return this.apiService.put(this.baseUrl, '/instance/cratos/asset/update', param);
+    return this.apiService.put(this.baseUrl, '/instance/custom/asset/update', param);
   }
 
   getEdsInstanceAsset(param: { id: number }): Observable<HttpResult<EdsAssetVO>> {

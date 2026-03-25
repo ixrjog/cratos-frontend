@@ -103,6 +103,12 @@ import {
 import {
   WorkOrderApplicationJvmTicketComponent
 } from '../work-order-ticket/work-order-application-jvm-ticket/work-order-application-jvm-ticket.component';
+import {
+  WorkOrderGcpIamRoleTicketComponent
+} from '../work-order-ticket/work-order-cloud-policy-ticket/work-order-gcp-iam-role-ticket/work-order-gcp-iam-role-ticket.component';
+import {
+  WorkOrderGcpIamTicketComponent
+} from '../work-order-ticket/work-order-cloud-identity-ticket/work-order-gcp-iam-ticket/work-order-gcp-iam-ticket.component';
 
 @Component({
   selector: 'app-work-order-data-table',
@@ -370,6 +376,12 @@ export class WorkOrderDataTableComponent implements OnInit {
           this.fetchData();
         }, ticket);
         break;
+      case WorkOrderKeyEnum.GCP_IAM_PERMISSION:
+        dialogDate['content'] = WorkOrderGcpIamTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
       case WorkOrderKeyEnum.ALIYUN_RAM_USER_RESET:
         dialogDate['content'] = WorkOrderAliyunRamResetTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
@@ -402,6 +414,12 @@ export class WorkOrderDataTableComponent implements OnInit {
         break;
       case WorkOrderKeyEnum.AWS_IAM_POLICY_PERMISSION:
         dialogDate['content'] = WorkOrderAwsIamPolicyTicketComponent;
+        this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
+          this.fetchData();
+        }, ticket);
+        break;
+      case WorkOrderKeyEnum.GCP_IAM_ROLE_PERMISSION:
+        dialogDate['content'] = WorkOrderGcpIamRoleTicketComponent;
         this.dialogUtil.onEditWithoutButtonDialog(ADD_OPERATION, dialogDate, () => {
           this.fetchData();
         }, ticket);

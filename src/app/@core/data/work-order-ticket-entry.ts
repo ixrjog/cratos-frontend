@@ -80,18 +80,30 @@ export interface AddCreateAwsIamUserTicketEntry {
   detail: AwsIamUserAccount;
 }
 
+export interface AddGcpIamMemberTicketEntry {
+  ticketId: number;
+  detail: AddGcpIamMember;
+}
+
 export interface AddAliyunRamPolicyPermissionTicketEntry {
   ticketId: number;
   detail: AliyunRamPolicy;
 }
 
-export interface AliyunRamUserAccount extends CloudIdentityAccount{
+export interface AliyunRamUserAccount extends CloudIdentityAccount {
 }
 
-export interface AwsIamUserAccount extends CloudIdentityAccount{
+export interface AwsIamUserAccount extends CloudIdentityAccount {
+}
+
+export interface AddGcpIamMember extends CloudIdentityAccount {
+  member: string;
 }
 
 export interface AliyunRamPolicy extends CloudPolicy {
+}
+
+export interface GcpIamRole extends CloudPolicy {
 }
 
 export interface CloudIdentityAccount {
@@ -146,6 +158,11 @@ export interface AddCreateAwsTransferSftpUserTicketEntry {
 export interface AddAwsIamPolicyPermissionTicketEntry {
   ticketId: number;
   detail: AwsIamPolicy;
+}
+
+export interface AddGcpIamRoleTicketEntry {
+  ticketId: number;
+  detail: GcpIamRole;
 }
 
 export interface AwsIamPolicy extends CloudPolicy {
@@ -300,6 +317,8 @@ export abstract class WorkOrderTicketEntryData {
 
   abstract addCreateAwsIamUserTicketEntry(param: AddCreateAwsIamUserTicketEntry): Observable<HttpResult<Boolean>>;
 
+  abstract addGcpIamMemberTicketEntry(param: AddGcpIamMemberTicketEntry): Observable<HttpResult<Boolean>>;
+
   abstract addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addResetAliyunRamUserTicketEntry(param: AddResetAliyunRamUserTicketEntry): Observable<HttpResult<Boolean>>;
@@ -317,6 +336,8 @@ export abstract class WorkOrderTicketEntryData {
   abstract addCreateAwsTransferSftpUserTicketEntry(param: AddCreateAwsTransferSftpUserTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>>;
+
+  abstract addGcpIamRoleTicketEntry(param: AddGcpIamRoleTicketEntry): Observable<HttpResult<Boolean>>;
 
   abstract addApplicationProdPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>>;
 

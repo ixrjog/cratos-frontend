@@ -193,6 +193,14 @@ export default {
       tips3: '3. 总长度必须在3到100个字符之间（第一个字符加上后面的2-99个字符）',
     },
     cloudIdentity: {
+      gcp: {
+        labels: {
+          member: '账户',
+        },
+        tips: {
+          member: '请输入你的 GooGle Mail 账户'
+        }
+      },
       headers: {
         instance: '实例',
         accountId: '账户 ID',

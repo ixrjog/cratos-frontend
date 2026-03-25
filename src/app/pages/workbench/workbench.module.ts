@@ -179,6 +179,8 @@ import { WebTerminalThemeSettingsComponent } from './web-terminal/web-terminal-m
 import { ExtDatasourceModule } from '../ext-datasource/ext-datasource.module';
 import { WorkOrderAwsIamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-aws-iam-ticket/work-order-aws-iam-ticket.component';
 import { WorkOrderApplicationJvmTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-jvm-ticket/work-order-application-jvm-ticket.component';
+import { WorkOrderGcpIamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-gcp-iam-ticket/work-order-gcp-iam-ticket.component';
+import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-gcp-iam-role-ticket/work-order-gcp-iam-role-ticket.component';
 
 @NgModule({
   declarations: [
@@ -257,6 +259,8 @@ import { WorkOrderApplicationJvmTicketComponent } from './work-order/work-order-
     WebTerminalThemeSettingsComponent,
     WorkOrderAwsIamTicketComponent,
     WorkOrderApplicationJvmTicketComponent,
+    WorkOrderGcpIamTicketComponent,
+    WorkOrderGcpIamRoleTicketComponent,
   ],
   imports: [
     CommonModule,

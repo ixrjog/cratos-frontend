@@ -192,6 +192,14 @@ export default {
       tips3: '3. Have a total length between 3-100 characters',
     },
     cloudIdentity: {
+      gcp: {
+        labels: {
+          member: 'Member',
+        },
+        tips: {
+          member: 'Please enter your google mail account'
+        }
+      },
       headers: {
         instance: 'Instance',
         accountId: 'Account ID',

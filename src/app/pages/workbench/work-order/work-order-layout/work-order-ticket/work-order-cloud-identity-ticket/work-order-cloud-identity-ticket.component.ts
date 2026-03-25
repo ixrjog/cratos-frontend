@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { WorkOrderBaseTicketComponent } from '../work-order-base-ticket/work-order-base-ticket.component';
 import { WorkOrderTicketDetailsVO, WorkOrderTicketEntryVO } from '../../../../../../@core/data/work-order-ticket';
 import { CloudIdentityAccount } from '../../../../../../@core/data/work-order-ticket-entry';
@@ -21,6 +21,7 @@ export class WorkOrderCloudIdentityTicketComponent implements OnInit {
   @ViewChild('workOrderBaseTicket') workOrderBaseTicket: WorkOrderBaseTicketComponent;
   @Input() ticketDetails: WorkOrderTicketDetailsVO;
   @Input() edsType: string;
+  @Input() editTicketEntryExtTemplate: TemplateRef<any>;
   @Output() onAddTicketEntry = new EventEmitter<CloudIdentityAccount>();
   @Output() onGetTicket = new EventEmitter<WorkOrderTicketDetailsVO>();
   @Output() onHideDialog = new EventEmitter<null>();

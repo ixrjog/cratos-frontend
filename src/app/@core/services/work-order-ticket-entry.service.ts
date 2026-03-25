@@ -16,7 +16,7 @@ import {
   AddCreateAwsTransferSftpUserTicketEntry,
   AddCreateFrontEndApplicationTicketEntry,
   AddDeploymentElasticScalingTicketEntry,
-  AddDeploymentJvmSpecTicketEntry,
+  AddDeploymentJvmSpecTicketEntry, AddGcpIamMemberTicketEntry, AddGcpIamRoleTicketEntry,
   AddGitLabPermissionTicketEntry,
   AddLdapRolePermissionTicketEntry,
   AddResetAlimailUserTicketEntry,
@@ -121,6 +121,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
     return this.apiService.post(this.baseUrl, '/aws/iam/user/instance/add', param);
   }
 
+  addGcpIamMemberTicketEntry(param: AddGcpIamMemberTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/gcp/iam/member/instance/add', param);
+  }
+
   addAliyunRamPolicyPermissionTicketEntry(param: AddAliyunRamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aliyun/ram/policy/permission/add', param);
   }
@@ -155,6 +159,10 @@ export class WorkOrderTicketEntryService extends WorkOrderTicketEntryData {
 
   addAwsIamPolicyPermissionTicketEntry(param: AddAwsIamPolicyPermissionTicketEntry): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/aws/iam/policy/permission/add', param);
+  }
+
+  addGcpIamRoleTicketEntry(param: AddGcpIamRoleTicketEntry): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/gcp/iam/role/permission/add', param);
   }
 
   addApplicationProdPermissionTicketEntry(param: AddApplicationPermissionTicketEntry): Observable<HttpResult<Boolean>> {

@@ -1,0 +1,22 @@
+<app-work-order-cloud-identity-ticket
+  #workOrderCloudIdentityTicket
+  [ticketDetails]="ticketDetails"
+  [edsType]="'GCP'"
+  (onAddTicketEntry)="onAddTicketEntry($event)"
+  (onGetTicket)="onGetTicketDetail($event)"
+  (onHideDialog)="onCancel()"
+  [editTicketEntryExtTemplate]="editTicketEntryExtTemplate"
+>
+</app-work-order-cloud-identity-ticket>
+
+<ng-template #editTicketEntryExtTemplate>
+  <d-form-item>
+    <d-form-label [required]=" true">{{ 'workOrderTicket.cloudIdentity.gcp.labels.member' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput name="member" [(ngModel)]="member" />
+      <d-alert [type]="'info'" [closeable]="false" style="margin-top: 5px">
+        {{ 'workOrderTicket.cloudIdentity.gcp.tips.member' | translate }}
+      </d-alert>
+    </d-form-control>
+  </d-form-item>
+</ng-template>

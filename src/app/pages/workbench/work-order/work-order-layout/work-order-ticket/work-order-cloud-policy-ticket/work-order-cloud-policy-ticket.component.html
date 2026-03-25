@@ -31,6 +31,7 @@
       <d-form-control>
         <d-select
           name="cloudPolicy"
+          [width]="580"
           [filterKey]="'name'"
           [appendToBody]="true"
           [(ngModel)]="cloudPolicy"
@@ -71,22 +72,25 @@
       <d-column field="detail" [header]="'workOrderTicket.cloudPolicy.headers.loginUsername' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            <span *ngIf="edsType==='ALIYUN'">{{ cellItem['ramLoginUsername'] }}</span>
-            <span *ngIf="edsType==='AWS'">{{ cellItem['cloudAccount']?.accountLogin.loginUsername }}</span>
+            <span *ngIf="edsType === 'ALIYUN'">{{ cellItem['ramLoginUsername'] }}</span>
+            <span *ngIf="edsType === 'AWS'">{{ cellItem['cloudAccount']?.accountLogin.loginUsername }}</span>
+            <span *ngIf="edsType === 'GCP'">{{ cellItem['member'] }}</span>
           </ng-template>
         </d-cell>
       </d-column>
       <d-column field="detail" [header]="'workOrderTicket.cloudPolicy.headers.policyName' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            {{ cellItem['asset']?.name }}
+            <span *ngIf="edsType === 'GCP'">{{ cellItem['role']?.title }}</span>
+            <span *ngIf="edsType !== 'GCP'">{{ cellItem['asset']?.name }}</span>
           </ng-template>
         </d-cell>
       </d-column>
       <d-column field="detail" [header]="'workOrderTicket.cloudPolicy.headers.policyDesc' | translate">
         <d-cell>
           <ng-template let-cellItem="cellItem">
-            {{ cellItem['asset']?.description }}
+            <span *ngIf="edsType === 'GCP'">{{ cellItem['role']?.description }}</span>
+            <span *ngIf="edsType !== 'GCP'">{{ cellItem['asset']?.description }}</span>
           </ng-template>
         </d-cell>
       </d-column>

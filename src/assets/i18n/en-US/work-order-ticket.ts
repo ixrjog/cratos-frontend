@@ -197,7 +197,7 @@ export default {
           member: 'Member',
         },
         tips: {
-          member: 'Please enter your google mail account'
+          member: 'Enter your Google Account (email format, e.g. example@gmail.com). If you don\'t have one, please register at accounts.google.com first. Once the request is approved, check your inbox for an invitation email from Google Cloud and click the link to confirm joining the project.'
         }
       },
       headers: {

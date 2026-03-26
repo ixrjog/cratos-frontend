@@ -198,7 +198,7 @@ export default {
           member: '账户',
         },
         tips: {
-          member: '请输入你的 GooGle Mail 账户'
+          member: '请输入你的 Google Account（邮箱格式，如 example@gmail.com）。如果没有 Google 账号，请先前往 accounts.google.com 注册。工单审批通过后，请在该邮箱中查收来自 Google Cloud 的邀请邮件，并点击邮件中的链接确认加入项目。'
         }
       },
       headers: {

@@ -102,6 +102,11 @@ export class WorkOrderBaseTicketComponent {
       ...this.dialogDate.warningOperateData,
       content: this.dialogDate.content.approve,
     };
+
+    if (approvalType === APPROVAL_REJECT) {
+      dialogDate.content = this.dialogDate.content.reject;
+    }
+
     this.dialogUtil.onDialog(dialogDate, () => {
       this.disabled.approval = true;
       this.disabled.cancel = true;

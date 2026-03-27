@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ApplicationPageQuery, ApplicationVO, ScanResource } from '../../../../@core/data/application';
 import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
@@ -7,8 +7,8 @@ import {
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions,
 } from '../../../../@core/data/application-resource';
-import { finalize, of, Subscription, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, of, Subject, Subscription, timer } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import {
   WebSocketApiService,
   WsMessageActionEnum,
@@ -28,7 +28,7 @@ import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user
   templateUrl: './kubernetes-resources-tabs.component.html',
   styleUrls: [ './kubernetes-resources-tabs.component.less' ],
 })
-export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
   private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
@@ -62,6 +62,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
   ws: WebSocket;
   timerRequest: Subscription;
   wsHeartbeatTimerRequest: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -73,8 +74,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
   ) {
   }
 
-  ngAfterViewInit(): void {
-    this.activatedRoute.queryParams.subscribe(param => {
+  private initRouteParams(): void {
+    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe(param => {
       if (param['applicationName'] !== undefined) {
         this.queryParam.applicationName  = param['applicationName']
         this.applicationService.getApplicationByName({name: this.queryParam.applicationName})
@@ -132,11 +133,11 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
         }
       }
     });
-    this.onGetUserFavorite();
   }
 
   onGetUserFavorite() {
     this.userFavoriteService.getMyFavoriteApplication()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(({ body }) => {
         this.favoriteApplicationList = body;
       });
@@ -148,6 +149,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       businessId: applicationId,
     };
     this.userFavoriteService.addApplicationFavorite(param)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.onGetUserFavorite();
       });
@@ -159,6 +161,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       businessId: applicationId,
     };
     this.userFavoriteService.removeApplicationFavorite(param)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
         if (this.application?.id === applicationId) {
@@ -199,6 +202,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       this.loading = true;
       this.applicationResourceService.queryApplicationResourceKubernetesDetails(param)
         .pipe(
+          takeUntil(this.destroy$),
           finalize(() => {
             this.loading = false;
             this.wsOnSubSend();
@@ -228,6 +232,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.toastUtil.onCommonToast(TOAST_CONTENT.OPERATION);
     this.applicationService.scanApplicationResource(param)
       .pipe(
+        takeUntil(this.destroy$),
         finalize(() => {
           this.loading = false;
         }))
@@ -261,6 +266,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
     if (this.queryParam.applicationName) {
       this.applicationService.getMyResourceNamespaceOptions({ applicationName: application.name })
+        .pipe(takeUntil(this.destroy$))
         .subscribe(({ body }) => {
           this.resourceNamespaceOptions = body.options;
           const namespaceExists = body.options.some(option => option.value === currentNamespace);
@@ -273,6 +279,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
               namespace: currentNamespace,
             };
             this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(param)
+              .pipe(takeUntil(this.destroy$))
               .subscribe(({ body }) => {
                 this.resourceNameOptions = body.options;
               });
@@ -317,6 +324,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       namespace: this.queryParam.namespace,
     };
     this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(({ body }) => {
         this.resourceNameOptions = body.options;
       });
@@ -328,6 +336,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.resourceNameOptions = [];
     this.applicationService.getMyResourceNamespaceOptions({ applicationName: this.application.name })
       .pipe(
+        takeUntil(this.destroy$),
         finalize(() => {
           this.nameSpaceLoading = false;
         }),
@@ -353,6 +362,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     this.wsOnOpen();
     this.initInterval();
     this.onWsHeartbeat();
+    this.initRouteParams();
+    this.onGetUserFavorite();
   }
 
   wsOnClose() {
@@ -368,6 +379,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
       if (this.ws) {
         this.ws.onopen = null;
         this.ws.onmessage = null;
+        this.ws.onerror = null;
+        this.ws.onclose = null;
         if (this.ws.readyState === WebSocket.OPEN ||
           this.ws.readyState === WebSocket.CONNECTING) {
           this.ws.close();
@@ -379,6 +392,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.wsOnClose();
     localStorage.removeItem('kubernetes_resources');
     localStorage.removeItem('kubernetes_resources_version');

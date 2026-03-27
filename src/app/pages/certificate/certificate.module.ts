@@ -20,6 +20,10 @@ import { CertificateDeploymentComponent } from './certificate-deployment/certifi
 import {
   CertificateDeploymentDetailComponent
 } from './certificate-deployment/certificate-deployment-detail/certificate-deployment-detail.component';
+import { AcmeDomainComponent } from './acme-domain/acme-domain.component';
+import {
+  AcmeDomainDataTableComponent
+} from './acme-domain/acme-domain-data-table/acme-domain-data-table.component';
 
 
 @NgModule({
@@ -29,7 +33,9 @@ import {
     CertificateListDataTableComponent,
     CertificateEditorComponent,
     CertificateDeploymentComponent,
-    CertificateDeploymentDetailComponent
+    CertificateDeploymentDetailComponent,
+    AcmeDomainComponent,
+    AcmeDomainDataTableComponent,
   ],
   imports: [
     CommonModule,

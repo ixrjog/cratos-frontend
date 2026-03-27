@@ -1,0 +1,91 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="name" header="Name" [width]="'200px'"></d-column>
+    <d-column field="domains" header="Domains" [width]="'300px'"></d-column>
+    <d-column field="edsInstance" header="DNS Resolver" [width]="'180px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="account" header="ACME Account" [width]="'180px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="dcvType" header="DCV" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span *ngIf="rowItem['dcvType']">
+            <d-tag [tag]="rowItem['dcvType']" [labelStyle]="'blue-w98'"></d-tag>
+            {{ rowItem['dcvDelegationTarget'] }}
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" header="Valid" [width]="'80px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon
+            [icon]="'icon-priority'"
+            [color]="getRowColor(cellItem)"
+          ></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Tags" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [width]="'160px'" field="createTime" header="Create Time">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

@@ -49,6 +49,7 @@ import { ApplicationCredentialService } from './services/application-credential.
 import { FinOpsService } from './services/finops.service';
 import { UserFavoriteService } from './services/user-favorite.service';
 import { TrafficRouteService } from './services/traffic-route.service';
+import { AcmeService } from './services/acme.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -103,6 +104,7 @@ export const CRATOS_PROVIDERS = [
   FinOpsService,
   UserFavoriteService,
   TrafficRouteService,
+  AcmeService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

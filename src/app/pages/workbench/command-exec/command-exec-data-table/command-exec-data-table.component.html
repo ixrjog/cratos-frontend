@@ -27,11 +27,10 @@
     [checkable]="true"
   >
     <d-column field="id" header="ID" [width]="'100px'"></d-column>
-    <d-column field="username" header="Info">
+    <d-column field="username" header="Applicant" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <span>Applicant:&nbsp;</span>
             <d-icon
               [icon]="'icon-identity-auth'"
               dPopover
@@ -48,21 +47,22 @@
             </ng-template>
             <span>{{ rowItem['username'] }}</span>
           </div>
-
           <div>
-            <span>Remark:&nbsp;</span>
+            <i class="fas fa-comment" style="vertical-align: middle;margin-right: 5px"></i>
             <span>{{ rowItem['applyRemark'] }}</span>
           </div>
-
           <div>
             <span>{{ rowItem['createTime'] | dDatePipe: 'y/M/d HH:mm:ss z' }}</span>&nbsp;
             <strong>{{ rowItem['createTime'] | dRelativeTime: limit | async }}</strong>
           </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
 
-          <div class="cratos-divider" style="margin: 5px 0 5px 0"></div>
-
+    <d-column field="approvedBy" header="Approver" [width]="'180px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
           <div>
-            <span>Approver:&nbsp;</span>
             <d-icon
               [icon]="'icon-identity-auth'"
               dPopover
@@ -80,18 +80,15 @@
             <span>{{ rowItem['approvedBy'] }}</span>
             <d-tag
               *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null"
-              dPopover
               style="margin-left: 5px"
               [tag]="rowItem['approvals']['APPROVER']['approvalStatus']"
               [labelStyle]="rowItem['approvals']['APPROVER']['approvalStatus']==='AGREE'?'green-w98':'red-w98'"
             ></d-tag>
           </div>
-
           <div *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null">
-            <span>Remark:&nbsp;</span>
+            <i class="fas fa-comment" style="vertical-align: middle;margin-right: 5px"></i>
             <span>{{ rowItem['approvals']['APPROVER']['approveRemark'] }}</span>
           </div>
-
           <div *ngIf="rowItem['ccTo'] !==''">
             <span>CC:&nbsp;</span>
             <d-icon
@@ -110,7 +107,6 @@
             </ng-template>
             <span>{{ rowItem['ccTo'] }}</span>
           </div>
-
         </ng-template>
       </d-cell>
     </d-column>
@@ -138,10 +134,30 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="commandMask" header="Command">
+    <d-column field="commandMask" header="Command" [width]="'200px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <app-xterm-logs [logs]="cellItem"></app-xterm-logs>
+          <div>
+            <span style="font-family: 'Courier New', monospace; font-size: 12px; color: #666; margin-right: 8px;">
+              {{ cellItem | slice:0:30 }}{{ cellItem?.length > 30 ? '...' : '' }}
+            </span>
+            <d-icon
+              [icon]="'icon-view'"
+              [operable]="true"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'click'"
+              [controlled]="true"
+              [content]="commandTemplate"
+              [popoverStyle]="getPopoverStyle({width: '600px'})"
+            ></d-icon>
+            <ng-template #commandTemplate>
+              <app-xterm-logs [logs]="cellItem"></app-xterm-logs>
+            </ng-template>
+          </div>
+          <div style="font-size: 11px; margin-top: 4px;">
+            Lines: {{ cellItem?.split('\n')?.length || 0 }} | Chars: {{ cellItem?.length || 0 }}
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

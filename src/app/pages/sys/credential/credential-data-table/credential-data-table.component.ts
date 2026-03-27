@@ -27,10 +27,14 @@ export class CredentialDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CREDENTIAL;
+  private static readonly CREDENTIAL_TYPE_STORAGE_KEY = 'credential_selected_type';
+
   queryParam = {
     queryName: '',
-    credentialType: '',
+    credentialType: localStorage.getItem(CredentialDataTableComponent.CREDENTIAL_TYPE_STORAGE_KEY) || '',
   };
+
+  credentialTypeOptions = [];
 
   table: Table<CredentialVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
@@ -94,6 +98,21 @@ export class CredentialDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchData();
+    this.getCredentialTypeOptions();
+  }
+
+  getCredentialTypeOptions() {
+    this.credentialService.getCredentialOptions()
+      .subscribe(({ body }) => {
+        this.credentialTypeOptions = body.options;
+      });
+  }
+
+  onCredentialTypeChange(credentialType: any) {
+    const value = typeof credentialType === 'object' ? credentialType?.value || '' : credentialType || '';
+    this.queryParam.credentialType = value;
+    localStorage.setItem(CredentialDataTableComponent.CREDENTIAL_TYPE_STORAGE_KEY, value);
     this.fetchData();
   }
 

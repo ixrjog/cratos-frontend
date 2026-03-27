@@ -51,9 +51,12 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   favoriteGroupList: FavoriteGroupVO[] = [];
   isCollapsed = true;
 
+  private static readonly SEARCH_STORAGE_KEY = 'web_terminal_search_name';
+  private static readonly GROUP_STORAGE_KEY = 'web_terminal_tag_group';
+
   queryParam = {
-    tagGroup: '',
-    queryName: '',
+    tagGroup: localStorage.getItem(WebTerminalDrawerComponent.GROUP_STORAGE_KEY) || '',
+    queryName: localStorage.getItem(WebTerminalDrawerComponent.SEARCH_STORAGE_KEY) || '',
   };
 
   table: Table<EdsAssetVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -83,6 +86,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
       takeUntil(this.destroy$)
     ).subscribe(searchValue => {
       this.queryParam.queryName = searchValue;
+      localStorage.setItem(WebTerminalDrawerComponent.SEARCH_STORAGE_KEY, searchValue || '');
       this.table.pager.pageIndex = 1;
     });
 
@@ -122,6 +126,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   fetchData(): void {
+    localStorage.setItem(WebTerminalDrawerComponent.SEARCH_STORAGE_KEY, this.queryParam.queryName || '');
     const param: TagGroupAssetPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -155,7 +160,16 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
 
   onTagGroupChange(option: any): void {
     this.queryParam.tagGroup = option;
+    localStorage.setItem(WebTerminalDrawerComponent.GROUP_STORAGE_KEY, option || '');
     this.isFavorite = this.onIsFavorite()
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
+  }
+
+  onClearTagGroup(): void {
+    this.queryParam.tagGroup = '';
+    localStorage.setItem(WebTerminalDrawerComponent.GROUP_STORAGE_KEY, '');
+    this.isFavorite = false;
     this.table.pager.pageIndex = 1;
     this.fetchData();
   }
@@ -300,6 +314,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
   onClick(group: FavoriteGroupVO) {
     this.isFavorite = true
     this.queryParam.tagGroup = group.name;
+    localStorage.setItem(WebTerminalDrawerComponent.GROUP_STORAGE_KEY, group.name || '');
     this.fetchData();
     this.onAddGroupFavorite(group.name);
   }

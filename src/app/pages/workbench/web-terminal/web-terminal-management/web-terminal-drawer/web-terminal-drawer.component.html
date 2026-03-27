@@ -25,19 +25,27 @@
     >
     </d-search>
 
-    <input
-      dTextInput
-      [allowEmptyValueSearch]="true"
-      [delay]="1000"
-      [appendToBody]="true"
-      name="tagGroup"
-      [valueParser]="valueParser"
-      [(ngModel)]="queryParam.tagGroup"
-      (ngModelChange)="onTagGroupChange($event)"
-      placeholder="Input key select tag group"
-      dAutoComplete
-      [searchFn]="onSearchTagGroup.bind(this)"
-    />
+    <div style="position: relative; display: inline-flex; flex: 1; min-width: 200px;">
+      <input
+        style="width: 100%; padding-right: 28px;"
+        dTextInput
+        [allowEmptyValueSearch]="true"
+        [delay]="1000"
+        [appendToBody]="true"
+        name="tagGroup"
+        [valueParser]="valueParser"
+        [(ngModel)]="queryParam.tagGroup"
+        (ngModelChange)="onTagGroupChange($event)"
+        placeholder="Input key select tag group"
+        dAutoComplete
+        [searchFn]="onSearchTagGroup.bind(this)"
+      />
+      <i *ngIf="queryParam.tagGroup"
+         class="icon icon-close"
+         style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999;"
+         (click)="onClearTagGroup()">
+      </i>
+    </div>
 
     <d-button
       bsStyle="common"
@@ -86,7 +94,6 @@
       [tableOverflowType]="'overlay'"
       [backdrop]="true"
       [scrollable]="true"
-      [tableHeight]="'calc(100vh - 350px)'"
       [loadingStyle]="'infinity'"
       [loading]="table.loading"
       [checkable]="true">

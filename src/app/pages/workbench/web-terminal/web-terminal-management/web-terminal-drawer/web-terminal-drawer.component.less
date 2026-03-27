@@ -79,9 +79,10 @@
   }
 
   .asset-table-container {
-    flex: 1;
+    flex: 0 1 auto;
     min-height: 0;
-    overflow: hidden;
+    overflow: auto;
+    max-height: calc(100vh - 350px);
     border: 1px solid @devui-dividing-line;
     border-radius: 6px;
 

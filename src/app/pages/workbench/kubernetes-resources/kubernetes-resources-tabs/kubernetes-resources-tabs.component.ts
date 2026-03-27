@@ -30,6 +30,9 @@ import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user
 })
 export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
+  private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
+
   queryParam = {
     applicationName: '',
     instanceName: '',
@@ -97,6 +100,36 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
             this.fetchData();
           })
+      } else {
+        // 从 localStorage 恢复
+        const savedApp = localStorage.getItem(KubernetesResourcesTabsComponent.APP_STORAGE_KEY);
+        const savedNs = localStorage.getItem(KubernetesResourcesTabsComponent.NS_STORAGE_KEY);
+        if (savedApp) {
+          this.queryParam.applicationName = savedApp;
+          this.applicationService.getApplicationByName({name: savedApp})
+            .subscribe(({body}) => {
+              this.application = body;
+              this.isFavorite = this.application.favorited;
+              this.queryParam.namespace = savedNs || '';
+              if (!this.first) {
+                this.first = true;
+              }
+              this.getResourceNamespaceOptions();
+
+              if (savedNs) {
+                const parma: QueryKubernetesDeploymentOptions = {
+                  applicationName: this.application.name,
+                  namespace: savedNs,
+                };
+                this.applicationResourceService.queryApplicationResourceKubernetesDeploymentOptions(parma)
+                  .subscribe(({ body }) => {
+                    this.resourceNameOptions = body.options;
+                  });
+              }
+
+              this.fetchData();
+            });
+        }
       }
     });
     this.onGetUserFavorite();
@@ -222,6 +255,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
     }
     this.isFavorite = application.favorited;
     this.queryParam.applicationName = application?.name;
+    localStorage.setItem(KubernetesResourcesTabsComponent.APP_STORAGE_KEY, application?.name || '');
     const currentNamespace = this.queryParam.namespace;
     this.wsOnUnsubSend();
 
@@ -275,6 +309,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy, Afte
 
   onResourceNamespaceChange(tab) {
     this.queryParam.namespace = tab;
+    localStorage.setItem(KubernetesResourcesTabsComponent.NS_STORAGE_KEY, tab || '');
     this.queryParam.name = '';
     this.fetchData();
     const parma: QueryKubernetesDeploymentOptions = {

@@ -186,13 +186,13 @@
                 [content]="jvmTemplate"
                 [tag]="'kubernetes.resources.jvm' | translate"
                 [labelStyle]="'blue-w98'"
-                [popoverStyle]="getPopoverStyle({width: '1000px'})"
               ></d-tag>
               <ng-template #jvmTemplate>
-                <app-xterm-logs
-                  [rows]="30"
-                  [logs]="kubernetesDeployment.attributes['env.java.opts']"
-                ></app-xterm-logs>
+                <div style="padding: 8px; max-width: 600px; word-break: break-all; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.8;">
+                  <div *ngFor="let opt of kubernetesDeployment.attributes['env.java.opts'].split(' ')">
+                    {{ opt }}
+                  </div>
+                </div>
               </ng-template>
             </div>
 

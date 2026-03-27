@@ -50,12 +50,14 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   private heartbeatSubscription: Subscription | null = null;
   private lastHeartbeatTime: number = 0;
   private readonly HEARTBEAT_TIMEOUT = 30000; // 30秒超时检测
+  connectionStatus: string = 'Connecting';
 
   // Terminal相关
   terminal: Terminal;
   fitAddon = new FitAddon();
   webLinksAddon = new WebLinksAddon();
   baseTerminalOptions: ITerminalOptions = BASE_TERMINAL_OPTIONS;
+  private terminalDisposables: { dispose(): void }[] = [];
 
   constructor(
     private wsApiService: WebSocketApiService,
@@ -148,6 +150,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
 
     this.ws.onopen = (event) => {
       console.log('WebSocket connected');
+      this.connectionStatus = 'Connected';
       this.lastHeartbeatTime = Date.now();
       this.initializeExecSession();
       this.setupTerminalInput();
@@ -159,11 +162,13 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
 
     this.ws.onerror = (error) => {
       console.error('WebSocket error:', error);
+      this.connectionStatus = 'Disconnected';
       this.terminal.write(`\r\n\x1b[31mWebSocket error occurred [${new Date().toLocaleString()}] \x1b[0m\r\n`);
     };
 
     this.ws.onclose = (event) => {
       console.log('WebSocket closed:', event.code, event.reason);
+      this.connectionStatus = 'Disconnected';
       if (event.code !== 1000) {
         // 非正常关闭
         const reason = event.reason || 'Unknown reason';
@@ -226,10 +231,12 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
 
     // 设置终端行数自动增长
-    this.terminal.onLineFeed(() => {
-      this.feedLines++;
-      this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
-    });
+    this.terminalDisposables.push(this.terminal.onLineFeed(() => {
+      if (this.feedLines < 1000) {
+        this.feedLines++;
+        this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
+      }
+    }));
 
     const param: ApplicationKubernetesDetailsRequest = {
       topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_POD_EXEC,
@@ -265,7 +272,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private setupTerminalInput(): void {
-    this.terminal.onData((event) => {
+    this.terminalDisposables.push(this.terminal.onData((event) => {
       const param: ApplicationKubernetesDetailsRequest = {
         topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_POD_EXEC,
         action: WsMessageActionEnum.INPUT,
@@ -294,7 +301,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       param.deployments.push(deployment);
 
       this.sendWebSocketMessage(param);
-    });
+    }));
   }
 
   private handleTerminalResize(): void {
@@ -374,6 +381,12 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
       this.ws = null;
     }
 
+    // 清理Terminal disposables
+    this.terminalDisposables.forEach(d => {
+      try { d.dispose(); } catch (e) {}
+    });
+    this.terminalDisposables = [];
+
     // 清理Terminal
     if (this.terminal) {
       try {
@@ -387,6 +400,23 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   // 公共方法
   onResize(event: any): void {
     this.handleTerminalResize();
+  }
+
+  onReconnect(): void {
+    this.connectionStatus = 'Connecting';
+    this.terminal.write('\r\n\x1b[33mReconnecting...\x1b[0m\r\n');
+    // 清理旧连接
+    if (this.ws) {
+      this.ws.onopen = null;
+      this.ws.onmessage = null;
+      this.ws.onerror = null;
+      this.ws.onclose = null;
+      if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+        this.ws.close();
+      }
+      this.ws = null;
+    }
+    this.initializeWebSocket();
   }
 
   onRowExit(): void {

@@ -3,12 +3,25 @@
     <d-card-header style="position: relative;margin-bottom: 5px;height: 28px">
       <d-card-subtitle>
         <span class="font-color-name" style="height: 22px">{{ kubernetesPod.metadata.name }}</span>
-        <d-button
-          style="position: absolute;right: 0;top: 0"
-          bsStyle="text"
-          (click)="onRowExit()"
-        >{{ 'kubernetes.actions.exit' | translate }}
-        </d-button>
+        <span style="margin-left: 10px;">
+          <d-tag
+            [tag]="connectionStatus"
+            [labelStyle]="connectionStatus === 'Connected' ? 'green-w98' : connectionStatus === 'Connecting' ? 'blue-w98' : 'red-w98'"
+          ></d-tag>
+        </span>
+        <span style="position: absolute;right: 0;top: 0; display: flex; gap: 8px;">
+          <d-button
+            bsStyle="text"
+            [disabled]="connectionStatus === 'Connected' || connectionStatus === 'Connecting'"
+            (click)="onReconnect()"
+          >Reconnect
+          </d-button>
+          <d-button
+            bsStyle="text"
+            (click)="onRowExit()"
+          >{{ 'kubernetes.actions.exit' | translate }}
+          </d-button>
+        </span>
       </d-card-subtitle>
     </d-card-header>
     <d-card-content>

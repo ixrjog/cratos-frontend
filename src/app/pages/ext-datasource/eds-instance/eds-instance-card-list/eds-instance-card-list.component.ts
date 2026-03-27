@@ -19,9 +19,11 @@ export class EdsInstanceCardListComponent implements OnInit {
 
   @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
 
+  private static readonly EDS_TYPE_STORAGE_KEY = 'eds_instance_selected_type';
+
   queryParam = {
     queryName: '',
-    edsType: '',
+    edsType: localStorage.getItem(EdsInstanceCardListComponent.EDS_TYPE_STORAGE_KEY) || '',
     queryByTag: {
       tagId: null,
       tagValue: null,
@@ -77,7 +79,10 @@ export class EdsInstanceCardListComponent implements OnInit {
     this.fetchData();
   }
 
-  onEdsTypeChange(edsType: string) {
+  onEdsTypeChange(edsType: any) {
+    const value = typeof edsType === 'object' ? edsType?.value || '' : edsType || '';
+    this.queryParam.edsType = value;
+    localStorage.setItem(EdsInstanceCardListComponent.EDS_TYPE_STORAGE_KEY, value);
     this.fetchData();
   }
 

@@ -5,6 +5,7 @@ import { CertificateRoutingModule } from './certificate-routing.module';
 import { CertificateComponent } from './certificate.component';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 import { BreadcrumbModule, LoadingModule, PaginationModule } from 'ng-devui';
+import { MarkdownModule } from 'ngx-markdown';
 import { DataTableModule } from 'ng-devui/data-table';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,6 +28,9 @@ import {
 import {
   AcmeDomainEditorComponent
 } from './acme-domain/acme-domain-data-table/acme-domain-editor/acme-domain-editor.component';
+import {
+  AcmeDomainIssueConfirmComponent
+} from './acme-domain/acme-domain-data-table/acme-domain-issue-confirm/acme-domain-issue-confirm.component';
 import { AcmeOrderComponent } from './acme-order/acme-order.component';
 import {
   AcmeOrderDataTableComponent
@@ -48,6 +52,7 @@ import {
     AcmeDomainComponent,
     AcmeDomainDataTableComponent,
     AcmeDomainEditorComponent,
+    AcmeDomainIssueConfirmComponent,
     AcmeOrderComponent,
     AcmeOrderDataTableComponent,
     AcmeAccountComponent,
@@ -64,6 +69,7 @@ import {
     LoadingModule,
     BasicFormModule,
     PaginationModule,
+    MarkdownModule,
   ],
   providers: [
   ]

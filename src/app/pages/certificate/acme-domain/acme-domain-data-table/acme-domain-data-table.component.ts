@@ -6,7 +6,10 @@ import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { getRowColor } from '../../../../@shared/utils/data-table.utli';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
+import { DialogService } from 'ng-devui';
 import { AcmeDomainEditorComponent } from './acme-domain-editor/acme-domain-editor.component';
+import { AcmeDomainIssueConfirmComponent } from './acme-domain-issue-confirm/acme-domain-issue-confirm.component';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-acme-domain-data-table',
@@ -45,7 +48,7 @@ export class AcmeDomainDataTableComponent implements OnInit {
     comment: '',
   };
 
-  constructor(private acmeService: AcmeService, private dialogUtil: DialogUtil) {
+  constructor(private acmeService: AcmeService, private dialogUtil: DialogUtil, private dialogService: DialogService, private toastUtil: ToastUtil) {
   }
 
   fetchData() {
@@ -89,6 +92,44 @@ export class AcmeDomainDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, JSON.parse(JSON.stringify(rowItem)));
+  }
+
+  onIssueCertificate(rowItem: AcmeDomainVO) {
+    const results = this.dialogService.open({
+      id: 'issue-certificate',
+      title: 'Issue Certificate',
+      width: '500px',
+      maxHeight: '600px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      content: AcmeDomainIssueConfirmComponent,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: 'Confirm',
+          handler: () => {
+            this.acmeService.issueCertificate({ acmeDomainId: rowItem.id })
+              .subscribe({
+                next: () => {
+                  this.toastUtil.onSuccessToast('Certificate issuance started');
+                  results.modalInstance.hide();
+                },
+                error: (err) => {
+                  this.toastUtil.onErrorToast(err?.error?.desc || 'Issue certificate failed');
+                },
+              });
+          },
+        },
+        {
+          cssClass: 'common',
+          text: 'Cancel',
+          handler: () => results.modalInstance.hide(),
+        },
+      ],
+      data: {
+        formData: rowItem,
+      },
+    });
   }
 
 }

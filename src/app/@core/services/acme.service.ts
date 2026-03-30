@@ -74,6 +74,10 @@ export class AcmeService {
     return this.apiService.put(this.baseUrl, '/domain/update', param);
   }
 
+  issueCertificate(param: { acmeDomainId: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/certificate/issue', param);
+  }
+
   queryAcmeOrderPage(param: AcmeOrderPageQuery): Observable<DataTable<AcmeOrderVO>> {
     return this.apiService.post(this.baseUrl, '/order/page/query', param);
   }

@@ -1,0 +1,73 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-label [required]="true">Name</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="name" placeholder="Name" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">Domain</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="domain" placeholder="e.g. example.com" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Domains</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="domains" placeholder="e.g. *.example.com,example.com" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Zone ID</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="zoneId" placeholder="DNS Zone ID" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>DNS Resolver Instance ID</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="dnsResolverInstanceId" placeholder="EDS Instance ID" type="number" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>ACME Account</d-form-label>
+    <d-form-control>
+      <d-select
+        [filterKey]="'name'"
+        [appendToBody]="true"
+        [searchFn]="onSearchAccount"
+        [isSearch]="true"
+        placeholder="Search and select account"
+        (valueChange)="onAccountChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.name }}</span>
+          <span style="float: right; padding: 3px 0; color: #999;">{{ option.acmeProvider }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>DCV Type</d-form-label>
+    <d-form-control>
+      <d-select
+        [options]="dcvTypeOptions"
+        [allowClear]="true"
+        formControlName="dcvType"
+        placeholder="Select DCV Type"
+      ></d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>DCV Delegation Target</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="dcvDelegationTarget" placeholder="Delegation target" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Comment</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="comment" placeholder="Comment"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

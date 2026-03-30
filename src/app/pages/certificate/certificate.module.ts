@@ -24,6 +24,17 @@ import { AcmeDomainComponent } from './acme-domain/acme-domain.component';
 import {
   AcmeDomainDataTableComponent
 } from './acme-domain/acme-domain-data-table/acme-domain-data-table.component';
+import {
+  AcmeDomainEditorComponent
+} from './acme-domain/acme-domain-data-table/acme-domain-editor/acme-domain-editor.component';
+import { AcmeOrderComponent } from './acme-order/acme-order.component';
+import {
+  AcmeOrderDataTableComponent
+} from './acme-order/acme-order-data-table/acme-order-data-table.component';
+import { AcmeAccountComponent } from './acme-account/acme-account.component';
+import {
+  AcmeAccountDataTableComponent
+} from './acme-account/acme-account-data-table/acme-account-data-table.component';
 
 
 @NgModule({
@@ -36,6 +47,11 @@ import {
     CertificateDeploymentDetailComponent,
     AcmeDomainComponent,
     AcmeDomainDataTableComponent,
+    AcmeDomainEditorComponent,
+    AcmeOrderComponent,
+    AcmeOrderDataTableComponent,
+    AcmeAccountComponent,
+    AcmeAccountDataTableComponent,
   ],
   imports: [
     CommonModule,

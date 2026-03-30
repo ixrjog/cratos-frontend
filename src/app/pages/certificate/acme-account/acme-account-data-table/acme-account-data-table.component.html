@@ -1,5 +1,4 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -19,33 +18,17 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="name" header="Name" [width]="'200px'"></d-column>
-    <d-column field="domain" header="Domain" [width]="'200px'"></d-column>
-    <d-column field="domains" header="Domains" [width]="'300px'"></d-column>
-    <d-column field="edsInstance" header="DNS Resolver" [width]="'180px'">
+    <d-column field="name" header="Name" [width]="'180px'"></d-column>
+    <d-column field="email" header="Email" [width]="'200px'"></d-column>
+    <d-column field="acmeProvider" header="Provider" [width]="'140px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span *ngIf="cellItem">{{ cellItem.instanceName }}</span>
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="account" header="ACME Account" [width]="'180px'">
-      <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span *ngIf="cellItem">{{ cellItem.name }}</span>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column field="dcvType" header="DCV" [width]="'250px'">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <span *ngIf="rowItem['dcvType']">
-            <d-tag [tag]="rowItem['dcvType']" [labelStyle]="'blue-w98'"></d-tag>
-            {{ rowItem['dcvDelegationTarget'] }}
-          </span>
-        </ng-template>
-      </d-cell>
-    </d-column>
+    <d-column field="acmeServer" header="ACME Server"></d-column>
+    <d-column field="createdBy" header="Created By" [width]="'140px'"></d-column>
     <d-column field="valid" header="Valid" [width]="'80px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">

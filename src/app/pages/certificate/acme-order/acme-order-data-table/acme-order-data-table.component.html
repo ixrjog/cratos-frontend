@@ -1,0 +1,238 @@
+<div class="spacing-search">
+  <d-select
+    class="select"
+    style="width: 300px; max-width: 300px"
+    [filterKey]="'domain'"
+    [appendToBody]="true"
+    [(ngModel)]="selectedDomain"
+    [searchFn]="onSearchDomain"
+    [isSearch]="true"
+    placeholder="Search and select ACME domain"
+    (valueChange)="onDomainChange($event)"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.domain }}</span>
+      <span style="float: right; padding: 3px 0">{{ option.name }}</span>
+    </ng-template>
+  </d-select>
+  <d-button class="button" bsStyle="common" [disabled]="!queryParam.acmeDomainId" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="acmeDomain" header="Domain" [width]="'180px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.domain }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="domains" header="Domains" [width]="'200px'"></d-column>
+    <d-column field="orderUrl" header="Order URL" [width]="'500px'"></d-column>
+    <d-column field="orderStatus" header="Status" [width]="'120px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem"
+            [tag]="cellItem"
+            [labelStyle]="cellItem === 'valid' ? 'green-w98' : cellItem === 'pending' ? 'blue-w98' : 'red-w98'"
+          ></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="account" header="ACME Account" [width]="'160px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [width]="'160px'" field="expires" header="Expires">
+      <d-cell>
+        <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
+          <span *ngIf="rowItem['orderStatus'] === 'VALID' || rowItem['orderStatus'] === 'INVALID'">--</span>
+          <span *ngIf="rowItem['orderStatus'] !== 'VALID' && rowItem['orderStatus'] !== 'INVALID' && cellItem">
+            {{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}
+            <br>
+            <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="errorMessage" header="Details" [width]="'120px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon
+            *ngIf="rowItem['certificateId']"
+            [icon]="'icon-safe-setting'"
+            [operable]="true"
+            (click)="onViewCertificate(rowItem['certificateId'])"
+            style="margin-right: 8px;"
+            title="View Certificate"
+          ></d-icon>
+          <d-icon
+            *ngIf="rowItem['dnsChallengeRecords']"
+            [icon]="'icon-view'"
+            [operable]="true"
+            dPopover
+            [position]="'left-top'"
+            [trigger]="'click'"
+            [controlled]="true"
+            [content]="dnsTemplate"
+            [popoverStyle]="{ width: '600px' }"
+            style="margin-right: 8px;"
+          ></d-icon>
+          <ng-template #dnsTemplate>
+            <div style="padding: 12px;">
+              <h4 style="margin: 0 0 8px 0; color: var(--devui-brand, #5e7ce0);">DNS Challenge Records</h4>
+              <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 12px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px;">{{ formatJson(rowItem['dnsChallengeRecords']) }}</pre>
+            </div>
+          </ng-template>
+          <d-icon
+            *ngIf="rowItem['errorMessage']"
+            [icon]="'icon-warning'"
+            [operable]="true"
+            [color]="'red'"
+            dPopover
+            [position]="'left-top'"
+            [trigger]="'click'"
+            [controlled]="true"
+            [content]="errorTemplate"
+            [popoverStyle]="{ width: '600px' }"
+          ></d-icon>
+          <ng-template #errorTemplate>
+            <div style="padding: 12px;">
+              <h4 style="margin: 0 0 8px 0; color: red;">Error Message</h4>
+              <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 12px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; color: red;">{{ rowItem['errorMessage'] }}</pre>
+            </div>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [width]="'160px'" field="createTime" header="Create Time">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Select a domain to query orders</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>
+
+<!-- Certificate Dialog -->
+<div *ngIf="certificate" class="certificate-overlay" (click)="certificate = null">
+  <div class="certificate-dialog" (click)="$event.stopPropagation()">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="margin: 0; color: var(--devui-brand, #5e7ce0);">ACME Certificate</h3>
+      <d-icon [icon]="'icon-close'" [operable]="true" (click)="certificate = null"></d-icon>
+    </div>
+    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Certificate Info:</label>
+    <d-data-table
+      [dataSource]="[certificate]"
+      [tableOverflowType]="'overlay'"
+      [scrollable]="true"
+    >
+      <d-column field="domains" header="Domains"></d-column>
+    </d-data-table>
+    <d-data-table
+      [dataSource]="[certificate]"
+      [tableOverflowType]="'overlay'"
+      [scrollable]="true"
+      style="margin-top: 12px;"
+    >
+      <d-column field="notBefore" header="Not Before" [width]="'200px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span *ngIf="cellItem">{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="notAfter" header="Not After" [width]="'200px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <span *ngIf="cellItem">{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Validity Period" [width]="'140px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span>{{ calcDays(rowItem['notBefore'], rowItem['notAfter']) }} days</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="Remaining" [width]="'140px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span [style.color]="calcDays(null, rowItem['notAfter']) <= 7 ? 'red' : calcDays(null, rowItem['notAfter']) <= 30 ? 'orange' : 'inherit'">
+              {{ calcDays(null, rowItem['notAfter']) }} days
+            </span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <div *ngIf="certificate.certificateDeployments?.length > 0" style="margin-top: 16px;">
+      <label style="font-weight: bold; display: block; margin-bottom: 8px;">Certificate Deployments:</label>
+      <d-data-table
+        [dataSource]="certificate.certificateDeployments"
+        [tableOverflowType]="'overlay'"
+        [scrollable]="true"
+      >
+        <d-column field="edsInstanceName" header="EDS Instance Name" [width]="'250px'"></d-column>
+        <d-column field="edsCertificateName" header="EDS Certificate Name"></d-column>
+      </d-data-table>
+    </div>
+    <div style="margin-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label style="font-weight: bold;">Certificate:</label>
+        <d-button bsStyle="text" dClipboard [content]="certificate.certificate" title="Copy">
+          <d-icon [icon]="'icon-copy'"></d-icon>
+        </d-button>
+      </div>
+      <pre style="margin-top: 4px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto;">{{ certificate.certificate }}</pre>
+    </div>
+    <div *ngIf="certificate.certificateChain" style="margin-top: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label style="font-weight: bold;">Certificate Chain:</label>
+        <d-button bsStyle="text" dClipboard [content]="certificate.certificateChain" title="Copy">
+          <d-icon [icon]="'icon-copy'"></d-icon>
+        </d-button>
+      </div>
+      <pre style="margin-top: 4px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto;">{{ certificate.certificateChain }}</pre>
+    </div>
+    <div *ngIf="certificate.privateKey" style="margin-top: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label style="font-weight: bold;">Private Key:</label>
+        <d-button bsStyle="text" dClipboard [content]="certificate.privateKey" title="Copy">
+          <d-icon [icon]="'icon-copy'"></d-icon>
+        </d-button>
+      </div>
+      <pre style="margin-top: 4px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto;">{{ certificate.privateKey }}</pre>
+    </div>
+  </div>
+</div>

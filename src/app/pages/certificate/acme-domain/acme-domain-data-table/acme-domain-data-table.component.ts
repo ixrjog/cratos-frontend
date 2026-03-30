@@ -5,7 +5,7 @@ import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { getRowColor } from '../../../../@shared/utils/data-table.utli';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { AcmeDomainEditorComponent } from './acme-domain-editor/acme-domain-editor.component';
 
 @Component({
@@ -79,6 +79,16 @@ export class AcmeDomainDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
     }, JSON.parse(JSON.stringify(this.newDomain)));
+  }
+
+  onRowEdit(rowItem: AcmeDomainVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit ACME Domain',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, JSON.parse(JSON.stringify(rowItem)));
   }
 
 }

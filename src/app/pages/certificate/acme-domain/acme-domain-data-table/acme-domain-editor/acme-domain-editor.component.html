@@ -1,6 +1,6 @@
 <form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
   <d-form-item>
-    <d-form-label [required]="true">Name</d-form-label>
+    <d-form-label>Name</d-form-label>
     <d-form-control>
       <input dTextInput formControlName="name" placeholder="Name" />
     </d-form-control>
@@ -8,35 +8,46 @@
   <d-form-item>
     <d-form-label [required]="true">Domain</d-form-label>
     <d-form-control>
-      <input dTextInput formControlName="domain" placeholder="e.g. example.com" />
+      <input dTextInput formControlName="domain" placeholder="e.g. example.com" [disabled]="!operationType" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
     <d-form-label>Domains</d-form-label>
     <d-form-control>
-      <input dTextInput formControlName="domains" placeholder="e.g. *.example.com,example.com" />
+      <input dTextInput formControlName="domains" placeholder="*.example.com,example.com" [disabled]="!operationType" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Zone ID</d-form-label>
+    <d-form-label [required]="true">DNS Resolver Instance</d-form-label>
     <d-form-control>
-      <input dTextInput formControlName="zoneId" placeholder="DNS Zone ID" />
+      <d-select
+        [options]="dnsResolverInstances"
+        [filterKey]="'instanceName'"
+        [allowClear]="true"
+        [isSearch]="true"
+        [(ngModel)]="selectedDnsResolver"
+        [ngModelOptions]="{standalone: true}"
+        placeholder="Select DNS Resolver Instance"
+        (valueChange)="onDnsResolverChange($event)"
+      ></d-select>
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>DNS Resolver Instance ID</d-form-label>
+    <d-form-label>Zone ID <span style="color: #999; font-weight: normal; font-size: 12px;">(auto-filled if left empty)</span></d-form-label>
     <d-form-control>
-      <input dTextInput formControlName="dnsResolverInstanceId" placeholder="EDS Instance ID" type="number" />
+      <input dTextInput formControlName="zoneId" placeholder="Auto-filled by DNS Resolver" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>ACME Account</d-form-label>
+    <d-form-label [required]="true">ACME Account</d-form-label>
     <d-form-control>
       <d-select
         [filterKey]="'name'"
         [appendToBody]="true"
         [searchFn]="onSearchAccount"
         [isSearch]="true"
+        [(ngModel)]="selectedAccount"
+        [ngModelOptions]="{standalone: true}"
         placeholder="Search and select account"
         (valueChange)="onAccountChange($event)"
       >

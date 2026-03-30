@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { DFormGroupRuleDirective, FormLayout } from 'ng-devui/form';
 import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { AcmeService } from '../../../../../@core/services/acme.service';
+import { TrafficRouteService } from '../../../../../@core/services/traffic-route.service';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -32,7 +33,11 @@ export class AcmeDomainEditorComponent implements OnInit {
     this.formGroup.patchValue({ accountId: account?.id });
   }
 
-  constructor(private acmeService: AcmeService) {
+  dnsResolverInstances = [];
+  selectedDnsResolver: any;
+  selectedAccount: any;
+
+  constructor(private acmeService: AcmeService, private trafficRouteService: TrafficRouteService) {
   }
 
   ngOnInit(): void {
@@ -50,6 +55,24 @@ export class AcmeDomainEditorComponent implements OnInit {
       valid: new UntypedFormControl(this.formData.valid),
       comment: new UntypedFormControl(this.formData.comment),
     });
+    this.loadDnsResolverInstances();
+    if (this.formData.edsInstance) {
+      this.selectedDnsResolver = this.formData.edsInstance;
+    }
+    if (this.formData.account) {
+      this.selectedAccount = this.formData.account;
+    }
+  }
+
+  loadDnsResolverInstances() {
+    this.trafficRouteService.queryDnsResolverInstances()
+      .subscribe(({ body }) => {
+        this.dnsResolverInstances = body;
+      });
+  }
+
+  onDnsResolverChange(instance: any) {
+    this.formGroup.patchValue({ dnsResolverInstanceId: instance?.id });
   }
 
   addForm() {
@@ -57,7 +80,7 @@ export class AcmeDomainEditorComponent implements OnInit {
   }
 
   updateForm() {
-    return this.acmeService.addAcmeDomain({ ...this.formGroup.value, id: this.formData.id });
+    return this.acmeService.updateAcmeDomain({ ...this.formGroup.value, id: this.formData.id });
   }
 
 }

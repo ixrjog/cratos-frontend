@@ -70,6 +70,10 @@ export class AcmeService {
     return this.apiService.post(this.baseUrl, '/domain/add', param);
   }
 
+  updateAcmeDomain(param: any): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/domain/update', param);
+  }
+
   queryAcmeOrderPage(param: AcmeOrderPageQuery): Observable<DataTable<AcmeOrderVO>> {
     return this.apiService.post(this.baseUrl, '/order/page/query', param);
   }

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RbacService } from '../../../../../@core/services/rbac.service';
 import { RbacRoleVO, RoleDetailsVO } from '../../../../../@core/data/rbac';
+import { getRowColor } from '../../../../../@shared/utils/data-table.utli';
 
 @Component({
   selector: 'app-rbac-role-details',
@@ -12,6 +13,7 @@ export class RbacRoleDetailsComponent implements OnInit {
   @Input() data: any;
   formData: RbacRoleVO;
   roleDetails: RoleDetailsVO;
+  protected readonly getRowColor = getRowColor;
 
   constructor(private rbacService: RbacService,) {
   }

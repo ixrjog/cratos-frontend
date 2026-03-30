@@ -35,66 +35,58 @@
       <d-card-title>{{ 'rbacRoleDetails.resourcePermissions.title' | translate }}</d-card-title>
     </d-card-header>
     <d-card-content>
-
-      <!-- 当有数据时显示 -->
-      <div class="resources-content" *ngIf="roleDetails && roleDetails.groupResources && roleDetails.groupResources.length > 0; else noResources">
-        <div class="simple-list">
-          <div *ngFor="let groupResource of roleDetails.groupResources; let i = index" class="group-item">
-            <h4>{{ groupResource.group?.groupName || ('rbacRoleDetails.resourcePermissions.groupName' | translate) }} ({{ groupResource.resources?.length || 0 }}{{ 'rbacRoleDetails.resourcePermissions.resources' | translate }})</h4>
-
-            <div *ngIf="groupResource.resources && groupResource.resources.length > 0" class="simple-table">
-              <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                <thead>
-                  <tr style="background-color: #f5f5f5;">
-                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.resourceName' | translate }}</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.uiPoint' | translate }}</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.valid' | translate }}</th>
-                    <th style="border: 1px solid #ddd; padding: 8px;">{{ 'rbacRoleDetails.table.comment' | translate }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let resource of groupResource.resources">
-                    <td style="border: 1px solid #ddd; padding: 8px;">{{ resource.resourceName }}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                      <span>
-                        {{ resource.uiPoint ? ('rbacRoleDetails.table.uiNode' | translate) : ('rbacRoleDetails.table.nonUiNode' | translate) }}
-                      </span>
-                    </td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                      <span [style.color]="resource.valid ? 'green' : 'red'">
-                        {{ resource.valid ? ('rbacRoleDetails.table.active' | translate) : ('rbacRoleDetails.table.inactive' | translate) }}
-                      </span>
-                    </td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">{{ resource.comment || ('rbacRoleDetails.table.noComment' | translate) }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div *ngIf="!groupResource.resources || groupResource.resources.length === 0" class="no-resources-simple">
-              <p style="color: #999; text-align: center; padding: 20px;">{{ 'rbacRoleDetails.empty.noResourcesDesc' | translate }}</p>
-            </div>
+      <div class="resources-content" *ngIf="roleDetails?.groupResources?.length > 0; else noResources">
+        <div *ngFor="let groupResource of roleDetails.groupResources" style="margin-bottom: 24px;">
+          <h4 style="margin: 0 0 8px 0; color: var(--devui-brand, #5e7ce0);">
+            {{ groupResource.group?.groupName || ('rbacRoleDetails.resourcePermissions.groupName' | translate) }}
+            ({{ groupResource.resources?.length || 0 }}{{ 'rbacRoleDetails.resourcePermissions.resources' | translate }})
+          </h4>
+          <d-data-table
+            *ngIf="groupResource.resources?.length > 0"
+            [dataSource]="groupResource.resources"
+            [tableOverflowType]="'overlay'"
+            [scrollable]="true"
+          >
+            <d-column field="resourceName" [header]="'rbacRoleDetails.table.resourceName' | translate"></d-column>
+            <d-column field="uiPoint" [header]="'rbacRoleDetails.table.uiPoint' | translate" [width]="'120px'">
+              <d-cell>
+                <ng-template let-cellItem="cellItem">
+                  <d-icon
+                    [icon]="'icon-priority'"
+                    [color]="getRowColor(cellItem)"
+                  ></d-icon>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="valid" [header]="'rbacRoleDetails.table.valid' | translate" [width]="'100px'">
+              <d-cell>
+                <ng-template let-cellItem="cellItem">
+                  <d-icon
+                    [icon]="'icon-priority'"
+                    [color]="getRowColor(cellItem)"
+                  ></d-icon>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="comment" [header]="'rbacRoleDetails.table.comment' | translate"></d-column>
+          </d-data-table>
+          <div *ngIf="!groupResource.resources || groupResource.resources.length === 0" style="color: #999; text-align: center; padding: 20px;">
+            {{ 'rbacRoleDetails.empty.noResourcesDesc' | translate }}
           </div>
         </div>
       </div>
 
-      <!-- 无资源提示 -->
       <ng-template #noResources>
-        <div class="no-resources">
-          <div class="empty-content">
-            <div class="empty-icon">
-              <i class="icon icon-shield-exclamation" style="font-size: 48px; color: #ccc;"></i>
-            </div>
-            <div class="empty-title">{{ 'rbacRoleDetails.empty.noPermissions' | translate }}</div>
-            <div class="empty-description">{{ 'rbacRoleDetails.empty.noPermissionsDesc' | translate }}</div>
-          </div>
+        <div style="text-align: center; padding: 40px; color: #999;">
+          <i class="icon icon-shield-exclamation" style="font-size: 48px; display: block; margin-bottom: 12px;"></i>
+          <div>{{ 'rbacRoleDetails.empty.noPermissions' | translate }}</div>
+          <div>{{ 'rbacRoleDetails.empty.noPermissionsDesc' | translate }}</div>
         </div>
       </ng-template>
     </d-card-content>
   </d-card>
 </div>
 
-<!-- 加载状态 -->
 <div class="loading-container" *ngIf="!roleDetails">
   <d-loading dLoading [loading]="true">
     <div class="loading-content"></div>

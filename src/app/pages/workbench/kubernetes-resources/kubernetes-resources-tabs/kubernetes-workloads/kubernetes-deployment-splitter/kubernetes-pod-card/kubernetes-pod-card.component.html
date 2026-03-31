@@ -1,5 +1,5 @@
 <div>
-  <d-card style="padding: 6px 8px">
+  <d-card style="padding: 6px 8px" [ngStyle]="{'border': getTotalRestartCount() > 0 ? '1px solid red' : ''}">
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">

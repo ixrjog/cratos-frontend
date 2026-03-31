@@ -30,6 +30,11 @@ export class KubernetesPodCardComponent {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
+  getTotalRestartCount(): number {
+    return (this.kubernetesPod.containerStatuses || [])
+      .reduce((sum, c) => sum + (c.restartCount || 0), 0);
+  }
+
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,

@@ -4,6 +4,8 @@ import { AcmeDomainPageQuery, AcmeDomainVO, AcmeOrderPageQuery, AcmeOrderVO, Acm
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { map } from 'rxjs/operators';
+import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 
 @Component({
   selector: 'app-acme-order-data-table',
@@ -26,7 +28,7 @@ export class AcmeOrderDataTableComponent implements OnInit {
 
   certificate: any = null;
 
-  constructor(private acmeService: AcmeService) {
+  constructor(private acmeService: AcmeService, private dialogUtil: DialogUtil, private toastUtil: ToastUtil) {
   }
 
   ngOnInit() {
@@ -90,6 +92,20 @@ export class AcmeOrderDataTableComponent implements OnInit {
     } catch (e) {
       return value;
     }
+  }
+
+  onRowDelete(rowItem: AcmeOrderVO) {
+    const dialogDate = {
+      ...DIALOG_DATA.warningOperateData,
+      content: '<strong>Confirm delete this order?</strong>',
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.acmeService.deleteAcmeOrderById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
   }
 
   onViewCertificate(certificateId: number) {

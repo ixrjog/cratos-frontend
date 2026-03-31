@@ -90,4 +90,8 @@ export class AcmeService {
     return this.apiService.get(this.baseUrl, '/certificate/get', param);
   }
 
+  deleteAcmeOrderById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.baseUrl, '/order/del', param);
+  }
+
 }

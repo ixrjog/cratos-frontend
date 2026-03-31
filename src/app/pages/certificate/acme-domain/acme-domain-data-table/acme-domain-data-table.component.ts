@@ -5,6 +5,7 @@ import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { getRowColor } from '../../../../@shared/utils/data-table.utli';
+import { countResource, parseResourceCount } from '../../../../@shared/utils/resource-count.util';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { DialogService } from 'ng-devui';
 import { AcmeDomainEditorComponent } from './acme-domain-editor/acme-domain-editor.component';
@@ -20,6 +21,8 @@ export class AcmeDomainDataTableComponent implements OnInit {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
   protected readonly getRowColor = getRowColor;
+  protected readonly countResource = countResource;
+  protected readonly parseResourceCount = parseResourceCount;
   businessType: string = BusinessTypeEnum.ACME_DOMAIN;
 
   queryParam = {

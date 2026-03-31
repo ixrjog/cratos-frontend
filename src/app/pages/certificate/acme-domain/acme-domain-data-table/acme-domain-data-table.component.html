@@ -22,6 +22,13 @@
     <d-column field="name" header="Name" [width]="'200px'"></d-column>
     <d-column field="domain" header="Domain" [width]="'200px'"></d-column>
     <d-column field="domains" header="Domains" [width]="'300px'"></d-column>
+    <d-column header="Orders" [width]="'80px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-badge [count]="countResource(rowItem)" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'"></d-badge>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="edsInstance" header="DNS Resolver" [width]="'180px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">

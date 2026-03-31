@@ -113,6 +113,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     };
 
     this.serverAccountService.queryServerAccountPage(query)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(({ body }) => {
         this.serverAccounts = body.data;
       });

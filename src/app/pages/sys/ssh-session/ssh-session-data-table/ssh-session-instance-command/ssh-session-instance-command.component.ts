@@ -62,8 +62,16 @@ export class SshSessionInstanceCommandComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     try {
-      this.ws.close();
-      this.ws = null;
+      if (this.ws) {
+        this.ws.onopen = null;
+        this.ws.onmessage = null;
+        this.ws.onerror = null;
+        this.ws.onclose = null;
+        if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+          this.ws.close();
+        }
+        this.ws = null;
+      }
     } catch (error) {
     }
   }

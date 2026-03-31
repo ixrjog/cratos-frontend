@@ -89,6 +89,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    document.removeEventListener('visibilitychange', this.visibilityChangeHandler);
     this.cleanup();
   }
 
@@ -721,15 +722,11 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
   }
 
   // 页面可见性监听
+  private visibilityChangeHandler = () => {
+    this.isPageVisible = !document.hidden;
+  };
+
   private setupPageVisibilityListener(): void {
-    document.addEventListener('visibilitychange', () => {
-      this.isPageVisible = !document.hidden;
-      
-      if (!this.isPageVisible) {
-        console.log('Page hidden, pausing message processing');
-      } else {
-        console.log('Page visible, resuming message processing');
-      }
-    });
+    document.addEventListener('visibilitychange', this.visibilityChangeHandler);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { DialogService } from 'ng-devui/modal';
 import { DrawerService, IDrawerOpenResult } from 'ng-devui/drawer';
 import { Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import { MenuVO } from '../@core/data/menu';
   templateUrl: './pages.component.html',
   styleUrls: [ './pages.component.scss' ],
 })
-export class PagesComponent implements OnInit {
+export class PagesComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   menu: any[] = [];
 
@@ -82,7 +82,9 @@ export class PagesComponent implements OnInit {
         const values = this.translate.instant('page');
         this.updateMenu(values);
       });
-    this.personalizeService.getUiTheme()!.subscribe((theme) => {
+    this.personalizeService.getUiTheme()!
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((theme) => {
       const currentTheme = Object.values(
         (window as { [key: string]: any })['devuiThemes'],
       ).find((i: Theme | unknown) => {
@@ -104,6 +106,7 @@ export class PagesComponent implements OnInit {
   updateMenu(values: any) {
     this.menu = [];
     this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
+      .pipe(takeUntil(this.destroy$))
       .subscribe(({ body }) => {
         body.map(item => {
           let menuItem = {
@@ -190,7 +193,7 @@ export class PagesComponent implements OnInit {
     }
   }
 
-  destroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

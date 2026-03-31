@@ -60,8 +60,18 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.timerRequest.unsubscribe();
-    this.ws.close();
+    if (this.timerRequest) {
+      this.timerRequest.unsubscribe();
+    }
+    if (this.ws) {
+      this.ws.onmessage = null;
+      this.ws.onerror = null;
+      this.ws.onclose = null;
+      if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+        this.ws.close();
+      }
+      this.ws = null;
+    }
   }
 
 

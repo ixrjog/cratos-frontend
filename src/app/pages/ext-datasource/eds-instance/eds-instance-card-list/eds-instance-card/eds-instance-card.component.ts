@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { EdsInstanceVO } from '../../../../../@core/data/ext-datasource';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
@@ -14,13 +14,17 @@ import { DRAWER_DATA, DrawerUtil } from '../../../../../@shared/utils/drawer.uti
 import { EdsInstanceScheduleComponent } from '../eds-instance-schedule/eds-instance-schedule.component';
 import { AddScheduleJob } from '../../../../../@core/data/ext-datasource-schedule';
 import { EdsKubernetesService } from '../../../../../@core/services/ext-datasource-kubernetes.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-eds-instance-card',
   templateUrl: './eds-instance-card.component.html',
   styleUrls: [ './eds-instance-card.component.less' ],
 })
-export class EdsInstanceCardComponent {
+export class EdsInstanceCardComponent implements OnDestroy {
+
+  private destroy$ = new Subject<void>();
 
   @Input() edsInstance: EdsInstanceVO;
   @Output() onFetchData = new EventEmitter<any>();
@@ -102,6 +106,7 @@ export class EdsInstanceCardComponent {
 
   onRowValid(rowItem: EdsInstanceVO) {
     this.edsService.setEdsInstanceValidById({ id: rowItem.id })
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.onFetchData.emit();
       });
@@ -114,6 +119,7 @@ export class EdsInstanceCardComponent {
     };
     this.dialogUtil.onDialog(dialogDate, () => {
       this.edsService.unregisterEdsInstance({ id: rowItem.id })
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.UNREGISTER);
           this.onFetchData.emit();
@@ -134,5 +140,10 @@ export class EdsInstanceCardComponent {
   onRouteInstanceAsset(instanceId: number) {
     // https://www.cnblogs.com/wolfocme110/p/13457531.html
     this.route.navigate([ '/pages/eds/asset' ], { queryParams: { instanceId: instanceId } });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

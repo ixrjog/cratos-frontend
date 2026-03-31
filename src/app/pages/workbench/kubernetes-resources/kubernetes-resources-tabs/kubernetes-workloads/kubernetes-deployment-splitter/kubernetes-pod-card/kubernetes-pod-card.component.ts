@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import {
   AccessControlVO,
   KubernetesDeploymentVO,
@@ -14,13 +14,17 @@ import { DIALOG_DATA, DialogUtil } from '../../../../../../../@shared/utils/dial
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../../@shared/utils/toast.util';
 import { ApplicationResourceService } from '../../../../../../../@core/services/application-resource.service';
 import { DeleteKubernetesDeploymentPod } from '../../../../../../../@core/data/application-resource';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-kubernetes-pod-card',
   templateUrl: './kubernetes-pod-card.component.html',
   styleUrls: [ './kubernetes-pod-card.component.less' ],
 })
-export class KubernetesPodCardComponent {
+export class KubernetesPodCardComponent implements OnDestroy {
+
+  private destroy$ = new Subject<void>();
 
   @Input() kubernetesPod: KubernetesPodVO;
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
@@ -126,9 +130,15 @@ export class KubernetesPodCardComponent {
           podName: this.kubernetesPod.metadata.name,
         };
       this.applicationResourceService.deleteApplicationResourceKubernetesDeploymentPod(param)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
         });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   AccessControlVO,
   DeploymentTemplateSpecContainerVO,
@@ -6,7 +6,8 @@ import {
 } from '../../../../../../@core/data/kubernetes';
 import { ApplicationVO } from '../../../../../../@core/data/application';
 import { ApplicationResourceService } from '../../../../../../@core/services/application-resource.service';
-import { finalize } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
@@ -18,7 +19,9 @@ import { BusinessTagVO } from '../../../../../../@core/data/business-tag';
   templateUrl: './kubernetes-deployment-splitter.component.html',
   styleUrls: [ './kubernetes-deployment-splitter.component.less' ],
 })
-export class KubernetesDeploymentSplitterComponent implements OnInit {
+export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy {
+
+  private destroy$ = new Subject<void>();
 
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
   @Input() application: ApplicationVO;
@@ -118,6 +121,7 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       this.kubernetesDeployment['$container']['$versionLoading'] = true;
       this.applicationResourceService.queryApplicationResourceKubernetesDeploymentImageVersion({ image: image })
         .pipe(
+          takeUntil(this.destroy$),
           finalize(() => this.kubernetesDeployment['$container']['$versionLoading'] = false),
         )
         .subscribe(({ body }) => {
@@ -161,6 +165,7 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       };
 
       this.applicationResourceService.redeployApplicationResourceKubernetesDeployment(param)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.REDEPLOY);
         });
@@ -175,5 +180,10 @@ export class KubernetesDeploymentSplitterComponent implements OnInit {
       return businessTag.tag.tagKey + ':' + businessTag.tagValue;
     }
     return businessTag.tag.tagKey;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

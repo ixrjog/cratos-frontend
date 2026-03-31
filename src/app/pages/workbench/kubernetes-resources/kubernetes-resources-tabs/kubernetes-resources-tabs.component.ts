@@ -350,6 +350,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   onWsHeartbeat() {
     this.wsHeartbeatTimerRequest = timer(5000, WS_HEART_INTERVAL)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
@@ -401,6 +402,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   initInterval() {
     this.timerRequest = timer(1000, WS_INIT_INTERVAL)
+      .pipe(takeUntil(this.destroy$))
       .subscribe(num => {
         if (this.ws?.readyState !== WebSocket.OPEN
           && this.ws?.readyState !== WebSocket.CONNECTING

@@ -26,6 +26,9 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class TrafficLayerRecordDataTableComponent implements OnInit {
 
+  private static readonly DOMAIN_STORAGE_KEY = 'traffic_record_tab_domain';
+  private static readonly ROUTE_STORAGE_KEY = 'traffic_record_tab_route';
+
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   businessType: string = BusinessTypeEnum.TRAFFIC_LAYER_RECORD;
   queryParam = {
@@ -94,6 +97,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   ];
 
   onValidChange(tab) {
+    localStorage.setItem(TrafficLayerRecordDataTableComponent.ROUTE_STORAGE_KEY, tab);
     switch (tab) {
       case '':
         this.queryParam.hasRouteTrafficTo = null;
@@ -144,6 +148,21 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
 
   ngOnInit() {
     this.getEnvOptions();
+    const savedDomain = localStorage.getItem(TrafficLayerRecordDataTableComponent.DOMAIN_STORAGE_KEY);
+    if (savedDomain) {
+      try {
+        const domain = JSON.parse(savedDomain);
+        this.trafficLayerDomain = domain;
+        this.queryParam.domainId = domain.id;
+      } catch (e) {}
+    }
+    const savedRoute = localStorage.getItem(TrafficLayerRecordDataTableComponent.ROUTE_STORAGE_KEY);
+    if (savedRoute) {
+      this.onValidChange(savedRoute);
+    }
+    if (this.queryParam.domainId) {
+      this.fetchData();
+    }
   }
 
   pageIndexChange(pageIndex) {
@@ -248,6 +267,7 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
 
   onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
     this.queryParam.domainId = domainVO.id;
+    localStorage.setItem(TrafficLayerRecordDataTableComponent.DOMAIN_STORAGE_KEY, JSON.stringify({ id: domainVO.id, domain: domainVO.domain }));
   }
 
   protected readonly getRowColor = getRowColor;

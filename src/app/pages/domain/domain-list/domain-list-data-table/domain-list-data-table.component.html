@@ -8,6 +8,19 @@
     (change)="fetchData()"
   >
   </d-search>
+  <d-select
+    class="select"
+    [options]="domainTypeOptions"
+    [filterKey]="'label'"
+    [isSearch]="true"
+    [valueKey]="'value'"
+    [appendToBody]="true"
+    [allowClear]="true"
+    placeholder="Select domain type"
+    [(ngModel)]="queryParam.domainType"
+    (valueChange)="onDomainTypeChange($event)"
+  >
+  </d-select>
   <app-business-cascader #businessCascader [businessType]="businessType"
                          (onChange)="onTagChanges($event)"></app-business-cascader>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>

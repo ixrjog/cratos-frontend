@@ -2,17 +2,10 @@
   <d-card style="position: relative; overflow: hidden;">
     <img
       [src]="'assets/eds/' + edsInstance.edsType.toLowerCase() + '.svg'"
-      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; opacity: 1; pointer-events: none; object-fit: contain;"
+      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; opacity: 0.7; pointer-events: none; object-fit: contain;"
       (error)="$any($event.target).style.display='none'"
     />
     <d-card-header (click)="onRouteInstanceAsset(edsInstance.id)" class="spacing-card-header">
-      <d-avatar
-        dCardAvatar
-        [name]="edsInstance.instanceName"
-        [isRound]="true"
-        [width]="28"
-        [height]="28"
-      ></d-avatar>
       <d-card-title>
         <h3 class="font-color-name" style="margin: 0; color: var(--devui-brand, #5e7ce0);">{{ edsInstance.instanceName }}</h3>
         <d-tag

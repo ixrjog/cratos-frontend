@@ -1,8 +1,8 @@
 {
   "/api": {
     "target1": "https://cratos.palmplaynow.com",
-    "target": "https://cratos.palmpay-inc.com",
-    "target2": "http://127.0.0.1:8081",
+    "target2": "https://cratos.palmpay-inc.com",
+    "target": "http://127.0.0.1:8081",
     "secure": false,
     "changeOrigin": true
   }

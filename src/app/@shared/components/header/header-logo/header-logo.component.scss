@@ -24,13 +24,14 @@
     align-items: center;
 
     img {
-      width: 50px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
     }
   }
 
   .da-logo-text {
-    font-size: $devui-font-size-modal-title;
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
     margin-left: -16px;

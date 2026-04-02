@@ -1,6 +1,6 @@
 <div class="da-settings-layout">
   <da-layout-row [daGutter]="[12, 12]">
-    <da-col-item [daSpan]="12" [daXs]="10" [daOrder]="2">
+    <da-col-item [daSpan]="24">
       <div *ngIf="robotToken">
         <d-alert [type]="'info'" [closeable]="false">
           {{ 'user.robot.tokenWarning' | translate }}
@@ -60,34 +60,34 @@
         </d-form-operation>
       </form>
     </da-col-item>
-    <da-col-item [daSpan]="24" [daXs]="14" [daOrder]="1" [daOrderXs]="3">
-      <div>
-        <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
-      </div>
-      <d-card *ngFor="let token of robotTokenList" style="margin-bottom: 10px">
-        <span style="float: right; padding: 3px 0">
-          <d-icon
-            [icon]="'icon-priority'"
-            [operable]="true"
-            [color]="getRowColor(token.valid)"
-            (click)="onRowRevoke(token)"
-          >
-          </d-icon>
-        </span>
-        <d-card-header>
-          <d-card-title>
-            <h4 style="margin: 0 10px 0 0;display: inline-block">{{ token.name }}</h4>
-            <span class="card-content-comment font-color-comment">{{ token.comment | dSafeNullPipe }}</span>
-          </d-card-title>
-        </d-card-header>
-        <d-card-content>
-          <div>
-            <span>{{ token.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
-            &nbsp;
-            <strong>{{ token.expiredTime | dRelativeTime: limit | async }}</strong>
+    <da-col-item [daSpan]="24">
+      <markdown lineHighlight mermaid [data]="robotTokenExample"></markdown>
+    </da-col-item>
+    <da-col-item [daSpan]="24">
+      <div class="robot-token-card" *ngFor="let token of robotTokenList"
+           [style.border-color]="isTokenValid(token) ? 'green' : 'red'"
+      >
+        <div class="robot-token-icon">
+          <i class="fa-solid fa-robot"></i>
+          <span class="robot-label">TOKEN</span>
+        </div>
+        <div class="robot-token-info">
+          <div class="robot-token-title">{{ token.name }}</div>
+          <div class="robot-token-comment font-color-comment">{{ token.comment | dSafeNullPipe }}</div>
+          <div class="robot-token-meta font-color-comment">
+            Expires on {{ token.expiredTime | dDatePipe: 'y-MM-dd HH:mm:ss' }}
+            — <strong>{{ token.expiredTime | dRelativeTime: limit | async }}</strong>
           </div>
-        </d-card-content>
-      </d-card>
+        </div>
+        <div class="robot-token-action">
+          <d-button
+            *ngIf="token.valid"
+            [bsStyle]="'text-dark'"
+            [bordered]="true"
+            (click)="onRowRevoke(token)"
+          >Revoke</d-button>
+        </div>
+      </div>
     </da-col-item>
   </da-layout-row>
 </div>

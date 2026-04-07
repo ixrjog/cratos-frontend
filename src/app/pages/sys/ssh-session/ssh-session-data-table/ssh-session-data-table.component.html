@@ -115,7 +115,7 @@
                   <span>{{ instance.destIp }}</span>
                   <br/>
                   <span *ngIf="instance['instanceClosed']">
-                    <i class="fa-solid fa-video cratos-color"></i>
+                    <i class="fa-solid fa-video" [class.video-active]="instance.outputSize > 0"></i>
                     <span style="margin-left: 5px">{{ instance.outputSize | flowUnitTran }}</span>
                   </span>
                 </div>

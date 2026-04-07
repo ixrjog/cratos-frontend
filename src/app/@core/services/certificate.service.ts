@@ -47,4 +47,8 @@ export class CertificateService extends CertificateData {
     return this.apiService.post(this.baseUrl, '/name/options/get', param);
   }
 
+  getCertificateTypeOptions(): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/type/options/get', {});
+  }
+
 }

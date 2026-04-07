@@ -8,6 +8,19 @@
     (change)="fetchData()"
   >
   </d-search>
+  <d-select
+    class="select"
+    [options]="certificateTypeOptions"
+    [filterKey]="'label'"
+    [valueKey]="'value'"
+    [isSearch]="true"
+    [allowClear]="true"
+    [appendToBody]="true"
+    placeholder="Select certificate type"
+    [(ngModel)]="queryParam.certificateType"
+    (valueChange)="onCertificateTypeChange($event)"
+  >
+  </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

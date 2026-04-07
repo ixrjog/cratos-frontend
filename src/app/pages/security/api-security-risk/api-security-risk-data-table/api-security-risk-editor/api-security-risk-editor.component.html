@@ -1,0 +1,150 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-label>{{ 'apiSecurityRisk.form.apiEndpoint' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="apiEndpoint" [placeholder]="'apiSecurityRisk.form.apiEndpointPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">{{ 'apiSecurityRisk.form.riskDescription' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="riskDescription" [placeholder]="'apiSecurityRisk.form.riskDescriptionPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>{{ 'apiSecurityRisk.form.docUrl' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="docUrl" [placeholder]="'apiSecurityRisk.form.docUrlPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">{{ 'apiSecurityRisk.form.riskLevel' | translate }}</d-form-label>
+    <d-form-control>
+      <d-tabs
+        type="options"
+        [activeTab]="formGroup.get('riskLevel').value"
+        (activeTabChange)="formGroup.patchValue({riskLevel: $event})"
+      >
+        <d-tab *ngFor="let level of riskLevelOptions" [id]="level" [title]="level"></d-tab>
+      </d-tabs>
+    </d-form-control>
+  </d-form-item>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 2;">
+      <d-form-label>{{ 'apiSecurityRisk.form.progress' | translate }}</d-form-label>
+      <d-form-control>
+        <d-tabs
+          type="options"
+          [activeTab]="formGroup.get('progress').value"
+          (activeTabChange)="onProgressChange($event)"
+        >
+          <d-tab *ngFor="let p of progressOptions" [id]="p" [title]="p"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.completed' | translate }}</d-form-label>
+      <d-form-control>
+        <d-tabs
+          type="options"
+          [activeTab]="formGroup.get('completed').value ? 'YES' : 'NO'"
+          (activeTabChange)="formGroup.patchValue({completed: $event === 'YES'})"
+        >
+          <d-tab [id]="'YES'" [title]="'YES'"></d-tab>
+          <d-tab [id]="'NO'" [title]="'NO'"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.analyst' | translate }}</d-form-label>
+      <d-form-control>
+        <d-select
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          [allowClear]="true"
+          [(ngModel)]="selectedAnalyst"
+          [ngModelOptions]="{standalone: true}"
+          [placeholder]="'apiSecurityRisk.form.searchUser' | translate"
+          (valueChange)="onAnalystChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }}</span>
+            <span style="float: right; color: #999;">{{ option.displayName }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.contactPerson' | translate }}</d-form-label>
+      <d-form-control>
+        <d-select
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          [allowClear]="true"
+          [(ngModel)]="selectedContactPerson"
+          [ngModelOptions]="{standalone: true}"
+          [placeholder]="'apiSecurityRisk.form.searchUser' | translate"
+          (valueChange)="onContactPersonChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }}</span>
+            <span style="float: right; color: #999;">{{ option.displayName }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.securityOfficer' | translate }}</d-form-label>
+      <d-form-control>
+        <d-select
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          [allowClear]="true"
+          [(ngModel)]="selectedSecurityOfficer"
+          [ngModelOptions]="{standalone: true}"
+          [placeholder]="'apiSecurityRisk.form.searchUser' | translate"
+          (valueChange)="onSecurityOfficerChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }}</span>
+            <span style="float: right; color: #999;">{{ option.displayName }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <d-form-item>
+    <d-form-label>{{ 'apiSecurityRisk.form.followUpGroup' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="followUpGroup" [placeholder]="'apiSecurityRisk.form.followUpGroupPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.discoveredTime' | translate }}</d-form-label>
+      <d-form-control>
+        <d-datepicker-pro formControlName="discoveredTime" [format]="'y/M/d'" [appendToBody]="true"></d-datepicker-pro>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'apiSecurityRisk.form.expectedTime' | translate }}</d-form-label>
+      <d-form-control>
+        <d-datepicker-pro formControlName="expectedTime" [format]="'y/M/d'" [appendToBody]="true"></d-datepicker-pro>
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <d-form-item>
+    <d-form-label>{{ 'apiSecurityRisk.form.analysisDesc' | translate }}</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="analysisDesc" [placeholder]="'apiSecurityRisk.form.analysisDescPlaceholder' | translate" style="height: 80px;"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
   i18nValues: any;
   isProduction = environment.production;
   hasRobotToken = false;
+  loginLoading = false;
 
   formData: LoginParam = {
     otp: '', password: '', username: '',
@@ -119,12 +120,17 @@ export class LoginComponent implements OnInit {
         const param: LoginParam = {
           ...this.formData,
         };
+        this.loginLoading = true;
         this.logService.login(param)
-          .subscribe(
-            ({ body }) => {
+          .subscribe({
+            next: ({ body }) => {
               this.logService.setSession(body);
               this.router.navigate([ '/' ]);
-            });
+            },
+            error: () => {
+              this.loginLoading = false;
+            },
+          });
         break;
       default:
         break;

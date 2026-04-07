@@ -149,7 +149,8 @@
     <!--        <a href="#">{{ 'loginPage.forgetPassword' | translate }}</a>-->
     <!--      </span>-->
     <!--    </div>-->
-    <button class="da-submit-button" dFormSubmit (Click)="onClick(tabActiveId)">
+    <button class="da-submit-button" dFormSubmit [disabled]="loginLoading" (Click)="onClick(tabActiveId)">
+      <d-icon *ngIf="loginLoading" [icon]="'icon-refresh'" class="fa-spin" style="margin-right: 5px;"></d-icon>
        {{ 'loginPage.submit' | translate }}
     </button>
   </form>

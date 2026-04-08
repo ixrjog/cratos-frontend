@@ -104,4 +104,10 @@ export class UserRobotSettingsComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
 
+  now: Date = new Date();
+
+  isTokenValid(token: RobotVO): boolean {
+    return token.valid && token.expiredTime && new Date(token.expiredTime).getTime() > this.now.getTime();
+  }
+
 }

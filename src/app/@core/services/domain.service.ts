@@ -33,4 +33,8 @@ export class DomainService extends DomainData {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
+  getDomainTypeOptions(): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/type/options/get', {});
+  }
+
 }

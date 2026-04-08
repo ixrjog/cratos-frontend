@@ -1,6 +1,6 @@
 export default {
   loginPage: {
-    coperation: '静水潜流运维深，行云无迹自乾坤',
+    coperation: '',
     loginWays: {
       account: '账号密码登录',
       email: '邮箱登录',

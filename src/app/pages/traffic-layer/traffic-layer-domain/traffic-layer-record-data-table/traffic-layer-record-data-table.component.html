@@ -12,6 +12,7 @@
     class="select"
     [filterKey]="'domain'"
     [appendToBody]="true"
+    [allowClear]="true"
     style="width: 300px;max-width: 300px"
     [(ngModel)]="trafficLayerDomain"
     [searchFn]="onSearchTrafficLayerDomain"
@@ -71,30 +72,12 @@
         </ng-template>
       </d-cell-edit>
     </d-column>
-    <d-column field="envName" header="Env Name" [editable]="true">
+    <d-column field="envName" header="Env Name">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          {{ cellItem }}
+        <ng-template let-rowItem="rowItem">
+          <d-tag [tag]="rowItem['envName']" [customColor]="rowItem['env']?.color"></d-tag>
         </ng-template>
       </d-cell>
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <d-select
-              [appendToBody]="true"
-              [options]="envOptions"
-              [isSearch]="true"
-              [filterKey]="'envName'"
-              [valueKey]="'envName'"
-              [toggleOnFocus]="true"
-              [(ngModel)]="rowItem[column.field]"
-              (ngModelChange)="finishEdit()"
-            >
-              <ng-template let-option="option" let-filterKey="filterKey"> {{ option[filterKey] }}</ng-template>
-            </d-select>
-          </div>
-        </ng-template>
-      </d-cell-edit>
     </d-column>
     <d-column field="routeTrafficTo" header="Route Traffic To" [editable]="true">
       <d-cell-edit>

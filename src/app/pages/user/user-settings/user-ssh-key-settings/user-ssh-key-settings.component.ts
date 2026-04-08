@@ -17,6 +17,11 @@ import { AddSshKey, UserVO } from '../../../../@core/data/user';
 export class UserSshKeySettingsComponent implements OnInit {
 
   sshKeyList: CredentialVO[];
+  now: Date = new Date();
+
+  isKeyValid(key: CredentialVO): boolean {
+    return key.expiredTime && new Date(key.expiredTime).getTime() > this.now.getTime();
+  }
   sshKeyExample: string = '';
   sshExample: string = '';
   dialogDate = {

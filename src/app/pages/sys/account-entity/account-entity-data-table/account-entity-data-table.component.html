@@ -1,0 +1,91 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">{{ 'accountEntity.common.new' | translate }}</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'accountEntity.common.filter' | translate }}</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="name" [header]="'accountEntity.table.name' | translate" [width]="'180px'"></d-column>
+    <d-column field="entityType" [header]="'accountEntity.table.entityType' | translate" [width]="'120px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="registeredName" [header]="'accountEntity.table.registeredName' | translate" [width]="'250px'"></d-column>
+    <d-column field="country" [header]="'accountEntity.table.country' | translate" [width]="'100px'"></d-column>
+    <d-column field="registrationNo" [header]="'accountEntity.table.registrationNo' | translate" [width]="'160px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span style="font-family: 'Courier New', monospace; font-size: 12px;">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="contactPerson" [header]="'accountEntity.table.contact' | translate" [width]="'120px'"></d-column>
+    <d-column field="contactEmail" [header]="'accountEntity.table.email' | translate" [width]="'200px'"></d-column>
+    <d-column field="valid" [header]="'accountEntity.table.valid' | translate" [width]="'70px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [header]="'accountEntity.table.tags' | translate" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [width]="'160px'" field="createTime" [header]="'accountEntity.table.createTime' | translate">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [header]="'accountEntity.table.actions' | translate" [width]="'80px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" [title]="'accountEntity.common.edit' | translate"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

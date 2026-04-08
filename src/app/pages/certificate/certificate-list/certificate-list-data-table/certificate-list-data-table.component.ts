@@ -19,9 +19,14 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 export class CertificateListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  private static readonly CERT_TYPE_STORAGE_KEY = 'certificate_selected_type';
+
   queryParam = {
     queryName: '',
+    certificateType: localStorage.getItem(CertificateListDataTableComponent.CERT_TYPE_STORAGE_KEY) || '',
   };
+
+  certificateTypeOptions = [];
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CERTIFICATE;
 
@@ -69,6 +74,21 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchData();
+    this.getCertificateTypeOptions();
+  }
+
+  getCertificateTypeOptions() {
+    this.certificateService.getCertificateTypeOptions()
+      .subscribe(({ body }) => {
+        this.certificateTypeOptions = body.options;
+      });
+  }
+
+  onCertificateTypeChange(certType: any) {
+    const value = typeof certType === 'object' ? certType?.value || '' : certType || '';
+    this.queryParam.certificateType = value;
+    localStorage.setItem(CertificateListDataTableComponent.CERT_TYPE_STORAGE_KEY, value);
     this.fetchData();
   }
 

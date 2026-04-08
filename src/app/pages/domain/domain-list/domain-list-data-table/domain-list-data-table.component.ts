@@ -23,13 +23,18 @@ export class DomainListDataTableComponent implements OnInit {
 
   @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  private static readonly DOMAIN_TYPE_STORAGE_KEY = 'domain_selected_type';
+
   queryParam = {
     queryName: '',
+    domainType: localStorage.getItem(DomainListDataTableComponent.DOMAIN_TYPE_STORAGE_KEY) || '',
     queryByTag: {
       tagId: null,
       tagValue: null,
     },
   };
+
+  domainTypeOptions = [];
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.DOMAIN;
 
@@ -78,6 +83,21 @@ export class DomainListDataTableComponent implements OnInit {
     setTimeout(() => {
       this.businessCascader.getTagOptions();
     }, 500);
+    this.fetchData();
+    this.getDomainTypeOptions();
+  }
+
+  getDomainTypeOptions() {
+    this.domainService.getDomainTypeOptions()
+      .subscribe(({ body }) => {
+        this.domainTypeOptions = body.options;
+      });
+  }
+
+  onDomainTypeChange(domainType: any) {
+    const value = typeof domainType === 'object' ? domainType?.value || '' : domainType || '';
+    this.queryParam.domainType = value;
+    localStorage.setItem(DomainListDataTableComponent.DOMAIN_TYPE_STORAGE_KEY, value);
     this.fetchData();
   }
 

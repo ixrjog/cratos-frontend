@@ -1,6 +1,7 @@
 {
   "/api": {
-    "target1": "https://cratos.palmplaynow.com",
+    "target6": "https://cratos.palmplaynow.com",
+    "target4": "https://cratos-pre.palmpay-inc.com",
     "target": "https://cratos.palmpay-inc.com",
     "target2": "http://127.0.0.1:8081",
     "secure": false,

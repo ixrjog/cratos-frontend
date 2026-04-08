@@ -1,6 +1,6 @@
 export default {
   loginPage: {
-    coperation: 'A watched pot never boils.',
+    coperation: '',
     loginWays: {
       account: 'Account Login',
       email: 'Email Login',

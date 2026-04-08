@@ -65,6 +65,10 @@ const routes: Routes = [
         loadChildren: () => import('./finops/finops.module').then(m => m.FinopsModule),
       },
       {
+        path: 'security',
+        loadChildren: () => import('./security/security.module').then(m => m.SecurityModule),
+      },
+      {
         path: '',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
       },

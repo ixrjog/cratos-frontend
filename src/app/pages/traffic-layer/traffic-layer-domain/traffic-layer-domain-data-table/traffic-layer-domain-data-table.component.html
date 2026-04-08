@@ -24,14 +24,14 @@
     (cellEditEnd)="onCellEditEnd($event)"
     [checkable]="true"
   >
-    <d-column field="name" header="Website" [width]="'300px'">
+    <d-column field="domain" header="Domain" [width]="'200px'"></d-column>
+    <d-column field="name" header="Websites" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div class="website-info">
-            <div class="domain-line">{{ rowItem.domain }}</div>
             <div class="record-line" *ngFor="let record of rowItem.records">
               <span class="record-name">{{ record.recordName }}</span>
-              <d-tag [tag]="record.envName" [labelStyle]="record.valid ? 'green-w98' : 'red-w98'" style="margin-left: 8px;"></d-tag>
+              <d-tag [tag]="record.envName" [customColor]="record.env?.color" style="margin-left: 8px;"></d-tag>
             </div>
           </div>
         </ng-template>
@@ -56,7 +56,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="comment" header="Comment"></d-column>
+    <d-column field="comment" header="Comment" [width]="'150px'"></d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

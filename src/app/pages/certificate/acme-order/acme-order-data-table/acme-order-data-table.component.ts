@@ -29,6 +29,7 @@ export class AcmeOrderDataTableComponent implements OnInit {
   table: Table<AcmeOrderVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   certificate: any = null;
+  showPrivateKey: boolean = false;
 
   constructor(private acmeService: AcmeService, private dialogUtil: DialogUtil, private toastUtil: ToastUtil) {
   }
@@ -111,6 +112,7 @@ export class AcmeOrderDataTableComponent implements OnInit {
   }
 
   onViewCertificate(certificateId: number) {
+    this.showPrivateKey = false;
     this.acmeService.getAcmeCertificate({ id: certificateId })
       .subscribe(({ body }) => {
         this.certificate = body;

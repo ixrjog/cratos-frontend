@@ -1,9 +1,10 @@
 /**
- * Ver: 1.0.4
+ * Ver: 1.0.5
  * Cloudflare Worker - 解密请求体并回源
  * 用于解密前端加密的请求，然后转发到源站
  * 
  * Changelog:
+ * - 1.0.5: 加密响应增加 X-Response-Encryption: true Header，便于前端识别响应是否已加密
  * - 1.0.4: 添加详细的解密错误信息（区分 encryptedKey 和 encryptedBody 解密失败）
  * - 1.0.3: 之前版本
  */
@@ -15,7 +16,7 @@ export default {
 
 async function handleRequest(request, env) {
   // 从环境变量读取私钥
-  const PRIVATE_KEY_PEM = env.PRIVATE_KEY_PEM;
+  const PRIVATE_KEY_PEM = env.PRIVATE_KEY_PEM_PROD;
 
   if (!PRIVATE_KEY_PEM) {
     console.error('Private key not configured');
@@ -103,6 +104,7 @@ async function handleRequest(request, env) {
         status: response.status,
         headers: {
           'Content-Type': 'application/json',
+          'X-Response-Encryption': 'true',
           ...Object.fromEntries(response.headers)
         }
       });

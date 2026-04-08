@@ -77,6 +77,14 @@
             title="View Certificate"
           ></d-icon>
           <d-icon
+            *ngIf="rowItem['certificateId']"
+            [icon]="'icon-download'"
+            [operable]="true"
+            (click)="onDownloadCertificateById(rowItem['certificateId'])"
+            style="margin-right: 8px;"
+            title="Download Certificate"
+          ></d-icon>
+          <d-icon
             *ngIf="rowItem['dnsChallengeRecords']"
             [icon]="'icon-view'"
             [operable]="true"
@@ -157,7 +165,12 @@
 <div *ngIf="certificate" class="certificate-overlay" (click)="certificate = null">
   <div class="certificate-dialog" (click)="$event.stopPropagation()">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="margin: 0; color: var(--devui-brand, #5e7ce0);">ACME Certificate</h3>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <h3 style="margin: 0; color: var(--devui-brand, #5e7ce0);">ACME Certificate</h3>
+        <d-button bsStyle="text" (click)="onDownloadCertificate()" title="Download PEM/KEY">
+          <d-icon [icon]="'icon-download'"></d-icon>
+        </d-button>
+      </div>
       <d-icon [icon]="'icon-close'" [operable]="true" (click)="certificate = null"></d-icon>
     </div>
     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Certificate Info:</label>

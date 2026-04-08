@@ -51,6 +51,7 @@ import { UserFavoriteService } from './services/user-favorite.service';
 import { TrafficRouteService } from './services/traffic-route.service';
 import { AcmeService } from './services/acme.service';
 import { ApiSecurityRiskService } from './services/api-security-risk.service';
+import { AccountEntityService } from './services/account-entity.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -107,6 +108,7 @@ export const CRATOS_PROVIDERS = [
   TrafficRouteService,
   AcmeService,
   ApiSecurityRiskService,
+  AccountEntityService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

@@ -1,0 +1,58 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-label [required]="true">{{ 'accountEntity.form.name' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="name" [placeholder]="'accountEntity.form.namePlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">{{ 'accountEntity.form.entityType' | translate }}</d-form-label>
+    <d-form-control>
+      <d-select [options]="entityTypeOptions" formControlName="entityType" [placeholder]="'accountEntity.form.entityTypePlaceholder' | translate"></d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>{{ 'accountEntity.form.registeredName' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="registeredName" [placeholder]="'accountEntity.form.registeredNamePlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>{{ 'accountEntity.form.country' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="country" [placeholder]="'accountEntity.form.countryPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>{{ 'accountEntity.form.registrationNo' | translate }}</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="registrationNo" [placeholder]="'accountEntity.form.registrationNoPlaceholder' | translate" />
+    </d-form-control>
+  </d-form-item>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'accountEntity.form.contactPerson' | translate }}</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="contactPerson" [placeholder]="'accountEntity.form.contactPersonPlaceholder' | translate" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'accountEntity.form.email' | translate }}</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="contactEmail" [placeholder]="'accountEntity.form.emailPlaceholder' | translate" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>{{ 'accountEntity.form.phone' | translate }}</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="contactPhone" [placeholder]="'accountEntity.form.phonePlaceholder' | translate" />
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <d-form-item>
+    <d-form-label>{{ 'accountEntity.form.comment' | translate }}</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="comment" [placeholder]="'accountEntity.form.commentPlaceholder' | translate" style="height: 60px;"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

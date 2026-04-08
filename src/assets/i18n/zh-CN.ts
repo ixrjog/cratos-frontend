@@ -12,6 +12,7 @@ import webTerminal from './zh-CN/web-terminal';
 import rbac from './zh-CN/rbac';
 import user from './zh-CN/user';
 import apiSecurityRisk from './zh-CN/api-security-risk';
+import accountEntity from './zh-CN/account-entity';
 
 export default {
   ...pages,
@@ -28,4 +29,5 @@ export default {
   ...rbac,
   ...user,
   ...apiSecurityRisk,
+  ...accountEntity,
 };

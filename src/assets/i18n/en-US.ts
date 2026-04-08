@@ -12,6 +12,7 @@ import webTerminal from './en-US/web-terminal';
 import rbac from './en-US/rbac';
 import user from './en-US/user';
 import apiSecurityRisk from './en-US/api-security-risk';
+import accountEntity from './en-US/account-entity';
 
 export default {
   ...pages,
@@ -28,4 +29,5 @@ export default {
   ...rbac,
   ...user,
   ...apiSecurityRisk,
+  ...accountEntity,
 };

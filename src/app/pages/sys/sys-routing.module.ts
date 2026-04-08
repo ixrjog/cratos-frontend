@@ -13,6 +13,7 @@ import { RobotComponent } from './robot/robot.component';
 import { ResourceCenterComponent } from './resource-center/resource-center.component';
 import { InstanceComponent } from './instance/instance.component';
 import { WorkOrderManagementComponent } from './work-order-management/work-order-management.component';
+import { AccountEntityComponent } from './account-entity/account-entity.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'robot', component: RobotComponent },
       { path: 'instance', component: InstanceComponent },
       { path: 'work-order-mgmt', component: WorkOrderManagementComponent },
+      { path: 'account/entity', component: AccountEntityComponent },
     ],
   },
 ];

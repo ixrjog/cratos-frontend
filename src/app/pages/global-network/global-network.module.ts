@@ -47,7 +47,7 @@ import { GlobalNetworkCheckCidrComponent } from './global-network-list/global-ne
     GlobalNetworkDataTableComponent,
     GlobalNetworkEditorComponent,
     GlobalNetworkDetailsComponent,
-    GlobalNetworkCheckCidrComponent
+    GlobalNetworkCheckCidrComponent,
   ],
   imports: [
     CommonModule,

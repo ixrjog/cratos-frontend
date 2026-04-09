@@ -1,0 +1,76 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-label>Name</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="name" placeholder="Network name" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Account Entity</d-form-label>
+    <d-form-control>
+      <d-select
+        [filterKey]="'name'"
+        [appendToBody]="true"
+        [searchFn]="onSearchAccountEntity"
+        [isSearch]="true"
+        [allowClear]="true"
+        [(ngModel)]="selectedAccountEntity"
+        [ngModelOptions]="{standalone: true}"
+        placeholder="Search account entity"
+        (valueChange)="onAccountEntityChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.name }}</span>
+          <span style="float: right; color: #999;">{{ option.country }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label [required]="true">Datacenter Type</d-form-label>
+    <d-form-control>
+      <d-tabs
+        type="options"
+        [activeTab]="formGroup.get('datacenterType').value"
+        (activeTabChange)="formGroup.patchValue({datacenterType: $event})"
+      >
+        <d-tab *ngFor="let t of datacenterTypeOptions" [id]="t" [title]="t"></d-tab>
+      </d-tabs>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>EDS Instance</d-form-label>
+    <d-form-control>
+      <d-tabs
+        type="options"
+        [activeTab]="selectedEdsType"
+        (activeTabChange)="onEdsTypeChange($event)"
+        *ngIf="edsTypeOptions.length > 0"
+        style="margin-bottom: 8px;"
+      >
+        <d-tab *ngFor="let opt of edsTypeOptions" [id]="opt.value" [title]="opt.label"></d-tab>
+      </d-tabs>
+      <d-select
+        [options]="edsInstanceOptions"
+        [filterKey]="'instanceName'"
+        [allowClear]="true"
+        [isSearch]="true"
+        [appendToBody]="true"
+        [(ngModel)]="selectedEdsInstance"
+        [ngModelOptions]="{standalone: true}"
+        placeholder="Select EDS instance"
+        (valueChange)="onEdsInstanceChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.instanceName }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Comment</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="comment" placeholder="Comment" style="height: 60px;"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

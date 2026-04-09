@@ -1,0 +1,98 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-label [required]="true">Datacenter Network</d-form-label>
+    <d-form-control>
+      <span *ngIf="!operationType">{{ formData.networkName }}</span>
+      <d-select
+        *ngIf="operationType"
+        [filterKey]="'name'"
+        [appendToBody]="true"
+        [searchFn]="onSearchNetwork"
+        [isSearch]="true"
+        [(ngModel)]="selectedNetwork"
+        [ngModelOptions]="{standalone: true}"
+        placeholder="Search datacenter network"
+        (valueChange)="onNetworkChange($event)"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.name }}</span>
+          <span *ngIf="option.datacenterType" style="float: right; color: #999;">{{ option.datacenterType }}</span>
+        </ng-template>
+      </d-select>
+    </d-form-control>
+  </d-form-item>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 1;">
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="name" placeholder="Allocation name" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>Region</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="region" placeholder="Region" />
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 1;">
+      <d-form-label [required]="true">CIDR</d-form-label>
+      <d-form-control>
+        <div style="display: flex; gap: 8px;">
+          <input dTextInput formControlName="cidr" placeholder="e.g. 10.20.0.0/24" style="flex: 1;" />
+          <d-button bsStyle="common" (click)="onCheckCidr()">Check</d-button>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>NAT</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="nat" placeholder="NAT address" />
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <div *ngIf="cidrCheckResult !== null" style="font-size: 12px; margin-bottom: 8px;">
+    <span *ngIf="!cidrCheckResult.conflict" style="color: green;">✓ No conflict</span>
+    <div *ngIf="cidrCheckResult.conflict" style="color: red;">
+      <span>✗ Conflict with:</span>
+      <div *ngFor="let alloc of cidrCheckResult.conflictAllocations" style="margin-left: 12px;">
+        <d-tag [tag]="alloc.cidr" [labelStyle]="'red-w98'" style="margin-right: 4px;"></d-tag>
+        {{ alloc.name }}
+      </div>
+    </div>
+  </div>
+  <div style="display: flex; gap: 12px;">
+    <d-form-item style="flex: 2;">
+      <d-form-label>Allocation Type</d-form-label>
+      <d-form-control>
+        <d-tabs
+          type="options"
+          [activeTab]="formGroup.get('allocationType').value"
+          (activeTabChange)="formGroup.patchValue({allocationType: $event})"
+        >
+          <d-tab *ngFor="let t of allocationTypeOptions" [id]="t" [title]="t"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item style="flex: 1;">
+      <d-form-label>Allow Overlap</d-form-label>
+      <d-form-control>
+        <d-tabs
+          type="options"
+          [activeTab]="formGroup.get('allowOverlap').value ? 'YES' : 'NO'"
+          (activeTabChange)="formGroup.patchValue({allowOverlap: $event === 'YES'})"
+        >
+          <d-tab [id]="'YES'" [title]="'YES'"></d-tab>
+          <d-tab [id]="'NO'" [title]="'NO'"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+  </div>
+  <d-form-item>
+    <d-form-label>Comment</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="comment" placeholder="Comment" style="height: 60px;"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

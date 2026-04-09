@@ -1,0 +1,111 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-button class="button" bsStyle="common" (click)="onFindAvailable()">Find Available</d-button>
+  <d-select
+    class="select"
+    style="width: 300px; max-width: 300px"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [searchFn]="onSearchNetwork"
+    [isSearch]="true"
+    [allowClear]="true"
+    [(ngModel)]="selectedNetwork"
+    placeholder="Search datacenter network"
+    (valueChange)="onNetworkChange($event)"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.name }}</span>
+      <span *ngIf="option.datacenterType" style="float: right; color: #999;">{{ option.datacenterType }}</span>
+    </ng-template>
+  </d-select>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    placeholder="Search name or CIDR"
+    (searchFn)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="networkName" header="Network" [width]="'180px'"></d-column>
+    <d-column field="name" header="Name" [width]="'200px'"></d-column>
+    <d-column field="cidr" header="CIDR" [width]="'180px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span style="color: var(--devui-brand, #5e7ce0);">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="nat" header="NAT" [width]="'150px'"></d-column>
+    <d-column field="region" header="Region" [width]="'150px'"></d-column>
+    <d-column field="allocationType" header="Type" [width]="'120px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="allowOverlap" header="Overlap" [width]="'80px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" header="Valid" [width]="'70px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" header="Comment" [width]="'200px'"></d-column>
+    <d-column [width]="'160px'" field="createTime" header="Create Time">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions" [width]="'80px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" title="Edit"></d-icon>
+            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)" title="Delete"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Select a network to view allocations</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

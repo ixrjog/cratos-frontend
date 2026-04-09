@@ -33,6 +33,10 @@ export class EdsService extends EdsData {
     return this.apiService.get(this.baseUrl, '/instance/type/options/get', {});
   }
 
+  getEdsInstanceTypeDatacenterOptions(): Observable<HttpResult<OptionsVO>> {
+    return this.apiService.get(this.baseUrl, '/instance/type/datacenter/options/get', {});
+  }
+
   addEdsConfig(param: EdsConfigEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/config/add', param);
   }

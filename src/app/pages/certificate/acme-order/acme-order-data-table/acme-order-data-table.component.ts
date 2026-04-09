@@ -6,6 +6,8 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 import { map } from 'rxjs/operators';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
+// @ts-ignore
+import * as JSZip from 'jszip';
 
 @Component({
   selector: 'app-acme-order-data-table',
@@ -124,6 +126,38 @@ export class AcmeOrderDataTableComponent implements OnInit {
     const start = from ? new Date(from).getTime() : Date.now();
     const end = to ? new Date(to).getTime() : Date.now();
     return Math.floor((end - start) / (1000 * 60 * 60 * 24));
+  }
+
+  onDownloadCertificateById(certificateId: number) {
+    this.acmeService.getAcmeCertificate({ id: certificateId })
+      .subscribe(({ body }) => this.downloadCertificateZip(body));
+  }
+
+  onDownloadCertificate() {
+    if (this.certificate) {
+      this.downloadCertificateZip(this.certificate);
+    }
+  }
+
+  private downloadCertificateZip(cert: any) {
+    const zip = new JSZip();
+    const domain = (cert.domains || 'certificate').replace(/[*]/g, '_wildcard').split(',')[0].trim();
+    if (cert.certificate) {
+      const fullPem = cert.certificateChain
+        ? cert.certificate + '\n' + cert.certificateChain
+        : cert.certificate;
+      zip.file(`${domain}.pem`, fullPem);
+    }
+    if (cert.privateKey) {
+      zip.file(`${domain}.key`, cert.privateKey);
+    }
+    zip.generateAsync({ type: 'blob' }).then(blob => {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${domain}-cert.zip`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
   }
 
 }

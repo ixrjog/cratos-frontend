@@ -55,7 +55,7 @@
               [controlled]="true"
               [mouseEnterDelay]="500"
               [content]="analystUserTemplate"
-              style="vertical-align: middle;margin-right: 5px"
+              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
             <ng-template #analystUserTemplate>
               <app-user-info-card [username]="rowItem['analyst']"></app-user-info-card>
@@ -95,7 +95,7 @@
               [controlled]="true"
               [mouseEnterDelay]="500"
               [content]="securityOfficerTemplate"
-              style="vertical-align: middle;margin-right: 5px"
+              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
             <ng-template #securityOfficerTemplate>
               <app-user-info-card [username]="rowItem['securityOfficer']"></app-user-info-card>
@@ -117,7 +117,7 @@
               [controlled]="true"
               [mouseEnterDelay]="500"
               [content]="contactPersonTemplate"
-              style="vertical-align: middle;margin-right: 5px"
+              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
             ></d-icon>
             <ng-template #contactPersonTemplate>
               <app-user-info-card [username]="rowItem['contactPerson']"></app-user-info-card>

@@ -1,0 +1,52 @@
+<div style="padding: 16px;">
+  <div style="display: flex; gap: 16px; align-items: flex-end; margin-bottom: 16px;">
+    <div>
+      <label style="font-weight: bold; display: block; margin-bottom: 4px;">Address Range</label>
+      <d-tabs
+        type="options"
+        [activeTab]="parentCidr"
+        (activeTabChange)="onParentCidrChange($any($event))"
+      >
+        <d-tab *ngFor="let cidr of parentCidrOptions" [id]="cidr" [title]="cidr"></d-tab>
+      </d-tabs>
+    </div>
+    <div>
+      <label style="font-weight: bold; display: block; margin-bottom: 4px;">Prefix Length</label>
+      <d-tabs
+        type="options"
+        [activeTab]="prefixLength"
+        (activeTabChange)="prefixLength = $any($event); fetchData()"
+      >
+        <d-tab *ngFor="let p of getAvailablePrefixLengths()" [id]="p" [title]="'/' + p"></d-tab>
+      </d-tabs>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="legend-box" style="background: var(--devui-base-bg, #f5f5f5);"></span> Available</span>
+    <span><span class="legend-box" style="background: #5e7ce0;"></span> VPC</span>
+    <span><span class="legend-box" style="background: #3ac295;"></span> SUBNET</span>
+    <span><span class="legend-box" style="background: #fa9841;"></span> RESERVED</span>
+    <span><span class="legend-box" style="background: #7b69ee;"></span> VLAN</span>
+  </div>
+
+  <div *ngIf="loading" style="text-align: center; padding: 40px;">
+    <d-loading dLoading [loading]="true"><div></div></d-loading>
+  </div>
+
+  <div *ngIf="subnetMap" class="subnet-grid">
+    <div
+      *ngFor="let block of subnetMap.blocks"
+      class="subnet-block"
+      [class.allocated]="block.allocated"
+      [style.background]="getBlockColor(block)"
+      [style.border]="getBlockBorder(block)"
+      [title]="block.cidr + (block.allocated ? '\n' + block.allocationName + ' (' + block.allocationType + ')' : '\nAvailable')"
+      (click)="block.allocated && onBlockClick(block)"
+      [style.cursor]="block.allocated ? 'pointer' : 'default'"
+    >
+      <i *ngIf="block.allocated" class="icon icon-search" style="font-size: 8px; margin-right: 2px; color: #fff;"></i>
+      <span class="block-label">{{ block.cidr }}</span>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<d-card style="padding: 8px;width: 500px" *ngIf="show">
+<d-card style="padding: 8px;width: 500px; background: var(--devui-connected-overlay-bg, #fff); color: var(--devui-text, #252b3a);" *ngIf="show">
   <d-card-header>
     <d-avatar dCardAvatar [imgSrc]="user.avatar?.url"></d-avatar>
     <d-card-title>{{ user.name }}</d-card-title>

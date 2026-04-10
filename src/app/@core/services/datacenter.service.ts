@@ -47,6 +47,14 @@ export class DatacenterService {
     return this.apiService.post(this.baseUrl, '/allocation/cidr/available/find', param);
   }
 
+  getSubnetMap(param: { parentCidr: string, prefixLength: number }): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/allocation/subnet/map/get', param);
+  }
+
+  queryAllocationsByCidr(param: { cidr: string }): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/allocation/cidr/query', param);
+  }
+
   scanNetworkAllocation(param: { networkId: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam(this.baseUrl, '/network/allocation/scan', param);
   }

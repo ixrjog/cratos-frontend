@@ -1,0 +1,30 @@
+<div *ngIf="loading" style="text-align: center; padding: 20px;">
+  <d-loading dLoading [loading]="true"><div></div></d-loading>
+</div>
+<div *ngIf="!loading && allocations.length === 0" style="color: #999; text-align: center; padding: 20px;">
+  No allocations in this subnet
+</div>
+<d-data-table
+  *ngIf="!loading && allocations.length > 0"
+  [dataSource]="allocations"
+  [scrollable]="true"
+  [tableOverflowType]="'overlay'"
+>
+  <d-column field="networkName" header="Network" [width]="'220px'"></d-column>
+  <d-column field="name" header="Name" [width]="'180px'"></d-column>
+  <d-column field="cidr" header="CIDR" [width]="'160px'">
+    <d-cell>
+      <ng-template let-cellItem="cellItem">
+        <span style="color: var(--devui-brand, #5e7ce0);">{{ cellItem }}</span>
+      </ng-template>
+    </d-cell>
+  </d-column>
+  <d-column field="nat" header="NAT" [width]="'140px'"></d-column>
+  <d-column field="allocationType" header="Type" [width]="'100px'">
+    <d-cell>
+      <ng-template let-cellItem="cellItem">
+        <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+      </ng-template>
+    </d-cell>
+  </d-column>
+</d-data-table>

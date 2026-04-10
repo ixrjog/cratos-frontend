@@ -136,6 +136,8 @@ export class ApiSecurityRiskDataTableComponent implements OnInit {
     });
   }
 
+  popoverStyle = { background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' };
+
   getProgressStyle(progress: string): string {
     switch (progress) {
       case 'FIXED': return 'green-w98';

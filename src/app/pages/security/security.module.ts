@@ -5,6 +5,7 @@ import { SecurityComponent } from './security.component';
 import { ApiSecurityRiskComponent } from './api-security-risk/api-security-risk.component';
 import { ApiSecurityRiskDataTableComponent } from './api-security-risk/api-security-risk-data-table/api-security-risk-data-table.component';
 import { ApiSecurityRiskEditorComponent } from './api-security-risk/api-security-risk-data-table/api-security-risk-editor/api-security-risk-editor.component';
+import { ApiSecurityRiskReportComponent } from './api-security-risk-report/api-security-risk-report.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -17,6 +18,7 @@ import { LoadingModule, PaginationModule } from 'ng-devui';
     ApiSecurityRiskComponent,
     ApiSecurityRiskDataTableComponent,
     ApiSecurityRiskEditorComponent,
+    ApiSecurityRiskReportComponent,
   ],
   imports: [
     CommonModule,

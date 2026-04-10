@@ -59,7 +59,7 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span *ngFor="let alloc of rowItem.allocations" style="display: inline-block; margin: 2px 4px 2px 0;">
-            <d-tag [tag]="alloc.name + ' ' + alloc.cidr" [labelStyle]="'blue-w98'"></d-tag>
+            <d-tag [tag]="alloc.name + ' ' + alloc.cidr" [labelStyle]="alloc.allocationType === 'RESERVED' ? 'orange-w98' : 'blue-w98'"></d-tag>
           </span>
         </ng-template>
       </d-cell>

@@ -27,4 +27,8 @@ export class ApiSecurityRiskService {
     return this.apiService.delete(this.baseUrl, '/risk/del', param);
   }
 
+  getReport(): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/risk/report/get', {});
+  }
+
 }

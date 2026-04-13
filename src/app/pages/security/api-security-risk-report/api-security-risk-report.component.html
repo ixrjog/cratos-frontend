@@ -7,19 +7,19 @@
   <div class="overview-cards">
     <div class="card">
       <div class="card-value">{{ report.overview.total }}</div>
-      <div class="card-label">Total Risks</div>
+      <div class="card-label">{{ 'apiSecurityRisk.report.totalRisks' | translate }}</div>
     </div>
     <div class="card card-danger">
       <div class="card-value">{{ report.overview.incomplete }}</div>
-      <div class="card-label">Incomplete</div>
+      <div class="card-label">{{ 'apiSecurityRisk.report.incomplete' | translate }}</div>
     </div>
     <div class="card card-success">
       <div class="card-value">{{ report.overview.completed }}</div>
-      <div class="card-label">Completed</div>
+      <div class="card-label">{{ 'apiSecurityRisk.report.completed' | translate }}</div>
     </div>
     <div class="card card-info">
       <div class="card-value">{{ report.overview.newThisMonth }}</div>
-      <div class="card-label">New This Month</div>
+      <div class="card-label">{{ 'apiSecurityRisk.report.newThisMonth' | translate }}</div>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
   <div class="charts-row">
     <!-- Risk Level Distribution -->
     <div class="chart-card">
-      <h4>Risk Level Distribution</h4>
+      <h4>{{ 'apiSecurityRisk.report.riskLevelDistribution' | translate }}</h4>
       <div class="bar-chart">
         <div *ngFor="let item of report.riskLevelDistribution | keyvalue" class="bar-item">
           <span class="bar-label">{{ item.key }}</span>
@@ -41,7 +41,7 @@
 
     <!-- Progress Distribution -->
     <div class="chart-card">
-      <h4>Progress Distribution</h4>
+      <h4>{{ 'apiSecurityRisk.report.progressDistribution' | translate }}</h4>
       <div class="bar-chart">
         <div *ngFor="let item of report.progressDistribution | keyvalue" class="bar-item">
           <span class="bar-label">{{ item.key }}</span>
@@ -54,27 +54,62 @@
     </div>
   </div>
 
-  <!-- Monthly Trends -->
-  <div class="chart-card" style="margin-bottom: 16px;">
-    <h4>Monthly Trends (Last 12 Months)</h4>
-    <div class="trend-table">
+  <!-- Monthly Trends & Analyst Stats -->
+  <div class="charts-row" style="margin-bottom: 16px;">
+    <div class="chart-card">
+      <h4>{{ 'apiSecurityRisk.report.monthlyTrends' | translate }}</h4>
+      <div class="trend-table">
+        <d-data-table
+          [dataSource]="report.monthlyTrends"
+          [scrollable]="true"
+          [tableOverflowType]="'overlay'"
+        >
+          <d-column field="month" [header]="'apiSecurityRisk.report.month' | translate" [width]="'120px'"></d-column>
+          <d-column field="discovered" [header]="'apiSecurityRisk.report.discovered' | translate" [width]="'120px'">
+            <d-cell>
+              <ng-template let-cellItem="cellItem">
+                <span style="color: #f66f6a; font-weight: bold;">{{ cellItem }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column field="fixed" [header]="'apiSecurityRisk.report.fixed' | translate" [width]="'120px'">
+            <d-cell>
+              <ng-template let-cellItem="cellItem">
+                <span style="color: #3ac295; font-weight: bold;">{{ cellItem }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+        </d-data-table>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h4>{{ 'apiSecurityRisk.report.securityOfficerStats' | translate }}</h4>
       <d-data-table
-        [dataSource]="report.monthlyTrends"
+        [dataSource]="report.analystStats"
         [scrollable]="true"
         [tableOverflowType]="'overlay'"
       >
-        <d-column field="month" header="Month" [width]="'120px'"></d-column>
-        <d-column field="discovered" header="Discovered" [width]="'120px'">
+        <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'150px'"></d-column>
+        <d-column field="total" [header]="'apiSecurityRisk.report.total' | translate" [width]="'80px'"></d-column>
+        <d-column field="completed" [header]="'apiSecurityRisk.report.completed' | translate" [width]="'100px'">
           <d-cell>
             <ng-template let-cellItem="cellItem">
-              <span style="color: #f66f6a; font-weight: bold;">{{ cellItem }}</span>
+              <span style="color: #3ac295;">{{ cellItem }}</span>
             </ng-template>
           </d-cell>
         </d-column>
-        <d-column field="fixed" header="Fixed" [width]="'120px'">
+        <d-column field="incomplete" [header]="'apiSecurityRisk.report.incomplete' | translate" [width]="'100px'">
           <d-cell>
             <ng-template let-cellItem="cellItem">
-              <span style="color: #3ac295; font-weight: bold;">{{ cellItem }}</span>
+              <span style="color: #f66f6a;">{{ cellItem }}</span>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column field="completionRate" [header]="'apiSecurityRisk.report.rate' | translate" [width]="'100px'">
+          <d-cell>
+            <ng-template let-cellItem="cellItem">
+              <span [style.color]="cellItem >= 80 ? '#3ac295' : cellItem >= 50 ? '#fa9841' : '#f66f6a'">{{ cellItem }}%</span>
             </ng-template>
           </d-cell>
         </d-column>
@@ -82,50 +117,16 @@
     </div>
   </div>
 
-  <!-- Analyst Stats -->
-  <div class="chart-card" style="margin-bottom: 16px;">
-    <h4>Security Officer Statistics</h4>
-    <d-data-table
-      [dataSource]="report.analystStats"
-      [scrollable]="true"
-      [tableOverflowType]="'overlay'"
-    >
-      <d-column field="securityOfficer" header="Security Officer" [width]="'150px'"></d-column>
-      <d-column field="total" header="Total" [width]="'80px'"></d-column>
-      <d-column field="completed" header="Completed" [width]="'100px'">
-        <d-cell>
-          <ng-template let-cellItem="cellItem">
-            <span style="color: #3ac295;">{{ cellItem }}</span>
-          </ng-template>
-        </d-cell>
-      </d-column>
-      <d-column field="incomplete" header="Incomplete" [width]="'100px'">
-        <d-cell>
-          <ng-template let-cellItem="cellItem">
-            <span style="color: #f66f6a;">{{ cellItem }}</span>
-          </ng-template>
-        </d-cell>
-      </d-column>
-      <d-column field="completionRate" header="Rate" [width]="'100px'">
-        <d-cell>
-          <ng-template let-cellItem="cellItem">
-            <span [style.color]="cellItem >= 80 ? '#3ac295' : cellItem >= 50 ? '#fa9841' : '#f66f6a'">{{ cellItem }}%</span>
-          </ng-template>
-        </d-cell>
-      </d-column>
-    </d-data-table>
-  </div>
-
   <!-- High Risks -->
   <div class="chart-card" *ngIf="report.highRisks?.length > 0" style="margin-bottom: 16px;">
-    <h4 style="color: #f66f6a;">🔥 High Risks ({{ report.highRisks.length }})</h4>
+    <h4 style="color: #f66f6a;">🔥 {{ 'apiSecurityRisk.report.highRisks' | translate }} ({{ report.highRisks.length }})</h4>
     <d-data-table
       [dataSource]="report.highRisks"
       [scrollable]="true"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="riskNo" header="No" [width]="'100px'"></d-column>
-      <d-column field="apiEndpoint" header="API Endpoint" [width]="'250px'">
+      <d-column field="riskNo" [header]="'apiSecurityRisk.report.no' | translate" [width]="'100px'"></d-column>
+      <d-column field="apiEndpoint" [header]="'apiSecurityRisk.report.apiEndpoint' | translate" [width]="'250px'">
         <d-cell>
           <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
             <span [style.filter]="showEndpoints.has(rowItem.id) ? 'none' : 'blur(4px)'" [style.user-select]="showEndpoints.has(rowItem.id) ? 'text' : 'none'">{{ cellItem }}</span>
@@ -133,35 +134,35 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="riskDescription" header="Description" [width]="'250px'"></d-column>
-      <d-column field="riskLevel" header="Level" [width]="'100px'">
+      <d-column field="riskDescription" [header]="'apiSecurityRisk.report.description' | translate" [width]="'250px'"></d-column>
+      <d-column field="riskLevel" [header]="'apiSecurityRisk.report.level' | translate" [width]="'100px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'red-w98'"></d-tag>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="progress" header="Progress" [width]="'120px'">
+      <d-column field="progress" [header]="'apiSecurityRisk.report.progress' | translate" [width]="'120px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="getProgressStyle(cellItem)"></d-tag>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="securityOfficer" header="Security Officer" [width]="'130px'"></d-column>
+      <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'130px'"></d-column>
     </d-data-table>
   </div>
 
   <!-- Overdue Risks -->
   <div class="chart-card" *ngIf="report.overdueRisks?.length > 0">
-    <h4 style="color: #f66f6a;">⚠ Overdue Risks ({{ report.overdueRisks.length }})</h4>
+    <h4 style="color: #f66f6a;">⚠ {{ 'apiSecurityRisk.report.overdueRisks' | translate }} ({{ report.overdueRisks.length }})</h4>
     <d-data-table
       [dataSource]="report.overdueRisks"
       [scrollable]="true"
       [tableOverflowType]="'overlay'"
     >
-      <d-column field="riskNo" header="No" [width]="'100px'"></d-column>
-      <d-column field="apiEndpoint" header="API Endpoint" [width]="'250px'">
+      <d-column field="riskNo" [header]="'apiSecurityRisk.report.no' | translate" [width]="'100px'"></d-column>
+      <d-column field="apiEndpoint" [header]="'apiSecurityRisk.report.apiEndpoint' | translate" [width]="'250px'">
         <d-cell>
           <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
             <span [style.filter]="showEndpoints.has(rowItem.id) ? 'none' : 'blur(4px)'" [style.user-select]="showEndpoints.has(rowItem.id) ? 'text' : 'none'">{{ cellItem }}</span>
@@ -169,16 +170,16 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="riskDescription" header="Description" [width]="'250px'"></d-column>
-      <d-column field="riskLevel" header="Level" [width]="'100px'">
+      <d-column field="riskDescription" [header]="'apiSecurityRisk.report.description' | translate" [width]="'250px'"></d-column>
+      <d-column field="riskLevel" [header]="'apiSecurityRisk.report.level' | translate" [width]="'100px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="cellItem === 'CRITICAL' || cellItem === 'HIGH' ? 'red-w98' : cellItem === 'MEDIUM' ? 'orange-w98' : 'blue-w98'"></d-tag>
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="analyst" header="Analyst" [width]="'120px'"></d-column>
-      <d-column field="expectedTime" header="Expected" [width]="'120px'">
+      <d-column field="analyst" [header]="'apiSecurityRisk.report.analyst' | translate" [width]="'120px'"></d-column>
+      <d-column field="expectedTime" [header]="'apiSecurityRisk.report.expected' | translate" [width]="'120px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">
             <span *ngIf="cellItem" style="color: #f66f6a;">{{ cellItem | dDatePipe: 'y-MM-dd' }}</span>

@@ -42,6 +42,11 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.fitAddon.fit();
     const defaultRows = this.rows;
     const defaultCols = this.terminal.cols;
+    // Pre-calculate rows needed for long lines that wrap
+    if (this.logs) {
+      const lines = this.logs.split('\n');
+      this.feedLines = lines.reduce((sum, line) => sum + Math.max(1, Math.ceil(line.length / defaultCols)), 0);
+    }
     this.terminal.resize(defaultCols, Math.min(defaultRows, this.feedLines));
     this.terminal.onLineFeed(() => {
       this.feedLines++;
@@ -51,7 +56,9 @@ export class XtermLogsComponent implements AfterViewInit, OnDestroy, OnChanges {
       );
     });
     if (this.terminal && this.terminal.write) {
-      this.terminal.write(this.logs);
+      this.terminal.write(this.logs, () => {
+        this.terminal.scrollToTop();
+      });
     }
   }
 

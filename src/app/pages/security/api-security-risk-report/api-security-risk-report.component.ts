@@ -42,4 +42,31 @@ export class ApiSecurityRiskReportComponent implements OnInit {
     }
   }
 
+  showEndpoints: Set<number> = new Set();
+
+  toggleEndpoint(id: number) {
+    if (this.showEndpoints.has(id)) {
+      this.showEndpoints.delete(id);
+    } else {
+      this.showEndpoints.add(id);
+    }
+  }
+
+  maskEndpoint(endpoint: string): string {
+    if (!endpoint || endpoint.length <= 8) {
+      return '****';
+    }
+    return endpoint.substring(0, 4) + '****' + endpoint.substring(endpoint.length - 4);
+  }
+
+  getProgressStyle(progress: string): string {
+    switch (progress) {
+      case 'FIXED': return 'green-w98';
+      case 'CONFIRMED': return 'blue-w98';
+      case 'CONFIRMING': return 'orange-w98';
+      case 'PENDING': return 'red-w98';
+      default: return 'default';
+    }
+  }
+
 }

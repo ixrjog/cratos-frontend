@@ -116,6 +116,42 @@
     </d-data-table>
   </div>
 
+  <!-- High Risks -->
+  <div class="chart-card" *ngIf="report.highRisks?.length > 0" style="margin-bottom: 16px;">
+    <h4 style="color: #f66f6a;">🔥 High Risks ({{ report.highRisks.length }})</h4>
+    <d-data-table
+      [dataSource]="report.highRisks"
+      [scrollable]="true"
+      [tableOverflowType]="'overlay'"
+    >
+      <d-column field="riskNo" header="No" [width]="'100px'"></d-column>
+      <d-column field="apiEndpoint" header="API Endpoint" [width]="'250px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
+            <span [style.filter]="showEndpoints.has(rowItem.id) ? 'none' : 'blur(4px)'" [style.user-select]="showEndpoints.has(rowItem.id) ? 'text' : 'none'">{{ cellItem }}</span>
+            <i class="icon icon-preview" style="margin-left: 6px; cursor: pointer; font-size: 12px;" (click)="toggleEndpoint(rowItem.id)"></i>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="riskDescription" header="Description" [width]="'250px'"></d-column>
+      <d-column field="riskLevel" header="Level" [width]="'100px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'red-w98'"></d-tag>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="progress" header="Progress" [width]="'120px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="getProgressStyle(cellItem)"></d-tag>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="securityOfficer" header="Security Officer" [width]="'130px'"></d-column>
+    </d-data-table>
+  </div>
+
   <!-- Overdue Risks -->
   <div class="chart-card" *ngIf="report.overdueRisks?.length > 0">
     <h4 style="color: #f66f6a;">⚠ Overdue Risks ({{ report.overdueRisks.length }})</h4>
@@ -125,7 +161,14 @@
       [tableOverflowType]="'overlay'"
     >
       <d-column field="riskNo" header="No" [width]="'100px'"></d-column>
-      <d-column field="apiEndpoint" header="API Endpoint" [width]="'250px'"></d-column>
+      <d-column field="apiEndpoint" header="API Endpoint" [width]="'250px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
+            <span [style.filter]="showEndpoints.has(rowItem.id) ? 'none' : 'blur(4px)'" [style.user-select]="showEndpoints.has(rowItem.id) ? 'text' : 'none'">{{ cellItem }}</span>
+            <i class="icon icon-preview" style="margin-left: 6px; cursor: pointer; font-size: 12px;" (click)="toggleEndpoint(rowItem.id)"></i>
+          </ng-template>
+        </d-cell>
+      </d-column>
       <d-column field="riskDescription" header="Description" [width]="'250px'"></d-column>
       <d-column field="riskLevel" header="Level" [width]="'100px'">
         <d-cell>

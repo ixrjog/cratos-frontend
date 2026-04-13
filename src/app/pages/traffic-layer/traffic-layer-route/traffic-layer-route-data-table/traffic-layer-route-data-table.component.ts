@@ -37,6 +37,8 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   businessType: string = BusinessTypeEnum.TRAFFIC_ROUTE;
 
+  private static STORAGE_KEY = 'traffic-route-query';
+
   queryParam = {
     queryName: '',
     queryByTag: {
@@ -92,6 +94,7 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    sessionStorage.setItem(TrafficLayerRouteDataTableComponent.STORAGE_KEY, JSON.stringify(this.queryParam));
     const param: TrafficRoutePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -101,8 +104,19 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    const saved = sessionStorage.getItem(TrafficLayerRouteDataTableComponent.STORAGE_KEY);
+    if (saved) {
+      Object.assign(this.queryParam, JSON.parse(saved));
+    }
     setTimeout(() => {
       this.businessCascader.getTagOptions();
+      if (this.queryParam.queryByTag?.tagId) {
+        const tags: any[] = [this.queryParam.queryByTag.tagId];
+        if (this.queryParam.queryByTag.tagValue) {
+          tags.push(this.queryParam.queryByTag.tagValue);
+        }
+        this.businessCascader.tags = tags;
+      }
     }, 500);
     this.fetchData();
   }

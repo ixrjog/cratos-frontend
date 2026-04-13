@@ -27,77 +27,72 @@
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
-          <br />
-          <a class='devui-link-light'
-             [href]="rowItem['consoleUrl']"
-             target='_blank'
-          >{{ rowItem['domain'] }}</a>
-          <span style='margin-right: 5px; margin-left: 5px'>→</span>
-          <span *ngIf='rowItem.dnsResolverInstance != null'>
-               <span>DNS on </span>
-               <d-tag
-                 [tag]='rowItem.dnsResolverInstance.instanceName'
-                 [labelStyle]="'blue-w98'"
-               >
-               </d-tag>
-          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header='DNS' [width]="'300px'">
+      <d-cell>
+        <ng-template let-rowItem='rowItem'>
+          <div>
+            <a class='devui-link-light' [href]="rowItem['consoleUrl']" target='_blank'>{{ rowItem['domain'] }}</a>
+          </div>
+          <div *ngIf='rowItem.dnsResourceRecordSet && !rowItem.dnsResourceRecordSet.isNoData' style="margin-top: 4px;">
+            <div *ngFor='let rr of rowItem.dnsResourceRecordSet.resourceRecords' style="margin-bottom: 2px;">
+              <span style="font-size: 12px; color: var(--devui-text-weak);">{{ rr.type }}</span>
+              <span *ngFor='let r of rr.resourceRecords' style="margin-left: 6px; font-size: 12px; font-family: monospace;">
+                {{ r.value }}<span *ngIf="r.tTL" style="color: var(--devui-text-weak);"> TTL:{{ r.tTL }}</span>
+              </span>
+            </div>
+          </div>
+          <div *ngIf='!rowItem.dnsResourceRecordSet || rowItem.dnsResourceRecordSet.isNoData' style="margin-top: 4px;">
+            <span style="font-size: 12px; color: var(--devui-text-weak);">No DNS records</span>
+          </div>
+          <div *ngIf='rowItem.dnsResolverInstance' style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); margin-top: 6px; padding-top: 6px;">
+            <d-tag [tag]='rowItem.dnsResolverInstance.instanceName' [labelStyle]="'blue-w98'"></d-tag>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>
     <d-column header='Record Targets'>
       <d-cell>
         <ng-template let-rowItem='rowItem'>
-          <div *ngFor='let target of rowItem.recordTargets'>
-            <div>
-              <d-badge [showDot]='true' style='margin-right: 1em'
-                       [status]="target.active?'success':'common'" />
-              <span>{{ target.resourceRecord }}</span>
-              <span style='margin-right: 5px; margin-left: 5px'>→</span>
-              <span>[ {{ target.recordType }} ]</span>
-              <span style='margin-right: 5px; margin-left: 5px'>→</span>
-              <span
-                *ngIf="target.targetType == 'CLOUDFLARE' && rowItem['dnsResolverInstance']?.edsType == 'CLOUDFLARE'">
-                  <img *ngIf='target.dnsResourceRecord?.proxied == "" || !target.dnsResourceRecord?.proxied'
-                       ngSrc='assets/icon/cloudflare-onlydns-icon.svg'
-                       alt='Cloudflare'
-                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'
-                       width='10'>
-                  <img *ngIf='target.dnsResourceRecord?.proxied != "" && target.dnsResourceRecord?.proxied'
-                       ngSrc='assets/icon/cloudflare-proxied-icon.svg'
-                       alt='Cloudflare'
-                       style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10'
-                       width='10'>
-              </span>
-              <!-- 记录 -->
-              <span *ngIf='!target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
-              <d-tag *ngIf='target.origin' [tag]='target.recordValue' [labelStyle]="'blue-w98'"></d-tag>
-              <span *ngIf="target.targetType == 'CLOUDFLARE'">
-                <img ngSrc='assets/icon/cloudflare-icon.svg'
-                     alt='Cloudflare'
-                     style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64'
-                     width='64'>
-              </span>
-              <img *ngIf="target.targetType == 'ALIYUN_ALB'" ngSrc='assets/icon/alibabacloud-icon.svg' alt='Cloudflare'
-                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
-              <img *ngIf="target.targetType == 'AWS_ELB'" ngSrc='assets/icon/aws-icon.svg' alt='AWS'
-                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
-              <img *ngIf="target.targetType == 'HWC_ELB'" ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
-                   style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
-              <span *ngIf='!target.origin'> →
-                <d-tag *ngIf='target.originServer == null || target.originServer == ""' tag='Origin'
-                       [labelStyle]="'blue-w98'"></d-tag>
-                <d-tag *ngIf='target.originServer != null && target.originServer != ""' [tag]='target.originServer'
-                       [labelStyle]="'blue-w98'"></d-tag>
-              </span>
+          <div *ngFor='let target of rowItem.recordTargets; let i = index' style="margin-bottom: 4px;">
+            <span style="display: inline; margin-right: 6px; white-space: nowrap;" [style.visibility]="target.active ? 'visible' : 'hidden'">
+              <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
+              <span style="margin: 0 4px; color: #3ac295;">——→</span>
+            </span>
+            <div style="display: inline-flex; align-items: center; border-radius: 4px; padding: 2px 8px; flex-wrap: wrap;"
+                 [style.border]="target.active ? '1px solid #3ac295' : 'none'">
+            <d-tag [tag]="'[ ' + target.recordType + ' ]'" [labelStyle]="target.active ? 'green-w98' : 'default'"></d-tag>
+            <span style='margin: 0 5px;'>→</span>
+            <span
+              *ngIf="target.targetType == 'CLOUDFLARE' && rowItem['dnsResolverInstance']?.edsType == 'CLOUDFLARE'">
+                <img *ngIf='!target.dnsResourceRecord?.proxied'
+                     ngSrc='assets/icon/cloudflare-onlydns-icon.svg' alt='Cloudflare'
+                     style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+                <img *ngIf='target.dnsResourceRecord?.proxied'
+                     ngSrc='assets/icon/cloudflare-proxied-icon.svg' alt='Cloudflare'
+                     style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
+            </span>
+            <span *ngIf='!target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+            <span *ngIf='target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+            <img *ngIf="target.targetType == 'CLOUDFLARE'" ngSrc='assets/icon/cloudflare-icon.svg' alt='Cloudflare'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64' width='64'>
+            <img *ngIf="target.targetType == 'ALIYUN_ALB'" ngSrc='assets/icon/alibabacloud-icon.svg' alt='Alibaba'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+            <img *ngIf="target.targetType == 'AWS_ELB'" ngSrc='assets/icon/aws-icon.svg' alt='AWS'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+            <img *ngIf="target.targetType == 'HWC_ELB'" ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
+                 style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
+            <span *ngIf='!target.origin'> →
+              <d-tag *ngIf='!target.originServer' tag='Origin' [labelStyle]="'blue-w98'"></d-tag>
+              <d-tag *ngIf='target.originServer' [tag]='target.originServer' [labelStyle]="'blue-w98'"></d-tag>
+            </span>
+            <span *ngIf="target.businessTags?.length > 0" style="margin-left: 8px;">
+              <d-tag *ngFor="let bt of target.businessTags" [tag]="bt.tag.tagKey + ':' + bt.tagValue" [customColor]="bt.tag.color" style="margin-right: 4px;"></d-tag>
+            </span>
             </div>
           </div>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column *ngIf='false' header='DNS' [width]="'150px'">
-      <d-cell>
-        <ng-template let-rowItem='rowItem'>
-          <span>{{ rowItem['dnsResolverInstance']?.instanceName }}</span>
         </ng-template>
       </d-cell>
     </d-column>

@@ -89,39 +89,33 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Instance Audit" [width]="'600px'">
+    <d-column header="Instance Audit" [width]="'1000px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <ul class="menu">
-            <li class="menu-item" *ngFor="let instance of rowItem['sessionInstances']" (click)="onRowClick(instance)">
-              <d-row>
-                <div class="item-left">
-                  <d-tag [tag]=instance.instanceType></d-tag>
-                  <br/>
-                  <span *ngIf="!instance['instanceClosed']">
-                    <i class="fa-solid fa-heart fa-flip"></i>
-                    <span style="margin-left: 5px">{{ instance | sshInstance }}</span>
+          <div class="instance-cards">
+            <div class="instance-card" [class.instance-active]="!instance['instanceClosed']" *ngFor="let instance of rowItem['sessionInstances']" (click)="onRowClick(instance)">
+              <div class="instance-card-header">
+                <d-tag [tag]=instance.instanceType></d-tag>
+                <span class="instance-ip">{{ instance.destIp }}</span>
+              </div>
+              <div class="instance-card-body">
+                <span *ngIf="!instance['instanceClosed']">
+                  <i class="fa-solid fa-heart fa-flip"></i>
+                  <span style="margin-left: 5px">{{ instance | sshInstance }}</span>
+                </span>
+                <span *ngIf="instance['instanceClosed']">
+                  <span>{{ instance | sshInstance }}
+                    &nbsp;<i class="fa-solid fa-terminal"></i>
                   </span>
-                  <span *ngIf="instance['instanceClosed']">
-                    <span style="width: 255px;margin-right: 5px">{{ instance | sshInstance }}
-                      &nbsp;<i class="fa-solid fa-terminal"></i>
-                    </span>
-                    <d-badge [count]=countResource(instance) status="common"></d-badge>
-                  </span>
-                </div>
-              </d-row>
-              <d-row>
-                <div class="item-right">
-                  <span>{{ instance.destIp }}</span>
-                  <br/>
-                  <span *ngIf="instance['instanceClosed']">
-                    <i class="fa-solid fa-video" [class.video-active]="instance.outputSize > 0"></i>
-                    <span style="margin-left: 5px">{{ instance.outputSize | flowUnitTran }}</span>
-                  </span>
-                </div>
-              </d-row>
-            </li>
-          </ul>
+                  <d-badge [count]=countResource(instance) status="common"></d-badge>
+                </span>
+              </div>
+              <div class="instance-card-footer" *ngIf="instance['instanceClosed']">
+                <i class="fa-solid fa-video" [class.video-active]="instance.outputSize > 0"></i>
+                <span style="margin-left: 5px">{{ instance.outputSize | flowUnitTran }}</span>
+              </div>
+            </div>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

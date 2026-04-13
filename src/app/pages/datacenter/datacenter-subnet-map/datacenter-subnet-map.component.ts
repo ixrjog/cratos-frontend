@@ -52,17 +52,25 @@ export class DatacenterSubnetMapComponent implements OnInit {
       });
   }
 
+  private typeColorMap = {
+    'RESERVED': '#fa9841',
+    'VPC': '#5e7ce0',
+    'SUBNET': '#3ac295',
+    'VLAN': '#7b69ee',
+  };
+
   getBlockColor(block: any): string {
     if (!block.allocated) {
       return 'var(--devui-base-bg, #f5f5f5)';
     }
-    switch (block.allocationType) {
-      case 'RESERVED': return '#fa9841';
-      case 'VPC': return '#5e7ce0';
-      case 'SUBNET': return '#3ac295';
-      case 'VLAN': return '#7b69ee';
-      default: return '#5e7ce0';
+    const types: string[] = block.allocationTypes || [block.allocationType];
+    if (types.length <= 1) {
+      return this.typeColorMap[types[0]] || '#5e7ce0';
     }
+    const colors = types.map(t => this.typeColorMap[t] || '#5e7ce0');
+    const step = 100 / colors.length;
+    const stops = colors.map((c, i) => `${c} ${i * step}% ${(i + 1) * step}%`).join(', ');
+    return `linear-gradient(135deg, ${stops})`;
   }
 
   getBlockBorder(block: any): string {

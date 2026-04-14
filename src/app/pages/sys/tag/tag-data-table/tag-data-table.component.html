@@ -30,12 +30,21 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="promptColor" header="Prompt Color"></d-column>
+    <d-column field="promptColor" header="Prompt Color">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem" style="display: inline-flex; align-items: center; background: #1e1e1e; border-radius: 4px; padding: 2px 8px;">
+            <span style="display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px;" [style.background]="cellItem"></span>
+            <span [style.color]="cellItem" style="font-family: monospace; font-size: 12px;">{{ cellItem }}</span>
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="color" header="Color">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span dClipboard [content]="cellItem">
-            <input type="color" [value]="cellItem" disabled="true" />
+            <span style="display: inline-block; width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.1); vertical-align: middle; margin-right: 6px;" [style.background]="cellItem"></span>
             {{ cellItem }}
           </span>
         </ng-template>

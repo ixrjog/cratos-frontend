@@ -83,21 +83,7 @@
       </h3>
       <span style="float: right">
         <span style="margin-right: 2em">Applicant</span>
-        <d-icon
-          [icon]="'icon-identity-auth'"
-          dPopover
-          [position]="'left-top'"
-          [trigger]="'hover'"
-          [controlled]="true"
-          [mouseEnterDelay]="500"
-          [content]="userInfoCardTemplate"
-          [popoverStyle]="getPopoverStyle()"
-          style="vertical-align: middle;margin-right: 5px"
-        ></d-icon>
-        <ng-template #userInfoCardTemplate>
-          <app-user-info-card [user]="entry.detail.applicant"></app-user-info-card>
-        </ng-template>
-        <span>{{ entry.detail.applicant.displayName }}</span>
+        <app-user-popover [username]="entry.detail.applicant.username"></app-user-popover>
       </span>
       <div class="cratos-divider" style="margin: 5px 0 10px 0"></div>
       <div>

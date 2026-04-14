@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">{{ 'commandExec.common.new' | translate }}</d-button>
   <d-category-search
     style="width: 800px;max-width: 800px"
     class="category-search"
@@ -13,7 +13,7 @@
     (searchEvent)="searchEvent($event)"
     (selectedTagsChange)="selectedTagsChange($event)"
   ></d-category-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'commandExec.common.filter' | translate }}</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -26,8 +26,8 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="id" header="ID" [width]="'100px'"></d-column>
-    <d-column field="username" header="Applicant" [width]="'180px'">
+    <d-column field="id" [header]="'commandExec.table.id' | translate" [width]="'100px'"></d-column>
+    <d-column field="username" [header]="'commandExec.table.applicant' | translate" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
@@ -45,7 +45,7 @@
       </d-cell>
     </d-column>
 
-    <d-column field="approvedBy" header="Approver" [width]="'180px'">
+    <d-column field="approvedBy" [header]="'commandExec.table.approver' | translate" [width]="'180px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
@@ -69,15 +69,15 @@
       </d-cell>
     </d-column>
 
-    <d-column field="execTarget" header="Exec Target" [width]="'200px'">
+    <d-column field="execTarget" [header]="'commandExec.table.execTarget' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <span>Instance:&nbsp;</span>
+            <span>{{ 'commandExec.table.instance' | translate }}:&nbsp;</span>
             <span>{{ rowItem['execTarget']['instance']['name'] }}</span>
           </div>
           <div>
-            <span>Namespace:&nbsp;</span>
+            <span>{{ 'commandExec.table.namespace' | translate }}:&nbsp;</span>
             <span *ngIf="rowItem['env'] === null">
               <span>{{ rowItem['execTarget']['instance']['namespace'] }}</span>
             </span>
@@ -86,13 +86,13 @@
             </span>
           </div>
           <div>
-            <span>Max Waiting Time:&nbsp;</span>
+            <span>{{ 'commandExec.table.maxWaitingTime' | translate }}:&nbsp;</span>
             <span>{{ rowItem['execTarget']['maxWaitingTime'] | dSafeNullPipe }}</span>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="commandMask" header="Command" [width]="'200px'">
+    <d-column field="commandMask" [header]="'commandExec.table.command' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <div>
@@ -114,12 +114,12 @@
             </ng-template>
           </div>
           <div style="font-size: 11px; margin-top: 4px;">
-            Lines: {{ cellItem?.split('\n')?.length || 0 }} | Chars: {{ cellItem?.length || 0 }}
+            {{ 'commandExec.table.lines' | translate }}: {{ cellItem?.split('\n')?.length || 0 }} | {{ 'commandExec.table.chars' | translate }}: {{ cellItem?.length || 0 }}
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Output" [width]="'200px'">
+    <d-column [header]="'commandExec.table.output' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-tag
@@ -158,25 +158,25 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Status" [width]="'200px'">
+    <d-column [header]="'commandExec.table.status' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-tag
             *ngIf="rowItem['completed']"
             style="margin:0 5px 5px 0"
-            [tag]="'completed'"
+            [tag]="'commandExec.table.completed' | translate"
             [labelStyle]="'green-w98'"
           ></d-tag>
           <d-tag
             *ngIf="rowItem['success']"
             style="margin:0 5px 5px 0"
-            [tag]="'success'"
+            [tag]="'commandExec.table.success' | translate"
             [labelStyle]="'green-w98'"
           ></d-tag>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'100px'">
+    <d-column [header]="'commandExec.table.actions' | translate" [width]="'100px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
@@ -197,7 +197,6 @@
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
-<!--                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>-->
                 <li class="devui-dropdown-item" (click)="onRowAdminDo(rowItem)">AdminDo</li>
               </ul>
             </span>
@@ -206,7 +205,7 @@
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
+      <div class="no-data">{{ 'commandExec.common.fetchData' | translate }}</div>
     </ng-template>
   </d-data-table>
 </div>
@@ -214,14 +213,14 @@
   <div dDropDown class="batch-button">
     <d-button-group>
       <d-button bsStyle="common" dDropDownToggle>
-        Batch
+        {{ 'commandExec.common.batch' | translate }}
         <span class="icon icon-select-arrow"></span>
       </d-button>
     </d-button-group>
     <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
       <li role="menuitem" (click)="onBatchDelete()">
         <a dDropDownMenuItem>
-          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> {{ 'commandExec.common.delete' | translate }}</span>
         </a>
       </li>
     </ul>

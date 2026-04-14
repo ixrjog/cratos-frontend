@@ -7,22 +7,8 @@
     <div [style.border-color]="data.color" class="approve-node">
       <div style="padding-bottom: 8px; font-size: 14px; font-weight: bold">{{ data.nodeName }}</div>
       <div style="padding-bottom: 8px" *ngIf="data.username">
-
-        <d-icon
-          [icon]="'icon-identity-auth'"
-          dPopover
-          [position]="'left-top'"
-          [trigger]="'hover'"
-          [controlled]="true"
-          [mouseEnterDelay]="500"
-          [content]="userInfoCardTemplate"
-          [popoverStyle]="getPopoverStyle()"
-          style="vertical-align: middle"
-        ></d-icon>
-        <ng-template #userInfoCardTemplate>
-          <app-user-info-card [username]="data.username"></app-user-info-card>
-        </ng-template>
-        &nbsp;{{ data.username }}&nbsp;
+        <app-user-popover [username]="data.username"></app-user-popover>
+        &nbsp;
         <d-tag
           *ngIf="data.approvalStatus"
           [tag]="data.approvalStatus"

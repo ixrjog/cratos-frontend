@@ -13,6 +13,7 @@ import rbac from './zh-CN/rbac';
 import user from './zh-CN/user';
 import apiSecurityRisk from './zh-CN/api-security-risk';
 import accountEntity from './zh-CN/account-entity';
+import commandExec from './zh-CN/command-exec';
 
 export default {
   ...pages,
@@ -30,4 +31,5 @@ export default {
   ...user,
   ...apiSecurityRisk,
   ...accountEntity,
+  ...commandExec,
 };

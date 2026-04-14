@@ -16,6 +16,7 @@ export class WebTerminalThemeSettingsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   // 主题相关
+  activeTab = 'theme';
   presetThemes: TerminalTheme[] = TERMINAL_THEMES;
   currentTheme: TerminalTheme | null = null;
   selectedThemeId = '';
@@ -30,6 +31,21 @@ drwxr-xr-x  8 user  staff   256 Aug 18 15:30 .
 $ npm start
 > Starting development server...
 ✓ Server running on http://localhost:3000`;
+
+  // 字体相关
+  fontSize = 14;
+  fontFamily = '"Courier New", "DejaVu Sans Mono", "Liberation Mono", monospace';
+  lineHeight = 1.2;
+  selectedFont: any = 'Courier New';
+  fontFamilyOptions = [
+    { name: 'Courier New', value: '"Courier New", "DejaVu Sans Mono", "Liberation Mono", monospace' },
+    { name: 'Menlo / Monaco', value: '"Menlo", "Monaco", "Consolas", monospace' },
+    { name: 'JetBrains Mono', value: '"JetBrains Mono", "Fira Code", monospace' },
+    { name: 'Source Code Pro', value: '"Source Code Pro", "Ubuntu Mono", monospace' },
+    { name: 'Cascadia Code', value: '"Cascadia Code", "Cascadia Mono", monospace' },
+    { name: 'IBM Plex Mono', value: '"IBM Plex Mono", monospace' },
+  ];
+  fontFamilyMap = {};
 
   constructor(
     private themeService: TerminalThemeService,
@@ -51,10 +67,13 @@ $ npm start
       this.currentTheme = this.themeService.getCurrentTheme();
       if (this.currentTheme) {
         this.selectedThemeId = this.currentTheme.id;
+        this.fontSize = this.currentTheme.fontSize || 14;
+        this.fontFamily = this.currentTheme.fontFamily || this.fontFamilyOptions[0].value;
+        this.selectedFont = this.fontFamilyOptions.find(f => f.value === this.fontFamily)?.name || 'Courier New';
+        this.lineHeight = this.currentTheme.lineHeight || 1.2;
       }
     } catch (error) {
       console.error('Error loading current theme:', error);
-      // 使用默认主题
       this.currentTheme = this.presetThemes[0];
       this.selectedThemeId = this.currentTheme.id;
     }
@@ -102,14 +121,27 @@ $ npm start
       return {
         'background-color': this.currentTheme.colors.background,
         'color': this.currentTheme.colors.foreground,
-        'font-family': this.currentTheme.fontFamily || 'monospace',
-        'font-size': `${this.currentTheme.fontSize || 14}px`,
-        'line-height': this.currentTheme.lineHeight || 1.2,
+        'font-family': this.fontFamily || this.currentTheme.fontFamily || 'monospace',
+        'font-size': `${this.fontSize || this.currentTheme.fontSize || 14}px`,
+        'line-height': this.lineHeight || this.currentTheme.lineHeight || 1.2,
         'letter-spacing': `${this.currentTheme.letterSpacing || 0}px`
       };
     } catch (error) {
       console.error('Error getting preview style:', error);
       return {};
+    }
+  }
+
+  onFontChange(): void {
+    if (this.currentTheme) {
+      this.fontFamily = this.fontFamilyOptions.find(f => f.name === this.selectedFont)?.value || this.fontFamilyOptions[0].value;
+      this.currentTheme = {
+        ...this.currentTheme,
+        fontSize: this.fontSize,
+        fontFamily: this.fontFamily,
+        lineHeight: this.lineHeight,
+      };
+      this.themeService.updateFontSettings(this.fontSize, this.fontFamily, this.lineHeight);
     }
   }
 

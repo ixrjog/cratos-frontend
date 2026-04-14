@@ -9,6 +9,7 @@
     [isSearch]="true"
     placeholder="Search and select ACME domain"
     (valueChange)="onDomainChange($event)"
+    [allowClear]="true"
   >
     <ng-template let-option="option">
       <span>{{ option.domain }}</span>
@@ -41,7 +42,7 @@
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem"
             [tag]="cellItem"
-            [labelStyle]="cellItem === 'valid' ? 'green-w98' : cellItem === 'pending' ? 'blue-w98' : 'red-w98'"
+            [labelStyle]="cellItem === 'VALID' || cellItem === 'valid' ? 'green-w98' : cellItem === 'PENDING' || cellItem === 'pending' ? 'blue-w98' : 'red-w98'"
           ></d-tag>
         </ng-template>
       </d-cell>

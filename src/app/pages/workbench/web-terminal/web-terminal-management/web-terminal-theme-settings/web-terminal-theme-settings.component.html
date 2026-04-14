@@ -9,37 +9,76 @@
   </div>
 
   <div class="theme-settings-content">
-    <!-- 主题选择区域 -->
-    <div class="theme-selection-section">
-      <h4>{{ 'webTerminal.themeSettings.selectTheme' | translate }}</h4>
-      <div class="theme-grid">
-        <div 
-          *ngFor="let theme of presetThemes"
-          class="theme-card"
-          [ngClass]="{'selected': selectedThemeId === theme.id}"
-          (click)="onThemeSelect(theme.id)">
-          <div class="theme-preview" 
-               [style.background-color]="theme.colors.background" 
-               [style.color]="theme.colors.foreground">
-            <div class="preview-line">$ echo "{{theme.name}}"</div>
-            <div class="preview-line">{{theme.name}}</div>
-            <div class="preview-cursor" [style.background-color]="theme.colors.cursor"></div>
-          </div>
-          <div class="theme-info">
-            <div class="theme-name">{{theme.name}}</div>
-            <div class="theme-description" *ngIf="theme.description">{{theme.description}}</div>
+    <d-tabs [activeTab]="activeTab" (activeTabChange)="activeTab = $any($event)">
+      <d-tab [id]="'theme'" [title]="'webTerminal.themeSettings.selectTheme' | translate">
+        <div class="theme-grid" style="margin-top: 16px;">
+          <div
+            *ngFor="let theme of presetThemes"
+            class="theme-card"
+            [ngClass]="{'selected': selectedThemeId === theme.id}"
+            (click)="onThemeSelect(theme.id)">
+            <div class="theme-preview"
+                 [style.background-color]="theme.colors.background"
+                 [style.color]="theme.colors.foreground">
+              <div class="preview-line">$ echo "{{theme.name}}"</div>
+              <div class="preview-line">{{theme.name}}</div>
+              <div class="preview-cursor" [style.background-color]="theme.colors.cursor"></div>
+            </div>
+            <div class="theme-info">
+              <div class="theme-name">{{theme.name}}</div>
+              <div class="theme-description" *ngIf="theme.description">{{theme.description}}</div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </d-tab>
+      <d-tab [id]="'font'" [title]="'webTerminal.themeSettings.fontSettings' | translate">
+        <div style="margin-top: 16px;">
+          <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600;">{{ 'webTerminal.themeSettings.fontFamily' | translate }}</label>
+          <div class="theme-grid">
+            <div
+              *ngFor="let font of fontFamilyOptions"
+              class="theme-card"
+              [ngClass]="{'selected': selectedFont === font.name}"
+              (click)="selectedFont = font.name; onFontChange()">
+              <div class="theme-preview"
+                   [style.font-family]="font.value"
+                   style="background: #1e1e1e; color: #d4d4d4; font-size: 13px;">
+                <div class="preview-line">$ echo "Hello"</div>
+                <div class="preview-line">AaBbCc 0Oo1Il</div>
+              </div>
+              <div class="theme-info">
+                <div class="theme-name">{{ font.name }}</div>
+              </div>
+            </div>
+          </div>
 
-    <!-- 预览区域 -->
-    <div class="theme-preview-section">
-      <h4>{{ 'webTerminal.themeSettings.previewEffect' | translate }}</h4>
-      <div class="terminal-preview" [ngStyle]="getPreviewStyle()">
-        <pre>{{previewText}}</pre>
-      </div>
-    </div>
+          <div style="display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;">
+            <div>
+              <label style="display: block; margin-bottom: 4px; font-size: 12px;">{{ 'webTerminal.themeSettings.fontSize' | translate }}</label>
+              <d-input-number
+                [(ngModel)]="fontSize"
+                [min]="10"
+                [max]="24"
+                [step]="1"
+                (ngModelChange)="onFontChange()"
+                style="width: 100px;"
+              ></d-input-number>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 4px; font-size: 12px;">{{ 'webTerminal.themeSettings.lineHeight' | translate }}</label>
+              <d-input-number
+                [(ngModel)]="lineHeight"
+                [min]="1.0"
+                [max]="2.0"
+                [step]="0.1"
+                (ngModelChange)="onFontChange()"
+                style="width: 100px;"
+              ></d-input-number>
+            </div>
+          </div>
+        </div>
+      </d-tab>
+    </d-tabs>
 
     <!-- 底部操作 -->
     <div class="theme-settings-footer">

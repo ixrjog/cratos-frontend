@@ -40,6 +40,16 @@ export class TerminalThemeService {
     this.setCurrentTheme(DEFAULT_THEME_ID);
   }
 
+  /**
+   * 更新字体设置
+   */
+  updateFontSettings(fontSize: number, fontFamily: string, lineHeight: number): void {
+    const current = this.getCurrentTheme();
+    const updated = { ...current, fontSize, fontFamily, lineHeight };
+    this.currentThemeSubject.next(updated);
+    this.saveThemeSettings();
+  }
+
   private findThemeById(themeId: string): TerminalTheme | undefined {
     return TERMINAL_THEMES.find(theme => theme.id === themeId);
   }
@@ -55,7 +65,13 @@ export class TerminalThemeService {
         const settings = JSON.parse(saved);
         const theme = this.findThemeById(settings.currentThemeId);
         if (theme) {
-          this.currentThemeSubject.next(theme);
+          const restored = {
+            ...theme,
+            fontSize: settings.fontSize ?? theme.fontSize,
+            fontFamily: settings.fontFamily ?? theme.fontFamily,
+            lineHeight: settings.lineHeight ?? theme.lineHeight,
+          };
+          this.currentThemeSubject.next(restored);
         }
       }
     } catch (error) {
@@ -68,6 +84,9 @@ export class TerminalThemeService {
       const currentTheme = this.getCurrentTheme();
       const settings = {
         currentThemeId: currentTheme.id,
+        fontSize: currentTheme.fontSize,
+        fontFamily: currentTheme.fontFamily,
+        lineHeight: currentTheme.lineHeight,
         timestamp: Date.now()
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(settings));

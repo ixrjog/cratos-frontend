@@ -25,15 +25,13 @@
     [checkable]="true"
   >
     <d-column field="domain" header="Domain" [width]="'200px'"></d-column>
-    <d-column field="name" header="Websites" [width]="'300px'">
+    <d-column field="name" header="Websites">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div class="website-info">
-            <div class="record-line" *ngFor="let record of rowItem.records">
-              <span class="record-name">{{ record.recordName }}</span>
-              <d-tag [tag]="record.envName" [customColor]="record.env?.color" style="margin-left: 8px;"></d-tag>
-            </div>
-          </div>
+          <span *ngFor="let record of rowItem.records" style="display: inline-flex; align-items: center; margin: 2px 6px 2px 0; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 4px; padding: 2px 6px;">
+            <d-tag [tag]="record.envName" [customColor]="record.env?.color" style="margin-right: 4px;"></d-tag>
+            <span>{{ record.recordName }}</span>
+          </span>
         </ng-template>
       </d-cell>
       <d-cell-edit>
@@ -56,8 +54,8 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="comment" header="Comment" [width]="'150px'"></d-column>
-    <d-column header="Tags" [width]="'250px'">
+    <d-column field="comment" header="Comment" [width]="'300px'"></d-column>
+    <d-column header="Tags" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>

@@ -11,6 +11,7 @@ export default {
         no: '编号',
         name: '名称',
         applicant: '申请人',
+        abstract: '摘要',
         state: '状态',
         time: '时间',
         actions: '操作',

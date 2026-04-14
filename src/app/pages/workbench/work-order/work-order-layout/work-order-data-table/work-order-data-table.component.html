@@ -72,7 +72,7 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="ticketNo" [header]="'workOrderTicket.dataTable.headers.no' | translate" [width]="'120px'">
+    <d-column field="ticketNo" [header]="'workOrderTicket.dataTable.headers.no' | translate">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span dClipboard [content]="onGetTicketUrl(cellItem)">{{ cellItem }}&nbsp;<i class='fa-solid fa-share-from-square'></i></span>
@@ -107,7 +107,26 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column [header]="'workOrderTicket.dataTable.headers.state' | translate" [width]="'180px'">
+    <d-column [header]="'workOrderTicket.dataTable.headers.abstract' | translate">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="ticketAbstractTemplate"
+            [position]="'left-top'"
+            [controlled]="true"
+            [popoverStyle]="getPopoverStyle({width: '1200px'})"
+            [operable]="true"
+          ></d-icon>
+          <ng-template #ticketAbstractTemplate>
+            <markdown lineNumbers lineHighlight mermaid
+                      [data]="rowItem['ticketAbstract']['markdown']"></markdown>
+          </ng-template>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column [header]="'workOrderTicket.dataTable.headers.state' | translate">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span>
@@ -131,7 +150,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column [header]="'workOrderTicket.dataTable.headers.time' | translate" [fieldType]="'date'" [width]="'200px'">
+    <d-column [header]="'workOrderTicket.dataTable.headers.time' | translate" [fieldType]="'date'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem['submittedAt'] !== null && rowItem['completedAt'] === null">
@@ -156,19 +175,6 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
-            <d-icon
-              dPopover
-              [icon]="'icon-view'"
-              [content]="ticketAbstractTemplate"
-              [position]="'left-top'"
-              [controlled]="true"
-              [popoverStyle]="getPopoverStyle({width: '1200px'})"
-            >
-            </d-icon>
-            <ng-template #ticketAbstractTemplate>
-              <markdown lineNumbers lineHighlight mermaid
-                        [data]="rowItem['ticketAbstract']['markdown']"></markdown>
-            </ng-template>
             <d-icon
               *ngIf="rowItem['ticketState']===WorkOrderStatus.NEW"
               [icon]="'icon-edit'"

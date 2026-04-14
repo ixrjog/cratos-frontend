@@ -11,6 +11,7 @@ export default {
         no: 'No',
         name: 'Name',
         applicant: 'Applicant',
+        abstract: 'Abstract',
         state: 'State',
         time: 'Time',
         actions: 'Actions',

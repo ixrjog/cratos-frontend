@@ -61,7 +61,7 @@
               <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
               <span style="margin: 0 4px; color: #3ac295;">——→</span>
             </span>
-            <div style="display: inline-flex; align-items: center; border-radius: 4px; padding: 2px 8px; flex-wrap: wrap;"
+            <div style="display: inline-flex; align-items: center; border-radius: 4px; padding: 2px 8px;"
                  [style.border]="target.active ? '1px solid #3ac295' : 'none'">
             <d-tag [tag]="'[ ' + target.recordType + ' ]'" [labelStyle]="target.active ? 'green-w98' : 'default'"></d-tag>
             <span style='margin: 0 5px;'>→</span>
@@ -84,7 +84,7 @@
                  style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
             <img *ngIf="target.targetType == 'HWC_ELB'" ngSrc='assets/icon/huaweicloud-icon.svg' alt='HuaweiCloud'
                  style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
-            <span *ngIf='!target.origin'> →
+            <span *ngIf='target.origin'> →
               <d-tag *ngIf='!target.originServer' tag='Origin' [labelStyle]="'blue-w98'"></d-tag>
               <d-tag *ngIf='target.originServer' [tag]='target.originServer' [labelStyle]="'blue-w98'"></d-tag>
             </span>

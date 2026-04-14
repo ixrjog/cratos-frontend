@@ -62,7 +62,8 @@
               <span style="margin: 0 4px; color: #3ac295;">——→</span>
             </span>
             <div style="display: inline-flex; align-items: center; border-radius: 4px; padding: 2px 8px;"
-                 [style.border]="target.active ? '1px solid #3ac295' : 'none'">
+                 [style.border]="target.active ? '1px solid #3ac295' : 'none'"
+                 [style.background]="target.active ? 'rgba(58, 194, 149, 0.1)' : ''">
             <d-tag [tag]="'[ ' + target.recordType + ' ]'" [labelStyle]="target.active ? 'green-w98' : 'default'"></d-tag>
             <span style='margin: 0 5px;'>→</span>
             <span

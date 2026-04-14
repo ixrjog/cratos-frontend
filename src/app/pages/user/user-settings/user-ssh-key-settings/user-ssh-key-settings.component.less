@@ -54,3 +54,49 @@
     margin-left: 16px;
   }
 }
+
+.command-block {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  max-width: 700px;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &:hover {
+    background: #2d2d2d;
+  }
+
+  code {
+    flex: 1;
+  }
+}
+
+.terminal-demo {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 700px;
+  height: 400px;
+  overflow-y: auto;
+  white-space: pre;
+
+  .cursor {
+    color: #3ac295;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+}

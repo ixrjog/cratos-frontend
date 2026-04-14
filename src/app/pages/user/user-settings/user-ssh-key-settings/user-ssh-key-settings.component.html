@@ -22,9 +22,29 @@
     </da-col-item>
     <da-col-item [daSpan]="24">
       <div class="font-color-comment">{{ 'user.sshKey.connectingInfo' | translate }}</div>
-      <markdown lineHighlight mermaid [data]="sshExample"></markdown>
-      <div class="font-color-comment">{{ 'user.sshKey.generateInfo' | translate }}</div>
-      <markdown lineHighlight mermaid [data]="sshKeyExample"></markdown>
+      <div class="command-block" dClipboard [content]="sshCommand">
+        <code>$ {{ sshCommand }}</code>
+        <i class="fas fa-copy" style="margin-left: 8px; cursor: pointer; color: var(--devui-text-weak);"></i>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="terminal-demo" #terminalDemo>
+          <div *ngFor="let line of demoLines">
+            <span [innerHTML]="line"></span>
+          </div>
+          <span class="cursor" *ngIf="demoCursorVisible">█</span>
+        </div>
+      </div>
+      <div class="font-color-comment" style="margin-top: 16px;">{{ 'user.sshKey.generateInfo' | translate }}</div>
+      <div style="margin-bottom: 4px; font-size: 12px; color: var(--devui-text-weak);">ED25519</div>
+      <div class="command-block" dClipboard [content]="ed25519Command">
+        <code>$ {{ ed25519Command }}</code>
+        <i class="fas fa-copy" style="margin-left: 8px; cursor: pointer; color: var(--devui-text-weak);"></i>
+      </div>
+      <div style="margin-top: 12px; margin-bottom: 4px; font-size: 12px; color: var(--devui-text-weak);">2048-bit RSA</div>
+      <div class="command-block" dClipboard [content]="rsaCommand">
+        <code>$ {{ rsaCommand }}</code>
+        <i class="fas fa-copy" style="margin-left: 8px; cursor: pointer; color: var(--devui-text-weak);"></i>
+      </div>
     </da-col-item>
     <da-col-item [daSpan]="24">
       <div class="font-color-comment">{{ 'user.sshKey.sshKeyList' | translate }}</div>

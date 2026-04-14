@@ -39,17 +39,10 @@
       </d-cell>
     </d-column>
     <d-column field="resourceName" [header]="'rbac.resource.table.resourceName' | translate"></d-column>
-    <d-column field="uiPoint" [header]="'rbac.resource.table.uiPoint' | translate">
+    <d-column field="uiPoint" [header]="'rbac.resource.table.uiPoint' | translate" [width]="'150px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem ? ('rbac.resource.uiPoint.yes' | translate) : ('rbac.resource.uiPoint.no' | translate) }}</span>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column field="valid" [header]="'rbac.resource.table.valid' | translate">
-      <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem ? ('rbac.common.valid' | translate) : ('rbac.common.invalid' | translate) }}</span>
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
         </ng-template>
       </d-cell>
     </d-column>

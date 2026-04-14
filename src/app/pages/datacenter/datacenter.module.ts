@@ -11,6 +11,7 @@ import { DatacenterAllocationEditorComponent } from './datacenter-allocation/dat
 import { DatacenterAllocationFindCidrComponent } from './datacenter-allocation/datacenter-allocation-data-table/datacenter-allocation-find-cidr/datacenter-allocation-find-cidr.component';
 import { DatacenterSubnetMapComponent } from './datacenter-subnet-map/datacenter-subnet-map.component';
 import { SubnetBlockDetailComponent } from './datacenter-subnet-map/subnet-block-detail/subnet-block-detail.component';
+import { SubnetDrillComponent } from './datacenter-subnet-map/subnet-drill/subnet-drill.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -29,6 +30,7 @@ import { LoadingModule, PaginationModule } from 'ng-devui';
     DatacenterAllocationFindCidrComponent,
     DatacenterSubnetMapComponent,
     SubnetBlockDetailComponent,
+    SubnetDrillComponent,
   ],
   imports: [
     CommonModule,

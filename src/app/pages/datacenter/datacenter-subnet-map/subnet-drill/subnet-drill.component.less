@@ -1,0 +1,39 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.drill-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.drill-block {
+  padding: 8px 6px;
+  border-radius: 4px;
+  border: 1px solid @devui-dividing-line;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  min-height: 32px;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+  }
+
+  &.allocated {
+    .block-label {
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+
+  .block-label {
+    font-size: 11px;
+    color: @devui-text;
+    user-select: none;
+    white-space: nowrap;
+  }
+}

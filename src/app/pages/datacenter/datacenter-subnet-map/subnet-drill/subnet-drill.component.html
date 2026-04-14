@@ -1,0 +1,32 @@
+<div *ngIf="loading" style="text-align: center; padding: 20px;">
+  <d-loading dLoading [loading]="true"><div></div></d-loading>
+</div>
+
+<div *ngIf="!loading && subnetMap">
+  <div style="margin-bottom: 12px; display: flex; align-items: flex-end; gap: 16px;">
+    <div>
+      <label style="font-weight: bold; display: block; margin-bottom: 4px;">{{ parentCidr }}</label>
+      <d-tabs
+        type="options"
+        [activeTab]="prefixLength"
+        (activeTabChange)="prefixLength = $any($event); fetchData()"
+      >
+        <d-tab *ngFor="let p of availablePrefixLengths" [id]="p" [title]="'/' + p"></d-tab>
+      </d-tabs>
+    </div>
+    <span style="color: var(--devui-text-weak); font-size: 12px;">({{ subnetMap.blocks?.length }} blocks)</span>
+  </div>
+
+  <div class="drill-grid">
+    <div
+      *ngFor="let block of subnetMap.blocks"
+      class="drill-block"
+      [class.allocated]="block.allocated"
+      [style.background]="getBlockColor(block)"
+      [title]="block.cidr + (block.allocated ? '\n' + block.allocationName + ' (' + (block.allocationTypes?.join(', ') || block.allocationType) + ')' : '\nAvailable — Click to drill down')"
+      (click)="onBlockClick(block)"
+    >
+      <span class="block-label">{{ block.cidr }}<br/><span style="font-size: 10px; opacity: 0.7;">{{ getIpCount(block.cidr) }} IPs</span></span>
+    </div>
+  </div>
+</div>

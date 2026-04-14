@@ -96,7 +96,7 @@ export default {
       // 表格列头
       table: {
         groupName: '资源组',
-        resourceName: '资源名称',
+        resourceName: '资源路径',
         uiPoint: 'UI节点',
         valid: '状态',
         comment: '备注',

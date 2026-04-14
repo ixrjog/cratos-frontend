@@ -43,8 +43,8 @@
       [style.background]="getBlockColor(block)"
       [style.border]="getBlockBorder(block)"
       [title]="block.cidr + (block.allocated ? '\n' + block.allocationName + ' (' + (block.allocationTypes?.join(', ') || block.allocationType) + ')' : '\nAvailable')"
-      (click)="block.allocated && onBlockClick(block)"
-      [style.cursor]="block.allocated ? 'pointer' : 'default'"
+      (click)="onBlockClick(block)"
+      [style.cursor]="'pointer'"
     >
       <i *ngIf="block.allocated" class="icon icon-search" style="font-size: 8px; margin-right: 2px; color: #fff;"></i>
       <span class="block-label">{{ block.cidr }}</span>

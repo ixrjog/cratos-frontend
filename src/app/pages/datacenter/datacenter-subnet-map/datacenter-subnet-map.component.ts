@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DatacenterService } from '../../../@core/services/datacenter.service';
 import { DialogService } from 'ng-devui';
 import { SubnetBlockDetailComponent } from './subnet-block-detail/subnet-block-detail.component';
+import { SubnetDrillComponent } from './subnet-drill/subnet-drill.component';
 
 @Component({
   selector: 'app-datacenter-subnet-map',
@@ -78,14 +79,43 @@ export class DatacenterSubnetMapComponent implements OnInit {
   }
 
   onBlockClick(block: any) {
+    if (block.allocated) {
+      const results = this.dialogService.open({
+        id: 'subnet-block-detail',
+        title: block.cidr + ' — ' + block.allocationName,
+        width: '900px',
+        maxHeight: '500px',
+        backdropCloseable: true,
+        dialogtype: 'standard',
+        content: SubnetBlockDetailComponent,
+        buttons: [
+          {
+            cssClass: 'common',
+            text: 'Close',
+            handler: () => results.modalInstance.hide(),
+          },
+        ],
+        data: { block },
+      });
+    } else {
+      this.openSubnetDrill(block.cidr);
+    }
+  }
+
+  openSubnetDrill(cidr: string) {
+    const currentPrefix = parseInt(cidr.split('/')[1], 10);
+    const nextPrefix = currentPrefix + 1;
+    if (nextPrefix > 28) {
+      return;
+    }
     const results = this.dialogService.open({
-      id: 'subnet-block-detail',
-      title: block.cidr + (block.allocated ? ' — ' + block.allocationName : ' — Available'),
+      id: 'subnet-drill-' + cidr,
+      title: cidr + ' — Subnet Division',
       width: '900px',
-      maxHeight: '500px',
+      maxHeight: '600px',
       backdropCloseable: true,
       dialogtype: 'standard',
-      content: SubnetBlockDetailComponent,
+      content: SubnetDrillComponent,
       buttons: [
         {
           cssClass: 'common',
@@ -93,7 +123,7 @@ export class DatacenterSubnetMapComponent implements OnInit {
           handler: () => results.modalInstance.hide(),
         },
       ],
-      data: { block },
+      data: { parentCidr: cidr, prefixLength: nextPrefix },
     });
   }
 

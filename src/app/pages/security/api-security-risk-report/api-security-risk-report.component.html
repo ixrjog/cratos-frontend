@@ -90,7 +90,13 @@
         [scrollable]="true"
         [tableOverflowType]="'overlay'"
       >
-        <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'150px'"></d-column>
+        <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'150px'">
+          <d-cell>
+            <ng-template let-cellItem="cellItem">
+              <app-user-popover *ngIf="cellItem" [username]="cellItem"></app-user-popover>
+            </ng-template>
+          </d-cell>
+        </d-column>
         <d-column field="total" [header]="'apiSecurityRisk.report.total' | translate" [width]="'80px'"></d-column>
         <d-column field="completed" [header]="'apiSecurityRisk.report.completed' | translate" [width]="'100px'">
           <d-cell>
@@ -149,7 +155,13 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'130px'"></d-column>
+      <d-column field="securityOfficer" [header]="'apiSecurityRisk.report.securityOfficer' | translate" [width]="'130px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <app-user-popover *ngIf="cellItem" [username]="cellItem"></app-user-popover>
+          </ng-template>
+        </d-cell>
+      </d-column>
     </d-data-table>
   </div>
 
@@ -178,7 +190,13 @@
           </ng-template>
         </d-cell>
       </d-column>
-      <d-column field="analyst" [header]="'apiSecurityRisk.report.analyst' | translate" [width]="'120px'"></d-column>
+      <d-column field="analyst" [header]="'apiSecurityRisk.report.analyst' | translate" [width]="'120px'">
+        <d-cell>
+          <ng-template let-cellItem="cellItem">
+            <app-user-popover *ngIf="cellItem" [username]="cellItem"></app-user-popover>
+          </ng-template>
+        </d-cell>
+      </d-column>
       <d-column field="expectedTime" [header]="'apiSecurityRisk.report.expected' | translate" [width]="'120px'">
         <d-cell>
           <ng-template let-cellItem="cellItem">

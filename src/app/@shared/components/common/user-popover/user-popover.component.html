@@ -1,0 +1,15 @@
+<span class="user-popover"
+  dPopover
+  [position]="'left-top'"
+  [trigger]="'hover'"
+  [controlled]="true"
+  [mouseEnterDelay]="500"
+  [content]="userInfoCardTemplate"
+  [popoverStyle]="getPopoverStyle()"
+>
+  <i class="fas fa-user"></i>
+  <span>{{ username }}</span>
+</span>
+<ng-template #userInfoCardTemplate>
+  <app-user-info-card [username]="username"></app-user-info-card>
+</ng-template>

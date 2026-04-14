@@ -31,21 +31,7 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="userApplicantTemplate"
-              [popoverStyle]="getPopoverStyle()"
-              style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #userApplicantTemplate>
-              <app-user-info-card [username]="rowItem['username']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem['username'] }}</span>
+            <app-user-popover [username]="rowItem['username']"></app-user-popover>
           </div>
           <div>
             <i class="fas fa-comment" style="vertical-align: middle;margin-right: 5px"></i>
@@ -63,21 +49,7 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="userApproverTemplate"
-              [popoverStyle]="getPopoverStyle()"
-              style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #userApproverTemplate>
-              <app-user-info-card [username]="rowItem['approvedBy']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem['approvedBy'] }}</span>
+            <app-user-popover [username]="rowItem['approvedBy']"></app-user-popover>
             <d-tag
               *ngIf="rowItem['approvals']['APPROVER']['approvalStatus'] !== null"
               style="margin-left: 5px"
@@ -91,21 +63,7 @@
           </div>
           <div *ngIf="rowItem['ccTo'] !==''">
             <span>CC:&nbsp;</span>
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="userCCTemplate"
-              [popoverStyle]="getPopoverStyle()"
-              style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #userCCTemplate>
-              <app-user-info-card [username]="rowItem['ccTo']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem['ccTo'] }}</span>
+            <app-user-popover [username]="rowItem['ccTo']"></app-user-popover>
           </div>
         </ng-template>
       </d-cell>

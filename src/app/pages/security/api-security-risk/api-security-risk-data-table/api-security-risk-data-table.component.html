@@ -46,22 +46,7 @@
     <d-column [header]="'apiSecurityRisk.table.analyst' | translate" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div *ngIf="rowItem.analyst">
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="analystUserTemplate"
-              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #analystUserTemplate>
-              <app-user-info-card [username]="rowItem['analyst']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem.analyst }}</span>
-          </div>
+          <app-user-popover *ngIf="rowItem.analyst" [username]="rowItem.analyst"></app-user-popover>
           <div *ngIf="rowItem.analysisDesc" style="font-size: 12px; margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--devui-dividing-line, #dfe1e6);">
             <i class="fas fa-comment" style="vertical-align: middle; margin-right: 5px;"></i>{{ rowItem.analysisDesc }}
           </div>
@@ -86,44 +71,14 @@
     <d-column field="securityOfficer" [header]="'apiSecurityRisk.table.securityOfficer' | translate" [width]="'130px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div *ngIf="rowItem.securityOfficer">
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="securityOfficerTemplate"
-              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #securityOfficerTemplate>
-              <app-user-info-card [username]="rowItem['securityOfficer']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem.securityOfficer }}</span>
-          </div>
+          <app-user-popover *ngIf="rowItem.securityOfficer" [username]="rowItem.securityOfficer"></app-user-popover>
         </ng-template>
       </d-cell>
     </d-column>
     <d-column field="contactPerson" [header]="'apiSecurityRisk.table.contact' | translate" [width]="'120px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <div *ngIf="rowItem.contactPerson">
-            <d-icon
-              [icon]="'icon-identity-auth'"
-              dPopover
-              [position]="'left-top'"
-              [trigger]="'hover'"
-              [controlled]="true"
-              [mouseEnterDelay]="500"
-              [content]="contactPersonTemplate"
-              [popoverStyle]="popoverStyle" style="vertical-align: middle;margin-right: 5px"
-            ></d-icon>
-            <ng-template #contactPersonTemplate>
-              <app-user-info-card [username]="rowItem['contactPerson']"></app-user-info-card>
-            </ng-template>
-            <span>{{ rowItem.contactPerson }}</span>
-          </div>
+          <app-user-popover *ngIf="rowItem.contactPerson" [username]="rowItem.contactPerson"></app-user-popover>
         </ng-template>
       </d-cell>
     </d-column>

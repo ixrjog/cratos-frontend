@@ -89,21 +89,7 @@
     <d-column field="username" [header]="'workOrderTicket.dataTable.headers.applicant' | translate">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <d-icon
-            [icon]="'icon-identity-auth'"
-            dPopover
-            [position]="'left-top'"
-            [trigger]="'hover'"
-            [controlled]="true"
-            [mouseEnterDelay]="500"
-            [content]="userInfoCardTemplate"
-            [popoverStyle]="getPopoverStyle()"
-            style="vertical-align: middle;margin-right: 5px"
-          ></d-icon>
-          <ng-template #userInfoCardTemplate>
-            <app-user-info-card [username]="cellItem"></app-user-info-card>
-          </ng-template>
-          <span>{{ cellItem }}</span>
+          <app-user-popover [username]="cellItem"></app-user-popover>
         </ng-template>
       </d-cell>
     </d-column>

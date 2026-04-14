@@ -23,14 +23,14 @@
     [loading]='table.loading'
     [checkable]='true'
   >
-    <d-column header='Web Site' [width]="'300px'">
+    <d-column header='Web Site' [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header='DNS' [width]="'300px'">
+    <d-column header='DNS' [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <div>

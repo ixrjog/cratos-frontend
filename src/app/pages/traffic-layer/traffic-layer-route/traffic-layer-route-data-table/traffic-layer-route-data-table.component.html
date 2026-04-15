@@ -58,8 +58,7 @@
         <ng-template let-rowItem='rowItem'>
           <div *ngFor='let target of rowItem.recordTargets; let i = index' style="margin-bottom: 4px;">
             <span style="display: inline; margin-right: 6px; white-space: nowrap;" [style.visibility]="target.active ? 'visible' : 'hidden'">
-              <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
-              <span style="margin: 0 4px; color: #3ac295;">——→</span>
+              <span dClipboard [content]="rowItem['domainRecord']" style="border: 1px solid #3ac295; border-radius: 4px; padding: 1px 6px; color: var(--devui-brand, #5e7ce0);">{{ rowItem['domainRecord'] }}</span>              <span style="margin: 0 4px; color: #3ac295;">→</span>
             </span>
             <div style="display: inline-flex; align-items: center; border-radius: 4px; padding: 2px 8px;"
                  [style.border]="target.active ? '1px solid #3ac295' : 'none'"
@@ -75,8 +74,8 @@
                      ngSrc='assets/icon/cloudflare-proxied-icon.svg' alt='Cloudflare'
                      style='width: 25px; height: 25px; margin-right: 5px; vertical-align: bottom' height='10' width='10'>
             </span>
-            <span *ngIf='!target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
-            <span *ngIf='target.origin' dClipboard [content]='target.recordValue'>{{ target.recordValue }}</span>
+            <d-tag *ngIf='!target.origin' [tag]='target.recordValue' [labelStyle]="target.active ? 'green-w98' : 'default'" dClipboard [content]='target.recordValue'></d-tag>
+            <d-tag *ngIf='target.origin' [tag]='target.recordValue' [labelStyle]="target.active ? 'green-w98' : 'default'" dClipboard [content]='target.recordValue'></d-tag>
             <img *ngIf="target.targetType == 'CLOUDFLARE'" ngSrc='assets/icon/cloudflare-icon.svg' alt='Cloudflare'
                  style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='64' width='64'>
             <img *ngIf="target.targetType == 'ALIYUN_ALB'" ngSrc='assets/icon/alibabacloud-icon.svg' alt='Alibaba'

@@ -17,25 +17,24 @@
       <span style="float: right; padding: 3px 0">{{ option.email }}</span>
     </ng-template>
   </d-select>
-  <d-select
-    class="select"
-    [options]="sessionTypeOptions"
-    [appendToBody]="true"
-    [(ngModel)]="queryParam.sessionType"
-    [allowClear]="true"
-    placeholder="Select protocol"
+  <d-tabs
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.sessionType"
+    (activeTabChange)="queryParam.sessionType = $any($event); fetchData()"
   >
-  </d-select>
-  <d-select
-    class="select"
-    style="width: 300px;max-width: 300px"
-    [options]="sessionStatusOptions"
-    [appendToBody]="true"
-    [(ngModel)]="queryParam.sessionStatus"
-    [allowClear]="true"
-    placeholder="Select session status"
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let type of sessionTypeOptions" [id]="type" [title]="type"></d-tab>
+  </d-tabs>
+  <d-tabs
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.sessionStatus"
+    (activeTabChange)="queryParam.sessionStatus = $any($event); fetchData()"
   >
-  </d-select>
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let s of sessionStatusOptions" [id]="s" [title]="s"></d-tab>
+  </d-tabs>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
@@ -48,8 +47,8 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="sessionId" header="Session ID"></d-column>
-    <d-column header="Session Time">
+    <d-column field="sessionId" header="Session ID" [width]="'250px'"></d-column>
+    <d-column header="Session Time" [width]="'280px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div>
@@ -58,16 +57,18 @@
               <span class="font-color-comment">
                 {{ rowItem['startTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
               </span>
+              <strong *ngIf="rowItem['startTime']" style="margin-left: 5px;">{{ rowItem['startTime'] | dRelativeTime: limit | async }}</strong>
             </div>
             <div>
               <strong style="margin-right: 5px">End</strong>
               <span class="font-color-comment">
                 {{ rowItem['endTime'] | dDatePipe: 'y/M/d HH:mm:ss z' | dSafeNullPipe: '?' }}
               </span>
+              <strong *ngIf="rowItem['endTime']" style="margin-left: 5px;">{{ rowItem['endTime'] | dRelativeTime: limit | async }}</strong>
             </div>
             <div>
               <strong style="margin-right: 5px">Duration</strong>
-              <span class="font-color-comment" c>
+              <span class="font-color-comment">
                 {{ rowItem['durationTime'] }}
               </span>
             </div>
@@ -75,17 +76,17 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Username@Hostname">
+    <d-column header="Username@Hostname" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <span>{{ rowItem['username'] }}@{{ rowItem['serverHostname'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="sessionStatus" header="Session Status">
+    <d-column field="sessionStatus" header="Session Status" [width]="'200px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+          <d-tag [tag]="cellItem" [labelStyle]="getSessionStatusStyle(cellItem)"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>

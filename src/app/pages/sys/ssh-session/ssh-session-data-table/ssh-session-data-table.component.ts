@@ -27,10 +27,12 @@ import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant'
 })
 export class SshSessionDataTableComponent implements OnInit {
 
+  private static STORAGE_KEY = 'ssh-session-query';
+
   queryParam = {
     username: '',
-    sessionStatus: null,
-    sessionType: null,
+    sessionStatus: '',
+    sessionType: '',
   };
   user: UserVO;
   protected readonly limit = RELATIVE_TIME_LIMIT;
@@ -55,6 +57,7 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    sessionStorage.setItem(SshSessionDataTableComponent.STORAGE_KEY, JSON.stringify(this.queryParam));
     const param: SshSessionPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -64,6 +67,10 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    const saved = sessionStorage.getItem(SshSessionDataTableComponent.STORAGE_KEY);
+    if (saved) {
+      Object.assign(this.queryParam, JSON.parse(saved));
+    }
     this.fetchData();
   }
 
@@ -113,4 +120,14 @@ export class SshSessionDataTableComponent implements OnInit {
   }
 
   protected readonly countResource = countResource;
+
+  getSessionStatusStyle(status: string): string {
+    switch (status) {
+      case SshShellEventType.SESSION_STARTED: return 'green-w98';
+      case SshShellEventType.SESSION_STOPPED: return 'default';
+      case SshShellEventType.SESSION_STOPPED_UNEXPECTEDLY: return 'red-w98';
+      case SshShellEventType.SESSION_DESTROYED: return 'orange-w98';
+      default: return 'blue-w98';
+    }
+  }
 }

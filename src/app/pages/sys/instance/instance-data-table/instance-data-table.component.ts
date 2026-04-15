@@ -24,6 +24,8 @@ export class InstanceDataTableComponent implements OnInit {
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.CRATOS_INSTANCE;
 
+  private static STORAGE_KEY = 'instance-query';
+
   queryParam = {
     queryName: '',
     valid: null,
@@ -50,6 +52,7 @@ export class InstanceDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    sessionStorage.setItem(InstanceDataTableComponent.STORAGE_KEY, JSON.stringify(this.queryParam));
     const param: RegisteredInstancePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -59,6 +62,10 @@ export class InstanceDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    const saved = sessionStorage.getItem(InstanceDataTableComponent.STORAGE_KEY);
+    if (saved) {
+      Object.assign(this.queryParam, JSON.parse(saved));
+    }
     setTimeout(() => {
       this.businessCascader.getTagOptions();
     }, 500);

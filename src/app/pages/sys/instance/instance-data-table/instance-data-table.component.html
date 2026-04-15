@@ -27,7 +27,20 @@
     <d-column field="hostIp" header="Host Ip"></d-column>
     <d-column field="status" header="Status"></d-column>
     <d-column field="version" header="Version"></d-column>
-    <d-column field="commit" header="Commit"></d-column>
+    <d-column field="commit" header="Commit" [width]="'500px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <div *ngIf="cellItem" style="font-size: 12px; font-family: monospace; line-height: 1.6;">
+            <div *ngFor="let line of cellItem.split('\n')">
+              <span *ngIf="line.startsWith('#')" style="color: var(--devui-text-weak);">{{ line }}</span>
+              <span *ngIf="!line.startsWith('#') && line.includes('=')">
+                <span style="color: #5e7ce0;">{{ line.split('=')[0] }}</span><span>=</span><span style="color: #3ac295;">{{ line.split('=').slice(1).join('=') }}</span>
+              </span>
+            </div>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column [width]="'160px'" field="startTime" header="Start Time" [fieldType]="'date'">
       <d-cell>
         <ng-template let-cellItem="cellItem">

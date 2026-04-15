@@ -5,6 +5,7 @@ export default {
       selectWorkOrder: '搜索并选择工单',
       selectUser: '搜索并选择用户',
       showOnlyMySubmit: '仅显示我提交的',
+      showOnlyMyApproval: '仅显示我的待审批',
       filter: '筛选',
       fetchData: '获取数据',
       headers: {

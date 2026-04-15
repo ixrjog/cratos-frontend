@@ -44,7 +44,14 @@
     [label]="'workOrderTicket.dataTable.showOnlyMySubmit' | translate"
     [isShowTitle]="false"
     [(ngModel)]="queryParam.mySubmitted"
-    (change)="fetchData()"
+    (change)="queryParam.myApproval = false; fetchData()"
+  ></d-checkbox>
+  <d-checkbox
+    class="checkbox"
+    [label]="'workOrderTicket.dataTable.showOnlyMyApproval' | translate"
+    [isShowTitle]="false"
+    [(ngModel)]="queryParam.myApproval"
+    (change)="queryParam.mySubmitted = false; fetchData()"
   ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'workOrderTicket.dataTable.filter' | translate }}</d-button>
   <br />

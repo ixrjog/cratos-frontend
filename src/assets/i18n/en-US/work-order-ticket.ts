@@ -5,6 +5,7 @@ export default {
       selectWorkOrder: 'Search and select work order',
       selectUser: 'Search and select user',
       showOnlyMySubmit: 'show only my submit',
+      showOnlyMyApproval: 'show only my approval',
       filter: 'Filter',
       fetchData: 'Fetch Data',
       headers: {

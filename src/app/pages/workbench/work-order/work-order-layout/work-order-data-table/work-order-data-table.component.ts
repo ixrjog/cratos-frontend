@@ -119,12 +119,15 @@ export class WorkOrderDataTableComponent implements OnInit {
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
+  private static STORAGE_KEY = 'work-order-ticket-query';
+
   table: Table<WorkOrderTicketVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   queryParam = {
     ticketNo: '',
     ticketState: '',
     username: '',
     mySubmitted: false,
+    myApproval: false,
   };
   workOrder: WorkOrderVO = null;
   user: UserVO;
@@ -140,13 +143,17 @@ export class WorkOrderDataTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const saved = sessionStorage.getItem(WorkOrderDataTableComponent.STORAGE_KEY);
+    if (saved) {
+      Object.assign(this.queryParam, JSON.parse(saved));
+    }
     this.translate.get('workOrderTicket').subscribe((res) => {
       this.onGetTicketStateOptions(res);
     });
     this.activatedRoute.queryParams.subscribe(param => {
       if (param['ticketNo'] !== undefined) {
         this.queryParam.ticketNo = param['ticketNo'];
-        this.queryParam.ticketState =  WorkOrderStatus.IN_APPROVAL
+        this.queryParam.ticketState = WorkOrderStatus.IN_APPROVAL;
       }
     });
     this.fetchData();
@@ -202,6 +209,7 @@ export class WorkOrderDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    sessionStorage.setItem(WorkOrderDataTableComponent.STORAGE_KEY, JSON.stringify(this.queryParam));
     const param: MyTicketPageQuery = {
       ...this.queryParam,
       workOrderKey: this.workOrder === null ? '' : this.workOrder.workOrderKey,

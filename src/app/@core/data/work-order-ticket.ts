@@ -108,6 +108,7 @@ export interface MyTicketPageQuery extends PageQuery {
   workOrderKey: string;
   username: string;
   mySubmitted: boolean;
+  myApproval: boolean;
 }
 
 export interface TicketPageQuery extends PageQuery {

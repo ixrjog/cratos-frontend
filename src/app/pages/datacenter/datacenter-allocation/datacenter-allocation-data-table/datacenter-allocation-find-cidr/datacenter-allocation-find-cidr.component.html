@@ -4,39 +4,34 @@
     <d-tabs
       type="options"
       [activeTab]="selectedParentCidr"
-      (activeTabChange)="selectedParentCidr = $any($event)"
+      (activeTabChange)="selectedParentCidr = $any($event); onFind()"
     >
       <d-tab *ngFor="let cidr of parentCidrOptions" [id]="cidr" [title]="cidr"></d-tab>
     </d-tabs>
   </div>
-  <div style="display: flex; gap: 12px; align-items: flex-end; margin-bottom: 16px;">
-    <div style="flex: 1;">
-      <label style="font-weight: bold; display: block; margin-bottom: 4px;">Prefix Length</label>
-      <d-select
-        [options]="prefixLengthOptions"
-        [(ngModel)]="selectedPrefixLength"
-        [appendToBody]="true"
-      ></d-select>
-    </div>
-    <d-button bsStyle="primary" (click)="onFind()" [disabled]="loading">
-      {{ loading ? 'Searching...' : 'Find Available' }}
-    </d-button>
+  <div style="margin-bottom: 12px;">
+    <label style="font-weight: bold; display: block; margin-bottom: 4px;">Prefix Length</label>
+    <d-tabs
+      type="options"
+      [activeTab]="selectedPrefixLength"
+      (activeTabChange)="selectedPrefixLength = $any($event); onFind()"
+    >
+      <d-tab *ngFor="let p of prefixLengthOptions" [id]="p" [title]="'/' + p"></d-tab>
+    </d-tabs>
   </div>
 
   <div *ngIf="result">
     <div *ngIf="result.availableCidrs?.length === 0" style="color: #999; text-align: center; padding: 20px;">
       No available CIDR found in {{ result.parentCidr }}
     </div>
-    <div *ngIf="result.availableCidrs?.length > 0">
-      <div *ngFor="let cidr of result.availableCidrs" style="display: inline-block; margin: 4px;">
-        <d-tag
-          [tag]="cidr"
-          [labelStyle]="'green-w98'"
-          style="cursor: pointer;"
-          dClipboard
-          [content]="cidr"
-          title="Click to copy"
-        ></d-tag>
+    <div *ngIf="result.availableCidrs?.length > 0" class="cidr-grid">
+      <div *ngFor="let cidr of result.availableCidrs | slice:0:16"
+           class="cidr-block"
+           dClipboard
+           [content]="$any(cidr)"
+           title="Click to copy"
+      >
+        {{ cidr }}
       </div>
     </div>
   </div>

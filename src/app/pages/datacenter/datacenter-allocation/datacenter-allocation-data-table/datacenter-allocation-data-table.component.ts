@@ -132,7 +132,7 @@ export class DatacenterAllocationDataTableComponent implements OnInit {
     this.dialogService.open({
       id: 'find-available-cidr',
       title: 'Find Available CIDR',
-      width: '600px',
+      width: '1000px',
       maxHeight: '500px',
       backdropCloseable: true,
       dialogtype: 'standard',

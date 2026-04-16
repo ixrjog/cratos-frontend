@@ -10,6 +10,7 @@ import { finalize, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { getPopoverStyle } from '../../../../../../@shared/utils/theme.util';
 import { DIALOG_DATA, DialogUtil } from '../../../../../../@shared/utils/dialog.util';
+import { DialogService } from 'ng-devui';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { RedeployKubernetesDeployment } from '../../../../../../@core/data/application-resource';
 import { BusinessTagVO } from '../../../../../../@core/data/business-tag';
@@ -41,7 +42,8 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
   constructor(
     private applicationResourceService: ApplicationResourceService,
     private dialogUtil: DialogUtil,
-    private toastUtil: ToastUtil
+    private toastUtil: ToastUtil,
+    private dialogService: DialogService,
   ) {
   }
 
@@ -149,6 +151,10 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
   }
 
   protected readonly getPopoverStyle = getPopoverStyle;
+
+  hasProgressing(): boolean {
+    return this.kubernetesDeployment.replicaSets?.some(rs => rs.progressing) || false;
+  }
 
   onRedeploy() {
     const dialogData = {

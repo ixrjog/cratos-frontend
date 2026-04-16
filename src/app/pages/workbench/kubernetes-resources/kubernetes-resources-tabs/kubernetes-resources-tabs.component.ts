@@ -457,12 +457,35 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
             && msg.body.namespace === this.queryParam.namespace) {
             this.kubernetesDetails = msg.body;
             this.serviceList = this.kubernetesDetails?.network?.services;
+            this.kubernetesApplication = this.kubernetesDetails?.application;
+            this.show = true;
+            const newDeployments = this.kubernetesDetails?.workloads?.deployments;
+            try {
+              if (newDeployments && this.deploymentList?.length > 0) {
+                const oldMap = new Map(this.deploymentList.map(d => [d.metadata.name + '@' + d.kubernetesCluster.name, d]));
+                newDeployments.forEach(d => {
+                  const old = oldMap.get(d.metadata.name + '@' + d.kubernetesCluster.name);
+                  if (old?.replicaSets && !d.replicaSets) {
+                    const runningPods = d.pods?.filter(p => p.status?.phase === 'Running').length ?? 0;
+                    const desiredReplicas = d.spec?.replicas ?? 0;
+                    d.replicaSets = old.replicaSets.map(rs => ({
+                      ...rs,
+                      readyReplicas: runningPods,
+                      replicas: desiredReplicas,
+                      progressing: desiredReplicas !== runningPods,
+                    }));
+                  }
+                });
+              }
+            } catch (e) {
+              console.warn('replicaSets merge error:', e);
+            }
             if (this.queryParam.name !== '' && this.queryParam.name !== null) {
-              this.deploymentList = this.kubernetesDetails?.workloads?.deployments.filter(
+              this.deploymentList = newDeployments?.filter(
                 deployment => deployment.metadata.name === this.queryParam.name,
               );
             } else {
-              this.deploymentList = this.kubernetesDetails?.workloads?.deployments;
+              this.deploymentList = newDeployments;
             }
           }
         } else {

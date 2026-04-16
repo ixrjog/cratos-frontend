@@ -2,6 +2,10 @@
   <d-splitter class="splitter-border" orientation="vertical">
     <d-splitter-pane size="30px" [resizable]="false">
       <div class="splitter-header">
+        <i *ngIf="kubernetesDeployment.replicaSets?.length > 0 && hasProgressing()"
+           class="fa-solid fa-spinner fa-spin"
+           style="color: #fa9841; margin-left: 8px; margin-right: 4px; font-size: 16px;"
+        ></i>
         <h2 style="margin: 0 10px 0 8px; color: var(--devui-brand, #5e7ce0);">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
@@ -191,6 +195,36 @@
                 <div style="padding: 8px; max-width: 600px; word-break: break-all; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.8;">
                   <div *ngFor="let opt of kubernetesDeployment.attributes['env.java.opts'].split(' ')">
                     {{ opt }}
+                  </div>
+                </div>
+              </ng-template>
+
+              <d-tag
+                *ngIf="kubernetesDeployment.replicaSets?.length > 0"
+                dPopover
+                [position]="'right-top'"
+                [trigger]="'hover'"
+                [controlled]="true"
+                [mouseEnterDelay]="500"
+                [content]="replicaSetTemplate"
+                [popoverStyle]="getPopoverStyle()"
+                [tag]="hasProgressing() ? 'ReplicaSet ⟳' : 'ReplicaSet ✓'"
+                [labelStyle]="hasProgressing() ? 'orange-w98' : 'green-w98'"
+              ></d-tag>
+              <ng-template #replicaSetTemplate>
+                <div style="padding: 8px; min-width: 400px; background: var(--devui-connected-overlay-bg, #fff); border-radius: 6px;">
+                  <div *ngFor="let rs of kubernetesDeployment.replicaSets" style="margin-bottom: 8px; padding: 8px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; background: var(--devui-base-bg, #f5f5f5);">
+                    <div style="font-weight: 600; margin-bottom: 4px; color: var(--devui-text);">{{ rs.name }}</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;">
+                      <d-tag [tag]="'Replicas: ' + rs.replicas" [labelStyle]="'blue-w98'"></d-tag>
+                      <d-tag [tag]="'Ready: ' + rs.readyReplicas" [labelStyle]="rs.readyReplicas === rs.replicas ? 'green-w98' : 'orange-w98'"></d-tag>
+                      <d-tag [tag]="'Available: ' + rs.availableReplicas" [labelStyle]="'blue-w98'"></d-tag>
+                      <d-tag *ngIf="rs.progressing" [tag]="'Progressing'" [labelStyle]="'orange-w98'"></d-tag>
+                      <d-tag *ngIf="!rs.progressing" [tag]="'Stable'" [labelStyle]="'green-w98'"></d-tag>
+                    </div>
+                    <div style="font-size: 11px; color: var(--devui-text-weak);">
+                      <div *ngFor="let img of rs.images">{{ img }}</div>
+                    </div>
                   </div>
                 </div>
               </ng-template>

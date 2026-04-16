@@ -64,6 +64,21 @@ export interface KubernetesDeploymentVO {
   topologyDetails: KubernetesTopologyDetails;
   attributes: Map<string, string>;
   env: EnvVO;
+  replicaSets: KubernetesReplicaSetVO[];
+}
+
+export interface KubernetesReplicaSetVO {
+  name: string;
+  namespace: string;
+  replicas: number;
+  currentReplicas: number;
+  readyReplicas: number;
+  availableReplicas: number;
+  creationTimestamp: string;
+  images: string[];
+  ownerDeployment: string;
+  active: boolean;
+  progressing: boolean;
 }
 
 export interface KubernetesClusterVO {

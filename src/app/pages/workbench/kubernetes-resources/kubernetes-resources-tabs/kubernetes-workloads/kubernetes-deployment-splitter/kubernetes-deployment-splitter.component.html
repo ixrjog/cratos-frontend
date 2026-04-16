@@ -6,7 +6,7 @@
            class="fa-solid fa-spinner fa-spin"
            style="color: #fa9841; margin-left: 8px; margin-right: 4px; font-size: 16px;"
         ></i>
-        <h2 style="margin: 0 10px 0 8px; color: var(--devui-brand, #5e7ce0);">
+        <h2 style="margin: 0 10px 0 8px;" [style.color]="kubernetesDeployment.pods?.length > 0 ? 'var(--devui-brand, #5e7ce0)' : '#999'">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
         <div class="layout-bottom" style="margin-right: 10px">
@@ -18,7 +18,7 @@
             [mouseEnterDelay]="500"
             [content]="nodeLabelsTemplate"
           >
-            <i class="fa-solid fa-tags" style="font-size: 16px"></i>
+            <i class="icon icon-tag" style="font-size: 16px"></i>
           </span>
           <ng-template #nodeLabelsTemplate>
             <div *ngFor="let label of kubernetesDeployment.metadata.labels | keyvalue">

@@ -19,7 +19,7 @@
             [mouseEnterDelay]="500"
             [content]="podLabelsTemplate"
           >
-            <i class="fa-solid fa-tags"></i>
+            <i class="icon icon-tag"></i>
           </span>
           <ng-template #podLabelsTemplate>
             <div *ngFor="let label of kubernetesPod.metadata.labels | keyvalue">

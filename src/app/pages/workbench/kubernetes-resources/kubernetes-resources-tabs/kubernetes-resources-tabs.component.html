@@ -40,6 +40,16 @@
       [title]="item.label"
     ></d-tab>
   </d-tabs>
+  <d-tabs
+    *ngIf="first"
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.countryCode"
+    (activeTabChange)="queryParam.countryCode = $any($event); onCountryCodeChange()"
+  >
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let cc of countryCodeOptions.slice(1)" [id]="cc" [title]="cc.toUpperCase()"></d-tab>
+  </d-tabs>
   <d-select
     class="select"
     [placeholder]="'kubernetes.form.selectResourceName' | translate"

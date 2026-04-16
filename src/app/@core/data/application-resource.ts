@@ -7,6 +7,7 @@ export interface QueryApplicationResourceKubernetesDetails {
   instanceName: string;
   namespace: string;
   name: string;
+  countryCode: string;
 }
 
 export interface QueryKubernetesDeploymentOptions {

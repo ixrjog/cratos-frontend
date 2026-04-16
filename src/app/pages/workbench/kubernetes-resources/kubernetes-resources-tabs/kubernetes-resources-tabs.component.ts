@@ -32,13 +32,17 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
   private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
+  private static readonly CC_STORAGE_KEY = 'k8s_resources_selected_countrycode';
 
   queryParam = {
     applicationName: '',
     instanceName: '',
     namespace: '',
     name: '',
+    countryCode: 'ng',
   };
+
+  countryCodeOptions = ['', 'ng', 'bd', 'pk', 'ph'];
 
   resourceName: string = '';
 
@@ -105,6 +109,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         // 从 localStorage 恢复
         const savedApp = localStorage.getItem(KubernetesResourcesTabsComponent.APP_STORAGE_KEY);
         const savedNs = localStorage.getItem(KubernetesResourcesTabsComponent.NS_STORAGE_KEY);
+        const savedCc = localStorage.getItem(KubernetesResourcesTabsComponent.CC_STORAGE_KEY);
         if (savedApp) {
           this.queryParam.applicationName = savedApp;
           this.applicationService.getApplicationByName({name: savedApp})
@@ -112,6 +117,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
               this.application = body;
               this.isFavorite = this.application.favorited;
               this.queryParam.namespace = savedNs || '';
+              this.queryParam.countryCode = savedCc || 'ng';
               if (!this.first) {
                 this.first = true;
               }
@@ -316,6 +322,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   onResourceNamespaceChange(tab) {
     this.queryParam.namespace = tab;
+    this.queryParam.countryCode = localStorage.getItem(KubernetesResourcesTabsComponent.CC_STORAGE_KEY) || 'ng';
     localStorage.setItem(KubernetesResourcesTabsComponent.NS_STORAGE_KEY, tab || '');
     this.queryParam.name = '';
     this.fetchData();
@@ -328,6 +335,11 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       .subscribe(({ body }) => {
         this.resourceNameOptions = body.options;
       });
+  }
+
+  onCountryCodeChange() {
+    localStorage.setItem(KubernetesResourcesTabsComponent.CC_STORAGE_KEY, this.queryParam.countryCode || '');
+    this.fetchData();
   }
 
   getResourceNamespaceOptions() {
@@ -433,6 +445,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         applicationName: this.queryParam.applicationName,
         namespace: this.queryParam.namespace,
         name: this.queryParam.name,
+        countryCode: this.queryParam.countryCode,
       };
       this.ws.send(JSON.stringify(param));
     }

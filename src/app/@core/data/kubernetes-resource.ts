@@ -117,6 +117,7 @@ export interface ApplicationKubernetesDetailsRequest {
   instanceName?: string;
   namespace?: string;
   name?: string;
+  countryCode?: string;
   deployments?: ApplicationKubernetesDeploymentRequest[];
 }
 

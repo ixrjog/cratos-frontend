@@ -84,15 +84,18 @@
         <d-splitter-pane [resizable]="false" size="350px">
           <div style="padding: 8px" class="splitter-left">
 
-            <span class="name">{{ 'kubernetes.resources.containers' | translate }}</span>
-            <d-radio-group
-              [name]="'container-name-radio'"
-              [values]="kubernetesDeployment['$containers']"
-              [direction]="'row'"
-              [(ngModel)]="kubernetesDeployment['$chosenItem']"
-              (change)="valueChange($event)"
-            >
-            </d-radio-group>
+            <div style="display: flex; align-items: center">
+              <span class="name">{{ 'kubernetes.resources.containers' | translate }}</span>
+              <d-radio-group
+                style="margin-left: 8px"
+                [name]="'container-name-radio'"
+                [values]="kubernetesDeployment['$containers']"
+                [direction]="'row'"
+                [(ngModel)]="kubernetesDeployment['$chosenItem']"
+                (change)="valueChange($event)"
+              >
+              </d-radio-group>
+            </div>
 
             <div>
               <span class="name">{{ 'kubernetes.resources.image' | translate }}</span>

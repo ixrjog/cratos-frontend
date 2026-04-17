@@ -51,6 +51,13 @@
       </d-cell>
     </d-column>
     <d-column field="seq" header="Seq" [sortable]="true"></d-column>
+    <d-column header="Preview">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-tag [tag]="rowItem.tagKey" [customColor]="rowItem.color"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Actions" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">

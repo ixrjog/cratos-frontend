@@ -11,4 +11,19 @@ body {
   d-aside {
     background-color: #202124;
   }
+
+  d-tag .devui-colorful-tag {
+    color: #fff !important;
+
+    .content-wrapper {
+      opacity: 1 !important;
+      border-radius: 2px;
+      z-index: 0;
+    }
+
+    > span {
+      position: relative;
+      z-index: 1;
+    }
+  }
 }

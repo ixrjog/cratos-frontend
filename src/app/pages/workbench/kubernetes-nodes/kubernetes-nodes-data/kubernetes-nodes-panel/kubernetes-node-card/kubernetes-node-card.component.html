@@ -38,7 +38,7 @@
             [mouseEnterDelay]="500"
             [content]="nodeLabelsTemplate"
           >
-            <i class="fa-solid fa-tags"></i>
+            <i class="icon icon-tag"></i>
           </span>
           <ng-template #nodeLabelsTemplate>
             <div *ngFor="let label of kubernetesNode.metadata.labels | keyvalue">

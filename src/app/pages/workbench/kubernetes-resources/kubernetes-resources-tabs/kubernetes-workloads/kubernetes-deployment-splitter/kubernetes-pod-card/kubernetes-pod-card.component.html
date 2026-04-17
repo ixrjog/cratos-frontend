@@ -1,5 +1,6 @@
 <div>
-  <d-card style="padding: 6px 8px" [ngStyle]="{'border': getTotalRestartCount() > 0 ? '1px solid red' : ''}">
+  <d-card style="padding: 6px 8px; position: relative" [ngStyle]="{'border': getTotalRestartCount() > 0 ? '1px solid red' : ''}">
+    <img src="assets/common-icon/pod.svg" alt="pod" style="width: 48px; height: 48px; opacity: 0.5; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none">
     <d-card-header class="spacing-card-header">
       <d-card-title>
         <div class="spacing-card-header-title">
@@ -66,7 +67,8 @@
         ></app-kubernetes-pod-containers>
       </div>
     </d-card-content>
-    <d-card-actions [align]="'end'" style="margin: 0">
+    <div class="cratos-divider" style="margin: 4px 0"></div>
+    <d-card-actions [align]="'end'" style="margin: 0; padding: 0">
       <div>
         <d-button
           bsStyle="text"

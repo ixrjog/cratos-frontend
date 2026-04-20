@@ -21,6 +21,10 @@ const routes: Routes = [
         loadChildren: () => import('./sys/sys.module').then(m => m.SysModule),
       },
       {
+        path: 'channel',
+        loadChildren: () => import('./channel/channel.module').then(m => m.ChannelModule),
+      },
+      {
         path: 'channel-network',
         loadChildren: () => import('./channel-network/channel-network.module').then(m => m.ChannelNetworkModule),
       },

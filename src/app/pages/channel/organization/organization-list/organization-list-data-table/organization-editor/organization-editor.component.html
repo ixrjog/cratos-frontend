@@ -1,0 +1,50 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="name"
+          [(ngModel)]="formData.name"
+          [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Code</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="code"
+          [(ngModel)]="formData.code"
+          [dValidateRules]="formRules['code']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Type</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="type"
+          [(ngModel)]="formData.type" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

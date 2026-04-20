@@ -50,20 +50,9 @@
               <d-form-item>
                 <d-form-label [required]="true">Menu Type</d-form-label>
                 <d-form-control>
-                  <d-radio-group
-                    name="menuType"
-                    [direction]="'row'"
-                    [(ngModel)]="selectMenu.menuType"
-                  >
-                    <d-radio
-                      *ngFor="let option of menuTypeOptions"
-                      [name]="'menuType'"
-                      [value]="option"
-                      [disabled]="true"
-                    >
-                      {{ option }}
-                    </d-radio>
-                  </d-radio-group>
+                  <d-tabs type="options" [activeTab]="selectMenu.menuType" (activeTabChange)="selectMenu.menuType = $any($event)">
+                    <d-tab *ngFor="let option of menuTypeOptions" [id]="option" [title]="option"></d-tab>
+                  </d-tabs>
                 </d-form-control>
               </d-form-item>
               <d-form-item>

@@ -27,9 +27,6 @@ import { SharedModule } from '../../@shared/shared.module';
 @NgModule({
   declarations: [
     ChannelNetworkComponent,
-    ChannelNetworkEditorComponent,
-    ChannelNetworkListComponent,
-    ChannelNetworkListDataTableComponent,
   ],
   imports: [
     CommonModule,

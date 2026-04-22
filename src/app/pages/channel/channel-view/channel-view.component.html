@@ -1,0 +1,133 @@
+<div class="channel-view">
+  <!-- Channel Selector -->
+  <div class="channel-selector">
+    <d-search
+      [(ngModel)]="queryName"
+      [iconPosition]="'left'"
+      [placeholder]="'Search Channel'"
+      (searchFn)="fetchChannels()"
+      (change)="fetchChannels()"
+    ></d-search>
+    <div class="channel-list">
+      <div
+        *ngFor="let ch of channels"
+        class="channel-item"
+        [class.active]="selectedChannel?.id === ch.id"
+        (click)="onSelectChannel(ch)"
+      >
+        <span class="channel-name">{{ ch.name }}</span>
+        <d-tag *ngIf="ch.availableStatus" [tag]="ch.availableStatus" [labelStyle]="'blue-w98'"></d-tag>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" *ngIf="selectedChannel">
+    <!-- Section 1: Users, Applications, Servers, Network Info -->
+    <div class="section-extensions">
+      <div class="relation-group network-info-inline" *ngIf="selectedChannel.networkInfo">
+        <h5 class="group-title">Network Info</h5>
+        <div class="group-content-doc">
+          <markdown lineNumbers lineHighlight mermaid [data]="getNetworkInfo()" [disableSanitizer]="true"></markdown>
+        </div>
+      </div>
+      <div class="relation-group" *ngIf="selectedChannel.members?.['USER']?.length">
+        <h5 class="group-title">Users</h5>
+        <div class="group-content">
+          <span *ngFor="let m of selectedChannel.members['USER']" class="user-item">
+            <span class="user-role">{{ m.role }}</span>
+            <app-user-popover [username]="m.name"></app-user-popover>
+          </span>
+        </div>
+      </div>
+      <div class="column-group">
+        <div class="relation-group" *ngIf="selectedChannel.members?.['APPLICATION']?.length">
+          <h5 class="group-title">Applications</h5>
+          <div class="group-content">
+            <span *ngFor="let m of selectedChannel.members['APPLICATION']" class="app-item">
+              <d-tag [tag]="m.name" [labelStyle]="'blue-w98'"></d-tag>
+              <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onOpenKubernetesResources(m)"></d-icon>
+            </span>
+          </div>
+        </div>
+        <div class="relation-group" *ngIf="selectedChannel.members?.['EDS_ASSET']?.length">
+          <h5 class="group-title">Servers</h5>
+          <div class="group-content">
+            <span *ngFor="let m of selectedChannel.members['EDS_ASSET']" class="server-item">
+              <d-tag [tag]="m.name" [titleContent]="m.comment" [labelStyle]="'blue-w98'"></d-tag>
+              <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(m)"></d-icon>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 2: PalmPay + Business + Channel + Organization -->
+    <div class="section-cards">
+      <div class="palmpay-card" id="palmpay-card">
+        <div class="card-inner">
+          <div class="card-title">PalmPay</div>
+        </div>
+      </div>
+
+      <div class="biz-column" *ngIf="businesses.length">
+        <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i">
+          <div class="biz-name">{{ biz.businessName }}</div>
+          <div class="biz-tags">
+            <d-tag *ngIf="biz.type" [tag]="biz.type" [labelStyle]="'blue-w98'"></d-tag>
+            <d-tag *ngIf="biz.businessDirection" [tag]="biz.businessDirection" [labelStyle]="'blue-w98'"></d-tag>
+          </div>
+        </div>
+      </div>
+
+      <div class="center-card" id="channel-center-card">
+        <div class="card-inner">
+          <div class="card-title">{{ selectedChannel.name }}</div>
+          <div class="card-info">
+            <div class="info-row"><span class="label">Country</span><span>{{ selectedChannel.country }}</span></div>
+            <div class="info-row"><span class="label">Priority</span><d-tag *ngIf="selectedChannel.priority" [tag]="selectedChannel.priority" [labelStyle]="'blue-w98'"></d-tag></div>
+            <div class="info-row"><span class="label">Status</span><d-tag *ngIf="selectedChannel.availableStatus" [tag]="selectedChannel.availableStatus" [labelStyle]="'blue-w98'"></d-tag></div>
+            <div class="info-row"><span class="label">Phase</span><d-tag *ngIf="selectedChannel.constructionPhase" [tag]="selectedChannel.constructionPhase" [labelStyle]="'blue-w98'"></d-tag></div>
+            <div class="info-row" *ngIf="selectedChannel.monitorUrl">
+              <span class="label">Monitor</span>
+              <a [href]="selectedChannel.monitorUrl" target="_blank"><d-icon [icon]="'icon-link'" [operable]="true"></d-icon></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="org-column" *ngIf="organizations.length">
+        <div *ngFor="let org of organizations" class="org-card" [id]="'org-' + org.id">
+          <div class="card-inner">
+            <div class="card-title">{{ org.name }}</div>
+            <div class="card-code" *ngIf="org.code">{{ org.code }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Section 4: Kubernetes Deployments -->
+    <div class="k8s-section relation-group" *ngIf="selectedAppName" dLoading [loading]="k8sLoading">
+      <h5 class="group-title k8s-title">Deployments
+        <d-icon [icon]="'icon-close'" [operable]="true" (click)="selectedAppName = ''; deploymentList = []"></d-icon>
+      </h5>
+      <app-kubernetes-workloads
+        *ngIf="deploymentList.length > 0"
+        [deploymentList]="deploymentList"
+        [application]="kubernetesApplication"
+        [accessControl]="kubernetesDetails?.accessControl"
+        [banner]="kubernetesDetails?.banner"
+      ></app-kubernetes-workloads>
+      <div *ngIf="!k8sLoading && deploymentList.length === 0" class="no-data">No deployments found</div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!selectedChannel">
+    <span>Select a channel to view details</span>
+  </div>
+</div>

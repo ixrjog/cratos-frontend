@@ -88,6 +88,7 @@
               "node_modules/ace-builds/src-min/ext-searchbox.js",
               "node_modules/ace-builds/src-min/ext-language_tools.js",
               "node_modules/@xterm/xterm/lib/xterm.js",
+              "node_modules/leader-line-new/leader-line.min.js",
               {
                 "bundleName": "worker-html",
                 "input": "node_modules/ace-builds/src-min/worker-html.js"

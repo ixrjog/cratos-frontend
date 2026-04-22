@@ -1,0 +1,350 @@
+.channel-view {
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  min-height: calc(100vh - 200px);
+}
+
+.channel-selector {
+  width: 240px;
+  flex-shrink: 0;
+
+  .channel-list {
+    margin-top: 10px;
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+  }
+
+  .channel-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--devui-list-item-hover-bg, #f2f3f5);
+    }
+
+    &.active {
+      background: var(--devui-list-item-active-bg, #e9edfa);
+    }
+
+    .channel-name {
+      font-weight: 500;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-extensions {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+
+  > .relation-group,
+  > .column-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  > .network-info-inline {
+    flex: 2;
+    min-width: 0;
+  }
+
+  .column-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .network-info-inline {
+    .group-content-doc {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  }
+}
+
+.section-cards {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.biz-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.org-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.org-card {
+  .card-inner {
+    border: 2px solid var(--devui-brand, #5e7ce0);
+    border-radius: 12px;
+    padding: 16px 24px;
+    background: var(--devui-base-bg, #fff);
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .card-code {
+    font-size: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+    margin-top: 4px;
+  }
+}
+
+.palmpay-card {
+  align-self: center;
+
+  .card-inner {
+    border: 2px solid var(--devui-brand, #5e7ce0);
+    border-radius: 12px;
+    padding: 24px 32px;
+    background: var(--devui-base-bg, #fff);
+    min-width: 160px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--devui-text, #252b3a);
+  }
+}
+
+.center-card {
+  .card-inner {
+    border: 2px solid var(--devui-brand, #5e7ce0);
+    border-radius: 12px;
+    padding: 16px 20px;
+    background: var(--devui-base-bg, #fff);
+    min-width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--devui-text, #252b3a);
+    margin-bottom: 12px;
+  }
+
+  .card-info {
+    text-align: left;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .label {
+      color: var(--devui-aide-text, #8a8e99);
+      min-width: 60px;
+      font-size: 12px;
+    }
+  }
+}
+
+.divider {
+  height: 1px;
+  background: var(--devui-dividing-line, #dfe1e6);
+  margin: 4px 0;
+}
+
+.network-info-card {
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+  margin: 16px 0;
+
+  .group-title {
+    margin: 0 0 10px 0;
+    color: var(--devui-text, #252b3a);
+    font-size: 13px;
+  }
+}
+
+.relation-group {
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+  min-width: 180px;
+  flex: 1;
+
+  .group-title {
+    margin: 0 0 10px 0;
+    color: var(--devui-text, #252b3a);
+    font-size: 13px;
+  }
+
+  .group-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+
+    &.vertical {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}
+
+.biz-item {
+  padding: 10px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  background: var(--devui-base-bg, #fff);
+
+  .biz-name {
+    font-weight: 500;
+    color: var(--devui-text, #252b3a);
+    margin-bottom: 4px;
+  }
+
+  .biz-tags {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .biz-org {
+    font-size: 11px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+}
+
+.k8s-section {
+  margin-top: 16px;
+
+  .k8s-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .deployment-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .deployment-card {
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 8px;
+    padding: 12px;
+    background: var(--devui-base-bg, #fff);
+
+    .dep-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .dep-cluster {
+      font-size: 11px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .dep-info {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 8px;
+    }
+
+    .dep-pods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pod-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--devui-aide-text, #8a8e99);
+
+      &.running { background: #3dcca6; }
+      &.pending { background: #f2a93b; }
+      &.failed { background: #f66f6a; }
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    color: var(--devui-aide-text, #8a8e99);
+    padding: 20px;
+  }
+}
+
+.user-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 4px;
+  padding: 4px 8px;
+
+  .user-role {
+    font-size: 11px;
+    color: var(--devui-aide-text, #8a8e99);
+    font-weight: 500;
+  }
+}
+
+.app-item, .server-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 4px;
+  padding: 2px 8px 2px 2px;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--devui-aide-text, #8a8e99);
+  font-size: 16px;
+}

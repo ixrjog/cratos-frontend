@@ -1,0 +1,161 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    (searchFn)="fetchData()"
+    (change)="fetchData()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+    [checkable]="true"
+    (cellEditEnd)="onCellEditEnd($event)"
+  >
+    <d-column field="name" header="Name" [editable]="true">
+      <d-cell-edit>
+        <ng-template let-rowItem="rowItem" let-column="column">
+          <div class="customized-editor edit-padding-fix">
+            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
+          </div>
+        </ng-template>
+      </d-cell-edit>
+    </d-column>
+    <d-column field="country" header="Country"></d-column>
+    <d-column field="priority" header="Priority">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="availableStatus" header="Available Status">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="constructionPhase" header="Construction Phase">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Extensions">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div *ngIf="rowItem.members">
+            <div *ngIf="rowItem.members?.APPLICATION" style="margin-bottom: 4px;">
+              <div style="font-size: 11px; color: #8a8e99;">APPLICATION</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <d-tag *ngFor="let m of rowItem.members.APPLICATION" [tag]="m.name" [labelStyle]="'blue-w98'"></d-tag>
+              </div>
+            </div>
+            <div *ngIf="rowItem.members?.USER" style="margin-bottom: 4px;">
+              <div style="font-size: 11px; color: #8a8e99;">USER</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <app-user-popover *ngFor="let m of rowItem.members.USER" [username]="m.name"></app-user-popover>
+              </div>
+            </div>
+            <div *ngIf="rowItem.members?.EDS_ASSET">
+              <div style="font-size: 11px; color: #8a8e99;">SERVER</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <d-tag *ngFor="let m of rowItem.members.EDS_ASSET" [tag]="m.name" [titleContent]="m.comment" [labelStyle]="'blue-w98'"></d-tag>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="monitorUrl" header="Monitor URL">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <a *ngIf="cellItem" [href]="cellItem" target="_blank">
+            <d-icon [icon]="'icon-link'" [operable]="true"></d-icon>
+          </a>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="networkInfo" header="Network Info">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon *ngIf="rowItem.networkInfo" [icon]="'icon-go-document'" [operable]="true"
+                  (click)="onShowNetworkInfo(rowItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column header="Actions">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
+            <d-icon [icon]="'icon-add'" [operable]="true" (click)="onRowAddExtension(rowItem)"></d-icon>
+            <d-icon
+              [icon]="'icon-priority'"
+              [operable]="true"
+              [color]="getRowColor(rowItem['valid'])"
+              (click)="onRowValid(rowItem)"
+            >
+            </d-icon>
+            <span dDropDown appendToBody>
+              <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
+              <ul dDropDownMenu>
+                <li class="devui-dropdown-item" (click)="onRowDelete(rowItem)">Delete</li>
+              </ul>
+            </span>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<ng-template #networkInfoTemplate>
+  <div style="overflow: auto; padding: 20px;">
+    <markdown lineNumbers lineHighlight mermaid [data]="networkInfoContent" [disableSanitizer]="true"></markdown>
+  </div>
+</ng-template>
+<div class="spacing-pagination">
+  <div dDropDown class="batch-button">
+    <d-button-group>
+      <d-button bsStyle="common" dDropDownToggle>
+        Batch
+        <span class="icon icon-select-arrow"></span>
+      </d-button>
+    </d-button-group>
+    <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+      <li role="menuitem" (click)="onBatchDelete()">
+        <a dDropDownMenuItem>
+          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

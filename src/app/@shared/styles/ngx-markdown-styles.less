@@ -46,17 +46,36 @@ markdown {
     }
   }
 
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
   blockquote {
     border-left: 3px solid rgba(0, 0, 0, 0.21);
     padding-left: 1em;
     color: rgba(0, 0, 0, 0.54);
     margin: 0 0 1rem;
     display: block;
-    //margin-block-start: 1em;
-    //margin-block-end: 1em;
-    //margin-inline-start: 40px;
-    //margin-inline-end: 40px;
-    //unicode-bidi: isolate;
+  }
+
+  code {
+    background: @devui-global-bg !important;
+    color: @devui-text !important;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  pre {
+    background: @devui-global-bg !important;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+
+    code {
+      background: transparent !important;
+      padding: 0;
+    }
   }
 }
 

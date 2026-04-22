@@ -269,5 +269,8 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
     MarkdownModule,
     ExtDatasourceModule,
   ],
+  exports: [
+    KubernetesWorkloadsComponent,
+  ],
 })
 export class WorkbenchModule { }

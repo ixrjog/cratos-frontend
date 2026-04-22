@@ -9,9 +9,18 @@ import { OrganizationEditorComponent } from './organization/organization-list/or
 import { ChannelNetworkListComponent } from '../channel-network/channel-network-list/channel-network-list.component';
 import { ChannelNetworkListDataTableComponent } from '../channel-network/channel-network-list/channel-network-list-data-table/channel-network-list-data-table.component';
 import { ChannelNetworkEditorComponent } from '../channel-network/channel-network-list/channel-network-list-data-table/channel-network-editor/channel-network-editor.component';
+import { ChannelInfoListComponent } from './channel-info/channel-info-list/channel-info-list.component';
+import { ChannelInfoListDataTableComponent } from './channel-info/channel-info-list/channel-info-list-data-table/channel-info-list-data-table.component';
+import { ChannelInfoEditorComponent } from './channel-info/channel-info-list/channel-info-list-data-table/channel-info-editor/channel-info-editor.component';
+import { ChannelExtensionEditorComponent } from './channel-info/channel-info-list/channel-info-list-data-table/channel-extension-editor/channel-extension-editor.component';
+import { ChannelBusinessListComponent } from './channel-business/channel-business-list/channel-business-list.component';
+import { ChannelBusinessListDataTableComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-list-data-table.component';
+import { ChannelBusinessEditorComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
+import { ChannelViewComponent } from './channel-view/channel-view.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import {
   ButtonModule,
+  CardModule,
   DataTableModule,
   DCommonModule,
   DropDownModule,
@@ -19,10 +28,14 @@ import {
   LoadingModule,
   PaginationModule,
   SearchModule,
+  SelectModule,
+  TabsModule,
   TagsModule,
 } from 'ng-devui';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
 import { SharedModule } from '../../@shared/shared.module';
+import { MarkdownModule } from 'ngx-markdown';
+import { WorkbenchModule } from '../workbench/workbench.module';
 
 @NgModule({
   declarations: [
@@ -33,12 +46,21 @@ import { SharedModule } from '../../@shared/shared.module';
     ChannelNetworkListComponent,
     ChannelNetworkListDataTableComponent,
     ChannelNetworkEditorComponent,
+    ChannelInfoListComponent,
+    ChannelInfoListDataTableComponent,
+    ChannelInfoEditorComponent,
+    ChannelExtensionEditorComponent,
+    ChannelBusinessListComponent,
+    ChannelBusinessListDataTableComponent,
+    ChannelBusinessEditorComponent,
+    ChannelViewComponent,
   ],
   imports: [
     CommonModule,
     ChannelRoutingModule,
     DaGridModule,
     ButtonModule,
+    CardModule,
     DCommonModule,
     DataTableModule,
     DropDownModule,
@@ -47,8 +69,12 @@ import { SharedModule } from '../../@shared/shared.module';
     PaginationModule,
     RelativeTimeModule,
     SearchModule,
+    SelectModule,
     SharedModule,
+    MarkdownModule,
+    TabsModule,
     TagsModule,
+    WorkbenchModule,
   ],
 })
 export class ChannelModule {

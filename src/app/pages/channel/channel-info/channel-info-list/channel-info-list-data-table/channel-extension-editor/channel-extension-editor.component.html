@@ -1,0 +1,180 @@
+<section>
+  <!-- Existing Extensions -->
+  <div *ngIf="filteredExtensions.length > 0" style="margin-bottom: 16px;">
+    <h6>Added Extensions</h6>
+    <!-- APPLICATION: tag style -->
+    <div *ngIf="activeTab === 'APPLICATION'" style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <d-tag *ngFor="let ext of filteredExtensions"
+             [tag]="ext.name"
+             [labelStyle]="'blue-w98'"
+             [deletable]="true"
+             (tagDelete)="onDeleteExtension(ext)">
+      </d-tag>
+    </div>
+    <!-- USER: tag with popover -->
+    <div *ngIf="activeTab === 'USER'" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+      <app-user-popover *ngFor="let ext of filteredExtensions"
+                        [username]="ext.name"
+                        [deletable]="true"
+                        (onDelete)="onDeleteExtension(ext)">
+      </app-user-popover>
+    </div>
+    <!-- EDS_ASSET: tag style -->
+    <div *ngIf="activeTab === 'EDS_ASSET'" style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <d-tag *ngFor="let ext of filteredExtensions"
+             [tag]="ext.name"
+             [labelStyle]="'blue-w98'"
+             [deletable]="true"
+             (tagDelete)="onDeleteExtension(ext)">
+      </d-tag>
+    </div>
+  </div>
+
+  <!-- Add New -->
+  <d-tabs type="options" [activeTab]="activeTab" (activeTabChange)="onTabChange($event)">
+    <d-tab [id]="'APPLICATION'" [title]="'Application'"></d-tab>
+    <d-tab [id]="'USER'" [title]="'User'"></d-tab>
+    <d-tab [id]="'EDS_ASSET'" [title]="'Server'"></d-tab>
+  </d-tabs>
+
+  <!-- Application -->
+  <div *ngIf="activeTab === 'APPLICATION'" style="margin-top: 10px;">
+    <d-search
+      [(ngModel)]="appQueryParam.queryName"
+      [iconPosition]="'left'"
+      [placeholder]="'Search Application'"
+      (searchFn)="fetchAppData()"
+      (change)="fetchAppData()"
+    ></d-search>
+    <d-data-table
+      dLoading
+      [dataSource]="appTable.data"
+      [scrollable]="true"
+      [loading]="appTable.loading"
+      [tableOverflowType]="'overlay'"
+      [maxHeight]="'300px'"
+      style="margin-top: 8px;"
+    >
+      <d-column field="name" header="Application Name"></d-column>
+      <d-column header="" [width]="'60px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon [icon]="'icon-add'" [operable]="true" (click)="onAddApplication(rowItem)"></d-icon>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <d-pagination
+      style="margin-top: 8px;"
+      [total]="appTable.pager.total"
+      [(pageSize)]="appTable.pager.pageSize"
+      [(pageIndex)]="appTable.pager.pageIndex"
+      [canViewTotal]="true"
+      [canChangePageSize]="true"
+      [maxItems]="5"
+      (pageIndexChange)="appPageIndexChange($event)"
+      (pageSizeChange)="appPageSizeChange($event)"
+    ></d-pagination>
+  </div>
+
+  <!-- User -->
+  <div *ngIf="activeTab === 'USER'" style="margin-top: 10px;">
+    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+      <label>Role:</label>
+      <input dTextInput [(ngModel)]="userRole" placeholder="USER" style="width: 150px;" />
+      <d-search
+        [(ngModel)]="userQueryParam.queryName"
+        [iconPosition]="'left'"
+        [placeholder]="'Search User'"
+        (searchFn)="fetchUserData()"
+        (change)="fetchUserData()"
+      ></d-search>
+    </div>
+    <d-data-table
+      dLoading
+      [dataSource]="userTable.data"
+      [scrollable]="true"
+      [loading]="userTable.loading"
+      [tableOverflowType]="'overlay'"
+      [maxHeight]="'300px'"
+      style="margin-top: 8px;"
+    >
+      <d-column field="username" header="Username"></d-column>
+      <d-column field="displayName" header="Display Name"></d-column>
+      <d-column header="" [width]="'60px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon [icon]="'icon-add'" [operable]="true" (click)="onAddUser(rowItem)"></d-icon>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <d-pagination
+      style="margin-top: 8px;"
+      [total]="userTable.pager.total"
+      [(pageSize)]="userTable.pager.pageSize"
+      [(pageIndex)]="userTable.pager.pageIndex"
+      [canViewTotal]="true"
+      [canChangePageSize]="true"
+      [maxItems]="5"
+      (pageIndexChange)="userPageIndexChange($event)"
+      (pageSizeChange)="userPageSizeChange($event)"
+    ></d-pagination>
+  </div>
+
+  <!-- Server -->
+  <div *ngIf="activeTab === 'EDS_ASSET'" style="margin-top: 10px;">
+    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+      <d-tabs type="options" [activeTab]="selectedEdsType" (activeTabChange)="onEdsTypeChange($event)">
+        <d-tab *ngFor="let opt of edsTypeOptions" [id]="opt.value" [title]="opt.label"></d-tab>
+      </d-tabs>
+    </div>
+    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+      <d-select
+        [options]="instanceOptions"
+        [placeholder]="'Select Instance'"
+        [(ngModel)]="selectedInstance"
+        (ngModelChange)="onInstanceChange($event)"
+        style="width: 200px;"
+        [disabled]="!selectedEdsType"
+      ></d-select>
+      <d-search
+        [(ngModel)]="serverQueryParam.queryName"
+        [iconPosition]="'left'"
+        [placeholder]="'Search Server'"
+        (searchFn)="fetchServerData()"
+        (change)="fetchServerData()"
+      ></d-search>
+    </div>
+    <d-data-table
+      dLoading
+      [dataSource]="serverTable.data"
+      [scrollable]="true"
+      [loading]="serverTable.loading"
+      [tableOverflowType]="'overlay'"
+      [maxHeight]="'300px'"
+    >
+      <d-column field="name" header="Name"></d-column>
+      <d-column field="assetKey" header="IP" [width]="'150px'"></d-column>
+      <d-column field="region" header="Region" [width]="'120px'"></d-column>
+      <d-column header="" [width]="'60px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon [icon]="'icon-add'" [operable]="true" (click)="onAddServer(rowItem)"></d-icon>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <d-pagination
+      style="margin-top: 8px;"
+      [total]="serverTable.pager.total"
+      [(pageSize)]="serverTable.pager.pageSize"
+      [(pageIndex)]="serverTable.pager.pageIndex"
+      [canViewTotal]="true"
+      [canChangePageSize]="true"
+      [maxItems]="5"
+      (pageIndexChange)="serverPageIndexChange($event)"
+      (pageSizeChange)="serverPageSizeChange($event)"
+    ></d-pagination>
+  </div>
+</section>

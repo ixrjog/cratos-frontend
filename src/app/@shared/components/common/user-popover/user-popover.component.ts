@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { getPopoverStyle } from '../../../utils/theme.util';
 
 @Component({
@@ -8,5 +8,7 @@ import { getPopoverStyle } from '../../../utils/theme.util';
 })
 export class UserPopoverComponent {
   @Input() username: string;
+  @Input() deletable = false;
+  @Output() onDelete = new EventEmitter<string>();
   protected readonly getPopoverStyle = getPopoverStyle;
 }

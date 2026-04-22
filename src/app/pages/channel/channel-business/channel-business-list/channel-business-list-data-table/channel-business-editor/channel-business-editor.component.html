@@ -1,0 +1,71 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Business Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="businessName" [(ngModel)]="formData.businessName" [dValidateRules]="formRules['businessName']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Type</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.type" (activeTabChange)="formData.type = $any($event)">
+          <d-tab *ngFor="let item of typeOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Direction</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.businessDirection" (activeTabChange)="formData.businessDirection = $any($event)">
+          <d-tab *ngFor="let item of directionOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Organization</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="orgOptions"
+          [(ngModel)]="selectedOrg"
+          name="organizationId"
+          [placeholder]="'Search Organization'"
+          [isSearch]="true"
+          [filterKey]="'label'"
+          (ngModelChange)="onOrgChange($event)"
+        ></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Channel</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="channelOptions"
+          [(ngModel)]="selectedChannel"
+          name="channelId"
+          [placeholder]="'Search Channel'"
+          [isSearch]="true"
+          [filterKey]="'label'"
+          (ngModelChange)="onChannelChange($event)"
+        ></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

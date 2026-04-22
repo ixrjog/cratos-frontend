@@ -54,6 +54,8 @@ import { ApiSecurityRiskService } from './services/api-security-risk.service';
 import { AccountEntityService } from './services/account-entity.service';
 import { DatacenterService } from './services/datacenter.service';
 import { OrganizationService } from './services/organization.service';
+import { ChannelInfoService } from './services/channel-info.service';
+import { ChannelBusinessService } from './services/channel-business.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -113,6 +115,8 @@ export const CRATOS_PROVIDERS = [
   AccountEntityService,
   DatacenterService,
   OrganizationService,
+  ChannelInfoService,
+  ChannelBusinessService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

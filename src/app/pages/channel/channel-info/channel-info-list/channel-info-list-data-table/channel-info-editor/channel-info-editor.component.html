@@ -1,0 +1,75 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Country</d-form-label>
+      <d-form-control>
+        <input dTextInput name="country" [(ngModel)]="formData.country" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Priority</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.priority" (activeTabChange)="formData.priority = $any($event)">
+          <d-tab *ngFor="let item of priorityOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Available Status</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.availableStatus" (activeTabChange)="formData.availableStatus = $any($event)">
+          <d-tab *ngFor="let item of availableStatusOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Construction Phase</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.constructionPhase" (activeTabChange)="formData.constructionPhase = $any($event)">
+          <d-tab *ngFor="let item of constructionPhaseOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Monitor URL</d-form-label>
+      <d-form-control>
+        <input dTextInput name="monitorUrl" [(ngModel)]="formData.monitorUrl" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Network Info (Markdown)</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="networkInfo"
+          maxlength="2000"
+          style="height: 120px"
+          [(ngModel)]="formData.networkInfo"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 80px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

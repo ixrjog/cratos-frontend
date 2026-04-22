@@ -1,0 +1,143 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DataTableComponent } from 'ng-devui';
+import { HttpResult, Table, TABLE_DATA } from '../../../../../@core/data/base-data';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
+import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data-table.utli';
+import { Observable, zip } from 'rxjs';
+import {
+  BusinessDirectionEnum,
+  ChannelBusinessEdit,
+  ChannelBusinessPageQuery,
+  ChannelBusinessVO,
+} from '../../../../../@core/data/channel-business';
+import { ChannelBusinessService } from '../../../../../@core/services/channel-business.service';
+import { ChannelBusinessEditorComponent } from './channel-business-editor/channel-business-editor.component';
+import { catchError } from 'rxjs/operators';
+
+@Component({
+  selector: 'app-channel-business-list-data-table',
+  templateUrl: './channel-business-list-data-table.component.html',
+  styleUrls: ['./channel-business-list-data-table.component.less'],
+})
+export class ChannelBusinessListDataTableComponent implements OnInit {
+
+  @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+  queryParam = {
+    queryName: '',
+  };
+  table: Table<ChannelBusinessVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
+  newChannelBusiness: ChannelBusinessEdit = {
+    organizationId: null,
+    channelId: null,
+    businessName: '',
+    type: '',
+    businessDirection: BusinessDirectionEnum.OUTBOUND,
+    valid: true,
+    comment: '',
+  };
+
+  dialogDate = {
+    editorData: {
+      ...DIALOG_DATA.editorData,
+      content: ChannelBusinessEditorComponent,
+    },
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
+  constructor(
+    private channelBusinessService: ChannelBusinessService,
+    private dialogUtil: DialogUtil,
+    private toastUtil: ToastUtil,
+  ) {
+  }
+
+  fetchData() {
+    const param: ChannelBusinessPageQuery = {
+      ...this.queryParam,
+      page: this.table.pager.pageIndex,
+      length: this.table.pager.pageSize,
+    };
+    onFetchValidData(this.table, this.channelBusinessService.queryChannelBusinessPage(param));
+  }
+
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  pageIndexChange(pageIndex) {
+    this.table.pager.pageIndex = pageIndex;
+    this.fetchData();
+  }
+
+  pageSizeChange(pageSize) {
+    this.table.pager.pageSize = pageSize;
+    this.fetchData();
+  }
+
+  onRowNew() {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'New Channel Business',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, JSON.parse(JSON.stringify(this.newChannelBusiness)));
+  }
+
+  onRowEdit(rowItem: ChannelBusinessVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit Channel Business',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem);
+  }
+
+  onRowValid(rowItem: ChannelBusinessVO) {
+    this.channelBusinessService.setChannelBusinessValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
+  }
+
+  onRowDelete(rowItem: ChannelBusinessVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.channelBusinessService.deleteChannelBusinessById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
+  }
+
+  onBatchDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchDelete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.channelBusinessService.deleteChannelBusinessById({ id: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
+        this.fetchData();
+      });
+    });
+  }
+
+  protected readonly getRowColor = getRowColor;
+}

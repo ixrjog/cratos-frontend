@@ -12,7 +12,9 @@ import {
   ChannelBusinessVO,
 } from '../../../../../@core/data/channel-business';
 import { ChannelBusinessService } from '../../../../../@core/services/channel-business.service';
+import { ChannelInfoService } from '../../../../../@core/services/channel-info.service';
 import { ChannelBusinessEditorComponent } from './channel-business-editor/channel-business-editor.component';
+import { ChannelBusinessLineEditorComponent } from './channel-business-line-editor/channel-business-line-editor.component';
 import { catchError } from 'rxjs/operators';
 
 @Component({
@@ -25,14 +27,17 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    channelId: null as number,
   };
   table: Table<ChannelBusinessVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  channelOptions: { label: string; value: number }[] = [];
+  selectedChannel: any = null;
 
   newChannelBusiness: ChannelBusinessEdit = {
     organizationId: null,
     channelId: null,
     businessName: '',
-    type: '',
+    type: 'WITHDRAWAL',
     businessDirection: BusinessDirectionEnum.OUTBOUND,
     valid: true,
     comment: '',
@@ -53,6 +58,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
 
   constructor(
     private channelBusinessService: ChannelBusinessService,
+    private channelInfoService: ChannelInfoService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
@@ -68,6 +74,19 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchChannels();
+    this.fetchData();
+  }
+
+  fetchChannels() {
+    this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 50 })
+      .subscribe(({ body }) => {
+        this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
+      });
+  }
+
+  onChannelChange(selected: any) {
+    this.queryParam.channelId = selected?.value || null;
     this.fetchData();
   }
 
@@ -82,13 +101,18 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   }
 
   onRowNew() {
+    const newData = JSON.parse(JSON.stringify(this.newChannelBusiness));
+    if (this.selectedChannel) {
+      newData.channelId = this.selectedChannel.value;
+      newData.channelName = this.selectedChannel.label;
+    }
     const dialogDate = {
       ...this.dialogDate.editorData,
       title: 'New Channel Business',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
-    }, JSON.parse(JSON.stringify(this.newChannelBusiness)));
+    }, newData);
   }
 
   onRowEdit(rowItem: ChannelBusinessVO) {
@@ -140,4 +164,13 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+
+  onRowManageLines(rowItem: ChannelBusinessVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Manage Lines',
+      content: ChannelBusinessLineEditorComponent,
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => this.fetchData(), rowItem);
+  }
 }

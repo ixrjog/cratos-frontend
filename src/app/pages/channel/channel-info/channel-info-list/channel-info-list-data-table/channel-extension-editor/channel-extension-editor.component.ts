@@ -39,7 +39,7 @@ export class ChannelExtensionEditorComponent implements OnInit {
   appTable: Table<ApplicationVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   userQueryParam = { queryName: '' };
-  userRole = 'USER';
+  userRole = 'OPS';
   userTable: Table<UserVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   // Server

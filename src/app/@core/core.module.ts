@@ -56,6 +56,7 @@ import { DatacenterService } from './services/datacenter.service';
 import { OrganizationService } from './services/organization.service';
 import { ChannelInfoService } from './services/channel-info.service';
 import { ChannelBusinessService } from './services/channel-business.service';
+import { ChannelLineService } from './services/channel-line.service';
 
 const DATA_SERVICES = [
   { provide: CourseData, useClass: CourseService },
@@ -117,6 +118,7 @@ export const CRATOS_PROVIDERS = [
   OrganizationService,
   ChannelInfoService,
   ChannelBusinessService,
+  ChannelLineService,
 ];
 
 export const WS_CRATOS_PROVIDERS = [

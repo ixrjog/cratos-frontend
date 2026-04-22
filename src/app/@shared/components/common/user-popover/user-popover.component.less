@@ -1,3 +1,8 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
 .user-popover {
   display: inline-flex;
   align-items: center;
@@ -10,5 +15,18 @@
 
   &:hover {
     border-color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.delete-btn {
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--devui-aide-text, #8a8e99);
+  z-index: 10;
+
+  &:hover {
+    color: var(--devui-danger, #f66f6a);
   }
 }

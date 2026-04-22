@@ -21,6 +21,8 @@ export class ChannelInfoEditorComponent implements OnInit {
   @Input() data: any;
   formData: ChannelInfoVO;
 
+  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
+
   availableStatusOptions = [
     ChannelAvailableStatusEnum.HA,
     ChannelAvailableStatusEnum.UNSTABLE,

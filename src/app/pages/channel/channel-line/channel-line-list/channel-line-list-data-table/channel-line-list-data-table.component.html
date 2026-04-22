@@ -17,8 +17,7 @@
     [iconPosition]="'left'"
     (searchFn)="fetchData()"
     (change)="fetchData()"
-  >
-  </d-search>
+  ></d-search>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
@@ -32,41 +31,22 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column field="businessName" header="Business Name"></d-column>
-    <d-column field="type" header="Type">
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="lineType" header="Type">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="businessDirection" header="Direction">
+    <d-column field="sourceEndpoint" header="Source Endpoint"></d-column>
+    <d-column field="channelName" header="Channel"></d-column>
+    <d-column field="monitorUrl" header="Monitor URL">
       <d-cell>
         <ng-template let-cellItem="cellItem">
-          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Organization">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          {{ rowItem.organization?.name }}
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Channel">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          {{ rowItem.channel?.name }}
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Lines">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <div *ngIf="rowItem.lines?.length" style="display: flex; flex-wrap: wrap; gap: 4px;">
-            <d-tag *ngFor="let line of rowItem.lines" [tag]="line.name" [labelStyle]="'blue-w98'"></d-tag>
-          </div>
+          <a *ngIf="cellItem" [href]="cellItem" target="_blank">
+            <d-icon [icon]="'icon-link'" [operable]="true"></d-icon>
+          </a>
         </ng-template>
       </d-cell>
     </d-column>
@@ -76,14 +56,7 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-link'" [operable]="true" (click)="onRowManageLines(rowItem)"></d-icon>
-            <d-icon
-              [icon]="'icon-priority'"
-              [operable]="true"
-              [color]="getRowColor(rowItem['valid'])"
-              (click)="onRowValid(rowItem)"
-            >
-            </d-icon>
+            <d-icon [icon]="'icon-priority'" [operable]="true" [color]="getRowColor(rowItem['valid'])" (click)="onRowValid(rowItem)"></d-icon>
             <span dDropDown appendToBody>
               <d-icon dDropDownToggle [icon]="'icon-more-operate'" [operable]="true"></d-icon>
               <ul dDropDownMenu>
@@ -94,25 +67,15 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <ng-template #noResultTemplateRef>
-      <div class="no-data">Fetch Data</div>
-    </ng-template>
   </d-data-table>
 </div>
 <div class="spacing-pagination">
   <div dDropDown class="batch-button">
     <d-button-group>
-      <d-button bsStyle="common" dDropDownToggle>
-        Batch
-        <span class="icon icon-select-arrow"></span>
-      </d-button>
+      <d-button bsStyle="common" dDropDownToggle>Batch<span class="icon icon-select-arrow"></span></d-button>
     </d-button-group>
     <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
-      <li role="menuitem" (click)="onBatchDelete()">
-        <a dDropDownMenuItem>
-          <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
-        </a>
-      </li>
+      <li role="menuitem" (click)="onBatchDelete()"><a dDropDownMenuItem><span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span></a></li>
     </ul>
   </div>
   <d-pagination
@@ -125,6 +88,5 @@
     [maxItems]="5"
     (pageIndexChange)="pageIndexChange($event)"
     (pageSizeChange)="pageSizeChange($event)"
-  >
-  </d-pagination>
+  ></d-pagination>
 </div>

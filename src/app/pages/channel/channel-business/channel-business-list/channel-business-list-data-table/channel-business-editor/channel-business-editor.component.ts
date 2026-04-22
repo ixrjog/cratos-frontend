@@ -58,10 +58,19 @@ export class ChannelBusinessEditorComponent implements OnInit {
     this.channelBusinessService.getBusinessTypeOptions()
       .subscribe(({ body }) => {
         this.typeOptions = (body.options || []).map(o => o.value || o.label);
-        if (!this.formData.type && this.typeOptions.length > 0) {
-          this.formData.type = this.typeOptions[0];
+        if (!this.formData.type) {
+          this.formData.type = this.typeOptions.find(t => t === 'WITHDRAWAL') || this.typeOptions[0] || '';
         }
       });
+  }
+
+  onTypeChange(type: any) {
+    this.formData.type = type as string;
+    if (this.formData.type === 'DEPOSIT') {
+      this.formData.businessDirection = 'INBOUND';
+    } else if (this.formData.type === 'WITHDRAWAL') {
+      this.formData.businessDirection = 'OUTBOUND';
+    }
   }
 
   fetchOrgs(queryName = '') {

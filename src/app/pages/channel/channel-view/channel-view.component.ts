@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { ChannelInfoService } from '../../../@core/services/channel-info.service';
 import { ChannelBusinessService } from '../../../@core/services/channel-business.service';
+import { ChannelLineService } from '../../../@core/services/channel-line.service';
 import { EdsService } from '../../../@core/services/ext-datasource.service.s';
 import { ApplicationResourceService } from '../../../@core/services/application-resource.service';
 import { ApplicationService } from '../../../@core/services/application.service';
@@ -8,6 +9,8 @@ import { ChannelInfoVO } from '../../../@core/data/channel-info';
 import { ChannelBusinessVO } from '../../../@core/data/channel-business';
 import { KubernetesDetailsVO } from '../../../@core/data/kubernetes';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../@shared/utils/toast.util';
+import { DialogService } from 'ng-devui';
 import { EdsAssetSshTerminalComponent } from '../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 
 declare var LeaderLine: any;
@@ -24,6 +27,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   queryName = '';
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
+  channelLines: any[] = [];
   lines: any[] = [];
   needDrawLines = false;
   private positionInterval: any;
@@ -31,6 +35,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   // Kubernetes
   selectedAppName = '';
   k8sLoading = false;
+  k8sCountryCode = '';
+  countryCodeOptions = ['ng', 'bd', 'pk', 'ph', 'tz', 'gh', 'ug', 'za', 'ke'];
   kubernetesDetails: KubernetesDetailsVO = null;
   deploymentList: any[] = [];
   kubernetesApplication: any = null;
@@ -38,10 +44,13 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   constructor(
     private channelInfoService: ChannelInfoService,
     private channelBusinessService: ChannelBusinessService,
+    private channelLineService: ChannelLineService,
     private edsService: EdsService,
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
     private dialogUtil: DialogUtil,
+    private dialogService: DialogService,
+    private toastUtil: ToastUtil,
     private el: ElementRef,
   ) {
   }
@@ -83,6 +92,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   onSelectChannel(channel: ChannelInfoVO) {
     this.removeLines();
     this.selectedChannel = channel;
+    this.selectedAppName = '';
+    this.deploymentList = [];
+    this.kubernetesDetails = null;
     this.fetchRelations();
   }
 
@@ -115,18 +127,94 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       this.organizations = Array.from(orgMap.values());
       this.needDrawLines = true;
     });
+
+    this.channelLineService.queryChannelLinePage({
+      queryName: '',
+      channelId: this.selectedChannel.id,
+      page: 1,
+      length: 100,
+    }).subscribe(({ body }) => {
+      this.channelLines = body.data || [];
+    });
   }
 
   getNetworkInfo(): string {
     return this.selectedChannel?.networkInfo?.replace(/<br\s*\/?>/gi, '\n\n') || '';
   }
 
+  @ViewChild('fullDocTemplate') fullDocTemplate: TemplateRef<any>;
+  @ViewChild('callDialogTemplate') callDialogTemplate: TemplateRef<any>;
+
+  callUserList: { name: string; role: string; checked: boolean }[] = [];
+  callSelectAll = true;
+
+  onOpenCallDialog() {
+    const users = this.selectedChannel?.members?.['USER'] || [];
+    this.callUserList = users.map(u => ({ name: u.name, role: u.role, checked: true }));
+    this.callSelectAll = true;
+    const results = this.dialogService.open({
+      id: 'call-alert-dialog',
+      width: '400px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: 'Call Alert',
+      contentTemplate: this.callDialogTemplate,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: 'Call',
+          handler: () => {
+            const selected = this.callUserList.filter(u => u.checked).map(u => u.name);
+            if (selected.length === 0) return;
+            this.channelInfoService.callChannelAlert({
+              channelId: this.selectedChannel.id,
+              usernames: selected,
+            }).subscribe(() => {
+              this.toastUtil.onSuccessToast(TOAST_CONTENT.ADD);
+            });
+            results.modalInstance.hide();
+          },
+        },
+        {
+          cssClass: 'common',
+          text: 'Cancel',
+          handler: () => {
+            results.modalInstance.hide();
+          },
+        },
+      ],
+    });
+  }
+
+  onCallSelectAllChange(checked: boolean) {
+    this.callUserList.forEach(u => u.checked = checked);
+  }
+
+  onCallUserCheck() {
+    this.callSelectAll = this.callUserList.every(u => u.checked);
+  }
+
+  onShowFullDoc() {
+    this.dialogService.open({
+      id: 'full-doc-dialog',
+      width: '60%',
+      maxHeight: '800px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: 'Network Info',
+      contentTemplate: this.fullDocTemplate,
+      buttons: [],
+    });
+  }
+
+  private k8sNamespace = '';
+
   onOpenKubernetesResources(member: any) {
     this.selectedAppName = member.name;
+    this.k8sCountryCode = (this.selectedChannel?.country || 'ng').toLowerCase();
     this.deploymentList = [];
     this.kubernetesDetails = null;
     this.k8sLoading = true;
-    const country = (this.selectedChannel?.country || 'ng').toLowerCase();
 
     this.applicationService.getMyResourceNamespaceOptions({ applicationName: member.name })
       .subscribe(({ body }) => {
@@ -136,25 +224,38 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           this.k8sLoading = false;
           return;
         }
-        this.applicationResourceService.queryApplicationResourceKubernetesDetails({
-          applicationName: member.name,
-          instanceName: '',
-          namespace: prodNs.value,
-          name: '',
-          countryCode: country,
-        }).subscribe(({ body: result }) => {
-          this.k8sLoading = false;
-          if (result.body.success) {
-            this.kubernetesDetails = result.body;
-            this.deploymentList = this.kubernetesDetails?.workloads?.deployments || [];
-            this.kubernetesApplication = this.kubernetesDetails?.application;
-          }
-        }, () => {
-          this.k8sLoading = false;
-        });
+        this.k8sNamespace = prodNs.value;
+        this.fetchK8sDeployments();
       }, () => {
         this.k8sLoading = false;
       });
+  }
+
+  onK8sCountryCodeChange(cc: any) {
+    this.k8sCountryCode = cc as string;
+    this.fetchK8sDeployments();
+  }
+
+  fetchK8sDeployments() {
+    if (!this.selectedAppName || !this.k8sNamespace) return;
+    this.k8sLoading = true;
+    this.deploymentList = [];
+    this.applicationResourceService.queryApplicationResourceKubernetesDetails({
+      applicationName: this.selectedAppName,
+      instanceName: '',
+      namespace: this.k8sNamespace,
+      name: '',
+      countryCode: this.k8sCountryCode,
+    }).subscribe(({ body: result }) => {
+      this.k8sLoading = false;
+      if (result.body.success) {
+        this.kubernetesDetails = result.body;
+        this.deploymentList = this.kubernetesDetails?.workloads?.deployments || [];
+        this.kubernetesApplication = this.kubernetesDetails?.application;
+      }
+    }, () => {
+      this.k8sLoading = false;
+    });
   }
 
   onServerLogin(member: any) {
@@ -183,48 +284,62 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const centerEl = this.el.nativeElement.querySelector('#channel-center-card');
     if (!centerEl) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
-    const lineOpts = { color: themeColor, size: 2, path: 'straight' };
+    const noArrow = { color: themeColor, size: 2, path: 'straight', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const palmpayEl = this.el.nativeElement.querySelector('#palmpay-card');
 
     // PalmPay → Business (with arrow by direction)
-    const palmpayEl = this.el.nativeElement.querySelector('#palmpay-card');
     if (palmpayEl) {
       this.businesses.forEach((biz, i) => {
         const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
         if (!bizEl) return;
         const isOutbound = biz.businessDirection === 'OUTBOUND';
-        const startEl = isOutbound ? palmpayEl : bizEl;
-        const endEl = isOutbound ? bizEl : palmpayEl;
         try {
-          this.lines.push(new LeaderLine(startEl, endEl, {
-            ...lineOpts,
-            startSocket: isOutbound ? 'right' : 'left',
-            endSocket: isOutbound ? 'left' : 'right',
-            endPlug: 'arrow1', startPlug: 'behind',
-          }));
+          this.lines.push(new LeaderLine(
+            isOutbound ? palmpayEl : bizEl,
+            isOutbound ? bizEl : palmpayEl,
+            { color: themeColor, size: 2, path: 'straight',
+              startSocket: isOutbound ? 'right' : 'left',
+              endSocket: isOutbound ? 'left' : 'right',
+              endPlug: 'arrow1', startPlug: 'behind' }
+          ));
         } catch (e) {}
       });
     }
 
-    // Business → Channel (no arrow)
+    // Business → Line (no arrow, match by business.lines)
     this.businesses.forEach((biz, i) => {
       const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
       if (!bizEl) return;
-      try {
-        this.lines.push(new LeaderLine(bizEl, centerEl, {
-          ...lineOpts, startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind',
-        }));
-      } catch (e) {}
+      (biz.lines || []).forEach(bizLine => {
+        const lineIdx = this.channelLines.findIndex(l => l.id === bizLine.id);
+        if (lineIdx < 0) return;
+        const lineEl = this.el.nativeElement.querySelector(`#line-${lineIdx}`);
+        if (!lineEl) return;
+        try { this.lines.push(new LeaderLine(bizEl, lineEl, noArrow)); } catch (e) {}
+      });
     });
+
+    // Line → Channel (no arrow)
+    this.channelLines.forEach((_, j) => {
+      const lineEl = this.el.nativeElement.querySelector(`#line-${j}`);
+      if (!lineEl) return;
+      try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
+    });
+
+    // If no lines, Business → Channel directly
+    if (!this.channelLines.length) {
+      this.businesses.forEach((_, i) => {
+        const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
+        if (!bizEl) return;
+        try { this.lines.push(new LeaderLine(bizEl, centerEl, noArrow)); } catch (e) {}
+      });
+    }
 
     // Channel → Organization (no arrow)
     this.organizations.forEach(org => {
       const orgEl = this.el.nativeElement.querySelector(`#org-${org.id}`);
       if (!orgEl) return;
-      try {
-        this.lines.push(new LeaderLine(centerEl, orgEl, {
-          ...lineOpts, startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind',
-        }));
-      } catch (e) {}
+      try { this.lines.push(new LeaderLine(centerEl, orgEl, noArrow)); } catch (e) {}
     });
   }
 }

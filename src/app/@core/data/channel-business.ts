@@ -13,6 +13,7 @@ export interface ChannelBusinessVO extends BaseVO, ValidVO {
   channelName: string;
   organization: { id: number; name: string };
   channel: { id: number; name: string };
+  lines: { id: number; name: string }[];
 }
 
 export interface ChannelBusinessPageQuery extends PageQuery {

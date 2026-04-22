@@ -44,4 +44,8 @@ export class ChannelInfoService extends ChannelInfoData {
   deleteChannelExtensionById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/extension/del', param);
   }
+
+  callChannelAlert(param: { channelId: number; usernames: string[] }): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/alert/call', param);
+  }
 }

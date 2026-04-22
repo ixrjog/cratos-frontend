@@ -13,11 +13,13 @@
     </div>
     <!-- USER: tag with popover -->
     <div *ngIf="activeTab === 'USER'" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-      <app-user-popover *ngFor="let ext of filteredExtensions"
-                        [username]="ext.name"
-                        [deletable]="true"
-                        (onDelete)="onDeleteExtension(ext)">
-      </app-user-popover>
+      <span *ngFor="let ext of filteredExtensions" class="user-item">
+        <span class="user-role">{{ ext.role }}</span>
+        <app-user-popover [username]="ext.name"
+                          [deletable]="true"
+                          (onDelete)="onDeleteExtension(ext)">
+        </app-user-popover>
+      </span>
     </div>
     <!-- EDS_ASSET: tag style -->
     <div *ngIf="activeTab === 'EDS_ASSET'" style="display: flex; flex-wrap: wrap; gap: 6px;">

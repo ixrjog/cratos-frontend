@@ -1,0 +1,61 @@
+<section>
+  <!-- Linked Lines -->
+  <div *ngIf="linkedLines.length > 0" style="margin-bottom: 16px;">
+    <h6>Linked Lines</h6>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <d-tag *ngFor="let linked of linkedLines"
+             [tag]="linked.lineName"
+             [labelStyle]="'blue-w98'"
+             [deletable]="true"
+             (tagDelete)="onRemoveLine(linked)">
+      </d-tag>
+    </div>
+  </div>
+
+  <!-- Available Lines -->
+  <h6>Available Lines</h6>
+  <d-search
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    [placeholder]="'Search Line'"
+    (searchFn)="fetchLines()"
+    (change)="fetchLines()"
+    style="margin-bottom: 8px;"
+  ></d-search>
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [scrollable]="true"
+    [loading]="table.loading"
+    [tableOverflowType]="'overlay'"
+    [maxHeight]="'300px'"
+  >
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="lineType" header="Type">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="sourceEndpoint" header="Source"></d-column>
+    <d-column header="" [width]="'60px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon [icon]="'icon-add'" [operable]="true" (click)="onAddLine(rowItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+  </d-data-table>
+  <d-pagination
+    style="margin-top: 8px;"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  ></d-pagination>
+</section>

@@ -16,11 +16,16 @@ import { ChannelExtensionEditorComponent } from './channel-info/channel-info-lis
 import { ChannelBusinessListComponent } from './channel-business/channel-business-list/channel-business-list.component';
 import { ChannelBusinessListDataTableComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-list-data-table.component';
 import { ChannelBusinessEditorComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
+import { ChannelBusinessLineEditorComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-line-editor/channel-business-line-editor.component';
 import { ChannelViewComponent } from './channel-view/channel-view.component';
+import { ChannelLineListComponent } from './channel-line/channel-line-list/channel-line-list.component';
+import { ChannelLineListDataTableComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-list-data-table.component';
+import { ChannelLineEditorComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import {
   ButtonModule,
   CardModule,
+  CheckBoxModule,
   DataTableModule,
   DCommonModule,
   DropDownModule,
@@ -53,7 +58,11 @@ import { WorkbenchModule } from '../workbench/workbench.module';
     ChannelBusinessListComponent,
     ChannelBusinessListDataTableComponent,
     ChannelBusinessEditorComponent,
+    ChannelBusinessLineEditorComponent,
     ChannelViewComponent,
+    ChannelLineListComponent,
+    ChannelLineListDataTableComponent,
+    ChannelLineEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +70,7 @@ import { WorkbenchModule } from '../workbench/workbench.module';
     DaGridModule,
     ButtonModule,
     CardModule,
+    CheckBoxModule,
     DCommonModule,
     DataTableModule,
     DropDownModule,

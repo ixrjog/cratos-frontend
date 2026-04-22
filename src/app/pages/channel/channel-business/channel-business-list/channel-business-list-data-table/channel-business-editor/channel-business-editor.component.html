@@ -14,7 +14,7 @@
     <d-form-item>
       <d-form-label>Type</d-form-label>
       <d-form-control>
-        <d-tabs type="options" [activeTab]="formData.type" (activeTabChange)="formData.type = $any($event)">
+        <d-tabs type="options" [activeTab]="formData.type" (activeTabChange)="onTypeChange($event)">
           <d-tab *ngFor="let item of typeOptions" [id]="item" [title]="item"></d-tab>
         </d-tabs>
       </d-form-control>

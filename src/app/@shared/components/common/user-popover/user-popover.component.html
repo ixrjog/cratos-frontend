@@ -9,9 +9,8 @@
 >
   <i class="fas fa-user"></i>
   <span>{{ username }}</span>
-  <i *ngIf="deletable" class="fas fa-times" style="margin-left: 6px; cursor: pointer; font-size: 10px;"
-     (click)="onDelete.emit(username); $event.stopPropagation()"></i>
 </span>
+<span *ngIf="deletable" class="delete-btn" (click)="onDelete.emit(username)">×</span>
 <ng-template #userInfoCardTemplate>
   <app-user-info-card [username]="username"></app-user-info-card>
 </ng-template>

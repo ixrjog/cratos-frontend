@@ -14,25 +14,29 @@
     <d-form-item>
       <d-form-label>Country</d-form-label>
       <d-form-control>
-        <input dTextInput name="country" [(ngModel)]="formData.country" />
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
-      <d-form-label>Priority</d-form-label>
-      <d-form-control>
-        <d-tabs type="options" [activeTab]="formData.priority" (activeTabChange)="formData.priority = $any($event)">
-          <d-tab *ngFor="let item of priorityOptions" [id]="item" [title]="item"></d-tab>
+        <d-tabs type="options" [activeTab]="formData.country" (activeTabChange)="formData.country = $any($event)">
+          <d-tab *ngFor="let item of countryOptions" [id]="item" [title]="item"></d-tab>
         </d-tabs>
       </d-form-control>
     </d-form-item>
-    <d-form-item>
-      <d-form-label>Available Status</d-form-label>
-      <d-form-control>
-        <d-tabs type="options" [activeTab]="formData.availableStatus" (activeTabChange)="formData.availableStatus = $any($event)">
-          <d-tab *ngFor="let item of availableStatusOptions" [id]="item" [title]="item"></d-tab>
-        </d-tabs>
-      </d-form-control>
-    </d-form-item>
+    <div style="display: flex; gap: 16px;">
+      <d-form-item style="flex: 1;">
+        <d-form-label>Priority</d-form-label>
+        <d-form-control>
+          <d-tabs type="options" [activeTab]="formData.priority" (activeTabChange)="formData.priority = $any($event)">
+            <d-tab *ngFor="let item of priorityOptions" [id]="item" [title]="item"></d-tab>
+          </d-tabs>
+        </d-form-control>
+      </d-form-item>
+      <d-form-item style="flex: 1;">
+        <d-form-label>Available Status</d-form-label>
+        <d-form-control>
+          <d-tabs type="options" [activeTab]="formData.availableStatus" (activeTabChange)="formData.availableStatus = $any($event)">
+            <d-tab *ngFor="let item of availableStatusOptions" [id]="item" [title]="item"></d-tab>
+          </d-tabs>
+        </d-form-control>
+      </d-form-item>
+    </div>
     <d-form-item>
       <d-form-label>Construction Phase</d-form-label>
       <d-form-control>

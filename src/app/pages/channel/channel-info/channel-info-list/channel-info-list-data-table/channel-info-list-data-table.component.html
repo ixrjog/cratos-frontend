@@ -53,7 +53,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Extensions">
+    <d-column header="Extensions" [width]="'400px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem.members">
@@ -66,7 +66,10 @@
             <div *ngIf="rowItem.members?.USER" style="margin-bottom: 4px;">
               <div style="font-size: 11px; color: #8a8e99;">USER</div>
               <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                <app-user-popover *ngFor="let m of rowItem.members.USER" [username]="m.name"></app-user-popover>
+                <span *ngFor="let m of rowItem.members.USER" class="user-item">
+                  <span class="user-role">{{ m.role }}</span>
+                  <app-user-popover [username]="m.name"></app-user-popover>
+                </span>
               </div>
             </div>
             <div *ngIf="rowItem.members?.EDS_ASSET">

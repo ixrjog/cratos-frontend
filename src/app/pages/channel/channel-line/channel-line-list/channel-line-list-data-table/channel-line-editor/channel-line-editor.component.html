@@ -1,0 +1,52 @@
+<section>
+  <form dForm ngForm [dValidateRules]="formRules['rule']" [layout]="layoutDirection">
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput name="name" [(ngModel)]="formData.name" [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Channel</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="channelOptions"
+          [(ngModel)]="selectedChannel"
+          name="channelId"
+          [placeholder]="'Select Channel'"
+          [filterKey]="'label'"
+          [isSearch]="true"
+          [allowClear]="true"
+          [appendToBody]="true"
+          (ngModelChange)="onChannelChange($event)"
+        ></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Line Type</d-form-label>
+      <d-form-control>
+        <d-tabs type="options" [activeTab]="formData.lineType" (activeTabChange)="formData.lineType = $any($event)">
+          <d-tab *ngFor="let item of lineTypeOptions" [id]="item" [title]="item"></d-tab>
+        </d-tabs>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Source Endpoint</d-form-label>
+      <d-form-control>
+        <input dTextInput name="sourceEndpoint" [(ngModel)]="formData.sourceEndpoint" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Monitor URL</d-form-label>
+      <d-form-control>
+        <input dTextInput name="monitorUrl" [(ngModel)]="formData.monitorUrl" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Description</d-form-label>
+      <d-form-control>
+        <textarea dTextarea name="comment" maxlength="200" style="height: 80px" [(ngModel)]="formData.comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

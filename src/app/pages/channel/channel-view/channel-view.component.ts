@@ -12,6 +12,9 @@ import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../@shared/util
 import { TOAST_CONTENT, ToastUtil } from '../../../@shared/utils/toast.util';
 import { DialogService } from 'ng-devui';
 import { EdsAssetSshTerminalComponent } from '../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
+import { ChannelInfoEditorComponent } from '../channel-info/channel-info-list/channel-info-list-data-table/channel-info-editor/channel-info-editor.component';
+import { ChannelBusinessEditorComponent } from '../channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
+import { ChannelLineEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
 
 declare var LeaderLine: any;
 
@@ -25,9 +28,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   channels: ChannelInfoVO[] = [];
   selectedChannel: ChannelInfoVO = null;
   queryName = '';
+  editMode = false;
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
   channelLines: any[] = [];
+  lineLevels: any[][] = []; // lines grouped by level for layout
   lines: any[] = [];
   needDrawLines = false;
   private positionInterval: any;
@@ -135,6 +140,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       length: 100,
     }).subscribe(({ body }) => {
       this.channelLines = body.data || [];
+      this.computeLineLevels();
     });
   }
 
@@ -192,6 +198,27 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
   onCallUserCheck() {
     this.callSelectAll = this.callUserList.every(u => u.checked);
+  }
+
+  onEditChannel() {
+    if (!this.editMode) return;
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
+      ...DIALOG_DATA.editorData, title: 'Edit Channel', content: ChannelInfoEditorComponent,
+    }, () => this.fetchRelations(), this.selectedChannel);
+  }
+
+  onEditBusiness(biz: any) {
+    if (!this.editMode) return;
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
+      ...DIALOG_DATA.editorData, title: 'Edit Business', content: ChannelBusinessEditorComponent,
+    }, () => this.fetchRelations(), biz);
+  }
+
+  onEditLine(line: any) {
+    if (!this.editMode) return;
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
+      ...DIALOG_DATA.editorData, title: 'Edit Line', content: ChannelLineEditorComponent,
+    }, () => this.fetchRelations(), line);
   }
 
   onShowFullDoc() {
@@ -272,6 +299,45 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
   }
 
+  getLineIndex(line: any): number {
+    return this.channelLines.findIndex(l => l.name === line.name);
+  }
+
+  computeLineLevels() {
+    this.lineLevels = [];
+    if (!this.channelLines.length) return;
+
+    // Merge lines with same name (keep first, aggregate ids and sourceEndpoints)
+    const mergedMap = new Map<string, any>();
+    this.channelLines.forEach(l => {
+      if (mergedMap.has(l.name)) {
+        const existing = mergedMap.get(l.name);
+        existing.mergedIds.push(l.id);
+        if (!existing.sourceEndpoints.includes(l.sourceEndpoint)) {
+          existing.sourceEndpoints.push(l.sourceEndpoint);
+        }
+      } else {
+        mergedMap.set(l.name, { ...l, mergedIds: [l.id], sourceEndpoints: [l.sourceEndpoint] });
+      }
+    });
+    const mergedLines = Array.from(mergedMap.values());
+    // A merged line is root if any of its sourceEndpoints is "."
+    mergedLines.forEach(l => l.isRoot = l.sourceEndpoints.includes('.'));
+
+    const placed = new Set<string>();
+    let currentLevel = mergedLines.filter(l => l.isRoot);
+    while (currentLevel.length > 0) {
+      this.lineLevels.push(currentLevel);
+      currentLevel.forEach(l => placed.add(l.name));
+      currentLevel = mergedLines.filter(l => !placed.has(l.name) && l.sourceEndpoints.some(s => placed.has(s)));
+    }
+    const remaining = mergedLines.filter(l => !placed.has(l.name));
+    if (remaining.length) this.lineLevels.push(remaining);
+
+    // Update channelLines to merged version for drawLines
+    this.channelLines = mergedLines;
+  }
+
   removeLines() {
     this.lines.forEach(line => {
       try { line.remove(); } catch (e) {}
@@ -306,24 +372,72 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
     }
 
-    // Business → Line (no arrow, match by business.lines)
+    // Build line element map by index
+    const lineElMap = new Map<number, HTMLElement>();
+    const lineByName = new Map<string, number>(); // name → index
+    this.channelLines.forEach((line, j) => {
+      const el = this.el.nativeElement.querySelector(`#line-${j}`);
+      if (el) {
+        lineElMap.set(j, el);
+        lineByName.set(line.name, j);
+      }
+    });
+
+    // Identify root lines (sourceEndpoint === ".") and child lines
+    const rootLineIndices = new Set<number>();
+    const terminalLineIndices = new Set<number>(); // lines that connect to channel (no child points to them)
+    const childTargets = new Set<number>(); // lines that are targets of other lines
+
+    this.channelLines.forEach((line, j) => {
+      if (line.isRoot) {
+        rootLineIndices.add(j);
+      }
+    });
+
+    // Business → root lines only (match by line name, deduplicated)
+    const bizConnected = new Set<string>();
     this.businesses.forEach((biz, i) => {
       const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
       if (!bizEl) return;
       (biz.lines || []).forEach(bizLine => {
-        const lineIdx = this.channelLines.findIndex(l => l.id === bizLine.id);
+        // Find merged line by name
+        const lineIdx = this.channelLines.findIndex(l => l.name === bizLine.name);
         if (lineIdx < 0) return;
-        const lineEl = this.el.nativeElement.querySelector(`#line-${lineIdx}`);
+        const mergedLine = this.channelLines[lineIdx];
+        if (!mergedLine.isRoot) return;
+        const key = `${i}-${mergedLine.name}`;
+        if (bizConnected.has(key)) return;
+        bizConnected.add(key);
+        const lineEl = lineElMap.get(lineIdx);
         if (!lineEl) return;
         try { this.lines.push(new LeaderLine(bizEl, lineEl, noArrow)); } catch (e) {}
       });
     });
 
-    // Line → Channel (no arrow)
-    this.channelLines.forEach((_, j) => {
-      const lineEl = this.el.nativeElement.querySelector(`#line-${j}`);
-      if (!lineEl) return;
-      try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
+    // Line → Line (non-root connects to lines whose name is in sourceEndpoints)
+    this.channelLines.forEach((line, j) => {
+      if (line.isRoot) return;
+      (line.sourceEndpoints || []).forEach(sep => {
+        if (sep === '.') return;
+        const parentIdx = lineByName.get(sep);
+        if (parentIdx === undefined) return;
+        const parentEl = lineElMap.get(parentIdx);
+        const childEl = lineElMap.get(j);
+        if (!parentEl || !childEl) return;
+        try { this.lines.push(new LeaderLine(parentEl, childEl, noArrow)); } catch (e) {}
+      });
+    });
+
+    // Terminal lines → Channel
+    const referencedNames = new Set<string>();
+    this.channelLines.forEach(l => (l.sourceEndpoints || []).forEach(s => { if (s !== '.') referencedNames.add(s); }));
+    this.channelLines.forEach((line, j) => {
+      if (!referencedNames.has(line.name)) {
+        // This is a terminal line, connect to channel
+        const lineEl = lineElMap.get(j);
+        if (!lineEl) return;
+        try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
+      }
     });
 
     // If no lines, Business → Channel directly

@@ -94,4 +94,8 @@ export class AcmeService {
     return this.apiService.delete(this.baseUrl, '/order/del', param);
   }
 
+  recoverDcvDelegation(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.putByParam(this.baseUrl, '/domain/dcv/relegation/recover', param);
+  }
+
 }

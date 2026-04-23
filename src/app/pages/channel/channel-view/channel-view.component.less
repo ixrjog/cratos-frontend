@@ -372,6 +372,15 @@
   padding: 2px 8px 2px 2px;
 }
 
+.editable {
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--devui-brand, #5e7ce0);
+  }
+}
+
 .empty-state {
   flex: 1;
   display: flex;

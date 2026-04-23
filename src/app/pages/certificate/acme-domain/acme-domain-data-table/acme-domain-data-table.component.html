@@ -49,6 +49,22 @@
           <span *ngIf="rowItem['dcvType']">
             <d-tag [tag]="rowItem['dcvType']" [labelStyle]="'blue-w98'"></d-tag>
             {{ rowItem['dcvDelegationTarget'] }}
+            <d-icon
+              *ngIf="rowItem['hasDcvRecord']"
+              [icon]="'icon-right'"
+              [color]="'#3dcca6'"
+              style="margin-left: 6px;"
+              title="DCV record exists"
+            ></d-icon>
+            <d-icon
+              *ngIf="!rowItem['hasDcvRecord']"
+              [icon]="'icon-error'"
+              [color]="'#f66f6a'"
+              [operable]="true"
+              style="margin-left: 6px; cursor: pointer;"
+              title="DCV record missing, click to recover"
+              (click)="onRecoverDcv(rowItem)"
+            ></d-icon>
           </span>
         </ng-template>
       </d-cell>

@@ -35,17 +35,7 @@ export class ChannelBusinessLineEditorComponent implements OnInit {
   fetchLinkedLines() {
     this.channelLineService.queryChannelBusinessLines({ channelBusinessId: this.channelBusinessId })
       .subscribe(({ body }) => {
-        const links = body || [];
-        // Fetch line details to get names
-        this.channelLineService.queryChannelLinePage({ queryName: '', channelId: this.channelId, page: 1, length: 200 })
-          .subscribe(({ body: lineBody }) => {
-            const lineMap = new Map<number, string>();
-            (lineBody.data || []).forEach(l => lineMap.set(l.id, l.name));
-            this.linkedLines = links.map(link => ({
-              ...link,
-              lineName: lineMap.get(link.channelLineId) || `#${link.channelLineId}`,
-            }));
-          });
+        this.linkedLines = (body || []).map(link => ({ ...link, lineName: link.name }));
       });
   }
 

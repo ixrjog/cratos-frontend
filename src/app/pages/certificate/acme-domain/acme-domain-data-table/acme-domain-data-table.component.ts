@@ -135,4 +135,12 @@ export class AcmeDomainDataTableComponent implements OnInit {
     });
   }
 
+  onRecoverDcv(rowItem: AcmeDomainVO) {
+    this.acmeService.recoverDcvDelegation({ id: rowItem.id })
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+        this.fetchData();
+      });
+  }
+
 }

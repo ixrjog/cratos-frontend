@@ -1,13 +1,22 @@
 <div class="channel-view">
   <!-- Channel Selector -->
   <div class="channel-selector">
-    <d-search
-      [(ngModel)]="queryName"
-      [iconPosition]="'left'"
-      [placeholder]="'Search Channel'"
-      (searchFn)="fetchChannels()"
-      (change)="fetchChannels()"
-    ></d-search>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <d-search
+        [(ngModel)]="queryName"
+        [iconPosition]="'left'"
+        [placeholder]="'Search Channel'"
+        (searchFn)="fetchChannels()"
+        (change)="fetchChannels()"
+      ></d-search>
+      <d-icon
+        [icon]="'icon-edit'"
+        [operable]="true"
+        [color]="editMode ? 'var(--devui-brand, #5e7ce0)' : ''"
+        (click)="editMode = !editMode"
+        [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
+      ></d-icon>
+    </div>
     <div class="channel-list">
       <div
         *ngFor="let ch of channels"
@@ -80,7 +89,7 @@
       </div>
 
       <div class="biz-column" *ngIf="businesses.length">
-        <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i">
+        <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
           <div class="biz-header">
             <i class="fas fa-dollar-sign"></i>
             <span class="biz-name">{{ biz.businessName }}</span>
@@ -92,8 +101,8 @@
         </div>
       </div>
 
-      <div class="line-column" *ngIf="channelLines.length">
-        <div *ngFor="let line of channelLines; let j = index" class="line-item" [id]="'line-' + j">
+      <div class="line-column" *ngFor="let level of lineLevels">
+        <div *ngFor="let line of level" class="line-item" [id]="'line-' + getLineIndex(line)" [class.editable]="editMode" (click)="onEditLine(line)">
           <i class="fas fa-sitemap"></i>
           <div class="line-content">
             <div class="line-name">{{ line.name }}</div>
@@ -102,7 +111,7 @@
         </div>
       </div>
 
-      <div class="center-card" id="channel-center-card">
+      <div class="center-card" id="channel-center-card" [class.editable]="editMode" (click)="onEditChannel()">
         <div class="card-inner">
           <div class="card-title"><i class="fab fa-instalod" style="margin-right: 6px;"></i>{{ selectedChannel.name }}</div>
           <div class="card-info">

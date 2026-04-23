@@ -54,6 +54,13 @@
         </ng-template>
       </d-cell>
     </d-column>
+    <d-column field="createdBy" header="Created By" [width]="'140px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <app-user-popover *ngIf="cellItem" [username]="cellItem"></app-user-popover>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column [width]="'160px'" field="expires" header="Expires">
       <d-cell>
         <ng-template let-rowItem="rowItem" let-cellItem="cellItem">

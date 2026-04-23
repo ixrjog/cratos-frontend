@@ -1,5 +1,5 @@
 <div class="spacing-search">
-  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()" [disabled]="!selectedChannel">New</d-button>
   <d-select
     class="select"
     [options]="channelOptions"
@@ -18,7 +18,7 @@
     (searchFn)="fetchData()"
     (change)="fetchData()"
   ></d-search>
-  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+  <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!selectedChannel">Filter</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -89,4 +89,17 @@
     (pageIndexChange)="pageIndexChange($event)"
     (pageSizeChange)="pageSizeChange($event)"
   ></d-pagination>
+</div>
+<!-- Line Graph -->
+<div class="line-graph" *ngIf="lineLevels.length">
+  <h5 class="graph-title">Line Topology</h5>
+  <div class="graph-content">
+    <div class="graph-column" *ngFor="let level of lineLevels">
+      <div *ngFor="let line of level" class="graph-item" [id]="'graph-line-' + getLineIndex(line)">
+        <i class="fas fa-sitemap" style="margin-right: 6px;"></i>
+        <span class="graph-name">{{ line.name }}</span>
+        <d-tag *ngIf="line.lineType" [tag]="line.lineType" [labelStyle]="'blue-w98'" style="margin-left: 6px;"></d-tag>
+      </div>
+    </div>
+  </div>
 </div>

@@ -64,7 +64,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.fetchChannels();
     this.positionInterval = setInterval(() => {
       this.lines.forEach(line => {
-        try { line.position(); } catch (e) {}
+        try {
+          if (line._svg && line._svg.isConnected) line.position();
+        } catch (e) {}
       });
     }, 500);
   }

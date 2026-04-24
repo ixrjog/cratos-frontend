@@ -356,26 +356,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     if (!centerEl) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const noArrow = { color: themeColor, size: 2, path: 'straight', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
-    const palmpayEl = this.el.nativeElement.querySelector('#palmpay-card');
-
-    // PalmPay → Business (with arrow by direction)
-    if (palmpayEl) {
-      this.businesses.forEach((biz, i) => {
-        const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
-        if (!bizEl) return;
-        const isOutbound = biz.businessDirection === 'OUTBOUND';
-        try {
-          this.lines.push(new LeaderLine(
-            isOutbound ? palmpayEl : bizEl,
-            isOutbound ? bizEl : palmpayEl,
-            { color: themeColor, size: 2, path: 'straight',
-              startSocket: isOutbound ? 'right' : 'left',
-              endSocket: isOutbound ? 'left' : 'right',
-              endPlug: 'arrow1', startPlug: 'behind' }
-          ));
-        } catch (e) {}
-      });
-    }
 
     // Build line element map by index
     const lineElMap = new Map<number, HTMLElement>();
@@ -415,7 +395,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         bizConnected.add(key);
         const lineEl = lineElMap.get(lineIdx);
         if (!lineEl) return;
-        try { this.lines.push(new LeaderLine(bizEl, lineEl, noArrow)); } catch (e) {}
+        const isOutbound = biz.businessDirection === 'OUTBOUND';
+        try {
+          this.lines.push(new LeaderLine(
+            isOutbound ? bizEl : lineEl,
+            isOutbound ? lineEl : bizEl,
+            { color: themeColor, size: 2, path: 'straight',
+              startSocket: 'right', endSocket: 'left',
+              endPlug: 'arrow1', startPlug: 'behind' }
+          ));
+        } catch (e) {}
       });
     });
 

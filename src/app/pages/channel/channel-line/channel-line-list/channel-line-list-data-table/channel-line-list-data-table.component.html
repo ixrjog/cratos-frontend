@@ -1,8 +1,13 @@
 <div class="spacing-search">
   <d-button class="button" bsStyle="primary" (click)="onRowNew()" [disabled]="!selectedChannel">New</d-button>
+  <d-tabs class="tabs" type="options" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($event)">
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
+  </d-tabs>
   <d-select
     class="select"
-    [options]="channelOptions"
+    style="width: 300px; max-width: 300px"
+    [options]="filteredChannelOptions"
     [(ngModel)]="selectedChannel"
     [placeholder]="'Select Channel'"
     [filterKey]="'label'"
@@ -10,7 +15,12 @@
     [allowClear]="true"
     [appendToBody]="true"
     (ngModelChange)="onChannelChange($event)"
-  ></d-select>
+  >
+    <ng-template let-option="option">
+      <span>{{ option.label }}</span>
+      <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.country }}</span>
+    </ng-template>
+  </d-select>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"

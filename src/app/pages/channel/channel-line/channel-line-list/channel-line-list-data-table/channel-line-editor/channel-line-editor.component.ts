@@ -18,7 +18,7 @@ export class ChannelLineEditorComponent implements OnInit {
 
   channelOptions: { label: string; value: number }[] = [];
   selectedChannel: any = null;
-  lineTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
+  lineTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET', 'CLOUD', 'IDC'];
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },

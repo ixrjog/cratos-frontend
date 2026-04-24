@@ -103,7 +103,9 @@
 
       <div class="line-column" *ngFor="let level of lineLevels">
         <div *ngFor="let line of level" class="line-item" [id]="'line-' + getLineIndex(line)" [class.editable]="editMode" (click)="onEditLine(line)">
-          <i class="fas fa-sitemap"></i>
+          <i [ngClass]="{'fas fa-server': line.lineType === 'IDC'}" *ngIf="line.lineType === 'IDC'"></i>
+          <i class="fas fa-cloud" *ngIf="line.lineType === 'CLOUD'"></i>
+          <i class="fas fa-sitemap" *ngIf="line.lineType !== 'IDC' && line.lineType !== 'CLOUD'"></i>
           <div class="line-content">
             <div class="line-name">{{ line.name }}</div>
             <d-tag *ngIf="line.lineType" [tag]="line.lineType" [labelStyle]="'blue-w98'"></d-tag>

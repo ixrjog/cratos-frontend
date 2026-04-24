@@ -23,6 +23,27 @@ export class ChannelBusinessEditorComponent implements OnInit {
   ];
 
   typeOptions: string[] = [];
+  typeLabelMap: { [key: string]: string } = {
+    DEPOSIT: 'Deposit (入金)',
+    WITHDRAWAL: 'Withdrawal (出金)',
+    KYC: 'KYC (身份认证)',
+    DATA: 'Data (流量充值)',
+    AIRTIME: 'Airtime (话费充值)',
+    PP_CARD: 'Prepaid Card (预付卡)',
+    USSD_DIAL: 'USSD Dial',
+    ELECTRICITY: 'Electricity (电费)',
+    TV: 'TV (电视订阅)',
+    POS: 'POS',
+    BETTING: 'Betting (博彩)',
+    PAYBILL: 'Paybill (收款)',
+    DEBIT: 'Debit (代扣)',
+    MOMO: 'Mobile Money',
+    TRANSFER: 'Transfer (转账)',
+  };
+
+  getTypeLabel(type: string): string {
+    return this.typeLabelMap[type] || type;
+  }
 
   orgOptions: { label: string; value: number }[] = [];
   orgQueryName = '';

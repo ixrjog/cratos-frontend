@@ -25,8 +25,11 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
     channelId: null as number,
   };
   table: Table<ChannelLineVO> = JSON.parse(JSON.stringify(TABLE_DATA));
-  channelOptions: { label: string; value: number }[] = [];
+  channelOptions: { label: string; value: number; country: string }[] = [];
+  filteredChannelOptions: { label: string; value: number; country: string }[] = [];
   selectedChannel: any = null;
+  selectedCountry = '';
+  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
 
   // Graph
   allLines: any[] = [];
@@ -169,10 +172,23 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   }
 
   fetchChannels() {
-    this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 50 })
+    this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 200 })
       .subscribe(({ body }) => {
-        this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
+        this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id, country: c.country }));
+        this.filterChannelOptions();
       });
+  }
+
+  onCountryChange(cc: any) {
+    this.selectedCountry = cc as string;
+    this.selectedChannel = null;
+    this.filterChannelOptions();
+  }
+
+  filterChannelOptions() {
+    this.filteredChannelOptions = this.selectedCountry
+      ? this.channelOptions.filter(c => c.country === this.selectedCountry)
+      : this.channelOptions;
   }
 
   onChannelChange(selected: any) {

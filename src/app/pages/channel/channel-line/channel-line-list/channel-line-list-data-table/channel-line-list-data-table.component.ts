@@ -44,6 +44,7 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
     lineType: '',
     sourceEndpoint: '',
     monitorUrl: '',
+    linkedChannel: false,
     valid: true,
     comment: '',
   };
@@ -236,4 +237,8 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   }
 
   protected readonly getRowColor = getRowColor;
+
+  isNetworkLine(lineType: string): boolean {
+    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(lineType);
+  }
 }

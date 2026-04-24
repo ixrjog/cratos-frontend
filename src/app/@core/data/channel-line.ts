@@ -8,6 +8,7 @@ export interface ChannelLineVO extends BaseVO, ValidVO {
   lineType: string;
   sourceEndpoint: string;
   monitorUrl: string;
+  linkedChannel: boolean;
   comment: string;
   channelName: string;
 }
@@ -24,6 +25,7 @@ export interface ChannelLineEdit {
   lineType: string;
   sourceEndpoint: string;
   monitorUrl: string;
+  linkedChannel: boolean;
   valid: boolean;
   comment: string;
 }

@@ -32,10 +32,33 @@
     border: 1px solid var(--devui-dividing-line, #dfe1e6);
     border-radius: 6px;
     background: var(--devui-base-bg, #fff);
+    gap: 8px;
+
+    &.graph-compact {
+      padding: 4px 8px;
+      gap: 4px;
+      font-size: 11px;
+      align-items: center;
+
+      .graph-name {
+        margin-bottom: 0;
+        align-self: flex-end;
+      }
+
+      ::ng-deep d-tag {
+        align-self: flex-end;
+      }
+    }
 
     .graph-name {
       font-weight: 500;
       color: var(--devui-text, #252b3a);
+    }
+
+    .graph-name-content {
+      .graph-name {
+        margin-bottom: 4px;
+      }
     }
   }
 }

@@ -43,6 +43,12 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label>Linked to Channel</d-form-label>
+      <d-form-control>
+        <d-checkbox name="linkedChannel" [(ngModel)]="formData.linkedChannel"></d-checkbox>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Description</d-form-label>
       <d-form-control>
         <textarea dTextarea name="comment" maxlength="200" style="height: 80px" [(ngModel)]="formData.comment"></textarea>

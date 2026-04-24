@@ -303,6 +303,10 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return this.channelLines.findIndex(l => l.name === line.name);
   }
 
+  isNetworkLine(lineType: string): boolean {
+    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(lineType);
+  }
+
   computeLineLevels() {
     this.lineLevels = [];
     if (!this.channelLines.length) return;
@@ -316,8 +320,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         if (!existing.sourceEndpoints.includes(l.sourceEndpoint)) {
           existing.sourceEndpoints.push(l.sourceEndpoint);
         }
+        if (l.linkedChannel) existing.linkedChannel = true;
       } else {
-        mergedMap.set(l.name, { ...l, mergedIds: [l.id], sourceEndpoints: [l.sourceEndpoint] });
+        mergedMap.set(l.name, { ...l, mergedIds: [l.id], sourceEndpoints: [l.sourceEndpoint], linkedChannel: !!l.linkedChannel });
       }
     });
     const mergedLines = Array.from(mergedMap.values());
@@ -429,15 +434,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
 
     // Terminal lines → Channel
-    const referencedNames = new Set<string>();
-    this.channelLines.forEach(l => (l.sourceEndpoints || []).forEach(s => { if (s !== '.') referencedNames.add(s); }));
+    // Lines with linkedChannel → Channel
     this.channelLines.forEach((line, j) => {
-      if (!referencedNames.has(line.name)) {
-        // This is a terminal line, connect to channel
-        const lineEl = lineElMap.get(j);
-        if (!lineEl) return;
-        try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
-      }
+      if (!line.linkedChannel) return;
+      const lineEl = lineElMap.get(j);
+      if (!lineEl) return;
+      try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
     });
 
     // If no lines, Business → Channel directly

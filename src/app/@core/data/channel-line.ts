@@ -10,6 +10,7 @@ export interface ChannelNodeVO extends BaseVO, ValidVO {
   monitorUrl: string;
   linkedChannel: boolean;
   comment: string;
+  nodeInfo: string;
   channelName: string;
 }
 
@@ -28,4 +29,5 @@ export interface ChannelNodeEdit {
   linkedChannel: boolean;
   valid: boolean;
   comment: string;
+  nodeInfo: string;
 }

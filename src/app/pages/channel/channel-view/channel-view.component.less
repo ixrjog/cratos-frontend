@@ -92,13 +92,13 @@
   gap: 80px;
 }
 
-.line-column {
+.node-column {
   display: flex;
   flex-direction: column;
   gap: 80px;
 }
 
-.line-item {
+.node-item {
   padding: 8px 12px;
   border: 1px solid var(--devui-dividing-line, #dfe1e6);
   border-radius: 6px;
@@ -107,7 +107,7 @@
   align-items: center;
   gap: 8px;
 
-  &.line-hidden {
+  &.node-hidden {
     visibility: hidden;
     height: 1px;
     padding: 0;
@@ -116,13 +116,13 @@
     overflow: hidden;
   }
 
-  &.line-compact {
+  &.node-compact {
     padding: 4px 8px;
     gap: 4px;
     font-size: 11px;
     align-items: center;
 
-    .line-name {
+    .node-name {
       margin-bottom: 0;
       align-self: flex-end;
     }
@@ -132,11 +132,11 @@
     }
   }
 
-  .line-content {
+  .node-content {
     text-align: center;
   }
 
-  .line-name {
+  .node-name {
     font-weight: 500;
     color: var(--devui-text, #252b3a);
     margin-bottom: 4px;

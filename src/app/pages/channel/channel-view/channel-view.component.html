@@ -81,7 +81,7 @@
     <div class="divider"></div>
 
     <!-- Section 2: Node Topology -->
-    <h5 class="section-title" *ngIf="lineLevels.length">Node Topology</h5>
+    <h5 class="section-title" *ngIf="nodeLevels.length">Node Topology</h5>
     <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
@@ -96,23 +96,23 @@
         </div>
       </div>
 
-      <div class="line-column" *ngFor="let level of lineLevels">
-        <ng-container *ngFor="let line of level">
-          <div *ngIf="line.nodeType !== 'LEASED_LINE' && line.nodeType !== 'IPSEC_VPN'"
-               class="line-item" [class.line-compact]="isNetworkLine(line.nodeType)"
-               [id]="'line-' + getLineIndex(line)" [class.editable]="editMode" (click)="onEditLine(line)">
-            <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
-            <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
-            <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.nodeType)"></i>
-            <div class="line-content" *ngIf="!isNetworkLine(line.nodeType)">
-              <div class="line-name">{{ line.name }}
-                <d-icon *ngIf="line.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
-                        (click)="onShowNodeInfo(line); $event.stopPropagation()" style="margin-left: 4px; font-size: 12px;"></d-icon>
+      <div class="node-column" *ngFor="let level of nodeLevels">
+        <ng-container *ngFor="let node of level">
+          <div *ngIf="node.nodeType !== 'LEASED_LINE' && node.nodeType !== 'IPSEC_VPN'"
+               class="node-item" [class.node-compact]="isNetworkNode(node.nodeType)"
+               [id]="'node-' + getNodeIndex(node)" [class.editable]="editMode" (click)="onEditNode(node)">
+            <i class="fas fa-server" *ngIf="node.nodeType === 'IDC'"></i>
+            <i class="fas fa-cloud" *ngIf="node.nodeType === 'CLOUD'"></i>
+            <i class="fas fa-sitemap" *ngIf="isNetworkNode(node.nodeType)"></i>
+            <div class="node-content" *ngIf="!isNetworkNode(node.nodeType)">
+              <div class="node-name">{{ node.name }}
+                <d-icon *ngIf="node.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
+                        (click)="onShowNodeInfo(node); $event.stopPropagation()" style="margin-left: 4px; font-size: 12px;"></d-icon>
               </div>
-              <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+              <d-tag *ngIf="node.nodeType" [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
             </div>
-            <span *ngIf="isNetworkLine(line.nodeType)" class="line-name">{{ line.name }}</span>
-            <d-tag *ngIf="isNetworkLine(line.nodeType)" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+            <span *ngIf="isNetworkNode(node.nodeType)" class="node-name">{{ node.name }}</span>
+            <d-tag *ngIf="isNetworkNode(node.nodeType)" [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
           </div>
         </ng-container>
       </div>

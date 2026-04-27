@@ -33,7 +33,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
   channelNodes: any[] = [];
-  lineLevels: any[][] = [];
+  nodeLevels: any[][] = [];
   hiddenNodesList: any[] = [];
   lines: any[] = [];
   elkNodes: any[] = [];
@@ -232,7 +232,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     }, () => this.fetchRelations(), biz);
   }
 
-  onEditLine(line: any) {
+  onEditNode(line: any) {
     if (!this.editMode) return;
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
       ...DIALOG_DATA.editorData, title: 'Edit Line', content: ChannelNodeEditorComponent,
@@ -331,11 +331,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
   }
 
-  getLineIndex(line: any): number {
+  getNodeIndex(line: any): number {
     return this.channelNodes.findIndex(l => l.name === line.name);
   }
 
-  isNetworkLine(nodeType: string): boolean {
+  isNetworkNode(nodeType: string): boolean {
     return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 
@@ -349,7 +349,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   computeLineLevels() {
-    this.lineLevels = [];
+    this.nodeLevels = [];
     if (!this.channelNodes.length) return;
 
     // Merge lines with same name (keep first, aggregate ids and sourceEndpoints)
@@ -373,12 +373,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const placed = new Set<string>();
     let currentLevel = mergedLines.filter(l => l.isRoot);
     while (currentLevel.length > 0) {
-      this.lineLevels.push(currentLevel);
+      this.nodeLevels.push(currentLevel);
       currentLevel.forEach(l => placed.add(l.name));
       currentLevel = mergedLines.filter(l => !placed.has(l.name) && l.sourceEndpoints.some(s => placed.has(s)));
     }
     const remaining = mergedLines.filter(l => !placed.has(l.name));
-    if (remaining.length) this.lineLevels.push(remaining);
+    if (remaining.length) this.nodeLevels.push(remaining);
 
     // Update channelNodes to merged version for drawLines
     this.channelNodes = mergedLines;
@@ -409,8 +409,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
     // Line nodes
     this.channelNodes.forEach((line, j) => {
-      const w = this.isNetworkLine(line.nodeType) ? 200 : 220;
-      const h = this.isNetworkLine(line.nodeType) ? 40 : 55;
+      const w = this.isNetworkNode(line.nodeType) ? 200 : 220;
+      const h = this.isNetworkNode(line.nodeType) ? 40 : 55;
       children.push({ id: `line-${j}`, width: w, height: h, type: 'line', data: line });
     });
 
@@ -538,13 +538,13 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
-    const lineElMap = new Map<number, HTMLElement>();
-    const lineByName = new Map<string, number>(); // name → index (ALL lines)
+    const nodeElMap = new Map<number, HTMLElement>();
+    const nodeByName = new Map<string, number>(); // name → index (ALL lines)
     this.channelNodes.forEach((line, j) => {
-      lineByName.set(line.name, j);
-      const el = this.el.nativeElement.querySelector(`#line-${j}`);
+      nodeByName.set(line.name, j);
+      const el = this.el.nativeElement.querySelector(`#node-${j}`);
       if (el) {
-        lineElMap.set(j, el);
+        nodeElMap.set(j, el);
       }
     });
 
@@ -576,7 +576,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
     // Build column map: nodeIdx → column index
     const nodeColumnMap = new Map<number, number>();
-    this.lineLevels.forEach((level, colIdx) => {
+    this.nodeLevels.forEach((level, colIdx) => {
       level.forEach(line => {
         const idx = this.channelNodes.findIndex(l => l.name === line.name);
         if (idx >= 0) nodeColumnMap.set(idx, colIdx);
@@ -596,7 +596,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       this.channelNodes.forEach((cl, idx) => {
         if ((cl.sourceEndpoints || []).includes(lineName)) {
           if (!hiddenTypes.includes(cl.nodeType)) {
-            const el = lineElMap.get(idx);
+            const el = nodeElMap.get(idx);
             if (el) results.push({ idx, el });
           } else {
             results.push(...findVisibleDescendants(cl.name));
@@ -636,7 +636,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           const key = `${i}-${mergedLine.name}`;
           if (bizConnected.has(key)) return;
           bizConnected.add(key);
-          const lineEl = lineElMap.get(lineIdx);
+          const lineEl = nodeElMap.get(lineIdx);
           if (!lineEl) return;
           try {
             this.lines.push(new LeaderLine(bizEl, lineEl,
@@ -653,26 +653,26 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.channelNodes.forEach((line, j) => {
       if (line.isRoot) return;
       if (hiddenTypes.includes(line.nodeType)) return;
-      const childEl = lineElMap.get(j);
+      const childEl = nodeElMap.get(j);
       if (!childEl) return;
       (line.sourceEndpoints || []).forEach(sep => {
         if (sep === '.') return;
-        const parentIdx = lineByName.get(sep);
+        const parentIdx = nodeByName.get(sep);
         if (parentIdx === undefined) return;
         const parentLine = this.channelNodes[parentIdx];
         if (hiddenTypes.includes(parentLine.nodeType)) {
           (parentLine.sourceEndpoints || []).forEach(gSep => {
             if (gSep === '.') return;
-            const gIdx = lineByName.get(gSep);
+            const gIdx = nodeByName.get(gSep);
             if (gIdx === undefined) return;
-            const gEl = lineElMap.get(gIdx);
+            const gEl = nodeElMap.get(gIdx);
             if (!gEl) return;
             const pairKey = `${gIdx}-${j}`;
             const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j));
             try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
-          const parentEl = lineElMap.get(parentIdx);
+          const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
           const pairKey = `${parentIdx}-${j}`;
           const sockets = getSocketPair(pairKey, isSameColumn(parentIdx, j));
@@ -687,16 +687,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (hiddenTypes.includes(line.nodeType)) {
         (line.sourceEndpoints || []).forEach(sep => {
           if (sep === '.') return;
-          const parentIdx = lineByName.get(sep);
+          const parentIdx = nodeByName.get(sep);
           if (parentIdx === undefined) return;
-          const parentEl = lineElMap.get(parentIdx);
+          const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
           const label = { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: '#fff', outlineColor: '', fontSize: '9px'}), dash: this.isDashedType(line.nodeType) };
           const sockets = getSocketPair(`${parentIdx}-channel`);
           try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
         });
       } else {
-        const lineEl = lineElMap.get(j);
+        const lineEl = nodeElMap.get(j);
         if (!lineEl) return;
         const nodeType = line.nodeType;
         const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};

@@ -34,6 +34,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
   // Graph
   allLines: any[] = [];
   lineLevels: any[][] = [];
+  hiddenNodesList: any[] = [];
   leaderLines: any[] = [];
   needDrawLines = false;
   private positionInterval: any;
@@ -133,6 +134,17 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     const remaining = mergedLines.filter(l => !placed.has(l.name));
     if (remaining.length) this.lineLevels.push(remaining);
     this.allLines = mergedLines;
+
+    // Assign numbers to hidden nodes
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
+    let num = 1;
+    this.hiddenNodesList = mergedLines
+      .filter(l => hiddenTypes.includes(l.nodeType))
+      .map(l => ({ ...l, hiddenNum: num++ }));
+    this.hiddenNodesList.forEach(h => {
+      const node = this.allLines.find(n => n.name === h.name);
+      if (node) node.hiddenNum = h.hiddenNum;
+    });
   }
 
   getLineIndex(line: any): number {
@@ -144,30 +156,92 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     this.leaderLines = [];
   }
 
+  getHiddenLabel(nodeName: string): string {
+    const node = this.hiddenNodesList.find(n => n.name === nodeName);
+    return node ? `#${node.hiddenNum} ${node.nodeType}` : '';
+  }
+
+  isDashedType(nodeType: string): boolean {
+    return nodeType === 'IPSEC_VPN' || nodeType === 'INTERNET';
+  }
+
   drawLines() {
     this.removeLines();
     if (!this.allLines.length) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
-    const noArrow = { color: themeColor, size: 2, path: 'straight', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
+    const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
 
     const lineElMap = new Map<number, HTMLElement>();
     const lineByName = new Map<string, number>();
     this.allLines.forEach((line, j) => {
+      lineByName.set(line.name, j);
       const el = this.el.nativeElement.querySelector(`#graph-line-${j}`);
-      if (el) { lineElMap.set(j, el); lineByName.set(line.name, j); }
+      if (el) lineElMap.set(j, el);
     });
 
-    // Line → Line
+    // Column map for same-column detection
+    const nodeColumnMap = new Map<number, number>();
+    this.lineLevels.forEach((level, colIdx) => {
+      level.forEach(line => {
+        const idx = this.allLines.findIndex(l => l.name === line.name);
+        if (idx >= 0) nodeColumnMap.set(idx, colIdx);
+      });
+    });
+    const isSameColumn = (a: number, b: number) =>
+      nodeColumnMap.has(a) && nodeColumnMap.has(b) && nodeColumnMap.get(a) === nodeColumnMap.get(b);
+
+    // Socket distribution
+    const pairCount = new Map<string, number>();
+    const getSocketPair = (key: string, sameCol = false) => {
+      const c = pairCount.get(key) || 0;
+      pairCount.set(key, c + 1);
+      if (sameCol) {
+        if (c === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        if (c === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      }
+      if (c === 0) return { startSocket: 'right', endSocket: 'left' };
+      if (c === 1) return { startSocket: 'top', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      return { startSocket: 'bottom', endSocket: 'bottom', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+    };
+
+    // Line → Line (skip hidden, draw through with label)
     this.allLines.forEach((line, j) => {
       if (line.isRoot) return;
+      if (hiddenTypes.includes(line.nodeType)) return;
+      const childEl = lineElMap.get(j);
+      if (!childEl) return;
       (line.sourceEndpoints || []).forEach(sep => {
         if (sep === '.') return;
         const parentIdx = lineByName.get(sep);
         if (parentIdx === undefined) return;
-        const parentEl = lineElMap.get(parentIdx);
-        const childEl = lineElMap.get(j);
-        if (!parentEl || !childEl) return;
-        try { this.leaderLines.push(new LeaderLine(parentEl, childEl, noArrow)); } catch (e) {}
+        const parentLine = this.allLines[parentIdx];
+        if (hiddenTypes.includes(parentLine.nodeType)) {
+          // Hidden parent: connect grandparents to this child with label
+          (parentLine.sourceEndpoints || []).forEach(gSep => {
+            if (gSep === '.') return;
+            const gIdx = lineByName.get(gSep);
+            if (gIdx === undefined) return;
+            const gEl = lineElMap.get(gIdx);
+            if (!gEl) return;
+            const pk = `${gIdx}-${j}`;
+            const sockets = getSocketPair(pk, isSameColumn(gIdx, j));
+            try {
+              this.leaderLines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets,
+                dash: this.isDashedType(parentLine.nodeType),
+                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'})
+              }));
+            } catch (e) {}
+          });
+        } else {
+          const parentEl = lineElMap.get(parentIdx);
+          if (!parentEl) return;
+          const pk = `${parentIdx}-${j}`;
+          const sockets = getSocketPair(pk, isSameColumn(parentIdx, j));
+          try { this.leaderLines.push(new LeaderLine(parentEl, childEl, { ...noArrow, ...sockets })); } catch (e) {}
+        }
       });
     });
   }

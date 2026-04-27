@@ -105,17 +105,23 @@
   <h5 class="graph-title">Line Topology</h5>
   <div class="graph-content">
     <div class="graph-column" *ngFor="let level of lineLevels">
-      <div *ngFor="let line of level" class="graph-item" [class.graph-compact]="isNetworkLine(line.nodeType)" [id]="'graph-line-' + getLineIndex(line)">
-        <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
-        <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
-        <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.nodeType)"></i>
-        <div class="graph-name-content" *ngIf="!isNetworkLine(line.nodeType)">
-          <span class="graph-name">{{ line.name }}</span>
-          <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+      <ng-container *ngFor="let line of level">
+        <div *ngIf="!isNetworkLine(line.nodeType)" class="graph-item" [id]="'graph-line-' + getLineIndex(line)">
+          <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
+          <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
+          <div class="graph-name-content">
+            <span class="graph-name">{{ line.name }}</span>
+            <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+          </div>
         </div>
-        <span *ngIf="isNetworkLine(line.nodeType)" class="graph-name">{{ line.name }}</span>
-        <d-tag *ngIf="isNetworkLine(line.nodeType)" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
-      </div>
+      </ng-container>
     </div>
+  </div>
+  <div class="hidden-nodes-legend" *ngIf="hiddenNodesList.length">
+    <span *ngFor="let node of hiddenNodesList" class="hidden-node-card">
+      <span class="hidden-num">#{{ node.hiddenNum }}</span>
+      <span class="hidden-name">{{ node.name }}</span>
+      <d-tag [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+    </span>
   </div>
 </div>

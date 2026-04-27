@@ -175,6 +175,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     if (!this.allLines.length) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
+    const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
     const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
     const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
 
@@ -236,7 +237,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
             try {
               this.leaderLines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets,
                 dash: this.isDashedType(parentLine.nodeType),
-                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'})
+                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'})
               }));
             } catch (e) {}
           });
@@ -267,7 +268,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
             try {
               this.leaderLines.push(new LeaderLine(pEl, channelEl, { ...noArrow, ...sockets,
                 dash: this.isDashedType(line.nodeType),
-                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: '#fff', outlineColor: '', fontSize: '9px'})
+                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: labelColor, outlineColor: '', fontSize: '9px'})
               }));
             } catch (e) {}
           });

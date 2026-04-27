@@ -535,6 +535,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     if (!centerEl) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
+    const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
     const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
@@ -627,7 +628,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
               this.lines.push(new LeaderLine(bizEl, d.el,
                 { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
                   startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
-                  middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'}),
+                  middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
                   dash: this.isDashedType(mergedLine.nodeType) }
               ));
             } catch (e) {}
@@ -669,7 +670,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             if (!gEl) return;
             const pairKey = `${gIdx}-${j}`;
             const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j));
-            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
+            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
           const parentEl = nodeElMap.get(parentIdx);
@@ -691,7 +692,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           if (parentIdx === undefined) return;
           const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
-          const label = { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: '#fff', outlineColor: '', fontSize: '9px'}), dash: this.isDashedType(line.nodeType) };
+          const label = { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: labelColor, outlineColor: '', fontSize: '9px'}), dash: this.isDashedType(line.nodeType) };
           const sockets = getSocketPair(`${parentIdx}-channel`);
           try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
         });
@@ -699,7 +700,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const lineEl = nodeElMap.get(j);
         if (!lineEl) return;
         const nodeType = line.nodeType;
-        const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};
+        const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), { color: labelColor, outlineColor: '', fontSize: '9px' }) } : {};
         const sockets = getSocketPair(`${j}-channel`);
         try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
       }

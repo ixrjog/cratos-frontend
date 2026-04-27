@@ -47,6 +47,7 @@ export class ChannelInfoListDataTableComponent implements OnInit {
     editorData: {
       ...DIALOG_DATA.editorData,
       content: ChannelInfoEditorComponent,
+      width: '60%',
     },
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,

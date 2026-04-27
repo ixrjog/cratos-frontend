@@ -82,18 +82,20 @@
   align-items: center;
   justify-content: center;
   padding: 20px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .biz-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .line-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .line-item {
@@ -104,6 +106,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  &.line-hidden {
+    visibility: hidden;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+  }
 
   &.line-compact {
     padding: 4px 8px;
@@ -135,7 +146,7 @@
 .org-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .org-card {
@@ -404,4 +415,25 @@
   justify-content: center;
   color: var(--devui-aide-text, #8a8e99);
   font-size: 16px;
+}
+
+.elk-graph-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  margin-top: 16px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+  overflow-x: auto;
+}
+
+.elk-node {
+  position: absolute;
+}
+
+
+::ng-deep .leader-line {
+  z-index: 10 !important;
 }

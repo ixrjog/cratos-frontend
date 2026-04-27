@@ -5,10 +5,10 @@ import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
-import { ChannelLineEdit, ChannelLinePageQuery, ChannelLineVO } from '../../../../../@core/data/channel-line';
-import { ChannelLineService } from '../../../../../@core/services/channel-line.service';
+import { ChannelNodeEdit, ChannelNodePageQuery, ChannelNodeVO } from '../../../../../@core/data/channel-line';
+import { ChannelNodeService } from '../../../../../@core/services/channel-line.service';
 import { ChannelInfoService } from '../../../../../@core/services/channel-info.service';
-import { ChannelLineEditorComponent } from './channel-line-editor/channel-line-editor.component';
+import { ChannelNodeEditorComponent } from './channel-line-editor/channel-line-editor.component';
 
 declare var LeaderLine: any;
 
@@ -17,14 +17,14 @@ declare var LeaderLine: any;
   templateUrl: './channel-line-list-data-table.component.html',
   styleUrls: ['./channel-line-list-data-table.component.less'],
 })
-export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
     channelId: null as number,
   };
-  table: Table<ChannelLineVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  table: Table<ChannelNodeVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   channelOptions: { label: string; value: number; country: string }[] = [];
   filteredChannelOptions: { label: string; value: number; country: string }[] = [];
   selectedChannel: any = null;
@@ -38,10 +38,10 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   needDrawLines = false;
   private positionInterval: any;
 
-  newChannelLine: ChannelLineEdit = {
+  newChannelNode: ChannelNodeEdit = {
     channelId: null,
     name: '',
-    lineType: '',
+    nodeType: '',
     sourceEndpoint: '',
     monitorUrl: '',
     linkedChannel: false,
@@ -50,13 +50,13 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   };
 
   dialogDate = {
-    editorData: { ...DIALOG_DATA.editorData, content: ChannelLineEditorComponent },
+    editorData: { ...DIALOG_DATA.editorData, content: ChannelNodeEditorComponent },
     warningOperateData: { ...DIALOG_DATA.warningOperateData },
     content: { ...DIALOG_DATA.content },
   };
 
   constructor(
-    private channelLineService: ChannelLineService,
+    private channelNodeService: ChannelNodeService,
     private channelInfoService: ChannelInfoService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
@@ -86,18 +86,18 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   }
 
   fetchData() {
-    const param: ChannelLinePageQuery = {
+    const param: ChannelNodePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.channelLineService.queryChannelLinePage(param));
+    onFetchValidData(this.table, this.channelNodeService.queryChannelNodePage(param));
     this.fetchAllLines();
   }
 
   fetchAllLines() {
     if (!this.queryParam.channelId) return;
-    this.channelLineService.queryChannelLinePage({
+    this.channelNodeService.queryChannelNodePage({
       queryName: '', channelId: this.queryParam.channelId, page: 1, length: 200,
     }).subscribe(({ body }) => {
       this.allLines = body.data || [];
@@ -203,7 +203,7 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   pageSizeChange(s) { this.table.pager.pageSize = s; this.fetchData(); }
 
   onRowNew() {
-    const newData = JSON.parse(JSON.stringify(this.newChannelLine));
+    const newData = JSON.parse(JSON.stringify(this.newChannelNode));
     if (this.selectedChannel) {
       newData.channelId = this.selectedChannel.value;
       newData.channelName = this.selectedChannel.label;
@@ -211,17 +211,17 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
     this.dialogUtil.onEditDialog(ADD_OPERATION, { ...this.dialogDate.editorData, title: 'New Channel Line' }, () => this.fetchData(), newData);
   }
 
-  onRowEdit(rowItem: ChannelLineVO) {
+  onRowEdit(rowItem: ChannelNodeVO) {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, { ...this.dialogDate.editorData, title: 'Edit Channel Line' }, () => this.fetchData(), rowItem);
   }
 
-  onRowValid(rowItem: ChannelLineVO) {
-    this.channelLineService.setChannelLineValidById({ id: rowItem.id }).subscribe(() => this.fetchData());
+  onRowValid(rowItem: ChannelNodeVO) {
+    this.channelNodeService.setChannelNodeValidById({ id: rowItem.id }).subscribe(() => this.fetchData());
   }
 
-  onRowDelete(rowItem: ChannelLineVO) {
+  onRowDelete(rowItem: ChannelNodeVO) {
     this.dialogUtil.onDialog({ ...this.dialogDate.warningOperateData, content: this.dialogDate.content.delete }, () => {
-      this.channelLineService.deleteChannelLineById({ id: rowItem.id }).subscribe(() => {
+      this.channelNodeService.deleteChannelNodeById({ id: rowItem.id }).subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
         this.fetchData();
       });
@@ -231,14 +231,14 @@ export class ChannelLineListDataTableComponent implements OnInit, OnDestroy, Aft
   onBatchDelete() {
     this.dialogUtil.onDialog({ ...this.dialogDate.warningOperateData, content: this.dialogDate.content.batchDelete }, () => {
       let obList: Observable<HttpResult<Boolean>>[] = [];
-      this.datatable.getCheckedRows().map(row => obList.push(this.channelLineService.deleteChannelLineById({ id: row.id })));
+      this.datatable.getCheckedRows().map(row => obList.push(this.channelNodeService.deleteChannelNodeById({ id: row.id })));
       zip(obList).subscribe(() => { this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE); this.fetchData(); });
     });
   }
 
   protected readonly getRowColor = getRowColor;
 
-  isNetworkLine(lineType: string): boolean {
-    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(lineType);
+  isNetworkLine(nodeType: string): boolean {
+    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 }

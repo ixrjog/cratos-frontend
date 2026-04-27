@@ -25,8 +25,8 @@
     <d-form-item>
       <d-form-label>Line Type</d-form-label>
       <d-form-control>
-        <d-tabs type="options" [activeTab]="formData.lineType" (activeTabChange)="formData.lineType = $any($event)">
-          <d-tab *ngFor="let item of lineTypeOptions" [id]="item" [title]="item"></d-tab>
+        <d-tabs type="options" [activeTab]="formData.nodeType" (activeTabChange)="formData.nodeType = $any($event)">
+          <d-tab *ngFor="let item of nodeTypeOptions" [id]="item" [title]="item"></d-tab>
         </d-tabs>
       </d-form-control>
     </d-form-item>

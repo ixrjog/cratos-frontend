@@ -42,7 +42,7 @@
     [checkable]="true"
   >
     <d-column field="name" header="Name"></d-column>
-    <d-column field="lineType" header="Type">
+    <d-column field="nodeType" header="Type">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
@@ -105,16 +105,16 @@
   <h5 class="graph-title">Line Topology</h5>
   <div class="graph-content">
     <div class="graph-column" *ngFor="let level of lineLevels">
-      <div *ngFor="let line of level" class="graph-item" [class.graph-compact]="isNetworkLine(line.lineType)" [id]="'graph-line-' + getLineIndex(line)">
-        <i class="fas fa-server" *ngIf="line.lineType === 'IDC'"></i>
-        <i class="fas fa-cloud" *ngIf="line.lineType === 'CLOUD'"></i>
-        <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.lineType)"></i>
-        <div class="graph-name-content" *ngIf="!isNetworkLine(line.lineType)">
+      <div *ngFor="let line of level" class="graph-item" [class.graph-compact]="isNetworkLine(line.nodeType)" [id]="'graph-line-' + getLineIndex(line)">
+        <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
+        <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
+        <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.nodeType)"></i>
+        <div class="graph-name-content" *ngIf="!isNetworkLine(line.nodeType)">
           <span class="graph-name">{{ line.name }}</span>
-          <d-tag *ngIf="line.lineType" [tag]="line.lineType" [labelStyle]="'blue-w98'"></d-tag>
+          <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
         </div>
-        <span *ngIf="isNetworkLine(line.lineType)" class="graph-name">{{ line.name }}</span>
-        <d-tag *ngIf="isNetworkLine(line.lineType)" [tag]="line.lineType" [labelStyle]="'blue-w98'"></d-tag>
+        <span *ngIf="isNetworkLine(line.nodeType)" class="graph-name">{{ line.name }}</span>
+        <d-tag *ngIf="isNetworkLine(line.nodeType)" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
       </div>
     </div>
   </div>

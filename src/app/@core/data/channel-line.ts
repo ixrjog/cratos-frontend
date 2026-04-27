@@ -1,11 +1,11 @@
 import { BaseVO, DataTable, HttpResult, PageQuery, ValidVO } from './base-data';
 import { Observable } from 'rxjs';
 
-export interface ChannelLineVO extends BaseVO, ValidVO {
+export interface ChannelNodeVO extends BaseVO, ValidVO {
   id: number;
   channelId: number;
   name: string;
-  lineType: string;
+  nodeType: string;
   sourceEndpoint: string;
   monitorUrl: string;
   linkedChannel: boolean;
@@ -13,16 +13,16 @@ export interface ChannelLineVO extends BaseVO, ValidVO {
   channelName: string;
 }
 
-export interface ChannelLinePageQuery extends PageQuery {
+export interface ChannelNodePageQuery extends PageQuery {
   queryName: string;
   channelId?: number;
 }
 
-export interface ChannelLineEdit {
+export interface ChannelNodeEdit {
   id?: number;
   channelId: number;
   name: string;
-  lineType: string;
+  nodeType: string;
   sourceEndpoint: string;
   monitorUrl: string;
   linkedChannel: boolean;

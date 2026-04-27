@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Table, TABLE_DATA } from '../../../../../../@core/data/base-data';
-import { ChannelLinePageQuery, ChannelLineVO } from '../../../../../../@core/data/channel-line';
-import { ChannelLineService } from '../../../../../../@core/services/channel-line.service';
+import { ChannelNodePageQuery, ChannelNodeVO } from '../../../../../../@core/data/channel-line';
+import { ChannelNodeService } from '../../../../../../@core/services/channel-line.service';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.util';
 import { onFetchValidData } from '../../../../../../@shared/utils/data-table.utli';
 
@@ -18,10 +18,10 @@ export class ChannelBusinessLineEditorComponent implements OnInit {
 
   linkedLines: any[] = [];
   queryParam = { queryName: '' };
-  table: Table<ChannelLineVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  table: Table<ChannelNodeVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
   constructor(
-    private channelLineService: ChannelLineService,
+    private channelNodeService: ChannelNodeService,
     private toastUtil: ToastUtil,
   ) {}
 
@@ -33,29 +33,29 @@ export class ChannelBusinessLineEditorComponent implements OnInit {
   }
 
   fetchLinkedLines() {
-    this.channelLineService.queryChannelBusinessLines({ channelBusinessId: this.channelBusinessId })
+    this.channelNodeService.queryChannelBusinessNodes({ channelBusinessId: this.channelBusinessId })
       .subscribe(({ body }) => {
         this.linkedLines = (body || []).map(link => ({ ...link, lineName: link.name }));
       });
   }
 
   fetchLines() {
-    const param: ChannelLinePageQuery = {
+    const param: ChannelNodePageQuery = {
       queryName: this.queryParam.queryName,
       channelId: this.channelId,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
-    onFetchValidData(this.table, this.channelLineService.queryChannelLinePage(param));
+    onFetchValidData(this.table, this.channelNodeService.queryChannelNodePage(param));
   }
 
   pageIndexChange(p) { this.table.pager.pageIndex = p; this.fetchLines(); }
   pageSizeChange(s) { this.table.pager.pageSize = s; this.fetchLines(); }
 
-  onAddLine(line: ChannelLineVO) {
-    this.channelLineService.addChannelBusinessLine({
+  onAddLine(line: ChannelNodeVO) {
+    this.channelNodeService.addChannelBusinessNode({
       channelBusinessId: this.channelBusinessId,
-      channelLineId: line.id,
+      channelNodeId: line.id,
       valid: true,
       comment: '',
     }).subscribe(() => {
@@ -65,7 +65,7 @@ export class ChannelBusinessLineEditorComponent implements OnInit {
   }
 
   onRemoveLine(linked: any) {
-    this.channelLineService.deleteChannelBusinessLineById({ id: linked.id })
+    this.channelNodeService.deleteChannelBusinessNodeById({ id: linked.id })
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
         this.fetchLinkedLines();

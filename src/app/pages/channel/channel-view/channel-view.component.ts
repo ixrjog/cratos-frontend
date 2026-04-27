@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { ChannelInfoService } from '../../../@core/services/channel-info.service';
 import { ChannelBusinessService } from '../../../@core/services/channel-business.service';
-import { ChannelLineService } from '../../../@core/services/channel-line.service';
+import { ChannelNodeService } from '../../../@core/services/channel-line.service';
+import ELK from 'elkjs/lib/elk.bundled';
 import { EdsService } from '../../../@core/services/ext-datasource.service.s';
 import { ApplicationResourceService } from '../../../@core/services/application-resource.service';
 import { ApplicationService } from '../../../@core/services/application.service';
@@ -14,7 +15,7 @@ import { DialogService } from 'ng-devui';
 import { EdsAssetSshTerminalComponent } from '../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 import { ChannelInfoEditorComponent } from '../channel-info/channel-info-list/channel-info-list-data-table/channel-info-editor/channel-info-editor.component';
 import { ChannelBusinessEditorComponent } from '../channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
-import { ChannelLineEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
+import { ChannelNodeEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
 
 declare var LeaderLine: any;
 
@@ -31,9 +32,13 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   editMode = false;
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
-  channelLines: any[] = [];
+  channelNodes: any[] = [];
   lineLevels: any[][] = []; // lines grouped by level for layout
   lines: any[] = [];
+  elkNodes: any[] = [];
+  elkLines: any[] = [];
+  elkGraphHeight = 600;
+  private elk = new ELK();
   needDrawLines = false;
   private positionInterval: any;
 
@@ -49,7 +54,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   constructor(
     private channelInfoService: ChannelInfoService,
     private channelBusinessService: ChannelBusinessService,
-    private channelLineService: ChannelLineService,
+    private channelNodeService: ChannelNodeService,
     private edsService: EdsService,
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
@@ -64,6 +69,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.fetchChannels();
     this.positionInterval = setInterval(() => {
       this.lines.forEach(line => {
+        try {
+          if (line._svg && line._svg.isConnected) line.position();
+        } catch (e) {}
+      });
+      this.elkLines.forEach(line => {
         try {
           if (line._svg && line._svg.isConnected) line.position();
         } catch (e) {}
@@ -84,6 +94,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnDestroy() {
     this.removeLines();
+    this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     if (this.positionInterval) {
       clearInterval(this.positionInterval);
     }
@@ -98,6 +109,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
   onSelectChannel(channel: ChannelInfoVO) {
     this.removeLines();
+    this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
+    this.elkNodes = [];
     this.selectedChannel = channel;
     this.selectedAppName = '';
     this.deploymentList = [];
@@ -135,13 +148,13 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       this.needDrawLines = true;
     });
 
-    this.channelLineService.queryChannelLinePage({
+    this.channelNodeService.queryChannelNodePage({
       queryName: '',
       channelId: this.selectedChannel.id,
       page: 1,
       length: 100,
     }).subscribe(({ body }) => {
-      this.channelLines = body.data || [];
+      this.channelNodes = body.data || [];
       this.computeLineLevels();
     });
   }
@@ -219,7 +232,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   onEditLine(line: any) {
     if (!this.editMode) return;
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
-      ...DIALOG_DATA.editorData, title: 'Edit Line', content: ChannelLineEditorComponent,
+      ...DIALOG_DATA.editorData, title: 'Edit Line', content: ChannelNodeEditorComponent,
     }, () => this.fetchRelations(), line);
   }
 
@@ -302,20 +315,20 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   getLineIndex(line: any): number {
-    return this.channelLines.findIndex(l => l.name === line.name);
+    return this.channelNodes.findIndex(l => l.name === line.name);
   }
 
-  isNetworkLine(lineType: string): boolean {
-    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(lineType);
+  isNetworkLine(nodeType: string): boolean {
+    return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 
   computeLineLevels() {
     this.lineLevels = [];
-    if (!this.channelLines.length) return;
+    if (!this.channelNodes.length) return;
 
     // Merge lines with same name (keep first, aggregate ids and sourceEndpoints)
     const mergedMap = new Map<string, any>();
-    this.channelLines.forEach(l => {
+    this.channelNodes.forEach(l => {
       if (mergedMap.has(l.name)) {
         const existing = mergedMap.get(l.name);
         existing.mergedIds.push(l.id);
@@ -341,8 +354,134 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const remaining = mergedLines.filter(l => !placed.has(l.name));
     if (remaining.length) this.lineLevels.push(remaining);
 
-    // Update channelLines to merged version for drawLines
-    this.channelLines = mergedLines;
+    // Update channelNodes to merged version for drawLines
+    this.channelNodes = mergedLines;
+    this.computeElkLayout();
+  }
+
+  computeElkLayout() {
+    const children: any[] = [];
+    const edges: any[] = [];
+    let edgeId = 0;
+
+    // Business nodes
+    this.businesses.forEach((biz, i) => {
+      children.push({ id: `biz-${i}`, width: 200, height: 55, type: 'business', data: biz });
+    });
+
+    // Line nodes
+    this.channelNodes.forEach((line, j) => {
+      const w = this.isNetworkLine(line.nodeType) ? 200 : 220;
+      const h = this.isNetworkLine(line.nodeType) ? 40 : 55;
+      children.push({ id: `line-${j}`, width: w, height: h, type: 'line', data: line });
+    });
+
+    // Channel node
+    children.push({ id: 'channel', width: 220, height: 80, type: 'channel', data: this.selectedChannel });
+
+    // Org nodes
+    this.organizations.forEach(org => {
+      children.push({ id: `org-${org.id}`, width: 160, height: 55, type: 'org', data: org });
+    });
+
+    // Edges: business → root lines
+    this.businesses.forEach((biz, i) => {
+      const connected = new Set<string>();
+      (biz.lines || []).forEach(bizLine => {
+        const lineIdx = this.channelNodes.findIndex(l => l.name === bizLine.name);
+        if (lineIdx >= 0 && this.channelNodes[lineIdx].isRoot && !connected.has(`${lineIdx}`)) {
+          connected.add(`${lineIdx}`);
+          edges.push({ id: `e${edgeId++}`, sources: [`biz-${i}`], targets: [`line-${lineIdx}`] });
+        }
+      });
+    });
+
+    // Edges: line → line
+    this.channelNodes.forEach((line, j) => {
+      if (line.isRoot) return;
+      (line.sourceEndpoints || []).forEach(sep => {
+        if (sep === '.') return;
+        const parentIdx = this.channelNodes.findIndex(l => l.name === sep);
+        if (parentIdx >= 0) edges.push({ id: `e${edgeId++}`, sources: [`line-${parentIdx}`], targets: [`line-${j}`] });
+      });
+    });
+
+    // Edges: linkedChannel → channel
+    this.channelNodes.forEach((line, j) => {
+      if (line.linkedChannel) edges.push({ id: `e${edgeId++}`, sources: [`line-${j}`], targets: ['channel'] });
+    });
+
+    // Edges: channel → orgs
+    this.organizations.forEach(org => {
+      edges.push({ id: `e${edgeId++}`, sources: ['channel'], targets: [`org-${org.id}`] });
+    });
+
+    // No lines: business → channel
+    if (!this.channelNodes.length) {
+      this.businesses.forEach((_, i) => {
+        edges.push({ id: `e${edgeId++}`, sources: [`biz-${i}`], targets: ['channel'] });
+      });
+    }
+
+    const graph = {
+      id: 'root',
+      layoutOptions: {
+        'elk.algorithm': 'stress',
+        'elk.stress.desiredEdgeLength': '80',
+        'elk.spacing.nodeNode': '20',
+        'elk.padding': '[top=10,left=10,bottom=10,right=10]',
+      },
+      children,
+      edges,
+    };
+
+    this.elk.layout(graph).then(layouted => {
+      this.elkNodes = (layouted.children || []).map(n => ({
+        id: n.id,
+        x: n.x,
+        y: n.y,
+        width: n.width,
+        height: n.height,
+        type: children.find(c => c.id === n.id)?.type,
+        data: children.find(c => c.id === n.id)?.data,
+      }));
+      this.elkGraphHeight = 600;
+
+      // Draw elk lines after render
+      setTimeout(() => this.drawElkLines(layouted, themeColor), 300);
+    });
+
+    const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
+  }
+
+  drawElkLines(layouted: any, themeColor: string) {
+    this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
+    this.elkLines = [];
+    const noArrow = { color: themeColor, size: 2, path: 'fluid', endPlug: 'behind', startPlug: 'behind' };
+    const getEl = (id: string) => this.el.nativeElement.querySelector(`#elk-${id}`);
+
+    (layouted.edges || []).forEach(edge => {
+      const srcId = edge.sources?.[0];
+      const tgtId = edge.targets?.[0];
+      const srcEl = getEl(srcId);
+      const tgtEl = getEl(tgtId);
+      if (!srcEl || !tgtEl) return;
+
+      // Check if business edge for arrow direction
+      const isBizEdge = srcId?.startsWith('biz-');
+      let opts: any = noArrow;
+      if (isBizEdge) {
+        const bizIdx = parseInt(srcId.replace('biz-', ''));
+        const biz = this.businesses[bizIdx];
+        const isOutbound = biz?.businessDirection === 'OUTBOUND';
+        opts = { color: themeColor, size: 2, path: 'fluid', endPlug: 'arrow1', startPlug: 'behind' };
+        if (!isOutbound) {
+          try { this.elkLines.push(new LeaderLine(tgtEl, srcEl, opts)); } catch (e) {}
+          return;
+        }
+      }
+      try { this.elkLines.push(new LeaderLine(srcEl, tgtEl, opts)); } catch (e) {}
+    });
   }
 
   removeLines() {
@@ -357,16 +496,17 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const centerEl = this.el.nativeElement.querySelector('#channel-center-card');
     if (!centerEl) return;
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
-    const noArrow = { color: themeColor, size: 2, path: 'straight', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
+    const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
     const lineElMap = new Map<number, HTMLElement>();
-    const lineByName = new Map<string, number>(); // name → index
-    this.channelLines.forEach((line, j) => {
+    const lineByName = new Map<string, number>(); // name → index (ALL lines)
+    this.channelNodes.forEach((line, j) => {
+      lineByName.set(line.name, j);
       const el = this.el.nativeElement.querySelector(`#line-${j}`);
       if (el) {
         lineElMap.set(j, el);
-        lineByName.set(line.name, j);
       }
     });
 
@@ -375,66 +515,133 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const terminalLineIndices = new Set<number>(); // lines that connect to channel (no child points to them)
     const childTargets = new Set<number>(); // lines that are targets of other lines
 
-    this.channelLines.forEach((line, j) => {
+    this.channelNodes.forEach((line, j) => {
       if (line.isRoot) {
         rootLineIndices.add(j);
       }
     });
 
-    // Business → root lines only (match by line name, deduplicated)
+    // Business → root lines (skip hidden, connect to visible descendants with label)
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN'];
     const bizConnected = new Set<string>();
+
+    // Helper: find visible descendants of a hidden line
+    const findVisibleDescendants = (lineName: string): { idx: number; el: HTMLElement }[] => {
+      const results: { idx: number; el: HTMLElement }[] = [];
+      this.channelNodes.forEach((cl, idx) => {
+        if ((cl.sourceEndpoints || []).includes(lineName)) {
+          if (!hiddenTypes.includes(cl.nodeType)) {
+            const el = lineElMap.get(idx);
+            if (el) results.push({ idx, el });
+          } else {
+            results.push(...findVisibleDescendants(cl.name));
+          }
+        }
+      });
+      return results;
+    };
+
     this.businesses.forEach((biz, i) => {
       const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
       if (!bizEl) return;
       (biz.lines || []).forEach(bizLine => {
-        // Find merged line by name
-        const lineIdx = this.channelLines.findIndex(l => l.name === bizLine.name);
+        const lineIdx = this.channelNodes.findIndex(l => l.name === bizLine.name);
         if (lineIdx < 0) return;
-        const mergedLine = this.channelLines[lineIdx];
+        const mergedLine = this.channelNodes[lineIdx];
         if (!mergedLine.isRoot) return;
-        const key = `${i}-${mergedLine.name}`;
-        if (bizConnected.has(key)) return;
-        bizConnected.add(key);
-        const lineEl = lineElMap.get(lineIdx);
-        if (!lineEl) return;
         const isOutbound = biz.businessDirection === 'OUTBOUND';
-        try {
-          this.lines.push(new LeaderLine(
-            isOutbound ? bizEl : lineEl,
-            isOutbound ? lineEl : bizEl,
-            { color: themeColor, size: 2, path: 'straight',
-              startSocket: 'right', endSocket: 'left',
-              endPlug: 'arrow1', startPlug: 'behind' }
-          ));
-        } catch (e) {}
+
+        if (hiddenTypes.includes(mergedLine.nodeType)) {
+          // Hidden root: connect business to visible descendants with label
+          const descendants = findVisibleDescendants(mergedLine.name);
+          descendants.forEach(d => {
+            const key = `${i}-${d.idx}`;
+            if (bizConnected.has(key)) return;
+            bizConnected.add(key);
+            try {
+              this.lines.push(new LeaderLine(bizEl, d.el,
+                { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
+                  startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
+                  middleLabel: LeaderLine.captionLabel(mergedLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) }
+              ));
+            } catch (e) {}
+          });
+        } else {
+          const key = `${i}-${mergedLine.name}`;
+          if (bizConnected.has(key)) return;
+          bizConnected.add(key);
+          const lineEl = lineElMap.get(lineIdx);
+          if (!lineEl) return;
+          try {
+            this.lines.push(new LeaderLine(bizEl, lineEl,
+              { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
+                startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind' }
+            ));
+          } catch (e) {}
+        }
       });
     });
 
-    // Line → Line (non-root connects to lines whose name is in sourceEndpoints)
-    this.channelLines.forEach((line, j) => {
+    // Line → Line: for each visible line, connect to all visible parents in sourceEndpoints
+    const lineConnected = new Set<string>();
+    this.channelNodes.forEach((line, j) => {
       if (line.isRoot) return;
+      if (hiddenTypes.includes(line.nodeType)) return;
+      const childEl = lineElMap.get(j);
+      if (!childEl) return;
       (line.sourceEndpoints || []).forEach(sep => {
         if (sep === '.') return;
         const parentIdx = lineByName.get(sep);
         if (parentIdx === undefined) return;
-        const parentEl = lineElMap.get(parentIdx);
-        const childEl = lineElMap.get(j);
-        if (!parentEl || !childEl) return;
-        try { this.lines.push(new LeaderLine(parentEl, childEl, noArrow)); } catch (e) {}
+        const parentLine = this.channelNodes[parentIdx];
+        if (hiddenTypes.includes(parentLine.nodeType)) {
+          // Hidden parent: label the line with hidden type, connect to hidden parent's visible parents
+          (parentLine.sourceEndpoints || []).forEach(gSep => {
+            if (gSep === '.') return;
+            const gIdx = lineByName.get(gSep);
+            if (gIdx === undefined) return;
+            const gEl = lineElMap.get(gIdx);
+            if (!gEl) return;
+            const key = `${gIdx}-${j}-${parentLine.nodeType}`;
+            if (lineConnected.has(key)) return;
+            lineConnected.add(key);
+            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, middleLabel: LeaderLine.captionLabel(parentLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
+          });
+        } else {
+          const parentEl = lineElMap.get(parentIdx);
+          if (!parentEl) return;
+          const key = `${parentIdx}-${j}`;
+          if (lineConnected.has(key)) return;
+          lineConnected.add(key);
+          try { this.lines.push(new LeaderLine(parentEl, childEl, noArrow)); } catch (e) {}
+        }
       });
     });
 
-    // Terminal lines → Channel
-    // Lines with linkedChannel → Channel
-    this.channelLines.forEach((line, j) => {
+    // Hidden lines with linkedChannel → connect their parents to channel with label
+    this.channelNodes.forEach((line, j) => {
       if (!line.linkedChannel) return;
-      const lineEl = lineElMap.get(j);
-      if (!lineEl) return;
-      try { this.lines.push(new LeaderLine(lineEl, centerEl, noArrow)); } catch (e) {}
+      if (hiddenTypes.includes(line.nodeType)) {
+        (line.sourceEndpoints || []).forEach(sep => {
+          if (sep === '.') return;
+          const parentIdx = lineByName.get(sep);
+          if (parentIdx === undefined) return;
+          const parentEl = lineElMap.get(parentIdx);
+          if (!parentEl) return;
+          const label = { middleLabel: LeaderLine.captionLabel(line.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) };
+          try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...label })); } catch (e) {}
+        });
+      } else {
+        const lineEl = lineElMap.get(j);
+        if (!lineEl) return;
+        const nodeType = line.nodeType;
+        const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(nodeType, { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};
+        try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...label })); } catch (e) {}
+      }
     });
 
     // If no lines, Business → Channel directly
-    if (!this.channelLines.length) {
+    if (!this.channelNodes.length) {
       this.businesses.forEach((_, i) => {
         const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
         if (!bizEl) return;
@@ -448,5 +655,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (!orgEl) return;
       try { this.lines.push(new LeaderLine(centerEl, orgEl, noArrow)); } catch (e) {}
     });
+
+    // Force leader-line SVGs to top layer
+    setTimeout(() => {
+      document.querySelectorAll('body > .leader-line').forEach((svg: any) => {
+        svg.style.zIndex = '10000';
+      });
+    }, 100);
   }
 }

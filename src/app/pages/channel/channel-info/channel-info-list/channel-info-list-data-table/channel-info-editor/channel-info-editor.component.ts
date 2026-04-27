@@ -20,6 +20,7 @@ export class ChannelInfoEditorComponent implements OnInit {
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
   formData: ChannelInfoVO;
+  editorTab: string | number = 'basic';
 
   countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
 

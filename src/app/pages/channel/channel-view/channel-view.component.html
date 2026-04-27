@@ -96,17 +96,21 @@
       </div>
 
       <div class="line-column" *ngFor="let level of lineLevels">
-        <div *ngFor="let line of level" class="line-item" [class.line-compact]="isNetworkLine(line.lineType)" [id]="'line-' + getLineIndex(line)" [class.editable]="editMode" (click)="onEditLine(line)">
-          <i class="fas fa-server" *ngIf="line.lineType === 'IDC'"></i>
-          <i class="fas fa-cloud" *ngIf="line.lineType === 'CLOUD'"></i>
-          <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.lineType)"></i>
-          <div class="line-content" *ngIf="!isNetworkLine(line.lineType)">
-            <div class="line-name">{{ line.name }}</div>
-            <d-tag *ngIf="line.lineType" [tag]="line.lineType" [labelStyle]="'blue-w98'"></d-tag>
+        <ng-container *ngFor="let line of level">
+          <div *ngIf="line.nodeType !== 'LEASED_LINE' && line.nodeType !== 'IPSEC_VPN'"
+               class="line-item" [class.line-compact]="isNetworkLine(line.nodeType)"
+               [id]="'line-' + getLineIndex(line)" [class.editable]="editMode" (click)="onEditLine(line)">
+            <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
+            <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
+            <i class="fas fa-sitemap" *ngIf="isNetworkLine(line.nodeType)"></i>
+            <div class="line-content" *ngIf="!isNetworkLine(line.nodeType)">
+              <div class="line-name">{{ line.name }}</div>
+              <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+            </div>
+            <span *ngIf="isNetworkLine(line.nodeType)" class="line-name">{{ line.name }}</span>
+            <d-tag *ngIf="isNetworkLine(line.nodeType)" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
           </div>
-          <span *ngIf="isNetworkLine(line.lineType)" class="line-name">{{ line.name }}</span>
-          <d-tag *ngIf="isNetworkLine(line.lineType)" [tag]="line.lineType" [labelStyle]="'blue-w98'"></d-tag>
-        </div>
+        </ng-container>
       </div>
 
       <div class="center-card" id="channel-center-card" [class.editable]="editMode" (click)="onEditChannel()">
@@ -155,6 +159,7 @@
       ></app-kubernetes-workloads>
       <div *ngIf="!k8sLoading && deploymentList.length === 0" class="no-data">No deployments found</div>
     </div>
+
   </div>
 
   <!-- Empty State -->

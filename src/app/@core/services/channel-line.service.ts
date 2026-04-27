@@ -2,47 +2,47 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult, OptionsVO } from '../data/base-data';
 import { ApiService } from './api.service';
-import { ChannelLineEdit, ChannelLinePageQuery, ChannelLineVO } from '../data/channel-line';
+import { ChannelNodeEdit, ChannelNodePageQuery, ChannelNodeVO } from '../data/channel-line';
 
 @Injectable()
-export class ChannelLineService {
+export class ChannelNodeService {
 
-  baseUrl = '/channel/line';
-  bizLineUrl = '/channel/business/line';
+  baseUrl = '/channel/node';
+  bizNodeUrl = '/channel/business/node';
 
   constructor(private apiService: ApiService) {
   }
 
-  queryChannelLinePage(param: ChannelLinePageQuery): Observable<DataTable<ChannelLineVO>> {
+  queryChannelNodePage(param: ChannelNodePageQuery): Observable<DataTable<ChannelNodeVO>> {
     return this.apiService.post(this.baseUrl, '/page/query', param);
   }
 
-  addChannelLine(param: ChannelLineEdit): Observable<HttpResult<Boolean>> {
+  addChannelNode(param: ChannelNodeEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/add', param);
   }
 
-  updateChannelLine(param: ChannelLineEdit): Observable<HttpResult<Boolean>> {
+  updateChannelNode(param: ChannelNodeEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/update', param);
   }
 
-  deleteChannelLineById(param: { id: number }): Observable<HttpResult<Boolean>> {
+  deleteChannelNodeById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.baseUrl, '/del', param);
   }
 
-  setChannelLineValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
+  setChannelNodeValidById(param: { id: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.putByParam(this.baseUrl, '/valid/set', param);
   }
 
-  // Business Line
-  queryChannelBusinessLines(param: { channelBusinessId: number }): Observable<HttpResult<any[]>> {
-    return this.apiService.get(this.bizLineUrl, '/query', param);
+  // Business Node
+  queryChannelBusinessNodes(param: { channelBusinessId: number }): Observable<HttpResult<any[]>> {
+    return this.apiService.get(this.bizNodeUrl, '/query', param);
   }
 
-  addChannelBusinessLine(param: { channelBusinessId: number; channelLineId: number; valid: boolean; comment: string }): Observable<HttpResult<Boolean>> {
-    return this.apiService.post(this.bizLineUrl, '/add', param);
+  addChannelBusinessNode(param: { channelBusinessId: number; channelNodeId: number; valid: boolean; comment: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.bizNodeUrl, '/add', param);
   }
 
-  deleteChannelBusinessLineById(param: { id: number }): Observable<HttpResult<Boolean>> {
-    return this.apiService.delete(this.bizLineUrl, '/del', param);
+  deleteChannelBusinessNodeById(param: { id: number }): Observable<HttpResult<Boolean>> {
+    return this.apiService.delete(this.bizNodeUrl, '/del', param);
   }
 }

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormLayout } from 'ng-devui/form';
 import { DValidateRules } from 'ng-devui';
-import { ChannelLineEdit, ChannelLineVO } from '../../../../../../@core/data/channel-line';
-import { ChannelLineService } from '../../../../../../@core/services/channel-line.service';
+import { ChannelNodeEdit, ChannelNodeVO } from '../../../../../../@core/data/channel-line';
+import { ChannelNodeService } from '../../../../../../@core/services/channel-line.service';
 import { ChannelInfoService } from '../../../../../../@core/services/channel-info.service';
 
 @Component({
@@ -10,15 +10,15 @@ import { ChannelInfoService } from '../../../../../../@core/services/channel-inf
   templateUrl: './channel-line-editor.component.html',
   styleUrls: ['./channel-line-editor.component.less'],
 })
-export class ChannelLineEditorComponent implements OnInit {
+export class ChannelNodeEditorComponent implements OnInit {
 
   layoutDirection: FormLayout = FormLayout.Vertical;
   @Input() data: any;
-  formData: ChannelLineVO;
+  formData: ChannelNodeVO;
 
   channelOptions: { label: string; value: number }[] = [];
   selectedChannel: any = null;
-  lineTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET', 'CLOUD', 'IDC'];
+  nodeTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET', 'CLOUD', 'IDC'];
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -26,7 +26,7 @@ export class ChannelLineEditorComponent implements OnInit {
   };
 
   constructor(
-    private channelLineService: ChannelLineService,
+    private channelNodeService: ChannelNodeService,
     private channelInfoService: ChannelInfoService,
   ) {}
 
@@ -50,12 +50,12 @@ export class ChannelLineEditorComponent implements OnInit {
   }
 
   addForm() {
-    const param: ChannelLineEdit = { ...this.formData };
-    return this.channelLineService.addChannelLine(param);
+    const param: ChannelNodeEdit = { ...this.formData };
+    return this.channelNodeService.addChannelNode(param);
   }
 
   updateForm() {
-    const param: ChannelLineEdit = { ...this.formData };
-    return this.channelLineService.updateChannelLine(param);
+    const param: ChannelNodeEdit = { ...this.formData };
+    return this.channelNodeService.updateChannelNode(param);
   }
 }

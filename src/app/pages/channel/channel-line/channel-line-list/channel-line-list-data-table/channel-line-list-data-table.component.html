@@ -148,11 +148,11 @@
     </div>
   </div>
   <div class="hidden-nodes-legend" *ngIf="hiddenNodesList.length">
-    <span *ngFor="let node of hiddenNodesList" class="hidden-node-card">
+    <span *ngFor="let node of hiddenNodesList" class="hidden-node-card editable" (click)="onRowEdit(node)">
       <span class="hidden-num">#{{ node.hiddenNum }}</span>
       <span class="hidden-name">{{ node.name }}</span>
       <d-icon *ngIf="node.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
-              (click)="onShowNodeInfo(node)" style="font-size: 12px;"></d-icon>
+              (click)="onShowNodeInfo(node); $event.stopPropagation()" style="font-size: 12px;"></d-icon>
       <d-tag [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
     </span>
   </div>

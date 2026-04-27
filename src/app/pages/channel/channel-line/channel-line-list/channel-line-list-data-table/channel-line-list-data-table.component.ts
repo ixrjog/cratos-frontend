@@ -247,6 +247,36 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
         }
       });
     });
+
+    // LinkedChannel → Channel card
+    const channelEl = this.el.nativeElement.querySelector('#graph-channel-card');
+    if (channelEl) {
+      this.allLines.forEach((line, j) => {
+        if (!line.linkedChannel) return;
+        if (hiddenTypes.includes(line.nodeType)) {
+          // Hidden: connect parents to channel with label
+          (line.sourceEndpoints || []).forEach(sep => {
+            if (sep === '.') return;
+            const pIdx = lineByName.get(sep);
+            if (pIdx === undefined) return;
+            const pEl = lineElMap.get(pIdx);
+            if (!pEl) return;
+            const sockets = getSocketPair(`${pIdx}-channel`);
+            try {
+              this.leaderLines.push(new LeaderLine(pEl, channelEl, { ...noArrow, ...sockets,
+                dash: this.isDashedType(line.nodeType),
+                middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: '#fff', outlineColor: '', fontSize: '9px'})
+              }));
+            } catch (e) {}
+          });
+        } else {
+          const lineEl = lineElMap.get(j);
+          if (!lineEl) return;
+          const sockets = getSocketPair(`${j}-channel`);
+          try { this.leaderLines.push(new LeaderLine(lineEl, channelEl, { ...noArrow, ...sockets })); } catch (e) {}
+        }
+      });
+    }
   }
 
   fetchChannels() {

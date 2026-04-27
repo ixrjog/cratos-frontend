@@ -123,6 +123,11 @@
         </div>
       </ng-container>
     </div>
+    <div class="channel-card" id="graph-channel-card" *ngIf="selectedChannel">
+      <div class="card-inner">
+        <div class="card-title"><i class="fab fa-instalod" style="margin-right: 6px;"></i>{{ selectedChannel.label }}</div>
+      </div>
+    </div>
   </div>
   <div class="hidden-nodes-legend" *ngIf="hiddenNodesList.length">
     <span *ngFor="let node of hiddenNodesList" class="hidden-node-card">

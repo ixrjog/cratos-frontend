@@ -51,6 +51,13 @@
     </d-column>
     <d-column field="sourceEndpoint" header="Source Endpoint"></d-column>
     <d-column field="channelName" header="Channel"></d-column>
+    <d-column field="linkedChannel" header="Linked to Channel">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <i *ngIf="cellItem" class="icon-right" style="color: #3dcca6;"></i>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="monitorUrl" header="Monitor URL">
       <d-cell>
         <ng-template let-cellItem="cellItem">

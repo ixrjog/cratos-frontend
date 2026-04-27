@@ -42,7 +42,7 @@ export class ChannelNodeService {
     return this.apiService.post(this.bizNodeUrl, '/add', param);
   }
 
-  deleteChannelBusinessNodeById(param: { id: number }): Observable<HttpResult<Boolean>> {
+  deleteChannelBusinessNodeById(param: { businessId: number; nodeId: number }): Observable<HttpResult<Boolean>> {
     return this.apiService.delete(this.bizNodeUrl, '/del', param);
   }
 }

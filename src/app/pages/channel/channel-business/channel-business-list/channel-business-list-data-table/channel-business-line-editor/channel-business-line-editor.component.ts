@@ -66,7 +66,7 @@ export class ChannelBusinessLineEditorComponent implements OnInit {
 
   onRemoveLine(linked: any) {
     console.log('Delete linked:', linked);
-    this.channelNodeService.deleteChannelBusinessNodeById({ businessId: this.channelBusinessId, nodeId: linked.channelNodeId })
+    this.channelNodeService.deleteChannelBusinessNodeById({ businessId: this.channelBusinessId, nodeId: linked.id })
       .subscribe(() => {
         this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
         this.fetchLinkedLines();

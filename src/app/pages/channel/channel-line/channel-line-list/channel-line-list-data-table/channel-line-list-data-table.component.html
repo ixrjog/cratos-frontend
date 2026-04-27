@@ -109,8 +109,8 @@
         <div *ngIf="!isNetworkLine(line.nodeType)" class="graph-item" [id]="'graph-line-' + getLineIndex(line)">
           <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
           <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
-          <div class="graph-name-content">
-            <span class="graph-name">{{ line.name }}</span>
+          <div class="line-content">
+            <div class="graph-name">{{ line.name }}</div>
             <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
           </div>
         </div>

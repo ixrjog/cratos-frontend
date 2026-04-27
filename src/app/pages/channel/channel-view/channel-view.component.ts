@@ -387,7 +387,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     // Edges: business → root lines
     this.businesses.forEach((biz, i) => {
       const connected = new Set<string>();
-      (biz.lines || []).forEach(bizLine => {
+      (biz.nodes || []).forEach(bizLine => {
         const lineIdx = this.channelNodes.findIndex(l => l.name === bizLine.name);
         if (lineIdx >= 0 && this.channelNodes[lineIdx].isRoot && !connected.has(`${lineIdx}`)) {
           connected.add(`${lineIdx}`);
@@ -521,6 +521,33 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       }
     });
 
+    // Shared connection counter for socket distribution
+    const pairCount = new Map<string, number>();
+    const getSocketPair = (pairKey: string, sameColumn = false) => {
+      const count = pairCount.get(pairKey) || 0;
+      pairCount.set(pairKey, count + 1);
+      if (sameColumn) {
+        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      }
+      if (count === 0) return { startSocket: 'right', endSocket: 'left' };
+      if (count === 1) return { startSocket: 'top', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      return { startSocket: 'bottom', endSocket: 'bottom', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+    };
+
+    // Build column map: nodeIdx → column index
+    const nodeColumnMap = new Map<number, number>();
+    this.lineLevels.forEach((level, colIdx) => {
+      level.forEach(line => {
+        const idx = this.channelNodes.findIndex(l => l.name === line.name);
+        if (idx >= 0) nodeColumnMap.set(idx, colIdx);
+      });
+    });
+    const isSameColumn = (idx1: number, idx2: number) => {
+      return nodeColumnMap.has(idx1) && nodeColumnMap.has(idx2) && nodeColumnMap.get(idx1) === nodeColumnMap.get(idx2);
+    };
+
     // Business → root lines (skip hidden, connect to visible descendants with label)
     const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN'];
     const bizConnected = new Set<string>();
@@ -544,7 +571,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.businesses.forEach((biz, i) => {
       const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
       if (!bizEl) return;
-      (biz.lines || []).forEach(bizLine => {
+      (biz.nodes || []).forEach(bizLine => {
         const lineIdx = this.channelNodes.findIndex(l => l.name === bizLine.name);
         if (lineIdx < 0) return;
         const mergedLine = this.channelNodes[lineIdx];
@@ -583,7 +610,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
 
     // Line → Line: for each visible line, connect to all visible parents in sourceEndpoints
-    const lineConnected = new Set<string>();
+    // Line → Line
     this.channelNodes.forEach((line, j) => {
       if (line.isRoot) return;
       if (hiddenTypes.includes(line.nodeType)) return;
@@ -595,25 +622,22 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         if (parentIdx === undefined) return;
         const parentLine = this.channelNodes[parentIdx];
         if (hiddenTypes.includes(parentLine.nodeType)) {
-          // Hidden parent: label the line with hidden type, connect to hidden parent's visible parents
           (parentLine.sourceEndpoints || []).forEach(gSep => {
             if (gSep === '.') return;
             const gIdx = lineByName.get(gSep);
             if (gIdx === undefined) return;
             const gEl = lineElMap.get(gIdx);
             if (!gEl) return;
-            const key = `${gIdx}-${j}-${parentLine.nodeType}`;
-            if (lineConnected.has(key)) return;
-            lineConnected.add(key);
-            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, middleLabel: LeaderLine.captionLabel(parentLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
+            const pairKey = `${gIdx}-${j}`;
+            const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j));
+            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, middleLabel: LeaderLine.captionLabel(parentLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
           const parentEl = lineElMap.get(parentIdx);
           if (!parentEl) return;
-          const key = `${parentIdx}-${j}`;
-          if (lineConnected.has(key)) return;
-          lineConnected.add(key);
-          try { this.lines.push(new LeaderLine(parentEl, childEl, noArrow)); } catch (e) {}
+          const pairKey = `${parentIdx}-${j}`;
+          const sockets = getSocketPair(pairKey, isSameColumn(parentIdx, j));
+          try { this.lines.push(new LeaderLine(parentEl, childEl, { ...noArrow, ...sockets })); } catch (e) {}
         }
       });
     });
@@ -629,14 +653,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           const parentEl = lineElMap.get(parentIdx);
           if (!parentEl) return;
           const label = { middleLabel: LeaderLine.captionLabel(line.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) };
-          try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...label })); } catch (e) {}
+          const sockets = getSocketPair(`${parentIdx}-channel`);
+          try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
         });
       } else {
         const lineEl = lineElMap.get(j);
         if (!lineEl) return;
         const nodeType = line.nodeType;
         const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(nodeType, { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};
-        try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...label })); } catch (e) {}
+        const sockets = getSocketPair(`${j}-channel`);
+        try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
       }
     });
 
@@ -653,7 +679,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.organizations.forEach(org => {
       const orgEl = this.el.nativeElement.querySelector(`#org-${org.id}`);
       if (!orgEl) return;
-      try { this.lines.push(new LeaderLine(centerEl, orgEl, noArrow)); } catch (e) {}
+      const sockets = getSocketPair(`channel-org-${org.id}`);
+      try { this.lines.push(new LeaderLine(centerEl, orgEl, { ...noArrow, ...sockets })); } catch (e) {}
     });
 
     // Force leader-line SVGs to top layer

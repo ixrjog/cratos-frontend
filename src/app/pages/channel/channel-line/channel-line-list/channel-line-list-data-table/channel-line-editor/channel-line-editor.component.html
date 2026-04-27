@@ -1,5 +1,9 @@
 <section>
-  <form dForm ngForm [dValidateRules]="formRules['rule']" [layout]="layoutDirection">
+  <d-tabs [activeTab]="editorTab" (activeTabChange)="editorTab = $any($event)">
+    <d-tab id="basic" [title]="'Basic'"></d-tab>
+    <d-tab id="nodeInfo" [title]="'Node Info'"></d-tab>
+  </d-tabs>
+  <form dForm ngForm [dValidateRules]="formRules['rule']" [layout]="layoutDirection" *ngIf="editorTab === 'basic'">
     <d-form-item>
       <d-form-label [required]="true">Name</d-form-label>
       <d-form-control>
@@ -54,11 +58,8 @@
         <textarea dTextarea name="comment" maxlength="200" style="height: 80px" [(ngModel)]="formData.comment"></textarea>
       </d-form-control>
     </d-form-item>
-    <d-form-item>
-      <d-form-label>Node Info</d-form-label>
-      <d-form-control>
-        <textarea dTextarea name="nodeInfo" style="height: 160px" [(ngModel)]="formData.nodeInfo"></textarea>
-      </d-form-control>
-    </d-form-item>
   </form>
+  <div *ngIf="editorTab === 'nodeInfo'" style="padding-top: 12px;">
+    <textarea dTextarea name="nodeInfo" style="width: 100%; height: 300px;" [(ngModel)]="formData.nodeInfo"></textarea>
+  </div>
 </section>

@@ -55,7 +55,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
   };
 
   dialogDate = {
-    editorData: { ...DIALOG_DATA.editorData, content: ChannelNodeEditorComponent },
+    editorData: { ...DIALOG_DATA.editorData, width: '600px', content: ChannelNodeEditorComponent },
     warningOperateData: { ...DIALOG_DATA.warningOperateData },
     content: { ...DIALOG_DATA.content },
   };

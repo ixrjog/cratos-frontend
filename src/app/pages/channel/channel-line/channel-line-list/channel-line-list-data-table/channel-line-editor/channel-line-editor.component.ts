@@ -19,6 +19,7 @@ export class ChannelNodeEditorComponent implements OnInit {
   channelOptions: { label: string; value: number }[] = [];
   selectedChannel: any = null;
   nodeTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET', 'CLOUD', 'IDC'];
+  editorTab = 'basic';
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },

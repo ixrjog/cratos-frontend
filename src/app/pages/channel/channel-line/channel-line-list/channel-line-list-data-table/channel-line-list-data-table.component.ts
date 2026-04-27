@@ -19,6 +19,9 @@ declare var LeaderLine: any;
 })
 export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, AfterViewChecked {
 
+  static readonly COUNTRY_STORAGE_KEY = 'channel_node_country';
+  static readonly CHANNEL_STORAGE_KEY = 'channel_node_channel';
+
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -250,13 +253,30 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 200 })
       .subscribe(({ body }) => {
         this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id, country: c.country }));
+        // Restore saved state
+        const savedCountry = localStorage.getItem(ChannelNodeListDataTableComponent.COUNTRY_STORAGE_KEY) || '';
+        const savedChannel = localStorage.getItem(ChannelNodeListDataTableComponent.CHANNEL_STORAGE_KEY);
+        this.selectedCountry = savedCountry;
         this.filterChannelOptions();
+        if (savedChannel) {
+          try {
+            const ch = JSON.parse(savedChannel);
+            const match = this.filteredChannelOptions.find(o => o.value === ch.value);
+            if (match) {
+              this.selectedChannel = match;
+              this.queryParam.channelId = match.value;
+              this.fetchData();
+            }
+          } catch (e) {}
+        }
       });
   }
 
   onCountryChange(cc: any) {
     this.selectedCountry = cc as string;
+    localStorage.setItem(ChannelNodeListDataTableComponent.COUNTRY_STORAGE_KEY, this.selectedCountry);
     this.selectedChannel = null;
+    localStorage.removeItem(ChannelNodeListDataTableComponent.CHANNEL_STORAGE_KEY);
     this.filterChannelOptions();
   }
 
@@ -268,6 +288,11 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
 
   onChannelChange(selected: any) {
     this.queryParam.channelId = selected?.value || null;
+    if (selected) {
+      localStorage.setItem(ChannelNodeListDataTableComponent.CHANNEL_STORAGE_KEY, JSON.stringify(selected));
+    } else {
+      localStorage.removeItem(ChannelNodeListDataTableComponent.CHANNEL_STORAGE_KEY);
+    }
     this.removeLines();
     this.lineLevels = [];
     if (this.queryParam.channelId) this.fetchData();

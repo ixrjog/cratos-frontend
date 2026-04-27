@@ -36,6 +36,12 @@
     align-items: center;
     gap: 8px;
 
+    &.editable {
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      &:hover { box-shadow: 0 0 0 2px var(--devui-brand, #5e7ce0); }
+    }
+
     .graph-name {
       font-weight: 500;
       color: var(--devui-text, #252b3a);

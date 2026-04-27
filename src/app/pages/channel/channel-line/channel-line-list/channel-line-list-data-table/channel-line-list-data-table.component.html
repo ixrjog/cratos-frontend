@@ -68,6 +68,14 @@
       </d-cell>
     </d-column>
     <d-column field="comment" header="Comment"></d-column>
+    <d-column field="nodeInfo" header="Node Info">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon *ngIf="rowItem.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
+                  (click)="onShowNodeInfo(rowItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Actions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -107,6 +115,12 @@
     (pageSizeChange)="pageSizeChange($event)"
   ></d-pagination>
 </div>
+<!-- Node Info Dialog -->
+<ng-template #nodeInfoTemplate>
+  <div style="overflow: auto; padding: 20px;">
+    <markdown lineNumbers lineHighlight mermaid [data]="nodeInfoContent" [disableSanitizer]="true"></markdown>
+  </div>
+</ng-template>
 <!-- Line Graph -->
 <div class="line-graph" *ngIf="lineLevels.length">
   <h5 class="graph-title">Node Topology</h5>

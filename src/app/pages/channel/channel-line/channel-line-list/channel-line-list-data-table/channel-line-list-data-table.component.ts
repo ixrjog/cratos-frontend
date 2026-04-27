@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
-import { DataTableComponent } from 'ng-devui';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild, TemplateRef } from '@angular/core';
+import { DataTableComponent, DialogService } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../../@core/data/base-data';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../../@shared/utils/toast.util';
@@ -64,6 +64,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     private channelNodeService: ChannelNodeService,
     private channelInfoService: ChannelInfoService,
     private dialogUtil: DialogUtil,
+    private dialogService: DialogService,
     private toastUtil: ToastUtil,
     private el: ElementRef,
   ) {}
@@ -363,6 +364,23 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
       let obList: Observable<HttpResult<Boolean>>[] = [];
       this.datatable.getCheckedRows().map(row => obList.push(this.channelNodeService.deleteChannelNodeById({ id: row.id })));
       zip(obList).subscribe(() => { this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE); this.fetchData(); });
+    });
+  }
+
+  @ViewChild('nodeInfoTemplate') nodeInfoTemplate: TemplateRef<any>;
+  nodeInfoContent = '';
+
+  onShowNodeInfo(rowItem: ChannelNodeVO) {
+    this.nodeInfoContent = (rowItem.nodeInfo || '').replace(/<br\s*\/?>/gi, '\n\n');
+    this.dialogService.open({
+      id: 'node-info-dialog',
+      width: '60%',
+      maxHeight: '800px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: rowItem.name + ' - Node Info',
+      contentTemplate: this.nodeInfoTemplate,
+      buttons: [],
     });
   }
 

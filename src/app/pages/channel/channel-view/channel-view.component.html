@@ -153,6 +153,29 @@
       </span>
     </div>
 
+    <!-- Node Topology -->
+    <div class="node-topology" *ngIf="lineLevels.length">
+      <h5 class="graph-title">Node Topology</h5>
+      <div class="graph-content">
+        <div class="graph-column" *ngFor="let level of lineLevels">
+          <ng-container *ngFor="let line of level">
+            <div *ngIf="!isNetworkLine(line.nodeType)" class="graph-item" [id]="'topo-line-' + getLineIndex(line)"
+                 [class.editable]="editMode" (click)="onEditLine(line)">
+              <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
+              <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
+              <div class="line-content">
+                <div class="line-name">{{ line.name }}
+                  <d-icon *ngIf="line.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
+                          (click)="onShowNodeInfo(line); $event.stopPropagation()" style="margin-left: 4px; font-size: 12px;"></d-icon>
+                </div>
+                <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
     <div class="divider"></div>
 
     <!-- Section 4: Kubernetes Deployments -->

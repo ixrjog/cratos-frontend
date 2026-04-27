@@ -166,6 +166,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
   @ViewChild('fullDocTemplate') fullDocTemplate: TemplateRef<any>;
   @ViewChild('callDialogTemplate') callDialogTemplate: TemplateRef<any>;
+  @ViewChild('nodeInfoTemplate') nodeInfoTemplate: TemplateRef<any>;
+  nodeInfoContent = '';
 
   callUserList: { name: string; role: string; checked: boolean }[] = [];
   callSelectAll = true;
@@ -246,6 +248,20 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       dialogtype: 'standard',
       title: 'Network Info',
       contentTemplate: this.fullDocTemplate,
+      buttons: [],
+    });
+  }
+
+  onShowNodeInfo(line: any) {
+    this.nodeInfoContent = (line.nodeInfo || '').replace(/<br\s*\/?>/gi, '\n\n');
+    this.dialogService.open({
+      id: 'node-info-dialog',
+      width: '60%',
+      maxHeight: '800px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: line.name + ' - Node Info',
+      contentTemplate: this.nodeInfoTemplate,
       buttons: [],
     });
   }

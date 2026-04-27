@@ -437,3 +437,31 @@
 ::ng-deep .leader-line {
   z-index: 10 !important;
 }
+
+.hidden-nodes-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+
+  .hidden-node-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    padding: 6px 10px;
+    background: var(--devui-base-bg, #fff);
+
+    .hidden-num {
+      font-weight: 700;
+      color: var(--devui-brand, #5e7ce0);
+      font-size: 12px;
+    }
+
+    .hidden-name {
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+}

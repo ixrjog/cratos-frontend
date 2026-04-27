@@ -139,6 +139,15 @@
       </div>
     </div>
 
+    <!-- Hidden Nodes Legend -->
+    <div class="hidden-nodes-legend" *ngIf="hiddenNodesList.length">
+      <span *ngFor="let node of hiddenNodesList" class="hidden-node-card">
+        <span class="hidden-num">#{{ node.hiddenNum }}</span>
+        <span class="hidden-name">{{ node.name }}</span>
+        <d-tag [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+      </span>
+    </div>
+
     <div class="divider"></div>
 
     <!-- Section 4: Kubernetes Deployments -->

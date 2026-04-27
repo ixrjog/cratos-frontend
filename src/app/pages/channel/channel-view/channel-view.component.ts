@@ -33,7 +33,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
   channelNodes: any[] = [];
-  lineLevels: any[][] = []; // lines grouped by level for layout
+  lineLevels: any[][] = [];
+  hiddenNodesList: any[] = [];
   lines: any[] = [];
   elkNodes: any[] = [];
   elkLines: any[] = [];
@@ -322,6 +323,15 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 
+  getHiddenLabel(nodeName: string): string {
+    const node = this.hiddenNodesList.find(n => n.name === nodeName);
+    return node ? `#${node.hiddenNum} ${node.nodeType}` : '';
+  }
+
+  isDashedType(nodeType: string): boolean {
+    return nodeType === 'IPSEC_VPN' || nodeType === 'INTERNET';
+  }
+
   computeLineLevels() {
     this.lineLevels = [];
     if (!this.channelNodes.length) return;
@@ -356,6 +366,18 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
     // Update channelNodes to merged version for drawLines
     this.channelNodes = mergedLines;
+
+    // Assign numbers to hidden nodes
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
+    let num = 1;
+    this.hiddenNodesList = mergedLines
+      .filter(l => hiddenTypes.includes(l.nodeType))
+      .map(l => ({ ...l, hiddenNum: num++ }));
+    // Also set hiddenNum on channelNodes for label lookup
+    this.hiddenNodesList.forEach(h => {
+      const node = this.channelNodes.find(n => n.name === h.name);
+      if (node) node.hiddenNum = h.hiddenNum;
+    });
     this.computeElkLayout();
   }
 
@@ -589,7 +611,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
               this.lines.push(new LeaderLine(bizEl, d.el,
                 { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
                   startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
-                  middleLabel: LeaderLine.captionLabel(mergedLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) }
+                  middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'}),
+                  dash: this.isDashedType(mergedLine.nodeType) }
               ));
             } catch (e) {}
           });
@@ -630,7 +653,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             if (!gEl) return;
             const pairKey = `${gIdx}-${j}`;
             const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j));
-            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, middleLabel: LeaderLine.captionLabel(parentLine.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
+            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: '#fff', outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
           const parentEl = lineElMap.get(parentIdx);
@@ -652,7 +675,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           if (parentIdx === undefined) return;
           const parentEl = lineElMap.get(parentIdx);
           if (!parentEl) return;
-          const label = { middleLabel: LeaderLine.captionLabel(line.nodeType, {color: '#fff', outlineColor: '', fontSize: '9px'}) };
+          const label = { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: '#fff', outlineColor: '', fontSize: '9px'}), dash: this.isDashedType(line.nodeType) };
           const sockets = getSocketPair(`${parentIdx}-channel`);
           try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
         });
@@ -660,7 +683,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const lineEl = lineElMap.get(j);
         if (!lineEl) return;
         const nodeType = line.nodeType;
-        const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(nodeType, { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};
+        const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), { color: '#fff', outlineColor: '', fontSize: '9px' }) } : {};
         const sockets = getSocketPair(`${j}-channel`);
         try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
       }

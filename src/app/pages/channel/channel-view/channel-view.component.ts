@@ -96,10 +96,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.isDrawing) return;
     if (this.redrawTimer) clearTimeout(this.redrawTimer);
     this.redrawTimer = setTimeout(() => {
-      this.isDrawing = true;
-      this.drawLines();
-      this.isDrawing = false;
-    }, 200);
+      requestAnimationFrame(() => {
+        this.isDrawing = true;
+        this.drawLines();
+        this.isDrawing = false;
+      });
+    }, 300);
   }
 
   ngAfterViewChecked() {

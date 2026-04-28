@@ -9,6 +9,8 @@ import { TOAST_CONTENT, ToastUtil } from '../../../../../../@shared/utils/toast.
 import { onFetchValidData } from '../../../../../../@shared/utils/data-table.utli';
 import { EdsService } from '../../../../../../@core/services/ext-datasource.service.s';
 import { AssetPageQuery, EdsAssetVO, EdsInstanceVO, InstancePageQuery } from '../../../../../../@core/data/ext-datasource';
+import { CertificateService } from '../../../../../../@core/services/certificate.service';
+import { CertificatePageQuery, CertificateVO } from '../../../../../../@core/data/certificate';
 
 const EDS_TYPE_ASSET_MAP: { [key: string]: string } = {
   ALIYUN: 'ALIYUN_ECS',
@@ -44,6 +46,10 @@ export class ChannelExtensionEditorComponent implements OnInit {
 
   // Server
   edsTypeOptions: { label: string; value: string }[] = [];
+
+  // Certificate
+  certQueryParam = { queryName: '' };
+  certTable: Table<CertificateVO> = JSON.parse(JSON.stringify(TABLE_DATA));
   selectedEdsType = '';
   instanceOptions: string[] = [];
   instanceMap: { [name: string]: number } = {};
@@ -55,6 +61,7 @@ export class ChannelExtensionEditorComponent implements OnInit {
     private applicationService: ApplicationService,
     private userService: UserService,
     private edsService: EdsService,
+    private certificateService: CertificateService,
     private channelInfoService: ChannelInfoService,
     private toastUtil: ToastUtil,
   ) {
@@ -66,6 +73,7 @@ export class ChannelExtensionEditorComponent implements OnInit {
     this.fetchAppData();
     this.fetchUserData();
     this.fetchEdsTypeOptions();
+    this.fetchCertData();
   }
 
   onTabChange(tab: any) {
@@ -220,6 +228,23 @@ export class ChannelExtensionEditorComponent implements OnInit {
       this.toastUtil.onSuccessToast(TOAST_CONTENT.ADD);
       this.fetchExtensions();
     });
+  }
+
+  // Certificate
+  fetchCertData() {
+    const param: CertificatePageQuery = {
+      queryName: this.certQueryParam.queryName,
+      page: this.certTable.pager.pageIndex,
+      length: this.certTable.pager.pageSize,
+    };
+    onFetchValidData(this.certTable, this.certificateService.queryCertificatePage(param));
+  }
+
+  certPageIndexChange(p) { this.certTable.pager.pageIndex = p; this.fetchCertData(); }
+  certPageSizeChange(s) { this.certTable.pager.pageSize = s; this.fetchCertData(); }
+
+  onAddCertificate(rowItem: CertificateVO) {
+    this.addExtension('CERTIFICATE', rowItem.id, rowItem.name);
   }
 
   // Common

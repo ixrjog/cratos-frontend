@@ -30,6 +30,15 @@
              (tagDelete)="onDeleteExtension(ext)">
       </d-tag>
     </div>
+    <!-- CERTIFICATE: tag style -->
+    <div *ngIf="activeTab === 'CERTIFICATE'" style="display: flex; flex-wrap: wrap; gap: 6px;">
+      <d-tag *ngFor="let ext of filteredExtensions"
+             [tag]="ext.name"
+             [labelStyle]="'blue-w98'"
+             [deletable]="true"
+             (tagDelete)="onDeleteExtension(ext)">
+      </d-tag>
+    </div>
   </div>
 
   <!-- Add New -->
@@ -37,6 +46,7 @@
     <d-tab [id]="'APPLICATION'" [title]="'Application'"></d-tab>
     <d-tab [id]="'USER'" [title]="'User'"></d-tab>
     <d-tab [id]="'EDS_ASSET'" [title]="'Server'"></d-tab>
+    <d-tab [id]="'CERTIFICATE'" [title]="'Certificate'"></d-tab>
   </d-tabs>
 
   <!-- Application -->
@@ -177,6 +187,48 @@
       [maxItems]="5"
       (pageIndexChange)="serverPageIndexChange($event)"
       (pageSizeChange)="serverPageSizeChange($event)"
+    ></d-pagination>
+  </div>
+
+  <!-- Certificate -->
+  <div *ngIf="activeTab === 'CERTIFICATE'" style="margin-top: 10px;">
+    <d-search
+      [(ngModel)]="certQueryParam.queryName"
+      [iconPosition]="'left'"
+      [placeholder]="'Search Certificate'"
+      (searchFn)="fetchCertData()"
+      (change)="fetchCertData()"
+    ></d-search>
+    <d-data-table
+      dLoading
+      [dataSource]="certTable.data"
+      [scrollable]="true"
+      [loading]="certTable.loading"
+      [tableOverflowType]="'overlay'"
+      [maxHeight]="'300px'"
+      style="margin-top: 8px;"
+    >
+      <d-column field="name" header="Name"></d-column>
+      <d-column field="domainName" header="Domain"></d-column>
+      <d-column field="certificateType" header="Type" [width]="'100px'"></d-column>
+      <d-column header="" [width]="'60px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon [icon]="'icon-add'" [operable]="true" (click)="onAddCertificate(rowItem)"></d-icon>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <d-pagination
+      style="margin-top: 8px;"
+      [total]="certTable.pager.total"
+      [(pageSize)]="certTable.pager.pageSize"
+      [(pageIndex)]="certTable.pager.pageIndex"
+      [canViewTotal]="true"
+      [canChangePageSize]="true"
+      [maxItems]="5"
+      (pageIndexChange)="certPageIndexChange($event)"
+      (pageSizeChange)="certPageSizeChange($event)"
     ></d-pagination>
   </div>
 </section>

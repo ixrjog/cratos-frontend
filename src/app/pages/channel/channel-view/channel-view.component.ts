@@ -560,6 +560,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       }
     });
 
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
+
     // Build column map: nodeIdx → column index, row index within column
     const nodeColumnMap = new Map<number, number>();
     const nodeRowMap = new Map<number, number>();
@@ -596,7 +598,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)
-    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
     const bizConnected = new Set<string>();
 
     // Helper: find visible descendants of a hidden line

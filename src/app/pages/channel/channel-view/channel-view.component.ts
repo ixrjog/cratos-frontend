@@ -115,9 +115,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       this.needDrawLines = false;
       setTimeout(() => {
         this.drawLines();
-        // 再次刷新位置
-        setTimeout(() => this.lines.forEach(l => { try { l.position(); } catch (e) {} }), 300);
-      }, 300);
+        setTimeout(() => this.lines.forEach(l => { try { l.position(); } catch (e) {} }), 200);
+      }, 200);
     }
   }
 

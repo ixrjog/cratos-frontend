@@ -745,8 +745,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizRightMid);
       const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, leftPt);
       try {
-        if (c.isOutbound) { this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, c.opts)); }
-        else { this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, c.opts)); }
+        if (c.isOutbound) {
+          this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, { ...c.opts, startSocketGravity: [5, 0], endSocketGravity: [-5, 0] }));
+        } else {
+          this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, { ...c.opts, startSocketGravity: [-5, 0], endSocketGravity: [5, 0] }));
+        }
       } catch (e) {}
     });
 

@@ -105,14 +105,24 @@
 }
 
 .seq-badge {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 9px;
+  font-size: 10px;
   color: #fff;
   background: var(--devui-brand, #5e7ce0);
   border-radius: 8px;
-  padding: 0 4px;
+  padding: 1px 6px;
   font-weight: 500;
   line-height: 14px;
+  display: inline-block;
+
+  &.seq-zero {
+    background: var(--devui-aide-text, #8a8e99);
+  }
+
+  &.seq-card {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 9px;
+    padding: 0 4px;
+  }
 }

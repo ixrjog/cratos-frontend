@@ -51,7 +51,13 @@
     </d-column>
     <d-column field="sourceEndpoint" header="Source Endpoint"></d-column>
     <d-column field="channelName" header="Channel"></d-column>
-    <d-column field="seq" header="Seq" [width]="'60px'"></d-column>
+    <d-column field="seq" header="Seq" [width]="'60px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span class="seq-badge" [class.seq-zero]="!cellItem">S{{ cellItem || 0 }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="linkedChannel" header="Linked to Channel">
       <d-cell>
         <ng-template let-cellItem="cellItem">
@@ -139,7 +145,7 @@
             </div>
             <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
           </div>
-          <span class="seq-badge">S{{ line.seq }}</span>
+          <span class="seq-badge seq-card">S{{ line.seq }}</span>
         </div>
       </ng-container>
     </div>

@@ -13,7 +13,7 @@
         [icon]="'icon-edit'"
         [operable]="true"
         [color]="editMode ? 'var(--devui-brand, #5e7ce0)' : ''"
-        (click)="editMode = !editMode"
+        (click)="editMode = !editMode; scheduleRedraw()"
         [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
       ></d-icon>
     </div>

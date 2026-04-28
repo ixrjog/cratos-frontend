@@ -92,7 +92,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.resizeObserver.observe(this.el.nativeElement);
   }
 
-  private scheduleRedraw() {
+  scheduleRedraw() {
     if (this.isDrawing) return;
     if (this.redrawTimer) clearTimeout(this.redrawTimer);
     this.redrawTimer = setTimeout(() => {

@@ -560,27 +560,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       }
     });
 
-    // Shared connection counter for socket distribution
-    const pairCount = new Map<string, number>();
-    const getSocketPair = (pairKey: string, sameColumn = false, srcIdx = -1, tgtIdx = -1) => {
-      const count = pairCount.get(pairKey) || 0;
-      pairCount.set(pairKey, count + 1);
-      if (sameColumn) {
-        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-      }
-      if (count === 0) return { startSocket: 'right', endSocket: 'left' };
-      // Use relative vertical position to pick top or bottom
-      const srcRow = nodeRowMap.get(srcIdx) ?? 0;
-      const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
-      const vert = tgtRow >= srcRow ? 'bottom' : 'top';
-      return { startSocket: vert, endSocket: vert, path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-    };
-
-    // Build column map: nodeIdx → column index
+    // Build column map: nodeIdx → column index, row index within column
     const nodeColumnMap = new Map<number, number>();
-    const nodeRowMap = new Map<number, number>(); // nodeIdx → row index within column
+    const nodeRowMap = new Map<number, number>();
     this.nodeLevels.forEach((level, colIdx) => {
       let row = 0;
       level.forEach(n => {
@@ -594,6 +576,23 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
     const isSameColumn = (idx1: number, idx2: number) => {
       return nodeColumnMap.has(idx1) && nodeColumnMap.has(idx2) && nodeColumnMap.get(idx1) === nodeColumnMap.get(idx2);
+    };
+
+    // Shared connection counter for socket distribution
+    const pairCount = new Map<string, number>();
+    const getSocketPair = (pairKey: string, sameColumn = false, srcIdx = -1, tgtIdx = -1) => {
+      const count = pairCount.get(pairKey) || 0;
+      pairCount.set(pairKey, count + 1);
+      if (sameColumn) {
+        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      }
+      if (count === 0) return { startSocket: 'right', endSocket: 'left' };
+      const srcRow = nodeRowMap.get(srcIdx) ?? 0;
+      const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
+      const vert = tgtRow >= srcRow ? 'bottom' : 'top';
+      return { startSocket: vert, endSocket: vert, path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)

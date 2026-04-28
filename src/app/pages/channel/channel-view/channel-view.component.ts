@@ -45,9 +45,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   needDrawLines = false;
   private positionInterval: any;
   private resizeObserver: ResizeObserver;
-  private mutationObserver: MutationObserver;
-  private redrawTimer: any;
-  private isDrawing = false;
 
   // Kubernetes
   selectedAppName = '';
@@ -87,18 +84,17 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
     }, 500);
 
-    // Redraw on container resize
-    this.resizeObserver = new ResizeObserver(() => this.scheduleRedraw());
+    // Redraw on container resize (sidebar toggle, window resize)
+    this.resizeObserver = new ResizeObserver(() => {
+      this.removeLines();
+      this.needDrawLines = true;
+    });
     this.resizeObserver.observe(this.el.nativeElement);
   }
 
   scheduleRedraw() {
-    if (this.isDrawing) return;
-    if (this.redrawTimer) clearTimeout(this.redrawTimer);
-    this.redrawTimer = setTimeout(() => {
-      this.removeLines();
-      this.needDrawLines = true;
-    }, 200);
+    this.removeLines();
+    this.needDrawLines = true;
   }
 
   onToggleEditMode() {
@@ -121,7 +117,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.removeLines();
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     if (this.positionInterval) clearInterval(this.positionInterval);
-    if (this.redrawTimer) clearTimeout(this.redrawTimer);
     if (this.resizeObserver) this.resizeObserver.disconnect();
   }
 

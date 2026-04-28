@@ -603,6 +603,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     };
 
     // Determine sides for a connection based on column positions
+    const pairSideCount = new Map<string, number>();
     const getSides = (srcIdx: number, tgtIdx: number): [string, string] => {
       const srcCol = nodeColumnMap.get(srcIdx) ?? -1;
       const tgtCol = nodeColumnMap.get(tgtIdx) ?? -1;
@@ -611,7 +612,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
         return tgtRow > srcRow ? ['bottom', 'top'] : ['top', 'bottom'];
       }
-      return srcCol < tgtCol ? ['right', 'left'] : ['left', 'right'];
+      // Cross-column: first line right→left, subsequent use top or bottom
+      const key = `${Math.min(srcIdx, tgtIdx)}-${Math.max(srcIdx, tgtIdx)}`;
+      const count = pairSideCount.get(key) || 0;
+      pairSideCount.set(key, count + 1);
+      if (count === 0) return srcCol < tgtCol ? ['right', 'left'] : ['left', 'right'];
+      // Subsequent: pick top or bottom based on target relative position
+      const srcRow = nodeRowMap.get(srcIdx) ?? 0;
+      const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
+      const vert = tgtRow > srcRow ? 'bottom' : 'top';
+      return [vert, vert];
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)
@@ -649,11 +659,14 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             const key = `${i}-${d.idx}`;
             if (bizConnected.has(key)) return;
             bizConnected.add(key);
-            const opts = { color: lineColor, size: 2, path: 'grid',
-              startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
+            const lineOpts = { color: lineColor, size: 2, path: 'grid', startPlug: 'behind', endPlug: 'arrow1',
               middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
               dash: this.isDashedType(mergedLine.nodeType) };
-            makeLine(bizEl, d.el, 'right', 'left', opts);
+            if (isOutbound) {
+              makeLine(bizEl, d.el, 'right', 'left', lineOpts);
+            } else {
+              makeLine(d.el, bizEl, 'right', 'left', lineOpts);
+            }
           });
         } else {
           const key = `${i}-${mergedLine.name}`;
@@ -661,9 +674,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           bizConnected.add(key);
           const lineEl = nodeElMap.get(lineIdx);
           if (!lineEl) return;
-          const opts = { color: lineColor, size: 2, path: 'grid',
-            startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind' };
-          makeLine(bizEl, lineEl, 'right', 'left', opts);
+          const lineOpts = { color: lineColor, size: 2, path: 'grid', startPlug: 'behind', endPlug: 'arrow1' };
+          if (isOutbound) {
+            makeLine(bizEl, lineEl, 'right', 'left', lineOpts);
+          } else {
+            makeLine(lineEl, bizEl, 'right', 'left', lineOpts);
+          }
         }
       });
     });

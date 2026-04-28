@@ -904,14 +904,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (idx < half) {
         // Upper half
         if (half === 1) return chRight[1]; // r2
-        if (half === 2) return [chUp[1], chUp[3]][idx]; // u2, u4
+        if (half === 2) return [chRight[0], chRight[1]][idx]; // r1, r2
+        // 3+: u1,u2,u3,u4,u5,r1,r2 cycle
         return chUpperSeq[idx % chUpperSeq.length];
       } else {
-        // Lower half (reverse: last org gets d5 side)
+        // Lower half (reverse: from bottom up)
         const lowerCount = total - half;
-        const li = (total - 1 - idx);
+        const li = (total - 1 - idx); // reverse index
         if (lowerCount === 1) return chRight[3]; // r4
-        if (lowerCount === 2) return [chDown[3], chDown[1]][li]; // d4, d2
+        if (lowerCount === 2) return [chRight[4], chRight[3]][li]; // r5, r4
+        // 3+: d1,d2,d3,d4,d5,r5,r4 cycle (from bottom up)
         return chLowerSeq[li % chLowerSeq.length];
       }
     };

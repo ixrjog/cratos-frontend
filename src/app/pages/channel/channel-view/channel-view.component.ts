@@ -495,7 +495,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   drawElkLines(layouted: any, themeColor: string) {
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     this.elkLines = [];
-    const noArrow = { color: themeColor, size: 2, path: 'fluid', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: themeColor, size: 2, path: 'grid', endPlug: 'behind', startPlug: 'behind' };
     const getEl = (id: string) => this.el.nativeElement.querySelector(`#elk-${id}`);
 
     (layouted.edges || []).forEach(edge => {
@@ -512,7 +512,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const bizIdx = parseInt(srcId.replace('biz-', ''));
         const biz = this.businesses[bizIdx];
         const isOutbound = biz?.businessDirection === 'OUTBOUND';
-        opts = { color: themeColor, size: 2, path: 'fluid', endPlug: 'arrow1', startPlug: 'behind' };
+        opts = { color: themeColor, size: 2, path: 'grid', endPlug: 'arrow1', startPlug: 'behind' };
         if (!isOutbound) {
           try { this.elkLines.push(new LeaderLine(tgtEl, srcEl, opts)); } catch (e) {}
           return;
@@ -536,7 +536,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
     const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
-    const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
     const nodeElMap = new Map<number, HTMLElement>();
@@ -586,15 +586,15 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const count = pairCount.get(pairKey) || 0;
       pairCount.set(pairKey, count + 1);
       if (sameColumn) {
-        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
       }
       if (count === 0) return { startSocket: 'right', endSocket: 'left' };
       const srcRow = nodeRowMap.get(srcIdx) ?? 0;
       const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
       const vert = tgtRow > srcRow ? 'bottom' : 'top';
-      return { startSocket: vert, endSocket: vert, path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      return { startSocket: vert, endSocket: vert, path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)
@@ -635,7 +635,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             bizConnected.add(key);
             try {
               this.lines.push(new LeaderLine(bizEl, d.el,
-                { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
+                { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left',
                   startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
                   middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
                   dash: this.isDashedType(mergedLine.nodeType) }
@@ -650,7 +650,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           if (!lineEl) return;
           try {
             this.lines.push(new LeaderLine(bizEl, lineEl,
-              { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left',
+              { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left',
                 startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind' }
             ));
           } catch (e) {}

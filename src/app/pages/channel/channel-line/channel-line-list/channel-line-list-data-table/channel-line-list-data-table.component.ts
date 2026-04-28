@@ -176,7 +176,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
     const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
-    const noArrow = { color: lineColor, size: 2, path: 'fluid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
     const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
 
     const lineElMap = new Map<number, HTMLElement>();
@@ -204,13 +204,13 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
       const c = pairCount.get(key) || 0;
       pairCount.set(key, c + 1);
       if (sameCol) {
-        if (c === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        if (c === 1) return { startSocket: 'right', endSocket: 'right', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-        return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+        if (c === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        if (c === 1) return { startSocket: 'right', endSocket: 'right', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
       }
       if (c === 0) return { startSocket: 'right', endSocket: 'left' };
-      if (c === 1) return { startSocket: 'top', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-      return { startSocket: 'bottom', endSocket: 'bottom', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      if (c === 1) return { startSocket: 'top', endSocket: 'top', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+      return { startSocket: 'bottom', endSocket: 'bottom', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
     };
 
     // Line → Line (skip hidden, draw through with label)

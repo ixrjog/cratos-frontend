@@ -562,7 +562,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
     // Shared connection counter for socket distribution
     const pairCount = new Map<string, number>();
-    const getSocketPair = (pairKey: string, sameColumn = false) => {
+    const getSocketPair = (pairKey: string, sameColumn = false, srcIdx = -1, tgtIdx = -1) => {
       const count = pairCount.get(pairKey) || 0;
       pairCount.set(pairKey, count + 1);
       if (sameColumn) {
@@ -571,16 +571,25 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         return { startSocket: 'left', endSocket: 'left', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
       }
       if (count === 0) return { startSocket: 'right', endSocket: 'left' };
-      if (count === 1) return { startSocket: 'top', endSocket: 'top', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
-      return { startSocket: 'bottom', endSocket: 'bottom', path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
+      // Use relative vertical position to pick top or bottom
+      const srcRow = nodeRowMap.get(srcIdx) ?? 0;
+      const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
+      const vert = tgtRow >= srcRow ? 'bottom' : 'top';
+      return { startSocket: vert, endSocket: vert, path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
     };
 
     // Build column map: nodeIdx → column index
     const nodeColumnMap = new Map<number, number>();
+    const nodeRowMap = new Map<number, number>(); // nodeIdx → row index within column
     this.nodeLevels.forEach((level, colIdx) => {
-      level.forEach(line => {
-        const idx = this.channelNodes.findIndex(l => l.name === line.name);
-        if (idx >= 0) nodeColumnMap.set(idx, colIdx);
+      let row = 0;
+      level.forEach(n => {
+        const idx = this.channelNodes.findIndex(l => l.name === n.name);
+        if (idx >= 0) {
+          nodeColumnMap.set(idx, colIdx);
+          nodeRowMap.set(idx, row);
+          if (!hiddenTypes.includes(n.nodeType)) row++;
+        }
       });
     });
     const isSameColumn = (idx1: number, idx2: number) => {
@@ -669,14 +678,14 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             const gEl = nodeElMap.get(gIdx);
             if (!gEl) return;
             const pairKey = `${gIdx}-${j}`;
-            const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j));
+            const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j), gIdx, j);
             try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
           const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
           const pairKey = `${parentIdx}-${j}`;
-          const sockets = getSocketPair(pairKey, isSameColumn(parentIdx, j));
+          const sockets = getSocketPair(pairKey, isSameColumn(parentIdx, j), parentIdx, j);
           try { this.lines.push(new LeaderLine(parentEl, childEl, { ...noArrow, ...sockets })); } catch (e) {}
         }
       });

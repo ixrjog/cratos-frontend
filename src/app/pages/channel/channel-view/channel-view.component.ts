@@ -26,6 +26,8 @@ declare var LeaderLine: any;
 })
 export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked {
 
+  static readonly CHANNEL_STORAGE_KEY = 'channel_view_selected';
+
   channels: ChannelInfoVO[] = [];
   selectedChannel: ChannelInfoVO = null;
   queryName = '';
@@ -105,6 +107,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.channelInfoService.queryChannelPage({ queryName: this.queryName, page: 1, length: 50 })
       .subscribe(({ body }) => {
         this.channels = body.data || [];
+        if (!this.selectedChannel) {
+          const saved = localStorage.getItem(ChannelViewComponent.CHANNEL_STORAGE_KEY);
+          if (saved) {
+            try {
+              const { id } = JSON.parse(saved);
+              const match = this.channels.find(c => c.id === id);
+              if (match) this.onSelectChannel(match);
+            } catch (e) {}
+          }
+        }
       });
   }
 
@@ -113,6 +125,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     this.elkNodes = [];
     this.selectedChannel = channel;
+    localStorage.setItem(ChannelViewComponent.CHANNEL_STORAGE_KEY, JSON.stringify({ id: channel.id, name: channel.name }));
     this.selectedAppName = '';
     this.deploymentList = [];
     this.kubernetesDetails = null;

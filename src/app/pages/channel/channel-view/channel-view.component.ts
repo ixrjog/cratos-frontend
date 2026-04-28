@@ -756,24 +756,24 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (total === 2) return idx === 0 ? 0 : 2;
       return Math.min(idx, 2);
     };
-    // Upper sequence: 1→3, 2→4,2, 3+→4,3,2 (cycle)
-    const upperSeq = [4, 3, 2];
-    // Lower sequence: 1→7, 2→8,6, 3+→8,7,6 (cycle)
-    const lowerSeq = [8, 7, 6];
+    // Upper sequence: 1→3, 2→4,2, 3+→4,3,2,1 (cycle)
+    const upperSeq = [4, 3, 2, 1];
+    // Lower sequence (assigned from max seq to min): 1→7, 2→8,7, 3+→8,7,6,5 (cycle)
+    const lowerSeq = [8, 7, 6, 5];
     const getNodeAnchorIdx = (tgtTotal: number, tgtIdx: number): number => {
       if (tgtTotal === 1) return 0;
       const half = Math.ceil(tgtTotal / 2);
       if (tgtIdx < half) {
-        // Upper half
+        // Upper half (first half, normal order)
         if (half === 1) return 3;
         if (half === 2) return [4, 2][tgtIdx];
         return upperSeq[tgtIdx % upperSeq.length];
       } else {
-        // Lower half
-        const li = tgtIdx - half;
+        // Lower half (reverse: last biz gets 8, then 7, 6, 5)
         const lowerCount = tgtTotal - half;
+        const li = (tgtTotal - 1 - tgtIdx); // reverse index within lower half
         if (lowerCount === 1) return 7;
-        if (lowerCount === 2) return [8, 6][li];
+        if (lowerCount === 2) return [8, 7][li];
         return lowerSeq[li % lowerSeq.length];
       }
     };

@@ -104,6 +104,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     }, 500);
   }
 
+  onToggleEditMode() {
+    this.removeLines();
+    this.editMode = !this.editMode;
+    this.needDrawLines = true;
+  }
+
   ngAfterViewChecked() {
     if (this.needDrawLines) {
       this.needDrawLines = false;

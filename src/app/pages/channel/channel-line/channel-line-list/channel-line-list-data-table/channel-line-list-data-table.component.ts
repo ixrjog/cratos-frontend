@@ -244,12 +244,13 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
         else { ptIdx = Math.min(idx, 2); }
         return pts[ptIdx];
       };
+      const gravityMap: { [s: string]: number[] } = { right: [20, 0], left: [-20, 0], top: [0, -20], bottom: [0, 20] };
       planned.forEach(c => {
         const sp = getPoint(c.srcEl.id, c.srcSide);
         const tp = getPoint(c.tgtEl.id, c.tgtSide);
         const start = LeaderLine.pointAnchor(c.srcEl, { x: sp.x, y: sp.y });
         const end = LeaderLine.pointAnchor(c.tgtEl, { x: tp.x, y: tp.y });
-        try { this.leaderLines.push(new LeaderLine(start, end, c.opts)); } catch (e) {}
+        try { this.leaderLines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: gravityMap[c.srcSide], endSocketGravity: gravityMap[c.tgtSide] })); } catch (e) {}
       });
     };
 

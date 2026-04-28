@@ -87,19 +87,22 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     }, 500);
 
     // Redraw on layout width change (sidebar toggle, window resize)
-    this.lastWidth = this.el.nativeElement.offsetWidth;
-    this.resizeObserver = new ResizeObserver(() => {
-      const w = this.el.nativeElement.offsetWidth;
-      if (w !== this.lastWidth) {
-        this.lastWidth = w;
-        if (this.resizeTimer) clearTimeout(this.resizeTimer);
-        this.resizeTimer = setTimeout(() => {
-          this.removeLines();
-          this.needDrawLines = true;
-        }, 400);
-      }
-    });
-    this.resizeObserver.observe(this.el.nativeElement);
+    const viewEl = this.el.nativeElement.querySelector('.channel-view');
+    if (viewEl) {
+      this.lastWidth = viewEl.offsetWidth;
+      this.resizeObserver = new ResizeObserver((entries) => {
+        const w = entries[0].contentRect.width;
+        if (Math.abs(w - this.lastWidth) > 1) {
+          this.lastWidth = w;
+          if (this.resizeTimer) clearTimeout(this.resizeTimer);
+          this.resizeTimer = setTimeout(() => {
+            this.removeLines();
+            this.needDrawLines = true;
+          }, 400);
+        }
+      });
+      this.resizeObserver.observe(viewEl);
+    }
   }
 
   scheduleRedraw() {

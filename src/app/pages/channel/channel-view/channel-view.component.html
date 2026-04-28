@@ -80,11 +80,10 @@
           <div class="group-content vertical">
             <div *ngFor="let m of selectedChannel.members['CERTIFICATE']" class="cert-item">
               <d-tag [tag]="m.name" [labelStyle]="'blue-w98'"></d-tag>
-              <span class="cert-expiry" *ngIf="m.extObj?.notAfter">
-                {{ m.extObj.notAfter | date:'yyyy-MM-dd' }}
-                <span class="cert-days" [class.cert-warn]="getDaysRemaining(m.extObj.notAfter) < 30">
-                  ({{ getDaysRemaining(m.extObj.notAfter) }}d)
-                </span>
+              <span *ngIf="m.extObj?.notAfter">
+                <d-tag [tag]="(m.extObj.notAfter | date:'yyyy-MM-dd') + ' (' + getDaysRemaining(m.extObj.notAfter) + 'd)'"
+                       [labelStyle]="getDaysRemaining(m.extObj.notAfter) >= 30 ? 'green-w98' : getDaysRemaining(m.extObj.notAfter) >= 15 ? 'orange-w98' : 'red-w98'">
+                </d-tag>
               </span>
             </div>
           </div>

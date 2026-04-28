@@ -23,6 +23,7 @@ export interface ChannelMemberVO {
   name: string;
   valid: boolean;
   comment: string;
+  extObj: any;
 }
 
 export interface ChannelInfoPageQuery extends PageQuery {

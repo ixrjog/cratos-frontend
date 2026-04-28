@@ -44,6 +44,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   private elk = new ELK();
   needDrawLines = false;
   private positionInterval: any;
+  private resizeObserver: ResizeObserver;
+  private mutationObserver: MutationObserver;
+  private redrawTimer: any;
 
   // Kubernetes
   selectedAppName = '';
@@ -82,6 +85,22 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         } catch (e) {}
       });
     }, 500);
+
+    // Redraw on container resize
+    this.resizeObserver = new ResizeObserver(() => this.scheduleRedraw());
+    this.resizeObserver.observe(this.el.nativeElement);
+
+    // Redraw on DOM structure changes (e.g. ngIf toggling elements)
+    this.mutationObserver = new MutationObserver(() => this.scheduleRedraw());
+    this.mutationObserver.observe(this.el.nativeElement, { childList: true, subtree: true });
+  }
+
+  private scheduleRedraw() {
+    if (this.redrawTimer) clearTimeout(this.redrawTimer);
+    this.redrawTimer = setTimeout(() => {
+      this.lines.forEach(l => { try { if (l._svg && l._svg.isConnected) l.position(); } catch (e) {} });
+      this.elkLines.forEach(l => { try { if (l._svg && l._svg.isConnected) l.position(); } catch (e) {} });
+    }, 200);
   }
 
   ngAfterViewChecked() {
@@ -98,9 +117,10 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   ngOnDestroy() {
     this.removeLines();
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
-    if (this.positionInterval) {
-      clearInterval(this.positionInterval);
-    }
+    if (this.positionInterval) clearInterval(this.positionInterval);
+    if (this.redrawTimer) clearTimeout(this.redrawTimer);
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.mutationObserver) this.mutationObserver.disconnect();
   }
 
   fetchChannels() {

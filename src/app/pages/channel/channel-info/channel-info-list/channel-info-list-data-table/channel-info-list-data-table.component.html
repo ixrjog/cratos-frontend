@@ -72,10 +72,16 @@
                 </span>
               </div>
             </div>
-            <div *ngIf="rowItem.members?.EDS_ASSET">
+            <div *ngIf="rowItem.members?.EDS_ASSET" style="margin-bottom: 4px;">
               <div style="font-size: 11px; color: #8a8e99;">SERVER</div>
               <div style="display: flex; flex-wrap: wrap; gap: 4px;">
                 <d-tag *ngFor="let m of rowItem.members.EDS_ASSET" [tag]="m.name" [titleContent]="m.comment" [labelStyle]="'blue-w98'"></d-tag>
+              </div>
+            </div>
+            <div *ngIf="rowItem.members?.CERTIFICATE">
+              <div style="font-size: 11px; color: #8a8e99;">CERTIFICATE</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <d-tag *ngFor="let m of rowItem.members.CERTIFICATE" [tag]="m.name" [labelStyle]="'blue-w98'"></d-tag>
               </div>
             </div>
           </div>

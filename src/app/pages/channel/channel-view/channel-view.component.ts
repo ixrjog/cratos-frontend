@@ -101,7 +101,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         this.drawLines();
         this.isDrawing = false;
       });
-    }, 300);
+    }, 500);
   }
 
   ngAfterViewChecked() {

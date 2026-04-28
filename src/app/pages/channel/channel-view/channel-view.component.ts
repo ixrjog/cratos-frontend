@@ -730,19 +730,33 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
 
     // Draw business connections with fixed anchors
-    const bizTargetIdx = new Map<string, number>(); // track current index per target
-    const bizRightMid = { x: '100%', y: '50%' }; // 2号
+    const bizTargetIdx = new Map<string, number>(); // track current index per target node
+    const bizSourceCount = new Map<string, number>(); // count per biz element
+    const bizSourceIdx = new Map<string, number>(); // track current index per biz element
     bizConns.forEach(c => {
-      const total = bizTargetCount.get(c.tgtEl.id) || 1;
-      const idx = bizTargetIdx.get(c.tgtEl.id) || 0;
-      bizTargetIdx.set(c.tgtEl.id, idx + 1);
-      // Node left side point: 1 biz→5号(50%), multi→first 4号(25%), second 6号(75%)
-      let leftPt: { x: string; y: string };
-      if (total === 1) { leftPt = { x: '0%', y: '50%' }; }
-      else if (idx === 0) { leftPt = { x: '0%', y: '25%' }; }
-      else { leftPt = { x: '0%', y: '75%' }; }
+      bizSourceCount.set(c.bizEl.id, (bizSourceCount.get(c.bizEl.id) || 0) + 1);
+    });
+    const rightPts = [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }];
+    const getDistPt = (total: number, idx: number, pts: { x: string; y: string }[]) => {
+      if (total === 1) return pts[1];
+      if (total === 2) return idx === 0 ? pts[0] : pts[2];
+      return pts[Math.min(idx, 2)];
+    };
+    bizConns.forEach(c => {
+      // Biz right side
+      const bizTotal = bizSourceCount.get(c.bizEl.id) || 1;
+      const bizIdx = bizSourceIdx.get(c.bizEl.id) || 0;
+      bizSourceIdx.set(c.bizEl.id, bizIdx + 1);
+      const rightPt = getDistPt(bizTotal, bizIdx, rightPts);
 
-      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizRightMid);
+      // Node left side
+      const tgtTotal = bizTargetCount.get(c.tgtEl.id) || 1;
+      const tgtIdx = bizTargetIdx.get(c.tgtEl.id) || 0;
+      bizTargetIdx.set(c.tgtEl.id, tgtIdx + 1);
+      const leftPts = [{ x: '0%', y: '25%' }, { x: '0%', y: '50%' }, { x: '0%', y: '75%' }];
+      const leftPt = getDistPt(tgtTotal, tgtIdx, leftPts);
+
+      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, rightPt);
       const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, leftPt);
       try {
         if (c.isOutbound) {

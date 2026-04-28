@@ -191,6 +191,7 @@ export class ChannelInfoListDataTableComponent implements OnInit {
       ...this.dialogDate.editorData,
       title: 'Channel Extension',
       content: ChannelExtensionEditorComponent,
+      width: '600px',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();

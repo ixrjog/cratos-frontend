@@ -34,10 +34,9 @@
   <div class="main-content" *ngIf="selectedChannel">
     <!-- Section 1: Users, Applications, Servers, Network Info -->
     <div class="section-extensions">
-      <div class="relation-group network-info-inline" *ngIf="selectedChannel.networkInfo">
-        <h5 class="group-title">Network Info
-          <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onShowFullDoc()" style="margin-left: 6px;"></d-icon>
-        </h5>
+      <div class="relation-group network-info-inline" *ngIf="selectedChannel.networkInfo" style="position: relative;">
+        <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onShowFullDoc()"
+                style="position: absolute; top: 12px; right: 12px; font-size: 14px;"></d-icon>
         <div class="group-content-doc">
           <markdown lineNumbers lineHighlight mermaid [data]="getNetworkInfo()" [disableSanitizer]="true"></markdown>
         </div>

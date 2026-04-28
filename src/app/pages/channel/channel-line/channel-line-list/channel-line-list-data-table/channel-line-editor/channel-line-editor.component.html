@@ -47,6 +47,12 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label>Seq</d-form-label>
+      <d-form-control>
+        <d-input-number name="seq" [(ngModel)]="formData.seq" [min]="0" [step]="1"></d-input-number>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Linked to Channel</d-form-label>
       <d-form-control>
         <d-checkbox name="linkedChannel" [(ngModel)]="formData.linkedChannel"></d-checkbox>

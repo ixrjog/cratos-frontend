@@ -736,7 +736,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     bizConns.forEach(c => {
       bizSourceCount.set(c.bizEl.id, (bizSourceCount.get(c.bizEl.id) || 0) + 1);
     });
-    const rightPts = [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }];
+    const bizRightPts = [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }];
     const getDistPt = (total: number, idx: number, pts: { x: string; y: string }[]) => {
       if (total === 1) return pts[1];
       if (total === 2) return idx === 0 ? pts[0] : pts[2];
@@ -747,7 +747,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const bizTotal = bizSourceCount.get(c.bizEl.id) || 1;
       const bizIdx = bizSourceIdx.get(c.bizEl.id) || 0;
       bizSourceIdx.set(c.bizEl.id, bizIdx + 1);
-      const rightPt = getDistPt(bizTotal, bizIdx, rightPts);
+      const rightPt = getDistPt(bizTotal, bizIdx, bizRightPts);
 
       // Node left side
       const tgtTotal = bizTargetCount.get(c.tgtEl.id) || 1;

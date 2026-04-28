@@ -95,7 +95,9 @@
     <div class="divider"></div>
 
     <!-- Section 2: Node Topology -->
-    <h5 class="section-title" *ngIf="nodeLevels.length">Node Topology</h5>
+    <h5 class="section-title" *ngIf="nodeLevels.length || editMode">Node Topology
+      <d-icon *ngIf="editMode" [icon]="'icon-add'" [operable]="true" (click)="onAddNode()" style="margin-left: 8px;"></d-icon>
+    </h5>
     <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">

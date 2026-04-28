@@ -9,7 +9,7 @@ import { ApplicationService } from '../../../@core/services/application.service'
 import { ChannelInfoVO } from '../../../@core/data/channel-info';
 import { ChannelBusinessVO } from '../../../@core/data/channel-business';
 import { KubernetesDetailsVO } from '../../../@core/data/kubernetes';
-import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../@shared/utils/dialog.util';
+import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION, ADD_OPERATION } from '../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../@shared/utils/toast.util';
 import { DialogService } from 'ng-devui';
 import { EdsAssetSshTerminalComponent } from '../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
@@ -248,8 +248,20 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   onEditNode(line: any) {
     if (!this.editMode) return;
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, {
-      ...DIALOG_DATA.editorData, title: 'Edit Line', content: ChannelNodeEditorComponent,
+      ...DIALOG_DATA.editorData, title: 'Edit Node', content: ChannelNodeEditorComponent,
     }, () => this.fetchRelations(), line);
+  }
+
+  onAddNode() {
+    const newNode = {
+      channelId: this.selectedChannel.id,
+      channelName: this.selectedChannel.name,
+      name: '', nodeType: '', sourceEndpoint: '', monitorUrl: '',
+      linkedChannel: false, valid: true, comment: '', nodeInfo: '',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, {
+      ...DIALOG_DATA.editorData, title: 'New Node', content: ChannelNodeEditorComponent,
+    }, () => this.fetchRelations(), newNode);
   }
 
   onShowFullDoc() {

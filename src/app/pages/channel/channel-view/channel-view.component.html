@@ -95,11 +95,11 @@
     <div class="divider"></div>
 
     <!-- Section 2: Node Topology -->
-    <div class="topology-card" *ngIf="nodeLevels.length">
+    <div class="topology-card">
       <h5 class="group-title">Node Topology
         <d-icon [icon]="'icon-add'" [operable]="editMode" [disabled]="!editMode" (click)="editMode && onAddNode()" style="margin-left: 8px;"></d-icon>
       </h5>
-    <div class="section-cards">
+      <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
           <div class="biz-header">

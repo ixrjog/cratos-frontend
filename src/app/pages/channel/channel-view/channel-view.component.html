@@ -75,6 +75,17 @@
             </span>
           </div>
         </div>
+        <div class="relation-group" *ngIf="selectedChannel.members?.['CERTIFICATE']?.length">
+          <h5 class="group-title">Certificates</h5>
+          <div class="group-content vertical">
+            <div *ngFor="let m of selectedChannel.members['CERTIFICATE']" class="cert-item">
+              <d-tag [tag]="m.name" [labelStyle]="'blue-w98'"></d-tag>
+              <span class="cert-expiry" *ngIf="m.extObj?.notAfter">
+                Expires: {{ m.extObj.notAfter | date:'yyyy-MM-dd' }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

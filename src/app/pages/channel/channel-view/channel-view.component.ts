@@ -593,7 +593,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (count === 0) return { startSocket: 'right', endSocket: 'left' };
       const srcRow = nodeRowMap.get(srcIdx) ?? 0;
       const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
-      const vert = tgtRow >= srcRow ? 'bottom' : 'top';
+      const vert = tgtRow > srcRow ? 'bottom' : 'top';
       return { startSocket: vert, endSocket: vert, path: 'magnet', startSocketGravity: 20, endSocketGravity: 20 };
     };
 

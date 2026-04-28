@@ -47,6 +47,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   private resizeObserver: ResizeObserver;
   private mutationObserver: MutationObserver;
   private redrawTimer: any;
+  private isDrawing = false;
 
   // Kubernetes
   selectedAppName = '';
@@ -89,17 +90,15 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     // Redraw on container resize
     this.resizeObserver = new ResizeObserver(() => this.scheduleRedraw());
     this.resizeObserver.observe(this.el.nativeElement);
-
-    // Redraw on DOM structure changes (e.g. ngIf toggling elements)
-    this.mutationObserver = new MutationObserver(() => this.scheduleRedraw());
-    this.mutationObserver.observe(this.el.nativeElement, { childList: true, subtree: true });
   }
 
   private scheduleRedraw() {
+    if (this.isDrawing) return;
     if (this.redrawTimer) clearTimeout(this.redrawTimer);
     this.redrawTimer = setTimeout(() => {
-      this.lines.forEach(l => { try { if (l._svg && l._svg.isConnected) l.position(); } catch (e) {} });
-      this.elkLines.forEach(l => { try { if (l._svg && l._svg.isConnected) l.position(); } catch (e) {} });
+      this.isDrawing = true;
+      this.drawLines();
+      this.isDrawing = false;
     }, 200);
   }
 
@@ -120,7 +119,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.positionInterval) clearInterval(this.positionInterval);
     if (this.redrawTimer) clearTimeout(this.redrawTimer);
     if (this.resizeObserver) this.resizeObserver.disconnect();
-    if (this.mutationObserver) this.mutationObserver.disconnect();
   }
 
   fetchChannels() {

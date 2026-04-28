@@ -96,12 +96,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     if (this.isDrawing) return;
     if (this.redrawTimer) clearTimeout(this.redrawTimer);
     this.redrawTimer = setTimeout(() => {
-      requestAnimationFrame(() => {
-        this.isDrawing = true;
-        this.drawLines();
-        this.isDrawing = false;
-      });
-    }, 500);
+      this.removeLines();
+      this.needDrawLines = true;
+    }, 200);
   }
 
   onToggleEditMode() {

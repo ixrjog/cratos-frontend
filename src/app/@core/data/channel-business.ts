@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 export interface ChannelBusinessVO extends BaseVO, ValidVO {
   id: number;
   organizationId: number;
+  accountEntityId: number;
   channelId: number;
   businessName: string;
   type: string;
@@ -26,6 +27,7 @@ export interface ChannelBusinessPageQuery extends PageQuery {
 export interface ChannelBusinessEdit {
   id?: number;
   organizationId: number;
+  accountEntityId: number;
   channelId: number;
   businessName: string;
   type: string;

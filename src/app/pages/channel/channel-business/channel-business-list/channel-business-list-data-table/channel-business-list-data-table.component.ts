@@ -40,6 +40,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
 
   newChannelBusiness: ChannelBusinessEdit = {
     organizationId: null,
+    accountEntityId: null,
     channelId: null,
     businessName: '',
     type: 'WITHDRAWAL',

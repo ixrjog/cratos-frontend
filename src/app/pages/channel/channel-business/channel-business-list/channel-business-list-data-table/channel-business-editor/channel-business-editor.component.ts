@@ -5,6 +5,7 @@ import { BusinessDirectionEnum, ChannelBusinessEdit, ChannelBusinessVO } from '.
 import { ChannelBusinessService } from '../../../../../../@core/services/channel-business.service';
 import { OrganizationService } from '../../../../../../@core/services/organization.service';
 import { ChannelInfoService } from '../../../../../../@core/services/channel-info.service';
+import { AccountEntityService } from '../../../../../../@core/services/account-entity.service';
 
 @Component({
   selector: 'app-channel-business-editor',
@@ -49,6 +50,9 @@ export class ChannelBusinessEditorComponent implements OnInit {
   orgQueryName = '';
   selectedOrg: any = null;
 
+  accountEntityOptions: { label: string; value: number }[] = [];
+  selectedAccountEntity: any = null;
+
   channelOptions: { label: string; value: number }[] = [];
   channelQueryName = '';
   selectedChannel: any = null;
@@ -65,6 +69,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
     private channelBusinessService: ChannelBusinessService,
     private organizationService: OrganizationService,
     private channelInfoService: ChannelInfoService,
+    private accountEntityService: AccountEntityService,
   ) {
   }
 
@@ -73,6 +78,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
     this.fetchTypeOptions();
     this.fetchOrgs();
     this.fetchChannels();
+    this.fetchAccountEntities();
   }
 
   fetchTypeOptions() {
@@ -106,6 +112,20 @@ export class ChannelBusinessEditorComponent implements OnInit {
 
   onOrgChange(selected: any) {
     this.formData.organizationId = selected?.value || null;
+  }
+
+  fetchAccountEntities() {
+    this.accountEntityService.queryAccountEntityPage({ queryName: '', page: 1, length: 200 })
+      .subscribe(({ body }) => {
+        this.accountEntityOptions = (body.data || []).map(e => ({ label: e.name, value: e.id }));
+        if (this.formData.accountEntityId) {
+          this.selectedAccountEntity = this.accountEntityOptions.find(e => e.value === this.formData.accountEntityId) || null;
+        }
+      });
+  }
+
+  onAccountEntityChange(selected: any) {
+    this.formData.accountEntityId = selected?.value || null;
   }
 
   fetchChannels(queryName = '') {

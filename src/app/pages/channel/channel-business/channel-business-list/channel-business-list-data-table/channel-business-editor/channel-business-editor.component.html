@@ -42,6 +42,21 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label>Account Entity</d-form-label>
+      <d-form-control>
+        <d-select
+          [options]="accountEntityOptions"
+          [(ngModel)]="selectedAccountEntity"
+          name="accountEntityId"
+          [placeholder]="'Search Account Entity'"
+          [isSearch]="true"
+          [filterKey]="'label'"
+          [allowClear]="true"
+          (ngModelChange)="onAccountEntityChange($event)"
+        ></d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Channel</d-form-label>
       <d-form-control>
         <d-select

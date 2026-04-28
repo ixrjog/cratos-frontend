@@ -97,7 +97,7 @@
     <!-- Section 2: Node Topology -->
     <div class="topology-card">
       <h5 class="group-title">Node Topology
-        <d-icon [icon]="'icon-add'" [operable]="editMode" [disabled]="!editMode" (click)="editMode && onAddNode()" style="margin-left: 8px;"></d-icon>
+        <d-icon [icon]="'icon-add'" [operable]="true" [style.opacity]="editMode ? 1 : 0.3" (click)="editMode && onAddNode()" style="margin-left: 8px; cursor: pointer;"></d-icon>
       </h5>
       <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">

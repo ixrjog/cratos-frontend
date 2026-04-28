@@ -746,8 +746,23 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       { pt: { x: '75%', y: '100%' }, g: [0, 20] },   // 8
     ];
     const bizRightMid = { x: '100%', y: '50%' };
+    const bizRightPts = [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }];
+    const bizSourceCount = new Map<string, number>();
+    bizConns.forEach(c => { bizSourceCount.set(c.bizEl.id, (bizSourceCount.get(c.bizEl.id) || 0) + 1); });
+    const bizSourceIdx = new Map<string, number>();
     const bizTargetIdx = new Map<string, number>();
+    const pick3 = (total: number, idx: number) => {
+      if (total === 1) return 1;
+      if (total === 2) return idx === 0 ? 0 : 2;
+      return Math.min(idx, 2);
+    };
     bizConns.forEach((c) => {
+      // Biz right side: 1→2号, 2→1+3号, 3→1+2+3号
+      const bTotal = bizSourceCount.get(c.bizEl.id) || 1;
+      const bIdx = bizSourceIdx.get(c.bizEl.id) || 0;
+      bizSourceIdx.set(c.bizEl.id, bIdx + 1);
+      const bizPt = bizRightPts[pick3(bTotal, bIdx)];
+
       const tgtTotal = bizTargetCount.get(c.tgtEl.id) || 1;
       const tgtIdx = bizTargetIdx.get(c.tgtEl.id) || 0;
       bizTargetIdx.set(c.tgtEl.id, tgtIdx + 1);
@@ -767,7 +782,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         naPt = nodeAnchorPts[anchorIdx];
       }
 
-      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizRightMid);
+      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizPt);
       const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, naPt.pt);
       try {
         if (c.isOutbound) {

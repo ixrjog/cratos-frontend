@@ -42,6 +42,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
     type: 'WITHDRAWAL',
     businessDirection: BusinessDirectionEnum.OUTBOUND,
     valid: true,
+    seq: 0,
     comment: '',
   };
 

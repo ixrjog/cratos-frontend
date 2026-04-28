@@ -8,6 +8,7 @@ export interface ChannelBusinessVO extends BaseVO, ValidVO {
   businessName: string;
   type: string;
   businessDirection: string;
+  seq: number;
   comment: string;
   organizationName: string;
   channelName: string;
@@ -30,6 +31,7 @@ export interface ChannelBusinessEdit {
   type: string;
   businessDirection: string;
   valid: boolean;
+  seq: number;
   comment: string;
 }
 

@@ -95,7 +95,7 @@
     <div class="divider"></div>
 
     <!-- Section 2: Node Topology -->
-    <h5 class="section-title" *ngIf="nodeLevels.length || editMode">Node Topology
+    <h5 class="section-title" *ngIf="nodeLevels.length">Node Topology
       <d-icon [icon]="'icon-add'" [operable]="editMode" [disabled]="!editMode" (click)="editMode && onAddNode()" style="margin-left: 8px;"></d-icon>
     </h5>
     <div class="section-cards">

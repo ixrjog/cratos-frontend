@@ -64,7 +64,7 @@
       [scrollable]="true"
       [loading]="appTable.loading"
       [tableOverflowType]="'overlay'"
-      [maxHeight]="'300px'"
+      [maxHeight]="'500px'"
       style="margin-top: 8px;"
     >
       <d-column field="name" header="Application Name"></d-column>
@@ -108,7 +108,7 @@
       [scrollable]="true"
       [loading]="userTable.loading"
       [tableOverflowType]="'overlay'"
-      [maxHeight]="'300px'"
+      [maxHeight]="'500px'"
       style="margin-top: 8px;"
     >
       <d-column field="username" header="Username"></d-column>
@@ -164,7 +164,7 @@
       [scrollable]="true"
       [loading]="serverTable.loading"
       [tableOverflowType]="'overlay'"
-      [maxHeight]="'300px'"
+      [maxHeight]="'500px'"
     >
       <d-column field="name" header="Name"></d-column>
       <d-column field="assetKey" header="IP" [width]="'150px'"></d-column>
@@ -205,12 +205,12 @@
       [scrollable]="true"
       [loading]="certTable.loading"
       [tableOverflowType]="'overlay'"
-      [maxHeight]="'300px'"
+      [maxHeight]="'500px'"
       style="margin-top: 8px;"
     >
       <d-column field="name" header="Name"></d-column>
       <d-column field="domainName" header="Domain"></d-column>
-      <d-column field="certificateType" header="Type" [width]="'100px'"></d-column>
+      <d-column field="certificateType" header="Type" ></d-column>
       <d-column header="" [width]="'60px'">
         <d-cell>
           <ng-template let-rowItem="rowItem">

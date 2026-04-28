@@ -28,6 +28,7 @@ export interface ChannelMemberVO {
 
 export interface ChannelInfoPageQuery extends PageQuery {
   queryName: string;
+  country?: string;
 }
 
 export interface ChannelInfoEdit {

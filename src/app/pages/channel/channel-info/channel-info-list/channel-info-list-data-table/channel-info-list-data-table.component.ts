@@ -28,8 +28,10 @@ export class ChannelInfoListDataTableComponent implements OnInit {
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
+    country: '',
   };
   table: Table<ChannelInfoVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
 
   newChannel: ChannelInfoEdit = {
     name: '',

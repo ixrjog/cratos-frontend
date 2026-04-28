@@ -98,7 +98,7 @@
 
       <div class="node-column" *ngFor="let level of nodeLevels">
         <ng-container *ngFor="let node of level">
-          <div *ngIf="node.nodeType !== 'LEASED_LINE' && node.nodeType !== 'IPSEC_VPN'"
+          <div *ngIf="node.nodeType !== 'LEASED_LINE' && node.nodeType !== 'IPSEC_VPN' && node.nodeType !== 'INTERNET'"
                class="node-item" [class.node-compact]="isNetworkNode(node.nodeType)"
                [id]="'node-' + getNodeIndex(node)" [class.editable]="editMode" (click)="onEditNode(node)">
             <i class="fas fa-server" *ngIf="node.nodeType === 'IDC'"></i>

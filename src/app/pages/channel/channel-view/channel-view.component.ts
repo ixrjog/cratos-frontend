@@ -588,7 +588,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)
-    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN'];
+    const hiddenTypes = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'];
     const bizConnected = new Set<string>();
 
     // Helper: find visible descendants of a hidden line

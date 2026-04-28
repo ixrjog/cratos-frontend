@@ -536,7 +536,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
     const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
-    const noArrow = { color: lineColor, size: 2, path: 'grid', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
     const nodeElMap = new Map<number, HTMLElement>();
@@ -576,52 +576,25 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         }
       });
     });
-
-    // Anchor point allocator: 12 points around each element
-    // Top: 1(25%,0) 2(50%,0) 3(75%,0)  Right: 4(100%,25%) 5(100%,50%) 6(100%,75%)
-    // Bottom: 7(75%,100%) 8(50%,100%) 9(25%,100%)  Left: 10(0,75%) 11(0,50%) 12(0,25%)
-    const anchorPoints: { [side: string]: { x: string; y: string }[] } = {
-      top:    [{ x: '25%', y: '0%' }, { x: '50%', y: '0%' }, { x: '75%', y: '0%' }],
-      right:  [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }],
-      bottom: [{ x: '75%', y: '100%' }, { x: '50%', y: '100%' }, { x: '25%', y: '100%' }],
-      left:   [{ x: '0%', y: '75%' }, { x: '0%', y: '50%' }, { x: '0%', y: '25%' }],
-    };
-    const sideUsage = new Map<string, number>(); // "elId-side" → count
-    const getAnchor = (el: HTMLElement, side: string) => {
-      const key = `${el.id}-${side}`;
-      const used = sideUsage.get(key) || 0;
-      sideUsage.set(key, used + 1);
-      const pts = anchorPoints[side];
-      const pt = pts[Math.min(used, pts.length - 1)];
-      return LeaderLine.pointAnchor(el, { x: pt.x, y: pt.y });
+    const isSameColumn = (idx1: number, idx2: number) => {
+      return nodeColumnMap.has(idx1) && nodeColumnMap.has(idx2) && nodeColumnMap.get(idx1) === nodeColumnMap.get(idx2);
     };
 
-    const makeLine = (srcEl: HTMLElement, tgtEl: HTMLElement, srcSide: string, tgtSide: string, opts: any) => {
-      const start = getAnchor(srcEl, srcSide);
-      const end = getAnchor(tgtEl, tgtSide);
-      try { this.lines.push(new LeaderLine(start, end, opts)); } catch (e) {}
-    };
-
-    // Determine sides for a connection based on column positions
-    const pairSideCount = new Map<string, number>();
-    const getSides = (srcIdx: number, tgtIdx: number): [string, string] => {
-      const srcCol = nodeColumnMap.get(srcIdx) ?? -1;
-      const tgtCol = nodeColumnMap.get(tgtIdx) ?? -1;
-      if (srcCol === tgtCol) {
-        const srcRow = nodeRowMap.get(srcIdx) ?? 0;
-        const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
-        return tgtRow > srcRow ? ['bottom', 'top'] : ['top', 'bottom'];
+    // Shared connection counter for socket distribution
+    const pairCount = new Map<string, number>();
+    const getSocketPair = (pairKey: string, sameColumn = false, srcIdx = -1, tgtIdx = -1) => {
+      const count = pairCount.get(pairKey) || 0;
+      pairCount.set(pairKey, count + 1);
+      if (sameColumn) {
+        if (count === 0) return { startSocket: 'bottom', endSocket: 'top', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        if (count === 1) return { startSocket: 'right', endSocket: 'right', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
+        return { startSocket: 'left', endSocket: 'left', path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
       }
-      // Cross-column: first line right→left, subsequent use top or bottom
-      const key = `${Math.min(srcIdx, tgtIdx)}-${Math.max(srcIdx, tgtIdx)}`;
-      const count = pairSideCount.get(key) || 0;
-      pairSideCount.set(key, count + 1);
-      if (count === 0) return srcCol < tgtCol ? ['right', 'left'] : ['left', 'right'];
-      // Subsequent: pick top or bottom based on target relative position
+      if (count === 0) return { startSocket: 'right', endSocket: 'left' };
       const srcRow = nodeRowMap.get(srcIdx) ?? 0;
       const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
       const vert = tgtRow > srcRow ? 'bottom' : 'top';
-      return [vert, vert];
+      return { startSocket: vert, endSocket: vert, path: 'grid', startSocketGravity: 20, endSocketGravity: 20 };
     };
 
     // Business → root lines (skip hidden, connect to visible descendants with label)
@@ -654,19 +627,20 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const isOutbound = biz.businessDirection === 'OUTBOUND';
 
         if (hiddenTypes.includes(mergedLine.nodeType)) {
+          // Hidden root: connect business to visible descendants with label
           const descendants = findVisibleDescendants(mergedLine.name);
           descendants.forEach(d => {
             const key = `${i}-${d.idx}`;
             if (bizConnected.has(key)) return;
             bizConnected.add(key);
-            const lineOpts = { color: lineColor, size: 2, path: 'grid', startPlug: 'behind', endPlug: 'arrow1',
-              middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
-              dash: this.isDashedType(mergedLine.nodeType) };
-            if (isOutbound) {
-              makeLine(bizEl, d.el, 'right', 'left', lineOpts);
-            } else {
-              makeLine(d.el, bizEl, 'right', 'left', lineOpts);
-            }
+            try {
+              this.lines.push(new LeaderLine(bizEl, d.el,
+                { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left',
+                  startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind',
+                  middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
+                  dash: this.isDashedType(mergedLine.nodeType) }
+              ));
+            } catch (e) {}
           });
         } else {
           const key = `${i}-${mergedLine.name}`;
@@ -674,12 +648,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           bizConnected.add(key);
           const lineEl = nodeElMap.get(lineIdx);
           if (!lineEl) return;
-          const lineOpts = { color: lineColor, size: 2, path: 'grid', startPlug: 'behind', endPlug: 'arrow1' };
-          if (isOutbound) {
-            makeLine(bizEl, lineEl, 'right', 'left', lineOpts);
-          } else {
-            makeLine(lineEl, bizEl, 'right', 'left', lineOpts);
-          }
+          try {
+            this.lines.push(new LeaderLine(bizEl, lineEl,
+              { color: lineColor, size: 2, path: 'grid', startSocket: 'right', endSocket: 'left',
+                startPlug: isOutbound ? 'behind' : 'arrow1', endPlug: isOutbound ? 'arrow1' : 'behind' }
+            ));
+          } catch (e) {}
         }
       });
     });
@@ -703,15 +677,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             if (gIdx === undefined) return;
             const gEl = nodeElMap.get(gIdx);
             if (!gEl) return;
-            const [srcSide, tgtSide] = getSides(gIdx, j);
-            const opts = { ...noArrow, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) };
-            makeLine(gEl, childEl, srcSide, tgtSide, opts);
+            const pairKey = `${gIdx}-${j}`;
+            const sockets = getSocketPair(pairKey, isSameColumn(gIdx, j), gIdx, j);
+            try { this.lines.push(new LeaderLine(gEl, childEl, { ...noArrow, ...sockets, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) })); } catch (e) {}
           });
         } else {
           const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
-          const [srcSide, tgtSide] = getSides(parentIdx, j);
-          makeLine(parentEl, childEl, srcSide, tgtSide, noArrow);
+          const pairKey = `${parentIdx}-${j}`;
+          const sockets = getSocketPair(pairKey, isSameColumn(parentIdx, j), parentIdx, j);
+          try { this.lines.push(new LeaderLine(parentEl, childEl, { ...noArrow, ...sockets })); } catch (e) {}
         }
       });
     });
@@ -727,14 +702,16 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
           const label = { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), {color: labelColor, outlineColor: '', fontSize: '9px'}), dash: this.isDashedType(line.nodeType) };
-          makeLine(parentEl, centerEl, 'right', 'left', { ...noArrow, ...label });
+          const sockets = getSocketPair(`${parentIdx}-channel`);
+          try { this.lines.push(new LeaderLine(parentEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
         });
       } else {
         const lineEl = nodeElMap.get(j);
         if (!lineEl) return;
         const nodeType = line.nodeType;
         const label = (nodeType === 'LEASED_LINE' || nodeType === 'IPSEC_VPN') ? { middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(line.name), { color: labelColor, outlineColor: '', fontSize: '9px' }) } : {};
-        makeLine(lineEl, centerEl, 'right', 'left', { ...noArrow, ...label });
+        const sockets = getSocketPair(`${j}-channel`);
+        try { this.lines.push(new LeaderLine(lineEl, centerEl, { ...noArrow, ...sockets, ...label })); } catch (e) {}
       }
     });
 
@@ -743,7 +720,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       this.businesses.forEach((_, i) => {
         const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
         if (!bizEl) return;
-        makeLine(bizEl, centerEl, 'right', 'left', noArrow);
+        try { this.lines.push(new LeaderLine(bizEl, centerEl, noArrow)); } catch (e) {}
       });
     }
 
@@ -751,7 +728,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.organizations.forEach(org => {
       const orgEl = this.el.nativeElement.querySelector(`#org-${org.id}`);
       if (!orgEl) return;
-      makeLine(centerEl, orgEl, 'right', 'left', noArrow);
+      const sockets = getSocketPair(`channel-org-${org.id}`);
+      try { this.lines.push(new LeaderLine(centerEl, orgEl, { ...noArrow, ...sockets })); } catch (e) {}
     });
 
     // Force leader-line SVGs to top layer

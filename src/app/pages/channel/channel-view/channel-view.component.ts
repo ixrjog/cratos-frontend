@@ -577,6 +577,17 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
     });
 
+    const getSides = (srcIdx: number, tgtIdx: number): [string, string] => {
+      const srcCol = nodeColumnMap.get(srcIdx) ?? -1;
+      const tgtCol = nodeColumnMap.get(tgtIdx) ?? -1;
+      if (srcCol === tgtCol) {
+        const srcRow = nodeRowMap.get(srcIdx) ?? 0;
+        const tgtRow = nodeRowMap.get(tgtIdx) ?? 0;
+        return tgtRow > srcRow ? ['bottom', 'top'] : ['top', 'bottom'];
+      }
+      return srcCol < tgtCol ? ['right', 'left'] : ['left', 'right'];
+    };
+
     // Two-pass anchor system: collect connections, then draw with distributed anchors
     // Right side points: 1(100%,25%) 2(100%,50%) 3(100%,75%)
     // Left side points:  4(0%,25%)   5(0%,50%)   6(0%,75%)
@@ -701,12 +712,14 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
             if (gIdx === undefined) return;
             const gEl = nodeElMap.get(gIdx);
             if (!gEl) return;
-            addConn(gEl, childEl, 'right', 'left', { ...noArrow, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) });
+            const [gs, gt] = getSides(gIdx, j);
+            addConn(gEl, childEl, gs, gt, { ...noArrow, dash: this.isDashedType(parentLine.nodeType), middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(parentLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}) });
           });
         } else {
           const parentEl = nodeElMap.get(parentIdx);
           if (!parentEl) return;
-          addConn(parentEl, childEl, 'right', 'left', noArrow);
+          const [ps, pt] = getSides(parentIdx, j);
+          addConn(parentEl, childEl, ps, pt, noArrow);
         }
       });
     });

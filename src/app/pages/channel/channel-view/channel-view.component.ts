@@ -361,6 +361,10 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return nodeType === 'IPSEC_VPN' || nodeType === 'INTERNET';
   }
 
+  getDaysRemaining(date: string): number {
+    return Math.ceil((new Date(date).getTime() - Date.now()) / 86400000);
+  }
+
   computeLineLevels() {
     this.nodeLevels = [];
     if (!this.channelNodes.length) return;

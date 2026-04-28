@@ -24,6 +24,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class ChannelBusinessListDataTableComponent implements OnInit {
 
+  static readonly CHANNEL_STORAGE_KEY = 'channel_business_channel';
+
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     queryName: '',
@@ -82,11 +84,28 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
     this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 50 })
       .subscribe(({ body }) => {
         this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
+        const saved = localStorage.getItem(ChannelBusinessListDataTableComponent.CHANNEL_STORAGE_KEY);
+        if (saved) {
+          try {
+            const ch = JSON.parse(saved);
+            const match = this.channelOptions.find(o => o.value === ch.value);
+            if (match) {
+              this.selectedChannel = match;
+              this.queryParam.channelId = match.value;
+              this.fetchData();
+            }
+          } catch (e) {}
+        }
       });
   }
 
   onChannelChange(selected: any) {
     this.queryParam.channelId = selected?.value || null;
+    if (selected) {
+      localStorage.setItem(ChannelBusinessListDataTableComponent.CHANNEL_STORAGE_KEY, JSON.stringify(selected));
+    } else {
+      localStorage.removeItem(ChannelBusinessListDataTableComponent.CHANNEL_STORAGE_KEY);
+    }
     this.fetchData();
   }
 

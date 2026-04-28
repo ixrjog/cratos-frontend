@@ -151,7 +151,6 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       length: 100,
     }).subscribe(({ body }) => {
       this.businesses = body.data || [];
-      // Extract unique organizations
       const orgMap = new Map();
       this.businesses.forEach(biz => {
         if (biz.organization && !orgMap.has(biz.organization.id)) {
@@ -159,17 +158,17 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         }
       });
       this.organizations = Array.from(orgMap.values());
-      this.needDrawLines = true;
-    });
 
-    this.channelNodeService.queryChannelNodePage({
-      queryName: '',
-      channelId: this.selectedChannel.id,
-      page: 1,
-      length: 100,
-    }).subscribe(({ body }) => {
-      this.channelNodes = body.data || [];
-      this.computeLineLevels();
+      this.channelNodeService.queryChannelNodePage({
+        queryName: '',
+        channelId: this.selectedChannel.id,
+        page: 1,
+        length: 100,
+      }).subscribe(({ body: nodeBody }) => {
+        this.channelNodes = nodeBody.data || [];
+        this.computeLineLevels();
+        this.needDrawLines = true;
+      });
     });
   }
 

@@ -128,7 +128,7 @@
     <div class="graph-column" *ngFor="let level of lineLevels">
       <ng-container *ngFor="let line of level">
         <div *ngIf="!isNetworkLine(line.nodeType)" class="graph-item editable" [id]="'graph-line-' + getLineIndex(line)"
-             (click)="onRowEdit(line)">
+             (click)="onRowEdit(line)" style="position: relative;">
           <i class="fas fa-server" *ngIf="line.nodeType === 'IDC'"></i>
           <i class="fas fa-cloud" *ngIf="line.nodeType === 'CLOUD'"></i>
           <div class="line-content">
@@ -138,6 +138,7 @@
             </div>
             <d-tag *ngIf="line.nodeType" [tag]="line.nodeType" [labelStyle]="'blue-w98'"></d-tag>
           </div>
+          <span class="seq-badge">S{{ line.seq }}</span>
         </div>
       </ng-container>
     </div>

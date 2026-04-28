@@ -863,11 +863,66 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       });
     }
 
-    // Channel → Organization (no arrow)
+    // Channel → Organization with distributed anchors
+    // Channel card anchors: u1-u5 (top), r1-r5 (right), d1-d5 (bottom)
+    const chUp = [
+      { pt: { x: '17%', y: '0%' }, g: [0, -20] },  // u1
+      { pt: { x: '33%', y: '0%' }, g: [0, -20] },  // u2
+      { pt: { x: '50%', y: '0%' }, g: [0, -20] },  // u3
+      { pt: { x: '67%', y: '0%' }, g: [0, -20] },  // u4
+      { pt: { x: '83%', y: '0%' }, g: [0, -20] },  // u5
+    ];
+    const chRight = [
+      { pt: { x: '100%', y: '10%' }, g: [20, 0] },  // r1
+      { pt: { x: '100%', y: '30%' }, g: [20, 0] },  // r2
+      { pt: { x: '100%', y: '50%' }, g: [20, 0] },  // r3
+      { pt: { x: '100%', y: '70%' }, g: [20, 0] },  // r4
+      { pt: { x: '100%', y: '90%' }, g: [20, 0] },  // r5
+    ];
+    const chDown = [
+      { pt: { x: '17%', y: '100%' }, g: [0, 20] },  // d1
+      { pt: { x: '33%', y: '100%' }, g: [0, 20] },  // d2
+      { pt: { x: '50%', y: '100%' }, g: [0, 20] },  // d3
+      { pt: { x: '67%', y: '100%' }, g: [0, 20] },  // d4
+      { pt: { x: '83%', y: '100%' }, g: [0, 20] },  // d5
+    ];
+    // Upper extended sequence: u1,u2,u3,u4,u5,r1,r2 (cycle)
+    const chUpperSeq = [...chUp, chRight[0], chRight[1]];
+    // Lower extended sequence: d1,d2,d3,d4,d5,r4,r5 (cycle, reversed assignment)
+    const chLowerSeq = [...chDown, chRight[3], chRight[4]];
+
+    const orgCount = this.organizations.length;
+    const orgEls: { el: HTMLElement; org: any }[] = [];
     this.organizations.forEach(org => {
       const orgEl = this.el.nativeElement.querySelector(`#org-${org.id}`);
-      if (!orgEl) return;
-      addConn(centerEl, orgEl, 'right', 'left', noArrow);
+      if (orgEl) orgEls.push({ el: orgEl, org });
+    });
+
+    const getChAnchor = (total: number, idx: number) => {
+      if (total === 1) return chRight[2]; // r3
+      const half = Math.ceil(total / 2);
+      if (idx < half) {
+        // Upper half
+        if (half === 1) return chRight[1]; // r2
+        if (half === 2) return [chUp[1], chUp[3]][idx]; // u2, u4
+        return chUpperSeq[idx % chUpperSeq.length];
+      } else {
+        // Lower half (reverse: last org gets d5 side)
+        const lowerCount = total - half;
+        const li = (total - 1 - idx);
+        if (lowerCount === 1) return chRight[3]; // r4
+        if (lowerCount === 2) return [chDown[3], chDown[1]][li]; // d4, d2
+        return chLowerSeq[li % chLowerSeq.length];
+      }
+    };
+
+    orgEls.forEach((o, i) => {
+      const chA = getChAnchor(orgEls.length, i);
+      const chAnchor = LeaderLine.pointAnchor(centerEl, chA.pt);
+      const orgAnchor = LeaderLine.pointAnchor(o.el, { x: '0%', y: '50%' });
+      try {
+        this.lines.push(new LeaderLine(chAnchor, orgAnchor, { ...noArrow, startSocketGravity: chA.g, endSocketGravity: [-20, 0] }));
+      } catch (e) {}
     });
 
     // Draw all planned connections with distributed anchors

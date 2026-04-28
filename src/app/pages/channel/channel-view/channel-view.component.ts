@@ -45,6 +45,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   needDrawLines = false;
   private positionInterval: any;
   private resizeObserver: ResizeObserver;
+  private onResizeBound = () => this.scheduleRedraw();
+  private onTransitionEndBound = () => this.scheduleRedraw();
 
   // Kubernetes
   selectedAppName = '';
@@ -85,11 +87,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     }, 500);
 
     // Redraw on container resize (sidebar toggle, window resize)
-    this.resizeObserver = new ResizeObserver(() => {
-      this.removeLines();
-      this.needDrawLines = true;
-    });
+    this.resizeObserver = new ResizeObserver(() => this.scheduleRedraw());
     this.resizeObserver.observe(this.el.nativeElement);
+    window.addEventListener('resize', this.onResizeBound);
+    // Sidebar menu uses CSS transition
+    document.querySelector('.main-container, .devui-layout-content, .devui-sidebar')
+      ?.addEventListener('transitionend', this.onTransitionEndBound);
   }
 
   scheduleRedraw() {
@@ -118,6 +121,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     if (this.positionInterval) clearInterval(this.positionInterval);
     if (this.resizeObserver) this.resizeObserver.disconnect();
+    window.removeEventListener('resize', this.onResizeBound);
+    document.querySelector('.main-container, .devui-layout-content, .devui-sidebar')
+      ?.removeEventListener('transitionend', this.onTransitionEndBound);
   }
 
   fetchChannels() {

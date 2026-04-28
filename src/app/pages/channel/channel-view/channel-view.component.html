@@ -95,9 +95,10 @@
     <div class="divider"></div>
 
     <!-- Section 2: Node Topology -->
-    <h5 class="section-title" *ngIf="nodeLevels.length">Node Topology
-      <d-icon [icon]="'icon-add'" [operable]="editMode" [disabled]="!editMode" (click)="editMode && onAddNode()" style="margin-left: 8px;"></d-icon>
-    </h5>
+    <div class="topology-card" *ngIf="nodeLevels.length">
+      <h5 class="group-title">Node Topology
+        <d-icon [icon]="'icon-add'" [operable]="editMode" [disabled]="!editMode" (click)="editMode && onAddNode()" style="margin-left: 8px;"></d-icon>
+      </h5>
     <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
@@ -168,6 +169,7 @@
                 (click)="onShowNodeInfo(node); $event.stopPropagation()" style="font-size: 12px;"></d-icon>
         <d-tag [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
       </span>
+    </div>
     </div>
 
     <div class="divider"></div>

@@ -731,24 +731,44 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
 
     // Draw business connections with fixed anchors
-    const bizTargetIdx = new Map<string, number>(); // track current index per target node
-    const bizSourceCount = new Map<string, number>(); // count per biz element
-    const bizSourceIdx = new Map<string, number>(); // track current index per biz element
-    bizConns.forEach(c => {
-      bizSourceCount.set(c.bizEl.id, (bizSourceCount.get(c.bizEl.id) || 0) + 1);
-    });
-    const bizRightPts = [{ x: '100%', y: '25%' }, { x: '100%', y: '50%' }, { x: '100%', y: '75%' }];
+    // Anchor points: 0=right-mid, 1=right-top, 2=top-left, 3=top-mid, 4=top-right,
+    //                 5=right-bottom, 6=bottom-left, 7=bottom-mid, 8=bottom-right
+    const bizAnchorPts = [
+      { pt: { x: '100%', y: '50%' },  g: [20, 0] },   // 0
+      { pt: { x: '100%', y: '25%' },  g: [20, 0] },   // 1
+      { pt: { x: '25%',  y: '0%' },   g: [0, -20] },  // 2
+      { pt: { x: '50%',  y: '0%' },   g: [0, -20] },  // 3
+      { pt: { x: '75%',  y: '0%' },   g: [0, -20] },  // 4
+      { pt: { x: '100%', y: '75%' },  g: [20, 0] },   // 5
+      { pt: { x: '25%',  y: '100%' }, g: [0, 20] },   // 6
+      { pt: { x: '50%',  y: '100%' }, g: [0, 20] },   // 7
+      { pt: { x: '75%',  y: '100%' }, g: [0, 20] },   // 8
+    ];
+    const totalBiz = bizConns.length;
+    const bizTargetIdx = new Map<string, number>();
     const getDistPt = (total: number, idx: number, pts: { x: string; y: string }[]) => {
       if (total === 1) return pts[1];
       if (total === 2) return idx === 0 ? pts[0] : pts[2];
       return pts[Math.min(idx, 2)];
     };
-    bizConns.forEach(c => {
-      // Biz right side
-      const bizTotal = bizSourceCount.get(c.bizEl.id) || 1;
-      const bizIdx = bizSourceIdx.get(c.bizEl.id) || 0;
-      bizSourceIdx.set(c.bizEl.id, bizIdx + 1);
-      const rightPt = getDistPt(bizTotal, bizIdx, bizRightPts);
+    bizConns.forEach((c, i) => {
+      // Biz anchor: 1 biz → 0号, multi → upper half 1,2,3,4 / lower half 5,6,7,8
+      let bizPt: { x: string; y: string };
+      let bizGravity: number[];
+      if (totalBiz === 1) {
+        bizPt = bizAnchorPts[0].pt;
+        bizGravity = bizAnchorPts[0].g;
+      } else {
+        const half = Math.ceil(totalBiz / 2);
+        let anchorIdx: number;
+        if (i < half) {
+          anchorIdx = Math.min(i, 3) + 1; // 1,2,3,4
+        } else {
+          anchorIdx = Math.min(i - half, 3) + 5; // 5,6,7,8
+        }
+        bizPt = bizAnchorPts[anchorIdx].pt;
+        bizGravity = bizAnchorPts[anchorIdx].g;
+      }
 
       // Node left side
       const tgtTotal = bizTargetCount.get(c.tgtEl.id) || 1;
@@ -757,13 +777,13 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const leftPts = [{ x: '0%', y: '25%' }, { x: '0%', y: '50%' }, { x: '0%', y: '75%' }];
       const leftPt = getDistPt(tgtTotal, tgtIdx, leftPts);
 
-      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, rightPt);
+      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizPt);
       const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, leftPt);
       try {
         if (c.isOutbound) {
-          this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, { ...c.opts, startSocketGravity: [20, 0], endSocketGravity: [-20, 0] }));
+          this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, { ...c.opts, startSocketGravity: bizGravity, endSocketGravity: [-20, 0] }));
         } else {
-          this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, { ...c.opts, startSocketGravity: [-20, 0], endSocketGravity: [20, 0] }));
+          this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, { ...c.opts, startSocketGravity: [-20, 0], endSocketGravity: bizGravity }));
         }
       } catch (e) {}
     });

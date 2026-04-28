@@ -101,6 +101,7 @@
 }
 
 .node-item {
+  position: relative;
   padding: 8px 12px;
   border: 1px solid var(--devui-dividing-line, #dfe1e6);
   border-radius: 6px;
@@ -282,6 +283,7 @@
 }
 
 .biz-item {
+  position: relative;
   padding: 10px;
   border: 1px solid var(--devui-dividing-line, #dfe1e6);
   border-radius: 6px;
@@ -434,14 +436,16 @@
 }
 
 .seq-badge {
-  margin-left: 4px;
-  font-size: 10px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 9px;
   color: #fff;
   background: var(--devui-brand, #5e7ce0);
   border-radius: 8px;
-  padding: 0 5px;
+  padding: 0 4px;
   font-weight: 500;
-  vertical-align: middle;
+  line-height: 14px;
 }
 
 .empty-state {

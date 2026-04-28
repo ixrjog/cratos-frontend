@@ -103,8 +103,9 @@
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
           <div class="biz-header">
             <i class="fas fa-dollar-sign"></i>
-            <span class="biz-name">{{ biz.businessName }}<span *ngIf="editMode" class="seq-badge">S{{ biz.seq }}</span></span>
+            <span class="biz-name">{{ biz.businessName }}</span>
           </div>
+          <span *ngIf="editMode" class="seq-badge">S{{ biz.seq }}</span>
           <div class="biz-tags">
             <d-tag *ngIf="biz.type" [tag]="biz.type" [labelStyle]="'blue-w98'"></d-tag>
             <d-tag *ngIf="biz.businessDirection" [tag]="biz.businessDirection" [labelStyle]="'blue-w98'"></d-tag>
@@ -121,7 +122,7 @@
             <i class="fas fa-cloud" *ngIf="node.nodeType === 'CLOUD'"></i>
             <i class="fas fa-sitemap" *ngIf="isNetworkNode(node.nodeType)"></i>
             <div class="node-content" *ngIf="!isNetworkNode(node.nodeType)">
-              <div class="node-name">{{ node.name }}<span *ngIf="editMode" class="seq-badge">S{{ node.seq }}</span>
+              <div class="node-name">{{ node.name }}
                 <d-icon *ngIf="node.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
                         (click)="onShowNodeInfo(node); $event.stopPropagation()" style="margin-left: 4px; font-size: 12px;"></d-icon>
               </div>
@@ -129,6 +130,7 @@
             </div>
             <span *ngIf="isNetworkNode(node.nodeType)" class="node-name">{{ node.name }}</span>
             <d-tag *ngIf="isNetworkNode(node.nodeType)" [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+            <span *ngIf="editMode" class="seq-badge">S{{ node.seq }}</span>
           </div>
         </ng-container>
       </div>

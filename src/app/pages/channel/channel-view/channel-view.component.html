@@ -42,20 +42,6 @@
           <markdown lineNumbers lineHighlight mermaid [data]="getNetworkInfo()" [disableSanitizer]="true"></markdown>
         </div>
       </div>
-      <div class="relation-group" *ngIf="selectedChannel.members?.['USER']?.length">
-        <h5 class="group-title">Users
-          <span style="margin-left: 8px; cursor: pointer; color: var(--devui-brand, #5e7ce0);"
-                (click)="onOpenCallDialog()">
-            <i class="fas fa-phone"></i>
-          </span>
-        </h5>
-        <div class="group-content">
-          <span *ngFor="let m of selectedChannel.members['USER']" class="user-item">
-            <span class="user-role">{{ m.role }}</span>
-            <app-user-popover [username]="m.name"></app-user-popover>
-          </span>
-        </div>
-      </div>
       <div class="column-group">
         <div class="relation-group" *ngIf="selectedChannel.members?.['APPLICATION']?.length">
           <h5 class="group-title">Applications</h5>
@@ -66,6 +52,22 @@
             </span>
           </div>
         </div>
+        <div class="relation-group" *ngIf="selectedChannel.members?.['USER']?.length">
+          <h5 class="group-title">Users
+            <span style="margin-left: 8px; cursor: pointer; color: var(--devui-brand, #5e7ce0);"
+                  (click)="onOpenCallDialog()">
+              <i class="fas fa-phone"></i>
+            </span>
+          </h5>
+          <div class="group-content">
+            <span *ngFor="let m of selectedChannel.members['USER']" class="user-item">
+              <span class="user-role">{{ m.role }}</span>
+              <app-user-popover [username]="m.name"></app-user-popover>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="column-group">
         <div class="relation-group" *ngIf="selectedChannel.members?.['EDS_ASSET']?.length">
           <h5 class="group-title">Servers</h5>
           <div class="group-content">

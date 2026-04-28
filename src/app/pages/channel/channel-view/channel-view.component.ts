@@ -657,6 +657,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       return results;
     };
 
+    // Business → root nodes: pre-count connections per target node, then draw with fixed anchors
+    // Biz always uses right-middle (2号). Node left side: 1 biz→5号(middle), multi→4号(top) then 6号(bottom)
+    const bizTargetCount = new Map<string, number>(); // targetElId → count
+    const bizConns: { bizEl: HTMLElement; tgtEl: HTMLElement; opts: any; isOutbound: boolean }[] = [];
+
     this.businesses.forEach((biz, i) => {
       const bizEl = this.el.nativeElement.querySelector(`#biz-${i}`);
       if (!bizEl) return;
@@ -667,30 +672,54 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         if (!mergedLine.isRoot) return;
         const isOutbound = biz.businessDirection === 'OUTBOUND';
 
+        const targets: { el: HTMLElement; label?: any; dash?: boolean }[] = [];
         if (hiddenTypes.includes(mergedLine.nodeType)) {
-          const descendants = findVisibleDescendants(mergedLine.name);
-          descendants.forEach(d => {
+          findVisibleDescendants(mergedLine.name).forEach(d => {
             const key = `${i}-${d.idx}`;
             if (bizConnected.has(key)) return;
             bizConnected.add(key);
-            const opts = { color: lineColor, size: 2, path: 'fluid',
-              startPlug: 'behind', endPlug: 'arrow1',
-              middleLabel: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
-              dash: this.isDashedType(mergedLine.nodeType) };
-            if (isOutbound) { addConn(bizEl, d.el, 'right', 'left', opts); }
-            else { addConn(d.el, bizEl, 'right', 'left', opts); }
+            targets.push({ el: d.el,
+              label: LeaderLine.captionLabel(this.getHiddenLabel(mergedLine.name), {color: labelColor, outlineColor: '', fontSize: '9px'}),
+              dash: this.isDashedType(mergedLine.nodeType) });
           });
         } else {
           const key = `${i}-${mergedLine.name}`;
-          if (bizConnected.has(key)) return;
-          bizConnected.add(key);
-          const lineEl = nodeElMap.get(lineIdx);
-          if (!lineEl) return;
-          const opts = { color: lineColor, size: 2, path: 'fluid', startPlug: 'behind', endPlug: 'arrow1' };
-          if (isOutbound) { addConn(bizEl, lineEl, 'right', 'left', opts); }
-          else { addConn(lineEl, bizEl, 'right', 'left', opts); }
+          if (!bizConnected.has(key)) {
+            bizConnected.add(key);
+            const lineEl = nodeElMap.get(lineIdx);
+            if (lineEl) targets.push({ el: lineEl });
+          }
         }
+
+        targets.forEach(t => {
+          bizTargetCount.set(t.el.id, (bizTargetCount.get(t.el.id) || 0) + 1);
+          const opts: any = { color: lineColor, size: 2, path: 'fluid', startPlug: 'behind', endPlug: 'arrow1' };
+          if (t.label) opts.middleLabel = t.label;
+          if (t.dash) opts.dash = true;
+          bizConns.push({ bizEl, tgtEl: t.el, opts, isOutbound });
+        });
       });
+    });
+
+    // Draw business connections with fixed anchors
+    const bizTargetIdx = new Map<string, number>(); // track current index per target
+    const bizRightMid = { x: '100%', y: '50%' }; // 2号
+    bizConns.forEach(c => {
+      const total = bizTargetCount.get(c.tgtEl.id) || 1;
+      const idx = bizTargetIdx.get(c.tgtEl.id) || 0;
+      bizTargetIdx.set(c.tgtEl.id, idx + 1);
+      // Node left side point: 1 biz→5号(50%), multi→first 4号(25%), second 6号(75%)
+      let leftPt: { x: string; y: string };
+      if (total === 1) { leftPt = { x: '0%', y: '50%' }; }
+      else if (idx === 0) { leftPt = { x: '0%', y: '25%' }; }
+      else { leftPt = { x: '0%', y: '75%' }; }
+
+      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizRightMid);
+      const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, leftPt);
+      try {
+        if (c.isOutbound) { this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, c.opts)); }
+        else { this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, c.opts)); }
+      } catch (e) {}
     });
 
     // Line → Line: for each visible line, connect to all visible parents in sourceEndpoints

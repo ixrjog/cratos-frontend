@@ -731,59 +731,49 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
 
     // Draw business connections with fixed anchors
-    // Anchor points: 0=right-mid, 1=right-top, 2=top-left, 3=top-mid, 4=top-right,
-    //                 5=right-bottom, 6=bottom-left, 7=bottom-mid, 8=bottom-right
-    const bizAnchorPts = [
-      { pt: { x: '100%', y: '50%' },  g: [20, 0] },   // 0
-      { pt: { x: '100%', y: '25%' },  g: [20, 0] },   // 1
-      { pt: { x: '25%',  y: '0%' },   g: [0, -20] },  // 2
-      { pt: { x: '50%',  y: '0%' },   g: [0, -20] },  // 3
-      { pt: { x: '75%',  y: '0%' },   g: [0, -20] },  // 4
-      { pt: { x: '100%', y: '75%' },  g: [20, 0] },   // 5
-      { pt: { x: '25%',  y: '100%' }, g: [0, 20] },   // 6
-      { pt: { x: '50%',  y: '100%' }, g: [0, 20] },   // 7
-      { pt: { x: '75%',  y: '100%' }, g: [0, 20] },   // 8
+    // Node left-side anchor points for receiving biz connections:
+    // 0=left-mid, 1=left-top, 2=top-left, 3=top-mid, 4=top-right,
+    // 5=left-bottom, 6=bottom-left, 7=bottom-mid, 8=bottom-right
+    const nodeAnchorPts = [
+      { pt: { x: '0%', y: '50%' },   g: [-20, 0] },  // 0
+      { pt: { x: '0%', y: '25%' },   g: [-20, 0] },  // 1
+      { pt: { x: '25%', y: '0%' },   g: [0, -20] },  // 2
+      { pt: { x: '50%', y: '0%' },   g: [0, -20] },  // 3
+      { pt: { x: '75%', y: '0%' },   g: [0, -20] },  // 4
+      { pt: { x: '0%', y: '75%' },   g: [-20, 0] },  // 5
+      { pt: { x: '25%', y: '100%' }, g: [0, 20] },   // 6
+      { pt: { x: '50%', y: '100%' }, g: [0, 20] },   // 7
+      { pt: { x: '75%', y: '100%' }, g: [0, 20] },   // 8
     ];
-    const totalBiz = bizConns.length;
+    const bizRightMid = { x: '100%', y: '50%' };
     const bizTargetIdx = new Map<string, number>();
-    const getDistPt = (total: number, idx: number, pts: { x: string; y: string }[]) => {
-      if (total === 1) return pts[1];
-      if (total === 2) return idx === 0 ? pts[0] : pts[2];
-      return pts[Math.min(idx, 2)];
-    };
-    bizConns.forEach((c, i) => {
-      // Biz anchor: 1 biz → 0号, multi → upper half 1,2,3,4 / lower half 5,6,7,8
-      let bizPt: { x: string; y: string };
-      let bizGravity: number[];
-      if (totalBiz === 1) {
-        bizPt = bizAnchorPts[0].pt;
-        bizGravity = bizAnchorPts[0].g;
-      } else {
-        const half = Math.ceil(totalBiz / 2);
-        let anchorIdx: number;
-        if (i < half) {
-          anchorIdx = Math.min(i, 3) + 1; // 1,2,3,4
-        } else {
-          anchorIdx = Math.min(i - half, 3) + 5; // 5,6,7,8
-        }
-        bizPt = bizAnchorPts[anchorIdx].pt;
-        bizGravity = bizAnchorPts[anchorIdx].g;
-      }
-
-      // Node left side
+    bizConns.forEach((c) => {
       const tgtTotal = bizTargetCount.get(c.tgtEl.id) || 1;
       const tgtIdx = bizTargetIdx.get(c.tgtEl.id) || 0;
       bizTargetIdx.set(c.tgtEl.id, tgtIdx + 1);
-      const leftPts = [{ x: '0%', y: '25%' }, { x: '0%', y: '50%' }, { x: '0%', y: '75%' }];
-      const leftPt = getDistPt(tgtTotal, tgtIdx, leftPts);
 
-      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizPt);
-      const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, leftPt);
+      // Node anchor: 1 biz → 0号, multi → upper half 1,2,3,4 / lower half 5,6,7,8
+      let naPt: { pt: { x: string; y: string }; g: number[] };
+      if (tgtTotal === 1) {
+        naPt = nodeAnchorPts[0];
+      } else {
+        const half = Math.ceil(tgtTotal / 2);
+        let anchorIdx: number;
+        if (tgtIdx < half) {
+          anchorIdx = Math.min(tgtIdx, 3) + 1; // 1,2,3,4
+        } else {
+          anchorIdx = Math.min(tgtIdx - half, 3) + 5; // 5,6,7,8
+        }
+        naPt = nodeAnchorPts[anchorIdx];
+      }
+
+      const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizRightMid);
+      const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, naPt.pt);
       try {
         if (c.isOutbound) {
-          this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, { ...c.opts, startSocketGravity: bizGravity, endSocketGravity: [-20, 0] }));
+          this.lines.push(new LeaderLine(bizAnchor, nodeAnchor, { ...c.opts, startSocketGravity: [20, 0], endSocketGravity: naPt.g }));
         } else {
-          this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, { ...c.opts, startSocketGravity: [-20, 0], endSocketGravity: bizGravity }));
+          this.lines.push(new LeaderLine(nodeAnchor, bizAnchor, { ...c.opts, startSocketGravity: naPt.g, endSocketGravity: [20, 0] }));
         }
       } catch (e) {}
     });

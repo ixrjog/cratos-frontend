@@ -65,7 +65,9 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem.nodes?.length" style="display: flex; flex-wrap: wrap; gap: 4px;">
-            <d-tag *ngFor="let line of rowItem.nodes" [tag]="line.name" [labelStyle]="'blue-w98'"></d-tag>
+            <ng-container *ngFor="let line of rowItem.nodes">
+              <d-tag *ngIf="line" [tag]="line.name" [labelStyle]="'blue-w98'"></d-tag>
+            </ng-container>
           </div>
         </ng-template>
       </d-cell>

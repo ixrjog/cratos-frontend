@@ -756,6 +756,27 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (total === 2) return idx === 0 ? 0 : 2;
       return Math.min(idx, 2);
     };
+    // Upper sequence: 1→3, 2→4,2, 3+→4,3,2 (cycle)
+    const upperSeq = [4, 3, 2];
+    // Lower sequence: 1→7, 2→8,6, 3+→8,7,6 (cycle)
+    const lowerSeq = [8, 7, 6];
+    const getNodeAnchorIdx = (tgtTotal: number, tgtIdx: number): number => {
+      if (tgtTotal === 1) return 0;
+      const half = Math.ceil(tgtTotal / 2);
+      if (tgtIdx < half) {
+        // Upper half
+        if (half === 1) return 3;
+        if (half === 2) return [4, 2][tgtIdx];
+        return upperSeq[tgtIdx % upperSeq.length];
+      } else {
+        // Lower half
+        const li = tgtIdx - half;
+        const lowerCount = tgtTotal - half;
+        if (lowerCount === 1) return 7;
+        if (lowerCount === 2) return [8, 6][li];
+        return lowerSeq[li % lowerSeq.length];
+      }
+    };
     bizConns.forEach((c) => {
       // Biz right side: 1→2号, 2→1+3号, 3→1+2+3号
       const bTotal = bizSourceCount.get(c.bizEl.id) || 1;
@@ -767,20 +788,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const tgtIdx = bizTargetIdx.get(c.tgtEl.id) || 0;
       bizTargetIdx.set(c.tgtEl.id, tgtIdx + 1);
 
-      // Node anchor: 1 biz → 0号, multi → upper half 1,2,3,4 / lower half 5,6,7,8
-      let naPt: { pt: { x: string; y: string }; g: number[] };
-      if (tgtTotal === 1) {
-        naPt = nodeAnchorPts[0];
-      } else {
-        const half = Math.ceil(tgtTotal / 2);
-        let anchorIdx: number;
-        if (tgtIdx < half) {
-          anchorIdx = Math.min(tgtIdx, 3) + 1; // 1,2,3,4
-        } else {
-          anchorIdx = Math.min(tgtIdx - half, 3) + 5; // 5,6,7,8
-        }
-        naPt = nodeAnchorPts[anchorIdx];
-      }
+      const naPt = nodeAnchorPts[getNodeAnchorIdx(tgtTotal, tgtIdx)];
 
       const bizAnchor = LeaderLine.pointAnchor(c.bizEl, bizPt);
       const nodeAnchor = LeaderLine.pointAnchor(c.tgtEl, naPt.pt);

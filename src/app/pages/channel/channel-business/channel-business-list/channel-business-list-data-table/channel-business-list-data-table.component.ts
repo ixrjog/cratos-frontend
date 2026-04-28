@@ -32,8 +32,11 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
     channelId: null as number,
   };
   table: Table<ChannelBusinessVO> = JSON.parse(JSON.stringify(TABLE_DATA));
-  channelOptions: { label: string; value: number }[] = [];
+  channelOptions: { label: string; value: number; country: string }[] = [];
+  filteredChannelOptions: { label: string; value: number; country: string }[] = [];
   selectedChannel: any = null;
+  selectedCountry = '';
+  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
 
   newChannelBusiness: ChannelBusinessEdit = {
     organizationId: null,
@@ -82,14 +85,15 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   }
 
   fetchChannels() {
-    this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 50 })
+    this.channelInfoService.queryChannelPage({ queryName: '', page: 1, length: 200 })
       .subscribe(({ body }) => {
-        this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
+        this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id, country: c.country }));
+        this.filterChannelOptions();
         const saved = localStorage.getItem(ChannelBusinessListDataTableComponent.CHANNEL_STORAGE_KEY);
         if (saved) {
           try {
             const ch = JSON.parse(saved);
-            const match = this.channelOptions.find(o => o.value === ch.value);
+            const match = this.filteredChannelOptions.find(o => o.value === ch.value);
             if (match) {
               this.selectedChannel = match;
               this.queryParam.channelId = match.value;
@@ -98,6 +102,19 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
           } catch (e) {}
         }
       });
+  }
+
+  onCountryChange(cc: any) {
+    this.selectedCountry = cc as string;
+    this.selectedChannel = null;
+    this.queryParam.channelId = null;
+    this.filterChannelOptions();
+  }
+
+  filterChannelOptions() {
+    this.filteredChannelOptions = this.selectedCountry
+      ? this.channelOptions.filter(c => c.country === this.selectedCountry)
+      : this.channelOptions;
   }
 
   onChannelChange(selected: any) {

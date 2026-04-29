@@ -105,6 +105,9 @@ export class ChannelBusinessEditorComponent implements OnInit {
       .subscribe(({ body }) => {
         this.orgOptions = (body.data || []).map(o => ({ label: o.name, value: o.id }));
         if (this.formData.organizationId) {
+          if (!this.orgOptions.find(o => o.value === this.formData.organizationId) && this.formData.organization) {
+            this.orgOptions.unshift({ label: this.formData.organization.name, value: this.formData.organization.id });
+          }
           this.selectedOrg = this.orgOptions.find(o => o.value === this.formData.organizationId) || null;
         }
       });
@@ -119,6 +122,9 @@ export class ChannelBusinessEditorComponent implements OnInit {
       .subscribe(({ body }) => {
         this.accountEntityOptions = (body.data || []).map(e => ({ label: e.name, value: e.id }));
         if (this.formData.accountEntityId) {
+          if (!this.accountEntityOptions.find(e => e.value === this.formData.accountEntityId) && this.formData['accountEntity']) {
+            this.accountEntityOptions.unshift({ label: this.formData['accountEntity'].name, value: this.formData['accountEntity'].id });
+          }
           this.selectedAccountEntity = this.accountEntityOptions.find(e => e.value === this.formData.accountEntityId) || null;
         }
       });
@@ -133,6 +139,9 @@ export class ChannelBusinessEditorComponent implements OnInit {
       .subscribe(({ body }) => {
         this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
         if (this.formData.channelId) {
+          if (!this.channelOptions.find(c => c.value === this.formData.channelId) && this.formData.channel) {
+            this.channelOptions.unshift({ label: this.formData.channel.name, value: this.formData.channel.id });
+          }
           this.selectedChannel = this.channelOptions.find(c => c.value === this.formData.channelId) || null;
         }
       });

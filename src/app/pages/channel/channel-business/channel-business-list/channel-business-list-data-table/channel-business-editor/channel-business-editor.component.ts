@@ -123,17 +123,17 @@ export class ChannelBusinessEditorComponent implements OnInit {
 
   onSearchOrg = (term: string) => {
     return this.organizationService.queryOrganizationPage({ queryName: term, code: '', page: 1, length: 10 })
-      .pipe(map(({ body }) => (body.data || []).map((o, i) => ({ id: i, option: o }))));
+      .pipe(map(({ body }) => (body.data || []).map((o, i) => ({ id: i, option: { label: o.name, value: o.id } }))));
   };
 
   onSearchAccountEntity = (term: string) => {
     return this.accountEntityService.queryAccountEntityPage({ queryName: term, page: 1, length: 10 })
-      .pipe(map(({ body }) => (body.data || []).map((e, i) => ({ id: i, option: e }))));
+      .pipe(map(({ body }) => (body.data || []).map((e, i) => ({ id: i, option: { label: e.name, value: e.id } }))));
   };
 
   onSearchChannel = (term: string) => {
     return this.channelInfoService.queryChannelPage({ queryName: term, page: 1, length: 10 })
-      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: c }))));
+      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: { label: c.name, value: c.id } }))));
   };
 
   fetchAccountEntities(queryName = '') {

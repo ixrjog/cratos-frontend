@@ -100,7 +100,7 @@
         <d-icon [icon]="'icon-add'" [operable]="true" [style.opacity]="editMode ? 1 : 0.3" (click)="editMode && onAddNode()" style="margin-left: 8px; cursor: pointer;"></d-icon>
       </h5>
       <div class="section-cards">
-      <div class="biz-column" *ngIf="businesses.length">
+      <div class="biz-column">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
           <div class="biz-entity" *ngIf="biz.accountEntity">
             <span class="biz-entity-name">{{ biz.accountEntity.name }} <i class="fas fa-registered" style="font-size: 10px;"></i></span>

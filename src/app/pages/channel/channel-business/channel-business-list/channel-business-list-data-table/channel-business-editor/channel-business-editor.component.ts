@@ -6,6 +6,7 @@ import { ChannelBusinessService } from '../../../../../../@core/services/channel
 import { OrganizationService } from '../../../../../../@core/services/organization.service';
 import { ChannelInfoService } from '../../../../../../@core/services/channel-info.service';
 import { AccountEntityService } from '../../../../../../@core/services/account-entity.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-channel-business-editor',
@@ -76,25 +77,18 @@ export class ChannelBusinessEditorComponent implements OnInit {
   ngOnInit(): void {
     this.formData = this.data['formData'];
     this.fetchTypeOptions();
-    // Rule 1: VO has object → select directly, no query
-    const org = this.formData.organization;
-    if (org) {
-      this.orgOptions = [{ label: org.name, value: org.id }];
-      this.selectedOrg = this.orgOptions[0];
-    } else { this.fetchOrgs(); }
-
-    const ch = this.formData.channel;
-    if (ch) {
-      this.channelOptions = [{ label: ch.name, value: ch.id }];
-      this.selectedChannel = this.channelOptions[0];
-    } else { this.fetchChannels(); }
-
+    // Pre-select from VO objects
+    if (this.formData.organization) {
+      this.selectedOrg = { label: this.formData.organization.name, value: this.formData.organization.id };
+    }
+    if (this.formData.channel) {
+      this.selectedChannel = { label: this.formData.channel.name, value: this.formData.channel.id };
+    }
     const ae = this.formData['accountEntity'];
     if (ae) {
       this.formData.accountEntityId = ae.id;
-      this.accountEntityOptions = [{ label: ae.name, value: ae.id }];
-      this.selectedAccountEntity = this.accountEntityOptions[0];
-    } else { this.fetchAccountEntities(); }
+      this.selectedAccountEntity = { label: ae.name, value: ae.id };
+    }
   }
 
   fetchTypeOptions() {
@@ -116,47 +110,24 @@ export class ChannelBusinessEditorComponent implements OnInit {
     }
   }
 
-  // Rule 3 helper: ensure current selection in list
-  private ensureInList(list: { label: string; value: number }[], selected: any) {
-    if (selected && !list.find(o => o.value === selected.value)) {
-      list.unshift(selected);
-    }
-    return list;
-  }
-
-  fetchOrgs(queryName = '') {
-    this.organizationService.queryOrganizationPage({ queryName, code: '', page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        this.orgOptions = this.ensureInList(
-          (body.data || []).map(o => ({ label: o.name, value: o.id })),
-          this.selectedOrg
-        );
-      });
-  }
-
-  fetchAccountEntities(queryName = '') {
-    this.accountEntityService.queryAccountEntityPage({ queryName, page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        this.accountEntityOptions = this.ensureInList(
-          (body.data || []).map(e => ({ label: e.name, value: e.id })),
-          this.selectedAccountEntity
-        );
-      });
-  }
-
-  fetchChannels(queryName = '') {
-    this.channelInfoService.queryChannelPage({ queryName, page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        this.channelOptions = this.ensureInList(
-          (body.data || []).map(c => ({ label: c.name, value: c.id })),
-          this.selectedChannel
-        );
-      });
-  }
-
   onOrgChange(selected: any) {
     this.formData.organizationId = selected?.value || null;
   }
+
+  onSearchOrg = (term: string) => {
+    return this.organizationService.queryOrganizationPage({ queryName: term, code: '', page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((o, i) => ({ id: i, option: { label: o.name, value: o.id } }))));
+  };
+
+  onSearchAccountEntity = (term: string) => {
+    return this.accountEntityService.queryAccountEntityPage({ queryName: term, page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((e, i) => ({ id: i, option: { label: e.name, value: e.id } }))));
+  };
+
+  onSearchChannel = (term: string) => {
+    return this.channelInfoService.queryChannelPage({ queryName: term, page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: { label: c.name, value: c.id } }))));
+  };
 
   onAccountEntityChange(selected: any) {
     this.formData.accountEntityId = selected?.value || null;

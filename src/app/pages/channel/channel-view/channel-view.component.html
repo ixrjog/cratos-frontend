@@ -102,16 +102,16 @@
       <div class="section-cards">
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
+          <div class="biz-entity" *ngIf="biz.accountEntity">
+            <span class="biz-entity-name">{{ biz.accountEntity.name }}</span>
+            <hr class="biz-divider">
+          </div>
           <div class="biz-header">
             <i class="fas fa-dollar-sign"></i>
             <span class="biz-name">{{ biz.businessName }}<span *ngIf="editMode" class="seq-badge">S{{ biz.seq }}</span></span>
           </div>
           <div class="biz-tags">
             <d-tag *ngIf="biz.type" [tag]="biz.type" [labelStyle]="'blue-w98'"></d-tag>
-          </div>
-          <div class="biz-entity" *ngIf="biz.accountEntity">
-            <hr class="biz-divider">
-            <span class="biz-entity-name">{{ biz.accountEntity.name }}</span>
           </div>
         </div>
       </div>

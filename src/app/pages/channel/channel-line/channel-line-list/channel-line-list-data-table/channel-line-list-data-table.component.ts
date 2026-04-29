@@ -427,4 +427,15 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
   isNetworkLine(nodeType: string): boolean {
     return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
+
+  private styleIconMap: { [key: string]: string } = {
+    '': 'assets/common-icon/data-center.svg',
+    'ALIYUN': 'assets/eds/aliyun.svg',
+    'AWS': 'assets/eds/aws.svg',
+    'HWC': 'assets/eds/huaweicloud.svg',
+  };
+
+  getNodeStyleIcon(style: string): string {
+    return this.styleIconMap[style || ''] || this.styleIconMap[''];
+  }
 }

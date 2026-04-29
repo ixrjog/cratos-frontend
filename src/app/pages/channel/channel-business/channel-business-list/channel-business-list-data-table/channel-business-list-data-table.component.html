@@ -75,6 +75,7 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           {{ rowItem.channel?.name }}
+          <span *ngIf="rowItem.channel?.country" style="color: var(--devui-aide-text, #8a8e99); font-size: 11px; margin-left: 4px;">{{ rowItem.channel.country }}</span>
         </ng-template>
       </d-cell>
     </d-column>

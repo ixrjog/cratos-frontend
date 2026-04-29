@@ -208,6 +208,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
       ...this.dialogDate.editorData,
       title: 'Manage Linked Nodes',
       content: ChannelBusinessLineEditorComponent,
+      height: '600px',
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => this.fetchData(), rowItem);
   }

@@ -689,12 +689,35 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       };
 
       const gravityMap: { [s: string]: number[] } = { right: [20, 0], left: [-20, 0], top: [0, -20], bottom: [0, 20] };
+      // Overflow pairs for 4+ connections between same src→tgt pair (cross-column)
+      const overflowPairs = [
+        { src: { x: '75%', y: '0%' },   tgt: { x: '25%', y: '0%' },   sg: [0, -20], eg: [0, -20] },   // u3→u1
+        { src: { x: '75%', y: '100%' }, tgt: { x: '25%', y: '100%' }, sg: [0, 20],  eg: [0, 20] },    // d3→d1
+        { src: { x: '50%', y: '0%' },   tgt: { x: '50%', y: '0%' },   sg: [0, -30], eg: [0, -30] },   // u2→u2
+        { src: { x: '50%', y: '100%' }, tgt: { x: '50%', y: '100%' }, sg: [0, 30],  eg: [0, 30] },    // d2→d2
+        { src: { x: '25%', y: '0%' },   tgt: { x: '75%', y: '0%' },   sg: [0, -40], eg: [0, -40] },   // u1→u3
+        { src: { x: '25%', y: '100%' }, tgt: { x: '75%', y: '100%' }, sg: [0, 40],  eg: [0, 40] },    // d1→d3
+      ];
+      const pairCount = new Map<string, number>();
       planned.forEach(c => {
-        const sp = getPoint(c.srcEl.id, c.srcSide);
-        const tp = getPoint(c.tgtEl.id, c.tgtSide);
-        const start = LeaderLine.pointAnchor(c.srcEl, { x: sp.x, y: sp.y });
-        const end = LeaderLine.pointAnchor(c.tgtEl, { x: tp.x, y: tp.y });
-        try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: gravityMap[c.srcSide], endSocketGravity: gravityMap[c.tgtSide] })); } catch (e) {}
+        const pk = `${c.srcEl.id}→${c.tgtEl.id}`;
+        const pi = pairCount.get(pk) || 0;
+        pairCount.set(pk, pi + 1);
+
+        const sameCol = c.srcSide === 'bottom' || c.srcSide === 'top';
+        // For cross-column pairs with 4+ connections, use overflow pairs from 4th onwards
+        if (!sameCol && pi >= 3) {
+          const op = overflowPairs[(pi - 3) % overflowPairs.length];
+          const start = LeaderLine.pointAnchor(c.srcEl, op.src);
+          const end = LeaderLine.pointAnchor(c.tgtEl, op.tgt);
+          try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: op.sg, endSocketGravity: op.eg })); } catch (e) {}
+        } else {
+          const sp = getPoint(c.srcEl.id, c.srcSide);
+          const tp = getPoint(c.tgtEl.id, c.tgtSide);
+          const start = LeaderLine.pointAnchor(c.srcEl, { x: sp.x, y: sp.y });
+          const end = LeaderLine.pointAnchor(c.tgtEl, { x: tp.x, y: tp.y });
+          try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: gravityMap[c.srcSide], endSocketGravity: gravityMap[c.tgtSide] })); } catch (e) {}
+        }
       });
     };
 

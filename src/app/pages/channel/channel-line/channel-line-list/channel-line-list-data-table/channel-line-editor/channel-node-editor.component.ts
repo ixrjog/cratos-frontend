@@ -57,13 +57,20 @@ export class ChannelNodeEditorComponent implements OnInit {
     this.formData.channelId = selected?.value || null;
   }
 
+  private trimFields(param: ChannelNodeEdit) {
+    param.name = param.name?.trim();
+    param.sourceEndpoint = param.sourceEndpoint?.trim();
+    param.monitorUrl = param.monitorUrl?.trim();
+    return param;
+  }
+
   addForm() {
-    const param: ChannelNodeEdit = { ...this.formData };
+    const param = this.trimFields({ ...this.formData });
     return this.channelNodeService.addChannelNode(param);
   }
 
   updateForm() {
-    const param: ChannelNodeEdit = { ...this.formData };
+    const param = this.trimFields({ ...this.formData });
     return this.channelNodeService.updateChannelNode(param);
   }
 }

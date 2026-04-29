@@ -79,17 +79,14 @@ markdown {
   }
 }
 
-// Mermaid dark theme fix
+// Mermaid dark theme fix - lines and arrows only
 .mermaid {
-  .flowchart-link, .messageLine0, .messageLine1, .relation, line, path.path {
+  .flowchart-link, .messageLine0, .messageLine1, .relation {
     stroke: var(--devui-text, #252b3a) !important;
   }
-  .messageText, .labelText, .loopText, .nodeLabel, text, .label {
-    fill: var(--devui-text, #252b3a) !important;
+  .edgeLabel .label span {
     color: var(--devui-text, #252b3a) !important;
-  }
-  .node rect, .node circle, .node polygon {
-    stroke: var(--devui-text, #252b3a) !important;
+    background: var(--devui-base-bg, #fff) !important;
   }
   marker path {
     fill: var(--devui-text, #252b3a) !important;

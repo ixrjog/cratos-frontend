@@ -118,14 +118,16 @@ export class ChannelBusinessEditorComponent implements OnInit {
   }
 
   fetchAccountEntities(queryName = '') {
+    const aeId = this.formData.accountEntityId || this.formData['accountEntity']?.id;
     this.accountEntityService.queryAccountEntityPage({ queryName, page: 1, length: 10 })
       .subscribe(({ body }) => {
         this.accountEntityOptions = (body.data || []).map(e => ({ label: e.name, value: e.id }));
-        if (this.formData.accountEntityId) {
-          if (!this.accountEntityOptions.find(e => e.value === this.formData.accountEntityId) && this.formData['accountEntity']) {
+        if (aeId) {
+          if (!this.accountEntityOptions.find(e => e.value === aeId) && this.formData['accountEntity']) {
             this.accountEntityOptions.unshift({ label: this.formData['accountEntity'].name, value: this.formData['accountEntity'].id });
           }
-          this.selectedAccountEntity = this.accountEntityOptions.find(e => e.value === this.formData.accountEntityId) || null;
+          this.formData.accountEntityId = aeId;
+          this.selectedAccountEntity = this.accountEntityOptions.find(e => e.value === aeId) || null;
         }
       });
   }

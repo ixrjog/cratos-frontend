@@ -103,7 +103,7 @@
       <div class="biz-column" *ngIf="businesses.length">
         <div *ngFor="let biz of businesses; let i = index" class="biz-item" [id]="'biz-' + i" [class.editable]="editMode" (click)="onEditBusiness(biz)">
           <div class="biz-entity" *ngIf="biz.accountEntity">
-            <span class="biz-entity-name">{{ biz.accountEntity.name }} <i class="fas fa-building" style="font-size: 10px;"></i></span>
+            <span class="biz-entity-name">{{ biz.accountEntity.name }} <i class="fas fa-registered" style="font-size: 10px;"></i></span>
             <hr class="biz-divider">
           </div>
           <div class="biz-header">

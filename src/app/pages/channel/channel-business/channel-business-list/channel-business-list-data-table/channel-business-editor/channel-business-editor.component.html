@@ -28,37 +28,6 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Organization</d-form-label>
-      <d-form-control>
-        <d-select
-          [options]="orgOptions"
-          [(ngModel)]="selectedOrg"
-          name="organizationId"
-          [placeholder]="'Search Organization'"
-          [isSearch]="true"
-          [filterKey]="'label'"
-          [searchFn]="onSearchOrg"
-          (ngModelChange)="onOrgChange($event)"
-        ></d-select>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
-      <d-form-label>Account Entity</d-form-label>
-      <d-form-control>
-        <d-select
-          [options]="accountEntityOptions"
-          [(ngModel)]="selectedAccountEntity"
-          name="accountEntityId"
-          [placeholder]="'Search Account Entity'"
-          [isSearch]="true"
-          [filterKey]="'label'"
-          [allowClear]="true"
-          [searchFn]="onSearchAccountEntity"
-          (ngModelChange)="onAccountEntityChange($event)"
-        ></d-select>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
       <d-form-label>Channel</d-form-label>
       <d-form-control>
         <d-select
@@ -76,6 +45,41 @@
             <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.country }}</span>
           </ng-template>
         </d-select>
+      </d-form-control>
+    </d-form-item>
+    <div style="display: flex; gap: 16px;">
+      <d-form-item style="flex: 1;">
+        <d-form-label>Account Entity</d-form-label>
+        <d-form-control>
+          <d-select
+            [options]="accountEntityOptions"
+            [(ngModel)]="selectedAccountEntity"
+            name="accountEntityId"
+            [placeholder]="'Search Account Entity'"
+            [isSearch]="true"
+            [filterKey]="'label'"
+            [allowClear]="true"
+            [searchFn]="onSearchAccountEntity"
+            (ngModelChange)="onAccountEntityChange($event)"
+          ></d-select>
+        </d-form-control>
+      </d-form-item>
+      <d-form-item style="flex: 1;">
+        <d-form-label>Organization</d-form-label>
+        <d-form-control>
+          <d-select
+            [options]="orgOptions"
+            [(ngModel)]="selectedOrg"
+            name="organizationId"
+            [placeholder]="'Search Organization'"
+            [isSearch]="true"
+            [filterKey]="'label'"
+            [searchFn]="onSearchOrg"
+            (ngModelChange)="onOrgChange($event)"
+          ></d-select>
+        </d-form-control>
+      </d-form-item>
+    </div>
       </d-form-control>
     </d-form-item>
     <d-form-item>

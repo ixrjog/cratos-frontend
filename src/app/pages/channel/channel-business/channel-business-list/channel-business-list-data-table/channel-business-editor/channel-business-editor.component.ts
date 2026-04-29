@@ -82,7 +82,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
       this.selectedOrg = { label: this.formData.organization.name, value: this.formData.organization.id };
     }
     if (this.formData.channel) {
-      this.selectedChannel = { label: this.formData.channel.name, value: this.formData.channel.id };
+      this.selectedChannel = { label: this.formData.channel.name, value: this.formData.channel.id, country: this.formData.channel['country'] || '' };
     }
     const ae = this.formData['accountEntity'];
     if (ae) {
@@ -126,7 +126,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
 
   onSearchChannel = (term: string) => {
     return this.channelInfoService.queryChannelPage({ queryName: term, page: 1, length: 10 })
-      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: { label: c.name, value: c.id } }))));
+      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: { label: c.name, value: c.id, country: c.country } }))));
   };
 
   onAccountEntityChange(selected: any) {

@@ -70,7 +70,12 @@
           [filterKey]="'label'"
           [searchFn]="onSearchChannel"
           (ngModelChange)="onChannelChange($event)"
-        ></d-select>
+        >
+          <ng-template let-option="option">
+            <span>{{ option.label }}</span>
+            <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.country }}</span>
+          </ng-template>
+        </d-select>
       </d-form-control>
     </d-form-item>
     <d-form-item>

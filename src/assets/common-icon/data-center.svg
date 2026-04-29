@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <!-- Gray platform base -->
-  <polygon points="8,98 120,98 108,118 4,118" fill="#b0bec5"/>
+  <polygon points="8,100 120,100 108,118 4,118" fill="#b0bec5"/>
 
-  <!-- Flat-top hexagons (top/bottom edges are flat, left/right are pointed) -->
+  <!-- Flat-top regular hexagons, taller proportions -->
   <!-- Left hexagon -->
-  <polygon points="18,64 30,50 54,50 66,64 54,78 30,78"
+  <polygon points="12,58 24,38 48,38 60,58 48,78 24,78"
            fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
-  <!-- Top-right hexagon (shares right edge of left hex) -->
-  <polygon points="66,36 78,22 102,22 114,36 102,50 78,50"
+  <!-- Top-right hexagon -->
+  <polygon points="60,18 72,-2 96,-2 108,18 96,38 72,38"
            fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
-  <!-- Bottom-right hexagon (shares edges with both) -->
-  <polygon points="66,64 78,50 102,50 114,64 102,78 78,78"
+  <!-- Bottom-right hexagon -->
+  <polygon points="60,58 72,38 96,38 108,58 96,78 72,78"
            fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
 </svg>

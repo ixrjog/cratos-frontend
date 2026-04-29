@@ -8,7 +8,7 @@ import { Observable, zip } from 'rxjs';
 import { ChannelNodeEdit, ChannelNodePageQuery, ChannelNodeVO } from '../../../../../@core/data/channel-line';
 import { ChannelNodeService } from '../../../../../@core/services/channel-line.service';
 import { ChannelInfoService } from '../../../../../@core/services/channel-info.service';
-import { ChannelNodeEditorComponent } from './channel-line-editor/channel-line-editor.component';
+import { ChannelNodeEditorComponent } from './channel-line-editor/channel-node-editor.component';
 
 declare var LeaderLine: any;
 

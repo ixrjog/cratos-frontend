@@ -15,7 +15,7 @@ import { DialogService } from 'ng-devui';
 import { EdsAssetSshTerminalComponent } from '../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 import { ChannelInfoEditorComponent } from '../channel-info/channel-info-list/channel-info-list-data-table/channel-info-editor/channel-info-editor.component';
 import { ChannelBusinessEditorComponent } from '../channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
-import { ChannelNodeEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
+import { ChannelNodeEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-node-editor.component';
 
 declare var LeaderLine: any;
 

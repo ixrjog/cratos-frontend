@@ -7,8 +7,8 @@ import { ChannelInfoService } from '../../../../../../@core/services/channel-inf
 
 @Component({
   selector: 'app-channel-line-editor',
-  templateUrl: './channel-line-editor.component.html',
-  styleUrls: ['./channel-line-editor.component.less'],
+  templateUrl: './channel-node-editor.component.html',
+  styleUrls: ['./channel-node-editor.component.less'],
 })
 export class ChannelNodeEditorComponent implements OnInit {
 

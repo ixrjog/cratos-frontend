@@ -20,7 +20,7 @@ import { ChannelBusinessLineEditorComponent } from './channel-business/channel-b
 import { ChannelViewComponent } from './channel-view/channel-view.component';
 import { ChannelNodeListComponent } from './channel-line/channel-line-list/channel-line-list.component';
 import { ChannelNodeListDataTableComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-list-data-table.component';
-import { ChannelNodeEditorComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-line-editor.component';
+import { ChannelNodeEditorComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-node-editor.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import {
   ButtonModule,

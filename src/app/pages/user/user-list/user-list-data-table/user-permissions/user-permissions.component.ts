@@ -151,13 +151,9 @@ export class UserPermissionsComponent implements OnInit {
     }
   }
 
-  getRoleBorderColor(role: any): string {
-    if (role.id === null) return '#dfe1e6';
-    if (!role.expiredTime) return '#52c41a';
-    const days = Math.ceil((new Date(role.expiredTime).getTime() - Date.now()) / 86400000);
-    return days < 0 ? '#ff4d4f' : '#52c41a';
-  }
-
+  /**
+   * 根据过期时间获取进度条颜色
+   */
   getProgressColor(expiredTime: Date): string {
     if (!expiredTime) {
       return '#50d4ab'; // 默认绿色

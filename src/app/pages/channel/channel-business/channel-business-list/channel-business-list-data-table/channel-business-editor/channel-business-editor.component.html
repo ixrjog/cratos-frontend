@@ -12,7 +12,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Type</d-form-label>
+      <d-form-label [required]="true">Type</d-form-label>
       <d-form-control>
         <d-tabs type="options" [activeTab]="formData.type" (activeTabChange)="onTypeChange($event)">
           <d-tab *ngFor="let item of typeOptions" [id]="item" [title]="getTypeLabel(item)"></d-tab>
@@ -20,7 +20,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Direction</d-form-label>
+      <d-form-label [required]="true">Direction</d-form-label>
       <d-form-control>
         <d-tabs type="options" [activeTab]="formData.businessDirection" (activeTabChange)="formData.businessDirection = $any($event)">
           <d-tab *ngFor="let item of directionOptions" [id]="item" [title]="item"></d-tab>
@@ -28,7 +28,7 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Channel</d-form-label>
+      <d-form-label [required]="true">Channel</d-form-label>
       <d-form-control>
         <d-select
           [options]="channelOptions"
@@ -65,7 +65,7 @@
         </d-form-control>
       </d-form-item>
       <d-form-item style="flex: 1;">
-        <d-form-label>Organization</d-form-label>
+        <d-form-label [required]="true">Organization</d-form-label>
         <d-form-control>
           <d-select
             [options]="orgOptions"

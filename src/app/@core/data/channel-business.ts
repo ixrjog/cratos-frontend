@@ -14,6 +14,7 @@ export interface ChannelBusinessVO extends BaseVO, ValidVO {
   organizationName: string;
   channelName: string;
   organization: { id: number; name: string };
+  accountEntity: { id: number; name: string };
   channel: { id: number; name: string };
   nodes: { id: number; name: string }[];
 }

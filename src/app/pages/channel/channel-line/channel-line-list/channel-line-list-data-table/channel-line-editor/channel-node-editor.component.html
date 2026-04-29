@@ -54,7 +54,7 @@
             <d-tab [id]="''" [title]="'Default'"></d-tab>
             <d-tab *ngFor="let s of styleOptions.slice(1)" [id]="s" [title]="s"></d-tab>
           </d-tabs>
-          <img [src]="styleIconMap[formData.style || '']" style="width: 24px; height: 24px;" alt="">
+          <img [src]="styleIconMap[formData.style || '']" style="width: 64px; height: auto;" alt="">
         </div>
       </d-form-control>
     </d-form-item>

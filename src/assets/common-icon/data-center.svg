@@ -2,14 +2,14 @@
   <!-- Gray platform base -->
   <polygon points="8,100 120,100 108,118 4,118" fill="#b0bec5"/>
 
-  <!-- Flat-top regular hexagons, taller proportions -->
-  <!-- Left hexagon -->
-  <polygon points="12,58 24,38 48,38 60,58 48,78 24,78"
-           fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
+  <!-- Flat-top hexagons: left one centered between right two -->
   <!-- Top-right hexagon -->
-  <polygon points="60,18 72,-2 96,-2 108,18 96,38 72,38"
+  <polygon points="62,28 74,14 94,14 106,28 94,42 74,42"
            fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
   <!-- Bottom-right hexagon -->
-  <polygon points="60,58 72,38 96,38 108,58 96,78 72,78"
+  <polygon points="62,56 74,42 94,42 106,56 94,70 74,70"
+           fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
+  <!-- Left hexagon (vertically centered between the two right ones) -->
+  <polygon points="22,42 34,28 54,28 66,42 54,56 34,56"
            fill="none" stroke="#29b6f6" stroke-width="3.5" stroke-linejoin="round"/>
 </svg>

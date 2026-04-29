@@ -394,9 +394,11 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 
+  private nodeTypeAlias: { [key: string]: string } = { LEASED_LINE: 'leased', IPSEC_VPN: 'ipsec', INTERNET: 'internet' };
+
   getHiddenLabel(nodeName: string): string {
     const node = this.hiddenNodesList.find(n => n.name === nodeName);
-    return node ? `#${node.hiddenNum} ${node.nodeType}` : '';
+    return node ? `#${node.hiddenNum} ${this.nodeTypeAlias[node.nodeType] || node.nodeType}` : '';
   }
 
   isDashedType(nodeType: string): boolean {

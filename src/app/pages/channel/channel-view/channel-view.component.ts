@@ -307,6 +307,39 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     });
   }
 
+  @ViewChild('editNetworkInfoTemplate') editNetworkInfoTemplate: TemplateRef<any>;
+  editNetworkInfoContent = '';
+
+  onEditNetworkInfo() {
+    this.editNetworkInfoContent = this.selectedChannel.networkInfo || '';
+    const results = this.dialogService.open({
+      id: 'edit-network-info-dialog',
+      width: '60%',
+      maxHeight: '800px',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: 'Edit Network Info',
+      contentTemplate: this.editNetworkInfoTemplate,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: 'Save',
+          handler: () => {
+            this.channelInfoService.updateChannel({
+              ...this.selectedChannel,
+              networkInfo: this.editNetworkInfoContent,
+            }).subscribe(() => {
+              this.selectedChannel.networkInfo = this.editNetworkInfoContent;
+              this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+              results.modalInstance.hide();
+            });
+          },
+        },
+        { cssClass: 'common', text: 'Cancel', handler: () => results.modalInstance.hide() },
+      ],
+    });
+  }
+
   onShowNodeInfo(line: any) {
     this.nodeInfoContent = (line.nodeInfo || '').replace(/<br\s*\/?>/gi, '\n\n');
     this.dialogService.open({

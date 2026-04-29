@@ -35,7 +35,7 @@
     <!-- Section 1: Users, Applications, Servers, Network Info -->
     <div class="section-extensions">
       <div class="relation-group network-info-inline" *ngIf="selectedChannel.networkInfo" style="position: relative;">
-        <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onShowFullDoc()"
+        <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="editMode ? onEditNetworkInfo() : onShowFullDoc()"
                 style="position: absolute; top: 12px; right: 12px; font-size: 14px; z-index: 2;"></d-icon>
         <div class="group-content-doc">
           <markdown lineNumbers lineHighlight mermaid [data]="getNetworkInfo()" [disableSanitizer]="true"></markdown>
@@ -227,6 +227,9 @@
     <div style="overflow: auto; padding: 20px;">
       <markdown lineNumbers lineHighlight mermaid [data]="getNetworkInfo()" [disableSanitizer]="true"></markdown>
     </div>
+  </ng-template>
+  <ng-template #editNetworkInfoTemplate>
+    <textarea dTextarea [(ngModel)]="editNetworkInfoContent" style="width: 100%; height: 500px; font-family: monospace;"></textarea>
   </ng-template>
   <ng-template #nodeInfoTemplate>
     <div style="overflow: auto; padding: 20px;">

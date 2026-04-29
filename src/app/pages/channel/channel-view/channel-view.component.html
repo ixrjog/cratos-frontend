@@ -229,7 +229,7 @@
     </div>
   </ng-template>
   <ng-template #editNetworkInfoTemplate>
-    <textarea dTextarea [(ngModel)]="editNetworkInfoContent" style="width: 100%; height: 500px; font-family: monospace;"></textarea>
+    <textarea [(ngModel)]="editNetworkInfoContent" style="width: 100%; height: 500px; font-family: monospace; box-sizing: border-box; padding: 8px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 4px; resize: vertical; color: var(--devui-text); background: var(--devui-base-bg);"></textarea>
   </ng-template>
   <ng-template #nodeInfoTemplate>
     <div style="overflow: auto; padding: 20px;">

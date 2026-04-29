@@ -108,7 +108,10 @@
           </div>
           <div class="biz-tags">
             <d-tag *ngIf="biz.type" [tag]="biz.type" [labelStyle]="'blue-w98'"></d-tag>
-            <d-tag *ngIf="biz.businessDirection" [tag]="biz.businessDirection" [labelStyle]="'blue-w98'"></d-tag>
+          </div>
+          <div class="biz-entity" *ngIf="biz.accountEntity">
+            <hr class="biz-divider">
+            <span class="biz-entity-name">{{ biz.accountEntity.name }}</span>
           </div>
         </div>
       </div>

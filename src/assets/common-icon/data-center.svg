@@ -1,17 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
-  <!-- Layer 1: Gray platform base (back) -->
+  <!-- Gray platform base -->
   <polygon points="10,95 118,95 105,120 2,120" fill="#b0bec5"/>
 
-  <!-- Layer 2: Three hexagons (front), transparent fill, blue stroke -->
-  <!-- Bottom-right hexagon -->
-  <polygon points="82,68 98,59 114,68 114,86 98,95 82,86"
-           fill="none" stroke="#29b6f6" stroke-width="7" stroke-linejoin="round"/>
-
+  <!-- Three interlocking hexagons, thinner stroke -->
   <!-- Left hexagon -->
-  <polygon points="22,58 38,49 54,58 54,76 38,85 22,76"
-           fill="none" stroke="#29b6f6" stroke-width="7" stroke-linejoin="round"/>
-
-  <!-- Top-right hexagon -->
-  <polygon points="58,38 74,29 90,38 90,56 74,65 58,56"
-           fill="none" stroke="#29b6f6" stroke-width="7" stroke-linejoin="round"/>
+  <polygon points="28,56 42,48 56,56 56,72 42,80 28,72"
+           fill="none" stroke="#29b6f6" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Top-right hexagon (shares edge with left) -->
+  <polygon points="56,42 70,34 84,42 84,58 70,66 56,58"
+           fill="none" stroke="#29b6f6" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Bottom-right hexagon (shares edge with both) -->
+  <polygon points="56,70 70,62 84,70 84,86 70,94 56,86"
+           fill="none" stroke="#29b6f6" stroke-width="4" stroke-linejoin="round"/>
 </svg>

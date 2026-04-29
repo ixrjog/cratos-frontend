@@ -119,20 +119,20 @@
       <div class="node-column" *ngFor="let level of nodeLevels">
         <ng-container *ngFor="let node of level">
           <div *ngIf="node.nodeType !== 'LEASED_LINE' && node.nodeType !== 'IPSEC_VPN' && node.nodeType !== 'INTERNET'"
-               class="node-item" [class.node-compact]="isNetworkNode(node.nodeType)"
+               class="node-item"
                [id]="'node-' + getNodeIndex(node)" [class.editable]="editMode" (click)="onEditNode(node)">
-            <i class="fas fa-server" *ngIf="node.nodeType === 'IDC'"></i>
-            <i class="fas fa-cloud" *ngIf="node.nodeType === 'CLOUD'"></i>
-            <i class="fas fa-sitemap" *ngIf="isNetworkNode(node.nodeType)"></i>
-            <div class="node-content" *ngIf="!isNetworkNode(node.nodeType)">
-              <div class="node-name">{{ node.name }}<span *ngIf="editMode" class="seq-badge">S{{ node.seq }}</span>
-                <d-icon *ngIf="node.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
-                        (click)="onShowNodeInfo(node); $event.stopPropagation()" style="margin-left: 4px; font-size: 12px;"></d-icon>
-              </div>
-              <d-tag *ngIf="node.nodeType" [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+            <div class="node-header">
+              <i class="fas fa-server" *ngIf="node.nodeType === 'IDC'"></i>
+              <i class="fas fa-cloud" *ngIf="node.nodeType === 'CLOUD'"></i>
+              <span class="node-name">{{ node.name }}</span>
+              <d-icon *ngIf="node.nodeInfo" [icon]="'icon-go-document'" [operable]="true"
+                      (click)="onShowNodeInfo(node); $event.stopPropagation()" style="font-size: 12px;"></d-icon>
+              <span *ngIf="editMode" class="seq-badge">S{{ node.seq }}</span>
             </div>
-            <span *ngIf="isNetworkNode(node.nodeType)" class="node-name">{{ node.name }}</span>
-            <d-tag *ngIf="isNetworkNode(node.nodeType)" [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
+            <div class="node-icon-area" *ngIf="node.nodeType === 'CLOUD' || node.nodeType === 'IDC'">
+              <hr class="node-divider">
+              <img src="assets/common-icon/data-center.svg" class="node-dc-icon" alt="dc">
+            </div>
           </div>
         </ng-container>
       </div>

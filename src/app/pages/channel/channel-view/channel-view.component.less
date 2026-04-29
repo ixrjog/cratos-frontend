@@ -106,8 +106,22 @@
   border-radius: 6px;
   background: var(--devui-base-bg, #fff);
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+
+  .node-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .node-divider {
+    border: none;
+    border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+    margin: 6px 0;
+  }
+
+  .node-icon-area { text-align: center; }
+  .node-dc-icon { width: 28px; height: 28px; }
 
   &.node-hidden {
     visibility: hidden;

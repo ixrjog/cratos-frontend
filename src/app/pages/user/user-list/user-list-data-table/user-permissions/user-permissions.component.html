@@ -1,6 +1,6 @@
 <section>
   <span *ngFor="let permission of permissionMap| keyvalue">
-    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+    <h3 style="margin: 5px 0; font-size: 12px; color: var(--devui-aide-text, #8a8e99); font-weight: normal;"> {{ permission.key }}</h3>
     <span *ngIf="JSON.stringify(permission.value) === '[]'">
       <d-tag [tag]="'user.permissions.noPermissions' | translate"></d-tag>
     </span>

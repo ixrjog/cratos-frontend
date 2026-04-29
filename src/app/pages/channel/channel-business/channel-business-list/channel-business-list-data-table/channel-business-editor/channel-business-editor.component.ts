@@ -76,9 +76,6 @@ export class ChannelBusinessEditorComponent implements OnInit {
   ngOnInit(): void {
     this.formData = this.data['formData'];
     this.fetchTypeOptions();
-    this.fetchOrgs();
-    this.fetchChannels();
-    this.fetchAccountEntities();
   }
 
   fetchTypeOptions() {

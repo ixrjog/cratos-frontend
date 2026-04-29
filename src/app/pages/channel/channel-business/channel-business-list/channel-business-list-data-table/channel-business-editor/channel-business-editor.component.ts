@@ -6,6 +6,7 @@ import { ChannelBusinessService } from '../../../../../../@core/services/channel
 import { OrganizationService } from '../../../../../../@core/services/organization.service';
 import { ChannelInfoService } from '../../../../../../@core/services/channel-info.service';
 import { AccountEntityService } from '../../../../../../@core/services/account-entity.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-channel-business-editor',
@@ -119,6 +120,21 @@ export class ChannelBusinessEditorComponent implements OnInit {
   onOrgChange(selected: any) {
     this.formData.organizationId = selected?.value || null;
   }
+
+  onSearchOrg = (term: string) => {
+    return this.organizationService.queryOrganizationPage({ queryName: term, code: '', page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((o, i) => ({ id: i, option: o }))));
+  };
+
+  onSearchAccountEntity = (term: string) => {
+    return this.accountEntityService.queryAccountEntityPage({ queryName: term, page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((e, i) => ({ id: i, option: e }))));
+  };
+
+  onSearchChannel = (term: string) => {
+    return this.channelInfoService.queryChannelPage({ queryName: term, page: 1, length: 10 })
+      .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: c }))));
+  };
 
   fetchAccountEntities(queryName = '') {
     this.accountEntityService.queryAccountEntityPage({ queryName, page: 1, length: 10 })

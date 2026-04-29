@@ -206,7 +206,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   onRowManageLines(rowItem: ChannelBusinessVO) {
     const dialogDate = {
       ...this.dialogDate.editorData,
-      title: 'Manage Lines',
+      title: 'Manage Linked Nodes',
       content: ChannelBusinessLineEditorComponent,
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => this.fetchData(), rowItem);

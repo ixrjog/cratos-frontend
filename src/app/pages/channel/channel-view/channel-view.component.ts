@@ -554,7 +554,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   drawElkLines(layouted: any, themeColor: string) {
     this.elkLines.forEach(l => { try { l.remove(); } catch (e) {} });
     this.elkLines = [];
-    const noArrow = { color: themeColor, size: 2, path: 'grid', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: themeColor, size: 2, path: 'fluid', endPlug: 'behind', startPlug: 'behind' };
     const getEl = (id: string) => this.el.nativeElement.querySelector(`#elk-${id}`);
 
     (layouted.edges || []).forEach(edge => {
@@ -571,7 +571,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         const bizIdx = parseInt(srcId.replace('biz-', ''));
         const biz = this.businesses[bizIdx];
         const isOutbound = biz?.businessDirection === 'OUTBOUND';
-        opts = { color: themeColor, size: 2, path: 'grid', endPlug: 'arrow1', startPlug: 'behind' };
+        opts = { color: themeColor, size: 2, path: 'fluid', endPlug: 'arrow1', startPlug: 'behind' };
         if (!isOutbound) {
           try { this.elkLines.push(new LeaderLine(tgtEl, srcEl, opts)); } catch (e) {}
           return;
@@ -595,7 +595,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-brand').trim() || '#5e7ce0';
     const lineColor = themeColor.startsWith('#') ? themeColor + 'CC' : themeColor;
     const labelColor = getComputedStyle(document.documentElement).getPropertyValue('--devui-text').trim() || '#252b3a';
-    const noArrow = { color: lineColor, size: 2, path: 'grid', endPlug: 'behind', startPlug: 'behind' };
+    const noArrow = { color: lineColor, size: 2, path: 'fluid', endPlug: 'behind', startPlug: 'behind' };
 
     // Build line element map by index
     const nodeElMap = new Map<number, HTMLElement>();
@@ -776,7 +776,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
         targets.forEach(t => {
           bizTargetCount.set(t.el.id, (bizTargetCount.get(t.el.id) || 0) + 1);
-          const opts: any = { color: lineColor, size: 2, path: 'grid', startPlug: 'behind', endPlug: 'arrow1' };
+          const opts: any = { color: lineColor, size: 2, path: 'fluid', startPlug: 'behind', endPlug: 'arrow1' };
           if (t.label) opts.middleLabel = t.label;
           if (t.dash) opts.dash = true;
           bizConns.push({ bizEl, tgtEl: t.el, opts, isOutbound });

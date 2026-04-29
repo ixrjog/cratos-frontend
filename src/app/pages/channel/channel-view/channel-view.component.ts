@@ -485,6 +485,15 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     const remaining = mergedLines.filter(l => !placed.has(l.name));
     if (remaining.length) this.nodeLevels.push(remaining);
 
+    // Move linkedChannel nodes to the last level
+    const linkedNodes: any[] = [];
+    this.nodeLevels = this.nodeLevels.map(level => {
+      const keep = level.filter(n => !n.linkedChannel);
+      linkedNodes.push(...level.filter(n => n.linkedChannel));
+      return keep;
+    }).filter(level => level.length > 0);
+    if (linkedNodes.length) this.nodeLevels.push(linkedNodes);
+
     // Update channelNodes to merged version for drawLines
     this.channelNodes = mergedLines;
 

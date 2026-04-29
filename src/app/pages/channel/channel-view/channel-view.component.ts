@@ -663,51 +663,38 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
     // After collecting, distribute anchors per element+side
     const drawPlanned = () => {
-      // Node→Node cross-column anchor pair sequence with increasing gravity
-      // src(right side) → tgt(left side): u3→u1(20px), d3→d1(20px), u2→u2(30px), d2→d2(30px), u1→u3(40px), d1→d3(40px)
-      const nnPairs = [
-        { src: { x: '75%', y: '0%' },   tgt: { x: '25%', y: '0%' },   sg: [0, -20], eg: [0, -20] },   // u3→u1
-        { src: { x: '75%', y: '100%' }, tgt: { x: '25%', y: '100%' }, sg: [0, 20],  eg: [0, 20] },    // d3→d1
-        { src: { x: '50%', y: '0%' },   tgt: { x: '50%', y: '0%' },   sg: [0, -30], eg: [0, -30] },   // u2→u2
-        { src: { x: '50%', y: '100%' }, tgt: { x: '50%', y: '100%' }, sg: [0, 30],  eg: [0, 30] },    // d2→d2
-        { src: { x: '25%', y: '0%' },   tgt: { x: '75%', y: '0%' },   sg: [0, -40], eg: [0, -40] },   // u1→u3
-        { src: { x: '25%', y: '100%' }, tgt: { x: '75%', y: '100%' }, sg: [0, 40],  eg: [0, 40] },    // d1→d3
-      ];
-      // Same-column pairs: bottom→top
-      const scPairs = [
-        { src: { x: '50%', y: '100%' }, tgt: { x: '50%', y: '0%' },   sg: [0, 20],  eg: [0, -20] },
-        { src: { x: '25%', y: '100%' }, tgt: { x: '25%', y: '0%' },   sg: [0, 30],  eg: [0, -30] },
-        { src: { x: '75%', y: '100%' }, tgt: { x: '75%', y: '0%' },   sg: [0, 40],  eg: [0, -40] },
-      ];
-
-      // Group planned connections by src→tgt element pair
-      const pairKey = (c: any) => `${c.srcEl.id}→${c.tgtEl.id}`;
-      const pairIdx = new Map<string, number>();
-
+      // Count connections per element+side
+      const sideCount = new Map<string, number>();
       planned.forEach(c => {
-        const key = pairKey(c);
-        const idx = pairIdx.get(key) || 0;
-        pairIdx.set(key, idx + 1);
+        const sk = `${c.srcEl.id}-${c.srcSide}`;
+        const tk = `${c.tgtEl.id}-${c.tgtSide}`;
+        sideCount.set(sk, (sideCount.get(sk) || 0) + 1);
+        sideCount.set(tk, (sideCount.get(tk) || 0) + 1);
+      });
+      // Track current index per element+side
+      const sideIdx = new Map<string, number>();
+      const getPts = (side: string) => side === 'right' ? rightPts : side === 'left' ? leftPts : side === 'top' ? topPts : bottomPts;
+      const getPoint = (elId: string, side: string) => {
+        const key = `${elId}-${side}`;
+        const total = sideCount.get(key) || 1;
+        const idx = sideIdx.get(key) || 0;
+        sideIdx.set(key, idx + 1);
+        const pts = getPts(side);
+        // 1 conn → middle(idx 1), 2 conn → top+bottom(idx 0,2), 3 conn → all(idx 0,1,2)
+        let ptIdx: number;
+        if (total === 1) { ptIdx = 1; }
+        else if (total === 2) { ptIdx = idx === 0 ? 0 : 2; }
+        else { ptIdx = Math.min(idx, 2); }
+        return pts[ptIdx];
+      };
 
-        const sameCol = c.srcSide === 'bottom' || c.srcSide === 'top';
-
-        if (sameCol) {
-          const pair = scPairs[idx % scPairs.length];
-          const start = LeaderLine.pointAnchor(c.srcEl, pair.src);
-          const end = LeaderLine.pointAnchor(c.tgtEl, pair.tgt);
-          try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: pair.sg, endSocketGravity: pair.eg })); } catch (e) {}
-        } else if (idx === 0) {
-          // First connection: right→left middle, standard 20px gravity
-          const start = LeaderLine.pointAnchor(c.srcEl, { x: '100%', y: '50%' });
-          const end = LeaderLine.pointAnchor(c.tgtEl, { x: '0%', y: '50%' });
-          try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: [20, 0], endSocketGravity: [-20, 0] })); } catch (e) {}
-        } else {
-          // Subsequent: use nnPairs sequence (idx-1 because first used right→left)
-          const pair = nnPairs[(idx - 1) % nnPairs.length];
-          const start = LeaderLine.pointAnchor(c.srcEl, pair.src);
-          const end = LeaderLine.pointAnchor(c.tgtEl, pair.tgt);
-          try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: pair.sg, endSocketGravity: pair.eg })); } catch (e) {}
-        }
+      const gravityMap: { [s: string]: number[] } = { right: [20, 0], left: [-20, 0], top: [0, -20], bottom: [0, 20] };
+      planned.forEach(c => {
+        const sp = getPoint(c.srcEl.id, c.srcSide);
+        const tp = getPoint(c.tgtEl.id, c.tgtSide);
+        const start = LeaderLine.pointAnchor(c.srcEl, { x: sp.x, y: sp.y });
+        const end = LeaderLine.pointAnchor(c.tgtEl, { x: tp.x, y: tp.y });
+        try { this.lines.push(new LeaderLine(start, end, { ...c.opts, startSocketGravity: gravityMap[c.srcSide], endSocketGravity: gravityMap[c.tgtSide] })); } catch (e) {}
       });
     };
 

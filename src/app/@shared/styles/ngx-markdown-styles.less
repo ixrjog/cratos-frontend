@@ -79,4 +79,21 @@ markdown {
   }
 }
 
+// Mermaid dark theme fix
+.mermaid {
+  .flowchart-link, .messageLine0, .messageLine1, .relation, line, path.path {
+    stroke: var(--devui-text, #252b3a) !important;
+  }
+  .messageText, .labelText, .loopText, .nodeLabel, text, .label {
+    fill: var(--devui-text, #252b3a) !important;
+    color: var(--devui-text, #252b3a) !important;
+  }
+  .node rect, .node circle, .node polygon {
+    stroke: var(--devui-text, #252b3a) !important;
+  }
+  marker path {
+    fill: var(--devui-text, #252b3a) !important;
+  }
+}
+
 

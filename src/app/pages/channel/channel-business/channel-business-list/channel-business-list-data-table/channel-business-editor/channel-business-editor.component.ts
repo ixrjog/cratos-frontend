@@ -101,7 +101,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
   }
 
   fetchOrgs(queryName = '') {
-    this.organizationService.queryOrganizationPage({ queryName, code: '', page: 1, length: 50 })
+    this.organizationService.queryOrganizationPage({ queryName, code: '', page: 1, length: 10 })
       .subscribe(({ body }) => {
         this.orgOptions = (body.data || []).map(o => ({ label: o.name, value: o.id }));
         if (this.formData.organizationId) {
@@ -114,8 +114,8 @@ export class ChannelBusinessEditorComponent implements OnInit {
     this.formData.organizationId = selected?.value || null;
   }
 
-  fetchAccountEntities() {
-    this.accountEntityService.queryAccountEntityPage({ queryName: '', page: 1, length: 200 })
+  fetchAccountEntities(queryName = '') {
+    this.accountEntityService.queryAccountEntityPage({ queryName, page: 1, length: 10 })
       .subscribe(({ body }) => {
         this.accountEntityOptions = (body.data || []).map(e => ({ label: e.name, value: e.id }));
         if (this.formData.accountEntityId) {
@@ -129,7 +129,7 @@ export class ChannelBusinessEditorComponent implements OnInit {
   }
 
   fetchChannels(queryName = '') {
-    this.channelInfoService.queryChannelPage({ queryName, page: 1, length: 50 })
+    this.channelInfoService.queryChannelPage({ queryName, page: 1, length: 10 })
       .subscribe(({ body }) => {
         this.channelOptions = (body.data || []).map(c => ({ label: c.name, value: c.id }));
         if (this.formData.channelId) {

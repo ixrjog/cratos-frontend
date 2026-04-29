@@ -37,7 +37,7 @@
           [placeholder]="'Search Organization'"
           [isSearch]="true"
           [filterKey]="'label'"
-          (searchFn)="fetchOrgs($event)"
+          (searchFn)="fetchOrgs($any($event))"
           (ngModelChange)="onOrgChange($event)"
         ></d-select>
       </d-form-control>
@@ -53,7 +53,7 @@
           [isSearch]="true"
           [filterKey]="'label'"
           [allowClear]="true"
-          (searchFn)="fetchAccountEntities($event)"
+          (searchFn)="fetchAccountEntities($any($event))"
           (ngModelChange)="onAccountEntityChange($event)"
         ></d-select>
       </d-form-control>
@@ -68,7 +68,7 @@
           [placeholder]="'Search Channel'"
           [isSearch]="true"
           [filterKey]="'label'"
-          (searchFn)="fetchChannels($event)"
+          (searchFn)="fetchChannels($any($event))"
           (ngModelChange)="onChannelChange($event)"
         ></d-select>
       </d-form-control>

@@ -77,9 +77,18 @@ export class ChannelBusinessEditorComponent implements OnInit {
   ngOnInit(): void {
     this.formData = this.data['formData'];
     this.fetchTypeOptions();
-    this.fetchOrgs();
-    this.fetchChannels();
-    this.fetchAccountEntities();
+    // Pre-select from VO objects
+    if (this.formData.organization) {
+      this.selectedOrg = { label: this.formData.organization.name, value: this.formData.organization.id };
+    }
+    if (this.formData.channel) {
+      this.selectedChannel = { label: this.formData.channel.name, value: this.formData.channel.id };
+    }
+    const ae = this.formData['accountEntity'];
+    if (ae) {
+      this.formData.accountEntityId = ae.id;
+      this.selectedAccountEntity = { label: ae.name, value: ae.id };
+    }
   }
 
   fetchTypeOptions() {
@@ -101,22 +110,6 @@ export class ChannelBusinessEditorComponent implements OnInit {
     }
   }
 
-  fetchOrgs(queryName = '') {
-    this.organizationService.queryOrganizationPage({ queryName, code: '', page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        const list = (body.data || []).map(o => ({ label: o.name, value: o.id }));
-        const org = this.formData.organization;
-        const orgId = this.formData.organizationId || org?.id;
-        if (orgId && org && !list.find(o => o.value === orgId)) {
-          list.unshift({ label: org.name, value: org.id });
-        }
-        this.orgOptions = list;
-        if (orgId && !this.selectedOrg) {
-          this.selectedOrg = this.orgOptions.find(o => o.value === orgId) || null;
-        }
-      });
-  }
-
   onOrgChange(selected: any) {
     this.formData.organizationId = selected?.value || null;
   }
@@ -136,43 +129,8 @@ export class ChannelBusinessEditorComponent implements OnInit {
       .pipe(map(({ body }) => (body.data || []).map((c, i) => ({ id: i, option: { label: c.name, value: c.id } }))));
   };
 
-  fetchAccountEntities(queryName = '') {
-    this.accountEntityService.queryAccountEntityPage({ queryName, page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        const list = (body.data || []).map(e => ({ label: e.name, value: e.id }));
-        // Ensure current selection stays in list
-        const ae = this.formData['accountEntity'];
-        const aeId = this.formData.accountEntityId || ae?.id;
-        if (aeId && ae && !list.find(e => e.value === aeId)) {
-          list.unshift({ label: ae.name, value: ae.id });
-        }
-        this.accountEntityOptions = list;
-        // Only set selection on first load
-        if (aeId && !this.selectedAccountEntity) {
-          this.formData.accountEntityId = aeId;
-          this.selectedAccountEntity = this.accountEntityOptions.find(e => e.value === aeId) || null;
-        }
-      });
-  }
-
   onAccountEntityChange(selected: any) {
     this.formData.accountEntityId = selected?.value || null;
-  }
-
-  fetchChannels(queryName = '') {
-    this.channelInfoService.queryChannelPage({ queryName, page: 1, length: 10 })
-      .subscribe(({ body }) => {
-        const list = (body.data || []).map(c => ({ label: c.name, value: c.id }));
-        const ch = this.formData.channel;
-        const chId = this.formData.channelId || ch?.id;
-        if (chId && ch && !list.find(c => c.value === chId)) {
-          list.unshift({ label: ch.name, value: ch.id });
-        }
-        this.channelOptions = list;
-        if (chId && !this.selectedChannel) {
-          this.selectedChannel = this.channelOptions.find(c => c.value === chId) || null;
-        }
-      });
   }
 
   onChannelChange(selected: any) {

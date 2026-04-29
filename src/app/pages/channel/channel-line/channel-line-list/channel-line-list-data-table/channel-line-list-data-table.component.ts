@@ -376,11 +376,11 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
       newData.channelId = this.selectedChannel.value;
       newData.channelName = this.selectedChannel.label;
     }
-    this.dialogUtil.onEditDialog(ADD_OPERATION, { ...this.dialogDate.editorData, title: 'New Channel Line' }, () => this.fetchData(), newData);
+    this.dialogUtil.onEditDialog(ADD_OPERATION, { ...this.dialogDate.editorData, title: 'New Channel Node' }, () => this.fetchData(), newData);
   }
 
   onRowEdit(rowItem: ChannelNodeVO) {
-    this.dialogUtil.onEditDialog(UPDATE_OPERATION, { ...this.dialogDate.editorData, title: 'Edit Channel Line' }, () => this.fetchData(), rowItem);
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, { ...this.dialogDate.editorData, title: 'Edit Channel Node' }, () => this.fetchData(), rowItem);
   }
 
   onRowValid(rowItem: ChannelNodeVO) {

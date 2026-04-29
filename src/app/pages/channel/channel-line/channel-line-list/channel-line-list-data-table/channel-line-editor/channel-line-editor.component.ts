@@ -20,6 +20,13 @@ export class ChannelNodeEditorComponent implements OnInit {
   selectedChannel: any = null;
   nodeTypeOptions = ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET', 'CLOUD', 'IDC'];
   editorTab = 'basic';
+  styleOptions = ['', 'ALIYUN', 'AWS', 'HWC'];
+  styleIconMap: { [key: string]: string } = {
+    '': 'assets/common-icon/data-center.svg',
+    'ALIYUN': 'assets/eds/aliyun.svg',
+    'AWS': 'assets/eds/aws.svg',
+    'HWC': 'assets/eds/huaweicloud.svg',
+  };
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },

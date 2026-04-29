@@ -47,6 +47,18 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label>Style</d-form-label>
+      <d-form-control>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <d-tabs type="options" [activeTab]="formData.style || ''" (activeTabChange)="formData.style = $any($event)">
+            <d-tab [id]="''" [title]="'Default'"></d-tab>
+            <d-tab *ngFor="let s of styleOptions.slice(1)" [id]="s" [title]="s"></d-tab>
+          </d-tabs>
+          <img [src]="styleIconMap[formData.style || '']" style="width: 24px; height: 24px;" alt="">
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Seq</d-form-label>
       <d-form-control>
         <d-input-number name="seq" [(ngModel)]="formData.seq" [min]="0" [step]="1"></d-input-number>

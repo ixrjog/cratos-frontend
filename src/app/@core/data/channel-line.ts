@@ -12,6 +12,7 @@ export interface ChannelNodeVO extends BaseVO, ValidVO {
   comment: string;
   nodeInfo: string;
   seq: number;
+  style: string;
   channelName: string;
 }
 
@@ -32,4 +33,5 @@ export interface ChannelNodeEdit {
   comment: string;
   nodeInfo: string;
   seq: number;
+  style: string;
 }

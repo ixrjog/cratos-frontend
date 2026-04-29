@@ -53,6 +53,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     comment: '',
     nodeInfo: '',
     seq: 0,
+    style: '',
   };
 
   dialogDate = {

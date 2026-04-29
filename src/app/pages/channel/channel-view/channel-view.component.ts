@@ -394,6 +394,17 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return ['LEASED_LINE', 'IPSEC_VPN', 'INTERNET'].includes(nodeType);
   }
 
+  private styleIconMap: { [key: string]: string } = {
+    '': 'assets/common-icon/data-center.svg',
+    'ALIYUN': 'assets/eds/aliyun.svg',
+    'AWS': 'assets/eds/aws.svg',
+    'HWC': 'assets/eds/huaweicloud.svg',
+  };
+
+  getNodeStyleIcon(style: string): string {
+    return this.styleIconMap[style || ''] || this.styleIconMap[''];
+  }
+
   private nodeTypeAlias: { [key: string]: string } = { LEASED_LINE: 'leased', IPSEC_VPN: 'ipsec', INTERNET: 'internet' };
 
   getHiddenLabel(nodeName: string): string {

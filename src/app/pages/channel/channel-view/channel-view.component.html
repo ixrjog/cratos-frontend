@@ -131,7 +131,7 @@
             </div>
             <div class="node-icon-area" *ngIf="node.nodeType === 'CLOUD' || node.nodeType === 'IDC'">
               <hr class="node-divider">
-              <img src="assets/common-icon/data-center.svg" class="node-dc-icon" alt="dc">
+              <img [src]="getNodeStyleIcon(node.style)" class="node-dc-icon" alt="dc">
             </div>
           </div>
         </ng-container>

@@ -111,7 +111,7 @@
           </div>
           <div class="card-info">
             <div class="info-row"><span class="label">Type</span><d-tag *ngIf="biz.type" [tag]="biz.type" [labelStyle]="'blue-w98'"></d-tag></div>
-            <div class="info-row"><span class="label">Direction</span><d-tag *ngIf="biz.businessDirection" [tag]="biz.businessDirection" [labelStyle]="'blue-w98'"></d-tag></div>
+            <div class="info-row" *ngIf="biz.organization"><span class="label">Org</span><span>{{ biz.organization.name }}</span></div>
           </div>
         </div>
       </div>

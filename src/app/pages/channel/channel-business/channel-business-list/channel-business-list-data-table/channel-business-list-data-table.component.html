@@ -57,6 +57,13 @@
         </ng-template>
       </d-cell>
     </d-column>
+    <d-column header="Account Entity">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          {{ rowItem.accountEntity?.name }}
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Organization">
       <d-cell>
         <ng-template let-rowItem="rowItem">

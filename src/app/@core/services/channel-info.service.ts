@@ -50,6 +50,6 @@ export class ChannelInfoService extends ChannelInfoData {
   }
 
   getCountryOptions(): Observable<HttpResult<any>> {
-    return this.apiService.get(this.baseUrl, '/country/options/get');
+    return this.apiService.get(this.baseUrl, '/country/options/get', {});
   }
 }

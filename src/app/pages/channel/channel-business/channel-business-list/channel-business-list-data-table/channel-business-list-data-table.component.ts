@@ -36,7 +36,7 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   filteredChannelOptions: { label: string; value: number; country: string }[] = [];
   selectedChannel: any = null;
   selectedCountry = '';
-  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
+  countryOptions: { label: string; value: string; count: number }[] = [];
 
   newChannelBusiness: ChannelBusinessEdit = {
     organizationId: null,
@@ -83,6 +83,13 @@ export class ChannelBusinessListDataTableComponent implements OnInit {
   ngOnInit() {
     this.fetchChannels();
     this.fetchData();
+    this.fetchCountryOptions();
+  }
+
+  fetchCountryOptions() {
+    this.channelInfoService.getCountryOptions().subscribe(({ body }) => {
+      this.countryOptions = (body.options || []).map(o => ({ label: o.label, value: o.value, count: o.comment }));
+    });
   }
 
   fetchChannels() {

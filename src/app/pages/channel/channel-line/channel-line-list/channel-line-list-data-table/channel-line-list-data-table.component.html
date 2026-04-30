@@ -2,7 +2,11 @@
   <d-button class="button" bsStyle="primary" (click)="onRowNew()" [disabled]="!selectedChannel">New</d-button>
   <d-tabs class="tabs" type="options" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($event)">
     <d-tab [id]="''" [title]="'All'"></d-tab>
-    <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
+    <d-tab *ngFor="let cc of countryOptions" [id]="cc.value">
+      <ng-template dTabTitle>
+        {{ cc.label }} <span class="count-badge">{{ cc.count }}</span>
+      </ng-template>
+    </d-tab>
   </d-tabs>
   <d-select
     class="select"

@@ -32,7 +32,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
   filteredChannelOptions: { label: string; value: number; country: string }[] = [];
   selectedChannel: any = null;
   selectedCountry = '';
-  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
+  countryOptions: { label: string; value: string; count: number }[] = [];
 
   // Graph
   allLines: any[] = [];
@@ -73,6 +73,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
 
   ngOnInit() {
     this.fetchChannels();
+    this.fetchCountryOptions();
     this.positionInterval = setInterval(() => {
       this.leaderLines.forEach(l => { try { l.position(); } catch (e) {} });
     }, 500);
@@ -317,6 +318,12 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
     }
 
     drawPlanned();
+  }
+
+  fetchCountryOptions() {
+    this.channelInfoService.getCountryOptions().subscribe(({ body }) => {
+      this.countryOptions = (body.options || []).map(o => ({ label: o.label, value: o.value, count: o.comment }));
+    });
   }
 
   fetchChannels() {

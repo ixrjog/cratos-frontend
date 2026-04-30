@@ -31,7 +31,7 @@ export class ChannelInfoListDataTableComponent implements OnInit {
     country: '',
   };
   table: Table<ChannelInfoVO> = JSON.parse(JSON.stringify(TABLE_DATA));
-  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
+  countryOptions: { label: string; value: string; count: number }[] = [];
 
   newChannel: ChannelInfoEdit = {
     name: '',
@@ -78,6 +78,13 @@ export class ChannelInfoListDataTableComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    this.fetchCountryOptions();
+  }
+
+  fetchCountryOptions() {
+    this.channelInfoService.getCountryOptions().subscribe(({ body }) => {
+      this.countryOptions = (body.options || []).map(o => ({ label: o.label, value: o.value, count: o.comment }));
+    });
   }
 
   pageIndexChange(pageIndex) {

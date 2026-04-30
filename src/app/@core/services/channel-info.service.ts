@@ -48,8 +48,8 @@ export class ChannelInfoService extends ChannelInfoData {
   callChannelAlert(param: { channelId: number; usernames: string[] }): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/alert/call', param);
   }
-}
 
   getCountryOptions(): Observable<HttpResult<any>> {
     return this.apiService.get(this.baseUrl, '/country/options/get');
   }
+}

@@ -1,13 +1,14 @@
 <div class="channel-view">
-  <div class="channel-view-header" style="display: flex; align-items: center; gap: 12px;">
+  <div class="channel-view-header spacing-search">
     <d-search
+      class="search"
       [(ngModel)]="queryName"
       [iconPosition]="'left'"
       [placeholder]="'Search Channel'"
       (searchFn)="fetchChannels()"
       (change)="fetchChannels()"
     ></d-search>
-    <d-tabs type="options" [activeTab]="queryCountry" (activeTabChange)="queryCountry = $any($event); fetchChannels()">
+    <d-tabs class="tabs" type="options" [activeTab]="queryCountry" (activeTabChange)="queryCountry = $any($event); fetchChannels()">
       <d-tab [id]="''" [title]="'All'"></d-tab>
       <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
     </d-tabs>

@@ -32,7 +32,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   selectedChannel: ChannelInfoVO = null;
   queryName = '';
   queryCountry = '';
-  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
+  countryOptions: { label: string; value: string }[] = [];
   editMode = false;
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
@@ -75,6 +75,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
 
   ngOnInit() {
     this.fetchChannels();
+    this.fetchCountryOptions();
     this.positionInterval = setInterval(() => {
       this.lines.forEach(line => {
         try {
@@ -151,6 +152,12 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
           }
         }
       });
+  }
+
+  fetchCountryOptions() {
+    this.channelInfoService.getCountryOptions().subscribe(({ body }) => {
+      this.countryOptions = (body.options || []).map(o => ({ label: o.label, value: o.value }));
+    });
   }
 
   onSelectChannel(channel: ChannelInfoVO) {

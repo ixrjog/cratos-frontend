@@ -49,3 +49,7 @@ export class ChannelInfoService extends ChannelInfoData {
     return this.apiService.post(this.baseUrl, '/alert/call', param);
   }
 }
+
+  getCountryOptions(): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/country/options/get');
+  }

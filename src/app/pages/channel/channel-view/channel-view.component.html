@@ -1,29 +1,27 @@
 <div class="channel-view">
-  <div class="channel-view-header">
+  <div class="channel-view-header" style="display: flex; align-items: center; gap: 12px;">
+    <d-search
+      [(ngModel)]="queryName"
+      [iconPosition]="'left'"
+      [placeholder]="'Search Channel'"
+      (searchFn)="fetchChannels()"
+      (change)="fetchChannels()"
+    ></d-search>
     <d-tabs type="options" [activeTab]="queryCountry" (activeTabChange)="queryCountry = $any($event); fetchChannels()">
       <d-tab [id]="''" [title]="'All'"></d-tab>
       <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
     </d-tabs>
+    <d-icon
+      [icon]="'icon-edit'"
+      [operable]="true"
+      [color]="editMode ? 'var(--devui-brand, #5e7ce0)' : ''"
+      (click)="onToggleEditMode()"
+      [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
+    ></d-icon>
   </div>
   <div class="channel-view-body">
   <!-- Channel Selector -->
   <div class="channel-selector">
-    <div style="display: flex; gap: 8px; align-items: center;">
-      <d-search
-        [(ngModel)]="queryName"
-        [iconPosition]="'left'"
-        [placeholder]="'Search Channel'"
-        (searchFn)="fetchChannels()"
-        (change)="fetchChannels()"
-      ></d-search>
-      <d-icon
-        [icon]="'icon-edit'"
-        [operable]="true"
-        [color]="editMode ? 'var(--devui-brand, #5e7ce0)' : ''"
-        (click)="onToggleEditMode()"
-        [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
-      ></d-icon>
-    </div>
     <div class="channel-list">
       <div
         *ngFor="let ch of channels"

@@ -10,9 +10,9 @@
     ></d-search>
     <d-tabs class="tabs" type="options" [activeTab]="queryCountry" (activeTabChange)="queryCountry = $any($event); fetchChannels()">
       <d-tab [id]="''" [title]="'All'"></d-tab>
-      <d-tab *ngFor="let cc of countryOptions" [id]="cc.value" [title]="cc.label">
+      <d-tab *ngFor="let cc of countryOptions" [id]="cc.value">
         <ng-template dTabTitle>
-          <span>{{ cc.label }} <d-badge [count]="cc.count" [style]="'info'"></d-badge></span>
+          {{ cc.label }} <span class="count-badge">{{ cc.count }}</span>
         </ng-template>
       </d-tab>
     </d-tabs>

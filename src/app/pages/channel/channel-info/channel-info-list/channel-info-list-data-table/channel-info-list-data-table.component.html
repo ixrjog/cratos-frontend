@@ -2,9 +2,9 @@
   <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
   <d-tabs class="tabs" type="options" [activeTab]="queryParam.country" (activeTabChange)="queryParam.country = $any($event); fetchData()">
     <d-tab [id]="''" [title]="'All'"></d-tab>
-    <d-tab *ngFor="let cc of countryOptions" [id]="cc.value" [title]="cc.label">
+    <d-tab *ngFor="let cc of countryOptions" [id]="cc.value">
       <ng-template dTabTitle>
-        <span>{{ cc.label }} <d-badge [count]="cc.count" [style]="'info'"></d-badge></span>
+        {{ cc.label }} <span class="count-badge">{{ cc.count }}</span>
       </ng-template>
     </d-tab>
   </d-tabs>

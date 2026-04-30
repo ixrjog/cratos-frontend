@@ -31,6 +31,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   channels: ChannelInfoVO[] = [];
   selectedChannel: ChannelInfoVO = null;
   queryName = '';
+  queryCountry = '';
+  countryOptions = ['CN', 'NG', 'TZ', 'BD', 'PK', 'GH', 'UG', 'PH', 'ZA', 'KE', 'BF', 'IQ'];
   editMode = false;
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
@@ -135,7 +137,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   fetchChannels() {
-    this.channelInfoService.queryChannelPage({ queryName: this.queryName, page: 1, length: 50 })
+    this.channelInfoService.queryChannelPage({ queryName: this.queryName, country: this.queryCountry, page: 1, length: 50 })
       .subscribe(({ body }) => {
         this.channels = body.data || [];
         if (!this.selectedChannel) {

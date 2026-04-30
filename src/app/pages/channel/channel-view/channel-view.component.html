@@ -1,6 +1,10 @@
 <div class="channel-view">
   <!-- Channel Selector -->
   <div class="channel-selector">
+    <d-tabs type="options" [activeTab]="queryCountry" (activeTabChange)="queryCountry = $any($event); fetchChannels()" style="margin-bottom: 8px;">
+      <d-tab [id]="''" [title]="'All'"></d-tab>
+      <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
+    </d-tabs>
     <div style="display: flex; gap: 8px; align-items: center;">
       <d-search
         [(ngModel)]="queryName"

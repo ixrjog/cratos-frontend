@@ -13,6 +13,7 @@
       <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
     </d-tabs>
     <d-icon
+      style="vertical-align: bottom;"
       [icon]="'icon-edit'"
       [operable]="true"
       [color]="editMode ? 'var(--devui-brand, #5e7ce0)' : ''"

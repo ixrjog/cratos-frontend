@@ -1,0 +1,81 @@
+<div class="api-test-wrapper">
+  <div class="left-panel">
+    <div class="api-test-container">
+      <h4>API安全测试</h4>
+
+      <div class="form-group">
+        <label>请求报文</label>
+        <textarea [(ngModel)]="requestMessage" (ngModelChange)="saveForm()" style="height: calc(100vh - 580px); min-height: 200px;" placeholder="粘贴完整HTTP请求报文"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label>签名算法</label>
+          <div class="tab-group">
+            <span *ngFor="let opt of signatureAlgorithmOptions"
+                  class="tab-item" [class.active]="signatureAlgorithm === opt"
+                  (click)="signatureAlgorithm = opt; saveForm()">{{ opt }}</span>
+          </div>
+        </div>
+        <div class="form-group half">
+          <label>私钥类型</label>
+          <div class="tab-group">
+            <span *ngFor="let opt of privateKeyTypeOptions"
+                  class="tab-item" [class.active]="privateKeyType === opt"
+                  (click)="privateKeyType = opt; saveForm()">{{ opt }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>从源站请求</label>
+        <input [(ngModel)]="originServer" (ngModelChange)="saveForm()" placeholder="替换请求URL的host" autocomplete="off"/>
+      </div>
+
+      <div class="record-info" *ngIf="recordInfo">
+        <div class="record-item"><label>Record:</label><span>{{ recordInfo.recordName }}</span></div>
+        <div class="record-item"><label>Origin:</label><span>{{ recordInfo.originServer }}</span></div>
+        <div class="record-item"><label>TrafficTo(CDN):</label><span>{{ recordInfo.routeTrafficTo }}</span></div>
+      </div>
+
+      <div class="form-group">
+        <label>令牌</label>
+        <div class="input-with-eye">
+          <input [type]="showToken ? 'text' : 'password'" [(ngModel)]="ppToken" (ngModelChange)="saveForm()" placeholder="留空则不拼接token" autocomplete="new-password"/>
+          <span class="eye-icon" (click)="showToken = !showToken"><i [class]="showToken ? 'icon icon-preview' : 'icon icon-preview-forbidden'"></i></span>
+        </div>
+      </div>
+
+      <div class="form-group" style="display:none">
+        <label>
+          <input type="checkbox" [(ngModel)]="convertToHTTPS" (ngModelChange)="saveForm()"/> 转换为HTTPS
+        </label>
+      </div>
+
+      <button class="btn-call" [disabled]="loading || !requestMessage" (click)="callApi()">
+        {{ loading ? '请求中...' : '发送请求' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="api-test-container">
+      <h4>响应结果</h4>
+      <div *ngIf="!response && !loading" class="help-doc">
+        <markdown mermaid [data]="helpDoc" [disableSanitizer]="true"></markdown>
+      </div>
+      <div *ngIf="loading" class="empty-tip">请求中...</div>
+      <div *ngIf="response">
+        <div class="status-code">
+          <span>Status: </span>
+          <span [class.success]="statusCode >= 200 && statusCode < 300"
+                [class.error]="statusCode >= 400">{{ statusCode }}</span>
+        </div>
+        <label>Response Headers</label>
+        <pre class="headers-pre">{{ responseHeaders }}</pre>
+        <label>Response Body</label>
+        <pre>{{ response }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

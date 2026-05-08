@@ -266,8 +266,13 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   };
 
   onTrafficLayerDomainChange(domainVO: TrafficLayerDomainVO) {
-    this.queryParam.domainId = domainVO.id;
-    localStorage.setItem(TrafficLayerRecordDataTableComponent.DOMAIN_STORAGE_KEY, JSON.stringify({ id: domainVO.id, domain: domainVO.domain }));
+    if (domainVO) {
+      this.queryParam.domainId = domainVO.id;
+      localStorage.setItem(TrafficLayerRecordDataTableComponent.DOMAIN_STORAGE_KEY, JSON.stringify({ id: domainVO.id, domain: domainVO.domain }));
+    } else {
+      this.queryParam.domainId = null;
+      localStorage.removeItem(TrafficLayerRecordDataTableComponent.DOMAIN_STORAGE_KEY);
+    }
   }
 
   protected readonly getRowColor = getRowColor;

@@ -31,4 +31,8 @@ export class ApiSecurityRiskService {
     return this.apiService.get(this.baseUrl, '/risk/report/get', {});
   }
 
+  callTestApi(param: any): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/risk/test/api/call', param);
+  }
+
 }

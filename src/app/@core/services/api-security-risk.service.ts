@@ -35,4 +35,12 @@ export class ApiSecurityRiskService {
     return this.apiService.post(this.baseUrl, '/risk/test/api/call', param);
   }
 
+  getAutoSignMapYaml(): Observable<HttpResult<string>> {
+    return this.apiService.get(this.baseUrl, '/risk/test/auto/sign/map/get', {});
+  }
+
+  saveAutoSignMap(param: any): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/risk/test/auto/sign/map/save', param);
+  }
+
 }

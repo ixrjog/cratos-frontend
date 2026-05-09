@@ -5,24 +5,31 @@
 
       <div class="form-group">
         <label>请求报文</label>
-        <textarea [(ngModel)]="requestMessage" (ngModelChange)="saveForm()" style="height: calc(100vh - 580px); min-height: 200px;" placeholder="粘贴完整HTTP请求报文"></textarea>
+        <app-ace-editor
+          [minLines]="20"
+          [maxLines]="35"
+          [mode]="'ace/mode/text'"
+          [aceValue]="requestMessage"
+          (onChange)="requestMessage = $event; saveForm()"
+        ></app-ace-editor>
       </div>
 
       <div class="form-row">
-        <div class="form-group half">
+        <div class="form-group">
           <label>签名算法</label>
-          <div class="tab-group">
-            <span *ngFor="let opt of signatureAlgorithmOptions"
-                  class="tab-item" [class.active]="signatureAlgorithm === opt"
-                  (click)="signatureAlgorithm = opt; saveForm()">{{ opt }}</span>
-          </div>
-        </div>
-        <div class="form-group half">
-          <label>私钥类型</label>
-          <div class="tab-group">
-            <span *ngFor="let opt of privateKeyTypeOptions"
-                  class="tab-item" [class.active]="privateKeyType === opt"
-                  (click)="privateKeyType = opt; saveForm()">{{ opt }}</span>
+          <div class="sign-row">
+            <select [(ngModel)]="signatureAlgorithm" (ngModelChange)="saveForm()">
+              <option *ngFor="let opt of signatureAlgorithmOptions" [value]="opt">{{ opt }}</option>
+            </select>
+            <div class="tab-group" style="margin-left: 12px;">
+              <span *ngFor="let opt of privateKeyTypeOptions"
+                    class="tab-item" [class.active]="privateKeyType === opt"
+                    (click)="privateKeyType = opt; saveForm()">{{ opt }}</span>
+            </div>
+            <label class="auto-match-label">
+              <input type="checkbox" [(ngModel)]="autoMatchSign" (ngModelChange)="saveForm()"/> 自动匹配
+            </label>
+            <span class="sign-map-btn" (click)="openSignMapEditor()"><i class="icon icon-setting"></i></span>
           </div>
         </div>
       </div>
@@ -76,6 +83,24 @@
         <label>Response Body</label>
         <pre>{{ response }}</pre>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sign Map Editor Dialog -->
+<div class="sign-map-overlay" *ngIf="signMapVisible" (click)="signMapVisible = false">
+  <div class="sign-map-dialog" (click)="$event.stopPropagation()">
+    <h4>签名映射配置</h4>
+    <app-ace-editor
+      [minLines]="30"
+      [maxLines]="45"
+      [mode]="'ace/mode/yaml'"
+      [aceValue]="signMapYaml"
+      (onChange)="signMapYaml = $event"
+    ></app-ace-editor>
+    <div class="sign-map-actions">
+      <button class="btn-cancel" (click)="signMapVisible = false">取消</button>
+      <button class="btn-save" (click)="saveSignMap()">保存</button>
     </div>
   </div>
 </div>

@@ -29,14 +29,71 @@ export class ApiSecurityTestComponent {
   // 帮助文档
   helpDoc = '';
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN'];
+  // 签名映射
+  signMapYaml = '';
+  signMapVisible = false;
+  signMapData: { [key: string]: string[] } = {};
+  autoMatchSign = true;
+
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,
               private trafficLayerService: TrafficLayerService) {
     this.loadForm();
+    this.loadSignMap();
     this.parseDomainAndQuery();
     this.loadHelpDoc();
+  }
+
+  loadSignMap() {
+    this.apiSecurityRiskService.getAutoSignMapYaml().subscribe((res: any) => {
+      this.signMapYaml = res.body || '';
+      this.parseSignMap();
+    });
+  }
+
+  private parseSignMap() {
+    this.signMapData = {};
+    if (!this.signMapYaml) return;
+    const lines = this.signMapYaml.split('\n');
+    let currentKey = '';
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      if (!line.startsWith(' ') && !line.startsWith('-') && line.endsWith(':')) {
+        currentKey = line.replace(':', '').trim();
+        this.signMapData[currentKey] = [];
+      } else if (line.trim().startsWith('-') && currentKey) {
+        this.signMapData[currentKey].push(line.trim().replace(/^-\s*/, ''));
+      }
+    }
+  }
+
+  matchSignatureByHost(): string | null {
+    const domain = this.extractDomain();
+    if (!domain) return null;
+    for (const [algorithm, hosts] of Object.entries(this.signMapData)) {
+      if (hosts.some(h => domain.includes(h) || h.includes(domain))) {
+        return algorithm;
+      }
+    }
+    return null;
+  }
+
+  private matchPrivateKeyType(domain: string): string {
+    const prefix = domain.split('.')[0].toLowerCase();
+    return /test|dev|daily|sit/.test(prefix) ? 'DEBUG' : 'RELEASE';
+  }
+
+  openSignMapEditor() {
+    this.signMapVisible = true;
+  }
+
+  saveSignMap() {
+    this.apiSecurityRiskService.saveAutoSignMap({ signMapYaml: this.signMapYaml }).subscribe(() => {
+      this.parseSignMap();
+      this.signMapVisible = false;
+    });
   }
 
   private loadHelpDoc() {
@@ -56,6 +113,7 @@ export class ApiSecurityTestComponent {
       this.signatureAlgorithm = data.signatureAlgorithm || 'PALMPAYAPPSIGN';
       this.privateKeyType = data.privateKeyType || 'DEBUG';
       this.convertToHTTPS = data.convertToHTTPS !== false;
+      this.autoMatchSign = data.autoMatchSign !== false;
     }
     const savedResp = localStorage.getItem(this.storageKey + '-response');
     if (savedResp) {
@@ -74,6 +132,7 @@ export class ApiSecurityTestComponent {
       signatureAlgorithm: this.signatureAlgorithm,
       privateKeyType: this.privateKeyType,
       convertToHTTPS: this.convertToHTTPS,
+      autoMatchSign: this.autoMatchSign,
     }));
     this.parseDomainAndQuery();
   }
@@ -82,8 +141,20 @@ export class ApiSecurityTestComponent {
     const domain = this.extractDomain();
     if (!domain) {
       this.recordInfo = null;
+      this.originServer = '';
       return;
     }
+    this.originServer = '';
+    this.recordInfo = null;
+    // 自动匹配签名算法
+    if (this.autoMatchSign) {
+      const matched = this.matchSignatureByHost();
+      if (matched) {
+        this.signatureAlgorithm = matched;
+      }
+    }
+    // 自动匹配私钥类型
+    this.privateKeyType = this.matchPrivateKeyType(domain);
     this.trafficLayerService.queryTrafficLayerRecordPage({
       queryName: domain, page: 1, length: 1, domainId: null, hasRouteTrafficTo: null,
     }).subscribe((res: any) => {

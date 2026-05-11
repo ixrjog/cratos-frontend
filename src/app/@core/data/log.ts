@@ -6,6 +6,7 @@ export interface LoginVO {
   name: string;
   uuid: string;
   token: string;
+  jti: string;
 }
 
 export interface LoginParam {

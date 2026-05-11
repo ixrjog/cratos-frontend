@@ -15,11 +15,13 @@ import { Observable, of } from 'rxjs';
 import { ToastService } from 'ng-devui';
 import { HttpResult } from '../data/base-data';
 import { Router } from '@angular/router';
+import { RequestSignService } from './request-sign.service';
 
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
   constructor(private toastService: ToastService,
-              private route: Router) {
+              private route: Router,
+              private requestSignService: RequestSignService) {
   }
 
   toastData = {
@@ -98,7 +100,30 @@ export class DefaultInterceptor implements HttpInterceptor {
     });
 
     if (req.url.startsWith('/api')) {
-      return next.handle(newReq).pipe(
+      // 添加请求签名
+      let signedReq = newReq;
+      const token = localStorage.getItem('id_token');
+      const jti = localStorage.getItem('jti');
+      if (token && jti) {
+        // 提取 encryptedBody（如果有加密 body）
+        let encryptedBody = '';
+        if (newReq.body) {
+          try {
+            const bodyObj = typeof newReq.body === 'string' ? JSON.parse(newReq.body) : newReq.body;
+            encryptedBody = bodyObj?.encryptedBody || '';
+          } catch (e) {}
+        }
+        const signHeaders = this.requestSignService.generateSignHeaders(token, encryptedBody);
+        if (signHeaders) {
+          let headers = newReq.headers.delete('Authorization');
+          Object.keys(signHeaders).forEach(key => {
+            headers = headers.set(key, signHeaders[key]);
+          });
+          signedReq = newReq.clone({ headers });
+        }
+      }
+
+      return next.handle(signedReq).pipe(
         mergeMap((event: any) => {
           // 允许统一对请求错误处理，这是因为一个请求若是业务上错误的情况下其HTTP请求的状态是200的情况下需要
           if (event instanceof HttpResponse && `${event.status}`.startsWith('20')) {

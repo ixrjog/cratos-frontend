@@ -46,7 +46,7 @@
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" [title]="'rbac.common.edit' | translate"></d-icon>
-            <d-icon [icon]="'icon-all-project'" [operable]="true" (click)="onRowDetails(rowItem)" [title]="'rbac.role.details' | translate"></d-icon>
+            <d-icon [icon]="'icon-view'" [operable]="true" (click)="onRowDetails(rowItem)" [title]="'rbac.role.details' | translate"></d-icon>
             <d-icon [icon]="'icon-directory'" [operable]="true" (click)="onRowMenu(rowItem)" [title]="'rbac.role.menu' | translate"></d-icon>
             <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)" [title]="'rbac.common.delete' | translate"></d-icon>
           </d-icon-group>

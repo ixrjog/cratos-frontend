@@ -30,6 +30,13 @@
   .form-group {
     margin-bottom: 12px;
 
+    app-ace-editor {
+      ::ng-deep .app-ace-editor {
+        box-shadow: none;
+        border: 1px solid @devui-dividing-line;
+      }
+    }
+
     label {
       display: block;
       margin-bottom: 4px;

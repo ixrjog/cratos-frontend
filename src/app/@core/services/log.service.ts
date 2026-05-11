@@ -30,7 +30,8 @@ export class LogService extends LogData {
     localStorage.setItem('id_token', userInfo.token);
     localStorage.setItem('userinfo', JSON.stringify(userInfo));
     localStorage.setItem('expires_at', '120');
-    localStorage.setItem('username',userInfo.username)
+    localStorage.setItem('username', userInfo.username);
+    localStorage.setItem('jti', userInfo.jti || '');
   }
 
   isUserLoggedIn() {

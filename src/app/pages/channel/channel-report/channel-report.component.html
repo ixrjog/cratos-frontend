@@ -1,0 +1,151 @@
+<div class="report-container" *ngIf="!loading">
+  <!-- Overview Cards -->
+  <div class="overview-cards">
+    <div class="card card-info">
+      <div class="card-value">{{ total }}</div>
+      <div class="card-label">Total Channels</div>
+    </div>
+    <div class="card" *ngFor="let item of statusData" [style.border-left-color]="item.color">
+      <div class="card-value" [style.color]="item.color">{{ item.value }}</div>
+      <div class="card-label">{{ item.key }}</div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <!-- Country Distribution -->
+    <div class="chart-card">
+      <h4>Country Distribution</h4>
+      <div class="bar-chart">
+        <div class="bar-item" *ngFor="let item of countryData">
+          <span class="bar-label">{{ item.key }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.value / total * 100" [style.background]="'#5e7ce0'"></div>
+          </div>
+          <span class="bar-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Distribution -->
+    <div class="chart-card">
+      <h4>Priority</h4>
+      <div class="bar-chart">
+        <div class="bar-item" *ngFor="let item of priorityData">
+          <span class="bar-label">{{ item.key }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.value / total * 100" [style.background]="item.color"></div>
+          </div>
+          <span class="bar-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <!-- Construction Phase -->
+    <div class="chart-card">
+      <h4>Construction Phase</h4>
+      <div class="bar-chart">
+        <div class="bar-item" *ngFor="let item of phaseData">
+          <span class="bar-label">{{ item.key }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.value / total * 100" [style.background]="item.color"></div>
+          </div>
+          <span class="bar-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Status -->
+    <div class="chart-card">
+      <h4>Available Status</h4>
+      <div class="bar-chart">
+        <div class="bar-item" *ngFor="let item of statusData">
+          <span class="bar-label">{{ item.key }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.value / total * 100" [style.background]="item.color"></div>
+          </div>
+          <span class="bar-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Channel Mapping -->
+  <div class="chart-card" style="margin-bottom: 16px;">
+    <h4>User Channel Mapping</h4>
+    <div class="role-selector">
+      <label>Role: </label>
+      <select [(ngModel)]="selectedRole" (ngModelChange)="onRoleChange($event)">
+        <option value="">-- Select Role --</option>
+        <option *ngFor="let role of roleOptions" [value]="role">{{ role }}</option>
+      </select>
+    </div>
+    <div class="user-channel-list" *ngIf="userChannelMap.length > 0">
+      <div class="user-row" *ngFor="let item of userChannelMap">
+        <span class="user-name">{{ item.username }}</span>
+        <span class="channel-count">{{ item.channels.length }}</span>
+        <div class="channel-tags">
+          <d-tag *ngFor="let ch of item.channels" [tag]="ch" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="selectedRole && userChannelMap.length === 0" class="empty-tip">No users found for this role</div>
+  </div>
+
+  <!-- Business Overview -->
+  <div class="chart-card" *ngIf="businessTotal > 0" style="margin-bottom: 16px;">
+    <h4>Business by Channel ({{ businessTotal }})</h4>
+    <div class="stacked-bar">
+      <div class="stacked-bar-track">
+        <div *ngFor="let item of businessByChannel; let i = index"
+             class="stacked-bar-segment"
+             [style.width.%]="item.value / businessTotal * 100"
+             [style.background]="stackColors[i % stackColors.length]"
+             [title]="item.key + ': ' + item.value">
+        </div>
+      </div>
+      <div class="stacked-bar-legend">
+        <span *ngFor="let item of businessByChannel; let i = index" class="legend-item">
+          <span class="legend-dot" [style.background]="stackColors[i % stackColors.length]"></span>
+          {{ item.key }} ({{ item.value }})
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row" *ngIf="businessTotal > 0">
+    <div class="chart-card">
+      <h4>Business Type</h4>
+      <div class="bar-chart">
+        <div class="bar-item" *ngFor="let item of businessByType">
+          <span class="bar-label">{{ item.key }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.value / businessTotal * 100" [style.background]="'#fa9841'"></div>
+          </div>
+          <span class="bar-value">{{ item.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card" *ngIf="businessByOrg.length > 0">
+    <h4>Business by Organization</h4>
+    <div class="stacked-bar">
+      <div class="stacked-bar-track">
+        <div *ngFor="let item of businessByOrg; let i = index"
+             class="stacked-bar-segment"
+             [style.width.%]="item.value / businessTotal * 100"
+             [style.background]="stackColors[(i + 3) % stackColors.length]"
+             [title]="item.key + ': ' + item.value">
+        </div>
+      </div>
+      <div class="stacked-bar-legend">
+        <span *ngFor="let item of businessByOrg; let i = index" class="legend-item">
+          <span class="legend-dot" [style.background]="stackColors[(i + 3) % stackColors.length]"></span>
+          {{ item.key }} ({{ item.value }})
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

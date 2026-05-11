@@ -1,0 +1,189 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.report-container {
+  padding: 16px;
+}
+
+.overview-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  .card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    background: @devui-base-bg;
+    border: 1px solid @devui-dividing-line;
+    border-left: 4px solid @devui-dividing-line;
+    text-align: center;
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: @devui-text;
+    }
+
+    .card-label {
+      font-size: 14px;
+      color: @devui-text-weak;
+      margin-top: 4px;
+    }
+
+    &.card-info {
+      border-left-color: #5e7ce0;
+      .card-value { color: #5e7ce0; }
+    }
+  }
+}
+
+.charts-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.chart-card {
+  flex: 1;
+  padding: 16px;
+  border-radius: 8px;
+  background: @devui-base-bg;
+  border: 1px solid @devui-dividing-line;
+
+  h4 {
+    margin: 0 0 12px 0;
+    color: @devui-text;
+  }
+}
+
+.stacked-bar {
+  .stacked-bar-track {
+    display: flex;
+    height: 28px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: @devui-dividing-line;
+
+    .stacked-bar-segment {
+      height: 100%;
+      transition: width 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .stacked-bar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      color: @devui-text;
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.bar-chart {
+  .bar-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .bar-label {
+      width: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: @devui-text;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      background: @devui-dividing-line;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0 8px;
+
+      .bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s;
+      }
+    }
+
+    .bar-value {
+      width: 30px;
+      text-align: right;
+      font-weight: 600;
+      color: @devui-text;
+    }
+  }
+}
+
+.role-selector {
+  margin-bottom: 12px;
+
+  label {
+    font-weight: 500;
+    color: @devui-text;
+    margin-right: 8px;
+  }
+
+  select {
+    padding: 6px 12px;
+    border: 1px solid @devui-dividing-line;
+    border-radius: 4px;
+    background: @devui-base-bg;
+    color: @devui-text;
+  }
+}
+
+.user-channel-list {
+  .user-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid @devui-dividing-line;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    .user-name {
+      font-weight: 600;
+      min-width: 120px;
+      color: @devui-text;
+    }
+
+    .channel-count {
+      min-width: 30px;
+      font-size: 12px;
+      color: @devui-text-weak;
+      margin-right: 8px;
+    }
+
+    .channel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+  }
+}
+
+.empty-tip {
+  color: @devui-text-weak;
+  padding: 20px 0;
+  text-align: center;
+}

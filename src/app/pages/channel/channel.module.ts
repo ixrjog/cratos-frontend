@@ -18,6 +18,7 @@ import { ChannelBusinessListDataTableComponent } from './channel-business/channe
 import { ChannelBusinessEditorComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-editor/channel-business-editor.component';
 import { ChannelBusinessLineEditorComponent } from './channel-business/channel-business-list/channel-business-list-data-table/channel-business-line-editor/channel-business-line-editor.component';
 import { ChannelViewComponent } from './channel-view/channel-view.component';
+import { ChannelReportComponent } from './channel-report/channel-report.component';
 import { ChannelNodeListComponent } from './channel-line/channel-line-list/channel-line-list.component';
 import { ChannelNodeListDataTableComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-list-data-table.component';
 import { ChannelNodeEditorComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-node-editor.component';
@@ -60,6 +61,7 @@ import { WorkbenchModule } from '../workbench/workbench.module';
     ChannelBusinessEditorComponent,
     ChannelBusinessLineEditorComponent,
     ChannelViewComponent,
+    ChannelReportComponent,
     ChannelNodeListComponent,
     ChannelNodeListDataTableComponent,
     ChannelNodeEditorComponent,

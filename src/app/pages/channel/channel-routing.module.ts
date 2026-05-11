@@ -7,6 +7,7 @@ import { ChannelInfoListComponent } from './channel-info/channel-info-list/chann
 import { ChannelBusinessListComponent } from './channel-business/channel-business-list/channel-business-list.component';
 import { ChannelNodeListComponent } from './channel-line/channel-line-list/channel-line-list.component';
 import { ChannelViewComponent } from './channel-view/channel-view.component';
+import { ChannelReportComponent } from './channel-report/channel-report.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'business', component: ChannelBusinessListComponent },
       { path: 'node', component: ChannelNodeListComponent },
       { path: 'view', component: ChannelViewComponent },
+      { path: 'report', component: ChannelReportComponent },
     ],
   },
 ];

@@ -8,6 +8,7 @@ import { ApiSecurityRiskDataTableComponent } from './api-security-risk/api-secur
 import { ApiSecurityRiskEditorComponent } from './api-security-risk/api-security-risk-data-table/api-security-risk-editor/api-security-risk-editor.component';
 import { ApiSecurityRiskReportComponent } from './api-security-risk-report/api-security-risk-report.component';
 import { ApiSecurityTestComponent } from './api-security-test/api-security-test.component';
+import { ApiSecurityTestRecordComponent } from './api-security-test-record/api-security-test-record.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -23,6 +24,7 @@ import { MarkdownModule } from 'ngx-markdown';
     ApiSecurityRiskEditorComponent,
     ApiSecurityRiskReportComponent,
     ApiSecurityTestComponent,
+    ApiSecurityTestRecordComponent,
   ],
   imports: [
     CommonModule,

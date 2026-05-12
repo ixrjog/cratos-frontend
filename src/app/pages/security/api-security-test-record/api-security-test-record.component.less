@@ -1,0 +1,115 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
+.spacing-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spacing-table {
+  margin-bottom: 12px;
+}
+
+.spacing-pagination {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .detail-dialog {
+    background: @devui-base-bg;
+    border-radius: 8px;
+    padding: 24px;
+    width: 80%;
+    max-height: 90vh;
+    height: 85vh;
+    overflow-y: auto;
+
+    h4 {
+      margin-bottom: 16px;
+      color: @devui-text;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .close-btn {
+        cursor: pointer;
+        font-size: 20px;
+        color: @devui-text-weak;
+      }
+
+      .copy-btn {
+        font-size: 12px;
+        padding: 2px 8px;
+        border: 1px solid @devui-dividing-line;
+        border-radius: 4px;
+        cursor: pointer;
+        color: @devui-text-weak;
+        margin-right: auto;
+        margin-left: 12px;
+
+        &:hover {
+          color: var(--devui-brand, #5e7ce0);
+          border-color: var(--devui-brand, #5e7ce0);
+        }
+      }
+    }
+
+    .detail-content {
+      height: calc(85vh - 100px);
+      display: flex;
+      flex-direction: column;
+
+      .detail-row {
+        display: flex;
+        gap: 16px;
+        flex: 1;
+        overflow: hidden;
+
+        .detail-left, .detail-right {
+          flex: 1;
+          min-width: 0;
+          overflow-y: auto;
+        }
+      }
+    }
+
+    .detail-section {
+      margin-bottom: 12px;
+
+      label {
+        font-weight: 600;
+        font-size: 13px;
+        color: @devui-text;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      pre {
+        background: @devui-global-bg;
+        border: 1px solid @devui-dividing-line;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 12px;
+        color: @devui-text;
+        overflow-x: auto;
+        max-height: none;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
+  }
+}

@@ -43,4 +43,12 @@ export class ApiSecurityRiskService {
     return this.apiService.post(this.baseUrl, '/risk/test/auto/sign/map/save', param);
   }
 
+  queryTestRecordPage(param: any): Observable<DataTable<any>> {
+    return this.apiService.post(this.baseUrl, '/risk/test/record/page/query', param);
+  }
+
+  getTestRecordSummary(id: number): Observable<HttpResult<any>> {
+    return this.apiService.get(this.baseUrl, '/risk/test/record/get', { id });
+  }
+
 }

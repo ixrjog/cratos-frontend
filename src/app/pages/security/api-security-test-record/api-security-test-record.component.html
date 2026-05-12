@@ -1,0 +1,131 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="app-data-table">
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    placeholder="Search by host"
+    (searchFn)="fetchData()"
+  ></d-search>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.username"
+    [iconPosition]="'left'"
+    placeholder="Search by username"
+    (searchFn)="fetchData()"
+  ></d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [scrollable]="true"
+    [tableOverflowType]="'overlay'"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column field="requestUrl" header="URL" [width]="'500px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span style="word-break: break-all; font-size: 12px;">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="createTime" header="Time">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' | dSafeNullPipe }}</span>
+          <strong style="margin-left: 5px">{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="username" header="User"></d-column>
+    <d-column field="requestHost" header="Host"></d-column>
+    <d-column field="requestMethod" header="Method"></d-column>
+    <d-column field="signatureAlgorithm" header="Sign">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="responseStatus" header="Status">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span [style.color]="cellItem >= 200 && cellItem < 300 ? '#3ac295' : '#f66f6a'">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="elapsedMs" header="Elapsed">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ formatElapsed(cellItem) }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="originServer" header="Origin"></d-column>
+    <d-column header="Actions">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon [icon]="'icon-view'" [operable]="true" (click)="onViewDetail(rowItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+  </d-data-table>
+</div>
+
+<!-- Detail Dialog -->
+<div class="detail-overlay" *ngIf="detailVisible" (click)="detailVisible = false">
+  <div class="detail-dialog" (click)="$event.stopPropagation()">
+    <h4>Record Summary <span class="copy-btn" (click)="copyAsMarkdown()">Copy MD</span> <span class="close-btn" (click)="detailVisible = false">&times;</span></h4>
+    <div class="detail-content" *ngIf="detailData">
+      <div class="detail-section" style="display: flex; justify-content: space-between; align-items: center;">
+        <label style="word-break: break-all;"><d-tag [tag]="detailData.requestMethod" [labelStyle]="'blue-w98'"></d-tag> {{ detailData.requestUrl }}</label>
+        <span style="white-space: nowrap; margin-left: 12px;">
+          Status: <span [style.color]="detailData.responseStatus >= 200 && detailData.responseStatus < 300 ? '#3ac295' : '#f66f6a'">{{ detailData.responseStatus }}</span> ({{ detailData.elapsedMs }}ms)
+        </span>
+      </div>
+      <div class="detail-row">
+        <div class="detail-left">
+          <div class="detail-section">
+            <label>Request Headers</label>
+            <pre>{{ formatJson(detailData.requestHeaders) }}</pre>
+          </div>
+          <div class="detail-section" *ngIf="detailData.requestBody">
+            <label>Request Body</label>
+            <pre>{{ formatJson(detailData.requestBody) }}</pre>
+          </div>
+        </div>
+        <div class="detail-right">
+          <div class="detail-section" *ngIf="detailData.responseHeaders">
+            <label>Response Headers</label>
+            <pre>{{ formatJson(detailData.responseHeaders) }}</pre>
+          </div>
+          <div class="detail-section" *ngIf="detailData.responseBody">
+            <label>Response Body</label>
+            <pre>{{ formatJson(detailData.responseBody) }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  ></d-pagination>
+</div>
+    </div>
+  </da-col-item>
+</da-layout-row>

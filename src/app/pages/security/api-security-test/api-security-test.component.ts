@@ -35,7 +35,7 @@ export class ApiSecurityTestComponent {
   signMapData: { [key: string]: string[] } = {};
   autoMatchSign = true;
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'NONE'];
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,
@@ -156,17 +156,19 @@ export class ApiSecurityTestComponent {
     // 自动匹配私钥类型
     this.privateKeyType = this.matchPrivateKeyType(domain);
     this.trafficLayerService.queryTrafficLayerRecordPage({
-      queryName: domain, page: 1, length: 1, domainId: null, hasRouteTrafficTo: null,
+      queryName: domain, page: 1, length: 10, domainId: null, hasRouteTrafficTo: null,
     }).subscribe((res: any) => {
       const data = res?.body?.data;
-      if (data && data.length > 0) {
+      // 精确匹配 recordName
+      const match = data?.find(r => r.recordName === domain);
+      if (match) {
         this.recordInfo = {
-          recordName: data[0].recordName,
-          originServer: data[0].originServer,
-          routeTrafficTo: data[0].routeTrafficTo,
+          recordName: match.recordName,
+          originServer: match.originServer,
+          routeTrafficTo: match.routeTrafficTo,
         };
-        if (data[0].routeTrafficTo) {
-          this.originServer = data[0].originServer || '';
+        if (match.routeTrafficTo) {
+          this.originServer = match.originServer || '';
         }
       } else {
         this.recordInfo = null;

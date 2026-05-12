@@ -8,6 +8,11 @@ export const EncryptionConfig = {
   // 是否启用响应加密（要求后端返回加密数据）
   responseEncryptionEnabled: false,
 
+  // 需要响应加密的接口路径（为空则全部加密）
+  responseEncryptionPaths: [
+    '/log/login'
+  ] as string[],
+
   // 密钥版本（用于密钥轮换）
   keyVersion: 'v1',
 

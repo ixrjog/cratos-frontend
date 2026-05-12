@@ -309,7 +309,7 @@ export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
     drawerRef = this.drawerService.open({
       drawerContentComponent: WebTerminalDrawerComponent,
-      width: '1000px',
+      width: '1200px',
       zIndex: 1000,
       isCover: true,
       fullScreen: false,

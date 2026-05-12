@@ -33,7 +33,7 @@ export class ApiService {
           return this.http.post(
             `${this.apiUrl}${baseUrl}${url}`,
             JSON.stringify(encryptedData),
-            { headers: this.getEncryptedHeaders() }
+            { headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
           );
         }),
         switchMap((response: any) => {
@@ -70,7 +70,7 @@ export class ApiService {
           return this.http.put(
             `${this.apiUrl}${baseUrl}${url}`,
             JSON.stringify(encryptedData),
-            { headers: this.getEncryptedHeaders() }
+            { headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
           );
         }),
         switchMap((response: any) => {
@@ -110,7 +110,7 @@ export class ApiService {
           };
           return this.http.delete(
             `${this.apiUrl}${baseUrl}${url}`,
-            { body: JSON.stringify(encryptedData), headers: this.getEncryptedHeaders() }
+            { body: JSON.stringify(encryptedData), headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
           );
         }),
         switchMap((response: any) => {
@@ -154,16 +154,19 @@ export class ApiService {
   /**
    * 获取加密请求的 Headers（包含加密标识和密钥版本）
    */
-  private getEncryptedHeaders(): HttpHeaders {
+  private getEncryptedHeaders(url?: string): HttpHeaders {
     const headersConfig: any = {
       'Content-Type': 'application/json',
       [EncryptionConfig.encryptionHeader]: 'true',
       [EncryptionConfig.keyVersionHeader]: EncryptionConfig.keyVersion,
     };
 
-    // 如果启用响应加密，添加响应加密请求 Header
+    // 如果启用响应加密，根据路径配置决定是否添加 Header
     if (EncryptionConfig.responseEncryptionEnabled) {
-      headersConfig[EncryptionConfig.responseEncryptionHeader] = 'true';
+      const paths = EncryptionConfig.responseEncryptionPaths;
+      if (paths.length === 0 || (url && paths.some(p => url.includes(p)))) {
+        headersConfig[EncryptionConfig.responseEncryptionHeader] = 'true';
+      }
     }
 
     const robotToken = localStorage.getItem('robotToken');

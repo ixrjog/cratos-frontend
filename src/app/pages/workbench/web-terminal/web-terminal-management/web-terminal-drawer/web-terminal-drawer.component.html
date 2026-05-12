@@ -98,7 +98,9 @@
       [loading]="table.loading"
       [checkable]="true">
 
-      <d-column field="name" header="Name" [width]="'180px'">
+      <d-column field="instanceName" header="Instance Name" [width]="'140px'"></d-column>
+
+      <d-column field="name" header="Server Name" [width]="'180px'">
         <d-cell>
           <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
             <div class="asset-name-container">

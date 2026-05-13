@@ -39,7 +39,7 @@ export class RequestSignService {
     return this.hmacSha256Sync(data, key);
   }
 
-  private hmacSha256Sync(message: string, key: string): string {
+  hmacSha256Sync(message: string, key: string): string {
     const encoder = new TextEncoder();
     const keyBytes = encoder.encode(key);
     const msgBytes = encoder.encode(message);

@@ -18,7 +18,9 @@
         <div class="form-group">
           <label>签名算法</label>
           <div class="sign-row">
-            <select [(ngModel)]="signatureAlgorithm" (ngModelChange)="saveForm()">
+            <select [(ngModel)]="signatureAlgorithm" (ngModelChange)="saveForm()"
+                    [class.sign-matched]="signMatchStatus === 'matched'"
+                    [class.sign-unmatched]="signMatchStatus === 'unmatched'">>
               <option *ngFor="let opt of signatureAlgorithmOptions" [value]="opt">{{ opt }}</option>
             </select>
             <div class="tab-group" style="margin-left: 12px;">
@@ -67,7 +69,7 @@
 
   <div class="right-panel">
     <div class="api-test-container">
-      <h4>响应结果</h4>
+      <h4>响应结果 <span *ngIf="response" class="clear-btn" (click)="clearResponse()"><i class="icon icon-delete"></i></span></h4>
       <div *ngIf="!response && !loading" class="help-doc">
         <markdown mermaid [data]="helpDoc" [disableSanitizer]="true"></markdown>
       </div>
@@ -99,6 +101,7 @@
       (onChange)="signMapYaml = $event"
     ></app-ace-editor>
     <div class="sign-map-actions">
+      <span class="sign-map-error" *ngIf="signMapError">{{ signMapError }}</span>
       <button class="btn-cancel" (click)="signMapVisible = false">取消</button>
       <button class="btn-save" (click)="saveSignMap()">保存</button>
     </div>

@@ -34,6 +34,7 @@ export class ApiSecurityTestComponent {
   signMapVisible = false;
   signMapData: { [key: string]: string[] } = {};
   autoMatchSign = true;
+  signMatchStatus = '';
 
   signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
@@ -42,7 +43,6 @@ export class ApiSecurityTestComponent {
               private trafficLayerService: TrafficLayerService) {
     this.loadForm();
     this.loadSignMap();
-    this.parseDomainAndQuery();
     this.loadHelpDoc();
   }
 
@@ -50,6 +50,7 @@ export class ApiSecurityTestComponent {
     this.apiSecurityRiskService.getAutoSignMapYaml().subscribe((res: any) => {
       this.signMapYaml = res.body || '';
       this.parseSignMap();
+      this.parseDomainAndQuery();
     });
   }
 
@@ -89,10 +90,37 @@ export class ApiSecurityTestComponent {
     this.signMapVisible = true;
   }
 
+  signMapError = '';
+
   saveSignMap() {
-    this.apiSecurityRiskService.saveAutoSignMap({ signMapYaml: this.signMapYaml }).subscribe(() => {
-      this.parseSignMap();
-      this.signMapVisible = false;
+    // 校验 YAML 格式
+    try {
+      const lines = this.signMapYaml.split('\n');
+      let valid = true;
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        if (!line.startsWith(' ') && !line.startsWith('-') && !line.endsWith(':')) {
+          if (!line.trim().startsWith('-')) {
+            valid = false;
+            break;
+          }
+        }
+      }
+      if (!valid) throw new Error('Invalid format');
+      this.signMapError = '';
+    } catch (e) {
+      this.signMapError = 'YAML格式错误，请检查格式：\nALGORITHM_NAME:\n  - domain.com';
+      return;
+    }
+    this.apiSecurityRiskService.saveAutoSignMap({ signMapYaml: this.signMapYaml }).subscribe({
+      next: () => {
+        this.parseSignMap();
+        this.signMapVisible = false;
+        this.signMapError = '';
+      },
+      error: (err) => {
+        this.signMapError = err?.error?.msg || '保存失败，请检查YAML格式';
+      }
     });
   }
 
@@ -151,7 +179,12 @@ export class ApiSecurityTestComponent {
       const matched = this.matchSignatureByHost();
       if (matched) {
         this.signatureAlgorithm = matched;
+        this.signMatchStatus = 'matched';
+      } else {
+        this.signMatchStatus = 'unmatched';
       }
+    } else {
+      this.signMatchStatus = '';
     }
     // 自动匹配私钥类型
     this.privateKeyType = this.matchPrivateKeyType(domain);
@@ -232,5 +265,12 @@ export class ApiSecurityTestComponent {
       responseHeaders: this.responseHeaders,
       response: this.response,
     }));
+  }
+
+  clearResponse() {
+    this.statusCode = 0;
+    this.responseHeaders = '';
+    this.response = '';
+    localStorage.removeItem(this.storageKey + '-response');
   }
 }

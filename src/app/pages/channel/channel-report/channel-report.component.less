@@ -176,8 +176,21 @@
 
     .channel-tags {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 4px;
+
+      .country-group {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+
+        .country-code {
+          font-size: 11px;
+          color: @devui-text-weak;
+          min-width: 30px;
+        }
+      }
     }
   }
 }

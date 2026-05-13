@@ -26,7 +26,7 @@ export class UserRbacEditorComponent {
     this.sourceOption = [];
     this.targetOption = [];
     const param: RolePageQuery = {
-      roleName: '', page: 1, length: 10,
+      roleName: '', page: 1, length: 100,
     };
     this.rbacService.queryRolePage(param)
       .subscribe(({ body }) => {

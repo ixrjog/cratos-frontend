@@ -3,10 +3,10 @@
  */
 export const EncryptionConfig = {
   // 是否启用请求加密
-  enabled: false,
+  enabled: true,
 
   // 是否启用响应加密（要求后端返回加密数据）
-  responseEncryptionEnabled: false,
+  responseEncryptionEnabled: true,
 
   // 需要响应加密的接口路径（为空则全部加密）
   responseEncryptionPaths: [

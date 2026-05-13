@@ -22,7 +22,7 @@ export class ChannelReportComponent implements OnInit {
   allChannels: ChannelInfoVO[] = [];
   roleOptions: string[] = [];
   selectedRole = '';
-  userChannelMap: { username: string; channels: string[] }[] = [];
+  userChannelMap: { username: string; countryChannels: { country: string; names: string[] }[]; total: number }[] = [];
 
   // Business
   businessTotal = 0;
@@ -92,17 +92,25 @@ export class ChannelReportComponent implements OnInit {
   onRoleChange(role: string) {
     this.selectedRole = role;
     localStorage.setItem('channel-report-role', role);
-    const map: { [username: string]: string[] } = {};
+    const map: { [username: string]: { [country: string]: string[] } } = {};
     this.allChannels.forEach(ch => {
       const users = ch.members?.['USER'] || [];
       users.filter(u => u.role === role).forEach(u => {
-        if (!map[u.name]) map[u.name] = [];
-        map[u.name].push(ch.name);
+        if (!map[u.name]) map[u.name] = {};
+        const country = ch.country || 'N/A';
+        if (!map[u.name][country]) map[u.name][country] = [];
+        map[u.name][country].push(ch.name);
       });
     });
     this.userChannelMap = Object.entries(map)
-      .map(([username, channels]) => ({ username, channels }))
-      .sort((a, b) => b.channels.length - a.channels.length);
+      .map(([username, countryMap]) => {
+        const countryChannels = Object.entries(countryMap)
+          .map(([country, names]) => ({ country, names }))
+          .sort((a, b) => a.country.localeCompare(b.country));
+        const total = countryChannels.reduce((sum, c) => sum + c.names.length, 0);
+        return { username, countryChannels, total };
+      })
+      .sort((a, b) => b.total - a.total);
   }
 
   private groupBy(data: any[], field: string): { key: string; value: number }[] {

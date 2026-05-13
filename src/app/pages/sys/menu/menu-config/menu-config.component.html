@@ -18,10 +18,10 @@
         >
         </d-accordion>
         <ng-template #menuTemplate let-item="item">
-          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
+          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ getLocalizedTitle(item) }}</span><span class="seq-badge" *ngIf="item.seq">{{ item.seq }}</span>
         </ng-template>
         <ng-template #itemTemplate let-item="item">
-          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ item.title }}</span>
+          <i class="title-icon {{ item.icon }}"></i><span class="title">{{ getLocalizedTitle(item) }}</span><span class="seq-badge" *ngIf="item.seq">{{ item.seq }}</span>
         </ng-template>
       </div>
     </d-splitter-pane>

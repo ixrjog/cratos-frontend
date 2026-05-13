@@ -84,9 +84,12 @@
     <div class="user-channel-list" *ngIf="userChannelMap.length > 0">
       <div class="user-row" *ngFor="let item of userChannelMap">
         <span class="user-name">{{ item.username }}</span>
-        <span class="channel-count">{{ item.channels.length }}</span>
+        <span class="channel-count">{{ item.total }}</span>
         <div class="channel-tags">
-          <d-tag *ngFor="let ch of item.channels" [tag]="ch" [labelStyle]="'blue-w98'"></d-tag>
+          <span *ngFor="let cc of item.countryChannels" class="country-group">
+            <strong class="country-code">{{ cc.country }}</strong>
+            <d-tag *ngFor="let name of cc.names" [tag]="name" [labelStyle]="'blue-w98'"></d-tag>
+          </span>
         </div>
       </div>
     </div>

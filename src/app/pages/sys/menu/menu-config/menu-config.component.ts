@@ -170,4 +170,14 @@ export class MenuConfigComponent implements OnInit {
   onMenuTitleChange(content: string) {
     this.menuTitleJson = content;
   }
+
+  getLocalizedTitle(item: any): string {
+    const lang = localStorage.getItem('lang') || 'en-us';
+    const titles = item.menuTitles;
+    if (titles && titles.length > 0) {
+      const match = titles.find(t => t.lang === lang);
+      if (match) return match.title;
+    }
+    return item.title || item.name;
+  }
 }

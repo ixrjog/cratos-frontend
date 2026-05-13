@@ -1,17 +1,28 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { RequestSignService } from './request-sign.service';
 
 @Injectable()
 export class WebSocketApiService {
 
   wsUrl: string = '/socket';
 
-  constructor() {
+  constructor(private requestSignService: RequestSignService) {
   }
 
   createWsClient(url: string): WebSocket {
     let token = localStorage.getItem('id_token');
     let username = localStorage.getItem('username');
+    let jti = localStorage.getItem('jti');
+
+    if (token && jti) {
+      // 签名模式
+      const timestamp = String(Date.now());
+      const sign = this.requestSignService.hmacSha256Sync(jti + timestamp, token);
+      const params = `?jti=${encodeURIComponent(jti)}&t=${timestamp}&sign=${encodeURIComponent(sign)}`;
+      return new WebSocket(environment.wsUrl + this.wsUrl + url + '/' + username + params, 'cratos-v1');
+    }
+    // 兼容旧模式
     return new WebSocket(environment.wsUrl + this.wsUrl + url + '/' + username, token);
   }
 

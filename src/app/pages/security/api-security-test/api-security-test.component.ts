@@ -35,6 +35,7 @@ export class ApiSecurityTestComponent {
   signMapData: { [key: string]: string[] } = {};
   autoMatchSign = true;
   signMatchStatus = '';
+  private lastQueriedDomain = '';
 
   signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
@@ -170,10 +171,9 @@ export class ApiSecurityTestComponent {
     if (!domain) {
       this.recordInfo = null;
       this.originServer = '';
+      this.lastQueriedDomain = '';
       return;
     }
-    this.originServer = '';
-    this.recordInfo = null;
     // 自动匹配签名算法
     if (this.autoMatchSign) {
       const matched = this.matchSignatureByHost();
@@ -188,6 +188,13 @@ export class ApiSecurityTestComponent {
     }
     // 自动匹配私钥类型
     this.privateKeyType = this.matchPrivateKeyType(domain);
+    // host 没变化时不重新查询源站信息
+    if (domain === this.lastQueriedDomain) {
+      return;
+    }
+    this.lastQueriedDomain = domain;
+    this.originServer = '';
+    this.recordInfo = null;
     this.trafficLayerService.queryTrafficLayerRecordPage({
       queryName: domain, page: 1, length: 10, domainId: null, hasRouteTrafficTo: null,
     }).subscribe((res: any) => {

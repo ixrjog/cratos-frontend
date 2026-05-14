@@ -8,23 +8,6 @@
       </ng-template>
     </d-tab>
   </d-tabs>
-  <d-select
-    class="select"
-    style="width: 300px; max-width: 300px"
-    [options]="filteredChannelOptions"
-    [(ngModel)]="selectedChannel"
-    [placeholder]="'Select Channel'"
-    [filterKey]="'label'"
-    [isSearch]="true"
-    [allowClear]="true"
-    [appendToBody]="true"
-    (ngModelChange)="onChannelChange($event)"
-  >
-    <ng-template let-option="option">
-      <span>{{ option.label }}</span>
-      <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.country }}</span>
-    </ng-template>
-  </d-select>
   <d-search
     class="search"
     [(ngModel)]="queryParam.queryName"
@@ -34,6 +17,24 @@
   ></d-search>
   <d-button class="button" bsStyle="common" (click)="fetchData()" [disabled]="!selectedChannel">Filter</d-button>
 </div>
+<div class="channel-node-layout">
+  <!-- Left: Channel List -->
+  <div class="channel-sidebar">
+    <div class="channel-list">
+      <div
+        *ngFor="let ch of filteredChannelOptions"
+        class="channel-item"
+        [class.active]="selectedChannel?.value === ch.value"
+        (click)="onChannelChange(ch)"
+      >
+        <span class="channel-name">{{ ch.label }}</span>
+        <d-tag *ngIf="ch.country" [tag]="ch.country" [labelStyle]="'blue-w98'"></d-tag>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Content -->
+  <div class="channel-main">
 <div class="spacing-table">
   <d-data-table
     dLoading
@@ -169,5 +170,7 @@
               (click)="onShowNodeInfo(node); $event.stopPropagation()" style="font-size: 12px;"></d-icon>
       <d-tag [tag]="node.nodeType" [labelStyle]="'blue-w98'"></d-tag>
     </span>
+  </div>
+</div>
   </div>
 </div>

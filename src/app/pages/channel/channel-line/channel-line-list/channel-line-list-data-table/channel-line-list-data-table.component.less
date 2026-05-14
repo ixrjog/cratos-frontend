@@ -139,3 +139,49 @@
     padding: 0 4px;
   }
 }
+
+.channel-node-layout {
+  display: flex;
+  gap: 16px;
+}
+
+.channel-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+
+  .channel-list {
+    margin-top: 10px;
+    max-height: calc(100vh - 240px);
+    overflow-y: auto;
+  }
+
+  .channel-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--devui-list-item-hover-bg, #f2f3f5);
+    }
+
+    &.active {
+      background: var(--devui-list-item-active-bg, #e9edfa);
+    }
+
+    .channel-name {
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+}
+
+.channel-main {
+  flex: 1;
+  min-width: 0;
+}

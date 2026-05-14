@@ -17,14 +17,20 @@ export class UserPasswordSettingsComponent {
 
   showPassword = false;
   showConfirmPassword = false;
+  showOldPassword = false;
 
   formData = {
+    oldPassword: '',
     password: '',
     confirmPassword: '',
   };
   verticalLayout: FormLayout = FormLayout.Vertical;
 
   formRules: { [key: string]: DValidateRules } = {
+    oldPassword: {
+      validators: [{ required: true }],
+      message: 'Old password is required.',
+    },
     password: {
       validators: [
         { required: true },
@@ -52,6 +58,7 @@ export class UserPasswordSettingsComponent {
   submitForm({ valid, directive }) {
     if (valid) {
       const param = {
+        oldPassword: this.formData.oldPassword,
         password: this.formData.password,
       };
       this.userService.resetMyAccountPassword(param)

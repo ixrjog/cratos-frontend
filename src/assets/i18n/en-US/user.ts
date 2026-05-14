@@ -93,6 +93,13 @@ export default {
       }
     },
 
+    // Password Settings
+    passwordSettings: {
+      oldPassword: 'Old Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm Password',
+    },
+
     // Permissions
     permissions: {
       title: 'Permission Management',

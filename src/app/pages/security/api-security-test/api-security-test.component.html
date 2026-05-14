@@ -4,10 +4,11 @@
       <h4>API安全测试</h4>
 
       <div class="form-group">
-        <label>请求报文</label>
+        <label style="margin-bottom: 2px; display: inline-flex; align-items: center;">请求报文 <span class="body-preview-btn" (click)="showBodyPreview()"><i class="icon icon-view"></i></span></label>
         <app-ace-editor
-          [minLines]="20"
-          [maxLines]="35"
+          *ngIf="aceEditorVisible"
+          [minLines]="10"
+          [maxLines]="999"
           [mode]="'ace/mode/text'"
           [aceValue]="requestMessage"
           (onChange)="requestMessage = $event; saveForm()"
@@ -32,6 +33,7 @@
               <input type="checkbox" [(ngModel)]="autoMatchSign" (ngModelChange)="saveForm()"/> 自动匹配
             </label>
             <span class="sign-map-btn" (click)="openSignMapEditor()"><i class="icon icon-setting"></i></span>
+            <span *ngIf="signMatchStatus === 'unmatched'" class="quick-add-btn" (click)="quickAddSignMap()">新增签名映射</span>
           </div>
         </div>
       </div>
@@ -61,15 +63,17 @@
         </label>
       </div>
 
-      <button class="btn-call" [disabled]="loading || !requestMessage" (click)="callApi()">
+      <div style="text-align: center;">
+        <button class="btn-call" [disabled]="loading || !requestMessage" (click)="callApi()">
         {{ loading ? '请求中...' : '发送请求' }}
       </button>
+      </div>
     </div>
   </div>
 
   <div class="right-panel">
     <div class="api-test-container">
-      <h4>响应结果 <span *ngIf="response" class="clear-btn" (click)="clearResponse()"><i class="icon icon-delete"></i></span></h4>
+      <h4>响应结果 <span *ngIf="response" class="copy-md-btn" (click)="copyResponseAsMd()">Copy MD</span> <span *ngIf="response" class="clear-btn" (click)="clearResponse()"><i class="icon icon-delete"></i></span></h4>
       <div *ngIf="!response && !loading" class="help-doc">
         <markdown mermaid [data]="helpDoc" [disableSanitizer]="true"></markdown>
       </div>
@@ -85,6 +89,23 @@
         <label>Response Body</label>
         <pre>{{ response }}</pre>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Body Preview Dialog -->
+<div class="sign-map-overlay" *ngIf="bodyPreviewVisible" (click)="bodyPreviewVisible = false">
+  <div class="sign-map-dialog" (click)="$event.stopPropagation()">
+    <h4>Request Body <span style="float:right;cursor:pointer;font-size:18px;color:#999" (click)="bodyPreviewVisible = false">&times;</span></h4>
+    <app-ace-editor
+      [minLines]="25"
+      [maxLines]="40"
+      [mode]="'ace/mode/json'"
+      [aceValue]="bodyPreviewContent"
+      (onChange)="bodyPreviewContent = $event"
+    ></app-ace-editor>
+    <div style="margin-top: 12px; text-align: right;">
+      <button class="btn-save" style="padding:6px 16px;border:none;border-radius:4px;background:var(--devui-brand,#5e7ce0);color:#fff;cursor:pointer;" (click)="saveBodyToMessage()">保存</button>
     </div>
   </div>
 </div>

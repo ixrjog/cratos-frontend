@@ -34,6 +34,8 @@
       ::ng-deep .app-ace-editor {
         box-shadow: none;
         border: 1px solid @devui-dividing-line;
+        max-height: calc(100vh - 550px);
+        overflow: auto;
       }
     }
 
@@ -181,8 +183,8 @@
     background: @devui-global-bg;
     padding: 12px;
     border-radius: 4px;
-    overflow-x: auto;
-    max-height: 500px;
+    overflow: auto;
+    max-height: calc(100vh - 550px);
     font-size: 13px;
     color: @devui-text;
     border: 1px solid @devui-dividing-line;
@@ -201,6 +203,33 @@
   }
 }
 
+.copy-md-btn {
+  font-size: 12px;
+  padding: 2px 8px;
+  border: 1px solid @devui-dividing-line;
+  border-radius: 4px;
+  cursor: pointer;
+  color: @devui-text-weak;
+  font-weight: normal;
+  margin-left: 8px;
+
+  &:hover {
+    color: var(--devui-brand, #5e7ce0);
+    border-color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.body-preview-btn {
+  cursor: pointer;
+  color: @devui-text-weak;
+  margin-left: 6px;
+  font-size: 16px;
+
+  &:hover {
+    color: var(--devui-brand, #5e7ce0);
+  }
+}
+
 .sign-map-btn {
   cursor: pointer;
   font-size: 14px;
@@ -209,6 +238,21 @@
 
   &:hover {
     color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.quick-add-btn {
+  cursor: pointer;
+  font-size: 12px;
+  color: #f66f6a;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border: 1px solid #f66f6a;
+  border-radius: 4px;
+
+  &:hover {
+    background: #f66f6a;
+    color: #fff;
   }
 }
 

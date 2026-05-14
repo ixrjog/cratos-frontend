@@ -36,8 +36,11 @@ export class ApiSecurityTestComponent {
   autoMatchSign = true;
   signMatchStatus = '';
   private lastQueriedDomain = '';
+  bodyPreviewVisible = false;
+  bodyPreviewContent = '';
+  aceEditorVisible = true;
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'NONE'];
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,
@@ -88,6 +91,22 @@ export class ApiSecurityTestComponent {
   }
 
   openSignMapEditor() {
+    this.signMapVisible = true;
+  }
+
+  quickAddSignMap() {
+    const domain = this.extractDomain();
+    if (!domain) return;
+    // 追加当前域名到当前选中的签名算法下
+    const algo = this.signatureAlgorithm;
+    if (!this.signMapYaml.includes(algo + ':')) {
+      this.signMapYaml += `\n${algo}:\n  - ${domain}`;
+    } else {
+      this.signMapYaml = this.signMapYaml.replace(
+        new RegExp(`(${algo}:\\n)`, 'g'),
+        `$1  - ${domain}\n`
+      );
+    }
     this.signMapVisible = true;
   }
 
@@ -279,5 +298,80 @@ export class ApiSecurityTestComponent {
     this.responseHeaders = '';
     this.response = '';
     localStorage.removeItem(this.storageKey + '-response');
+  }
+
+  copyResponseAsMd() {
+    const domain = this.extractDomain();
+    const username = localStorage.getItem('username') || '';
+    const dateStr = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' }).format(new Date());
+    const md = `## ${this.requestMessage.split('\n')[0]?.trim() || ''}
+
+**Status:** ${this.statusCode} | **Host:** ${domain || ''}
+
+### Request
+\`\`\`
+${this.requestMessage}
+\`\`\`
+
+### Response Headers
+\`\`\`json
+${this.responseHeaders}
+\`\`\`
+
+### Response Body
+\`\`\`json
+${this.response}
+\`\`\`
+
+---
+Test by: ${username}
+Date: ${dateStr}
+`;
+    navigator.clipboard.writeText(md);
+  }
+
+  showBodyPreview() {
+    const lines = this.requestMessage.split('\n');
+    let inBody = false;
+    let body = '';
+    for (const line of lines) {
+      if (inBody) {
+        body += line;
+      } else if (line.trim() === '') {
+        inBody = true;
+      }
+    }
+    try {
+      this.bodyPreviewContent = body ? JSON.stringify(JSON.parse(body), null, 2) : '';
+    } catch {
+      this.bodyPreviewContent = body || '';
+    }
+    this.bodyPreviewVisible = true;
+  }
+
+  saveBodyToMessage() {
+    // 压缩 JSON 为单行
+    let compactBody = '';
+    try {
+      compactBody = JSON.stringify(JSON.parse(this.bodyPreviewContent));
+    } catch {
+      compactBody = this.bodyPreviewContent.replace(/\n/g, '');
+    }
+    // 替换报文中的 body 部分
+    const lines = this.requestMessage.split('\n');
+    let headerPart = '';
+    for (let i = 0; i < lines.length; i++) {
+      headerPart += lines[i] + '\n';
+      if (lines[i].trim() === '') {
+        break;
+      }
+    }
+    this.bodyPreviewVisible = false;
+    this.aceEditorVisible = false;
+    this.requestMessage = headerPart + compactBody;
+    setTimeout(() => {
+      this.aceEditorVisible = true;
+      this.saveForm();
+    });
   }
 }

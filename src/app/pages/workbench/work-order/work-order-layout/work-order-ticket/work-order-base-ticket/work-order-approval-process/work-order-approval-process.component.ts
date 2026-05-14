@@ -48,10 +48,12 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
       if (process.approvalStatus === APPROVAL_REJECT) {
         color = 'var(--devui-danger)';
       }
+      const displayName = this.getNodeDisplayName(node);
       let timeAxis = {
         dotColor: color,
         data: {
           ...process,
+          nodeName: displayName,
           dotColor: color,
           color: color,
         },
@@ -89,4 +91,12 @@ export class WorkOrderApprovalProcessComponent implements OnInit {
   protected readonly getPopoverStyle = getPopoverStyle;
   protected readonly limit = RELATIVE_TIME_LIMIT;
   protected readonly WorkOrderStatus = WorkOrderStatus;
+
+  private getNodeDisplayName(node: any): string {
+    const lang = localStorage.getItem('lang') || 'en-us';
+    if (node.langMap && node.langMap[lang] && node.langMap[lang].displayName) {
+      return node.langMap[lang].displayName;
+    }
+    return node.name;
+  }
 }

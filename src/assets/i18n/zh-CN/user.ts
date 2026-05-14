@@ -93,6 +93,13 @@ export default {
       }
     },
 
+    // 密码设置
+    passwordSettings: {
+      oldPassword: '旧密码',
+      newPassword: '新密码',
+      confirmPassword: '确认密码',
+    },
+
     // 权限管理
     permissions: {
       title: '权限管理',

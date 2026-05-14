@@ -103,9 +103,9 @@
       </div>
     </div>
 
-    <!-- Section 2: Node Topology -->
+    <!-- Section 2: Channel Topology -->
     <div class="topology-card">
-      <h5 class="group-title">Node Topology
+      <h5 class="group-title">Channel Topology
         <d-icon [icon]="'icon-add'" [operable]="true" [style.opacity]="editMode ? 1 : 0.3" (click)="editMode && onAddNode()" style="margin-left: 8px; cursor: pointer;"></d-icon>
       </h5>
       <div class="section-cards">
@@ -165,7 +165,11 @@
       <div class="org-column" *ngIf="organizations.length">
         <div *ngFor="let org of organizations" class="org-card" [id]="'org-' + org.id">
           <div class="card-inner">
-            <div class="card-title">{{ org.name }}</div>
+            <div class="card-top">
+              <i class="fa-solid fa-building" style="margin-right: 6px;"></i>
+              <div class="card-title">{{ org.name }}</div>
+            </div>
+            <hr class="node-divider" *ngIf="org.code">
             <div class="card-code" *ngIf="org.code">{{ org.code }}</div>
           </div>
         </div>

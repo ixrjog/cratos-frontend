@@ -34,6 +34,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   queryCountry = '';
   countryOptions: { label: string; value: string; count: number }[] = [];
   editMode = false;
+  sopVisible = false;
+  sopContent = '';
+  sopTitle = '';
   businesses: ChannelBusinessVO[] = [];
   organizations: any[] = [];
   channelNodes: any[] = [];
@@ -117,6 +120,19 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     this.removeLines();
     this.editMode = !this.editMode;
     this.needDrawLines = true;
+  }
+
+  showSop() {
+    const lang = localStorage.getItem('lang') || 'en-us';
+    const isCn = lang.startsWith('zh');
+    this.sopTitle = isCn ? '渠道网络故障处理 SOP' : 'Channel Network Troubleshooting SOP';
+    const file = isCn ? 'channel-network-troubleshooting-sop-cn.md' : 'channel-network-troubleshooting-sop-en.md';
+    fetch(`assets/docs/${file}`)
+      .then(res => res.text())
+      .then(text => {
+        this.sopContent = text;
+        this.sopVisible = true;
+      });
   }
 
   ngAfterViewChecked() {

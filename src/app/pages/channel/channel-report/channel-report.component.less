@@ -163,12 +163,18 @@
 
     .user-name {
       font-weight: 600;
-      min-width: 120px;
+      width: 150px;
+      min-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 8px;
       color: @devui-text;
     }
 
     .channel-count {
-      min-width: 30px;
+      width: 80px;
+      min-width: 80px;
       font-size: 12px;
       color: @devui-text-weak;
       margin-right: 8px;

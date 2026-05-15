@@ -24,6 +24,7 @@
       (click)="onToggleEditMode()"
       [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
     ></d-icon>
+    <d-button bsStyle="danger" style="margin-left: 8px;" (click)="showSop()">SOP</d-button>
   </div>
   <div class="channel-view-body">
   <!-- Channel Selector -->
@@ -249,5 +250,19 @@
       <markdown lineNumbers lineHighlight mermaid [data]="nodeInfoContent" [disableSanitizer]="true"></markdown>
     </div>
   </ng-template>
+
+  <!-- SOP Dialog -->
+  <div class="sop-overlay" *ngIf="sopVisible" (click)="sopVisible = false">
+    <div class="sop-dialog" (click)="$event.stopPropagation()">
+      <div class="sop-header">
+        <h4>{{ sopTitle }}</h4>
+        <span class="sop-close" (click)="sopVisible = false">&times;</span>
+      </div>
+      <div class="sop-content">
+        <markdown lineNumbers lineHighlight mermaid [data]="sopContent" [disableSanitizer]="true"></markdown>
+      </div>
+    </div>
+  </div>
+
   </div>
 </div>

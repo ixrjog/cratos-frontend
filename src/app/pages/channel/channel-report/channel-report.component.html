@@ -83,8 +83,8 @@
     </div>
     <div class="user-channel-list" *ngIf="userChannelMap.length > 0">
       <div class="user-row" *ngFor="let item of userChannelMap">
-        <span class="user-name">{{ item.username }}</span>
-        <span class="channel-count">{{ item.total }}</span>
+        <span class="user-name"><app-user-popover [username]="item.username"></app-user-popover></span>
+        <span class="channel-count">{{ item.total }}（{{ (item.total / total * 100).toFixed(0) }}%）</span>
         <div class="channel-tags">
           <span *ngFor="let cc of item.countryChannels" class="country-group">
             <strong class="country-code">{{ cc.country }}</strong>
@@ -120,13 +120,20 @@
   <div class="charts-row" *ngIf="businessTotal > 0">
     <div class="chart-card">
       <h4>Business Type</h4>
-      <div class="bar-chart">
-        <div class="bar-item" *ngFor="let item of businessByType">
-          <span class="bar-label">{{ item.key }}</span>
-          <div class="bar-track">
-            <div class="bar-fill" [style.width.%]="item.value / businessTotal * 100" [style.background]="'#fa9841'"></div>
+      <div class="stacked-bar">
+        <div class="stacked-bar-track">
+          <div *ngFor="let item of businessByType; let i = index"
+               class="stacked-bar-segment"
+               [style.width.%]="item.value / businessTotal * 100"
+               [style.background]="stackColors[(i + 5) % stackColors.length]"
+               [title]="item.key + ': ' + item.value">
           </div>
-          <span class="bar-value">{{ item.value }}</span>
+        </div>
+        <div class="stacked-bar-legend">
+          <span *ngFor="let item of businessByType; let i = index" class="legend-item">
+            <span class="legend-dot" [style.background]="stackColors[(i + 5) % stackColors.length]"></span>
+            {{ item.key }} ({{ item.value }})
+          </span>
         </div>
       </div>
     </div>

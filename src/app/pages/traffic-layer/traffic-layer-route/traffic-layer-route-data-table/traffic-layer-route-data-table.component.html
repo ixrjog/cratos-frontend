@@ -148,6 +148,11 @@
           <span class='icon-setup' style='padding-right: 5px; vertical-align: middle'> Valid</span>
         </a>
       </li>
+      <li role='menuitem' (click)='onBatchDcSwitch()'>
+        <a dDropDownMenuItem>
+          <span class='icon-switch' style='padding-right: 5px; vertical-align: middle'> DC Switch</span>
+        </a>
+      </li>
       <li role='menuitem' (click)='onBatchTag()'>
         <a dDropDownMenuItem>
           <span class='icon-tag' style='padding-right: 5px; vertical-align: middle'> Tag</span>
@@ -172,4 +177,37 @@
     (pageSizeChange)='pageSizeChange($event)'
   >
   </d-pagination>
+</div>
+
+<!-- DC Switch Dialog -->
+<div class="dc-switch-overlay" *ngIf="dcSwitchVisible" (click)="dcSwitchVisible = false">
+  <div class="dc-switch-dialog" (click)="$event.stopPropagation()">
+    <h4>DC Switch <span style="float:right;cursor:pointer;font-size:18px;color:#999" (click)="dcSwitchVisible = false">&times;</span></h4>
+    <p style="margin-bottom: 12px; color: #8a8e99;">Select target DC role and confirm routes to switch:</p>
+    <d-tabs type="options" [activeTab]="selectedDcRole" (activeTabChange)="selectedDcRole = $any($event)">
+      <d-tab *ngFor="let role of dcRoleOptions" [id]="role" [title]="role"></d-tab>
+    </d-tabs>
+    <div style="margin-top: 12px; max-height: 500px; overflow-y: auto;">
+      <d-data-table
+        #dcDatatable
+        [dataSource]="dcSwitchRoutes"
+        [checkable]="true"
+      >
+        <d-column field="domainRecord" header="Web Site"></d-column>
+        <d-column header="DNS Provider">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <d-tag *ngIf="rowItem.dnsResolverInstance" [tag]="rowItem.dnsResolverInstance.instanceName" [labelStyle]="'blue-w98'"></d-tag>
+            </ng-template>
+          </d-cell>
+        </d-column>
+      </d-data-table>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button (click)="dcSwitchVisible = false" style="padding:6px 16px;border:1px solid var(--devui-dividing-line,#dfe1e6);border-radius:4px;background:var(--devui-base-bg,#fff);color:var(--devui-text,#252b3a);cursor:pointer;margin-right:8px;">Cancel</button>
+      <button (click)="executeDcSwitch()" [disabled]="!selectedDcRole || dcSwitching" style="padding:6px 16px;border:none;border-radius:4px;background:var(--devui-brand,#5e7ce0);color:#fff;cursor:pointer;">
+        {{ dcSwitching ? 'Switching...' : 'Switch' }}
+      </button>
+    </div>
+  </div>
 </div>

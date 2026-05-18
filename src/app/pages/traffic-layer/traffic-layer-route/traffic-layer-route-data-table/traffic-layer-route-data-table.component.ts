@@ -252,4 +252,55 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     this.queryParam.queryByTag = value;
   }
 
+  // DC Switch
+  dcSwitchVisible = false;
+  dcRoleOptions: string[] = [];
+  selectedDcRole = '';
+  dcSwitching = false;
+  dcSwitchRoutes: any[] = [];
+  @ViewChild('dcDatatable') dcDatatable: DataTableComponent;
+
+  getCheckedRowsCount(): number {
+    return this.datatable?.getCheckedRows()?.length || 0;
+  }
+
+  onBatchDcSwitch() {
+    if (this.getCheckedRowsCount() === 0) return;
+    this.dcSwitchRoutes = [...this.datatable.getCheckedRows()];
+    this.trafficRouteService.getDcRoleOptions().subscribe((res: any) => {
+      this.dcRoleOptions = res.body || [];
+      this.selectedDcRole = '';
+      this.dcSwitchVisible = true;
+    });
+  }
+
+  executeDcSwitch() {
+    if (!this.selectedDcRole) return;
+    const rows = this.dcDatatable?.getCheckedRows() || [];
+    if (rows.length === 0) return;
+    this.dcSwitching = true;
+    let completed = 0;
+    rows.forEach(row => {
+      this.trafficRouteService.switchToDcTarget({ routeId: row.id, dcRole: this.selectedDcRole })
+        .subscribe({
+          next: () => {
+            completed++;
+            if (completed === rows.length) {
+              this.dcSwitching = false;
+              this.dcSwitchVisible = false;
+              this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_UPDATE);
+              this.fetchData();
+            }
+          },
+          error: () => {
+            completed++;
+            if (completed === rows.length) {
+              this.dcSwitching = false;
+              this.fetchData();
+            }
+          }
+        });
+    });
+  }
+
 }

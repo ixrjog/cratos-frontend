@@ -73,4 +73,30 @@ export class TrafficRouteService extends TrafficRouteData {
     return this.apiService.put(this.baseUrl, '/record/target/switch', param);
   }
 
+  switchToDcTarget(param: { routeId: number; dcRole: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.put(this.baseUrl, '/dc/target/switch', param);
+  }
+
+  getDcRoleOptions(): Observable<HttpResult<Array<string>>> {
+    return new Observable(observer => {
+      this.apiService.post('/tag', '/page/query', { tagKey: 'DCRole', page: 1, length: 1 })
+        .subscribe((tagRes: any) => {
+          const tags = tagRes?.body?.data;
+          if (tags && tags.length > 0) {
+            const tagId = tags[0].id;
+            this.apiService.post('/business/tag', '/query/by/value', {
+              tagId: tagId,
+              businessType: 'TRAFFIC_RECORD_TARGET',
+            }).subscribe((res: any) => {
+              observer.next(res);
+              observer.complete();
+            });
+          } else {
+            observer.next({ body: [] } as any);
+            observer.complete();
+          }
+        });
+    });
+  }
+
 }

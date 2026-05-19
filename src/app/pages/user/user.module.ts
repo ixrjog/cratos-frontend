@@ -27,6 +27,7 @@ import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { UserBaseSettingsComponent } from './user-settings/user-base-settings/user-base-settings.component';
 import { UserSshKeySettingsComponent } from './user-settings/user-ssh-key-settings/user-ssh-key-settings.component';
 import { UserRobotSettingsComponent } from './user-settings/user-robot-settings/user-robot-settings.component';
+import { UserWebauthnSettingsComponent } from './user-settings/user-webauthn-settings/user-webauthn-settings.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { UserPermissionsComponent } from './user-list/user-list-data-table/user-permissions/user-permissions.component';
 import {
@@ -67,6 +68,7 @@ import { UserPasswordSettingsComponent } from './user-settings/user-password-set
     UserBaseSettingsComponent,
     UserSshKeySettingsComponent,
     UserRobotSettingsComponent,
+    UserWebauthnSettingsComponent,
     UserPermissionsComponent,
     UserPermissionsEditorComponent,
     UserRenewalComponent,

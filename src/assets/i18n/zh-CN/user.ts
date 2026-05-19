@@ -66,7 +66,8 @@ export default {
         cloudIdentity: '云身份',
         identity: '身份认证',
         sshKey: 'SSH密钥',
-        robot: '机器人'
+        robot: '机器人',
+        biometric: '生物识别'
       }
     },
 
@@ -98,6 +99,16 @@ export default {
       oldPassword: '旧密码',
       newPassword: '新密码',
       confirmPassword: '确认密码',
+    },
+
+    // 生物识别
+    biometric: {
+      title: '生物识别认证',
+      notSupported: '您的浏览器不支持 WebAuthn。',
+      register: '注册生物识别设备',
+      registering: '注册中...',
+      registeredDevices: '已注册设备',
+      noDevices: '暂无已注册的生物识别设备。',
     },
 
     // 权限管理

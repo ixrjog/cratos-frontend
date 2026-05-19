@@ -55,6 +55,11 @@
                   <app-user-robot-settings [username]="username"></app-user-robot-settings>
                 </div>
 
+                <div *ngIf="menus[7].isActive">
+                  <div class="da-settings-header">{{ menus[7].title }}</div>
+                  <app-user-webauthn-settings></app-user-webauthn-settings>
+                </div>
+
               </div>
             </da-col-item>
           </da-layout-row>

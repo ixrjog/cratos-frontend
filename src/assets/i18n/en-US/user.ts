@@ -66,7 +66,8 @@ export default {
         cloudIdentity: 'Cloud Identity',
         identity: 'Identity',
         sshKey: 'SSH Key',
-        robot: 'Robot'
+        robot: 'Robot',
+        biometric: 'Biometric'
       }
     },
 
@@ -98,6 +99,16 @@ export default {
       oldPassword: 'Old Password',
       newPassword: 'New Password',
       confirmPassword: 'Confirm Password',
+    },
+
+    // Biometric
+    biometric: {
+      title: 'Biometric Authentication',
+      notSupported: 'Your browser does not support WebAuthn.',
+      register: 'Register Biometric Device',
+      registering: 'Registering...',
+      registeredDevices: 'Registered Devices',
+      noDevices: 'No biometric devices registered yet.',
     },
 
     // Permissions

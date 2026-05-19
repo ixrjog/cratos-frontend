@@ -1,0 +1,27 @@
+<div class="da-settings-layout">
+  <da-layout-row [daGutter]="[12, 12]">
+    <da-col-item [daSpan]="12" [daXs]="24">
+      <h4>{{ 'user.biometric.title' | translate }}</h4>
+      <p *ngIf="!supported" style="color: #f66f6a;">{{ 'user.biometric.notSupported' | translate }}</p>
+
+      <d-button *ngIf="supported" bsStyle="primary" [disabled]="loading" (click)="register()">
+        {{ loading ? ('user.biometric.registering' | translate) : ('user.biometric.register' | translate) }}
+      </d-button>
+
+      <div style="margin-top: 16px;" *ngIf="credentials.length > 0">
+        <h4>{{ 'user.biometric.registeredDevices' | translate }}</h4>
+        <div *ngFor="let cred of credentials" class="credential-item">
+          <div class="credential-info">
+            <span class="device-name">{{ cred.deviceName || 'Device' }}</span>
+            <span class="create-time">{{ cred.createTime | dDatePipe: 'yyyy/MM/dd HH:mm' }}</span>
+          </div>
+          <d-button bsStyle="danger" (click)="deleteCredential(cred.id)">{{ 'user.common.delete' | translate }}</d-button>
+        </div>
+      </div>
+
+      <div *ngIf="credentials.length === 0 && supported" style="margin-top: 16px; color: #8a8e99;">
+        {{ 'user.biometric.noDevices' | translate }}
+      </div>
+    </da-col-item>
+  </da-layout-row>
+</div>

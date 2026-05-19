@@ -153,6 +153,9 @@
       <d-icon *ngIf="loginLoading" [icon]="'icon-refresh'" class="fa-spin" style="margin-right: 5px;"></d-icon>
        {{ 'loginPage.submit' | translate }}
     </button>
+    <button *ngIf="webauthnSupported" type="button" class="da-biometric-button" [disabled]="loginLoading" (click)="onBiometricLogin()">
+      <i class="fa-solid fa-fingerprint"></i> Biometric Login
+    </button>
   </form>
 </ng-template>
 

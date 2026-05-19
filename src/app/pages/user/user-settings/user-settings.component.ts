@@ -49,6 +49,11 @@ export class UserSettingsComponent implements OnInit {
       title: '',
       key: 'user.settings.menu.robot'
     },
+    {
+      isActive: false,
+      title: '',
+      key: 'user.settings.menu.biometric'
+    },
   ];
 
   constructor(

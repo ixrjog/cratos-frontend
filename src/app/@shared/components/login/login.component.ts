@@ -10,6 +10,7 @@ import { ThemeType } from '../../models/theme';
 import { FormLayout } from 'ng-devui/form';
 import { LANGUAGES } from 'src/config/language-config';
 import { LogService } from '../../../@core/services/log.service';
+import { ApiService } from '../../../@core/services/api.service';
 import { LoginParam } from '../../../@core/data/log';
 import { environment } from '../../../../environments/environment';
 
@@ -33,6 +34,7 @@ export class LoginComponent implements OnInit {
   isProduction = environment.production;
   hasRobotToken = false;
   loginLoading = false;
+  webauthnSupported = !!window.PublicKeyCredential;
 
   formData: LoginParam = {
     otp: '', password: '', username: '',
@@ -74,12 +76,14 @@ export class LoginComponent implements OnInit {
     private logService: LogService,
     private translate: TranslateService,
     private i18n: I18nService,
-    private personalizeService: PersonalizeService
+    private personalizeService: PersonalizeService,
+    private apiService: ApiService
   ) {
     this.language = this.translate.currentLang;
   }
 
   ngOnInit(): void {
+    this.formData.username = localStorage.getItem('username') || '';
     this.translate
       .get('loginPage')
       .pipe(takeUntil(this.destroy$))
@@ -192,5 +196,80 @@ export class LoginComponent implements OnInit {
 
   checkRobotToken() {
     this.hasRobotToken = !!localStorage.getItem('robotToken');
+  }
+
+  async onBiometricLogin() {
+    let username = this.formData.username || localStorage.getItem('username') || '';
+    if (!username) {
+      alert('Please enter username first');
+      return;
+    }
+    this.loginLoading = true;
+    try {
+      // 1. Get login options
+      const optionsRes: any = await this.apiService.get('/webauthn', '/login/options', { username }).toPromise();
+      const options = optionsRes.body;
+
+      // 2. Call WebAuthn API
+      const publicKeyOptions: PublicKeyCredentialRequestOptions = {
+        challenge: this.base64urlToBuffer(options.challenge),
+        rpId: options.rpId,
+        allowCredentials: (options.allowCredentials || []).map((c: any) => ({
+          type: c.type,
+          id: this.base64urlToBuffer(c.id),
+          transports: c.transports,
+        })),
+        userVerification: options.userVerification,
+        timeout: options.timeout,
+      };
+
+      const assertion = await navigator.credentials.get({ publicKey: publicKeyOptions }) as PublicKeyCredential;
+      const authResponse = assertion.response as AuthenticatorAssertionResponse;
+
+      // 3. Send to server
+      const body = {
+        id: this.bufferToBase64url(assertion.rawId),
+        username: username,
+        response: {
+          authenticatorData: this.bufferToBase64url(authResponse.authenticatorData),
+          clientDataJSON: this.bufferToBase64url(authResponse.clientDataJSON),
+          signature: this.bufferToBase64url(authResponse.signature),
+        },
+      };
+
+      const loginRes: any = await this.apiService.post('/webauthn', '/login/complete', body).toPromise();
+      const result = loginRes.body;
+
+      // 4. Set session
+      this.logService.setSession({
+        token: result.token,
+        jti: result.jti,
+        username: result.username,
+        name: result.name || result.username,
+        uuid: '',
+      });
+      this.router.navigate(['/pages']);
+    } catch (e: any) {
+      console.error('Biometric login failed:', e);
+      alert('Biometric login failed: ' + (e?.message || e));
+    } finally {
+      this.loginLoading = false;
+    }
+  }
+
+  private base64urlToBuffer(base64url: string): ArrayBuffer {
+    const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4 === 0 ? '' : '='.repeat(4 - (base64.length % 4));
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+
+  private bufferToBase64url(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 }

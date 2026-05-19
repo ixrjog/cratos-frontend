@@ -35,33 +35,36 @@
     [checkable]="true"
   >
     <d-column field="certificateId" header="Certificate ID"></d-column>
-    <d-column field="name" header="Name"></d-column>
-    <d-column field="domainName" header="Domain Name"></d-column>
-    <d-column field="certificateType" header="Certificate Type">
+    <d-column header="Instance / Type">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        <ng-template let-rowItem="rowItem">
+          <div>{{ rowItem.instanceName }}</div>
+          <hr style="border:none;border-top:1px solid var(--devui-dividing-line,#dfe1e6);margin:4px 0;">
+          <div><d-tag [tag]="rowItem.certificateType" [labelStyle]="'blue-w98'"></d-tag></div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column
-      [width]="'150px'"
-      field="notBefore"
-       header="Not Before"
-      [fieldType]="'date'"
-      [extraOptions]="{ dateFormat: 'yyyy/MM/dd' }"
-    ></d-column>
-    <d-column
-      [width]="'150px'"
-      field="notAfter"
-      header="Not After"
-      [fieldType]="'date'"
-    >
+    <d-column header="Name / Domain">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span>{{ cellItem | dDatePipe: 'yyyy/MM/dd' }}</span>
-          <br>
-          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        <ng-template let-rowItem="rowItem">
+          <div>{{ rowItem.name }}</div>
+          <hr style="border:none;border-top:1px solid var(--devui-dividing-line,#dfe1e6);margin:4px 0;">
+          <div style="font-size:12px;color:var(--devui-text-weak,#8a8e99);">{{ rowItem.domainName }}</div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Validity" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div style="font-size: 12px;">
+            <span>Not Before: {{ rowItem.notBefore | dDatePipe: 'yyyy/MM/dd' }}</span>
+          </div>
+          <div style="font-size: 12px;">
+            <span>Not After: {{ rowItem.notAfter | dDatePipe: 'yyyy/MM/dd' }}</span>
+            <span class="count-badge" style="margin-left: 6px;"
+              [style.background]="getDaysRemaining(rowItem.notAfter) <= 0 ? '#555' : getDaysRemaining(rowItem.notAfter) < 15 ? '#991111' : getDaysRemaining(rowItem.notAfter) < 30 ? '#cc6414' : '#518519'"
+            >{{ getDaysRemaining(rowItem.notAfter) }}d</span>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

@@ -196,4 +196,10 @@ export class CertificateListDataTableComponent implements OnInit {
 
   protected readonly getRowColor = getRowColor;
 
+  getDaysRemaining(date: string): number {
+    if (!date) return 0;
+    const diff = new Date(date).getTime() - Date.now();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
 }

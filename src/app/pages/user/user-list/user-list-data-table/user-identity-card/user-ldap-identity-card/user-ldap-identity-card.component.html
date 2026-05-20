@@ -6,18 +6,6 @@
     <div>
 
       <div class="card-content">
-        <span class="name">Groups</span>
-        <span class="value">
-          <d-tag
-            style="margin: 0 3px 3px 0"
-            *ngFor="let group of identity.groups"
-            [labelStyle]="'blue-w98'"
-            [tag]="group"
-          ></d-tag>
-        </span>
-      </div>
-
-      <div class="card-content">
         <span class="name">Username</span>
         <span class="value" dClipboard [content]="identity.account.assetKey">
           {{ identity.account.assetKey }}
@@ -28,6 +16,18 @@
         <span class="name">Display Name</span>
         <span class="value" dClipboard [content]="identity.account.name">
           {{ identity.account.name }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">Groups</span>
+        <span class="value">
+          <d-tag
+            style="margin: 0 3px 3px 0"
+            *ngFor="let group of identity.groups"
+            [labelStyle]="'blue-w98'"
+            [tag]="group"
+          ></d-tag>
         </span>
       </div>
 

@@ -36,6 +36,7 @@
     "leader-line-new": "^1.1.9",
     "marked": "^4.3.0",
     "mermaid": "^10.8.0",
+    "monaco-editor": "^0.36.1",
     "ng-devui": "^15.0.0",
     "ng-devui-admin": "^15.1.0",
     "ng-devui-materials": "^15.1.0",

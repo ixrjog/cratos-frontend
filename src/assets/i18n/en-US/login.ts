@@ -8,6 +8,7 @@ export default {
     autoLogin: 'Remember me',
     forgetPassword: 'Forgot Password?',
     submit: 'Submit',
+    biometricLogin: 'Biometric Login',
     userName: 'Username',
     password: 'Password',
     otp: 'OTP',

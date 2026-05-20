@@ -6,17 +6,6 @@
     <div>
 
       <div class="card-content">
-        <span class="name">SSH Key</span>
-        <span class="value">
-          <span *ngFor="let sshKey of identity.sshKeys">
-            <i class="fa-solid fa-key"></i>
-            &nbsp;{{ sshKey.assetKey }}
-            <br />
-          </span>
-        </span>
-      </div>
-
-      <div class="card-content">
         <span class="name">Login Link</span>
         <span class="value">
           <a class="devui-link-light" [href]="identity.accountLogin.loginUrl" target="_blank">
@@ -36,6 +25,17 @@
         <span class="name">Email</span>
         <span class="value" dClipboard [content]="identity.account.description">
           {{ identity.account.description }}
+        </span>
+      </div>
+
+      <div class="card-content">
+        <span class="name">SSH Key</span>
+        <span class="value">
+          <span *ngFor="let sshKey of identity.sshKeys">
+            <i class="fa-solid fa-key"></i>
+            &nbsp;{{ sshKey.assetKey }}
+            <br />
+          </span>
         </span>
       </div>
 

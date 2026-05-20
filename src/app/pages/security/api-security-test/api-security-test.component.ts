@@ -40,7 +40,7 @@ export class ApiSecurityTestComponent {
   bodyPreviewContent = '';
   aceEditorVisible = true;
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'NONE'];
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,
@@ -91,26 +91,60 @@ export class ApiSecurityTestComponent {
   }
 
   openSignMapEditor() {
+    this.showDiff = false;
     this.signMapVisible = true;
+  }
+
+  cancelSignMap() {
+    if (this.showDiff && this.signMapOld) {
+      this.signMapYaml = this.signMapOld;
+    }
+    this.signMapVisible = false;
+  }
+
+  signMapOld = '';
+  showDiff = false;
+
+  getDiffLines(): { prefix: string; text: string; type: string }[] {
+    const oldLines = this.signMapOld.split('\n');
+    const newLines = this.signMapYaml.split('\n');
+    const result: { prefix: string; text: string; type: string }[] = [];
+    const oldSet = new Set(oldLines);
+    const newSet = new Set(newLines);
+    // Show all new lines, mark added ones
+    for (const line of newLines) {
+      if (!oldSet.has(line)) {
+        result.push({ prefix: '+', text: line, type: 'added' });
+      } else {
+        result.push({ prefix: ' ', text: line, type: 'unchanged' });
+      }
+    }
+    return result;
   }
 
   quickAddSignMap() {
     const domain = this.extractDomain();
     if (!domain) return;
-    // 追加当前域名到当前选中的签名算法下
     const algo = this.signatureAlgorithm;
+    if (this.signMapYaml.includes('- ' + domain)) {
+      alert(`"${domain}" already exists in sign map`);
+      return;
+    }
+    this.signMapOld = this.signMapYaml;
     if (!this.signMapYaml.includes(algo + ':')) {
       this.signMapYaml += `\n${algo}:\n  - ${domain}`;
     } else {
       this.signMapYaml = this.signMapYaml.replace(
-        new RegExp(`(${algo}:\\n)`, 'g'),
-        `$1  - ${domain}\n`
+        algo + ':',
+        `${algo}:\n  - ${domain}`
       );
     }
+    this.showDiff = true;
     this.signMapVisible = true;
   }
 
   signMapError = '';
+
 
   saveSignMap() {
     // 校验 YAML 格式
@@ -135,6 +169,8 @@ export class ApiSecurityTestComponent {
     this.apiSecurityRiskService.saveAutoSignMap({ signMapYaml: this.signMapYaml }).subscribe({
       next: () => {
         this.parseSignMap();
+        this.lastQueriedDomain = '';
+        this.parseDomainAndQuery();
         this.signMapVisible = false;
         this.signMapError = '';
       },

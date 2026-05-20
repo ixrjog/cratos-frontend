@@ -360,3 +360,47 @@
     }
   }
 }
+
+.diff-view {
+  margin-bottom: 12px;
+  border: 1px solid @devui-dividing-line;
+  border-radius: 4px;
+  overflow: hidden;
+  max-height: 600px;
+  overflow-y: auto;
+
+  .diff-unified {
+    font-family: monospace;
+    font-size: 11px;
+  }
+
+  .diff-line {
+    padding: 2px 12px;
+    white-space: pre-wrap;
+
+    &.added {
+      background: #e6ffed;
+      color: #22863a;
+    }
+
+    &.unchanged {
+      color: @devui-text;
+    }
+
+    .diff-prefix {
+      display: inline-block;
+      width: 16px;
+      color: @devui-text-weak;
+      user-select: none;
+    }
+
+    .diff-linenum {
+      display: inline-block;
+      width: 30px;
+      text-align: right;
+      margin-right: 8px;
+      color: @devui-text-weak;
+      user-select: none;
+    }
+  }
+}

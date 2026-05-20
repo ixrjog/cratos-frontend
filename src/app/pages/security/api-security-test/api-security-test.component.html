@@ -111,19 +111,33 @@
 </div>
 
 <!-- Sign Map Editor Dialog -->
-<div class="sign-map-overlay" *ngIf="signMapVisible" (click)="signMapVisible = false">
-  <div class="sign-map-dialog" (click)="$event.stopPropagation()">
+<div class="sign-map-overlay" *ngIf="signMapVisible" (click)="cancelSignMap()">
+  <div class="sign-map-dialog" [style.width]="showDiff ? '900px' : '700px'" (click)="$event.stopPropagation()">
     <h4>签名映射配置</h4>
-    <app-ace-editor
+
+    <!-- Diff view (unified) -->
+    <div *ngIf="showDiff" class="diff-view">
+      <div class="diff-unified">
+        <div *ngFor="let line of getDiffLines(); let i = index" class="diff-line" [ngClass]="line.type">
+          <span class="diff-linenum">{{ i + 1 }}</span>
+          <span class="diff-prefix">{{ line.prefix }}</span>
+          <span class="diff-text">{{ line.text }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Normal editor -->
+    <app-ace-editor *ngIf="!showDiff"
       [minLines]="30"
       [maxLines]="45"
       [mode]="'ace/mode/yaml'"
       [aceValue]="signMapYaml"
       (onChange)="signMapYaml = $event"
     ></app-ace-editor>
+
     <div class="sign-map-actions">
       <span class="sign-map-error" *ngIf="signMapError">{{ signMapError }}</span>
-      <button class="btn-cancel" (click)="signMapVisible = false">取消</button>
+      <button class="btn-cancel" (click)="cancelSignMap()">取消</button>
       <button class="btn-save" (click)="saveSignMap()">保存</button>
     </div>
   </div>

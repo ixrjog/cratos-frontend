@@ -8,6 +8,7 @@ export default {
     autoLogin: '自动登录',
     forgetPassword: '忘记密码？',
     submit: '提交',
+    biometricLogin: '生物识别登录',
     userName: '用户名',
     password: '密码',
     otp: 'OTP',

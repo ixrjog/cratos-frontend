@@ -1,6 +1,7 @@
-<div class="da-settings-layout">
-  <da-layout-row [daGutter]="[12, 12]">
-    <da-col-item [daSpan]="12" [daXs]="24">
+<div class="webauthn-container">
+  <!-- Top: left form, right logo -->
+  <div class="webauthn-top">
+    <div class="webauthn-top-left">
       <h4>{{ 'user.biometric.title' | translate }}</h4>
       <p *ngIf="!supported" style="color: #f66f6a;">{{ 'user.biometric.notSupported' | translate }}</p>
 
@@ -22,6 +23,21 @@
       <div *ngIf="credentials.length === 0 && supported" style="margin-top: 16px; color: #8a8e99;">
         {{ 'user.biometric.noDevices' | translate }}
       </div>
-    </da-col-item>
-  </da-layout-row>
+    </div>
+    <div class="webauthn-top-right">
+      <img src="assets/svg/webauthn/webauthn.svg" alt="WebAuthn">
+    </div>
+  </div>
+
+  <!-- Bottom: registration flow left, authentication flow right -->
+  <div class="webauthn-bottom">
+    <div class="webauthn-flow">
+      <h5>Registration Flow</h5>
+      <img src="assets/svg/webauthn/webauthn-registration-flow-01.svg" alt="Registration Flow">
+    </div>
+    <div class="webauthn-flow">
+      <h5>Authentication Flow</h5>
+      <img src="assets/svg/webauthn/webauthn-authentication-flow-01.svg" alt="Authentication Flow">
+    </div>
+  </div>
 </div>

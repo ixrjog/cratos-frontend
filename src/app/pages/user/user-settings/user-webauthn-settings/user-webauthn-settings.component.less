@@ -1,5 +1,58 @@
 @import 'ng-devui/styles-var/devui-var.less';
 
+.webauthn-container {
+  padding: 16px;
+}
+
+.webauthn-top {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  .webauthn-top-left {
+    flex: 1;
+  }
+
+  .webauthn-top-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border: 1px solid @devui-dividing-line;
+    border-radius: 8px;
+
+    img {
+      width: 400px;
+      height: auto;
+    }
+  }
+}
+
+.webauthn-bottom {
+  display: flex;
+  gap: 24px;
+
+  .webauthn-flow {
+    flex: 1;
+    background: #f8f9fa;
+    border: 1px solid @devui-dividing-line;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+
+    h5 {
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
 .credential-item {
   display: flex;
   justify-content: space-between;

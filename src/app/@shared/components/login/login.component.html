@@ -13,7 +13,7 @@
       </span>
     </div>
     <div class="da-login-ways">
-      <d-tabs [(activeTab)]="tabActiveId" type="pills">
+      <!--<d-tabs [(activeTab)]="tabActiveId" type="pills">
         <d-tab *ngFor="let item of tabItems" [id]="item.id">
           <ng-template dTabTitle>
             <span class="da-tabs-title">
@@ -21,7 +21,7 @@
             </span>
           </ng-template>
         </d-tab>
-      </d-tabs>
+      </d-tabs>-->
       <!--      <ng-container *ngIf="tabActiveId === 'tab1'; else loginWithEmail">-->
       <!--        <ng-template [ngTemplateOutlet]="loginWithPassword"></ng-template>-->
       <!--      </ng-container>-->
@@ -154,7 +154,7 @@
        {{ 'loginPage.submit' | translate }}
     </button>
     <button *ngIf="webauthnSupported" type="button" class="da-biometric-button" [disabled]="loginLoading" (click)="onBiometricLogin()">
-      <i class="fa-solid fa-fingerprint"></i> Biometric Login
+      <i class="fa-solid fa-fingerprint" style="margin-right: 6px;"></i>{{ 'loginPage.biometricLogin' | translate }}
     </button>
   </form>
 </ng-template>

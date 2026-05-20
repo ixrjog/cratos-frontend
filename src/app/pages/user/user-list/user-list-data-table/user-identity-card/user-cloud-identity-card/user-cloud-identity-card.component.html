@@ -5,6 +5,15 @@
   <d-card-content>
     <div>
 
+      <div class="card-content">
+        <span class="name">Login Link</span>
+        <span class="value">
+          <a class="devui-link-light" [href]="identity.accountLogin.loginUrl" target="_blank">
+            {{ identity.accountLogin.loginUrl }}
+          </a>
+        </span>
+      </div>
+
       <div class="card-content" *ngIf="identity.accountLogin.accountId">
         <span class="name">Account ID</span>
         <span class="value" dClipboard [content]="identity.accountLogin.accountId">
@@ -22,15 +31,6 @@
           ></i>
 
           {{ identity.accountLogin.loginUsername }}
-        </span>
-      </div>
-
-      <div class="card-content">
-        <span class="name">Login Link</span>
-        <span class="value">
-          <a class="devui-link-light" [href]="identity.accountLogin.loginUrl" target="_blank">
-            {{ identity.accountLogin.loginUrl }}
-          </a>
         </span>
       </div>
 

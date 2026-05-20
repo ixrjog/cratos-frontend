@@ -40,7 +40,7 @@ export class ApiSecurityTestComponent {
   bodyPreviewContent = '';
   aceEditorVisible = true;
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'NONE'];
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'TZAPPSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,
@@ -136,7 +136,7 @@ export class ApiSecurityTestComponent {
     } else {
       this.signMapYaml = this.signMapYaml.replace(
         algo + ':',
-        `${algo}:\n  - ${domain}`
+        `${algo}:\n  - ${domain}`,
       );
     }
     this.showDiff = true;
@@ -176,7 +176,7 @@ export class ApiSecurityTestComponent {
       },
       error: (err) => {
         this.signMapError = err?.error?.msg || '保存失败，请检查YAML格式';
-      }
+      },
     });
   }
 
@@ -339,7 +339,15 @@ export class ApiSecurityTestComponent {
   copyResponseAsMd() {
     const domain = this.extractDomain();
     const username = localStorage.getItem('username') || '';
-    const dateStr = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' }).format(new Date());
+    const dateStr = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short',
+    }).format(new Date());
     const md = `## ${this.requestMessage.split('\n')[0]?.trim() || ''}
 
 **Status:** ${this.statusCode} | **Host:** ${domain || ''}

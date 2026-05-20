@@ -81,6 +81,13 @@
         </ng-template>
       </d-cell>
     </d-column>
+    <d-column header="WebAuthn" [width]="'100px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span *ngIf="rowItem.webAuths?.length"><i class="fa-solid fa-fingerprint" style="margin-right: 4px;"></i><span class="count-badge">{{ rowItem.webAuths.length }}</span></span>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column header="Permissions">
       <d-cell>
         <ng-template let-rowItem="rowItem">
@@ -106,7 +113,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="RBAC" [width]="'250px'">
+    <d-column header="RBAC" [width]="'350px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-tag

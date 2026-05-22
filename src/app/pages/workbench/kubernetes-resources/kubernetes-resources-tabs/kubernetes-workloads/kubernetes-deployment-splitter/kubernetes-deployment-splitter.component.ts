@@ -24,6 +24,8 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
 
   private destroy$ = new Subject<void>();
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
   @Input() application: ApplicationVO;
   @Input() accessControl: AccessControlVO;

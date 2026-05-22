@@ -6,9 +6,21 @@
            class="fa-solid fa-spinner fa-spin"
            style="color: #fa9841; margin-left: 8px; font-size: 16px;"
         ></i>
-        <h2 style="margin: 0 10px 0 8px; font-size: 14px;" [style.color]="kubernetesDeployment.pods?.length > 0 ? 'var(--devui-brand, #5e7ce0)' : '#999'">
+        <h2 style="margin: 0 10px 0 8px; font-size: 14px; line-height: 30px; flex-shrink: 0;" [style.color]="kubernetesDeployment.pods?.length > 0 ? 'var(--devui-brand, #5e7ce0)' : '#999'">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
+        <ng-container *ngIf="isMobile">
+          <d-tabs
+            class="tabs"
+            style="height: 28px;"
+            type="options"
+            [activeTab]="kubernetesDeployment['$chosenItem']"
+            (activeTabChange)="valueChange($any($event))"
+          >
+            <d-tab *ngFor="let c of kubernetesDeployment['$containers']" [id]="c" [title]="c"></d-tab>
+          </d-tabs>
+        </ng-container>
+        <ng-container *ngIf="!isMobile">
         <div class="layout-bottom" style="margin-right: 10px">
           <span
             dPopover
@@ -77,26 +89,28 @@
             {{ 'kubernetes.deployment.redeploy.button' | translate }}
           </d-button>
         </div>
+        </ng-container>
       </div>
     </d-splitter-pane>
     <d-splitter-pane>
       <d-splitter orientation="horizontal">
-        <d-splitter-pane [resizable]="false" size="350px">
+        <d-splitter-pane *ngIf="!isMobile" [resizable]="false" [size]="'350px'">
           <div style="padding: 8px" class="splitter-left">
 
-            <div style="display: flex; align-items: center">
+            <div style="display: flex; align-items: center; flex-wrap: wrap;">
               <span class="name">{{ 'kubernetes.resources.containers' | translate }}</span>
               <d-radio-group
                 style="margin-left: 8px"
                 [name]="'container-name-radio'"
                 [values]="kubernetesDeployment['$containers']"
-                [direction]="'row'"
+                [direction]="isMobile ? 'column' : 'row'"
                 [(ngModel)]="kubernetesDeployment['$chosenItem']"
                 (change)="valueChange($event)"
               >
               </d-radio-group>
             </div>
 
+            <ng-container *ngIf="!isMobile">
             <div>
               <span class="name">{{ 'kubernetes.resources.image' | translate }}</span>
               <span class="value inline-value"
@@ -232,6 +246,7 @@
                 </div>
               </ng-template>
             </div>
+            </ng-container>
 
           </div>
         </d-splitter-pane>

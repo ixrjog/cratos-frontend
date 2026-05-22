@@ -1,5 +1,6 @@
 <div class="spacing-search">
   <d-button
+    *ngIf="!isMobile"
     [disabled]="queryParam.applicationName ===''"
     class="button"
     bsStyle="common"
@@ -41,7 +42,7 @@
     ></d-tab>
   </d-tabs>
   <d-tabs
-    *ngIf="first"
+    *ngIf="first && !isMobile"
     class="tabs"
     type="options"
     [activeTab]="queryParam.countryCode"
@@ -51,6 +52,7 @@
     <d-tab *ngFor="let cc of countryCodeOptions.slice(1)" [id]="cc" [title]="cc.toUpperCase()"></d-tab>
   </d-tabs>
   <d-select
+    *ngIf="!isMobile"
     class="select"
     [placeholder]="'kubernetes.form.selectResourceName' | translate"
     style="max-width: 450px;width: 450px"
@@ -67,13 +69,13 @@
   </d-button>
 
 
-  <d-button class="button" bsStyle="common" dClipboard [content]="onGetShareUrl()"
+  <d-button *ngIf="!isMobile" class="button" bsStyle="common" dClipboard [content]="onGetShareUrl()"
             [disabled]="queryParam.applicationName ==='' || queryParam.namespace ===''"
   ><i class="icon icon-share" style="margin-right: 4px;"></i>{{ 'kubernetes.actions.share' | translate }}
   </d-button>
 
 
-  <span class="right-button">
+  <span class="right-button" *ngIf="!isMobile">
       <d-button class="button" bsStyle="primary" (click)="onScanData()"
                 [disabled]="queryParam.applicationName ==='' "
       >{{ 'kubernetes.actions.scan' | translate }}
@@ -106,7 +108,7 @@
 
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
-    <d-tabs type="pills" [(activeTab)]="tabActiveId">
+    <d-tabs *ngIf="!isMobile" type="pills" [(activeTab)]="tabActiveId">
       <d-tab [id]="'workloads'" [title]="'kubernetes.tabs.workloads' | translate">
         <div>
           <app-kubernetes-workloads
@@ -123,5 +125,13 @@
         </div>
       </d-tab>
     </d-tabs>
+    <div *ngIf="isMobile">
+      <app-kubernetes-workloads
+        [deploymentList]="deploymentList"
+        [application]="kubernetesApplication"
+        [accessControl]="kubernetesDetails.accessControl"
+        [banner]="kubernetesDetails.banner"
+      ></app-kubernetes-workloads>
+    </div>
   </div>
 </div>

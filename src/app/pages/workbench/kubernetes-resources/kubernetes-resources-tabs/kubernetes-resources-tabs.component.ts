@@ -30,6 +30,8 @@ import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user
 })
 export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
   private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
   private static readonly CC_STORAGE_KEY = 'k8s_resources_selected_countrycode';
@@ -39,7 +41,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     instanceName: '',
     namespace: '',
     name: '',
-    countryCode: 'ng',
+    countryCode: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? '' : 'ng',
   };
 
   countryCodeOptions = ['', 'ng', 'bd', 'pk', 'ph'];

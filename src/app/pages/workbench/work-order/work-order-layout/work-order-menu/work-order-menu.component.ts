@@ -14,6 +14,7 @@ export class WorkOrderMenuComponent implements OnInit {
 
   menu = [];
   disabled = false;
+  private isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   constructor(private workOrderService: WorkOrderService) {
   }
@@ -27,7 +28,7 @@ export class WorkOrderMenuComponent implements OnInit {
       .subscribe(({ body }) => {
         body.groupList.forEach(group => {
           group['children'] = group.workOrderList;
-          group['open'] = true;
+          group['open'] = !this.isMobile;
           this.menu.push(group);
         });
       });

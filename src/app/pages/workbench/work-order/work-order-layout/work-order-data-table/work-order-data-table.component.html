@@ -1,5 +1,19 @@
 <div class="spacing-search">
+  <d-tabs
+    *ngIf="!isMobile"
+    class="tabs"
+    type="options"
+    [activeTab]="queryParam.ticketState"
+    (activeTabChange)="onTicketStateChange($event)"
+  >
+    <d-tab
+      *ngFor="let item of ticketStateOptions"
+      [id]="item.id"
+      [title]="item.title"
+    ></d-tab>
+  </d-tabs>
   <d-search
+    *ngIf="!isMobile"
     class="search"
     [(ngModel)]="queryParam.ticketNo"
     [iconPosition]="'left'"
@@ -9,6 +23,7 @@
   >
   </d-search>
   <d-select
+    *ngIf="!isMobile"
     class="select"
     style="width: 250px;max-width: 250px"
     [filterKey]="'name'"
@@ -22,6 +37,7 @@
   >
   </d-select>
   <d-select
+    *ngIf="!isMobile"
     class="select"
     style="width: 300px;max-width: 300px"
     [width]="580"
@@ -54,20 +70,6 @@
     (change)="queryParam.mySubmitted = false; fetchData()"
   ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'workOrderTicket.dataTable.filter' | translate }}</d-button>
-  <br />
-  <d-tabs
-    style="margin-top: 5px"
-    class="tabs"
-    type="options"
-    [activeTab]="queryParam.ticketState"
-    (activeTabChange)="onTicketStateChange($event)"
-  >
-    <d-tab
-      *ngFor="let item of ticketStateOptions"
-      [id]="item.id"
-      [title]="item.title"
-    ></d-tab>
-  </d-tabs>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -107,7 +109,7 @@
             dPopover
             [icon]="'icon-view'"
             [content]="ticketAbstractTemplate"
-            [position]="'left-top'"
+            [position]="'bottom'"
             [controlled]="true"
             [popoverStyle]="getPopoverStyle({width: '1200px'})"
             [operable]="true"

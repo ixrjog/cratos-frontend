@@ -200,14 +200,11 @@ export class LoginComponent implements OnInit {
 
   async onBiometricLogin() {
     let username = this.formData.username || localStorage.getItem('username') || '';
-    if (!username) {
-      alert('Please enter username first');
-      return;
-    }
     this.loginLoading = true;
     try {
-      // 1. Get login options
-      const optionsRes: any = await this.apiService.get('/webauthn', '/login/options', { username }).toPromise();
+      // 1. Get login options (username optional for discoverable credentials)
+      const params = username ? { username } : {};
+      const optionsRes: any = await this.apiService.get('/webauthn', '/login/options', params).toPromise();
       const options = optionsRes.body;
 
       // 2. Call WebAuthn API
@@ -227,15 +224,18 @@ export class LoginComponent implements OnInit {
       const authResponse = assertion.response as AuthenticatorAssertionResponse;
 
       // 3. Send to server
-      const body = {
+      const body: any = {
         id: this.bufferToBase64url(assertion.rawId),
-        username: username,
         response: {
           authenticatorData: this.bufferToBase64url(authResponse.authenticatorData),
           clientDataJSON: this.bufferToBase64url(authResponse.clientDataJSON),
           signature: this.bufferToBase64url(authResponse.signature),
+          userHandle: authResponse.userHandle ? this.bufferToBase64url(authResponse.userHandle) : null,
         },
       };
+      if (username) {
+        body.username = username;
+      }
 
       const loginRes: any = await this.apiService.post('/webauthn', '/login/complete', body).toPromise();
       const result = loginRes.body;

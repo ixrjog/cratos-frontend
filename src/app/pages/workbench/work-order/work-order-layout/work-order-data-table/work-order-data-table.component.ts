@@ -117,6 +117,8 @@ import {
 })
 export class WorkOrderDataTableComponent implements OnInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
   private static STORAGE_KEY = 'work-order-ticket-query';
@@ -151,7 +153,11 @@ export class WorkOrderDataTableComponent implements OnInit {
       this.onGetTicketStateOptions(res);
     });
     this.activatedRoute.queryParams.subscribe(param => {
-      if (param['ticketNo'] !== undefined) {
+      if (param['action'] === 'new' && param['key'] && param['ticketNo']) {
+        this.workOrderTicketService.getTicket({ ticketNo: param['ticketNo'] }).subscribe(({ body }) => {
+          this.onRowDialog(param['key'], body);
+        });
+      } else if (param['ticketNo'] !== undefined) {
         this.queryParam.ticketNo = param['ticketNo'];
         this.queryParam.ticketState = WorkOrderStatus.IN_APPROVAL;
       }
@@ -168,7 +174,7 @@ export class WorkOrderDataTableComponent implements OnInit {
     },
     editorData: {
       ...DIALOG_DATA.editorData,
-      width: '70%',
+      width: this.isMobile ? '95%' : '70%',
       maxHeight: '1000px',
     },
   };

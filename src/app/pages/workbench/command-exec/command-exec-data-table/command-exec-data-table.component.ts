@@ -21,6 +21,8 @@ import { CommandExecViewComponent } from './command-exec-view/command-exec-view.
 })
 export class CommandExecDataTableComponent implements OnInit, AfterViewInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {
     namespace: '',

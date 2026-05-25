@@ -18,6 +18,8 @@ export class AcmeOrderDataTableComponent implements OnInit {
 
   private static readonly DOMAIN_STORAGE_KEY = 'acme_order_selected_domain';
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
   selectedDomain: AcmeDomainVO;

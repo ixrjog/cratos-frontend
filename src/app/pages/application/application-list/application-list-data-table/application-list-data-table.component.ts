@@ -26,6 +26,8 @@ import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
 })
 export class ApplicationListDataTableComponent implements OnInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   queryParam = {

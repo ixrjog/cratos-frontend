@@ -191,7 +191,44 @@
 
 body.is-mobile .devui-modal-dialog,
 body.is-mobile .modal-dialog,
-body.is-mobile [class*="modal-dialog"] {
-  width: 95% !important;
-  max-width: 95% !important;
+body.is-mobile [class*="modal-dialog"],
+body.is-mobile .modal .modal-dialog {
+  width: 95vw !important;
+  max-width: 95vw !important;
+  min-width: 0 !important;
+  position: fixed !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+}
+
+body.is-mobile .main-container,
+body.is-mobile .da-layout-content,
+body.is-mobile .content-container {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.is-mobile .spacing-table {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+
+  table {
+    min-width: 1200px;
+  }
+}
+
+
+body.is-mobile .web-terminal-management .terminal-container {
+  overflow: visible !important;
+  flex: none !important;
+}
+
+body.is-mobile .web-terminal-management .terminal-container .terminal-grid {
+  display: block !important;
+}
+
+body.is-mobile .web-terminal-management .terminal-container .terminal-grid app-web-terminal-item {
+  display: block;
+  margin-bottom: 8px;
 }

@@ -39,6 +39,8 @@ export interface TerminalInstance {
 })
 export class WebTerminalManagementComponent implements OnInit, OnDestroy {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   // 组件销毁信号
   private destroy$ = new Subject<void>();
 

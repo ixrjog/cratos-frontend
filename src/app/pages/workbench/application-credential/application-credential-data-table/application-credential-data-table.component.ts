@@ -15,6 +15,8 @@ import { UserService } from '../../../../@core/services/user.service';
 })
 export class ApplicationCredentialDataTableComponent implements OnInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
   queryParam = {

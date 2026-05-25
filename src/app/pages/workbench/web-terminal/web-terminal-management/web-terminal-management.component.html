@@ -33,6 +33,7 @@
       </d-button>
       <!-- 主题设置按钮 -->
       <d-button
+        *ngIf="!isMobile"
         bsStyle="common"
         icon="icon-palette"
         (click)="onOpenThemeSettings()">
@@ -85,7 +86,7 @@
   </div>
 
   <!-- Demo组件 - 显示模拟终端 -->
-  <app-web-terminal-demo *ngIf="terminals.length === 0"></app-web-terminal-demo>
+  <app-web-terminal-demo *ngIf="terminals.length === 0 && !isMobile"></app-web-terminal-demo>
 
   <!-- 主题设置面板 -->
   <div class="theme-settings-overlay" *ngIf="showThemeSettings" (click)="onCloseThemeSettings()">

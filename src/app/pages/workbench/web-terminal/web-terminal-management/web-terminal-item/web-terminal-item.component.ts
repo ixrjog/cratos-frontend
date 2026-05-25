@@ -28,6 +28,8 @@ import { DialogUtil } from '../../../../../@shared/utils/dialog.util';
 })
 export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @Input() terminal!: TerminalInstance;
   @Input() isSelected = false;
   @Input() isGroupControlMode = false;

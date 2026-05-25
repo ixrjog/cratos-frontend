@@ -26,6 +26,23 @@
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span>{{ cellItem.name }}</span>
+          <d-icon
+            dPopover
+            [icon]="'icon-view'"
+            [content]="assetTemplate"
+            [position]="'right-top'"
+            [controlled]="true"
+            [popoverStyle]="getPopoverStyle({width: '1000px'})"
+            style="margin-left: 6px;"
+          >
+          </d-icon>
+          <ng-template #assetTemplate>
+            <app-ace-editor
+              [readonly]="true"
+              [aceValue]="cellItem.originalModel"
+              [mode]="'ace/mode/yaml'"
+            ></app-ace-editor>
+          </ng-template>
         </ng-template>
       </d-cell>
     </d-column>
@@ -63,29 +80,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="asset" header="Asset">
-      <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <d-icon
-            dPopover
-            [icon]="'icon-view'"
-            [content]="assetTemplate"
-            [position]="'left-top'"
-            [controlled]="true"
-            [popoverStyle]="getPopoverStyle({width: '1000px'})"
-          >
-          </d-icon>
-          <ng-template #assetTemplate>
-            <app-ace-editor
-              [readonly]="true"
-              [aceValue]="cellItem.originalModel"
-              [mode]="'ace/mode/yaml'"
-            ></app-ace-editor>
-          </ng-template>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Actions" [width]="'200px'">
+    <d-column header="Actions" [width]="'100px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

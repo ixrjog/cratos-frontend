@@ -28,7 +28,7 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="acmeDomain" header="Domain" [width]="'180px'">
+    <d-column *ngIf="!isMobile" field="acmeDomain" header="Domain" [width]="'180px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span *ngIf="cellItem">{{ cellItem.domain }}</span>
@@ -36,7 +36,7 @@
       </d-cell>
     </d-column>
     <d-column field="domains" header="Domains" [width]="'200px'"></d-column>
-    <d-column field="orderUrl" header="Order URL" [width]="'500px'"></d-column>
+    <d-column *ngIf="!isMobile" field="orderUrl" header="Order URL" [width]="'500px'"></d-column>
     <d-column field="orderStatus" header="Status" [width]="'120px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
@@ -47,7 +47,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="account" header="ACME Account" [width]="'160px'">
+    <d-column *ngIf="!isMobile" field="account" header="ACME Account" [width]="'160px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <span *ngIf="cellItem">{{ cellItem.name }}</span>
@@ -61,7 +61,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column [width]="'160px'" field="expires" header="Expires">
+    <d-column *ngIf="!isMobile" [width]="'160px'" field="expires" header="Expires">
       <d-cell>
         <ng-template let-rowItem="rowItem" let-cellItem="cellItem">
           <span *ngIf="rowItem['orderStatus'] === 'VALID' || rowItem['orderStatus'] === 'INVALID'">--</span>

@@ -19,14 +19,15 @@
   <d-data-table
     dLoading
     [dataSource]="table.data"
-    [tableOverflowType]="'overlay'"
+    [tableOverflowType]="isMobile ? 'auto' : 'overlay'"
     [backdrop]="true"
     [scrollable]="true"
+    [tableWidth]="isMobile ? '1500px' : ''"
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column header="Name" [width]="'250px'">
+    <d-column header="Name" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon
@@ -51,7 +52,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="resources" header="Resources">
+    <d-column field="resources" header="Resources" [width]="'300px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <div *ngFor="let resource of cellItem | keyvalue">
@@ -66,7 +67,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Permissions">
+    <d-column header="Permissions" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div dLoading [loading]="rowItem['$loading']">
@@ -85,14 +86,14 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Tags" [width]="'250px'">
+    <d-column header="Tags" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Actions" [width]="'250px'">
+    <d-column header="Actions" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

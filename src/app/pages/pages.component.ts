@@ -103,11 +103,22 @@ export class PagesComponent implements OnInit, OnDestroy {
   //     .subscribe(({ body }) => this.menu = body);
   // }
 
+  private static readonly MENU_STORAGE_KEY = 'cached_menu_data';
+
   updateMenu(values: any) {
     this.menu = [];
+    // 先从 localStorage 读取缓存
+    const cached = localStorage.getItem(PagesComponent.MENU_STORAGE_KEY);
+    if (cached) {
+      try {
+        this.menu = JSON.parse(cached);
+      } catch (e) {}
+    }
+    // 接口查询后写入 localStorage 并刷新菜单
     this.menuService.queryMyMenu({ lang: localStorage.getItem('lang') })
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ body }) => {
+        this.menu = [];
         body.map(item => {
           let menuItem = {
             title: item.title,
@@ -122,6 +133,7 @@ export class PagesComponent implements OnInit, OnDestroy {
             this.menu.push(menuItem);
           }
         });
+        localStorage.setItem(PagesComponent.MENU_STORAGE_KEY, JSON.stringify(this.menu));
       });
   }
 

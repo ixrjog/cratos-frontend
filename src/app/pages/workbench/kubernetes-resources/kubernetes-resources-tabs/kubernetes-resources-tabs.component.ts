@@ -63,7 +63,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   isFavorite: boolean;
   favoriteApplicationList: ApplicationVO[] = [];
 
-  isCollapsed = true;
+  isCollapsed = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
   ws: WebSocket;
   timerRequest: Subscription;

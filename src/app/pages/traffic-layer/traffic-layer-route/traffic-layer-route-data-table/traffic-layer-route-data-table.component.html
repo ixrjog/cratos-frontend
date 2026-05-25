@@ -53,7 +53,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header='Record Targets'>
+    <d-column header='Record Targets' [width]="'750px'">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <div *ngFor='let target of rowItem.recordTargets; let i = index' style="margin-bottom: 4px;">

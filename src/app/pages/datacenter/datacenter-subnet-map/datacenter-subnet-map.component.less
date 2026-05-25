@@ -24,6 +24,10 @@
   gap: 3px;
 }
 
+:host-context(body.is-mobile) .subnet-grid {
+  grid-template-columns: repeat(8, 1fr);
+}
+
 .subnet-block {
   aspect-ratio: auto;
   padding: 4px 2px;

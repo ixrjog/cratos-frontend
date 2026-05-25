@@ -20,7 +20,7 @@
               <span style="color: #999;">IP:</span>
               <span style="margin-left: 4px;" dClipboard [content]="terminal.ip">{{ terminal.ip }}</span>
             </span>
-            <span>
+            <span *ngIf="!isMobile">
               <span style="color: #999;">{{ 'webTerminal.instanceId' | translate }}:</span>
               <span style="margin-left: 4px;">{{ terminal.instanceId }}</span>
             </span>
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div class="terminal-actions" style="position: absolute;right: 12px;top: 8px; display: flex; align-items: center;">
+        <div class="terminal-actions" style="position: absolute;right: 12px;top: 0; bottom: 0; margin: 0; height: 24px; display: flex; align-items: center;">
           <d-button
             bsStyle="text"
             (click)="onRowBusinessDoc()"

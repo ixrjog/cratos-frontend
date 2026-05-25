@@ -31,6 +31,8 @@ import { ListValue } from '../../../../../@core/data/business-tag';
 })
 export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @ViewChild('datatable', { static: true }) datatable: DataTableComponent;
 
   // 静态变量用于接收数据

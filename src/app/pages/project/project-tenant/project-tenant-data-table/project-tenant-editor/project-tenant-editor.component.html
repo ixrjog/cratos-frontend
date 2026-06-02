@@ -1,0 +1,183 @@
+<section>
+  <d-tabs [activeTab]="editorTab" (activeTabChange)="editorTab = $any($event)">
+    <d-tab id="basic" [title]="'Basic'"></d-tab>
+    <d-tab id="loadBalancers" [title]="'Load Balancers'"></d-tab>
+  </d-tabs>
+  <form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup" *ngIf="editorTab === 'basic'">
+    <d-form-item>
+      <d-form-label [required]="true">Project</d-form-label>
+      <d-form-control>
+        <d-select
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [searchFn]="onSearchProject"
+          [isSearch]="true"
+          [(ngModel)]="selectedProject"
+          [ngModelOptions]="{standalone: true}"
+          placeholder="Search and select project"
+          (valueChange)="onProjectChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; padding: 3px 0; color: #999;">{{ option.key }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Tenant Code</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="tenantCode" placeholder="Tenant Code" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label [required]="true">Name</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="name" placeholder="Name" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Country Code</d-form-label>
+      <d-form-control>
+        <input dTextInput formControlName="countryCode" placeholder="e.g. CN, US" />
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Docs</d-form-label>
+      <d-form-control>
+        <textarea dTextarea formControlName="docs" placeholder="Markdown docs"></textarea>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>Comment</d-form-label>
+      <d-form-control>
+        <textarea dTextarea formControlName="comment" placeholder="Comment"></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+  <div *ngIf="editorTab === 'loadBalancers'" style="padding-top: 12px;">
+    <!-- Existing LBs -->
+    <d-data-table *ngIf="loadBalancers.length > 0" [dataSource]="loadBalancers" [scrollable]="true" [tableOverflowType]="'overlay'">
+      <d-column header="Instance">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span *ngIf="rowItem.edsInstance">{{ rowItem.edsInstance.instanceName }}</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="name" header="Name"></d-column>
+      <d-column header="Config">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon
+              *ngIf="rowItem.config"
+              [icon]="'icon-view'"
+              [operable]="true"
+              dPopover
+              [position]="'left-top'"
+              [trigger]="'click'"
+              [controlled]="true"
+              [content]="configTpl"
+              [popoverStyle]="{ width: '500px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+            ></d-icon>
+            <ng-template #configTpl>
+              <pre style="margin: 0; padding: 12px; white-space: pre-wrap; font-family: monospace; font-size: 12px;">{{ rowItem.config }}</pre>
+            </ng-template>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onEditLb(rowItem)" title="Edit Config"></d-icon>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDeleteLb(rowItem)" title="Delete"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+    </d-data-table>
+    <!-- Edit LB Config -->
+    <div *ngIf="editingLb" style="margin-top: 8px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; padding: 12px;">
+      <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin-bottom: 4px; display: block;">Editing: {{ editingLb.name }}</label>
+      <app-ace-editor
+        [minLines]="10"
+        [maxLines]="20"
+        [mode]="'ace/mode/yaml'"
+        [aceValue]="editingLb.config || ''"
+        (onChange)="editingLb.config = $event"
+      ></app-ace-editor>
+      <div style="margin-top: 8px; display: flex; gap: 8px;">
+        <d-button bsStyle="primary" (click)="onSaveLbConfig()">Save</d-button>
+        <d-button bsStyle="common" (click)="editingLb = null">Cancel</d-button>
+      </div>
+    </div>
+    <!-- Add LB -->
+    <div style="margin-top: 12px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; padding: 12px;">
+      <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin-bottom: 4px; display: block;">Instance Type</label>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <d-tabs class="tabs" type="options" [activeTab]="selectedInstanceType" (activeTabChange)="onInstanceTypeChange($event)">
+          <d-tab *ngFor="let t of instanceTypeOptions" [id]="t.value" [title]="t.label || t.value"></d-tab>
+        </d-tabs>
+      </div>
+      <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Select Instance</label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <d-select
+          style="width: 300px;"
+          [filterKey]="'instanceName'"
+          [appendToBody]="true"
+          [searchFn]="onSearchInstance"
+          [isSearch]="true"
+          [(ngModel)]="selectedInstance"
+          placeholder="Search Instance"
+          [disabled]="!selectedInstanceType"
+          (valueChange)="onInstanceChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.instanceName }}</span>
+          </ng-template>
+        </d-select>
+      </div>
+      <div *ngIf="selectedInstance">
+        <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">LB Type</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <d-tabs class="tabs" *ngIf="filteredLbTypeOptions.length > 0" type="options" [activeTab]="selectedLbType" (activeTabChange)="onLbTypeChange($event)">
+            <d-tab *ngFor="let t of filteredLbTypeOptions" [id]="t.value || t" [title]="t.label || t.value || t"></d-tab>
+          </d-tabs>
+        </div>
+      </div>
+      <div *ngIf="selectedLbType">
+        <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Select LB</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <d-select
+            style="width: 300px;"
+            [filterKey]="'name'"
+            [appendToBody]="true"
+            [searchFn]="onSearchAsset"
+            [isSearch]="true"
+            [(ngModel)]="selectedAsset"
+            placeholder="Search LB Asset"
+            (valueChange)="onAssetChange($event)"
+          >
+            <ng-template let-option="option">
+              <span>{{ option.name }}</span>
+            </ng-template>
+          </d-select>
+        </div>
+      </div>
+      <div *ngIf="selectedAsset">
+        <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Config</label>
+        <app-ace-editor
+          [minLines]="5"
+          [maxLines]="15"
+          [mode]="'ace/mode/yaml'"
+          [aceValue]="newLbConfig"
+          (onChange)="newLbConfig = $event"
+        ></app-ace-editor>
+      </div>
+      <div *ngIf="selectedAsset" style="margin-top: 8px;">
+        <d-button bsStyle="primary" (click)="onAddLb()">Add</d-button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-tabs class="tabs" type="options" [activeTab]="activeProjectId" (activeTabChange)="onProjectChange($event)">
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let p of projects" [id]="p.id">
+      <ng-template dTabTitle>
+        {{ p.key }} <span class="count-badge">{{ p.count }}</span>
+      </ng-template>
+    </d-tab>
+  </d-tabs>
+  <d-search class="search" [(ngModel)]="queryParam.queryName" [iconPosition]="'left'" (searchFn)="fetchData()"></d-search>
+  <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table dLoading [dataSource]="table.data" [tableOverflowType]="'overlay'" [backdrop]="true" [scrollable]="true" [loadingStyle]="'infinity'" [loading]="table.loading">
+    <d-column header="Project" field="project">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem.key" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="name" header="Name"></d-column>
+    <d-column field="tenantCode" header="Tenant Code"></d-column>
+    <d-column field="countryCode" header="Country">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" header="Valid">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" header="Comment"></d-column>
+    <d-column field="createTime" header="Create Time">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span>{{ cellItem | dDatePipe: 'y-MM-dd HH:mm:ss' }}</span>
+          <br>
+          <strong>{{ cellItem | dRelativeTime: limit | async }}</strong>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Actions">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" title="Edit"></d-icon>
+            <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onRowDelete(rowItem)" title="Delete"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination class="pagination" [total]="table.pager.total" [(pageSize)]="table.pager.pageSize" [(pageIndex)]="table.pager.pageIndex" [canViewTotal]="true" [canChangePageSize]="true" [maxItems]="5" (pageIndexChange)="pageIndexChange($event)" (pageSizeChange)="pageSizeChange($event)"></d-pagination>
+</div>

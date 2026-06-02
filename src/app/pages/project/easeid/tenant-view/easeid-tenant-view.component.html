@@ -1,0 +1,104 @@
+<div style="padding: 16px;">
+  <div class="tenant-view-body">
+    <!-- Tenant Selector -->
+    <div class="tenant-selector">
+      <div class="tenant-logo">
+        <img src="assets/icon/easeid-logo.png" alt="EaseID" style="width: 200px; vertical-align: middle; padding: 2px 6px; border-radius: 4px; background: #f0f0f0;">
+      </div>
+      <div class="tenant-list">
+        <div
+          *ngFor="let t of tenantOptions"
+          class="tenant-item"
+          [class.active]="activeTenant === t.tenantCode"
+          (click)="onTenantChange(t.tenantCode)"
+        >
+          <span class="tenant-name">{{ t.name }}</span>
+          <d-tag *ngIf="t.countryCode" [tag]="t.countryCode.toUpperCase()" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" *ngIf="tenantView">
+      <!-- Top row: Docs (left) + Groups (right) -->
+      <div class="top-row">
+        <div class="docs-panel" *ngIf="tenantView.docs">
+          <div class="docs-content">
+            <markdown lineNumbers lineHighlight mermaid [data]="tenantView.docs" [disableSanitizer]="true"></markdown>
+          </div>
+        </div>
+        <div class="groups-section" *ngIf="tenantView.groups?.length > 0">
+          <div *ngFor="let group of tenantView.groups" class="group-card">
+            <h5 class="group-title">{{ group.name }}</h5>
+            <div class="group-content">
+              <span *ngFor="let member of group.members" class="server-item">
+                <d-tag [tag]="member.name" [titleContent]="member.comment" [labelStyle]="'blue-w98'"></d-tag>
+                <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(member)"></d-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: LoadBalancers -->
+      <div class="lb-panel-card">
+        <h5 class="lb-panel-title">Load Balancers</h5>
+          <div *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index" class="lb-section">
+            <div class="lb-routes" *ngIf="lb.lbConfig?.routes?.length > 0">
+              <div *ngFor="let route of lb.lbConfig.routes; let rIdx = index"
+                   class="route-card"
+                   [id]="'route-' + lbIdx + '-' + rIdx">
+                <div class="route-dns">{{ route.dnsRecord }}</div>
+                <d-tag *ngIf="route.recordType" [tag]="route.recordType" [labelStyle]="'blue-w98'"></d-tag>
+                <div *ngIf="route.cdn" class="route-cdn">CDN: {{ route.cdn }}</div>
+              </div>
+            </div>
+            <div class="lb-card" [id]="'lb-card-' + lbIdx">
+              <div class="lb-header">
+                <span style="display: inline-flex; align-items: center;">
+                  <i class="icon icon-homologous-tool" style="margin-right: 4px; color: var(--devui-brand, #5e7ce0);"></i>
+                  <d-tag [tag]="lb.dnsName" [labelStyle]="'blue-w98'" [id]="'lb-dns-' + lbIdx"></d-tag>
+                  <i class="icon icon-copy" style="margin-left: 6px; cursor: pointer; color: var(--devui-text-weak, #999);" dClipboard [content]="lb.dnsName"></i>
+                </span>
+                <span class="lb-name">{{ lb.loadBalancerName }}</span>
+                <span class="lb-instance-name">{{ lb.instanceName || lb.loadBalancerType }}</span>
+              </div>
+              <div class="lb-listeners">
+                <div *ngFor="let listener of lb.listeners; let lIdx = index" class="listener-card">
+                  <d-splitter class="splitter-border" orientation="vertical">
+                    <d-splitter-pane size="30px" [resizable]="false">
+                      <div class="listener-splitter-header" [id]="'listener-' + lbIdx + '-' + lIdx">
+                        <span class="listener-name">{{ listener.listenerDescription }}</span>
+                        <d-tag *ngIf="listener.listenerStatus" [tag]="listener.listenerStatus" [labelStyle]="listener.listenerStatus === 'Running' ? 'green-w98' : 'orange-w98'"></d-tag>
+                      </div>
+                    </d-splitter-pane>
+                    <d-splitter-pane>
+                      <d-splitter orientation="horizontal">
+                        <d-splitter-pane [resizable]="false" size="250px">
+                          <div style="padding: 8px 12px;">
+                            <d-tag [tag]="listener.listenerProtocol + ':' + getListenerPort(listener)" [labelStyle]="'blue-w98'" style="margin-bottom: 4px;"></d-tag>
+                            <d-tag *ngIf="listener.serverGroupId" [tag]="'SG:' + listener.serverGroupId" [labelStyle]="'default'" style="margin-top: 4px;"></d-tag>
+                          </div>
+                        </d-splitter-pane>
+                        <d-splitter-pane>
+                          <div class="listener-servers">
+                            <i class="fa-solid fa-server" style="color: var(--devui-text-weak, #999); margin-right: 8px;"></i>
+                            <d-tag
+                              *ngFor="let server of listener.serverGroupServers"
+                              style="margin: 4px 4px 4px 0;"
+                              [tag]="server.serverIp + ':' + (server.port || getListenerPort(listener))"
+                              [labelStyle]="'blue-w98'"
+                            ></d-tag>
+                          </div>
+                        </d-splitter-pane>
+                      </d-splitter>
+                    </d-splitter-pane>
+                  </d-splitter>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

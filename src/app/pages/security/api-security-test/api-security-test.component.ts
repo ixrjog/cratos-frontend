@@ -40,7 +40,7 @@ export class ApiSecurityTestComponent {
   bodyPreviewContent = '';
   aceEditorVisible = true;
 
-  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'TZAPPSIGN', 'NONE'];
+  signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'TZAPPSIGN', 'NILEWEBSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
   constructor(private apiSecurityRiskService: ApiSecurityRiskService,

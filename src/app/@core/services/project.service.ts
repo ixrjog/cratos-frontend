@@ -92,4 +92,32 @@ export class ProjectService {
   getLbTypeOptions(): Observable<any> {
     return this.apiService.get(this.baseUrl, '/lb/type/options/get', {});
   }
+
+  getMemberTypeOptions(): Observable<any> {
+    return this.apiService.get(this.baseUrl, '/member/type/options/get', {});
+  }
+
+  queryGroupsByTenantId(tenantId: number): Observable<any> {
+    return this.apiService.get(this.baseUrl, '/group/query', { tenantId });
+  }
+
+  addProjectGroup(param: any): Observable<any> {
+    return this.apiService.post(this.baseUrl, '/group/add', param);
+  }
+
+  updateProjectGroup(param: any): Observable<any> {
+    return this.apiService.put(this.baseUrl, '/group/update', param);
+  }
+
+  deleteProjectGroup(param: { id: number }): Observable<any> {
+    return this.apiService.delete(this.baseUrl, '/group/del', param);
+  }
+
+  addProjectGroupMember(param: any): Observable<any> {
+    return this.apiService.post(this.baseUrl, '/group/member/add', param);
+  }
+
+  deleteProjectGroupMember(param: { id: number }): Observable<any> {
+    return this.apiService.delete(this.baseUrl, '/group/member/del', param);
+  }
 }

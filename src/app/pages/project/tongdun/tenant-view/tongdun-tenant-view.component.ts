@@ -7,15 +7,15 @@ import { EdsAssetSshTerminalComponent } from '../../../ext-datasource/eds-instan
 declare var LeaderLine: any;
 
 @Component({
-  selector: 'app-easeid-tenant-view',
-  templateUrl: './easeid-tenant-view.component.html',
-  styleUrls: ['./easeid-tenant-view.component.less'],
+  selector: 'app-tongdun-tenant-view',
+  templateUrl: './tongdun-tenant-view.component.html',
+  styleUrls: ['./tongdun-tenant-view.component.less'],
 })
-export class EaseidTenantViewComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class TongdunTenantViewComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-  private static readonly TENANT_STORAGE_KEY = 'easeid_selected_tenant';
+  private static readonly TENANT_STORAGE_KEY = 'tongdun_selected_tenant';
 
-  projectKey = 'EaseID';
+  projectKey = 'Tongdun';
   activeTenant = '';
   tenantOptions: any[] = [];
 
@@ -31,7 +31,7 @@ export class EaseidTenantViewComponent implements OnInit, AfterViewChecked, OnDe
     this.apiService.get('/project', '/tenant/query', { projectKey: this.projectKey })
       .subscribe(({ body }: any) => {
         this.tenantOptions = body;
-        const saved = localStorage.getItem(EaseidTenantViewComponent.TENANT_STORAGE_KEY);
+        const saved = localStorage.getItem(TongdunTenantViewComponent.TENANT_STORAGE_KEY);
         if (saved && this.tenantOptions.some((t: any) => t.tenantCode === saved)) {
           this.activeTenant = saved;
         } else if (this.tenantOptions.length > 0) {
@@ -54,7 +54,7 @@ export class EaseidTenantViewComponent implements OnInit, AfterViewChecked, OnDe
 
   onTenantChange(tenantId: string) {
     this.activeTenant = tenantId;
-    localStorage.setItem(EaseidTenantViewComponent.TENANT_STORAGE_KEY, tenantId);
+    localStorage.setItem(TongdunTenantViewComponent.TENANT_STORAGE_KEY, tenantId);
     this.fetchTenantView();
   }
 
@@ -108,10 +108,10 @@ export class EaseidTenantViewComponent implements OnInit, AfterViewChecked, OnDe
 
     this.tenantView.loadBalancers.forEach((lb: any, lbIdx: number) => {
       if (!lb.lbConfig?.routes) return;
-      const dnsEl = document.getElementById(`lb-dns-${lbIdx}`);
+      const dnsEl = document.getElementById(`tongdun-lb-dns-${lbIdx}`);
       if (!dnsEl) return;
       lb.lbConfig.routes.forEach((route: any, rIdx: number) => {
-        const routeEl = document.getElementById(`route-${lbIdx}-${rIdx}`);
+        const routeEl = document.getElementById(`tongdun-route-${lbIdx}-${rIdx}`);
         if (routeEl) {
           try {
             this.lines.push(new LeaderLine(routeEl, dnsEl, {

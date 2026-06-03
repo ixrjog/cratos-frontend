@@ -6,6 +6,7 @@ import { ProjectRoutingModule } from './project-routing.module';
 import { ProjectComponent } from './project.component';
 import { EaseidTenantViewComponent } from './easeid/tenant-view/easeid-tenant-view.component';
 import { TmsTenantViewComponent } from './tms/tenant-view/tms-tenant-view.component';
+import { TongdunTenantViewComponent } from './tongdun/tenant-view/tongdun-tenant-view.component';
 import { ProjectConfigComponent } from './project-config/project-config.component';
 import { ProjectConfigDataTableComponent } from './project-config/project-config-data-table/project-config-data-table.component';
 import { ProjectConfigEditorComponent } from './project-config/project-config-data-table/project-config-editor/project-config-editor.component';
@@ -24,6 +25,7 @@ import { DaGridModule } from '../../@shared/layouts/da-grid';
     ProjectComponent,
     EaseidTenantViewComponent,
     TmsTenantViewComponent,
+    TongdunTenantViewComponent,
     ProjectConfigComponent,
     ProjectConfigDataTableComponent,
     ProjectConfigEditorComponent,

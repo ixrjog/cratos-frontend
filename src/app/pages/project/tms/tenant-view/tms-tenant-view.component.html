@@ -28,13 +28,22 @@
           </div>
         </div>
         <div class="groups-section" *ngIf="tenantView.groups?.length > 0">
-          <div *ngFor="let group of tenantView.groups" class="group-card">
-            <h5 class="group-title">{{ group.name }}</h5>
-            <div class="group-content">
-              <span *ngFor="let member of group.members" class="server-item">
-                <d-tag [tag]="member.name" [titleContent]="member.comment" [labelStyle]="'blue-w98'"></d-tag>
-                <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(member)"></d-icon>
-              </span>
+          <div class="group-card">
+            <d-tabs class="tabs" type="options" [activeTab]="activeGroupName" (activeTabChange)="activeGroupName = $any($event)">
+              <d-tab *ngFor="let group of tenantView.groups" [id]="group.name">
+                <ng-template dTabTitle>
+                  {{ group.name }} <span class="count-badge">{{ group.members?.length || 0 }}</span>
+                </ng-template>
+              </d-tab>
+            </d-tabs>
+            <div class="group-content" *ngFor="let group of tenantView.groups">
+              <ng-container *ngIf="group.name === activeGroupName">
+                <span *ngFor="let member of group.members" class="server-item">
+                  <d-tag [tag]="member.name" [titleContent]="member.comment" [labelStyle]="'blue-w98'"></d-tag>
+                  <span *ngIf="member.comment" style="font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ member.comment }}</span>
+                  <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(member)"></d-icon>
+                </span>
+              </ng-container>
             </div>
           </div>
         </div>

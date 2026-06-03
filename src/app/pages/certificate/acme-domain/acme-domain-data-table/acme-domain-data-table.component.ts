@@ -25,11 +25,16 @@ export class AcmeDomainDataTableComponent implements OnInit {
   protected readonly parseResourceCount = parseResourceCount;
   businessType: string = BusinessTypeEnum.ACME_DOMAIN;
 
+  private static readonly SEARCH_STORAGE_KEY = 'acme_domain_search_query';
+
   queryParam = {
-    queryName: '',
+    queryName: localStorage.getItem('acme_domain_search_query') || '',
   };
 
   table: Table<AcmeDomainVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
+  certificate: any = null;
+  showPrivateKey: boolean = false;
 
   dialogDate = {
     editorData: {
@@ -55,6 +60,7 @@ export class AcmeDomainDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    localStorage.setItem(AcmeDomainDataTableComponent.SEARCH_STORAGE_KEY, this.queryParam.queryName);
     const param: AcmeDomainPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -133,6 +139,20 @@ export class AcmeDomainDataTableComponent implements OnInit {
         formData: rowItem,
       },
     });
+  }
+
+  onViewCertificate(certificateId: number) {
+    this.showPrivateKey = false;
+    this.acmeService.getAcmeCertificate({ id: certificateId })
+      .subscribe(({ body }) => {
+        this.certificate = body;
+      });
+  }
+
+  calcDays(from: any, to: any): number {
+    const start = from ? new Date(from).getTime() : Date.now();
+    const end = to ? new Date(to).getTime() : Date.now();
+    return Math.floor((end - start) / (1000 * 60 * 60 * 24));
   }
 
   onRecoverDcv(rowItem: AcmeDomainVO) {

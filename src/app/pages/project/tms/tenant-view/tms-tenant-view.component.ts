@@ -21,6 +21,7 @@ export class TmsTenantViewComponent implements OnInit, AfterViewChecked, OnDestr
 
   tenantView: any = null;
   loading = false;
+  activeGroupName = '';
   private lines: any[] = [];
   private needDrawLines = false;
 
@@ -67,6 +68,9 @@ export class TmsTenantViewComponent implements OnInit, AfterViewChecked, OnDestr
       this.tenantView = body;
       this.loading = false;
       this.needDrawLines = true;
+      if (body?.groups?.length > 0) {
+        this.activeGroupName = body.groups[0].name;
+      }
     });
   }
 

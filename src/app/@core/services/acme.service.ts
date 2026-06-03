@@ -17,6 +17,7 @@ export interface AcmeDomainVO {
   dcvDelegationTarget: string;
   comment: string;
   account: any;
+  recentOrder: any;
   businessTags: any[];
   businessDocs: any[];
   createTime: Date;

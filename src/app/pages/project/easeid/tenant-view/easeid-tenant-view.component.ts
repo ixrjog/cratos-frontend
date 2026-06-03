@@ -22,6 +22,13 @@ export class EaseidTenantViewComponent implements OnInit, AfterViewChecked, OnDe
   tenantView: any = null;
   loading = false;
   activeGroupName = '';
+  activeLbIndex: any = 0;
+
+  onLbTabChange(index: any) {
+    this.activeLbIndex = index;
+    this.removeLines();
+    this.needDrawLines = true;
+  }
   private lines: any[] = [];
   private needDrawLines = false;
 

@@ -52,7 +52,11 @@
       <!-- Bottom row: LoadBalancers -->
       <div class="lb-panel-card">
         <h5 class="lb-panel-title">Load Balancers</h5>
-          <div *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index" class="lb-section">
+        <d-tabs class="tabs" type="options" [activeTab]="activeLbIndex" (activeTabChange)="onLbTabChange($event)">
+          <d-tab *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index" [id]="lbIdx" [title]="lb.loadBalancerName || lb.dnsName"></d-tab>
+        </d-tabs>
+        <ng-container *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index">
+          <div *ngIf="lbIdx === activeLbIndex" class="lb-section">
             <div class="lb-routes" *ngIf="lb.lbConfig?.routes?.length > 0">
               <div *ngFor="let route of lb.lbConfig.routes; let rIdx = index"
                    class="route-card"
@@ -107,6 +111,7 @@
               </div>
             </div>
           </div>
+        </ng-container>
       </div>
     </div>
   </div>

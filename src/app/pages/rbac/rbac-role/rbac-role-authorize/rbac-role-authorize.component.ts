@@ -96,7 +96,7 @@ export class RbacRoleAuthorizeComponent {
 
   onSearchRbacRole = (term: string) => {
     const param: RolePageQuery = {
-      length: 10, page: 1, roleName: term,
+      length: 100, page: 1, roleName: term,
     };
     return this.rbacService.queryRolePage(param)
       .pipe(

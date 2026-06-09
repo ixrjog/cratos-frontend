@@ -1,0 +1,146 @@
+<div style="padding: 16px;">
+  <div class="tenant-view-body">
+    <!-- Tenant Selector -->
+    <div class="tenant-selector">
+      <div class="tenant-logo">
+        <span style="font-size: 20px; font-weight: 700; color: var(--devui-brand, #5e7ce0);">CloudFlare</span>
+      </div>
+      <div class="tenant-list">
+        <div
+          *ngFor="let t of tenantOptions"
+          class="tenant-item"
+          [class.active]="activeTenant === t.tenantCode"
+          (click)="onTenantChange(t.tenantCode)"
+        >
+          <span class="tenant-name">{{ t.name }}</span>
+          <d-tag *ngIf="t.countryCode" [tag]="t.countryCode.toUpperCase()" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" *ngIf="tenantView">
+      <!-- Top row: Docs (left) + Groups (right) -->
+      <div class="top-row">
+        <div class="docs-panel" *ngIf="tenantView.docs">
+          <div class="docs-content">
+            <markdown lineNumbers lineHighlight mermaid [data]="tenantView.docs" [disableSanitizer]="true"></markdown>
+          </div>
+        </div>
+        <div class="groups-section" *ngIf="tenantView.groups?.length > 0">
+          <div class="group-card">
+            <d-tabs class="tabs" type="options" [activeTab]="activeGroupName" (activeTabChange)="activeGroupName = $any($event)">
+              <d-tab *ngFor="let group of tenantView.groups" [id]="group.name">
+                <ng-template dTabTitle>
+                  {{ group.name }} <span class="count-badge">{{ group.members?.length || 0 }}</span>
+                </ng-template>
+              </d-tab>
+            </d-tabs>
+            <div class="group-content" *ngFor="let group of tenantView.groups">
+              <ng-container *ngIf="group.name === activeGroupName">
+                <span *ngFor="let member of group.members" class="server-item">
+                  <d-tag [tag]="member.name" [titleContent]="member.comment" [labelStyle]="'blue-w98'"></d-tag>
+                  <span *ngIf="member.comment" style="font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ member.comment }}</span>
+                  <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(member)"></d-icon>
+                </span>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: LoadBalancers -->
+      <div class="lb-panel-card">
+        <h5 class="lb-panel-title">Load Balancers</h5>
+        <d-tabs class="tabs" type="options" [activeTab]="activeLbIndex" (activeTabChange)="onLbTabChange($event)">
+          <d-tab *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index" [id]="lbIdx" [title]="lb.loadBalancerName || lb.dnsName"></d-tab>
+        </d-tabs>
+        <ng-container *ngFor="let lb of tenantView.loadBalancers; let lbIdx = index">
+          <div *ngIf="lbIdx === activeLbIndex" class="lb-section">
+            <div class="lb-routes" *ngIf="lb.lbConfig?.routes?.length > 0">
+              <div *ngFor="let route of lb.lbConfig.routes; let rIdx = index"
+                   class="route-card"
+                   [id]="'cloudflare-route-' + lbIdx + '-' + rIdx">
+                <div class="route-dns">{{ route.dnsRecord }}</div>
+                <d-tag *ngIf="route.recordType" [tag]="route.recordType" [labelStyle]="'blue-w98'"></d-tag>
+                <div *ngIf="route.cdn" class="route-cdn">CDN: {{ route.cdn }}</div>
+              </div>
+            </div>
+            <div class="lb-card" [id]="'cloudflare-lb-card-' + lbIdx">
+              <div class="lb-header">
+                <span style="display: inline-flex; align-items: center;">
+                  <i class="icon icon-homologous-tool" style="margin-right: 4px; color: var(--devui-brand, #5e7ce0);"></i>
+                  <d-tag [tag]="lb.dnsName" [labelStyle]="'blue-w98'" [id]="'cloudflare-lb-dns-' + lbIdx"></d-tag>
+                  <i class="icon icon-copy" style="margin-left: 6px; cursor: pointer; color: var(--devui-text-weak, #999);" dClipboard [content]="lb.dnsName"></i>
+                </span>
+                <span class="lb-name">{{ lb.loadBalancerName }}</span>
+                <span class="lb-instance-name">{{ lb.instanceName || lb.loadBalancerType }}</span>
+              </div>
+              <div class="lb-listeners">
+                <div *ngFor="let listener of lb.listeners; let lIdx = index" class="listener-card">
+                  <d-splitter class="splitter-border" orientation="vertical">
+                    <d-splitter-pane size="30px" [resizable]="false">
+                      <div class="listener-splitter-header" [id]="'cloudflare-listener-' + lbIdx + '-' + lIdx">
+                        <span class="listener-name">{{ listener.listenerDescription }}</span>
+                        <d-icon
+                          *ngIf="listener.aclList?.length > 0"
+                          [icon]="'icon-safe-setting'"
+                          [operable]="true"
+                          style="margin-left: 6px; color: var(--devui-brand, #5e7ce0);"
+                          dPopover
+                          [position]="'bottom-left'"
+                          [trigger]="'click'"
+                          [controlled]="true"
+                          [content]="aclTpl"
+                          [popoverStyle]="{ width: '500px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+                          title="ACL"
+                        ></d-icon>
+                        <ng-template #aclTpl>
+                          <div style="padding: 12px; max-height: 400px; overflow-y: auto;">
+                            <div *ngFor="let acl of listener.aclList" style="margin-bottom: 12px;">
+                              <div style="font-weight: 600; margin-bottom: 4px;">
+                                <d-tag [tag]="acl.aclType" [labelStyle]="'blue-w98'"></d-tag>
+                                <span style="margin-left: 6px; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ acl.aclId }}</span>
+                              </div>
+                              <div *ngFor="let entry of acl.aclEntries" style="font-size: 12px; font-family: monospace; padding: 2px 0; color: var(--devui-text, #252b3a);">
+                                {{ entry.entry }} <span *ngIf="entry.description" style="color: var(--devui-aide-text, #8a8e99);">- {{ entry.description }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                        <span style="margin-left: auto;">
+                          <d-tag *ngIf="listener.listenerStatus" [tag]="listener.listenerStatus" [labelStyle]="listener.listenerStatus === 'Running' ? 'green-w98' : 'orange-w98'"></d-tag>
+                        </span>
+                      </div>
+                    </d-splitter-pane>
+                    <d-splitter-pane>
+                      <d-splitter orientation="horizontal">
+                        <d-splitter-pane [resizable]="false" size="250px">
+                          <div style="padding: 8px 12px;">
+                            <d-tag [tag]="listener.listenerProtocol + ':' + getListenerPort(listener) + (listener.forwardTo ? ' → ' + listener.forwardTo : '')" [labelStyle]="'blue-w98'" style="margin-bottom: 4px;"></d-tag>
+                            <d-tag *ngIf="listener.serverGroupId" [tag]="'SG:' + listener.serverGroupId" [labelStyle]="'default'" style="margin-top: 4px;"></d-tag>
+                          </div>
+                        </d-splitter-pane>
+                        <d-splitter-pane>
+                          <div class="listener-servers" *ngIf="listener.serverGroupServers?.length > 0">
+                            <span *ngFor="let server of listener.serverGroupServers" style="display: inline-flex; align-items: center; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 4px; padding: 2px 8px; margin: 4px 4px 4px 0;">
+                              <i class="fa-solid fa-server" style="color: var(--devui-text-weak, #999); margin-right: 6px;"></i>
+                              <d-tag
+                                [tag]="server.serverIp + ':' + (server.port || getListenerPort(listener))"
+                                [labelStyle]="'blue-w98'"
+                              ></d-tag>
+                            </span>
+                          </div>
+                        </d-splitter-pane>
+                      </d-splitter>
+                    </d-splitter-pane>
+                  </d-splitter>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

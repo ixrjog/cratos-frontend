@@ -25,6 +25,7 @@ export interface DomainEdit {
   domainType: string;
   comment: string;
   fromAssetId?: number;
+  accountEntityId?: number;
 }
 
 export abstract class DomainData {

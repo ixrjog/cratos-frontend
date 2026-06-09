@@ -23,6 +23,22 @@
   </d-select>
   <app-business-cascader #businessCascader [businessType]="businessType"
                          (onChange)="onTagChanges($event)"></app-business-cascader>
+  <d-select
+    class="select"
+    style="width: 200px; max-width: 200px;"
+    [filterKey]="'name'"
+    [appendToBody]="true"
+    [searchFn]="onSearchAccountEntity"
+    [isSearch]="true"
+    [allowClear]="true"
+    [(ngModel)]="selectedAccountEntity"
+    placeholder="Account Entity"
+    (valueChange)="onAccountEntityFilterChange($event)"
+  >
+    <ng-template let-option="option">
+      <span>{{ option.name }}</span>
+    </ng-template>
+  </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
@@ -37,10 +53,23 @@
     [checkable]="true"
   >
     <d-column field="name" header="Name"></d-column>
-    <d-column field="domainType" header="Domain Type">
+    <d-column header="Account Entity">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <d-tag [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
+        <ng-template let-rowItem="rowItem">
+          <div *ngIf="rowItem.accountEntity">
+            <div>{{ rowItem.accountEntity.name }}</div>
+            <div style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); padding-top: 4px; margin-top: 4px; color: #8a8e99;">{{ rowItem.accountEntity.registeredName }} <i class="fa-regular fa-registered" style="margin-left: 4px;"></i></div>
+          </div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column header="Domain Instance">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div>{{ rowItem.instanceName }}</div>
+          <div style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); padding-top: 4px; margin-top: 4px; color: #8a8e99;">
+            <d-tag *ngIf="rowItem.domainType" [tag]="rowItem.domainType" [labelStyle]="'blue-w98'"></d-tag>
+          </div>
         </ng-template>
       </d-cell>
     </d-column>

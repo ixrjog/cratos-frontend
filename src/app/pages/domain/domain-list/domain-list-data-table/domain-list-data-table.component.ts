@@ -6,9 +6,11 @@ import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DomainEdit, DomainPageQuery, DomainVO } from '../../../../@core/data/domian';
 import { DomainEditorComponent } from './domain-editor/domain-editor.component';
 import { DomainService } from '../../../../@core/services/domain.service';
+import { AccountEntityService } from '../../../../@core/services/account-entity.service';
 import {
   BusinessCascaderComponent
 } from '../../../../@shared/components/common/business-cascader/business-cascader.component';
@@ -26,8 +28,9 @@ export class DomainListDataTableComponent implements OnInit {
   private static readonly DOMAIN_TYPE_STORAGE_KEY = 'domain_selected_type';
 
   queryParam = {
-    queryName: '',
+    queryName: localStorage.getItem('domain_search_query') || '',
     domainType: localStorage.getItem(DomainListDataTableComponent.DOMAIN_TYPE_STORAGE_KEY) || '',
+    accountEntityId: JSON.parse(localStorage.getItem('domain_account_entity_id') || 'null'),
     queryByTag: {
       tagId: null,
       tagValue: null,
@@ -37,6 +40,22 @@ export class DomainListDataTableComponent implements OnInit {
   domainTypeOptions = [];
   protected readonly limit = RELATIVE_TIME_LIMIT;
   businessType: string = BusinessTypeEnum.DOMAIN;
+  selectedAccountEntity: any = JSON.parse(localStorage.getItem('domain_account_entity') || 'null');
+
+  onSearchAccountEntity = (term: string) => {
+    return this.accountEntityService.queryAccountEntityPage({ queryName: term, page: 1, length: 20 })
+      .pipe(
+        map(({ body }) => body.data.map((item, index) => ({ id: index, option: item }))),
+      );
+  };
+
+  onAccountEntityFilterChange(entity: any) {
+    this.selectedAccountEntity = entity;
+    this.queryParam.accountEntityId = entity?.id || null;
+    localStorage.setItem('domain_account_entity_id', JSON.stringify(entity?.id || null));
+    localStorage.setItem('domain_account_entity', JSON.stringify(entity || null));
+    this.fetchData();
+  }
 
   table: Table<DomainVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
@@ -65,12 +84,14 @@ export class DomainListDataTableComponent implements OnInit {
 
   constructor(
     private domainService: DomainService,
+    private accountEntityService: AccountEntityService,
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
   ) {
   }
 
   fetchData() {
+    localStorage.setItem('domain_search_query', this.queryParam.queryName);
     const param: DomainPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,

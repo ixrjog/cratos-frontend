@@ -271,6 +271,9 @@ export class ProjectTenantEditorComponent implements OnInit {
         if (this.selectedGroupId) {
           const group = this.groups.find(g => g.id == this.selectedGroupId);
           this.selectedGroupMembers = group?.members || [];
+        } else if (this.groups.length > 0) {
+          this.selectedGroupId = this.groups[0].id;
+          this.selectedGroupMembers = this.groups[0].members || [];
         }
       });
   }

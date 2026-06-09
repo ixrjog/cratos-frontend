@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkbenchRoutingModule } from './workbench-routing.module';
 import { WorkbenchComponent } from './workbench.component';
+import { KubernetesVersionCompareComponent } from './kubernetes-version-compare/kubernetes-version-compare.component';
 import {
   KubernetesResourcesTabsComponent,
 } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-resources-tabs.component';
@@ -261,6 +262,7 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
     WorkOrderApplicationJvmTicketComponent,
     WorkOrderGcpIamTicketComponent,
     WorkOrderGcpIamRoleTicketComponent,
+    KubernetesVersionCompareComponent,
   ],
   imports: [
     CommonModule,

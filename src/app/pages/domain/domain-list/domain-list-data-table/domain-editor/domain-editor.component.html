@@ -60,6 +60,26 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
+      <d-form-label>Account Entity</d-form-label>
+      <d-form-control>
+        <d-select
+          name="accountEntity"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [searchFn]="onSearchAccountEntity"
+          [isSearch]="true"
+          [(ngModel)]="selectedAccountEntity"
+          placeholder="Search account entity"
+          (valueChange)="onAccountEntityChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.registeredName }}</span>
+          </ng-template>
+        </d-select>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
       <d-form-label>Description</d-form-label>
       <d-form-control>
         <textarea dTextarea name="comment" maxlength="200" style="height: 80px"  [(ngModel)]="formData.comment"></textarea>

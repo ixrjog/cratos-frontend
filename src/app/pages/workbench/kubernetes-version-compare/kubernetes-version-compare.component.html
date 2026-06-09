@@ -1,0 +1,72 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="app-data-table">
+      <div class="spacing-search">
+        <d-tabs class="tabs" type="options" [activeTab]="activeCountry" (activeTabChange)="onCountryChange($event)">
+          <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
+        </d-tabs>
+        <d-tabs class="tabs" *ngIf="comparisons.length > 0" type="options" [activeTab]="activeComparisonId" (activeTabChange)="onComparisonChange($event)">
+          <d-tab *ngFor="let c of comparisons" [id]="c.id" [title]="c.name"></d-tab>
+        </d-tabs>
+        <d-search
+          class="search"
+          [(ngModel)]="filterText"
+          [iconPosition]="'left'"
+          placeholder="Filter by app name"
+        ></d-search>
+        <d-checkbox
+          class="checkbox"
+          [label]="'DIFF Only'"
+          [isShowTitle]="false"
+          [(ngModel)]="showDiffOnly"
+        ></d-checkbox>
+        <d-button class="button" bsStyle="common" (click)="compare()">Refresh</d-button>
+      </div>
+      <div class="spacing-table" dLoading [loading]="loading" [backdrop]="true">
+        <d-data-table
+          [dataSource]="filteredVersions"
+          [scrollable]="true"
+          [tableOverflowType]="'overlay'"
+        >
+          <d-column header="Application" field="appName">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <strong>{{ rowItem.appName }}</strong>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="DC Version">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <div *ngFor="let img of rowItem.dcDeploymentImages">
+                  <span style="font-size: 11px; color: var(--devui-aide-text, #8a8e99); margin-right: 4px;">{{ img.name }}</span>
+                  <d-tag [tag]="getImageTag(img.image)" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                </div>
+                <span *ngIf="!rowItem.dcDeploymentImages?.length" style="color: var(--devui-aide-text, #8a8e99);">-</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="DR Version">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <div *ngFor="let img of rowItem.drDeploymentImages">
+                  <span style="font-size: 11px; color: var(--devui-aide-text, #8a8e99); margin-right: 4px;">{{ img.name }}</span>
+                  <d-tag [tag]="getImageTag(img.image)" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                </div>
+                <span *ngIf="!rowItem.drDeploymentImages?.length" style="color: var(--devui-aide-text, #8a8e99);">-</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="Status">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <d-tag *ngIf="isVersionMatch(rowItem)" tag="MATCH" [labelStyle]="'green-w98'"></d-tag>
+                <d-tag *ngIf="!isVersionMatch(rowItem)" tag="DIFF" [labelStyle]="'red-w98'"></d-tag>
+              </ng-template>
+            </d-cell>
+          </d-column>
+        </d-data-table>
+      </div>
+    </div>
+  </da-col-item>
+</da-layout-row>

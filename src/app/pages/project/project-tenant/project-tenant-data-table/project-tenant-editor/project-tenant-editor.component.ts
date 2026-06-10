@@ -3,6 +3,7 @@ import { DFormGroupRuleDirective, FormLayout } from 'ng-devui/form';
 import { FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ProjectService } from '../../../../../@core/services/project.service';
 import { EdsService } from '../../../../../@core/services/ext-datasource.service.s';
+import { TagGroupService } from '../../../../../@core/services/tag-group.service';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -37,15 +38,12 @@ export class ProjectTenantEditorComponent implements OnInit {
   // Groups
   groups: any[] = [];
   newGroupName = '';
+  availableGroupNames: string[] = [];
   selectedGroupId: any = localStorage.getItem('project_tenant_selected_group') || '';
   selectedGroupMembers: any[] = [];
-  memberInstanceTypeOptions: any[] = [];
-  memberTypeOptions: any[] = [];
-  filteredMemberTypeOptions: any[] = [];
-  memberInstanceType = localStorage.getItem('project_tenant_member_instance_type') || '';
-  memberAssetType = localStorage.getItem('project_tenant_member_asset_type') || '';
-  memberInstance: any = JSON.parse(localStorage.getItem('project_tenant_member_instance') || 'null');
-  memberAsset: any = null;
+  tagGroupQuery = '';
+  tagGroupSearchName = '';
+  tagGroupAssets: any[] = [];
 
   onSearchProject = (term: string) => {
     return this.projectService.queryProjectPage({ queryName: term, page: 1, length: 10 })
@@ -80,58 +78,7 @@ export class ProjectTenantEditorComponent implements OnInit {
     );
   };
 
-  onSearchMemberInstance = (term: string) => {
-    if (!this.memberInstanceType) return of([]);
-    return this.edsService.queryEdsInstancePage({
-      queryName: term,
-      edsType: this.memberInstanceType,
-      page: 1,
-      length: 100,
-    }).pipe(
-      map(({ body }) => body.data.map((inst, index) => ({ id: index, option: inst }))),
-    );
-  };
-
-  memberAssetSearchTerm = localStorage.getItem('project_tenant_member_asset_search') || '';
-  memberAssetResults: any[] = [];
-
-  onSearchMemberAsset = (term: string) => {
-    if (!this.memberInstanceType || !this.memberAssetType) return of([]);
-    localStorage.setItem('project_tenant_member_asset_search', term);
-    return this.edsService.queryEdsInstanceAssetPage({
-      queryName: term,
-      assetType: this.memberAssetType,
-      instanceId: this.memberInstance?.id,
-      valid: true,
-      page: 1,
-      length: 100,
-    } as any).pipe(
-      map(({ body }) => {
-        const existingKeys = new Set(this.selectedGroupMembers.map(m => m.comment));
-        return body.data
-          .filter(a => !existingKeys.has(a.assetKey))
-          .map((a, index) => ({ id: index, option: a }));
-      }),
-    );
-  };
-
-  constructor(private projectService: ProjectService, private edsService: EdsService) {}
-
-  searchMemberAssets() {
-    localStorage.setItem('project_tenant_member_asset_search', this.memberAssetSearchTerm);
-    if (!this.memberInstanceType || !this.memberAssetType) return;
-    this.edsService.queryEdsInstanceAssetPage({
-      queryName: this.memberAssetSearchTerm,
-      assetType: this.memberAssetType,
-      instanceId: this.memberInstance?.id,
-      valid: true,
-      page: 1,
-      length: 100,
-    } as any).subscribe(({ body }) => {
-      const existingKeys = new Set(this.selectedGroupMembers.map(m => m.comment));
-      this.memberAssetResults = body.data.filter(a => !existingKeys.has(a.assetKey));
-    });
-  }
+  constructor(private projectService: ProjectService, private edsService: EdsService, private tagGroupService: TagGroupService) {}
 
   ngOnInit(): void {
     this.operationType = this.data['operationType'];
@@ -159,21 +106,10 @@ export class ProjectTenantEditorComponent implements OnInit {
     this.edsService.getEdsInstanceTypeDatacenterOptions()
       .subscribe(({ body }) => {
         this.instanceTypeOptions = body.options || [];
-        this.memberInstanceTypeOptions = body.options || [];
       });
     this.projectService.getLbTypeOptions()
       .subscribe(({ body }) => {
         this.lbTypeOptions = body.options || [];
-      });
-    this.projectService.getMemberTypeOptions()
-      .subscribe(({ body }) => {
-        this.memberTypeOptions = body.options || [];
-        if (this.memberInstanceType) {
-          this.filteredMemberTypeOptions = this.memberTypeOptions.filter(t => {
-            const val = (typeof t === 'string' ? t : t?.value || '').toLowerCase();
-            return val.startsWith(this.memberInstanceType.toLowerCase());
-          });
-        }
       });
   }
 
@@ -271,10 +207,17 @@ export class ProjectTenantEditorComponent implements OnInit {
         if (this.selectedGroupId) {
           const group = this.groups.find(g => g.id == this.selectedGroupId);
           this.selectedGroupMembers = group?.members || [];
+          if (group?.name) { this.tagGroupQuery = group.name; this.searchTagGroupAssets(); }
         } else if (this.groups.length > 0) {
           this.selectedGroupId = this.groups[0].id;
           this.selectedGroupMembers = this.groups[0].members || [];
+          this.tagGroupQuery = this.groups[0].name;
+          this.searchTagGroupAssets();
         }
+      });
+    this.tagGroupService.getGroupOptions({ queryName: '' })
+      .subscribe(({ body }) => {
+        this.availableGroupNames = body?.options?.map(o => o.label || o.value) || [];
       });
   }
 
@@ -294,57 +237,61 @@ export class ProjectTenantEditorComponent implements OnInit {
     this.projectService.deleteProjectGroup({ id: group.id }).subscribe(() => this.fetchGroups());
   }
 
+  onDeleteSelectedGroup() {
+    const group = this.groups.find(g => g.id == this.selectedGroupId);
+    if (group) {
+      this.selectedGroupId = '';
+      this.onDeleteGroup(group);
+    }
+  }
+
   onGroupSelect(groupId: any) {
     this.selectedGroupId = groupId;
     localStorage.setItem('project_tenant_selected_group', groupId?.toString() || '');
     const group = this.groups.find(g => g.id == groupId);
     this.selectedGroupMembers = group?.members || [];
-  }
-
-  onMemberInstanceTypeChange(type: any) {
-    this.memberInstanceType = type;
-    localStorage.setItem('project_tenant_member_instance_type', type || '');
-    this.filteredMemberTypeOptions = this.memberTypeOptions.filter(t => {
-      const val = (typeof t === 'string' ? t : t?.value || '').toLowerCase();
-      return val.startsWith(type.toLowerCase());
-    });
-    this.memberAssetType = '';
-    this.memberInstance = null;
-    this.memberAsset = null;
-  }
-
-  onMemberInstanceChange(instance: any) {
-    this.memberInstance = instance;
-    localStorage.setItem('project_tenant_member_instance', JSON.stringify(instance));
-    this.memberAsset = null;
-  }
-
-  onMemberAssetTypeChange(type: any) {
-    this.memberAssetType = typeof type === 'string' ? type : type?.value || '';
-    localStorage.setItem('project_tenant_member_asset_type', this.memberAssetType);
-    this.memberAsset = null;
-  }
-
-  onAddGroupMember() {
-    if (!this.memberAsset || !this.selectedGroupId) return;
-    this.projectService.addProjectGroupMember({
-      groupId: this.selectedGroupId,
-      businessType: 'EDS_ASSET',
-      businessId: this.memberAsset.id,
-      role: this.memberAssetType,
-      name: this.memberAsset.name,
-      comment: this.memberAsset.assetKey,
-      valid: true,
-    }).subscribe(() => {
-      this.memberAsset = null;
-      this.fetchGroups();
-      this.searchMemberAssets();
-    });
+    // Auto-query tag group assets by group name
+    if (group?.name) {
+      this.tagGroupQuery = group.name;
+      this.searchTagGroupAssets();
+    }
   }
 
   onDeleteGroupMember(member: any) {
     this.projectService.deleteProjectGroupMember({ id: member.id }).subscribe(() => {
       this.fetchGroups();
+    });
+  }
+
+  searchTagGroupAssets() {
+    if (!this.tagGroupQuery) return;
+    this.tagGroupService.queryTagGroupAssetPage({
+      tagGroup: this.tagGroupQuery,
+      queryName: this.tagGroupSearchName,
+      page: 1,
+      length: 100,
+    } as any).subscribe(({ body }) => {
+      this.tagGroupAssets = body?.data || [];
+    });
+  }
+
+  isMemberExist(asset: any): boolean {
+    return this.selectedGroupMembers.some(m => m.comment === asset.assetKey);
+  }
+
+  onAddGroupMemberFromAsset(asset: any) {
+    if (!this.selectedGroupId) return;
+    this.projectService.addProjectGroupMember({
+      groupId: this.selectedGroupId,
+      businessType: 'EDS_ASSET',
+      businessId: asset.id,
+      role: asset.assetType,
+      name: asset.name,
+      comment: asset.assetKey,
+      valid: true,
+    }).subscribe(() => {
+      this.fetchGroups();
+      this.searchTagGroupAssets();
     });
   }
 }

@@ -1,142 +1,156 @@
-<da-layout-row [daGutter]="[12, 12]">
-  <da-col-item [daSpan]="24" [daXs]="24">
-    <div class="app-data-table">
-      <div class="spacing-search">
+<da-layout-row [daGutter]='[12, 12]'>
+  <da-col-item [daSpan]='24' [daXs]='24'>
+    <div class='app-data-table'>
+      <div class='spacing-search'>
         <d-select
-          class="select"
-          style="width: 250px; max-width: 250px;"
+          class='select'
+          style='width: 250px; max-width: 250px;'
           [filterKey]="'name'"
-          [appendToBody]="true"
-          [searchFn]="onSearchApplication"
-          [isSearch]="true"
-          [(ngModel)]="selectedApp"
-          placeholder="Select app to scan"
+          [appendToBody]='true'
+          [searchFn]='onSearchApplication'
+          [isSearch]='true'
+          [(ngModel)]='selectedApp'
+          placeholder='Select app to scan'
         >
-          <ng-template let-option="option">
+          <ng-template let-option='option'>
             <span>{{ option.name }}</span>
           </ng-template>
         </d-select>
-        <d-button class="button" bsStyle="primary" [disabled]="!selectedApp" (click)="scanSelectedApp()">Scan App</d-button>
-        <d-search
-          class="search"
-          [(ngModel)]="filterAppName"
-          [iconPosition]="'left'"
-          placeholder="Filter by app"
-          (searchFn)="fetchResults()"
-        ></d-search>
-        <d-search
-          class="search"
-          [(ngModel)]="filterPath"
-          [iconPosition]="'left'"
-          placeholder="Filter by path"
-          (searchFn)="fetchResults()"
-        ></d-search>
-        <d-button class="button" bsStyle="common" (click)="fetchResults()">Refresh</d-button>
-        <d-button class="button" bsStyle="common" (click)="toggleConfig()">
-          <i class="fa-solid fa-gear"></i> Config
+        <d-button class='button' bsStyle='primary' [disabled]='!selectedApp' (click)='scanSelectedApp()'>Scan App
         </d-button>
-        <d-button class="button" bsStyle="primary" [disabled]="scanning" (click)="executeScan()" style="float: right;">
-          <span *ngIf="!scanning">Scan All</span>
-          <span *ngIf="scanning"><i class="fa-solid fa-spinner fa-spin"></i> Scanning...</span>
+        <d-search
+          class='search'
+          [(ngModel)]='filterAppName'
+          [iconPosition]="'left'"
+          placeholder='Filter by app'
+          (searchFn)='fetchResults()'
+        ></d-search>
+        <d-search
+          class='search'
+          [(ngModel)]='filterPath'
+          [iconPosition]="'left'"
+          placeholder='Filter by path'
+          (searchFn)='fetchResults()'
+        ></d-search>
+        <d-button class='button' bsStyle='common' (click)='fetchResults()'>Refresh</d-button>
+        <d-button class='button' bsStyle='common' (click)='toggleConfig()'>
+          <i class='fa-solid fa-gear'></i> Config
+        </d-button>
+        <d-button class='button' bsStyle='primary' [disabled]='scanning' (click)='executeScan()' style='float: right;'>
+          <span *ngIf='!scanning'>Scan All</span>
+          <span *ngIf='scanning'><i class='fa-solid fa-spinner fa-spin'></i> Scanning...</span>
         </d-button>
       </div>
       <!-- Config Dialog -->
-      <div *ngIf="showConfig" class="config-overlay" (click)="showConfig = false">
-        <div class="config-dialog" (click)="$event.stopPropagation()">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h4 style="margin: 0;">Scan Config (YAML)</h4>
-            <d-icon [icon]="'icon-close'" [operable]="true" (click)="showConfig = false"></d-icon>
+      <div *ngIf='showConfig' class='config-overlay' (click)='showConfig = false'>
+        <div class='config-dialog' (click)='$event.stopPropagation()'>
+          <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>
+            <h4 style='margin: 0;'>Scan Config (YAML)</h4>
+            <d-icon [icon]="'icon-close'" [operable]='true' (click)='showConfig = false'></d-icon>
           </div>
           <app-ace-editor
-            [minLines]="25"
-            [maxLines]="50"
+            [minLines]='25'
+            [maxLines]='50'
             [mode]="'ace/mode/yaml'"
-            [aceValue]="configYaml"
-            (onChange)="onConfigChange($event)"
+            [aceValue]='configYaml'
+            (onChange)='onConfigChange($event)'
           ></app-ace-editor>
-          <div style="margin-top: 12px; text-align: right;">
-            <d-button bsStyle="primary" (click)="saveConfig()">Save</d-button>
+          <div style='margin-top: 12px; text-align: right;'>
+            <d-button bsStyle='primary' (click)='saveConfig()'>Save</d-button>
           </div>
         </div>
       </div>
-      <div class="spacing-table" dLoading [loading]="loading" [backdrop]="true">
+      <div class='spacing-table' dLoading [loading]='loading' [backdrop]='true'>
         <d-data-table
-          [dataSource]="results"
-          [scrollable]="true"
+          [dataSource]='results'
+          [scrollable]='true'
           [tableOverflowType]="'overlay'"
         >
-          <d-column field="groupName" header="Group"></d-column>
-          <d-column header="Application">
+          <d-column field='groupName' header='Group'></d-column>
+          <d-column header='Application' [width]="'250px'">
             <d-cell>
-              <ng-template let-rowItem="rowItem">
+              <ng-template let-rowItem='rowItem'>
                 {{ rowItem.appName }}
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Deployment">
+          <d-column header='Deployment'>
             <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <span style="color: var(--devui-aide-text, #8a8e99);">{{ rowItem.deploymentName }} / {{ rowItem.podIP }}</span>
+              <ng-template let-rowItem='rowItem'>
+                <span style='color: var(--devui-aide-text, #8a8e99);'>{{ rowItem.deploymentName }}
+                  / {{ rowItem.podIP }}</span>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Path">
+          <d-column header='Path'>
             <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <d-tag [tag]="rowItem.method" [labelStyle]="'blue-w98'" style="margin-right: 4px;"></d-tag>{{ rowItem.path }}
+              <ng-template let-rowItem='rowItem'>
+                <d-tag [tag]='rowItem.method' [labelStyle]="'blue-w98'" style='margin-right: 4px;'></d-tag>
+                {{ rowItem.path }}
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column field="severity" header="Severity" [width]="'150px'">
+          <d-column header='Batch' [width]="'150px'">
             <d-cell>
-              <ng-template let-cellItem="cellItem">
-                <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="getSeverityStyle(cellItem)"></d-tag>
+              <ng-template let-rowItem='rowItem'>
+                <span>{{ rowItem.scanBatch }}</span>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Response" [width]="'250px'">
+          <d-column field='severity' header='Severity' [width]="'150px'">
             <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <d-tag [tag]="rowItem.statusCode?.toString()" [labelStyle]="rowItem.statusCode === 200 ? 'green-w98' : 'blue-w98'"></d-tag>
-                <span style="margin-left: 4px; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ rowItem.respSize | flowUnitTran }}</span>
+              <ng-template let-cellItem='cellItem'>
+                <d-tag *ngIf='cellItem' [tag]='cellItem' [labelStyle]='getSeverityStyle(cellItem)'></d-tag>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header='Response' [width]="'250px'">
+            <d-cell>
+              <ng-template let-rowItem='rowItem'>
+                <d-tag [tag]='rowItem.statusCode?.toString()'
+                       [labelStyle]="rowItem.statusCode === 200 ? 'green-w98' : 'blue-w98'"></d-tag>
+                <span
+                  style='margin-left: 4px; font-size: 11px; color: var(--devui-aide-text, #8a8e99);'>{{ rowItem.respSize | flowUnitTran }}</span>
                 <d-icon
-                  *ngIf="rowItem.resp"
+                  *ngIf='rowItem.resp'
                   [icon]="'icon-view'"
-                  [operable]="true"
-                  style="margin-left: 6px;"
+                  [operable]='true'
+                  style='margin-left: 6px;'
                   dPopover
                   [position]="'left-top'"
                   [trigger]="'click'"
-                  [controlled]="true"
-                  [content]="respTpl"
+                  [controlled]='true'
+                  [content]='respTpl'
                   [popoverStyle]="{ width: '600px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
                 ></d-icon>
                 <ng-template #respTpl>
-                  <pre style="margin: 0; padding: 12px; white-space: pre-wrap; font-family: monospace; font-size: 11px; max-height: 400px; overflow-y: auto;">{{ rowItem.resp }}</pre>
+                  <pre
+                    style='margin: 0; padding: 12px; white-space: pre-wrap; font-family: monospace; font-size: 11px; max-height: 400px; overflow-y: auto;'>{{ rowItem.resp }}</pre>
                 </ng-template>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="" [width]="'50px'">
+          <d-column header='' [width]="'50px'">
             <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <d-icon [icon]="'icon-copy'" [operable]="true" (click)="copySummary(rowItem)" title="Copy summary"></d-icon>
+              <ng-template let-rowItem='rowItem'>
+                <d-icon [icon]="'icon-copy'" [operable]='true' (click)='copySummary(rowItem)'
+                        title='Copy summary'></d-icon>
               </ng-template>
             </d-cell>
           </d-column>
         </d-data-table>
       </div>
-      <div class="spacing-pagination">
+      <div class='spacing-pagination'>
         <d-pagination
-          class="pagination"
-          [total]="pager.total"
-          [(pageSize)]="pager.pageSize"
-          [(pageIndex)]="pager.pageIndex"
-          [canViewTotal]="true"
-          [canChangePageSize]="true"
-          [maxItems]="5"
-          (pageIndexChange)="pageIndexChange($event)"
-          (pageSizeChange)="pageSizeChange($event)"
+          class='pagination'
+          [total]='pager.total'
+          [(pageSize)]='pager.pageSize'
+          [(pageIndex)]='pager.pageIndex'
+          [canViewTotal]='true'
+          [canChangePageSize]='true'
+          [maxItems]='5'
+          (pageIndexChange)='pageIndexChange($event)'
+          (pageSizeChange)='pageSizeChange($event)'
         ></d-pagination>
       </div>
     </div>

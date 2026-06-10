@@ -12,7 +12,7 @@
             style="margin-right: 5px;"
             [tag]="role"
             [customViewTemplate]="customTag"
-            [labelStyle]="role.id !== null?'green-w98':''"
+            [labelStyle]="''"
           >
           </d-tag>
           <ng-template #customTag let-tag="tag">
@@ -22,12 +22,14 @@
                   [type]="'circle'"
                   [strokeWidth]="18"
                   [percentage]="tag.lifeCycleExpires?.survivalRate"
-                  [strokeColor]="'#50d4ab'"
+                  [strokeColor]="getProgressColor(tag.expiredTime)"
                   [showContent]="false"
                   style="display: inline-block"
                   *ngIf="tag.id !== null"
                 ></d-progress>
-                <span>&nbsp;{{ tag.role }}</span>
+                <span *ngIf="tag.id !== null" [style.background]="isExpired(tag.expiredTime) ? '#ad215b' : '#5e9629'" style="display: inline-block; color: #fff; border-radius: 2px; padding: 0 4px; margin-left: 4px; font-size: 11px;">{{ tag.role }}</span>
+                <span *ngIf="tag.id !== null && tag.expiredTime" [style.color]="getProgressColor(tag.expiredTime)" style="margin-left: 4px; font-size: 10px;">{{ getCompactExpirationText(tag.expiredTime) }}</span>
+                <span *ngIf="tag.id === null">&nbsp;{{ tag.role }}</span>
               </span>
             </div>
           </ng-template>

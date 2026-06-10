@@ -88,6 +88,7 @@ export class UserListDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    sessionStorage.setItem('user-list-query', this.queryParam.queryName || '');
     const param: UserPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -123,6 +124,7 @@ export class UserListDataTableComponent implements OnInit {
     setTimeout(() => {
       this.businessCascader.getTagOptions();
     }, 500);
+    this.queryParam.queryName = sessionStorage.getItem('user-list-query') || '';
     this.fetchData();
   }
 

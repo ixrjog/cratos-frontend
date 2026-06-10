@@ -108,6 +108,63 @@
                             </div>
                           </div>
                         </ng-template>
+                        <d-icon
+                          *ngIf="listener.ruleList?.length > 0"
+                          [icon]="'icon-sharing'"
+                          [operable]="true"
+                          style="margin-left: 6px; color: var(--devui-success, #50d4ab);"
+                          dPopover
+                          [position]="'bottom-left'"
+                          [trigger]="'click'"
+                          [controlled]="true"
+                          [content]="ruleTpl"
+                          [popoverStyle]="{ width: '660px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+                          title="转发规则"
+                        ></d-icon>
+                        <span *ngIf="listener.ruleList?.length > 0" class="rule-count-badge">{{ listener.ruleList.length }}</span>
+                        <ng-template #ruleTpl>
+                          <div style="padding: 12px; max-height: 420px; overflow-y: auto;">
+                            <div *ngFor="let rule of listener.ruleList" class="rule-popover-item">
+                              <div class="rule-popover-header">
+                                <span class="rule-popover-name">{{ rule.ruleName }}</span>
+                                <d-tag
+                                  *ngIf="rule.ruleStatus"
+                                  [tag]="rule.ruleStatus"
+                                  [labelStyle]="rule.ruleStatus === 'Available' ? 'green-w98' : 'orange-w98'"
+                                ></d-tag>
+                              </div>
+                              <div class="rule-popover-body">
+                                <div class="rule-popover-section">
+                                  <span class="rule-popover-label">匹配条件</span>
+                                  <ng-container *ngFor="let cond of rule.ruleConditions">
+                                    <div *ngIf="cond.type === 'Host' && cond.hostConfig?.values?.length > 0" class="rule-popover-cond">
+                                      <d-tag [tag]="'Host'" [labelStyle]="'blue-w98'"></d-tag>
+                                      <span class="rule-popover-cond-val">{{ cond.hostConfig.values.join(', ') }}</span>
+                                    </div>
+                                    <div *ngIf="cond.type === 'Path' && cond.pathConfig?.values?.length > 0" class="rule-popover-cond">
+                                      <d-tag [tag]="'Path'" [labelStyle]="'purple-w98'"></d-tag>
+                                      <span class="rule-popover-cond-val">{{ cond.pathConfig.values.join(', ') }}</span>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                                <i class="icon icon-arrow-right rule-popover-arrow"></i>
+                                <div class="rule-popover-section">
+                                  <span class="rule-popover-label">转发动作</span>
+                                  <ng-container *ngFor="let action of rule.ruleActions">
+                                    <div
+                                      *ngFor="let tuple of action.forwardGroupConfig?.serverGroupTuples"
+                                      class="rule-popover-action"
+                                    >
+                                      <i class="fa-solid fa-server" style="color: var(--devui-text-weak, #999); margin-right: 6px;"></i>
+                                      <span class="rule-popover-sg">{{ tuple.serverGroupId }}</span>
+                                      <span class="rule-popover-weight">权重 {{ tuple.weight }}</span>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
                         <span style="margin-left: auto;">
                           <d-tag *ngIf="listener.listenerStatus" [tag]="listener.listenerStatus" [labelStyle]="listener.listenerStatus === 'Running' ? 'green-w98' : 'orange-w98'"></d-tag>
                         </span>

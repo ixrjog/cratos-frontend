@@ -29,21 +29,19 @@
         </div>
         <div class="groups-section" *ngIf="tenantView.groups?.length > 0">
           <div class="group-card">
-            <d-tabs class="tabs" type="options" [activeTab]="activeGroupName" (activeTabChange)="activeGroupName = $any($event)">
-              <d-tab *ngFor="let group of tenantView.groups" [id]="group.name">
+            <d-tabs class="tabs" type="options" [activeTab]="activeGroupName" (activeTabChange)="onGroupChange($event)">
+              <d-tab *ngFor="let group of tenantView.groups" [id]="group">
                 <ng-template dTabTitle>
-                  {{ group.name }} <span class="count-badge">{{ group.members?.length || 0 }}</span>
+                  {{ group }} <span class="count-badge">{{ group === activeGroupName ? groupAssets.length : '' }}</span>
                 </ng-template>
               </d-tab>
             </d-tabs>
-            <div class="group-content" *ngFor="let group of tenantView.groups">
-              <ng-container *ngIf="group.name === activeGroupName">
-                <span *ngFor="let member of group.members" class="server-item">
-                  <d-tag [tag]="member.name" [titleContent]="member.comment" [labelStyle]="'blue-w98'"></d-tag>
-                  <span *ngIf="member.comment" style="font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ member.comment }}</span>
-                  <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin(member)"></d-icon>
-                </span>
-              </ng-container>
+            <div class="group-content">
+              <span *ngFor="let asset of groupAssets" class="server-item">
+                <d-tag [tag]="asset.name" [titleContent]="asset.assetKey" [labelStyle]="'blue-w98'"></d-tag>
+                <span *ngIf="asset.assetKey" style="font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ asset.assetKey }}</span>
+                <d-icon [icon]="'icon-run-with-parameter'" [operable]="true" (click)="onServerLogin({businessId: asset.id, name: asset.name, comment: asset.assetKey})"></d-icon>
+              </span>
             </div>
           </div>
         </div>

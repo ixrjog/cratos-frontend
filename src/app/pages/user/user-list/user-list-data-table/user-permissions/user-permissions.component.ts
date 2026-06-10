@@ -154,9 +154,14 @@ export class UserPermissionsComponent implements OnInit {
   /**
    * 根据过期时间获取进度条颜色
    */
+  isExpired(expiredTime: Date): boolean {
+    if (!expiredTime) return false;
+    return new Date(expiredTime).getTime() < Date.now();
+  }
+
   getProgressColor(expiredTime: Date): string {
     if (!expiredTime) {
-      return '#50d4ab'; // 默认绿色
+      return '#5e9629';
     }
     
     const now = new Date();
@@ -168,7 +173,7 @@ export class UserPermissionsComponent implements OnInit {
     } else if (daysDiff <= 7) {
       return '#ffa940'; // 橙色 - 即将过期
     } else {
-      return '#50d4ab'; // 绿色 - 正常
+      return '#5e9629';
     }
   }
 }

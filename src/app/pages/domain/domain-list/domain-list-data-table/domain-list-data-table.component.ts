@@ -100,6 +100,34 @@ export class DomainListDataTableComponent implements OnInit {
     onFetchValidData(this.table, this.domainService.queryDomainPage(param));
   }
 
+  exportCsv() {
+    const param: DomainPageQuery = {
+      ...this.queryParam,
+      page: 1,
+      length: this.table.pager.total || 10000,
+    };
+    this.domainService.queryDomainPage(param).subscribe(({ body }) => {
+      const headers = ['Name', 'Domain Type', 'Instance', 'Account Entity', 'Registration Time', 'Expiry', 'Valid', 'Comment'];
+      const rows = (body.data || []).map((d: any) => [
+        d.name,
+        d.domainType,
+        d.instanceName || '',
+        d.accountEntity?.name || '',
+        d.registrationTime ? new Date(d.registrationTime).toISOString().split('T')[0] : '',
+        d.expiry ? new Date(d.expiry).toISOString().split('T')[0] : '',
+        d.valid ? 'Y' : 'N',
+        d.comment || '',
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.map(v => '"' + (v || '').replace(/"/g, '""') + '"').join(','))].join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'domains_' + new Date().toISOString().slice(0, 10) + '.csv';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+  }
+
   ngOnInit() {
     setTimeout(() => {
       this.businessCascader.getTagOptions();

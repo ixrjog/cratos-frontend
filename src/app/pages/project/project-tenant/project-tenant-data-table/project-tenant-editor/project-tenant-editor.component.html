@@ -4,7 +4,6 @@
     <d-tab id="docs" [title]="'Docs'"></d-tab>
     <d-tab id="loadBalancers" [title]="'Load Balancers'"></d-tab>
     <d-tab id="groups" [title]="'Groups'"></d-tab>
-    <d-tab id="groupMembers" [title]="'Group Members'"></d-tab>
   </d-tabs>
   <form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup" *ngIf="editorTab === 'basic'">
     <d-form-item>
@@ -189,100 +188,71 @@
   </div>
   <!-- Groups Tab -->
   <div *ngIf="editorTab === 'groups'" style="padding-top: 12px;">
-    <div *ngFor="let group of groups; let gi = index" style="border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; padding: 12px; margin-bottom: 12px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <strong>{{ group.name }} <span class="count-badge">{{ group.members?.length || 0 }}</span></strong>
-        <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDeleteGroup(group)" title="Delete Group"></d-icon>
-      </div>
-    </div>
     <!-- Add Group -->
-    <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
-      <input dTextInput [(ngModel)]="newGroupName" placeholder="Group Name" style="width: 200px;" />
+    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+      <d-select
+        style="width: 250px;"
+        [options]="availableGroupNames"
+        [(ngModel)]="newGroupName"
+        [isSearch]="true"
+        [allowClear]="true"
+        [appendToBody]="true"
+        placeholder="Select or type group name"
+      ></d-select>
       <d-button bsStyle="primary" [disabled]="!newGroupName" (click)="onAddGroup()">Add Group</d-button>
     </div>
-  </div>
-  <!-- Group Members Tab -->
-  <div *ngIf="editorTab === 'groupMembers'" style="padding-top: 12px;">
-    <div *ngIf="groups.length === 0" style="color: var(--devui-aide-text, #8a8e99);">No groups configured. Please add groups first.</div>
+    <div *ngIf="groups.length === 0" style="color: var(--devui-aide-text, #8a8e99);">No groups configured.</div>
     <div *ngIf="groups.length > 0">
-    <!-- Select Group -->
-    <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin-bottom: 4px; display: block;">Select Group</label>
-    <d-tabs class="tabs" type="options" [activeTab]="selectedGroupId" (activeTabChange)="onGroupSelect($event)">
-      <d-tab *ngFor="let g of groups" [id]="g.id">
-        <ng-template dTabTitle>
-          {{ g.name }} <span class="count-badge">{{ g.members?.length || 0 }}</span>
-        </ng-template>
-      </d-tab>
-    </d-tabs>
-    <!-- Members Table -->
-    <div *ngIf="selectedGroupId">
-      <d-data-table *ngIf="selectedGroupMembers.length > 0" style="margin-top: 8px;" [dataSource]="selectedGroupMembers" [scrollable]="true" [tableOverflowType]="'overlay'">
-        <d-column field="name" header="Name"></d-column>
-        <d-column field="comment" header="IP"></d-column>
-        <d-column field="role" header="Role"></d-column>
-        <d-column header="">
-          <d-cell>
-            <ng-template let-rowItem="rowItem">
-              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDeleteGroupMember(rowItem)" title="Delete"></d-icon>
+      <!-- Select Group -->
+      <div style="display: flex; align-items: center;">
+        <d-tabs class="tabs" type="options" [activeTab]="selectedGroupId" (activeTabChange)="onGroupSelect($event)">
+          <d-tab *ngFor="let g of groups" [id]="g.id">
+            <ng-template dTabTitle>
+              {{ g.name }} <span class="count-badge">{{ g.size || 0 }}</span>
             </ng-template>
-          </d-cell>
-        </d-column>
-      </d-data-table>
-      <!-- Add Member -->
-      <div style="margin-top: 12px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; padding: 12px;">
-        <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin-bottom: 4px; display: block;">Instance Type</label>
-        <d-tabs class="tabs" type="options" [activeTab]="memberInstanceType" (activeTabChange)="onMemberInstanceTypeChange($event)">
-          <d-tab *ngFor="let t of memberInstanceTypeOptions" [id]="t.value" [title]="t.label || t.value"></d-tab>
+          </d-tab>
         </d-tabs>
-        <div *ngIf="memberInstanceType">
-          <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Select Instance</label>
-          <div style="width: 300px;">
-            <d-select
-              [filterKey]="'instanceName'"
-              [appendToBody]="true"
-              [searchFn]="onSearchMemberInstance"
-              [isSearch]="true"
-              [(ngModel)]="memberInstance"
-              placeholder="Search Instance"
-              (valueChange)="onMemberInstanceChange($event)"
-            >
-              <ng-template let-option="option">
-                <span>{{ option.instanceName }}</span>
+        <d-icon [icon]="'icon-delete'" [operable]="!!selectedGroupId" [disabled]="!selectedGroupId" (click)="selectedGroupId && onDeleteSelectedGroup()" title="Delete selected group" style="margin-left: 8px;"></d-icon>
+      </div>
+      <!-- Members Table -->
+      <div *ngIf="selectedGroupId">
+        <d-data-table *ngIf="selectedGroupMembers.length > 0" style="margin-top: 8px;" [dataSource]="selectedGroupMembers" [scrollable]="true" [tableOverflowType]="'overlay'">
+          <d-column field="name" header="Name"></d-column>
+          <d-column field="comment" header="IP"></d-column>
+          <d-column field="role" header="Role"></d-column>
+          <d-column header="">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDeleteGroupMember(rowItem)" title="Delete"></d-icon>
               </ng-template>
-          </d-select>
+            </d-cell>
+          </d-column>
+        </d-data-table>
+        <!-- Assets from Tag Group -->
+        <div style="margin-top: 12px; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 6px; padding: 12px;">
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+            <d-search
+              style="width: 250px;"
+              [(ngModel)]="tagGroupSearchName"
+              [iconPosition]="'left'"
+              placeholder="Search asset"
+              (searchFn)="searchTagGroupAssets()"
+            ></d-search>
+            <d-button bsStyle="common" (click)="searchTagGroupAssets()">Search</d-button>
           </div>
-        </div>
-        <div *ngIf="memberInstanceType">
-          <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Member Type</label>
-          <d-tabs class="tabs" *ngIf="filteredMemberTypeOptions.length > 0" type="options" [activeTab]="memberAssetType" (activeTabChange)="onMemberAssetTypeChange($event)">
-            <d-tab *ngFor="let t of filteredMemberTypeOptions" [id]="t.value || t" [title]="t.label || t.value || t"></d-tab>
-          </d-tabs>
-        </div>
-        <div *ngIf="memberAssetType">
-          <label style="font-size: 12px; color: var(--devui-aide-text, #8a8e99); margin: 8px 0 4px; display: block;">Select Asset</label>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <input dTextInput [(ngModel)]="memberAssetSearchTerm" placeholder="Search keyword" style="width: 200px;" (keyup.enter)="searchMemberAssets()" />
-            <d-button bsStyle="common" (click)="searchMemberAssets()">Search</d-button>
-          </div>
-          <div *ngIf="memberAssetResults.length > 0" style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
-            <d-select
-              style="width: 300px;"
-              [options]="memberAssetResults"
-              [filterKey]="'name'"
-              [appendToBody]="true"
-              [(ngModel)]="memberAsset"
-              placeholder="Select Asset"
-            >
-              <ng-template let-option="option">
-                <span>{{ option.name }}</span>
-                <span style="float: right; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ option.assetKey }}</span>
-              </ng-template>
-            </d-select>
-            <d-button bsStyle="primary" [disabled]="!memberAsset" (click)="onAddGroupMember()">Add</d-button>
-          </div>
+          <d-data-table *ngIf="tagGroupAssets.length > 0" [dataSource]="tagGroupAssets" [scrollable]="true" [tableOverflowType]="'overlay'">
+            <d-column field="name" header="Name"></d-column>
+            <d-column field="assetKey" header="IP"></d-column>
+            <d-column header="Tags">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </section>

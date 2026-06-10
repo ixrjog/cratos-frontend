@@ -46,7 +46,7 @@
     [checkable]="true"
     (cellEditEnd)="onCellEditEnd($event)"
   >
-    <d-column [header]="'user.list.table.name' | translate" [width]="'260px'">
+    <d-column [header]="'User'" [width]="'260px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div dLoading [loading]="rowItem['$userInfoLoading']">

@@ -2,6 +2,7 @@ import { AfterViewChecked, Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiService } from '../../../../@core/services/api.service';
 import { DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { EdsService } from '../../../../@core/services/ext-datasource.service.s';
+import { TagGroupService } from '../../../../@core/services/tag-group.service';
 import { EdsAssetSshTerminalComponent } from '../../../ext-datasource/eds-instance/eds-asset/eds-asset-data-table/eds-asset-ssh-terminal/eds-asset-ssh-terminal.component';
 
 declare var LeaderLine: any;
@@ -23,6 +24,7 @@ export class TmsTenantViewComponent implements OnInit, AfterViewChecked, OnDestr
   loading = false;
   activeGroupName = '';
   activeLbIndex: any = 0;
+  groupAssets: any[] = [];
 
   onLbTabChange(index: any) {
     this.activeLbIndex = index;
@@ -32,7 +34,7 @@ export class TmsTenantViewComponent implements OnInit, AfterViewChecked, OnDestr
   private lines: any[] = [];
   private needDrawLines = false;
 
-  constructor(private apiService: ApiService, private edsService: EdsService, private dialogUtil: DialogUtil) {}
+  constructor(private apiService: ApiService, private edsService: EdsService, private dialogUtil: DialogUtil, private tagGroupService: TagGroupService) {}
 
   ngOnInit(): void {
     this.apiService.get('/project', '/tenant/query', { projectKey: this.projectKey })
@@ -76,9 +78,23 @@ export class TmsTenantViewComponent implements OnInit, AfterViewChecked, OnDestr
       this.loading = false;
       this.needDrawLines = true;
       if (body?.groups?.length > 0) {
-        this.activeGroupName = body.groups[0].name;
+        this.activeGroupName = body.groups[0];
+        this.loadGroupAssets(this.activeGroupName);
       }
     });
+  }
+
+  loadGroupAssets(groupName: string) {
+    if (!groupName) return;
+    this.tagGroupService.queryTagGroupAssetPage({ tagGroup: groupName, queryName: '', page: 1, length: 100 } as any)
+      .subscribe(({ body }) => {
+        this.groupAssets = body?.data || [];
+      });
+  }
+
+  onGroupChange(groupName: any) {
+    this.activeGroupName = groupName;
+    this.loadGroupAssets(groupName);
   }
 
   getListenerPort(listener: any): string {

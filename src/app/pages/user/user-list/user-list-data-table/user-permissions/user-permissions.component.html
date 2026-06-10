@@ -1,60 +1,53 @@
 <section>
-  <span *ngFor="let permission of permissionMap| keyvalue">
-    <h3 style="margin: 5px 0" class="font-color-comment"> {{ permission.key }}</h3>
+  <span *ngFor='let permission of permissionMap| keyvalue'>
+    <h3 style='margin: 5px 0' class='font-color-comment'> {{ permission.key }}</h3>
     <span *ngIf="JSON.stringify(permission.value) === '[]'">
       <d-tag [tag]="'user.permissions.noPermissions' | translate"></d-tag>
     </span>
-    <div class="permissions">
-      <d-card *ngFor="let item of permission.value" class="permissions-card">
+    <div class='permissions'>
+      <d-card *ngFor='let item of permission.value' class='permissions-card'>
         <d-card-content>
-          <div class="permission-row">
+          <div class='permission-row'>
             <d-tag
               dClipboard
-              [content]="item.name"
-              style="margin-right: 8px;"
-              [tag]="item.name"
+              [content]='item.name'
+              style='margin-right: 8px;'
+              [tag]='item.name'
               [labelStyle]="'blue-w98'"
             >
             </d-tag>
             
-            <span 
-              *ngFor="let role of item.userPermissions" 
-              class="role-compact"
-              style="display: inline-block; margin-right: 8px;"
+            <span
+              *ngFor='let role of item.userPermissions'
+              class='role-compact'
+              style='display: inline-block; margin-right: 8px;'
             >
               <d-tag
-                [tag]="role"
-                [customViewTemplate]="customTag"
-                [labelStyle]="role.id !== null?'green-w98':''"
-                (click)="onRowRemove(role)"
-                style="margin-right: 4px;"
+                [tag]='role'
+                [customViewTemplate]='customTag'
+                [labelStyle]="''"
+                (click)='onRowRemove(role)'
+                style='margin-right: 2px;'
               >
               </d-tag>
-              <span 
-                *ngIf="role.expiredTime"
-                class="expiration-compact" 
-                [style.color]="getExpirationColor(role.expiredTime)"
-                [title]="getExpirationTooltip(role.expiredTime)"
-                style="font-size: 11px; white-space: nowrap;"
-              >
-                {{ getCompactExpirationText(role.expiredTime) }}
-              </span>
             </span>
           </div>
           
-          <ng-template #customTag let-tag="tag">
+          <ng-template #customTag let-tag='tag'>
             <div>
-              <span class="progress-container circle-type">
+              <span class='progress-container circle-type'>
                 <d-progress
                   [type]="'circle'"
-                  [strokeWidth]="18"
-                  [percentage]="tag.lifeCycleExpires?.survivalRate"
-                  [strokeColor]="getProgressColor(tag.expiredTime)"
-                  [showContent]="false"
-                  style="display: inline-block"
-                  *ngIf="tag.id !== null"
+                  [strokeWidth]='18'
+                  [percentage]='tag.lifeCycleExpires?.survivalRate'
+                  [strokeColor]='getProgressColor(tag.expiredTime)'
+                  [showContent]='false'
+                  style='display: inline-block'
+                  *ngIf='tag.id !== null'
                 ></d-progress>
-                <span>&nbsp;{{ tag.role }}</span>
+                <span *ngIf="tag.id !== null" [style.background]="isExpired(tag.expiredTime) ? '#ad215b' : '#5e9629'" style="display: inline-block; color: #fff; border-radius: 2px; padding: 0 4px; margin-left: 4px; font-size: 11px;">{{ tag.role }}</span>
+                <span *ngIf="tag.id !== null && tag.expiredTime" [style.color]="getProgressColor(tag.expiredTime)" style="margin-left: 4px; font-size: 10px;">{{ getCompactExpirationText(tag.expiredTime) }}</span>
+                <span *ngIf="tag.id === null">&nbsp;{{ tag.role }}</span>
               </span>
             </div>
           </ng-template>

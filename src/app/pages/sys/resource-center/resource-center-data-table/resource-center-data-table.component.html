@@ -24,6 +24,10 @@
     placeholder="Search and select tag group"
     (valueChange)="onTagGroupChange($event)"
   >
+    <ng-template let-option="option">
+      <span>{{ option.value }}</span>
+      <span *ngIf="option.size" class="count-badge" style="float: right;">{{ option.size }}</span>
+    </ng-template>
   </d-select>
   <d-search
     class="search"

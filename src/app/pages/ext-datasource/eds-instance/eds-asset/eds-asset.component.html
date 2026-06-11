@@ -16,7 +16,7 @@
       <i class="icon icon-module" style="margin-right: 5px"></i>{{ edsInstance?.instanceName }}
     </a>
   </h2>
-  <d-tabs type="pills" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
+  <d-tabs type="tabs" [(activeTab)]="tabActiveId" (activeTabChange)="onActiveTabChange($event)">
     <d-tab *ngFor="let item of instanceAssetTypes" [id]="item.type">
       <ng-template dTabTitle>
         {{ item | edsAssetType }}

@@ -70,6 +70,13 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   wsHeartbeatTimerRequest: Subscription;
   private destroy$ = new Subject<void>();
 
+  // WS detail-push throttling/dedupe state.
+  private static readonly DETAILS_THROTTLE_MS = 500;
+  private pendingDetails: KubernetesDetailsVO | null = null;
+  private detailsFlushScheduled = false;
+  private lastDetailsAppliedAt = 0;
+  private lastDeploymentsSignature = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private userFavoriteService: UserFavoriteService,
@@ -203,6 +210,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.deploymentList = [];
     this.serviceList = [];
     this.kubernetesApplication = null;
+    this.lastDeploymentsSignature = '';
+    this.pendingDetails = null;
     if (this.queryParam.applicationName !== '' && this.queryParam.namespace !== '') {
       const param: QueryApplicationResourceKubernetesDetails = {
         ...this.queryParam,
@@ -381,16 +390,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.onGetUserFavorite();
   }
 
-  wsOnClose() {
+  /** Tear down only the WebSocket connection (keeps reconnect/heartbeat timers running). */
+  private closeWsConnection() {
     try {
-      if (this.timerRequest) {
-        this.timerRequest.unsubscribe();
-        this.timerRequest = null;
-      }
-      if (this.wsHeartbeatTimerRequest) {
-        this.wsHeartbeatTimerRequest.unsubscribe();
-        this.wsHeartbeatTimerRequest = null;
-      }
       if (this.ws) {
         this.ws.onopen = null;
         this.ws.onmessage = null;
@@ -404,6 +406,18 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
     }
+  }
+
+  wsOnClose() {
+    if (this.timerRequest) {
+      this.timerRequest.unsubscribe();
+      this.timerRequest = null;
+    }
+    if (this.wsHeartbeatTimerRequest) {
+      this.wsHeartbeatTimerRequest.unsubscribe();
+      this.wsHeartbeatTimerRequest = null;
+    }
+    this.closeWsConnection();
   }
 
   ngOnDestroy(): void {
@@ -421,17 +435,20 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         if (this.ws?.readyState !== WebSocket.OPEN
           && this.ws?.readyState !== WebSocket.CONNECTING
           && this.ws?.readyState !== WebSocket.CLOSING) {
-          this.wsOnClose();
+          // Only rebuild the socket; keep the reconnect/heartbeat timers alive.
+          this.closeWsConnection();
           this.wsOnInit();
           this.wsOnOpen();
-          this.wsOnSubSend();
-          this.wsOnMessage();
         }
       });
   }
 
   wsOnOpen() {
     this.ws.onopen = (event) => {
+      // (Re)subscribe and (re)bind the message handler whenever the socket opens,
+      // so reconnects resume the data stream with the current query params.
+      this.wsOnSubSend();
+      this.wsOnMessage();
     };
   }
 
@@ -470,44 +487,96 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         if (msg.body.success) {
           if (msg.body.application.name === this.queryParam.applicationName
             && msg.body.namespace === this.queryParam.namespace) {
-            this.kubernetesDetails = msg.body;
-            this.serviceList = this.kubernetesDetails?.network?.services;
-            this.kubernetesApplication = this.kubernetesDetails?.application;
-            this.show = true;
-            const newDeployments = this.kubernetesDetails?.workloads?.deployments;
-            try {
-              if (newDeployments && this.deploymentList?.length > 0) {
-                const oldMap = new Map(this.deploymentList.map(d => [d.metadata.name + '@' + d.kubernetesCluster.name, d]));
-                newDeployments.forEach(d => {
-                  const old = oldMap.get(d.metadata.name + '@' + d.kubernetesCluster.name);
-                  if (old?.replicaSets && !d.replicaSets) {
-                    const runningPods = d.pods?.filter(p => p.status?.phase === 'Running').length ?? 0;
-                    const desiredReplicas = d.spec?.replicas ?? 0;
-                    d.replicaSets = old.replicaSets.map(rs => ({
-                      ...rs,
-                      readyReplicas: runningPods,
-                      replicas: desiredReplicas,
-                      progressing: desiredReplicas !== runningPods,
-                    }));
-                  }
-                });
-              }
-            } catch (e) {
-              console.warn('replicaSets merge error:', e);
-            }
-            if (this.queryParam.name !== '' && this.queryParam.name !== null) {
-              this.deploymentList = newDeployments?.filter(
-                deployment => deployment.metadata.name === this.queryParam.name,
-              );
-            } else {
-              this.deploymentList = newDeployments;
-            }
+            // Buffer the latest payload and flush on a throttle to avoid
+            // re-rendering the whole workloads tree on every server push.
+            this.pendingDetails = msg.body;
+            this.scheduleDetailsFlush();
           }
         } else {
           this.wsOnUnsubSend();
         }
       }
     };
+  }
+
+  /** Apply the buffered details payload at most once per throttle window. */
+  private scheduleDetailsFlush() {
+    if (this.detailsFlushScheduled) {
+      return;
+    }
+    this.detailsFlushScheduled = true;
+    const elapsed = Date.now() - this.lastDetailsAppliedAt;
+    const delay = Math.max(0, KubernetesResourcesTabsComponent.DETAILS_THROTTLE_MS - elapsed);
+    timer(delay)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.detailsFlushScheduled = false;
+        this.lastDetailsAppliedAt = Date.now();
+        const details = this.pendingDetails;
+        this.pendingDetails = null;
+        if (details) {
+          this.applyDetails(details);
+        }
+      });
+  }
+
+  private applyDetails(details: KubernetesDetailsVO) {
+    const newDeployments = details?.workloads?.deployments;
+    // Skip if nothing actually changed, to avoid redundant change detection.
+    const signature = this.buildDeploymentsSignature(newDeployments);
+    const sameDeployments = signature === this.lastDeploymentsSignature;
+
+    this.kubernetesDetails = details;
+    this.serviceList = this.kubernetesDetails?.network?.services;
+    this.kubernetesApplication = this.kubernetesDetails?.application;
+    this.show = true;
+
+    try {
+      if (newDeployments && this.deploymentList?.length > 0) {
+        const oldMap = new Map(this.deploymentList.map(d => [d.metadata.name + '@' + d.kubernetesCluster.name, d]));
+        newDeployments.forEach(d => {
+          const old = oldMap.get(d.metadata.name + '@' + d.kubernetesCluster.name);
+          if (old?.replicaSets && !d.replicaSets) {
+            const runningPods = d.pods?.filter(p => p.status?.phase === 'Running').length ?? 0;
+            const desiredReplicas = d.spec?.replicas ?? 0;
+            d.replicaSets = old.replicaSets.map(rs => ({
+              ...rs,
+              readyReplicas: runningPods,
+              replicas: desiredReplicas,
+              progressing: desiredReplicas !== runningPods,
+            }));
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('replicaSets merge error:', e);
+    }
+
+    if (sameDeployments) {
+      // Keep the existing array reference so trackBy can fully reuse the views.
+      return;
+    }
+    this.lastDeploymentsSignature = signature;
+    if (this.queryParam.name !== '' && this.queryParam.name !== null) {
+      this.deploymentList = newDeployments?.filter(
+        deployment => deployment.metadata.name === this.queryParam.name,
+      );
+    } else {
+      this.deploymentList = newDeployments;
+    }
+  }
+
+  /** Lightweight signature of deployments to detect real changes (avoids full deep compare). */
+  private buildDeploymentsSignature(deployments: any[]): string {
+    if (!deployments?.length) {
+      return '';
+    }
+    return deployments.map(d => {
+      const pods = (d.pods || []).map(p =>
+        p.metadata?.name + ':' + (p.status?.phase || '') + ':' +
+        (p.containerStatuses || []).map(c => (c.ready ? '1' : '0') + (c.restartCount ?? '')).join(',')).join('|');
+      return d.metadata?.name + '@' + d.kubernetesCluster?.name + '#' + (d.spec?.replicas ?? '') + '#' + pods;
+    }).join(';;');
   }
 
   onFavoriteClick() {

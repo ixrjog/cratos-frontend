@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {
   AccessControlVO,
   DeploymentTemplateSpecContainerVO,
@@ -19,8 +19,9 @@ import { BusinessTagVO } from '../../../../../../@core/data/business-tag';
   selector: 'app-kubernetes-deployment-splitter',
   templateUrl: './kubernetes-deployment-splitter.component.html',
   styleUrls: [ './kubernetes-deployment-splitter.component.less' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy {
+export class KubernetesDeploymentSplitterComponent implements OnInit, OnChanges, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
@@ -46,46 +47,69 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
     private dialogService: DialogService,
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
   ngOnInit(): void {
-    if (!!localStorage.getItem('kubernetes_resources_version')) {
-      this.imageVersion = JSON.parse(localStorage.getItem('kubernetes_resources'));
-    } else {
+    // Parse the persisted maps once (not per container) to keep init off the hot path.
+    const versionRaw = localStorage.getItem('kubernetes_resources_version');
+    try {
+      this.imageVersion = versionRaw ? JSON.parse(versionRaw) : {};
+    } catch (e) {
       this.imageVersion = {};
     }
 
-    if (!!localStorage.getItem('kubernetes_resources')) {
-      this.kubernetesResources = JSON.parse(localStorage.getItem('kubernetes_resources'));
-      this.kubernetesDeployment['$chosenItem'] = this.kubernetesResources[this.kubernetesDeployment.metadata.name];
-    } else {
+    const resourcesRaw = localStorage.getItem('kubernetes_resources');
+    try {
+      this.kubernetesResources = resourcesRaw ? JSON.parse(resourcesRaw) : {};
+    } catch (e) {
       this.kubernetesResources = {};
     }
-    this.kubernetesDeployment['$containers'] = [];
-    this.kubernetesDeployment['$container'] = null;
-    this.kubernetesDeployment['$containerMap'] = new Map<string, DeploymentTemplateSpecContainerVO>();
-    this.kubernetesDeployment.spec.template.spec.containers.map(container => {
+    this.initContainerState();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // The deployment view is reused across WS pushes (trackBy); when a new
+    // deployment object arrives, re-derive the container selector/state.
+    if (changes['kubernetesDeployment'] && !changes['kubernetesDeployment'].firstChange && this.kubernetesResources) {
+      this.initContainerState();
+    }
+  }
+
+  /** Derive the container selector state ($containers/$container/$chosenItem) for the current deployment. */
+  private initContainerState(): void {
+    const dep = this.kubernetesDeployment;
+    if (dep['$chosenItem'] === undefined) {
+      dep['$chosenItem'] = this.kubernetesResources[dep.metadata.name];
+    }
+    dep['$containers'] = [];
+    dep['$container'] = null;
+    dep['$containerMap'] = new Map<string, DeploymentTemplateSpecContainerVO>();
+    dep.spec.template.spec.containers.forEach(container => {
       if (container.main) {
-        if (this.kubernetesDeployment['$chosenItem'] === undefined) {
-          this.kubernetesDeployment['$chosenItem'] = container.name;
-          this.kubernetesResources[this.kubernetesDeployment.metadata.name] = this.kubernetesDeployment['$chosenItem'];
+        if (dep['$chosenItem'] === undefined) {
+          dep['$chosenItem'] = container.name;
+          this.kubernetesResources[dep.metadata.name] = dep['$chosenItem'];
           this.setItem();
         }
       }
-      this.kubernetesDeployment['$containers'].push(container.name);
-      this.kubernetesDeployment['$containerMap'].set(container.name, container);
-      this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$chosenItem']);
-      if (this.kubernetesDeployment['$container'] === undefined) {
-        this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(this.kubernetesDeployment['$containers'][0]);
+      dep['$containers'].push(container.name);
+      dep['$containerMap'].set(container.name, container);
+      dep['$container'] = dep['$containerMap'].get(dep['$chosenItem']);
+      if (dep['$container'] === undefined) {
+        dep['$container'] = dep['$containerMap'].get(dep['$containers'][0]);
       }
-      this.getVersionByLocalStorage();
     });
+    this.getVersionByLocalStorage();
   }
 
   setItem() {
     localStorage.setItem('kubernetes_resources', JSON.stringify(this.kubernetesResources));
   }
+
+  trackByPod = (_: number, pod: any): string =>
+    pod?.metadata?.uid || pod?.metadata?.name || '';
 
   valueChange(item: string): void {
     this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(item);
@@ -96,25 +120,27 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
   protected readonly JSON = JSON;
 
   getResourcesLimits(): string {
-    if (JSON.stringify(this.kubernetesDeployment['$container'].resources.limits) !== '{}') {
+    const limits = this.kubernetesDeployment['$container']?.resources?.limits;
+    if (limits?.cpu && limits?.memory) {
       return 'cpu '
-        + this.kubernetesDeployment['$container'].resources.limits.cpu.amount
-        + this.kubernetesDeployment['$container'].resources.limits.cpu.format
+        + limits.cpu.amount
+        + limits.cpu.format
         + ' mem '
-        + this.kubernetesDeployment['$container'].resources.limits.memory.amount
-        + this.kubernetesDeployment['$container'].resources.limits.memory.format;
+        + limits.memory.amount
+        + limits.memory.format;
     }
     return 'no limit';
   }
 
   getResourcesRequests(): string {
-    if (JSON.stringify(this.kubernetesDeployment['$container'].resources.requests) !== '{}') {
+    const requests = this.kubernetesDeployment['$container']?.resources?.requests;
+    if (requests?.cpu && requests?.memory) {
       return 'cpu '
-        + this.kubernetesDeployment['$container'].resources.requests.cpu.amount
-        + this.kubernetesDeployment['$container'].resources.requests.cpu.format
+        + requests.cpu.amount
+        + requests.cpu.format
         + ' mem '
-        + this.kubernetesDeployment['$container'].resources.requests.memory.amount
-        + this.kubernetesDeployment['$container'].resources.requests.memory.format;
+        + requests.memory.amount
+        + requests.memory.format;
     }
     return 'no request';
   }
@@ -126,12 +152,16 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
       this.applicationResourceService.queryApplicationResourceKubernetesDeploymentImageVersion({ image: image })
         .pipe(
           takeUntil(this.destroy$),
-          finalize(() => this.kubernetesDeployment['$container']['$versionLoading'] = false),
+          finalize(() => {
+            this.kubernetesDeployment['$container']['$versionLoading'] = false;
+            this.cdr.markForCheck();
+          }),
         )
         .subscribe(({ body }) => {
           this.kubernetesDeployment['$container']['$imageVersion'] = body;
           this.imageVersion[this.kubernetesDeployment['$container'].image] = body;
           this.setVersionItem();
+          this.cdr.markForCheck();
         });
     }
   }
@@ -144,11 +174,9 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnDestroy 
   }
 
   getVersionByLocalStorage() {
-    if (!!localStorage.getItem('kubernetes_resources_version')) {
-      const versionMap = JSON.parse(localStorage.getItem('kubernetes_resources_version'));
-      if (this.kubernetesDeployment['$container'] !== undefined && versionMap[this.kubernetesDeployment['$container'].image] !== undefined) {
-        this.kubernetesDeployment['$container']['$imageVersion'] = versionMap[this.kubernetesDeployment['$container'].image];
-      }
+    const container = this.kubernetesDeployment['$container'];
+    if (container !== undefined && this.imageVersion && this.imageVersion[container.image] !== undefined) {
+      container['$imageVersion'] = this.imageVersion[container.image];
     }
   }
 

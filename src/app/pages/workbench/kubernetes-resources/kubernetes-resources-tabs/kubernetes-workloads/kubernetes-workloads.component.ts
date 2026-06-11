@@ -25,6 +25,9 @@ export class KubernetesWorkloadsComponent {
   constructor(private drawerUtil: DrawerUtil) {
   }
 
+  trackByDeployment = (_: number, deployment: KubernetesDeploymentVO): string =>
+    (deployment?.metadata?.name || '') + '@' + (deployment?.kubernetesCluster?.name || '');
+
   drawerDate = {
     editorData: {
       ...DRAWER_DATA.editorData,

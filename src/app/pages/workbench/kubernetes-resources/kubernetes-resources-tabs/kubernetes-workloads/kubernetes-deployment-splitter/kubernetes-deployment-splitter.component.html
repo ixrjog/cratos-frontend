@@ -254,7 +254,7 @@
           <div class="da-list-content">
             <app-kubernetes-pod-card
               [containerName]="kubernetesDeployment['$chosenItem']"
-              *ngFor="let pod of kubernetesDeployment.pods"
+              *ngFor="let pod of kubernetesDeployment.pods; trackBy: trackByPod"
               [kubernetesPod]="pod"
               [kubernetesDeployment]="kubernetesDeployment"
               [application]="application"

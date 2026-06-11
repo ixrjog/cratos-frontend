@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core';
 import {
   AccessControlVO,
   KubernetesDeploymentVO,
@@ -21,6 +21,7 @@ import { takeUntil } from 'rxjs/operators';
   selector: 'app-kubernetes-pod-card',
   templateUrl: './kubernetes-pod-card.component.html',
   styleUrls: [ './kubernetes-pod-card.component.less' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KubernetesPodCardComponent implements OnDestroy {
 

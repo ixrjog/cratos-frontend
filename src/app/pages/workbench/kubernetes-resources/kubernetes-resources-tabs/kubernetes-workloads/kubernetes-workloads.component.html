@@ -6,7 +6,7 @@
 
         <div class="layout-center" style="margin-right: 5px">
           <d-tag
-            [tag]="JSON.stringify(deploymentList) !== '[]'?('kubernetes.deployment.totalReplicas' | translate) + getTotalReplicas():('kubernetes.deployment.unboundDeployment' | translate)"
+            [tag]="deploymentList?.length > 0?('kubernetes.deployment.totalReplicas' | translate) + getTotalReplicas():('kubernetes.deployment.unboundDeployment' | translate)"
             [labelStyle]="'blue-w98'"
           ></d-tag>
         </div>
@@ -19,7 +19,7 @@
     </d-splitter-pane>
     <d-splitter-pane>
       <d-splitter-pane size="30px" [resizable]="false">
-        <div style="margin-bottom: 5px" *ngFor="let deployment of deploymentList">
+        <div style="margin-bottom: 5px" *ngFor="let deployment of deploymentList; trackBy: trackByDeployment">
           <app-kubernetes-deployment-splitter
             [application]="application"
             [kubernetesDeployment]="deployment"

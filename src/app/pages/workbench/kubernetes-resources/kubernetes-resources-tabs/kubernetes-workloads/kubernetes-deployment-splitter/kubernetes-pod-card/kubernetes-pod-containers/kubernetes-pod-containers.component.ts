@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { KubernetesContainerVO, PodStatusVO } from '../../../../../../../../@core/data/kubernetes';
 import { RELATIVE_TIME_LIMIT } from '../../../../../../../../@shared/constant/date.constant';
 
@@ -6,6 +6,7 @@ import { RELATIVE_TIME_LIMIT } from '../../../../../../../../@shared/constant/da
   selector: 'app-kubernetes-pod-containers',
   templateUrl: './kubernetes-pod-containers.component.html',
   styleUrls: [ './kubernetes-pod-containers.component.less' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KubernetesPodContainersComponent implements OnInit, OnChanges {
 

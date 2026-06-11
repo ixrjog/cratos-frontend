@@ -75,6 +75,11 @@
   </d-button>
 
 
+  <span class="ws-status" [ngClass]="'ws-status--' + wsStatus" title="WebSocket connection status">
+    <span class="ws-status-dot"></span>
+    <span class="ws-status-text">{{ wsStatus === 'connected' ? 'WebSocket' : wsStatus === 'connecting' ? 'Connecting' : 'Offline' }}</span>
+  </span>
+
   <span class="right-button" *ngIf="!isMobile">
       <d-button class="button" bsStyle="primary" (click)="onScanData()"
                 [disabled]="queryParam.applicationName ==='' "

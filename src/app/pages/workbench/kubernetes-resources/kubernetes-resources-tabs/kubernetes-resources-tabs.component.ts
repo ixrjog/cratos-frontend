@@ -66,9 +66,14 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   isCollapsed = !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 
   ws: WebSocket;
+  wsStatus: 'connecting' | 'connected' | 'closed' = 'closed';
   timerRequest: Subscription;
   wsHeartbeatTimerRequest: Subscription;
   private destroy$ = new Subject<void>();
+
+  // Pause/close the WS while the tab is hidden; resume when visible again.
+  private pageHidden = false;
+  private visibilityHandler = () => this.onVisibilityChange();
 
   // WS detail-push throttling/dedupe state.
   private static readonly DETAILS_THROTTLE_MS = 500;
@@ -369,6 +374,13 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   wsOnInit() {
     this.ws = this.wsApiService.createWsClient('/application/kubernetes/details');
+    this.wsStatus = 'connecting';
+    this.ws.onerror = () => {
+      this.wsStatus = 'closed';
+    };
+    this.ws.onclose = () => {
+      this.wsStatus = 'closed';
+    };
   }
 
   onWsHeartbeat() {
@@ -381,6 +393,23 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       });
   }
 
+  /** Close the WS when the tab becomes hidden, and reconnect when it is visible again. */
+  private onVisibilityChange() {
+    if (document.hidden) {
+      this.pageHidden = true;
+      this.pendingDetails = null;
+      this.closeWsConnection();
+    } else {
+      if (!this.pageHidden) {
+        return;
+      }
+      this.pageHidden = false;
+      this.closeWsConnection();
+      this.wsOnInit();
+      this.wsOnOpen();
+    }
+  }
+
   ngOnInit(): void {
     this.wsOnInit();
     this.wsOnOpen();
@@ -388,6 +417,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.onWsHeartbeat();
     this.initRouteParams();
     this.onGetUserFavorite();
+    document.addEventListener('visibilitychange', this.visibilityHandler);
   }
 
   /** Tear down only the WebSocket connection (keeps reconnect/heartbeat timers running). */
@@ -406,6 +436,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
     }
+    this.wsStatus = 'closed';
   }
 
   wsOnClose() {
@@ -421,6 +452,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
     this.destroy$.next();
     this.destroy$.complete();
     this.wsOnClose();
@@ -432,6 +464,9 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.timerRequest = timer(1000, WS_INIT_INTERVAL)
       .pipe(takeUntil(this.destroy$))
       .subscribe(num => {
+        if (this.pageHidden) {
+          return;
+        }
         if (this.ws?.readyState !== WebSocket.OPEN
           && this.ws?.readyState !== WebSocket.CONNECTING
           && this.ws?.readyState !== WebSocket.CLOSING) {
@@ -445,6 +480,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   wsOnOpen() {
     this.ws.onopen = (event) => {
+      this.wsStatus = 'connected';
       // (Re)subscribe and (re)bind the message handler whenever the socket opens,
       // so reconnects resume the data stream with the current query params.
       this.wsOnSubSend();

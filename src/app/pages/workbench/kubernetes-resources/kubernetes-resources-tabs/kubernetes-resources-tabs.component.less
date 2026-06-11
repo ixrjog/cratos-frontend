@@ -5,3 +5,55 @@
 :host ::ng-deep .devui-panel .devui-panel-heading {
   padding: 5px !important;
 }
+
+.ws-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 0 8px;
+  height: 24px;
+  border-radius: 12px;
+  font-size: 12px;
+  vertical-align: middle;
+  background: var(--devui-base-bg, #f5f5f5);
+  color: var(--devui-text-weak, #8a8e99);
+
+  .ws-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--devui-text-weak, #8a8e99);
+  }
+
+  &.ws-status--connected {
+    color: rgb(95, 170, 21);
+
+    .ws-status-dot {
+      background: rgb(95, 170, 21);
+      box-shadow: 0 0 0 3px rgba(95, 170, 21, 0.18);
+    }
+  }
+
+  &.ws-status--connecting {
+    color: var(--devui-warning, #fac20a);
+
+    .ws-status-dot {
+      background: var(--devui-warning, #fac20a);
+      animation: ws-blink 1s ease-in-out infinite;
+    }
+  }
+
+  &.ws-status--closed {
+    color: var(--devui-danger, #f66f6a);
+
+    .ws-status-dot {
+      background: var(--devui-danger, #f66f6a);
+    }
+  }
+}
+
+@keyframes ws-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

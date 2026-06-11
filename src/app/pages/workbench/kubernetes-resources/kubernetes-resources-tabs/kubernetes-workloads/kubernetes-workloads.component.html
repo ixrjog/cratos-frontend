@@ -5,10 +5,25 @@
         <h1 style="margin: 0 10px 0 0; font-size: 18px; line-height: 36px; color: var(--devui-brand, #5e7ce0);">{{ application.name }}</h1>
 
         <div class="layout-center" style="margin-right: 5px">
-          <d-tag
-            [tag]="deploymentList?.length > 0?('kubernetes.deployment.totalReplicas' | translate) + getTotalReplicas():('kubernetes.deployment.unboundDeployment' | translate)"
-            [labelStyle]="'blue-w98'"
-          ></d-tag>
+          <ng-container *ngIf="deploymentList?.length > 0; else unboundDeploymentTpl">
+            <span
+              dPopover
+              [content]="('kubernetes.deployment.totalReplicas' | translate) + getTotalReplicas()"
+              [trigger]="'hover'"
+              [position]="'bottom'"
+              style="cursor: pointer;"
+            >
+              <d-badge
+                [count]="getTotalReplicas()"
+                [maxCount]="9999"
+                [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                [status]="'warning'"
+              ></d-badge>
+            </span>
+          </ng-container>
+          <ng-template #unboundDeploymentTpl>
+            <d-tag [tag]="'kubernetes.deployment.unboundDeployment' | translate" [labelStyle]="'blue-w98'"></d-tag>
+          </ng-template>
         </div>
 
         <div class="layout-center" style="margin-right: 5px" *ngIf="banner?.arms?.valid === true">

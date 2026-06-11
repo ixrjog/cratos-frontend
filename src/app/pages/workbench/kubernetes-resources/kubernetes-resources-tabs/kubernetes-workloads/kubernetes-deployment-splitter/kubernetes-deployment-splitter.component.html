@@ -9,6 +9,20 @@
         <h2 style="margin: 0 10px 0 8px; font-size: 14px; line-height: 30px; flex-shrink: 0;" [style.color]="kubernetesDeployment.pods?.length > 0 ? 'var(--devui-brand, #5e7ce0)' : '#999'">
           {{ kubernetesDeployment.metadata.name }}@{{ kubernetesDeployment.kubernetesCluster.name }}
         </h2>
+        <span
+          dPopover
+          [content]="'replicas x' + kubernetesDeployment.spec.replicas"
+          [trigger]="'hover'"
+          [position]="'bottom'"
+          style="cursor: pointer; margin-right: 10px; flex-shrink: 0;"
+        >
+          <d-badge
+            [count]="kubernetesDeployment.spec.replicas"
+            [maxCount]="9999"
+            [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+            [status]="'warning'"
+          ></d-badge>
+        </span>
         <ng-container *ngIf="isMobile">
           <d-tabs
             class="tabs"
@@ -51,10 +65,6 @@
             [customColor]="businessTag.tag.color"
           >
           </d-tag>
-        </div>
-
-        <div class="layout-bottom" style="margin-right: 5px">
-          <d-tag [tag]="'replicas x' + kubernetesDeployment.spec.replicas" [labelStyle]="'blue-w98'"></d-tag>
         </div>
 
         <div class="layout-bottom" style="margin-right: 5px">

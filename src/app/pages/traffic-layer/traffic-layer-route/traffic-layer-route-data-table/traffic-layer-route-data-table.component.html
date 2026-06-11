@@ -16,21 +16,22 @@
   <d-data-table
     dLoading
     [dataSource]='table.data'
-    [tableOverflowType]="'overlay'"
+    [tableOverflowType]="isMobile ? 'auto' : 'overlay'"
     [backdrop]='true'
     [scrollable]='true'
+    [tableWidth]="isMobile ? '1300px' : ''"
     [loadingStyle]="'infinity'"
     [loading]='table.loading'
     [checkable]='true'
   >
-    <d-column header='Web Site' [width]="'200px'">
+    <d-column header='Web Site' [width]="'200px'" *ngIf="!isMobile">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <span dClipboard [content]="rowItem['domainRecord']">{{ rowItem['domainRecord'] }}</span>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header='DNS' [width]="'200px'">
+    <d-column header='DNS' [width]="'200px'" *ngIf="!isMobile">
       <d-cell>
         <ng-template let-rowItem='rowItem'>
           <div>
@@ -181,13 +182,13 @@
 
 <!-- DC Switch Dialog -->
 <div class="dc-switch-overlay" *ngIf="dcSwitchVisible" (click)="dcSwitchVisible = false">
-  <div class="dc-switch-dialog" (click)="$event.stopPropagation()">
+  <div class="dc-switch-dialog" [class.mobile]="isMobile" (click)="$event.stopPropagation()">
     <h4>DC Switch <span style="float:right;cursor:pointer;font-size:18px;color:#999" (click)="dcSwitchVisible = false">&times;</span></h4>
     <p style="margin-bottom: 12px; color: #8a8e99;">Select target DC role and confirm routes to switch:</p>
     <d-tabs type="options" [activeTab]="selectedDcRole" (activeTabChange)="selectedDcRole = $any($event)">
       <d-tab *ngFor="let role of dcRoleOptions" [id]="role" [title]="role"></d-tab>
     </d-tabs>
-    <div style="margin-top: 12px; max-height: 500px; overflow-y: auto;">
+    <div class="dc-switch-table-scroll">
       <d-data-table
         #dcDatatable
         [dataSource]="dcSwitchRoutes"

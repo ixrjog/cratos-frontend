@@ -21,6 +21,29 @@
       margin-bottom: 12px;
     }
 
+    .dc-switch-table-scroll {
+      margin-top: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    &.mobile {
+      width: 95vw;
+      max-width: 95vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+
+      .dc-switch-table-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
     ::ng-deep .devui-scrollbar {
       background: var(--devui-base-bg, #fff) !important;
     }

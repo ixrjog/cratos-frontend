@@ -33,6 +33,8 @@ import { DRAWER_DATA, DrawerUtil } from '../../../../@shared/utils/drawer.util';
 })
 export class TrafficLayerRouteDataTableComponent implements OnInit {
 
+  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   @ViewChild('businessCascader') private businessCascader: BusinessCascaderComponent;
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   businessType: string = BusinessTypeEnum.TRAFFIC_ROUTE;
@@ -269,9 +271,49 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     this.dcSwitchRoutes = [...this.datatable.getCheckedRows()];
     this.trafficRouteService.getDcRoleOptions().subscribe((res: any) => {
       this.dcRoleOptions = res.body || [];
-      this.selectedDcRole = '';
+      this.selectedDcRole = this.computeDefaultDcRole();
       this.dcSwitchVisible = true;
     });
+  }
+
+  /** Read the DCRole tag value from a record target. */
+  private extractDcRole(target: any): string {
+    const tag = (target?.businessTags || []).find((bt: any) => bt?.tag?.tagKey === 'DCRole');
+    return tag?.tagValue || '';
+  }
+
+  /**
+   * Intelligently pre-select a DC role based on the selected routes:
+   * detect the current DC role (most common among the active targets), then
+   * default to a different available role (the typical switch target).
+   */
+  private computeDefaultDcRole(): string {
+    if (!this.dcRoleOptions?.length) {
+      return '';
+    }
+    const currentCounts = new Map<string, number>();
+    for (const route of this.dcSwitchRoutes) {
+      const activeTarget = (route.recordTargets || []).find((t: any) => t.active);
+      const role = this.extractDcRole(activeTarget);
+      if (role) {
+        currentCounts.set(role, (currentCounts.get(role) || 0) + 1);
+      }
+    }
+    // Most common current DC role across the selected routes.
+    let currentRole = '';
+    let max = 0;
+    currentCounts.forEach((count, role) => {
+      if (count > max) {
+        max = count;
+        currentRole = role;
+      }
+    });
+    // Prefer a target role different from the current one.
+    const candidates = this.dcRoleOptions.filter(r => r !== currentRole);
+    if (currentRole && candidates.length > 0) {
+      return candidates[0];
+    }
+    return this.dcRoleOptions[0];
   }
 
   executeDcSwitch() {

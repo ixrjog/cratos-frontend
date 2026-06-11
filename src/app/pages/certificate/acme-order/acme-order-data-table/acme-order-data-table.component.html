@@ -1,22 +1,38 @@
+<div class="domain-tabs-wrapper">
+  <d-tabs
+    class="domain-tabs"
+    type="options"
+    [activeTab]="activeDomain"
+    (activeTabChange)="onDomainTabChange($any($event))"
+  >
+    <d-tab [id]="ALL_DOMAIN">
+      <ng-template dTabTitle>
+        All
+      </ng-template>
+    </d-tab>
+    <d-tab *ngFor="let t of domainTabs" [id]="t.domain">
+      <ng-template dTabTitle>
+        {{ t.domain }}
+        <d-badge [count]="t.count" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'"></d-badge>
+      </ng-template>
+    </d-tab>
+  </d-tabs>
+</div>
 <div class="spacing-search">
   <d-select
     class="select"
-    style="width: 300px; max-width: 300px"
-    [filterKey]="'domain'"
+    style="width: 600px; max-width: 600px"
     [appendToBody]="true"
-    [(ngModel)]="selectedDomain"
-    [searchFn]="onSearchDomain"
+    [(ngModel)]="selectedDomains"
+    [options]="domainsOptions"
+    [filterKey]="'label'"
+    [valueKey]="'value'"
     [isSearch]="true"
-    placeholder="Search and select ACME domain"
-    (valueChange)="onDomainChange($event)"
+    placeholder="Filter by domains"
+    (valueChange)="onDomainsChange($event)"
     [allowClear]="true"
   >
-    <ng-template let-option="option">
-      <span>{{ option.domain }}</span>
-      <span style="float: right; padding: 3px 0">{{ option.name }}</span>
-    </ng-template>
   </d-select>
-  <d-button class="button" bsStyle="common" [disabled]="!queryParam.acmeDomainId" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">
   <d-data-table
@@ -150,7 +166,7 @@
       </d-cell>
     </d-column>
     <ng-template #noResultTemplateRef>
-      <div class="no-data">Select a domain to query orders</div>
+      <div class="no-data">No orders</div>
     </ng-template>
   </d-data-table>
 </div>

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { AcmeDomainPageQuery, AcmeDomainVO, AcmeService } from '../../../../@core/services/acme.service';
-import { onFetchValidData } from '../../../../@shared/utils/data-table.utli';
+import { AcmeDomainGroupVO, AcmeDomainPageQuery, AcmeDomainVO, AcmeService } from '../../../../@core/services/acme.service';
+import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
-import { getRowColor } from '../../../../@shared/utils/data-table.utli';
 import { countResource, parseResourceCount } from '../../../../@shared/utils/resource-count.util';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { DialogService } from 'ng-devui';
@@ -26,12 +25,20 @@ export class AcmeDomainDataTableComponent implements OnInit {
   businessType: string = BusinessTypeEnum.ACME_DOMAIN;
 
   private static readonly SEARCH_STORAGE_KEY = 'acme_domain_search_query';
+  private static readonly DOMAIN_STORAGE_KEY = 'acme_domain_selected_domain';
+
+  readonly ALL_DOMAIN = '__ALL__';
 
   queryParam = {
     queryName: localStorage.getItem('acme_domain_search_query') || '',
   };
 
   table: Table<AcmeDomainVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
+  /** Distinct `domain` values with their member counts, used to render tabs. */
+  domainTabs: AcmeDomainGroupVO[] = [];
+  /** Currently selected domain tab (ALL_DOMAIN means "show all"). */
+  activeDomain: string = localStorage.getItem('acme_domain_selected_domain') || this.ALL_DOMAIN;
 
   certificate: any = null;
   showPrivateKey: boolean = false;
@@ -61,12 +68,42 @@ export class AcmeDomainDataTableComponent implements OnInit {
 
   fetchData() {
     localStorage.setItem(AcmeDomainDataTableComponent.SEARCH_STORAGE_KEY, this.queryParam.queryName);
+    this.fetchDomainTabs();
     const param: AcmeDomainPageQuery = {
-      ...this.queryParam,
+      queryName: this.queryParam.queryName,
+      domain: this.activeDomain === this.ALL_DOMAIN ? undefined : this.activeDomain,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.acmeService.queryAcmeDomainPage(param));
+  }
+
+  /** Load the distinct domain tabs (with member counts) from the backend. */
+  private fetchDomainTabs() {
+    this.acmeService.queryDistinctAcmeDomain().subscribe(({ body }) => {
+      this.domainTabs = body || [];
+      // Reset the active tab if the selected domain no longer exists.
+      if (this.activeDomain !== this.ALL_DOMAIN && !this.domainTabs.some(t => t.domain === this.activeDomain)) {
+        this.activeDomain = this.ALL_DOMAIN;
+        localStorage.removeItem(AcmeDomainDataTableComponent.DOMAIN_STORAGE_KEY);
+      }
+    });
+  }
+
+  onDomainTabChange(domain: string) {
+    this.activeDomain = domain;
+    if (domain === this.ALL_DOMAIN) {
+      localStorage.removeItem(AcmeDomainDataTableComponent.DOMAIN_STORAGE_KEY);
+    } else {
+      localStorage.setItem(AcmeDomainDataTableComponent.DOMAIN_STORAGE_KEY, domain);
+    }
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
+  }
+
+  onSearch() {
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
   }
 
   ngOnInit() {
@@ -80,6 +117,7 @@ export class AcmeDomainDataTableComponent implements OnInit {
 
   pageSizeChange(pageSize) {
     this.table.pager.pageSize = pageSize;
+    this.table.pager.pageIndex = 1;
     this.fetchData();
   }
 

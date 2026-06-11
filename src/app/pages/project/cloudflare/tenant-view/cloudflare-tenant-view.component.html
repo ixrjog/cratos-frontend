@@ -64,6 +64,7 @@
                 <div class="route-dns">{{ route.dnsRecord }}</div>
                 <d-tag *ngIf="route.recordType" [tag]="route.recordType" [labelStyle]="'blue-w98'"></d-tag>
                 <div *ngIf="route.cdn" class="route-cdn">CDN: {{ route.cdn }}</div>
+                <div *ngIf="route.hostHeaderOverride" class="route-host-override" title="Host Header Override">Host: {{ route.hostHeaderOverride }}</div>
               </div>
             </div>
             <div class="lb-card" [id]="'cloudflare-lb-card-' + lbIdx">

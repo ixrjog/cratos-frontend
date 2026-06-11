@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { AcmeDomainPageQuery, AcmeDomainVO, AcmeOrderPageQuery, AcmeOrderVO, AcmeService } from '../../../../@core/services/acme.service';
+import { AcmeDomainGroupVO, AcmeOrderPageQuery, AcmeOrderVO, AcmeService } from '../../../../@core/services/acme.service';
 import { onFetchData } from '../../../../@shared/utils/data-table.utli';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
-import { map } from 'rxjs/operators';
 import { DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 // @ts-ignore
@@ -17,16 +16,23 @@ import * as JSZip from 'jszip';
 export class AcmeOrderDataTableComponent implements OnInit {
 
   private static readonly DOMAIN_STORAGE_KEY = 'acme_order_selected_domain';
+  private static readonly DOMAINS_STORAGE_KEY = 'acme_order_selected_domains';
+
+  readonly ALL_DOMAIN = '__ALL__';
 
   isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
-  selectedDomain: AcmeDomainVO;
+  /** Distinct `domain` values with their member counts, used to render tabs. */
+  domainTabs: AcmeDomainGroupVO[] = [];
+  /** Currently selected domain tab (ALL_DOMAIN means "show all"). */
+  activeDomain: string = this.ALL_DOMAIN;
 
-  queryParam = {
-    acmeDomainId: null as number,
-  };
+  /** Distinct order `domains` values (scoped by the active domain tab), used by the dropdown. */
+  domainsOptions: { label: string; value: string }[] = [];
+  /** Currently selected `domains` filter (null means "no filter"). */
+  selectedDomains: string = null;
 
   table: Table<AcmeOrderVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
@@ -37,46 +43,76 @@ export class AcmeOrderDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    const saved = localStorage.getItem(AcmeOrderDataTableComponent.DOMAIN_STORAGE_KEY);
-    if (saved) {
-      try {
-        const domain = JSON.parse(saved);
-        this.selectedDomain = domain;
-        this.queryParam.acmeDomainId = domain.id;
-        this.fetchData();
-      } catch (e) {}
+    const savedDomain = localStorage.getItem(AcmeOrderDataTableComponent.DOMAIN_STORAGE_KEY);
+    // Guard against the legacy format where this key stored a JSON object.
+    if (savedDomain && !savedDomain.startsWith('{')) {
+      this.activeDomain = savedDomain;
+    } else if (savedDomain) {
+      localStorage.removeItem(AcmeOrderDataTableComponent.DOMAIN_STORAGE_KEY);
     }
+    const savedDomains = localStorage.getItem(AcmeOrderDataTableComponent.DOMAINS_STORAGE_KEY);
+    if (savedDomains) {
+      this.selectedDomains = savedDomains;
+    }
+    this.fetchDomainTabs();
+    this.fetchDomainsOptions();
+    this.fetchData();
   }
 
   fetchData() {
-    if (!this.queryParam.acmeDomainId) {
-      return;
-    }
     const param: AcmeOrderPageQuery = {
-      ...this.queryParam,
+      domain: this.activeDomain === this.ALL_DOMAIN ? undefined : this.activeDomain,
+      domains: this.selectedDomains || undefined,
       page: this.table.pager.pageIndex,
       length: this.table.pager.pageSize,
     };
     onFetchData(this.table, this.acmeService.queryAcmeOrderPage(param));
   }
 
-  onSearchDomain = (term: string) => {
-    const param: AcmeDomainPageQuery = {
-      queryName: term,
-      page: 1,
-      length: 10,
-    };
-    return this.acmeService.queryAcmeDomainPage(param)
-      .pipe(
-        map(({ body }) =>
-          body.data.map((domain, index) => ({ id: index, option: domain })),
-        ),
-      );
-  };
+  /** Load the distinct domain tabs (with member counts) from the backend. */
+  private fetchDomainTabs() {
+    this.acmeService.queryDistinctAcmeDomain().subscribe(({ body }) => {
+      this.domainTabs = body || [];
+      // Reset the active tab if the selected domain no longer exists.
+      if (this.activeDomain !== this.ALL_DOMAIN && !this.domainTabs.some(t => t.domain === this.activeDomain)) {
+        this.activeDomain = this.ALL_DOMAIN;
+      }
+    });
+  }
 
-  onDomainChange(domain: AcmeDomainVO) {
-    this.queryParam.acmeDomainId = domain?.id;
-    localStorage.setItem(AcmeOrderDataTableComponent.DOMAIN_STORAGE_KEY, JSON.stringify({ id: domain.id, name: domain.name, domain: domain.domain }));
+  /** Load the distinct order `domains` options, scoped by the active domain tab. */
+  private fetchDomainsOptions() {
+    const domain = this.activeDomain === this.ALL_DOMAIN ? undefined : this.activeDomain;
+    this.acmeService.queryDistinctOrderDomains(domain).subscribe(({ body }) => {
+      const values = body || [];
+      this.domainsOptions = values.map(v => ({ label: v, value: v }));
+      // Clear the selection if it no longer exists within the current scope.
+      if (this.selectedDomains && !values.includes(this.selectedDomains)) {
+        this.selectedDomains = null;
+        localStorage.removeItem(AcmeOrderDataTableComponent.DOMAINS_STORAGE_KEY);
+      }
+    });
+  }
+
+  onDomainTabChange(domain: string) {
+    this.activeDomain = domain;
+    localStorage.setItem(AcmeOrderDataTableComponent.DOMAIN_STORAGE_KEY, domain);
+    // Reset the domains filter when switching apex domain.
+    this.selectedDomains = null;
+    localStorage.removeItem(AcmeOrderDataTableComponent.DOMAINS_STORAGE_KEY);
+    this.table.pager.pageIndex = 1;
+    this.fetchDomainsOptions();
+    this.fetchData();
+  }
+
+  onDomainsChange(domains: any) {
+    const value = typeof domains === 'object' ? domains?.value || null : domains || null;
+    this.selectedDomains = value;
+    if (this.selectedDomains) {
+      localStorage.setItem(AcmeOrderDataTableComponent.DOMAINS_STORAGE_KEY, this.selectedDomains);
+    } else {
+      localStorage.removeItem(AcmeOrderDataTableComponent.DOMAINS_STORAGE_KEY);
+    }
     this.table.pager.pageIndex = 1;
     this.fetchData();
   }

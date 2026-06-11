@@ -45,12 +45,20 @@ export interface AcmeOrderVO {
 
 export interface AcmeDomainPageQuery {
   queryName: string;
+  domain?: string;
   page: number;
   length: number;
 }
 
+export interface AcmeDomainGroupVO {
+  domain: string;
+  count: number;
+}
+
 export interface AcmeOrderPageQuery {
-  acmeDomainId: number;
+  acmeDomainId?: number;
+  domain?: string;
+  domains?: string;
   page: number;
   length: number;
 }
@@ -67,6 +75,10 @@ export class AcmeService {
     return this.apiService.post(this.baseUrl, '/domain/page/query', param);
   }
 
+  queryDistinctAcmeDomain(): Observable<HttpResult<AcmeDomainGroupVO[]>> {
+    return this.apiService.get(this.baseUrl, '/domain/distinct/query', {});
+  }
+
   addAcmeDomain(param: any): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/domain/add', param);
   }
@@ -81,6 +93,10 @@ export class AcmeService {
 
   queryAcmeOrderPage(param: AcmeOrderPageQuery): Observable<DataTable<AcmeOrderVO>> {
     return this.apiService.post(this.baseUrl, '/order/page/query', param);
+  }
+
+  queryDistinctOrderDomains(domain?: string): Observable<HttpResult<string[]>> {
+    return this.apiService.get(this.baseUrl, '/order/domains/distinct/query', domain ? { domain } : {});
   }
 
   queryAcmeAccountPage(param: { queryName: string, page: number, length: number }): Observable<DataTable<any>> {

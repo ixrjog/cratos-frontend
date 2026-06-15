@@ -17,6 +17,8 @@ import { WS_HEART_INTERVAL } from '../../../../@shared/constant/ws.constant';
 })
 export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
 
+  private static readonly INSTANCE_STORAGE_KEY = 'k8s_nodes_selected_instance';
+
   queryParam = {
     instanceName: '',
   };
@@ -80,6 +82,11 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
 
   onKubernetesInstanceChange(instance: EdsInstanceVO) {
     this.queryParam.instanceName = instance?.instanceName;
+    if (instance?.instanceName) {
+      localStorage.setItem(KubernetesNodesDataComponent.INSTANCE_STORAGE_KEY, instance.instanceName);
+    } else {
+      localStorage.removeItem(KubernetesNodesDataComponent.INSTANCE_STORAGE_KEY);
+    }
     this.fetchData();
     // this.wsOnUnsubSend();
   }
@@ -98,6 +105,12 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const saved = localStorage.getItem(KubernetesNodesDataComponent.INSTANCE_STORAGE_KEY);
+    if (saved) {
+      this.queryParam.instanceName = saved;
+      this.kubernetesInstance = { instanceName: saved } as EdsInstanceVO;
+      this.fetchData();
+    }
     // this.wsOnInit();
     // this.wsOnOpen();
     // this.initInterval();

@@ -225,6 +225,23 @@ export interface KubernetesNodeDetailsVO {
   message: string;
   kubernetesInstance: EdsInstanceVO;
   nodes: Map<string, KubernetesNodeVO[]>;
+  grafana: KubernetesGrafanaVO;
+}
+
+export interface KubernetesGrafanaVO {
+  kubernetes: GrafanaKubernetesVO;
+}
+
+export interface GrafanaKubernetesVO {
+  overview: string;
+  workload: string;
+  pod: { topN: string };
+  node: {
+    overview: string;
+    topN: string;
+    summary: string;
+    pool: string;
+  };
 }
 
 export interface KubernetesNodeVO {
@@ -238,6 +255,9 @@ export interface KubernetesNodeVO {
     memoryPercentage: number
     name: string
   }
+  ext?: {
+    grafana?: KubernetesGrafanaVO;
+  };
 }
 
 export interface KubernetesNodeStatusVO {

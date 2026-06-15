@@ -120,6 +120,16 @@
                         style="display: inline-block"></d-progress>
             &nbsp;<i class="fa-solid fa-hard-drive"></i>
             {{ kubernetesNode.attributes['status.capacity.ephemeral-storage'] | unitTran }}
+            <a
+              *ngIf="kubernetesNode.ext?.grafana?.kubernetes?.node?.overview"
+              class="node-monitor-link"
+              [href]="kubernetesNode.ext.grafana.kubernetes.node.overview"
+              target="_blank"
+              rel="noopener"
+              title="Node Monitoring"
+            >
+              <i class="fa-solid fa-chart-line"></i>
+            </a>
           </span>
         </div>
       </div>

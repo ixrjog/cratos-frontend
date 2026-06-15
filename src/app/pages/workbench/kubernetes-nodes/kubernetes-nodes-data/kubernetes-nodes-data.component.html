@@ -21,6 +21,34 @@
 </div>
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
+    <div class="grafana-card" *ngIf="kubernetesNodeDetailsVO.grafana?.kubernetes as g">
+      <div class="grafana-card-title">
+        <i class="fa-solid fa-chart-line" style="margin-right: 6px;"></i>Grafana Monitoring
+      </div>
+      <div class="grafana-links">
+        <a *ngIf="g.overview" class="grafana-link" [href]="g.overview" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Cluster Overview
+        </a>
+        <a *ngIf="g.workload" class="grafana-link" [href]="g.workload" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Workload
+        </a>
+        <a *ngIf="g.pod?.topN" class="grafana-link" [href]="g.pod.topN" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Pod TopN
+        </a>
+        <a *ngIf="g.node?.overview" class="grafana-link" [href]="g.node.overview" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Node Overview
+        </a>
+        <a *ngIf="g.node?.topN" class="grafana-link" [href]="g.node.topN" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Node TopN
+        </a>
+        <a *ngIf="g.node?.summary" class="grafana-link" [href]="g.node.summary" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Node Summary
+        </a>
+        <a *ngIf="g.node?.pool" class="grafana-link" [href]="g.node.pool" target="_blank" rel="noopener">
+          <i class="fa-solid fa-up-right-from-square"></i>Node Pool
+        </a>
+      </div>
+    </div>
     <d-panel>
       <d-panel-header>
         <div>

@@ -17,6 +17,7 @@ export interface RemoveUserFavorite {
 export interface FavoriteGroupVO {
   name: string;
   businessId: number;
+  size?: number;
 }
 
 

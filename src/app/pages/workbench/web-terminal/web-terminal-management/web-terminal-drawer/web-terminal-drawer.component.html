@@ -39,7 +39,19 @@
         placeholder="Input key select tag group"
         dAutoComplete
         [searchFn]="onSearchTagGroup.bind(this)"
+        [itemTemplate]="tagGroupItemTemplate"
       />
+      <ng-template #tagGroupItemTemplate let-item="item">
+        <span>{{ item.label }}</span>
+        <d-badge
+          *ngIf="item.size != null"
+          [count]="item.size"
+          [maxCount]="999"
+          [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+          [status]="'warning'"
+          style="margin-left: 6px;"
+        ></d-badge>
+      </ng-template>
       <i *ngIf="queryParam.tagGroup"
          class="icon icon-close"
          style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #999;"
@@ -79,6 +91,14 @@
       </d-tag>
       <ng-template #customTag let-tag="tag">
         <span (click)="onClick(tag)">{{ tag.name }}</span>
+        <d-badge
+          *ngIf="tag.size != null"
+          [count]="tag.size"
+          [maxCount]="999"
+          [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+          [status]="'warning'"
+          style="margin-left: 6px;"
+        ></d-badge>
         <span class="icon-close" style="vertical-align: center; padding-left: 4px"
               (click)="onRemoveGroupFavorite(tag.name)"></span>
       </ng-template>

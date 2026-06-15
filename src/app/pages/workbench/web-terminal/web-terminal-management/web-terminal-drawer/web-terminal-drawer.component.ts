@@ -151,7 +151,7 @@ export class WebTerminalDrawerComponent implements OnInit, OnDestroy, AfterViewI
     return this.tagGroupService.getMyGroupOptions(param)
       .pipe(
         map(({ body }) =>
-          body.options.map((option, index) => ({ id: index, label: option.value })),
+          body.options.map((option, index) => ({ id: index, label: option.value, size: (option as any).size })),
         ),
       );
   };

@@ -47,14 +47,14 @@
     [checkable]="true"
   >
     <d-column field="businessName" header="Business Name"></d-column>
-    <d-column field="type" header="Type">
+    <d-column field="type" header="Type" [width]="'150px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="businessDirection" header="Direction">
+    <d-column field="businessDirection" header="Direction" [width]="'150px'">
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'blue-w98'"></d-tag>
@@ -83,7 +83,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Linked Nodes">
+    <d-column header="Linked Nodes" [width]="'300px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <div *ngIf="rowItem.nodes?.length" style="display: flex; flex-wrap: wrap; gap: 4px;">

@@ -27,10 +27,16 @@
     [loadingStyle]="'infinity'"
     [loading]="table.loading"
   >
-    <d-column field="requestUrl" header="URL" [width]="'500px'">
+    <d-column field="requestUrl" header="URL" [width]="'560px'">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <span style="word-break: break-all; font-size: 12px;">{{ cellItem }}</span>
+        <ng-template let-rowItem="rowItem">
+          <div>
+            <d-tag *ngIf="rowItem['requestMethod']" [tag]="rowItem['requestMethod']" [labelStyle]="'blue-w98'" style="margin-right: 6px;"></d-tag>
+            <span style="word-break: break-all; font-size: 12px;">{{ rowItem['requestUrl'] }}</span>
+          </div>
+          <div *ngIf="rowItem['originServer']" style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); padding-top: 4px; margin-top: 4px; color: var(--devui-aide-text, #8a8e99); font-size: 12px; word-break: break-all;">
+            Origin: {{ rowItem['originServer'] }}
+          </div>
         </ng-template>
       </d-cell>
     </d-column>
@@ -42,9 +48,14 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="username" header="User"></d-column>
+    <d-column field="username" header="User">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <app-user-popover *ngIf="cellItem" [username]="cellItem"></app-user-popover>
+        </ng-template>
+      </d-cell>
+    </d-column>
     <d-column field="requestHost" header="Host"></d-column>
-    <d-column field="requestMethod" header="Method"></d-column>
     <d-column field="signatureAlgorithm" header="Sign">
       <d-cell>
         <ng-template let-cellItem="cellItem">
@@ -66,7 +77,6 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="originServer" header="Origin"></d-column>
     <d-column header="Actions">
       <d-cell>
         <ng-template let-rowItem="rowItem">

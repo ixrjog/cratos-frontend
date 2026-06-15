@@ -10,7 +10,8 @@
         </d-tabs>
         <d-search
           class="search"
-          [(ngModel)]="filterText"
+          [ngModel]="filterText"
+          (ngModelChange)="onFilterChange($event)"
           [iconPosition]="'left'"
           placeholder="Filter by app name"
         ></d-search>
@@ -18,7 +19,22 @@
           class="checkbox"
           [label]="'DIFF Only'"
           [isShowTitle]="false"
-          [(ngModel)]="showDiffOnly"
+          [ngModel]="showDiffOnly"
+          (ngModelChange)="onDiffOnlyChange($event)"
+        ></d-checkbox>
+        <d-checkbox
+          class="checkbox"
+          [label]="'Both Sides Only'"
+          [isShowTitle]="false"
+          [ngModel]="bothSidesOnly"
+          (ngModelChange)="onBothSidesChange($event)"
+        ></d-checkbox>
+        <d-checkbox
+          class="checkbox"
+          [label]="'Ignore Domain'"
+          [isShowTitle]="false"
+          [ngModel]="ignoreDomain"
+          (ngModelChange)="onIgnoreDomainChange($event)"
         ></d-checkbox>
         <d-button class="button" bsStyle="common" (click)="compare()">Refresh</d-button>
       </div>

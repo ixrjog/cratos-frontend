@@ -18,6 +18,30 @@
   </d-select>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter
   </d-button>
+  <d-search
+    *ngIf="show"
+    class="search"
+    [ngModel]="nodeFilter.ip"
+    (ngModelChange)="nodeFilter.ip = $event; onNodeFilterChange()"
+    [iconPosition]="'left'"
+    placeholder="Filter by node IP"
+  ></d-search>
+  <d-checkbox
+    *ngIf="show"
+    class="checkbox"
+    [label]="'CPU > 60%'"
+    [isShowTitle]="false"
+    [(ngModel)]="nodeFilter.cpuOverload"
+    (ngModelChange)="onNodeFilterChange()"
+  ></d-checkbox>
+  <d-checkbox
+    *ngIf="show"
+    class="checkbox"
+    [label]="'MEM > 80%'"
+    [isShowTitle]="false"
+    [(ngModel)]="nodeFilter.memOverload"
+    (ngModelChange)="onNodeFilterChange()"
+  ></d-checkbox>
 </div>
 <div class="spacing-table" dLoading [loading]="loading">
   <div *ngIf="show">
@@ -62,7 +86,7 @@
         </div>
       </d-panel-header>
       <d-panel-body style="padding: 0">
-        <div *ngFor="let item of kubernetesNodes | keyvalue; let first = first">
+        <div *ngFor="let item of filteredNodes | keyvalue; let first = first">
           <app-kubernetes-nodes-panel
             [zone]="item.key"
             [kubernetesNodes]="item.value"

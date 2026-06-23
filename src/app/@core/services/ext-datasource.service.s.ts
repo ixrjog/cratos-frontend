@@ -101,6 +101,14 @@ export class EdsService extends EdsData {
     return this.apiService.post(this.baseUrl, '/instance/asset/query', param);
   }
 
+  createKubernetesAlbConfig(param: { instanceId: number, content: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/instance/kubernetes/custom-resource/alb-config/create', param);
+  }
+
+  createKubernetesIngressClass(param: { instanceId: number, content: string }): Observable<HttpResult<Boolean>> {
+    return this.apiService.post(this.baseUrl, '/instance/kubernetes/custom-resource/ingress-class/create', param);
+  }
+
   getToBusinessTarget(param: { assetId: number }): Observable<HttpResult<AssetToBusiness>> {
     return this.apiService.get(this.baseUrl, '/asset/to/business/target/get', param);
   }

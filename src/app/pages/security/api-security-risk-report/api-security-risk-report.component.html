@@ -23,6 +23,25 @@
     </div>
   </div>
 
+  <!-- 全知科技 API 安全风险 (DataSec) -->
+  <div class="datasec-section" *ngIf="report.dataSecApiRisk">
+    <h4>{{ 'apiSecurityRisk.report.dataSecApiRisk' | translate }}</h4>
+    <div class="overview-cards">
+      <div class="card">
+        <div class="card-value">{{ report.dataSecApiRisk.total }}</div>
+        <div class="card-label">{{ 'apiSecurityRisk.report.dataSecTotal' | translate }}</div>
+      </div>
+      <div class="card card-warning">
+        <div class="card-value">{{ report.dataSecApiRisk.pendingConfirmation }}</div>
+        <div class="card-label">{{ 'apiSecurityRisk.report.pendingConfirmation' | translate }}</div>
+      </div>
+      <div class="card card-danger">
+        <div class="card-value">{{ report.dataSecApiRisk.pending }}</div>
+        <div class="card-label">{{ 'apiSecurityRisk.report.pending' | translate }}</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Charts Row -->
   <div class="charts-row">
     <!-- Risk Level Distribution -->

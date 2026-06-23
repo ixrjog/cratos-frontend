@@ -9,6 +9,7 @@ import {
   TrafficLayerIngressServiceComponent
 } from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
 import { TrafficLayerRouteComponent } from './traffic-layer-route/traffic-layer-route.component';
+import { TrafficLayerAlbConfigComponent } from './traffic-layer-alb-config/traffic-layer-alb-config.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'ingress-service-details', component: TrafficLayerIngressServiceComponent },
       { path: 'limit', component: TrafficLayerLimitComponent },
       { path: 'route', component: TrafficLayerRouteComponent },
+      { path: 'alb-config', component: TrafficLayerAlbConfigComponent },
     ],
   },
 ];

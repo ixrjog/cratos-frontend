@@ -1,11 +1,17 @@
 <div class="spacing-search">
   <d-search
     class="search"
-    placeholder="Entry host"
+    placeholder="Input Service"
     [(ngModel)]="queryParam.queryService"
     [iconPosition]="'left'"
   >
   </d-search>
+  <d-checkbox
+    class="checkbox"
+    [label]="'Exact Match'"
+    [isShowTitle]="false"
+    [(ngModel)]="queryParam.exactMatch"
+  ></d-checkbox>
   <d-button
     [disabled]="queryParam.queryService ===''"
     class="button"

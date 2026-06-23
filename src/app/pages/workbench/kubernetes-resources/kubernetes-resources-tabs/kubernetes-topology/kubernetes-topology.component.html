@@ -1,0 +1,269 @@
+<div dLoading [loading]="loading" style="padding: 16px;">
+  <!-- Controls: always visible so the topology can be (re)queried on demand -->
+  <div class="topo-toolbar">
+    <d-button
+      class="topo-query-btn"
+      bsStyle="primary"
+      [disabled]="!serviceName || loading"
+      (click)="onQuery()"
+    >Query</d-button>
+    <d-button
+      class="topo-dns-btn"
+      bsStyle="common"
+      [disabled]="!displayPaths?.length || loading"
+      (click)="onDnsCheck()"
+    >DNS Check</d-button>
+    <d-checkbox
+      class="topo-env-filter"
+      [label]="'Current Env Only'"
+      [isShowTitle]="false"
+      [(ngModel)]="filterByEnv"
+      (ngModelChange)="onFilterChange()"
+    ></d-checkbox>
+  </div>
+
+  <div *ngIf="topology?.trafficPaths?.length > 0; else noTopology">
+    <!-- Select a load balancer -->
+    <d-tabs
+      class="topo-tabs"
+      type="options"
+      [activeTab]="activeLbIndex"
+      (activeTabChange)="onLbTabChange($any($event))"
+    >
+      <d-tab
+        *ngFor="let dp of displayPaths; let pIdx = index"
+        [id]="pIdx"
+      >
+        <ng-template dTabTitle>
+          {{ getLbTabTitle(dp.path, pIdx) }}
+          <d-badge
+            [count]="dp.domains.length"
+            [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+            [status]="'warning'"
+            style="margin-left: 6px;"
+          ></d-badge>
+        </ng-template>
+      </d-tab>
+    </d-tabs>
+
+    <ng-container *ngFor="let dp of displayPaths; let pIdx = index">
+      <div *ngIf="pIdx === activeLbIndex" class="topo-section">
+        <!-- Left: domains routing to this load balancer -->
+        <div class="topo-routes">
+          <div
+            *ngFor="let domain of dp.domains; let dIdx = index"
+            class="topo-route-card"
+            [class.topo-route-card--dns-ok]="dnsMatch[domain]"
+            [id]="'k8s-topo-route-' + pIdx + '-' + dIdx"
+          >
+            <div class="topo-route-head">
+              <span class="topo-route-domain">{{ domain }}</span>
+              <i
+                *ngIf="dnsMatch[domain]"
+                class="fa-solid fa-circle-check topo-route-dns-ok"
+                [title]="'DNS CNAME matches: ' + (dnsResolved[domain] || '')"
+              ></i>
+              <ng-container *ngIf="getRoute(dp.path, domain) as r">
+                <span class="topo-route-head-right">
+                  <d-tag *ngIf="r.proxied" [tag]="'Proxied'" [labelStyle]="'green-w98'"></d-tag>
+                  <d-tag *ngIf="r.namespace" [tag]="r.namespace" [labelStyle]="'blue-w98'"></d-tag>
+                  <d-icon
+                    *ngIf="r.rules?.length > 0"
+                    [icon]="'icon-view'"
+                    [operable]="true"
+                    dPopover
+                    [position]="'bottom'"
+                    [trigger]="'click'"
+                    [controlled]="true"
+                    [content]="rulesTpl"
+                    [popoverStyle]="{ width: '480px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+                    style="color: var(--devui-brand, #5e7ce0);"
+                    title="Rules"
+                  ></d-icon>
+                  <d-badge
+                    *ngIf="r.rules?.length > 0"
+                    [count]="r.rules.length"
+                    [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                    [status]="'warning'"
+                  ></d-badge>
+                </span>
+                <ng-template #rulesTpl>
+                  <div class="topo-rules-popover">
+                    <div class="topo-rules-title">Rules ({{ r.rules.length }})</div>
+                    <div *ngFor="let rule of r.rules" class="topo-rule-item">{{ rule }}</div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+            <ng-container *ngIf="getRoute(dp.path, domain) as r">
+              <div *ngIf="r.cdn" class="topo-route-sub">CDN: {{ r.cdn }}</div>
+              <div *ngIf="r.host" class="topo-route-sub">Host: {{ r.host }}</div>
+              <div *ngIf="r.originServer && r.originServer !== dp.path.loadBalancer?.dnsName" class="topo-route-sub">Origin: {{ r.originServer }}</div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Right: load balancer (click to load detail on demand when assetId is present) -->
+        <div class="topo-lb-card" [class.topo-lb-card--expanded]="isLbExpanded(dp.path)">
+          <div
+            class="topo-lb-head"
+            [class.topo-lb-clickable]="dp.path.loadBalancer?.assetId != null"
+            (click)="onLbClick(dp.path)"
+          >
+            <i class="icon icon-homologous-tool" style="margin-right: 6px; color: var(--devui-brand, #5e7ce0);"></i>
+            <d-tag [tag]="dp.path.loadBalancer?.dnsName" [labelStyle]="'blue-w98'" [id]="'k8s-topo-lb-' + pIdx"></d-tag>
+            <span *ngIf="dp.path.loadBalancer?.loadBalancerName" class="topo-lb-name">{{ dp.path.loadBalancer.loadBalancerName }}</span>
+            <i
+              *ngIf="dp.path.loadBalancer?.dnsName"
+              class="icon icon-copy"
+              style="margin-left: 6px; cursor: pointer; color: var(--devui-text-weak, #999);"
+              dClipboard
+              [content]="dp.path.loadBalancer.dnsName"
+              (click)="$event.stopPropagation()"
+            ></i>
+            <i
+              *ngIf="dp.path.loadBalancer?.assetId != null"
+              class="icon"
+              [ngClass]="isLbExpanded(dp.path) ? 'icon-chevron-up' : 'icon-chevron-down'"
+              style="margin-left: 6px; color: var(--devui-brand, #5e7ce0);"
+            ></i>
+          </div>
+
+          <!-- On-demand LB detail (listeners / ACLs / forwarding rules) -->
+          <div *ngIf="isLbExpanded(dp.path)" class="topo-lb-detail" dLoading [loading]="lbDetailLoading">
+            <div *ngIf="lbDetail?.instanceName" class="topo-lb-detail-info">
+              <i class="fa-solid fa-server" style="margin-right: 6px; color: var(--devui-brand, #5e7ce0);"></i>
+              <span class="topo-lb-detail-info-label">Instance:</span>
+              <span class="topo-lb-detail-info-val">{{ lbDetail.instanceName }}</span>
+              <d-tag *ngIf="lbDetail?.loadBalancerType" [tag]="lbDetail.loadBalancerType" [labelStyle]="'blue-w98'" style="margin-left: 8px;"></d-tag>
+            </div>
+            <div class="lb-listeners" *ngIf="lbDetail?.listeners?.length > 0">
+            <div *ngFor="let listener of lbDetail.listeners; let lIdx = index" class="listener-card">
+              <d-splitter class="splitter-border" orientation="vertical">
+                <d-splitter-pane size="30px" [resizable]="false">
+                  <div class="listener-splitter-header" [id]="'k8s-topo-listener-' + pIdx + '-' + lIdx">
+                    <span class="listener-name">{{ listener.listenerDescription }}</span>
+                    <d-icon
+                      *ngIf="listener.aclList?.length > 0"
+                      [icon]="'icon-safe-setting'"
+                      [operable]="true"
+                      style="margin-left: 6px; color: var(--devui-brand, #5e7ce0);"
+                      dPopover
+                      [position]="'bottom-left'"
+                      [trigger]="'click'"
+                      [controlled]="true"
+                      [content]="aclTpl"
+                      [popoverStyle]="{ width: '500px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+                      title="ACL"
+                    ></d-icon>
+                    <ng-template #aclTpl>
+                      <div style="padding: 12px; max-height: 400px; overflow-y: auto;">
+                        <div *ngFor="let acl of listener.aclList" style="margin-bottom: 12px;">
+                          <div style="font-weight: 600; margin-bottom: 4px;">
+                            <d-tag [tag]="acl.aclType" [labelStyle]="'blue-w98'"></d-tag>
+                            <span style="margin-left: 6px; color: var(--devui-aide-text, #8a8e99); font-size: 11px;">{{ acl.aclId }}</span>
+                          </div>
+                          <div *ngFor="let entry of acl.aclEntries" style="font-size: 12px; font-family: monospace; padding: 2px 0; color: var(--devui-text, #252b3a);">
+                            {{ entry.entry }} <span *ngIf="entry.description" style="color: var(--devui-aide-text, #8a8e99);">- {{ entry.description }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <d-icon
+                      *ngIf="listener.ruleList?.length > 0"
+                      [icon]="'icon-sharing'"
+                      [operable]="true"
+                      style="margin-left: 6px; color: var(--devui-success, #50d4ab);"
+                      dPopover
+                      [position]="'bottom-left'"
+                      [trigger]="'click'"
+                      [controlled]="true"
+                      [content]="ruleTpl"
+                      [popoverStyle]="{ width: '660px', background: 'var(--devui-connected-overlay-bg, #fff)', border: '1px solid var(--devui-dividing-line, #dfe1e6)' }"
+                      title="转发规则"
+                    ></d-icon>
+                    <span *ngIf="listener.ruleList?.length > 0" class="rule-count-badge">{{ listener.ruleList.length }}</span>
+                    <ng-template #ruleTpl>
+                      <div style="padding: 12px; max-height: 420px; overflow-y: auto;">
+                        <div *ngFor="let rule of listener.ruleList" class="rule-popover-item">
+                          <div class="rule-popover-header">
+                            <span class="rule-popover-name">{{ rule.ruleName }}</span>
+                            <d-tag
+                              *ngIf="rule.ruleStatus"
+                              [tag]="rule.ruleStatus"
+                              [labelStyle]="rule.ruleStatus === 'Available' ? 'green-w98' : 'orange-w98'"
+                            ></d-tag>
+                          </div>
+                          <div class="rule-popover-body">
+                            <div class="rule-popover-section">
+                              <span class="rule-popover-label">匹配条件</span>
+                              <ng-container *ngFor="let cond of rule.ruleConditions">
+                                <div *ngIf="cond.type === 'Host' && cond.hostConfig?.values?.length > 0" class="rule-popover-cond">
+                                  <d-tag [tag]="'Host'" [labelStyle]="'blue-w98'"></d-tag>
+                                  <span class="rule-popover-cond-val">{{ cond.hostConfig.values.join(', ') }}</span>
+                                </div>
+                                <div *ngIf="cond.type === 'Path' && cond.pathConfig?.values?.length > 0" class="rule-popover-cond">
+                                  <d-tag [tag]="'Path'" [labelStyle]="'purple-w98'"></d-tag>
+                                  <span class="rule-popover-cond-val">{{ cond.pathConfig.values.join(', ') }}</span>
+                                </div>
+                              </ng-container>
+                            </div>
+                            <i class="icon icon-arrow-right rule-popover-arrow"></i>
+                            <div class="rule-popover-section">
+                              <span class="rule-popover-label">转发动作</span>
+                              <ng-container *ngFor="let action of rule.ruleActions">
+                                <div
+                                  *ngFor="let tuple of action.forwardGroupConfig?.serverGroupTuples"
+                                  class="rule-popover-action"
+                                >
+                                  <i class="fa-solid fa-server" style="color: var(--devui-text-weak, #999); margin-right: 6px;"></i>
+                                  <span class="rule-popover-sg">{{ tuple.serverGroupId }}</span>
+                                  <span class="rule-popover-weight">权重 {{ tuple.weight }}</span>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <span style="margin-left: auto;">
+                      <d-tag *ngIf="listener.listenerStatus" [tag]="listener.listenerStatus" [labelStyle]="listener.listenerStatus === 'Running' ? 'green-w98' : 'orange-w98'"></d-tag>
+                    </span>
+                  </div>
+                </d-splitter-pane>
+                <d-splitter-pane>
+                  <d-splitter orientation="horizontal">
+                    <d-splitter-pane [resizable]="false" size="250px">
+                      <div style="padding: 8px 12px;">
+                        <d-tag [tag]="listener.listenerProtocol + ':' + getListenerPort(listener) + (listener.forwardTo ? ' → ' + listener.forwardTo : '')" [labelStyle]="'blue-w98'" style="margin-bottom: 4px;"></d-tag>
+                        <d-tag *ngIf="listener.serverGroupId" [tag]="'SG:' + listener.serverGroupId" [labelStyle]="'default'" style="margin-top: 4px;"></d-tag>
+                      </div>
+                    </d-splitter-pane>
+                    <d-splitter-pane>
+                      <div class="listener-servers" *ngIf="listener.serverGroupServers?.length > 0">
+                        <span *ngFor="let server of listener.serverGroupServers" style="display: inline-flex; align-items: center; border: 1px solid var(--devui-dividing-line, #dfe1e6); border-radius: 4px; padding: 2px 8px; margin: 4px 4px 4px 0;">
+                          <i class="fa-solid fa-server" style="color: var(--devui-text-weak, #999); margin-right: 6px;"></i>
+                          <d-tag
+                            [tag]="server.serverIp + ':' + (server.port || getListenerPort(listener))"
+                            [labelStyle]="'blue-w98'"
+                          ></d-tag>
+                        </span>
+                      </div>
+                    </d-splitter-pane>
+                  </d-splitter>
+                </d-splitter-pane>
+              </d-splitter>
+            </div>
+            </div>
+            <div *ngIf="!lbDetailLoading && !(lbDetail?.listeners?.length > 0)" class="topo-lb-detail-empty">No load balancer detail</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="displayPaths.length === 0" class="no-data">No data for the current environment</div>
+  </div>
+  <ng-template #noTopology>
+    <div *ngIf="!loading" class="no-data">{{ topology ? 'No topology data' : 'Click "Query" to load the topology' }}</div>
+  </ng-template>
+</div>

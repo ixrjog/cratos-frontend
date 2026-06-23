@@ -32,6 +32,11 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+  /** Topology tab is restricted to a specific user. */
+  // Topology is restricted to the 'baiyi' user or sessions authenticated via biometric/WebAuthn.
+  canViewTopology = localStorage.getItem('username') === 'baiyi'
+    || localStorage.getItem('loginMethod') === 'webauthn';
+
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
   private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
   private static readonly CC_STORAGE_KEY = 'k8s_resources_selected_countrycode';

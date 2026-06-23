@@ -13,6 +13,7 @@ export class TrafficLayerIngressServiceDetailComponent implements OnInit {
   showRecord = false;
   queryParam = {
     queryService: '',
+    exactMatch: false,
   };
   tableDetails: string = '';
 
@@ -27,7 +28,7 @@ export class TrafficLayerIngressServiceDetailComponent implements OnInit {
     this.showRecord = true;
     this.loading = true;
     this.tableDetails = '';
-    this.trafficLayerService.queryIngressServiceDetails({ queryService: this.queryParam.queryService })
+    this.trafficLayerService.queryIngressServiceDetails({ queryService: this.queryParam.queryService, exactMatch: this.queryParam.exactMatch })
       .pipe(
         finalize(() => this.loading = false),
       )

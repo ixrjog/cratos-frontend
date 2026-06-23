@@ -1,0 +1,319 @@
+.topo-tabs {
+  margin-bottom: 24px;
+}
+
+.topo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  .topo-query-btn {
+    flex-shrink: 0;
+  }
+}
+
+.topo-section {
+  display: flex;
+  align-items: center;
+  gap: 300px;
+  margin-bottom: 32px;
+  margin-top: 24px;
+}
+
+.topo-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.topo-route-card {
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: var(--devui-base-bg, #f5f5f5);
+  min-width: 300px;
+
+  &.topo-route-card--dns-ok {
+    border-color: rgb(95, 170, 21);
+    box-shadow: 0 0 0 1px rgb(95, 170, 21);
+  }
+
+  .topo-route-dns-ok {
+    color: rgb(95, 170, 21);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .topo-route-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topo-route-domain {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+  }
+
+  .topo-route-head-right {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .topo-route-sub {
+    font-size: 11px;
+    color: var(--devui-text-weak, #999);
+    margin-top: 4px;
+    word-break: break-all;
+  }
+
+  .topo-route-rules {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.topo-lb-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  background: var(--devui-connected-overlay-bg, #fff);
+  flex-shrink: 0;
+  max-width: 820px;
+}
+
+.topo-lb-head {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+
+  .topo-lb-name {
+    margin-left: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+  }
+}
+
+.topo-lb-clickable {
+  cursor: pointer;
+  border-radius: 8px;
+
+  &:hover {
+    background: var(--devui-list-item-hover-bg, #f2f3f5);
+  }
+}
+
+.topo-lb-card--expanded .topo-lb-head {
+  border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px 8px 0 0;
+}
+
+.topo-lb-detail {
+  min-width: 360px;
+}
+
+.topo-lb-detail-info {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+  background: var(--devui-base-bg, #f5f5f5);
+  font-size: 13px;
+
+  .topo-lb-detail-info-label {
+    color: var(--devui-aide-text, #8a8e99);
+    margin-right: 6px;
+  }
+
+  .topo-lb-detail-info-val {
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+  }
+}
+
+.topo-lb-detail-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--devui-aide-text, #8a8e99);
+}
+
+.no-data {
+  color: var(--devui-aide-text, #8a8e99);
+  text-align: center;
+  padding: 32px 0;
+}
+
+.topo-rules-popover {
+  padding: 10px 12px;
+  max-height: 320px;
+  overflow-y: auto;
+
+  .topo-rules-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--devui-aide-text, #8a8e99);
+    margin-bottom: 6px;
+  }
+
+  .topo-rule-item {
+    font-size: 12px;
+    font-family: monospace;
+    color: var(--devui-text, #252b3a);
+    padding: 3px 0;
+    word-break: break-all;
+  }
+}
+
+/* ---- Detailed LB card (loadBalancerDetails present), mirrors cloudflare tenant-view ---- */
+.lb-listeners {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listener-card {
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  overflow: hidden;
+
+  .splitter-border {
+    border: none;
+  }
+
+  .listener-splitter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    height: 30px;
+    background: var(--devui-base-bg, #f5f5f5);
+
+    .listener-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--devui-brand, #5e7ce0);
+    }
+
+    .rule-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      margin-left: -4px;
+      border-radius: 8px;
+      background: var(--devui-brand, #5e7ce0);
+      color: #fff;
+      font-size: 11px;
+      line-height: 16px;
+    }
+  }
+
+  .listener-servers {
+    padding: 4px 8px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 4px;
+    margin: 6px 8px;
+  }
+}
+
+.rule-popover-item {
+  padding: 10px 12px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background: var(--devui-base-bg, #f5f5f5);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .rule-popover-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .rule-popover-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+
+  .rule-popover-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .rule-popover-arrow {
+    align-self: center;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .rule-popover-section {
+    flex: 1;
+    min-width: 0;
+
+    .rule-popover-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 4px;
+    }
+
+    .rule-popover-cond {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 0;
+
+      .rule-popover-cond-val {
+        font-size: 12px;
+        font-family: monospace;
+        color: var(--devui-text, #252b3a);
+        word-break: break-all;
+      }
+    }
+
+    .rule-popover-action {
+      display: flex;
+      align-items: center;
+      padding: 2px 0;
+
+      .rule-popover-sg {
+        font-size: 12px;
+        font-family: monospace;
+        color: var(--devui-text, #252b3a);
+      }
+
+      .rule-popover-weight {
+        font-size: 11px;
+        color: var(--devui-aide-text, #8a8e99);
+        margin-left: 8px;
+      }
+    }
+  }
+}

@@ -75,6 +75,10 @@ export default {
       progress: 'Progress',
       analyst: 'Analyst',
       expected: 'Expected',
+      dataSecApiRisk: 'DataSec API Security Risks',
+      dataSecTotal: 'Total Weaknesses',
+      pendingConfirmation: 'Pending Confirmation',
+      pending: 'Pending Fix',
     },
   },
 };

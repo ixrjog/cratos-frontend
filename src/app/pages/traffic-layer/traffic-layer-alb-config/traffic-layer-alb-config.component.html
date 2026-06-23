@@ -1,0 +1,169 @@
+<div style="padding: 16px;">
+  <!-- ALIYUN data source instances -->
+  <div dLoading [loading]="loading">
+    <h4 class="section-title">ALB Instance (ALIYUN)</h4>
+    <div *ngIf="instances.length > 0; else noAliyun">
+      <d-tabs
+        type="options"
+        [activeTab]="activeInstanceId"
+        (activeTabChange)="onInstanceChange($any($event))"
+      >
+        <d-tab *ngFor="let inst of instances" [id]="inst.id" [title]="inst.instanceName"></d-tab>
+      </d-tabs>
+
+      <div class="alb-config-body" *ngIf="activeInstance as inst">
+        <div class="info-row">
+          <span class="label">Instance</span>
+          <span class="value">{{ inst.instanceName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Type</span>
+          <d-tag [tag]="inst.edsType" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+        <div class="info-row" *ngIf="inst.url">
+          <span class="label">URL</span>
+          <span class="value">{{ inst.url }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">ALB</span>
+          <d-select
+            style="width: 480px;"
+            [filterKey]="'name'"
+            [searchFn]="onSearchAlbAsset"
+            [isSearch]="true"
+            [appendToBody]="true"
+            [(ngModel)]="selectedAlbAsset"
+            placeholder="Search ALB by name"
+            (ngModelChange)="onAlbSelect($event)"
+          >
+            <ng-template let-option="option">
+              <div class="alb-option">
+                <span class="alb-option-id">{{ option.assetId }}</span>
+                <span class="alb-option-name">{{ option.name }}</span>
+              </div>
+            </ng-template>
+          </d-select>
+        </div>
+
+        <ng-container *ngIf="selectedAlbAsset as alb">
+          <div class="alb-detail-box">
+            <div class="info-row">
+              <span class="label">ID</span>
+              <span class="value">{{ alb.assetId }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Name</span>
+              <span class="value">{{ alb.name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">DNS Name</span>
+              <span class="value copyable" dClipboard [content]="alb.assetKey">{{ alb.assetKey }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #noAliyun>
+      <div *ngIf="!loading" class="no-data">No ALIYUN data source instances</div>
+    </ng-template>
+  </div>
+
+  <!-- Kubernetes instances (only those whose version contains "aliyun", i.e. ACK) -->
+  <div dLoading [loading]="k8sLoading" style="margin-top: 24px;">
+    <h4 class="section-title">Kubernetes Instance (ACK)</h4>
+    <div *ngIf="k8sInstances.length > 0; else noK8s">
+      <d-tabs
+        type="options"
+        [activeTab]="activeK8sInstanceId"
+        (activeTabChange)="onK8sInstanceChange($any($event))"
+      >
+        <d-tab *ngFor="let inst of k8sInstances" [id]="inst.id" [title]="inst.instanceName"></d-tab>
+      </d-tabs>
+
+      <div class="alb-config-body" *ngIf="activeK8sInstance as inst">
+        <div class="info-row">
+          <span class="label">Instance</span>
+          <span class="value">{{ inst.instanceName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Type</span>
+          <d-tag [tag]="inst.edsType" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+        <div class="info-row" *ngIf="inst.version">
+          <span class="label">Version</span>
+          <span class="value">{{ inst.version }}</span>
+        </div>
+        <div class="info-row" *ngIf="inst.url">
+          <span class="label">URL</span>
+          <span class="value">{{ inst.url }}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #noK8s>
+      <div *ngIf="!k8sLoading" class="no-data">No matching Kubernetes (ACK) instances</div>
+    </ng-template>
+  </div>
+
+  <!-- Resource configuration: AlbConfig / IngressClass -->
+  <div class="config-section" style="margin-top: 24px;">
+    <h4 class="section-title">Resource Configuration</h4>
+    <d-tabs
+      type="options"
+      [activeTab]="configType"
+      (activeTabChange)="onConfigTypeChange($any($event))"
+    >
+      <d-tab [id]="'AlbConfig'" [title]="'AlbConfig'"></d-tab>
+      <d-tab [id]="'IngressClass'" [title]="'IngressClass'"></d-tab>
+    </d-tabs>
+
+    <div *ngIf="configType === 'AlbConfig'" class="config-editor">
+      <div class="tls-selector">
+        <span class="tls-label">TLS Policy</span>
+        <d-tabs
+          type="options"
+          [activeTab]="tlsPolicy"
+          (activeTabChange)="onTlsPolicyChange($any($event))"
+        >
+          <d-tab *ngFor="let p of tlsPolicies" [id]="p" [title]="p"></d-tab>
+        </d-tabs>
+      </div>
+      <app-ace-editor
+        #albConfigEditor
+        [minLines]="10"
+        [maxLines]="30"
+        [mode]="'ace/mode/yaml'"
+        [aceValue]="albConfigYaml"
+        (onChange)="albConfigYaml = $event"
+      ></app-ace-editor>
+      <div class="config-actions">
+        <d-button
+          bsStyle="primary"
+          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || creatingAlbConfig"
+          [showLoading]="creatingAlbConfig"
+          (click)="onCreateAlbConfig()"
+        >Create AlbConfig</d-button>
+        <span class="config-target" *ngIf="activeK8sInstance as k8s">→ {{ k8s.instanceName }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="configType === 'IngressClass'" class="config-editor">
+      <app-ace-editor
+        #ingressClassEditor
+        [minLines]="10"
+        [maxLines]="30"
+        [mode]="'ace/mode/yaml'"
+        [aceValue]="ingressClassYaml"
+        (onChange)="ingressClassYaml = $event"
+      ></app-ace-editor>
+      <div class="config-actions">
+        <d-button
+          bsStyle="primary"
+          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || creatingIngressClass"
+          [showLoading]="creatingIngressClass"
+          (click)="onCreateIngressClass()"
+        >Create IngressClass</d-button>
+        <span class="config-target" *ngIf="activeK8sInstance as k8s">→ {{ k8s.instanceName }}</span>
+      </div>
+    </div>
+  </div>
+</div>

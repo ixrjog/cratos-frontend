@@ -22,6 +22,7 @@ export class LogService extends LogData {
     localStorage.removeItem('expires_at');
     localStorage.removeItem('userinfo');
     localStorage.removeItem('robotToken');
+    localStorage.removeItem('loginMethod');
     return this.apiService.put(this.baseUrl, '/login');
   }
 

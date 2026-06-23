@@ -129,6 +129,15 @@
           <app-kubernetes-network [serviceList]="serviceList"></app-kubernetes-network>
         </div>
       </d-tab>
+      <d-tab *ngIf="canViewTopology" [id]="'topology'" [title]="'Topology'">
+        <div>
+          <app-kubernetes-topology
+            [serviceName]="queryParam.applicationName"
+            [namespace]="queryParam.namespace"
+            [active]="tabActiveId === 'topology'"
+          ></app-kubernetes-topology>
+        </div>
+      </d-tab>
     </d-tabs>
     <div *ngIf="isMobile">
       <app-kubernetes-workloads

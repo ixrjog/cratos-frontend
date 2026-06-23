@@ -150,3 +150,91 @@ export abstract class TrafficLayerData {
   abstract queryIngressServiceDetails(param: { queryService: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
 
 }
+
+export interface TrafficLayerTopologyVO {
+  serviceName: string;
+  trafficPaths: TrafficPathVO[];
+}
+
+export interface TrafficPathVO {
+  routeMap?: { [domain: string]: TopologyRouteVO };
+  loadBalancer: TopologyLoadBalancerVO;
+}
+
+export interface TopologyLoadBalancerVO {
+  dnsName: string;
+  loadBalancerName?: string;
+  /** When present, the LB detail (listeners/rules) can be queried on demand. */
+  assetId?: number;
+}
+
+export interface TopologyRouteVO {
+  record: string;
+  cdn: string;
+  proxied: boolean;
+  host: string;
+  namespace: string;
+  originServer: string;
+  rules: string[];
+}
+
+/** Mirrors ProjectLoadBalancerVO.LoadBalancer on the backend. */
+export interface ProjectLoadBalancerDetailVO {
+  instanceName?: string;
+  loadBalancerType?: string;
+  loadBalancerName?: string;
+  loadBalancerId?: string;
+  dnsName?: string;
+  regionId?: string;
+  listeners?: ProjectLbListenerVO[];
+  lbConfig?: { routes?: any[] };
+}
+
+export interface ProjectLbListenerVO {
+  listenerProtocol?: string;
+  listenerPort?: number;
+  startPort?: string;
+  endPort?: string;
+  listenerDescription?: string;
+  serverGroupId?: string;
+  listenerStatus?: string;
+  serverGroupServers?: ProjectLbServerVO[];
+  forwardTo?: number;
+  aclList?: ProjectLbAclVO[];
+  ruleList?: ProjectLbRuleVO[];
+}
+
+export interface ProjectLbServerVO {
+  serverId?: string;
+  serverType?: string;
+  serverIp?: string;
+  port?: number;
+  weight?: number;
+  serverGroupId?: string;
+  zoneId?: string;
+}
+
+export interface ProjectLbAclVO {
+  name?: string;
+  aclId?: string;
+  aclType?: string;
+  aclEntries?: { description?: string; entry?: string; status?: string }[];
+}
+
+export interface ProjectLbRuleVO {
+  ruleName?: string;
+  ruleStatus?: string;
+  ruleConditions?: ProjectLbRuleConditionVO[];
+  ruleActions?: ProjectLbRuleActionVO[];
+}
+
+export interface ProjectLbRuleConditionVO {
+  type?: string;
+  hostConfig?: { values?: string[] };
+  pathConfig?: { values?: string[] };
+  sourceIpConfig?: { values?: string[] };
+}
+
+export interface ProjectLbRuleActionVO {
+  forwardGroupConfig?: { serverGroupTuples?: { serverGroupId?: string; weight?: number }[] };
+}

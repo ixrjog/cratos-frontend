@@ -75,6 +75,10 @@ export default {
       progress: '进度',
       analyst: '分析人',
       expected: '预计完成',
+      dataSecApiRisk: '全知科技 API 安全风险',
+      dataSecTotal: '弱点总数',
+      pendingConfirmation: '待确认弱点',
+      pending: '待修复弱点',
     },
   },
 };

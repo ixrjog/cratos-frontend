@@ -69,29 +69,41 @@
     </d-card-content>
     <div class="cratos-divider" style="margin: 4px 0"></div>
     <d-card-actions [align]="'end'" style="margin: 0; padding: 0">
-      <div>
-        <d-button
-          bsStyle="text"
-          style="margin-right: 8px"
-          (click)="onRowExec()"
-          [disabled]="!accessControl.permission"
-        >{{ 'kubernetes.actions.exec' | translate }}
-        </d-button>
-        <d-button
-          bsStyle="text"
-          style="margin-right: 8px"
-          (click)="onRowLogs()"
-          [disabled]="!accessControl.permission"
-        >{{ 'kubernetes.actions.logs' | translate }}
-        </d-button>
+      <div style="display: flex; align-items: center; width: 100%;">
+        <a
+          *ngIf="kubernetesPod.ext?.grafana?.kubernetes?.pod?.overview"
+          class="pod-monitor-link"
+          [href]="kubernetesPod.ext.grafana.kubernetes.pod.overview"
+          target="_blank"
+          rel="noopener"
+          title="Pod Monitoring"
+        >
+          <i class="fa-solid fa-chart-line"></i>
+        </a>
+        <span style="margin-left: auto; display: inline-flex; align-items: center;">
+          <d-button
+            bsStyle="text"
+            style="margin-right: 8px"
+            (click)="onRowExec()"
+            [disabled]="!accessControl.permission"
+          >{{ 'kubernetes.actions.exec' | translate }}
+          </d-button>
+          <d-button
+            bsStyle="text"
+            style="margin-right: 8px"
+            (click)="onRowLogs()"
+            [disabled]="!accessControl.permission"
+          >{{ 'kubernetes.actions.logs' | translate }}
+          </d-button>
 
-        <d-button
-          bsStyle="text"
-          (click)="onRowDelete()"
-          [disabled]="!accessControl.operationPermissions['DEPLOYMENT_POD_DELETE']"
-          [title]="'kubernetes.actions.delete.tooltip' | translate"
-        >{{ 'kubernetes.actions.delete.button' | translate }}
-        </d-button>
+          <d-button
+            bsStyle="text"
+            (click)="onRowDelete()"
+            [disabled]="!accessControl.operationPermissions['DEPLOYMENT_POD_DELETE']"
+            [title]="'kubernetes.actions.delete.tooltip' | translate"
+          >{{ 'kubernetes.actions.delete.button' | translate }}
+          </d-button>
+        </span>
       </div>
     </d-card-actions>
   </d-card>

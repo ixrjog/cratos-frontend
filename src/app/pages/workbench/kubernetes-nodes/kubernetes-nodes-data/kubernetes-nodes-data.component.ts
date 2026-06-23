@@ -28,6 +28,14 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
   loading = false;
   kubernetesNodeDetailsVO: KubernetesNodeDetailsVO = null;
   kubernetesNodes: Map<string, KubernetesNodeVO[]>;
+  /** Result after applying the client-side node filters. */
+  filteredNodes: Map<string, KubernetesNodeVO[]> = new Map();
+  /** Client-side only filters. */
+  nodeFilter = {
+    ip: '',
+    cpuOverload: false,
+    memOverload: false,
+  };
 
   ws: WebSocket;
   timerRequest: Subscription;
@@ -58,6 +66,7 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
         if (body.body.success) {
           this.kubernetesNodeDetailsVO = body.body;
           this.kubernetesNodes = new Map(Object.entries(this.kubernetesNodeDetailsVO.nodes));
+          this.applyNodeFilter();
           this.show = true;
         } else {
           this.toastUtil.onErrorToast(body.body.message, { width: '600px' });
@@ -66,6 +75,39 @@ export class KubernetesNodesDataComponent implements OnInit, OnDestroy {
     );
     // this.wsOnSubSend();
     // this.wsOnMessage();
+  }
+
+  onNodeFilterChange() {
+    this.applyNodeFilter();
+  }
+
+  /** Apply node IP / CPU>60% / MEM>80% filters in the browser; drop zones with no matching node. */
+  applyNodeFilter() {
+    const ip = (this.nodeFilter.ip || '').trim().toLowerCase();
+    const result = new Map<string, KubernetesNodeVO[]>();
+    this.kubernetesNodes?.forEach((nodes, zone) => {
+      const matched = (nodes || []).filter(node => {
+        if (ip) {
+          const addresses: any = node.status?.addresses || {};
+          const internalIp = (addresses['InternalIP']?.address || '').toLowerCase();
+          const hostname = (addresses['Hostname']?.address || '').toLowerCase();
+          if (!internalIp.includes(ip) && !hostname.includes(ip)) {
+            return false;
+          }
+        }
+        if (this.nodeFilter.cpuOverload && !(node.usage?.cpuPercentage > 60)) {
+          return false;
+        }
+        if (this.nodeFilter.memOverload && !(node.usage?.memoryPercentage > 80)) {
+          return false;
+        }
+        return true;
+      });
+      if (matched.length > 0) {
+        result.set(zone, matched);
+      }
+    });
+    this.filteredNodes = result;
   }
 
   onSearchKubernetesInstance = (term: string) => {

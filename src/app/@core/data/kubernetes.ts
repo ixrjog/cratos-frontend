@@ -182,6 +182,9 @@ export interface KubernetesPodVO {
   status: PodStatusVO;
   spec: PodSpecVO;
   containerStatuses: KubernetesContainerVO[];
+  ext?: {
+    grafana?: KubernetesGrafanaVO;
+  };
 }
 
 export interface PodStatusVO {
@@ -235,7 +238,7 @@ export interface KubernetesGrafanaVO {
 export interface GrafanaKubernetesVO {
   overview: string;
   workload: string;
-  pod: { topN: string };
+  pod: { topN?: string; overview?: string };
   node: {
     overview: string;
     topN: string;

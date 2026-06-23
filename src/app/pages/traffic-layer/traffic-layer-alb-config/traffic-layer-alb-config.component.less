@@ -1,0 +1,102 @@
+.section-title {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--devui-text, #252b3a);
+}
+
+.config-editor {
+  margin-top: 12px;
+}
+
+.tls-selector {
+  margin-bottom: 12px;
+
+  .tls-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+}
+
+.config-actions {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .config-target {
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+}
+
+.alb-config-body {
+  margin-top: 16px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--devui-connected-overlay-bg, #fff);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+
+  .label {
+    width: 96px;
+    flex-shrink: 0;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+
+  .value {
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+
+    &.copyable {
+      cursor: pointer;
+
+      &:hover {
+        color: var(--devui-brand, #5e7ce0);
+      }
+    }
+  }
+}
+
+.alb-detail-box {
+  margin-top: 12px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 8px;
+  padding: 8px 16px;
+  background: var(--devui-global-bg, #f7f8fa);
+}
+
+.no-data {
+  color: var(--devui-aide-text, #8a8e99);
+  text-align: center;
+  padding: 32px 0;
+}
+
+.alb-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+
+  .alb-option-id {
+    color: var(--devui-aide-text, #8a8e99);
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  .alb-option-name {
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+    text-align: right;
+  }
+}

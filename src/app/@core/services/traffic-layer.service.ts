@@ -14,7 +14,9 @@ import {
   TrafficLayerRecordPageQuery,
   TrafficLayerRecordQueryDetails,
   TrafficLayerRecordVO,
+  TrafficLayerTopologyVO,
   UpdateTrafficLayerIngressTrafficLimit,
+  ProjectLoadBalancerDetailVO,
 } from '../data/traffic-layer';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -92,8 +94,21 @@ export class TrafficLayerService extends TrafficLayerData {
     return this.apiService.put(this.baseUrl, '/ingress/traffic-limit/update', param);
   }
 
-  queryIngressServiceDetails(param: { queryService: string }): Observable<HttpResult<TrafficLayerIngressVO>> {
+  queryIngressServiceDetails(param: { queryService: string, exactMatch?: boolean }): Observable<HttpResult<TrafficLayerIngressVO>> {
     return this.apiService.post(this.baseUrl, '/service/ingress/query', param);
+  }
+
+  queryServiceTopology(param: { appName: string, namespace?: string }): Observable<HttpResult<TrafficLayerTopologyVO>> {
+    return this.apiService.post(this.baseUrl, '/service/topology/query', param);
+  }
+
+  queryServiceTopologyLoadBalancer(assetId: number): Observable<HttpResult<ProjectLoadBalancerDetailVO>> {
+    return this.apiService.get(this.baseUrl, '/service/topology/lb/get', { assetId });
+  }
+
+  /** Resolve a domain's CNAME via the backend (Google DoH). */
+  resolveDnsCname(name: string): Observable<HttpResult<any>> {
+    return this.apiService.get('/common', '/util/dns/google/resolve', { name });
   }
 
 }

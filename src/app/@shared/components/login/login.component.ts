@@ -129,6 +129,8 @@ export class LoginComponent implements OnInit {
           .subscribe({
             next: ({ body }) => {
               this.logService.setSession(body);
+              // Record the auth method used for this session (password vs biometric/webauthn).
+              localStorage.setItem('loginMethod', 'password');
               this.router.navigate([ '/' ]);
             },
             error: () => {
@@ -248,6 +250,8 @@ export class LoginComponent implements OnInit {
         name: result.name || result.username,
         uuid: '',
       });
+      // Mark this session as authenticated via biometric/WebAuthn.
+      localStorage.setItem('loginMethod', 'webauthn');
       this.router.navigate(['/pages']);
     } catch (e: any) {
       console.error('Biometric login failed:', e);

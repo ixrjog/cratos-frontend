@@ -21,6 +21,9 @@ import {
 import {
   KubernetesNetworkComponent,
 } from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-network/kubernetes-network.component';
+import {
+  KubernetesTopologyComponent,
+} from './kubernetes-resources/kubernetes-resources-tabs/kubernetes-topology/kubernetes-topology.component';
 import { SharedModule } from '../../@shared/shared.module';
 import {
   KubernetesServiceComponent,
@@ -193,6 +196,7 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
     KubernetesPodContainersComponent,
     KubernetesNetworkComponent,
     KubernetesResourcesTabsComponent,
+    KubernetesTopologyComponent,
     KubernetesServiceComponent,
     KubernetesNodesComponent,
     KubernetesNodesDataComponent,

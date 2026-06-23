@@ -22,10 +22,11 @@ import {
   LoadingModule,
   PaginationModule,
   SearchModule,
+  SelectModule,
   TabsModule,
   TagsModule,
 } from 'ng-devui';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RelativeTimeModule } from 'ng-devui/relative-time';
 import { SharedModule } from '../../@shared/shared.module';
 import {
@@ -51,6 +52,7 @@ import { TrafficLayerRouteDataTableComponent } from './traffic-layer-route/traff
 import { TrafficLayerRouteEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-editor/traffic-layer-route-editor.component';
 import { TrafficLayerRouteRecordTargetEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
 import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-switch/traffic-layer-route-record-target-switch.component';
+import { TrafficLayerAlbConfigComponent } from './traffic-layer-alb-config/traffic-layer-alb-config.component';
 
 
 @NgModule({
@@ -75,6 +77,7 @@ import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-ro
     TrafficLayerRouteEditorComponent,
     TrafficLayerRouteRecordTargetEditorComponent,
     TrafficLayerRouteRecordTargetSwitchComponent,
+    TrafficLayerAlbConfigComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +95,8 @@ import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-ro
     ReactiveFormsModule,
     RelativeTimeModule,
     SearchModule,
+    SelectModule,
+    FormsModule,
     SharedModule,
     TagsModule,
     NgOptimizedImage,

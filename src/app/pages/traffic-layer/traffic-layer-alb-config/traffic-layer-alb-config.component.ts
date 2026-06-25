@@ -20,6 +20,12 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
   private static readonly K8S_VERSION_KEYWORD = 'aliyun';
   /** Aliyun ALB asset type. */
   private static readonly ALB_ASSET_TYPE = 'ALIYUN_ALB';
+  /**
+   * ALB resource name validation (RFC 1123 DNS subdomain style, anchored).
+   * Lowercase letters/digits, '-' allowed only in the middle, '.'-separated labels.
+   */
+  private static readonly ALB_NAME_PATTERN =
+    /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
   private static readonly INSTANCE_STORAGE_KEY = 'traffic_layer_alb_selected_instance';
   private static readonly K8S_INSTANCE_STORAGE_KEY = 'traffic_layer_alb_selected_k8s_instance';
 
@@ -32,6 +38,14 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
   activeK8sInstanceId: any = null;
 
   selectedAlbAsset: EdsAssetVO = null;
+
+  /** Editable ALB resource name injected into the config templates. */
+  albName = '';
+
+  /** True when albName is non-empty and matches the ALB naming rule. */
+  get albNameValid(): boolean {
+    return TrafficLayerAlbConfigComponent.ALB_NAME_PATTERN.test(this.albName);
+  }
 
   // Resource configuration (AlbConfig / IngressClass)
   configType: any = 'AlbConfig';
@@ -122,6 +136,7 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
   /** Clear the selected ALB and reset both YAML templates. */
   private resetAlbSelection() {
     this.selectedAlbAsset = null;
+    this.albName = '';
     this.albConfigYaml = this.buildAlbConfigYaml();
     this.ingressClassYaml = this.buildIngressClassYaml();
     setTimeout(() => {
@@ -148,8 +163,7 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
   /** Switch the TLS security policy and re-inject it into the AlbConfig YAML. */
   onTlsPolicyChange(policy: any) {
     this.tlsPolicy = policy;
-    this.albConfigYaml = this.buildAlbConfigYaml(
-      this.selectedAlbAsset?.name, this.selectedAlbAsset?.assetId);
+    this.albConfigYaml = this.buildAlbConfigYaml(this.albName, this.selectedAlbAsset?.assetId);
     setTimeout(() => this.albConfigEditor?.onWrite(this.albConfigYaml), 0);
   }
 
@@ -166,6 +180,10 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
   private createCustomResource(type: 'AlbConfig' | 'IngressClass') {
     if (this.activeK8sInstanceId == null) {
       this.toastUtil.onErrorToast('Please select a Kubernetes (ACK) instance');
+      return;
+    }
+    if (!this.albNameValid) {
+      this.toastUtil.onErrorToast('Invalid ALB name');
       return;
     }
     const content = type === 'AlbConfig' ? this.albConfigYaml : this.ingressClassYaml;
@@ -203,9 +221,22 @@ export class TrafficLayerAlbConfigComponent implements OnInit {
 
   /** Inject the selected ALB into both config templates (name + assetId). */
   onAlbSelect(asset: EdsAssetVO) {
-    const name = asset?.name;
-    this.albConfigYaml = this.buildAlbConfigYaml(name, asset?.assetId);
-    this.ingressClassYaml = this.buildIngressClassYaml(name);
+    // Pre-fill the editable name from the selected ALB; user may edit it afterwards.
+    // ALB asset names may contain '_', which is invalid for the resource name,
+    // so default to converting '_' -> '-'.
+    this.albName = (asset?.name || '').replace(/_/g, '-');
+    this.injectAlbIntoConfigs();
+  }
+
+  /** Re-inject the (possibly user-edited) ALB name into both config templates. */
+  onAlbNameChange() {
+    this.injectAlbIntoConfigs();
+  }
+
+  /** Rebuild both YAML templates from the current albName + selected ALB id and push to editors. */
+  private injectAlbIntoConfigs() {
+    this.albConfigYaml = this.buildAlbConfigYaml(this.albName, this.selectedAlbAsset?.assetId);
+    this.ingressClassYaml = this.buildIngressClassYaml(this.albName);
     // ace-editor reads aceValue only on init; push into whichever editor is currently rendered.
     setTimeout(() => {
       this.albConfigEditor?.onWrite(this.albConfigYaml);

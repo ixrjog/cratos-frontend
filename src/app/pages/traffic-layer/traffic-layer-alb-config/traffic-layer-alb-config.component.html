@@ -107,6 +107,29 @@
   <!-- Resource configuration: AlbConfig / IngressClass -->
   <div class="config-section" style="margin-top: 24px;">
     <h4 class="section-title">Resource Configuration</h4>
+
+    <div class="alb-name-field" style="margin-bottom: 12px;">
+      <span class="label" style="margin-right: 12px;">ALB Name</span>
+      <input
+        dTextInput
+        name="albName"
+        style="width: 480px;"
+        placeholder="lowercase letters, digits, '-' (e.g. my-alb)"
+        [(ngModel)]="albName"
+        (ngModelChange)="onAlbNameChange()"
+      />
+      <div class="alb-name-pattern" style="color: var(--devui-text-weak, #909399); font-size: 12px; margin-top: 4px; font-family: 'Courier New', monospace;">
+        Pattern: [a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*
+      </div>
+      <div
+        *ngIf="albName && !albNameValid"
+        class="alb-name-error"
+        style="color: var(--devui-danger, #f66f6a); font-size: 12px; margin-top: 4px;"
+      >
+        Invalid ALB name. Use lowercase letters/digits separated by '.', with '-' only in the middle of a label.
+      </div>
+    </div>
+
     <d-tabs
       type="options"
       [activeTab]="configType"
@@ -138,7 +161,7 @@
       <div class="config-actions">
         <d-button
           bsStyle="primary"
-          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || creatingAlbConfig"
+          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || !albNameValid || creatingAlbConfig"
           [showLoading]="creatingAlbConfig"
           (click)="onCreateAlbConfig()"
         >Create AlbConfig</d-button>
@@ -158,7 +181,7 @@
       <div class="config-actions">
         <d-button
           bsStyle="primary"
-          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || creatingIngressClass"
+          [disabled]="activeK8sInstanceId == null || !selectedAlbAsset || !albNameValid || creatingIngressClass"
           [showLoading]="creatingIngressClass"
           (click)="onCreateIngressClass()"
         >Create IngressClass</d-button>

@@ -21,6 +21,8 @@ export class KubernetesWorkloadsComponent {
   @Input() application: ApplicationVO;
   @Input() accessControl: AccessControlVO;
   @Input() banner: KubernetesDetailsBannerVO;
+  /** When true, force the simplified (mobile) layout regardless of device. */
+  @Input() forceMobile = false;
 
   constructor(private drawerUtil: DrawerUtil) {
   }

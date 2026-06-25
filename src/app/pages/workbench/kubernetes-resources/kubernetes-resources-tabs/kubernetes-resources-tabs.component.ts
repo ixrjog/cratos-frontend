@@ -30,7 +30,19 @@ import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user
 })
 export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
+  /** True when the current device is detected as mobile via user-agent. */
   isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  /**
+   * User-toggled switch to force the simplified (mobile) layout.
+   * Defaults to ON; an explicitly persisted 'false' disables it. Persisted in localStorage.
+   */
+  forceMobile = localStorage.getItem(KubernetesResourcesTabsComponent.FM_STORAGE_KEY) !== 'false';
+
+  /** Effective mobile state: real mobile device OR user forced compact mode. */
+  get effectiveMobile(): boolean {
+    return this.isMobile || this.forceMobile;
+  }
 
   /** Topology tab is restricted to a specific user. */
   // Topology is restricted to the 'baiyi' user or sessions authenticated via biometric/WebAuthn.
@@ -40,6 +52,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
   private static readonly NS_STORAGE_KEY = 'k8s_resources_selected_namespace';
   private static readonly CC_STORAGE_KEY = 'k8s_resources_selected_countrycode';
+  private static readonly FM_STORAGE_KEY = 'k8s_resources_force_mobile';
 
   queryParam = {
     applicationName: '',
@@ -361,6 +374,11 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   onCountryCodeChange() {
     localStorage.setItem(KubernetesResourcesTabsComponent.CC_STORAGE_KEY, this.queryParam.countryCode || '');
     this.fetchData();
+  }
+
+  /** Persist the user-forced compact (mobile) layout preference. */
+  onForceMobileChange() {
+    localStorage.setItem(KubernetesResourcesTabsComponent.FM_STORAGE_KEY, this.forceMobile ? 'true' : 'false');
   }
 
   getResourceNamespaceOptions() {

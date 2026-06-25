@@ -25,11 +25,19 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnChanges,
 
   private destroy$ = new Subject<void>();
 
-  isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  /** True when the current device is detected as mobile via user-agent. */
+  private readonly uaMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   @Input() kubernetesDeployment: KubernetesDeploymentVO;
   @Input() application: ApplicationVO;
   @Input() accessControl: AccessControlVO;
+  /** When true, force the simplified (mobile) layout regardless of device. */
+  @Input() forceMobile = false;
+
+  /** Effective mobile state: real mobile device OR user-forced compact mode. */
+  get isMobile(): boolean {
+    return this.uaMobile || this.forceMobile;
+  }
   kubernetesResources: any;
   imageVersion: any;
 
@@ -101,6 +109,16 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnChanges,
         dep['$container'] = dep['$containerMap'].get(dep['$containers'][0]);
       }
     });
+    // Fallback: if nothing is selected (no `main` container) or the persisted
+    // selection no longer exists, default to the first container so the radio /
+    // tabs and the pod cards always have a valid container highlighted.
+    if (dep['$containers'].length > 0 &&
+      (dep['$chosenItem'] === undefined || !dep['$containerMap'].has(dep['$chosenItem']))) {
+      dep['$chosenItem'] = dep['$containers'][0];
+      dep['$container'] = dep['$containerMap'].get(dep['$chosenItem']);
+      this.kubernetesResources[dep.metadata.name] = dep['$chosenItem'];
+      this.setItem();
+    }
     this.getVersionByLocalStorage();
   }
 
@@ -112,8 +130,13 @@ export class KubernetesDeploymentSplitterComponent implements OnInit, OnChanges,
     pod?.metadata?.uid || pod?.metadata?.name || '';
 
   valueChange(item: string): void {
+    // Single source of truth: update the chosen container here so it works for
+    // both the desktop radio group ([(ngModel)]) and the compact-mode tabs
+    // (one-way [activeTab] + (activeTabChange)). The pod cards are bound to
+    // $chosenItem, so it must be updated for the selected container's image to show.
+    this.kubernetesDeployment['$chosenItem'] = item;
     this.kubernetesDeployment['$container'] = this.kubernetesDeployment['$containerMap'].get(item);
-    this.kubernetesResources[this.kubernetesDeployment.metadata.name] = this.kubernetesDeployment['$chosenItem'];
+    this.kubernetesResources[this.kubernetesDeployment.metadata.name] = item;
     this.setItem();
   }
 

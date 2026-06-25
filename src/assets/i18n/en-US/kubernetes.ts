@@ -12,6 +12,7 @@ export default {
       filter: 'Filter',
       share: 'Share',
       scan: 'Scan',
+      compactMode: 'Compact',
       exec: 'Exec',
       logs: 'Logs',
       delete: {

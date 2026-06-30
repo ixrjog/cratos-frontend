@@ -1,0 +1,15 @@
+# 规则配置参考（YAML 形式）
+# Cloudflare Worker 运行时不直接读 YAML：
+#   - 简单做法：把规则写进 worker.js 的 DEFAULT_CONFIG；
+#   - 或把等价 JSON 放到 wrangler.toml 的 [vars] RULES_JSON（不改代码即可调整规则）。
+# 见 README.md 的「YAML -> RULES_JSON」说明。
+
+rules:
+  - name: r-test-1
+    paths:
+      - '/api/a/callback/'
+      - '/api/channel/callback/'
+    # 支持 CIDR，或单个 IP（IPv4 / IPv6）
+    whitelist:
+      - 100.122.200.0/24
+      - 220.123.200.7

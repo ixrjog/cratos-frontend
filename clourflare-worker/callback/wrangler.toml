@@ -1,0 +1,12 @@
+name = "callback-ip-gate"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+# 路由：把要保护的域名/路径挂到这个 worker（按实际域名/zone 调整）
+# routes = [
+#   { pattern = "callback-a-prod.palmpay.pk/*", zone_name = "palmpay.pk" }
+# ]
+
+# 可选：通过环境变量注入规则（改规则不用改代码，等价于 rules.yaml 的 JSON 形式）
+# [vars]
+# RULES_JSON = '{"rules":[{"name":"r-test-1","paths":["/api/a/callback/","/api/channel/callback/"],"whitelist":["100.122.200.0/24","220.123.200.7"]}]}'

@@ -53,6 +53,12 @@ import { TrafficLayerRouteEditorComponent } from './traffic-layer-route/traffic-
 import { TrafficLayerRouteRecordTargetEditorComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-editor/traffic-layer-route-record-target-editor.component';
 import { TrafficLayerRouteRecordTargetSwitchComponent } from './traffic-layer-route/traffic-layer-route-data-table/traffic-layer-route-record-target-switch/traffic-layer-route-record-target-switch.component';
 import { TrafficLayerAlbConfigComponent } from './traffic-layer-alb-config/traffic-layer-alb-config.component';
+import {
+  TrafficLayerCallbackRecordComponent
+} from './traffic-layer-callback-record/traffic-layer-callback-record.component';
+import {
+  TrafficLayerCallbackRecordDetailComponent
+} from './traffic-layer-callback-record/traffic-layer-callback-record-detail/traffic-layer-callback-record-detail.component';
 
 
 @NgModule({
@@ -78,6 +84,8 @@ import { TrafficLayerAlbConfigComponent } from './traffic-layer-alb-config/traff
     TrafficLayerRouteRecordTargetEditorComponent,
     TrafficLayerRouteRecordTargetSwitchComponent,
     TrafficLayerAlbConfigComponent,
+    TrafficLayerCallbackRecordComponent,
+    TrafficLayerCallbackRecordDetailComponent,
   ],
   imports: [
     CommonModule,

@@ -46,6 +46,10 @@ export class TrafficLayerService extends TrafficLayerData {
     return this.apiService.post(this.baseUrl, '/domain/page/query', param);
   }
 
+  queryCallbackDomain(): Observable<HttpResult<TrafficLayerDomainVO[]>> {
+    return this.apiService.get(this.baseUrl, '/domain/callback/query', {});
+  }
+
   updateTrafficLayerDomain(param: TrafficLayerDomainEdit): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/domain/update', param);
   }

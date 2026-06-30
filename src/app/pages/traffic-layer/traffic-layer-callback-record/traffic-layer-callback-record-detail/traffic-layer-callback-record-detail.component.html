@@ -1,0 +1,77 @@
+<div class="spacing-search">
+  <d-tabs
+    class="tabs"
+    type="options"
+    [(activeTab)]="activeDomainId"
+    (activeTabChange)="onDomainTabChange($any($event))"
+    *ngIf="callbackDomains.length"
+  >
+    <d-tab *ngFor="let d of callbackDomains" [id]="d.id" [title]="d.domain"></d-tab>
+  </d-tabs>
+</div>
+<div class="spacing-search">
+  <d-tabs
+    class="tabs"
+    type="options"
+    [(activeTab)]="tabActiveId"
+    (activeTabChange)="activeTabChange($event)"
+    *ngIf="JSON.stringify(envItems) !== '[]'"
+  >
+    <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName" [disabled]="!item.valid"></d-tab>
+  </d-tabs>
+  <d-button
+    [disabled]="queryParam.domainId === null || queryParam.envName === ''"
+    class="button"
+    bsStyle="common"
+    (click)="fetchData()"
+  >Fetch
+  </d-button>
+</div>
+<div class="spacing-table" *ngIf="showRecord">
+  <div dLoading [loading]="loading">
+    <div *ngIf="!loading && showRecord">
+      <h3>Domain</h3>
+      <form dForm ngForm [layout]="FormLayout.Horizontal">
+        <d-form-item>
+          <d-form-label>Tags</d-form-label>
+          <d-form-control>
+            <app-business-tags [businessTags]="trafficLayerDomain.businessTags"></app-business-tags>
+          </d-form-control>
+        </d-form-item>
+        <d-form-item>
+          <d-form-label>Dns Providers</d-form-label>
+          <d-form-control>
+              <span
+                *ngFor="let dnsProvider of trafficLayerDomain.dnsProviders"
+                style="margin-right: 10px"
+              >
+                <a class="devui-link-light" [href]="dnsProvider.consoleUrl" target="_blank">
+                  {{ dnsProvider.providerName }}
+                </a>
+              </span>
+          </d-form-control>
+        </d-form-item>
+      </form>
+      <h3>Record Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.recordTable"
+        [mode]="'ace/mode/text'"
+      ></app-ace-editor>
+      <br />
+      <h3>Load Balancer Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.lbTable"
+        [mode]="'ace/mode/text'"
+      ></app-ace-editor>
+      <br />
+      <h3>Ingress Rule Table</h3>
+      <app-ace-editor
+        [readonly]="true"
+        [aceValue]="tableDetails.ingressRuleTable"
+        [mode]="'ace/mode/text'"
+      ></app-ace-editor>
+    </div>
+  </div>
+</div>

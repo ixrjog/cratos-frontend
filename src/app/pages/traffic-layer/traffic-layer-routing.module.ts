@@ -10,6 +10,7 @@ import {
 } from './traffic-layer-ingress-service/traffic-layer-ingress-service.component';
 import { TrafficLayerRouteComponent } from './traffic-layer-route/traffic-layer-route.component';
 import { TrafficLayerAlbConfigComponent } from './traffic-layer-alb-config/traffic-layer-alb-config.component';
+import { TrafficLayerCallbackRecordComponent } from './traffic-layer-callback-record/traffic-layer-callback-record.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
     children: [
       { path: 'domain', component: TrafficLayerDomainComponent },
       { path: 'record-details', component: TrafficLayerRecordComponent },
+      { path: 'callback/record-details', component: TrafficLayerCallbackRecordComponent },
       { path: 'ingress-details', component: TrafficLayerIngressComponent },
       { path: 'ingress-service-details', component: TrafficLayerIngressServiceComponent },
       { path: 'limit', component: TrafficLayerLimitComponent },

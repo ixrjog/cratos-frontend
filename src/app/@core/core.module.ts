@@ -57,6 +57,7 @@ import { OrganizationService } from './services/organization.service';
 import { ChannelInfoService } from './services/channel-info.service';
 import { ChannelBusinessService } from './services/channel-business.service';
 import { ChannelNodeService } from './services/channel-line.service';
+import { ChannelRouteConfigService } from './services/channel-route-config.service';
 import { ProjectService } from './services/project.service';
 
 const DATA_SERVICES = [
@@ -120,6 +121,7 @@ export const CRATOS_PROVIDERS = [
   ChannelInfoService,
   ChannelBusinessService,
   ChannelNodeService,
+  ChannelRouteConfigService,
   ProjectService,
 ];
 

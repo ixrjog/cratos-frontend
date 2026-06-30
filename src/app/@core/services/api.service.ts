@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, from, of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
+import { ToastService } from 'ng-devui';
 import { EncryptionService } from './encryption.service';
 import { EncryptionConfig } from '../config/encryption.config';
 
@@ -13,8 +14,28 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private encryptionService: EncryptionService
+    private encryptionService: EncryptionService,
+    private toastService: ToastService
   ) {
+  }
+
+  /**
+   * Business-level check for a decrypted response. The HTTP interceptor cannot
+   * inspect encrypted bodies, so it skips the `success` check for encrypted
+   * responses. We re-apply it here after decryption: surface the error message
+   * and throw so the caller's error handler runs (e.g. wrong username/password).
+   */
+  private handleDecryptedResult(result: any): any {
+    if (result && result.success === false) {
+      this.toastService.open({
+        value: [{ severity: 'error', content: result.msg }],
+        life: 3000,
+        lifeMode: 'global',
+        style: { width: '600px', color: 'red' },
+      });
+      throw new Error(result.msg);
+    }
+    return result;
   }
 
   get(baseUrl: string, url: string, params: any): Observable<any> {
@@ -41,7 +62,9 @@ export class ApiService {
           // console.log('Response received:', response);
           if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
             console.log('Decrypting response...');
-            return from(this.encryptionService.decryptResponse(response.encryptedData));
+            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
+              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+            );
           }
           // console.log('Response not encrypted, returning as-is');
           return of(response);
@@ -75,7 +98,9 @@ export class ApiService {
         }),
         switchMap((response: any) => {
           if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
-            return from(this.encryptionService.decryptResponse(response.encryptedData));
+            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
+              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+            );
           }
           return of(response);
         }),
@@ -115,7 +140,9 @@ export class ApiService {
         }),
         switchMap((response: any) => {
           if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
-            return from(this.encryptionService.decryptResponse(response.encryptedData));
+            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
+              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+            );
           }
           return of(response);
         }),

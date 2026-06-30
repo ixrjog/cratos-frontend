@@ -1,0 +1,121 @@
+<form dForm #editorForm="dForm" [layout]="layoutDirection" [formGroup]="formGroup">
+  <d-form-item>
+    <d-form-control>
+      <div class="dual-row">
+        <div class="dual-col">
+          <label class="sub-label"><span class="req">*</span>Channel</label>
+          <d-select
+            [filterKey]="'name'"
+            [appendToBody]="true"
+            [searchFn]="onSearchChannel"
+            [isSearch]="true"
+            [allowClear]="true"
+            [(ngModel)]="selectedChannel"
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Search and select channel"
+            (valueChange)="onChannelChange($event)"
+          >
+            <ng-template let-option="option">
+              <span>{{ option.name }}</span>
+              <span style="float: right; padding: 3px 0; color: #999;">{{ option.country }}</span>
+            </ng-template>
+          </d-select>
+        </div>
+        <div class="dual-col">
+          <label class="sub-label">Country</label>
+          <input dTextInput formControlName="country" placeholder="e.g. NG" />
+        </div>
+      </div>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-control>
+      <div class="dual-row">
+        <div class="dual-col">
+          <label class="sub-label">Application</label>
+          <d-select
+            [filterKey]="'name'"
+            [appendToBody]="true"
+            [searchFn]="onSearchApplication"
+            [isSearch]="true"
+            [allowClear]="true"
+            [(ngModel)]="selectedApplication"
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Search and select application"
+            (valueChange)="onApplicationChange($event)"
+          >
+            <ng-template let-option="option">
+              <span>{{ option.name }}</span>
+            </ng-template>
+          </d-select>
+        </div>
+        <div class="dual-col">
+          <label class="sub-label">Service</label>
+          <input dTextInput formControlName="service" placeholder="Service (defaults to application name)" />
+        </div>
+      </div>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Route Channel</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="routeChannel" placeholder="e.g. OPAY" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Kubernetes Instance ID</d-form-label>
+    <d-form-control>
+      <d-tabs
+        *ngIf="kubernetesInstanceOptions.length; else noInstance"
+        type="options"
+        [activeTab]="activeInstanceId"
+        (activeTabChange)="onInstanceTabChange($any($event))"
+      >
+        <d-tab *ngFor="let opt of kubernetesInstanceOptions" [id]="opt.value" [title]="opt.label"></d-tab>
+      </d-tabs>
+      <ng-template #noInstance>
+        <span style="color: #8a8e99; font-size: 12px;">No KUBERNETES instance</span>
+      </ng-template>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Save API</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="saveApi" placeholder="e.g. /opay/config/save" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Query API</d-form-label>
+    <d-form-control>
+      <input dTextInput formControlName="queryApi" placeholder="e.g. /opay/config/query" />
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Namespace</d-form-label>
+    <d-form-control>
+      <d-tabs
+        *ngIf="namespaceOptions.length; else noNamespace"
+        type="options"
+        [activeTab]="activeNamespace"
+        (activeTabChange)="onNamespaceTabChange($any($event))"
+      >
+        <d-tab *ngFor="let opt of namespaceOptions" [id]="opt.value" [title]="opt.label"></d-tab>
+      </d-tabs>
+      <ng-template #noNamespace>
+        <span style="color: #8a8e99; font-size: 12px;">Select an application first</span>
+      </ng-template>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Valid</d-form-label>
+    <d-form-control>
+      <d-toggle formControlName="valid"></d-toggle>
+    </d-form-control>
+  </d-form-item>
+  <d-form-item>
+    <d-form-label>Comment</d-form-label>
+    <d-form-control>
+      <textarea dTextarea formControlName="comment" placeholder="Comment"></textarea>
+    </d-form-control>
+  </d-form-item>
+</form>

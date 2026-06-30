@@ -22,6 +22,16 @@ import { ChannelReportComponent } from './channel-report/channel-report.componen
 import { ChannelNodeListComponent } from './channel-line/channel-line-list/channel-line-list.component';
 import { ChannelNodeListDataTableComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-list-data-table.component';
 import { ChannelNodeEditorComponent } from './channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-node-editor.component';
+import { ChannelRouteConfigComponent } from './channel-route-config/channel-route-config.component';
+import {
+  ChannelRouteConfigDataTableComponent
+} from './channel-route-config/channel-route-config-data-table/channel-route-config-data-table.component';
+import {
+  ChannelRouteConfigEditorComponent
+} from './channel-route-config/channel-route-config-data-table/channel-route-config-editor/channel-route-config-editor.component';
+import {
+  ChannelRouteConfigLineComponent
+} from './channel-route-config/channel-route-config-data-table/channel-route-config-line/channel-route-config-line.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import {
   ButtonModule,
@@ -65,6 +75,10 @@ import { WorkbenchModule } from '../workbench/workbench.module';
     ChannelNodeListComponent,
     ChannelNodeListDataTableComponent,
     ChannelNodeEditorComponent,
+    ChannelRouteConfigComponent,
+    ChannelRouteConfigDataTableComponent,
+    ChannelRouteConfigEditorComponent,
+    ChannelRouteConfigLineComponent,
   ],
   imports: [
     CommonModule,

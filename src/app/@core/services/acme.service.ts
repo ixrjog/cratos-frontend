@@ -79,6 +79,10 @@ export class AcmeService {
     return this.apiService.get(this.baseUrl, '/domain/distinct/query', {});
   }
 
+  queryHasDcvAcmeDomain(param: { dcvType?: string; page: number; length: number }): Observable<HttpResult<AcmeDomainVO[]>> {
+    return this.apiService.post(this.baseUrl, '/domain/dcv/query', param);
+  }
+
   addAcmeDomain(param: any): Observable<HttpResult<Boolean>> {
     return this.apiService.post(this.baseUrl, '/domain/add', param);
   }

@@ -1,0 +1,85 @@
+<div class="spacing-search">
+  <d-button class="button" bsStyle="primary" (click)="onRowNew()">New</d-button>
+  <d-search
+    class="search"
+    [(ngModel)]="queryParam.queryName"
+    [iconPosition]="'left'"
+    [placeholder]="'Search route channel'"
+    (searchFn)="onSearch()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="onSearch()">Filter</d-button>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="table.data"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="table.loading"
+  >
+    <d-column header="Channel" [width]="'200px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem['channel'] ? rowItem['channel']['name'] : rowItem['channelId'] }}</span>
+          <d-tag *ngIf="rowItem['country']" [tag]="rowItem['country']" [labelStyle]="'blue-w98'" style="margin-left: 6px;"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="service" header="Service" [width]="'180px'"></d-column>
+    <d-column header="API" [width]="'260px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div><span style="color: #8a8e99;">save:</span> {{ rowItem['saveApi'] }}</div>
+          <div><span style="color: #8a8e99;">query:</span> {{ rowItem['queryApi'] }}</div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="namespace" header="Namespace" [width]="'160px'"></d-column>
+    <d-column field="instanceName" header="Instance Name" [width]="'180px'"></d-column>
+    <d-column header="Lines" [width]="'90px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-badge [count]="rowItem['lines'] ? rowItem['lines'].length : 0" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'"></d-badge>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" header="Valid" [width]="'80px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="comment" header="Comment" [width]="'200px'"></d-column>
+    <d-column header="Actions" [width]="'120px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)" title="Edit"></d-icon>
+            <d-icon [icon]="'icon-connect'" [operable]="true" (click)="onLineConfig(rowItem)" title="Line Config"></d-icon>
+          </d-icon-group>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>
+<div class="spacing-pagination">
+  <d-pagination
+    class="pagination"
+    [total]="table.pager.total"
+    [(pageSize)]="table.pager.pageSize"
+    [(pageIndex)]="table.pager.pageIndex"
+    [canViewTotal]="true"
+    [canChangePageSize]="true"
+    [maxItems]="5"
+    (pageIndexChange)="pageIndexChange($event)"
+    (pageSizeChange)="pageSizeChange($event)"
+  >
+  </d-pagination>
+</div>

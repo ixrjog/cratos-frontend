@@ -39,6 +39,10 @@ import { AcmeAccountComponent } from './acme-account/acme-account.component';
 import {
   AcmeAccountDataTableComponent
 } from './acme-account/acme-account-data-table/acme-account-data-table.component';
+import { DcvAcmeDomainComponent } from './dcv-acme-domain/dcv-acme-domain.component';
+import {
+  DcvAcmeDomainDataTableComponent
+} from './dcv-acme-domain/dcv-acme-domain-data-table/dcv-acme-domain-data-table.component';
 
 
 @NgModule({
@@ -57,6 +61,8 @@ import {
     AcmeOrderDataTableComponent,
     AcmeAccountComponent,
     AcmeAccountDataTableComponent,
+    DcvAcmeDomainComponent,
+    DcvAcmeDomainDataTableComponent,
   ],
   imports: [
     CommonModule,

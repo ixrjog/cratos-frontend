@@ -1,0 +1,96 @@
+<div class="spacing-search">
+  <d-search
+    class="search"
+    [(ngModel)]="dcvType"
+    [iconPosition]="'left'"
+    [placeholder]="'Filter by DCV type'"
+    (searchFn)="onSearch()"
+  >
+  </d-search>
+  <d-button class="button" bsStyle="common" (click)="onSearch()">Filter</d-button>
+  <d-checkbox
+    style="margin-left: 12px; align-self: center;"
+    [label]="'Only missing DCV record'"
+    [(ngModel)]="onlyMissing"
+  ></d-checkbox>
+</div>
+<div class="spacing-table">
+  <d-data-table
+    dLoading
+    [dataSource]="displayData"
+    [tableOverflowType]="'overlay'"
+    [backdrop]="true"
+    [scrollable]="true"
+    [loadingStyle]="'infinity'"
+    [loading]="loading"
+  >
+    <d-column field="name" header="Name" [width]="'180px'"></d-column>
+    <d-column header="Domains" [width]="'320px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <div>{{ rowItem['domains'] }}</div>
+          <div *ngIf="rowItem['domain']" style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); padding-top: 4px; margin-top: 4px; color: #8a8e99; word-break: break-all;">{{ rowItem['domain'] }}</div>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="dcvType" header="DCV" [width]="'250px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span *ngIf="rowItem['dcvType']">
+            <div>
+              <d-tag [tag]="rowItem['dcvType']" [labelStyle]="'blue-w98'"></d-tag>
+              <d-icon
+                *ngIf="rowItem['hasDcvRecord']"
+                [icon]="'icon-right'"
+                [color]="'#3dcca6'"
+                style="margin-left: 6px;"
+                title="DCV record exists"
+              ></d-icon>
+              <d-icon
+                *ngIf="!rowItem['hasDcvRecord']"
+                [icon]="'icon-error'"
+                [color]="'#f66f6a'"
+                [operable]="true"
+                style="margin-left: 6px; cursor: pointer;"
+                title="DCV record missing, click to recover"
+                (click)="onRecoverDcv(rowItem)"
+              ></d-icon>
+            </div>
+            <div style="word-break: break-all; margin-top: 4px; color: #8a8e99;">{{ rowItem['dcvDelegationTarget'] }}</div>
+          </span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="zoneId" header="Zone ID" [width]="'220px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span style="word-break: break-all; font-family: monospace; font-size: 11px;">{{ cellItem }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="edsInstance" header="DNS Resolver" [width]="'160px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.instanceName }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="account" header="ACME Account" [width]="'160px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <span *ngIf="cellItem">{{ cellItem.name }}</span>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="valid" header="Valid" [width]="'80px'">
+      <d-cell>
+        <ng-template let-cellItem="cellItem">
+          <d-icon [icon]="'icon-priority'" [color]="getRowColor(cellItem)"></d-icon>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <ng-template #noResultTemplateRef>
+      <div class="no-data">Fetch Data</div>
+    </ng-template>
+  </d-data-table>
+</div>

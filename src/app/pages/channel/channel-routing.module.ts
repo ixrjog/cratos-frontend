@@ -8,6 +8,7 @@ import { ChannelBusinessListComponent } from './channel-business/channel-busines
 import { ChannelNodeListComponent } from './channel-line/channel-line-list/channel-line-list.component';
 import { ChannelViewComponent } from './channel-view/channel-view.component';
 import { ChannelReportComponent } from './channel-report/channel-report.component';
+import { ChannelRouteConfigComponent } from './channel-route-config/channel-route-config.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'node', component: ChannelNodeListComponent },
       { path: 'view', component: ChannelViewComponent },
       { path: 'report', component: ChannelReportComponent },
+      { path: 'route/config', component: ChannelRouteConfigComponent },
     ],
   },
 ];

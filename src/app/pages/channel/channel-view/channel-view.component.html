@@ -24,6 +24,13 @@
       (click)="onToggleEditMode()"
       [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
     ></d-icon>
+    <d-icon
+      style="vertical-align: bottom; margin-left: 10px;"
+      [icon]="'icon-switch'"
+      [operable]="true"
+      (click)="onOpenRouteConfig()"
+      [title]="'Channel Route Switch'"
+    ></d-icon>
     <d-button bsStyle="danger" style="margin-left: 8px;" (click)="showSop()">SOP</d-button>
   </div>
   <div class="channel-view-body">
@@ -248,6 +255,46 @@
   <ng-template #nodeInfoTemplate>
     <div style="overflow: auto; padding: 20px;">
       <markdown lineNumbers lineHighlight mermaid [data]="nodeInfoContent" [disableSanitizer]="true"></markdown>
+    </div>
+  </ng-template>
+
+  <ng-template #routeConfigTemplate>
+    <div class="route-config-dialog" dLoading [loading]="routeConfigLoading">
+      <div *ngIf="!routeConfigLoading && routeLineGroups.length === 0" class="rc-empty">No route config data</div>
+
+      <!-- Lines: aggregate businesses by line, line-level enable -->
+      <div class="rc-section" *ngIf="routeLineGroups.length">
+        <h4 class="rc-section-title">线路 / Lines
+          <span class="rc-hash-hint">线路故障可整体关闭 / toggle a failed line off</span>
+        </h4>
+        <div class="rc-line-card" *ngFor="let line of routeLineGroups" [class.rc-disabled]="!line.enable">
+          <div class="rc-line-head">
+            <span class="rc-line-tag">{{ line.lineTag }}</span>
+            <d-toggle [(ngModel)]="line.enable" (change)="onLineEnableChange(line, $event)"></d-toggle>
+          </div>
+          <div class="rc-line-actions" *ngIf="line.actionTypes.length">
+            <d-tag *ngFor="let at of line.actionTypes" [tag]="at" [labelStyle]="'blue-w98'"></d-tag>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business traffic distribution: per-business weight per line (independent) -->
+      <div class="rc-section" *ngIf="routeBusinessList.length">
+        <h4 class="rc-section-title">业务流量分配 / Business Traffic
+          <span class="rc-hash-hint">hash ∈ 0 - {{ rangeSpace }} 左开右闭</span>
+        </h4>
+        <div class="rc-biz-card" *ngFor="let biz of routeBusinessList">
+          <div class="rc-biz-name">{{ biz }}</div>
+          <div class="rc-biz-line" *ngFor="let g of getServingGroups(biz)" [class.rc-disabled]="!g.enable">
+            <span class="rc-biz-line-tag" [class.rc-off]="!g.enable">{{ g.lineTag }}</span>
+            <d-slider class="rc-biz-slider" [(ngModel)]="g.weights[biz]" [min]="0" [max]="100" [step]="1" [disabled]="!g.enable"></d-slider>
+            <span class="rc-biz-weight">{{ g.weights[biz] }}</span>
+            <span class="rc-biz-percent">{{ getBizRange(biz, g).percent }}%</span>
+            <span class="rc-biz-range" [class.rc-off]="!g.enable">{{ getBizRange(biz, g).start }} - {{ getBizRange(biz, g).end }}</span>
+          </div>
+          <div class="rc-biz-empty" *ngIf="getServingGroups(biz).length === 0">No line</div>
+        </div>
+      </div>
     </div>
   </ng-template>
 

@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild, 
 import { ChannelInfoService } from '../../../@core/services/channel-info.service';
 import { ChannelBusinessService } from '../../../@core/services/channel-business.service';
 import { ChannelNodeService } from '../../../@core/services/channel-line.service';
+import { ChannelRouteConfigService } from '../../../@core/services/channel-route-config.service';
+import { ChannelRouteConfigVO, ChannelRouteLineVO, ChannelRouteConfigLine } from '../../../@core/data/channel-route-config';
 import ELK from 'elkjs/lib/elk.bundled';
 import { EdsService } from '../../../@core/services/ext-datasource.service.s';
 import { ApplicationResourceService } from '../../../@core/services/application-resource.service';
@@ -18,6 +20,14 @@ import { ChannelBusinessEditorComponent } from '../channel-business/channel-busi
 import { ChannelNodeEditorComponent } from '../channel-line/channel-line-list/channel-line-list-data-table/channel-line-editor/channel-node-editor.component';
 
 declare var LeaderLine: any;
+
+interface RouteLineGroup {
+  lineTag: string;
+  enable: boolean;
+  actionTypes: string[];
+  weights: { [actionType: string]: number };
+  rawLines: ChannelRouteLineVO[];
+}
 
 @Component({
   selector: 'app-channel-view',
@@ -66,6 +76,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     private channelInfoService: ChannelInfoService,
     private channelBusinessService: ChannelBusinessService,
     private channelNodeService: ChannelNodeService,
+    private channelRouteConfigService: ChannelRouteConfigService,
     private edsService: EdsService,
     private applicationResourceService: ApplicationResourceService,
     private applicationService: ApplicationService,
@@ -380,6 +391,214 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   private k8sNamespace = '';
+
+  // ===== Route Config =====
+  @ViewChild('routeConfigTemplate') routeConfigTemplate: TemplateRef<any>;
+  routeConfigLoading = false;
+  routeConfigId: number = null;
+  routeConfig: ChannelRouteConfigVO = null;
+  routeLineGroups: RouteLineGroup[] = [];
+  routeSaving = false;
+
+  get rangeSpace(): number {
+    return ChannelViewComponent.RANGE_SPACE;
+  }
+
+  onOpenRouteConfig() {
+    if (!this.selectedChannel) {
+      this.toastUtil.onCommonToast('Please select a channel first');
+      return;
+    }
+    this.routeLineGroups = [];
+    this.routeConfig = null;
+    this.routeConfigLoading = true;
+    const results = this.dialogService.open({
+      id: 'route-config-dialog',
+      width: '720px',
+      maxHeight: '80vh',
+      backdropCloseable: true,
+      dialogtype: 'standard',
+      title: `Route Config - ${this.selectedChannel.name}`,
+      contentTemplate: this.routeConfigTemplate,
+      buttons: [
+        {
+          cssClass: 'primary',
+          text: '切换线路 / Switch Line',
+          handler: () => this.onSwitchLine(() => results.modalInstance.hide()),
+        },
+        {
+          cssClass: 'common',
+          text: 'Cancel',
+          handler: () => results.modalInstance.hide(),
+        },
+      ],
+    });
+    this.channelRouteConfigService.getRouteConfig({ channelId: this.selectedChannel.id })
+      .subscribe(({ body }) => {
+        this.routeConfigLoading = false;
+        this.buildRouteGroups(body);
+      }, () => {
+        this.routeConfigLoading = false;
+      });
+  }
+
+  private buildRouteGroups(config: ChannelRouteConfigVO) {
+    this.routeConfig = config;
+    this.routeConfigId = config?.id ?? null;
+    const map = new Map<string, RouteLineGroup>();
+    (config?.lines || []).forEach(l => {
+      if (!map.has(l.lineTag)) {
+        map.set(l.lineTag, {
+          lineTag: l.lineTag,
+          enable: l.enable !== false,
+          actionTypes: [],
+          weights: {},
+          rawLines: [],
+        });
+      }
+      const group = map.get(l.lineTag);
+      group.rawLines.push(l);
+      if (l.actionType) {
+        if (!group.actionTypes.includes(l.actionType)) {
+          group.actionTypes.push(l.actionType);
+        }
+        // weight is per (line, business) pair, independent of other businesses
+        group.weights[l.actionType] = (l.weight !== null && l.weight !== undefined)
+          ? l.weight
+          : Math.max(0, (l.randomEnd || 0) - (l.randomStart || 0));
+      }
+    });
+    this.routeLineGroups = Array.from(map.values());
+  }
+
+  /**
+   * When a line is switched off (line failure), reset the weight of every
+   * remaining active line that served the same businesses to 100, so the
+   * backup line(s) immediately take over the traffic.
+   */
+  onLineEnableChange(line: RouteLineGroup, enabled: boolean) {
+    line.enable = enabled;
+    if (enabled) {
+      return;
+    }
+    line.actionTypes.forEach(actionType => {
+      this.routeLineGroups.forEach(g => {
+        if (g.lineTag !== line.lineTag && g.enable && g.actionTypes.includes(actionType)) {
+          g.weights[actionType] = 100;
+        }
+      });
+    });
+  }
+
+  get routeBusinessList(): string[] {
+    const set = new Set<string>();
+    this.routeLineGroups.forEach(g => g.actionTypes.forEach(a => set.add(a)));
+    return Array.from(set);
+  }
+
+  /** Upper bound of the hash space; requests hash into (0, RANGE_SPACE]. */
+  static readonly RANGE_SPACE = 10001;
+
+  /** Lines serving a business (actionType), in stable order, incl. disabled ones. */
+  getServingGroups(actionType: string): RouteLineGroup[] {
+    return this.routeLineGroups.filter(g => g.actionTypes.includes(actionType));
+  }
+
+  /**
+   * Compute the hash interval + percentage for every line serving a business.
+   * Enabled, positive-weight lines partition the space (0, RANGE_SPACE]
+   * (left-open, right-closed) proportionally to their weight. Zero-weight enabled
+   * lines get the sentinel range 0-1. Disabled lines get 0-0.
+   */
+  private computeBusinessRanges(actionType: string): Map<string, { start: number; end: number; percent: number }> {
+    const serving = this.getServingGroups(actionType);
+    const totalPositive = serving
+      .filter(g => g.enable && (g.weights[actionType] || 0) > 0)
+      .reduce((sum, g) => sum + (g.weights[actionType] || 0), 0);
+    const space = ChannelViewComponent.RANGE_SPACE;
+    const result = new Map<string, { start: number; end: number; percent: number }>();
+    let cursor = 0;
+    serving.forEach(g => {
+      const weight = g.weights[actionType] || 0;
+      if (g.enable && weight > 0 && totalPositive > 0) {
+        const start = Math.floor((cursor / totalPositive) * space);
+        cursor += weight;
+        const end = Math.floor((cursor / totalPositive) * space);
+        const percent = Math.round((weight / totalPositive) * 1000) / 10;
+        result.set(g.lineTag, { start, end, percent });
+      } else if (g.enable && weight === 0) {
+        result.set(g.lineTag, { start: 0, end: 1, percent: 0 });
+      } else {
+        result.set(g.lineTag, { start: 0, end: 0, percent: 0 });
+      }
+    });
+    return result;
+  }
+
+  /** Hash interval + percentage for a single line within a business. */
+  getBizRange(actionType: string, group: RouteLineGroup): { start: number; end: number; percent: number } {
+    return this.computeBusinessRanges(actionType).get(group.lineTag) || { start: 0, end: 0, percent: 0 };
+  }
+
+  /** Total weight of enabled lines serving a business. */
+  getBusinessTotal(actionType: string): number {
+    return this.routeLineGroups
+      .filter(g => g.actionTypes.includes(actionType) && g.enable)
+      .reduce((sum, g) => sum + (g.weights[actionType] || 0), 0);
+  }
+
+  /** Build the per (line, business) config lines with computed hash intervals. */
+  private buildConfigValue(): ChannelRouteConfigLine[] {
+    const result: ChannelRouteConfigLine[] = [];
+    this.routeBusinessList.forEach(actionType => {
+      const ranges = this.computeBusinessRanges(actionType);
+      this.getServingGroups(actionType).forEach(g => {
+        const r = ranges.get(g.lineTag) || { start: 0, end: 0, percent: 0 };
+        result.push({
+          lineTag: g.lineTag,
+          randomStart: r.start,
+          randomEnd: r.end,
+          enable: g.enable,
+          actionTypeEnum: actionType,
+          suffixNumber: [],
+          whiteListAccounts: [],
+        });
+      });
+    });
+    return result;
+  }
+
+  /** Persist the current routing weights by calling the backend /save/call. */
+  onSwitchLine(onDone?: () => void) {
+    if (!this.routeLineGroups.length || this.routeConfigId == null) {
+      this.toastUtil.onCommonToast('No route config to switch');
+      return;
+    }
+    if (this.routeSaving) {
+      return;
+    }
+    this.routeSaving = true;
+    const param = {
+      channelRouteConfigId: this.routeConfigId,
+      saveConfig: {
+        id: this.routeConfig?.id ?? undefined,
+        route: {
+          countryCode: this.routeConfig?.country || this.selectedChannel?.country || '',
+          channel: this.routeConfig?.channel?.name || this.selectedChannel?.name || '',
+        },
+        configValue: this.buildConfigValue(),
+      },
+    };
+    this.channelRouteConfigService.callSaveConfig(param).subscribe(() => {
+      this.routeSaving = false;
+      this.toastUtil.onSuccessToast(TOAST_CONTENT.UPDATE);
+      if (onDone) {
+        onDone();
+      }
+    }, () => {
+      this.routeSaving = false;
+    });
+  }
 
   onOpenKubernetesResources(member: any) {
     this.selectedAppName = member.name;

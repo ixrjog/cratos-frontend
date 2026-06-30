@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+
+// two equal (50%) columns, each with its own label above the control
+.dual-row {
+  display: flex;
+  gap: 16px;
+
+  .dual-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    .sub-label {
+      margin-bottom: 6px;
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--devui-text, #252b3a);
+
+      .req {
+        color: var(--devui-danger, #f66f6a);
+        margin-right: 4px;
+      }
+    }
+
+    ::ng-deep d-select,
+    ::ng-deep .devui-select,
+    input {
+      width: 100%;
+    }
+  }
+}

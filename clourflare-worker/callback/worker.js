@@ -9,22 +9,12 @@
  * 客户端 IP 取自 CF-Connecting-IP（Cloudflare 边缘注入的真实客户端 IP，不可被客户端伪造）。
  */
 
-// ===== 配置：可直接改这里，或通过 env.RULES_JSON 注入（见 wrangler.toml）=====
+// ===== 配置：可直接改这里，或通过 env.CF_CALLBACK_PK_RULES_CONFIG 注入（见 wrangler.toml）=====
+// DEFAULT_CONFIG 仅作「兜底」：当变量 CF_CALLBACK_PK_RULES_CONFIG 缺失/解析失败时使用。
+// 实际规则请放到 Cloudflare 变量 CF_CALLBACK_PK_RULES_CONFIG（见 loadConfig / wrangler.toml）。
+// 注意：env 只能在 fetch(request, env, ctx) 里访问，不能在模块顶层引用。
 const DEFAULT_CONFIG = {
-  rules: [
-    {
-      name: 'r-test-1',
-      paths: [
-        '/api/a/callback/',
-        '/api/channel/callback/',
-      ],
-      // 支持 CIDR 或单个 IP（IPv4 / IPv6）
-      whitelist: [
-        '100.122.200.0/24',
-        '220.123.200.7',
-      ],
-    },
-  ],
+  rules: []
 };
 
 const DENY_STATUS = 403;
@@ -57,12 +47,15 @@ export default {
 
 // ===== 配置加载（优先用环境变量 RULES_JSON，便于不改代码就调整规则）=====
 function loadConfig(env) {
-  if (env && env.RULES_JSON) {
+  // 优先读 CF_CALLBACK_PK_RULES_CONFIG（Cloudflare 变量/机密），兼容旧的 RULES_JSON。
+  const raw = env && (env.CF_CALLBACK_PK_RULES_CONFIG || env.RULES_JSON);
+  if (raw) {
     try {
-      const parsed = JSON.parse(env.RULES_JSON);
-      if (parsed && Array.isArray(parsed.rules)) {
-        return parsed;
-      }
+      // 变量值通常是 JSON 字符串；若平台已解析成对象则直接用。
+      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      // 支持两种形态：{ "rules": [...] } 或直接一个 [...] 数组。
+      if (Array.isArray(parsed)) return { rules: parsed };
+      if (parsed && Array.isArray(parsed.rules)) return parsed;
     } catch (e) {
       // 解析失败则回退到默认配置
     }
@@ -70,12 +63,27 @@ function loadConfig(env) {
   return DEFAULT_CONFIG;
 }
 
-// ===== 路径前缀匹配 =====
+// ===== 路径匹配 =====
+// - 不含 '*' 的规则：保持原有「前缀匹配」行为（向后兼容）。
+// - 含 '*' 的规则：'*' 匹配任意字符（含 '/'）。前缀语义（后面可再跟任意内容），
+//   并对结尾斜杠做容错：'/*/callback/' 也可命中以 '/callback' 结尾（无尾斜杠）的路径。
 function pathMatches(path, prefix) {
-  if (path === prefix) return true;
-  if (path.startsWith(prefix)) return true;
-  // 允许无尾斜杠精确命中：/api/a/callback 命中 /api/a/callback/
-  if (prefix.endsWith('/') && path === prefix.slice(0, -1)) return true;
+  if (!prefix.includes('*')) {
+    if (path === prefix) return true;
+    if (path.startsWith(prefix)) return true;
+    // 允许无尾斜杠精确命中：/api/a/callback 命中 /api/a/callback/
+    if (prefix.endsWith('/') && path === prefix.slice(0, -1)) return true;
+    return false;
+  }
+  // 通配匹配：'*' -> '.*'（可跨路径段）。
+  const toRegexBody = (p) =>
+    '^' +
+    p.replace(/[.+?^${}()|[\]\\]/g, '\\$&') // 转义正则特殊字符
+      .replace(/\*/g, '.*'); // '*' 匹配任意字符
+  // 前缀语义（不锚定结尾），命中后允许再跟任意内容。
+  if (new RegExp(toRegexBody(prefix)).test(path)) return true;
+  // 结尾斜杠容错：'/*/callback/' 也命中以 '/*/callback' 结尾的路径。
+  if (prefix.endsWith('/') && new RegExp(toRegexBody(prefix.slice(0, -1)) + '$').test(path)) return true;
   return false;
 }
 

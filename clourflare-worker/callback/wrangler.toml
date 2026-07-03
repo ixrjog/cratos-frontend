@@ -9,4 +9,4 @@ compatibility_date = "2024-09-01"
 
 # 可选：通过环境变量注入规则（改规则不用改代码，等价于 rules.yaml 的 JSON 形式）
 # [vars]
-# RULES_JSON = '{"rules":[{"name":"r-test-1","paths":["/api/a/callback/","/api/channel/callback/"],"whitelist":["100.122.200.0/24","220.123.200.7"]}]}'
+# CF_CALLBACK_PK_RULES_CONFIG = '{"rules":[{"name":"r-test-1","paths":["/api/a/callback/","/api/channel/callback/"],"whitelist":["100.122.200.0/24","220.123.200.7"]}]}'

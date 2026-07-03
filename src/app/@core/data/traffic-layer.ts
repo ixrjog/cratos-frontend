@@ -87,6 +87,18 @@ export interface TrafficLayerRecordQueryDetails {
   envName: string;
 }
 
+/** Response of /cloudflare/workers/callback/rules. `rules` is a raw JSON string. */
+export interface TrafficLayerCloudFlareWorkersCallbackRules {
+  rules: string;
+}
+
+/** Parsed shape of a single CloudFlare Worker callback rule. */
+export interface CloudFlareWorkersCallbackRule {
+  name: string;
+  paths: string[];
+  whitelist: string[];
+}
+
 export interface TrafficLayerDomainEnvVO {
   envName: string;
   valid: boolean;
@@ -138,6 +150,8 @@ export abstract class TrafficLayerData {
   abstract queryRecordDetails(param: TrafficLayerRecordQueryDetails): Observable<HttpResult<TrafficLayerRecordDetails>>;
 
   abstract queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>>;
+
+  abstract queryCloudFlareWorkersCallbackRules(param: { callbackDomain: string }): Observable<HttpResult<TrafficLayerCloudFlareWorkersCallbackRules>>;
 
   abstract queryIngressHostDetails(param: { queryHost: string }): Observable<HttpResult<TrafficLayerIngressVO>>;
 

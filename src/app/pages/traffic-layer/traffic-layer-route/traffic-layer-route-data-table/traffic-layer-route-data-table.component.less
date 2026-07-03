@@ -49,3 +49,124 @@
     }
   }
 }
+
+/* DNS resolution chain (Route53 CNAME -> Cloudflare proxy -> origin) */
+.dns-records {
+  margin-top: 4px;
+
+  .dns-chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 3px;
+    line-height: 1.6;
+  }
+
+  .dns-type {
+    font-size: 11px;
+    color: var(--devui-text-weak, #999);
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 3px;
+    padding: 0 4px;
+  }
+
+  .dns-arrow {
+    color: #3ac295;
+    font-size: 12px;
+  }
+
+  .dns-hop {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  .dns-cf-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+  }
+
+  .dns-value {
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+  }
+
+  .dns-ttl {
+    color: var(--devui-text-weak, #999);
+    font-size: 11px;
+  }
+}
+
+/* DNS resolution chain (Route53 CNAME -> Cloudflare proxy -> origin) */
+.dns-records {
+  margin-top: 4px;
+
+  .dns-chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 3px;
+    line-height: 1.6;
+  }
+
+  .dns-type {
+    font-size: 11px;
+    color: var(--devui-text-weak, #999);
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 3px;
+    padding: 0 4px;
+  }
+
+  .dns-arrow {
+    color: #3ac295;
+    font-size: 12px;
+  }
+
+  .dns-hop {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  .dns-cf-icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+  }
+
+  .dns-value {
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+  }
+
+  .dns-ttl {
+    color: var(--devui-text-weak, #999);
+    font-size: 11px;
+  }
+}
+
+/* Origin server highlight when it matches the resolved origin behind Cloudflare */
+.origin-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.origin-box.origin-matched {
+  border: 1px solid #3ac295;
+  background: rgba(58, 194, 149, 0.1);
+}
+
+.origin-match-icon {
+  color: #3ac295;
+  font-size: 12px;
+}

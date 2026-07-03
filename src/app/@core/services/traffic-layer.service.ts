@@ -17,6 +17,7 @@ import {
   TrafficLayerTopologyVO,
   UpdateTrafficLayerIngressTrafficLimit,
   ProjectLoadBalancerDetailVO,
+  TrafficLayerCloudFlareWorkersCallbackRules,
 } from '../data/traffic-layer';
 import { Observable } from 'rxjs';
 import { DataTable, HttpResult } from '../data/base-data';
@@ -80,6 +81,10 @@ export class TrafficLayerService extends TrafficLayerData {
 
   queryTrafficLayerDomainEnv(param: { domainId: number }): Observable<HttpResult<Array<TrafficLayerDomainEnvVO>>> {
     return this.apiService.post(this.baseUrl, '/domain/env/query', param);
+  }
+
+  queryCloudFlareWorkersCallbackRules(param: { callbackDomain: string }): Observable<HttpResult<TrafficLayerCloudFlareWorkersCallbackRules>> {
+    return this.apiService.post(this.baseUrl, '/cloudflare/workers/callback/rules', param);
   }
 
   queryIngressHostDetails(param: { queryHost: string }): Observable<HttpResult<TrafficLayerIngressVO>> {

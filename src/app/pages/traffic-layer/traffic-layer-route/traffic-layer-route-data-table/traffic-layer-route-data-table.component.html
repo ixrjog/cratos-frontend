@@ -37,17 +37,6 @@
           <div>
             <a class='devui-link-light' [href]="rowItem['consoleUrl']" target='_blank'>{{ rowItem['domain'] }}</a>
           </div>
-          <div *ngIf='rowItem.dnsResourceRecordSet && !rowItem.dnsResourceRecordSet.isNoData' style="margin-top: 4px;">
-            <div *ngFor='let rr of rowItem.dnsResourceRecordSet.resourceRecords' style="margin-bottom: 2px;">
-              <span style="font-size: 12px; color: var(--devui-text-weak);">{{ rr.type }}</span>
-              <span *ngFor='let r of rr.resourceRecords' style="margin-left: 6px; font-size: 12px; font-family: monospace;">
-                {{ r.value }}<span *ngIf="r.tTL" style="color: var(--devui-text-weak);"> TTL:{{ r.tTL }}</span>
-              </span>
-            </div>
-          </div>
-          <div *ngIf='!rowItem.dnsResourceRecordSet || rowItem.dnsResourceRecordSet.isNoData' style="margin-top: 4px;">
-            <span style="font-size: 12px; color: var(--devui-text-weak);">No DNS records</span>
-          </div>
           <div *ngIf='rowItem.dnsResolverInstance' style="border-top: 1px solid var(--devui-dividing-line, #dfe1e6); margin-top: 6px; padding-top: 6px;">
             <d-tag [tag]='rowItem.dnsResolverInstance.instanceName' [labelStyle]="'blue-w98'"></d-tag>
           </div>
@@ -87,7 +76,15 @@
                  style='width: 20px; height: 20px; margin-left: 10px; vertical-align: bottom' height='10' width='10'>
             <span *ngIf='target.origin'> →
               <d-tag *ngIf='!target.originServer' tag='Origin' [labelStyle]="'blue-w98'"></d-tag>
-              <d-tag *ngIf='target.originServer' [tag]='target.originServer' [labelStyle]="'blue-w98'"></d-tag>
+              <span
+                *ngIf='target.originServer'
+                class="origin-box"
+                [class.origin-matched]="originMatched(rowItem, target)"
+                [title]="originMatched(rowItem, target) ? 'Matches resolved origin behind Cloudflare' : ''"
+              >
+                <d-tag [tag]='target.originServer' [labelStyle]="'blue-w98'" dClipboard [content]='target.originServer'></d-tag>
+                <i *ngIf="originMatched(rowItem, target)" class="fa-solid fa-circle-check origin-match-icon"></i>
+              </span>
             </span>
             <span *ngIf="target.businessTags?.length > 0" style="margin-left: 8px;">
               <d-tag *ngFor="let bt of target.businessTags" [tag]="bt.tag.tagKey + ':' + bt.tagValue" [customColor]="bt.tag.color" style="margin-right: 4px;"></d-tag>

@@ -94,17 +94,15 @@ export interface ReportBaseData {
 export interface DnsResourceRecordSetVO {
   name: string;
   type: string;
-  isNoData: boolean;
+  noData: boolean;
   resourceRecords: DnsResourceRecordsVO[];
 }
 
+/** A single resolved record. `resourceRecord` recurses to the next hop (e.g. the origin behind a Cloudflare proxy). */
 export interface DnsResourceRecordsVO {
-  name: string;
-  type: string;
-  isNoData: boolean;
-  resourceRecords: {
-    value: string
-    weight: number
-    tTL: number
-  }[];
+  value: string;
+  weight: number | null;
+  proxied: boolean | null;
+  ttl: number | null;
+  resourceRecord: DnsResourceRecordsVO | null;
 }

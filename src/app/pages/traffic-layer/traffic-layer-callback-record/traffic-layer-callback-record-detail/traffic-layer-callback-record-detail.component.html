@@ -26,6 +26,13 @@
     (click)="fetchData()"
   >Fetch
   </d-button>
+  <d-button
+    [disabled]="!trafficLayerDomain"
+    class="button"
+    bsStyle="common"
+    (click)="viewWorkersRules()"
+  >CloudFlare Rules
+  </d-button>
 </div>
 <div class="spacing-table" *ngIf="showRecord">
   <div dLoading [loading]="loading">
@@ -75,3 +82,75 @@
     </div>
   </div>
 </div>
+<div class="spacing-table" *ngIf="showWorkersRules">
+  <div dLoading [loading]="workersRulesLoading">
+    <div class="workers-rules-header">
+      <h3>CloudFlare Workers Rules / IP Whitelist</h3>
+      <span class="rules-summary" *ngIf="workersRules.length">{{ workersRules.length }} rules</span>
+      <d-button
+        class="raw-json-btn"
+        bsStyle="common"
+        [disabled]="!workersRulesRaw"
+        (click)="openRawJson()"
+      >View raw JSON
+      </d-button>
+    </div>
+    <div *ngIf="!workersRulesLoading">
+      <div *ngIf="workersRulesError" class="workers-rules-tip">{{ workersRulesError }}</div>
+
+      <div class="cf-topo" *ngIf="workersRules.length">
+        <!-- Root: the callback domain / Worker -->
+        <div class="cf-topo-root">
+          <div class="cf-node cf-node-root" id="cf-rules-root">
+            <i class="icon icon-homologous-tool cf-node-icon"></i>
+            <div class="cf-node-title">{{ trafficLayerDomain?.domain }}</div>
+            <div class="cf-node-sub">Callback Worker</div>
+          </div>
+        </div>
+        <!-- Rule nodes -->
+        <div class="cf-topo-rules">
+          <div class="cf-node cf-rule-node" *ngFor="let rule of workersRules; let i = index" [id]="'cf-rule-node-' + i">
+            <div class="cf-rule-head">
+              <span class="rule-name-badge">{{ rule.name }}</span>
+            </div>
+            <div class="cf-rule-section" *ngIf="rule.paths?.length">
+              <div class="cf-rule-section-head">
+                <span class="cf-rule-label">Paths</span>
+                <span class="cf-count-badge">{{ (rule.paths || []).length }}</span>
+              </div>
+              <div class="cf-rule-value">
+                <span class="path-chip" *ngFor="let p of rule.paths">{{ p }}</span>
+              </div>
+            </div>
+            <div class="cf-rule-section">
+              <div class="cf-rule-section-head">
+                <span class="cf-rule-label">IP Whitelist</span>
+                <span class="cf-count-badge cf-count-badge--ip">{{ (rule.whitelist || []).length }}</span>
+              </div>
+              <div class="cf-rule-value">
+                <d-tag
+                  *ngFor="let ip of rule.whitelist"
+                  [tag]="ip"
+                  [labelStyle]="ipTagStyle(ip)"
+                  [customColor]="ipTagColor(ip)"
+                  [titleContent]="ipTagTitle(ip)"
+                ></d-tag>
+                <span class="empty-hint" *ngIf="!(rule.whitelist && rule.whitelist.length)">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #rawJsonTpl>
+  <div class="cf-raw-dialog">
+    <app-ace-editor
+      [readonly]="true"
+      [aceValue]="workersRulesRaw"
+      [mode]="'ace/mode/json'"
+    ></app-ace-editor>
+  </div>
+</ng-template>

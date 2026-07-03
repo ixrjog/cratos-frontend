@@ -5,6 +5,7 @@ import {
 import { DataTableComponent } from 'ng-devui';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
+import { DnsResourceRecordsVO } from '../../../../@core/data/base-data';
 import { TrafficLayerDomainVO } from '../../../../@core/data/traffic-layer';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
@@ -87,6 +88,41 @@ export class TrafficLayerRouteDataTableComponent implements OnInit {
     valid: true,
   };
   protected readonly getRowColor = getRowColor;
+
+  /** Lowercase + strip a trailing dot for DNS/IP comparison. */
+  private normalizeDns(value: string): string {
+    return (value || '').trim().toLowerCase().replace(/\.$/, '');
+  }
+
+  /** Collect all values along a recursive resourceRecord chain into a set. */
+  private collectChainValues(rr: DnsResourceRecordsVO, set: Set<string>) {
+    let cur: DnsResourceRecordsVO | null = rr;
+    let guard = 0;
+    while (cur && guard < 20) {
+      if (cur.value) {
+        set.add(this.normalizeDns(cur.value));
+      }
+      cur = cur.resourceRecord;
+      guard++;
+    }
+  }
+
+  /**
+   * Whether the target's configured originServer matches the real resolved origin
+   * (a value found along the recursive resourceRecord chain, e.g. the IP behind a Cloudflare proxy).
+   */
+  originMatched(rowItem: TrafficRouteVO, target: any): boolean {
+    if (!target?.origin || !target?.originServer) {
+      return false;
+    }
+    const want = this.normalizeDns(target.originServer);
+    const values = new Set<string>();
+    if (target.dnsResourceRecord) {
+      this.collectChainValues(target.dnsResourceRecord, values);
+    }
+    (rowItem?.dnsResourceRecordSet?.resourceRecords || []).forEach(e => this.collectChainValues(e, values));
+    return values.has(want);
+  }
 
   constructor(
     private trafficRouteService: TrafficRouteService,

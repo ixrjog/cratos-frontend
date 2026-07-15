@@ -30,6 +30,7 @@ export class CommandExecDataTableComponent implements OnInit, AfterViewInit {
     applyUsername: '',
     approvedBy: '',
     success: null,
+    remark: '',
   };
 
   table: Table<CommandExecVO> = JSON.parse(JSON.stringify(TABLE_DATA));
@@ -63,6 +64,12 @@ export class CommandExecDataTableComponent implements OnInit, AfterViewInit {
     {
       label: 'ApprovedBy',
       field: 'approvedBy',
+      type: 'textInput',
+      group: 'Basic',
+    },
+    {
+      label: 'Remark',
+      field: 'remark',
       type: 'textInput',
       group: 'Basic',
     },
@@ -249,6 +256,7 @@ export class CommandExecDataTableComponent implements OnInit, AfterViewInit {
     this.queryParam.applyUsername = '';
     this.queryParam.success = null;
     this.queryParam.completed = null;
+    this.queryParam.remark = '';
     event.selectedTags.map(selectedTag => {
       switch (selectedTag.type) {
         case 'textInput':

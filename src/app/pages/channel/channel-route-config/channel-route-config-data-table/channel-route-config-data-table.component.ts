@@ -5,13 +5,9 @@ import { ChannelRouteConfigPageQuery, ChannelRouteConfigVO } from '../../../../@
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { RELATIVE_TIME_LIMIT } from '../../../../@shared/constant/date.constant';
 import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
-import { DialogService } from 'ng-devui';
 import {
   ChannelRouteConfigEditorComponent
 } from './channel-route-config-editor/channel-route-config-editor.component';
-import {
-  ChannelRouteConfigLineComponent
-} from './channel-route-config-line/channel-route-config-line.component';
 
 @Component({
   selector: 'app-channel-route-config-data-table',
@@ -53,8 +49,7 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
     comment: '',
   };
 
-  constructor(private channelRouteConfigService: ChannelRouteConfigService, private dialogUtil: DialogUtil,
-              private dialogService: DialogService) {
+  constructor(private channelRouteConfigService: ChannelRouteConfigService, private dialogUtil: DialogUtil) {
   }
 
   ngOnInit() {
@@ -94,22 +89,6 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
     }, JSON.parse(JSON.stringify(rowItem)));
-  }
-
-  onLineConfig(rowItem: ChannelRouteConfigVO) {
-    this.dialogService.open({
-      id: 'route-config-line',
-      width: '60%',
-      maxHeight: '80vh',
-      backdropCloseable: true,
-      dialogtype: 'standard',
-      title: 'Line Config',
-      content: ChannelRouteConfigLineComponent,
-      buttons: [],
-      data: {
-        routeConfigId: rowItem.id,
-      },
-    });
   }
 
   pageIndexChange(pageIndex) {

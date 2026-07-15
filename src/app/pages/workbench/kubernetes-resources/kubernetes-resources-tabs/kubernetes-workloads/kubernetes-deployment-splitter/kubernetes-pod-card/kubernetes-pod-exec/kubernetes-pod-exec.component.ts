@@ -70,6 +70,58 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.terminal = new Terminal(this.baseTerminalOptions);
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.loadAddon(this.webLinksAddon);
+
+    // Windows/Linux 习惯：有选区时 Ctrl+C 复制，无选区时透传 ^C（SIGINT）。
+    // Mac 不拦截（保持 Ctrl+C=SIGINT、Cmd+C=复制的原生习惯）。
+    const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform)
+      || /Mac OS X/i.test(navigator.userAgent);
+    this.terminal.attachCustomKeyEventHandler((event: KeyboardEvent): boolean => {
+      if (event.type === 'keydown' && !isMac
+        && event.ctrlKey && !event.shiftKey && !event.altKey && !event.metaKey) {
+        // Ctrl+C：有选区则复制并拦截；无选区透传 ^C（SIGINT）
+        if (event.key === 'c' || event.code === 'KeyC') {
+          if (this.terminal.hasSelection()) {
+            this.copyToClipboard(this.terminal.getSelection());
+            return false;
+          }
+          return true;
+        }
+        // Ctrl+V：拦截 ^V，放行浏览器原生粘贴（xterm 会捕获 paste 事件写入终端）
+        if (event.key === 'v' || event.code === 'KeyV') {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  /** 复制文本到剪贴板：优先 Clipboard API（需 https/localhost），否则回退 execCommand（兼容 http）。 */
+  private copyToClipboard(text: string): void {
+    if (!text) {
+      return;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
+    } else {
+      this.fallbackCopy(text);
+    }
+  }
+
+  private fallbackCopy(text: string): void {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {
+      // ignore
+    }
   }
 
   private initializeComponent(): void {

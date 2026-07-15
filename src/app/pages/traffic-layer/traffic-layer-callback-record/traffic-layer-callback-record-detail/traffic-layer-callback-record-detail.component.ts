@@ -52,6 +52,8 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
 
   /** Template rendered inside the raw-JSON dialog. */
   @ViewChild('rawJsonTpl') rawJsonTpl: TemplateRef<any>;
+  /** Template rendered inside the CIDR detail dialog. */
+  @ViewChild('cidrDetailTpl') cidrDetailTpl: TemplateRef<any>;
 
   constructor(private trafficLayerService: TrafficLayerService,
               private dialogService: DialogService,
@@ -226,12 +228,95 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
     return !!ip && ip.includes('/') && !this.isAllowAllIp(ip);
   }
 
-  /** devui tag labelStyle for an IP entry: green=single IP, orange=CIDR, red=allow-all. */
-  ipTagStyle(ip: string): string {
-    if (this.isAllowAllIp(ip)) {
-      return 'red-w98';
+  /** Detail of the CIDR currently shown in the dialog. */
+  cidrDetail: any = null;
+
+  /** Open a dialog showing the expanded IP info for a CIDR entry. */
+  openCidrDetail(cidr: string) {
+    const info = this.computeCidrInfo(cidr);
+    if (!info) {
+      return;
     }
-    return this.isCidr(ip) ? 'orange-w98' : 'green-w98';
+    this.cidrDetail = info;
+    const results = this.dialogService.open({
+      id: 'cf-cidr-detail',
+      width: '520px',
+      maxHeight: '80vh',
+      title: 'CIDR ' + cidr,
+      dialogtype: 'standard',
+      backdropCloseable: true,
+      contentTemplate: this.cidrDetailTpl,
+      buttons: [
+        {
+          cssClass: 'common',
+          text: 'Close',
+          handler: () => results.modalInstance.hide(),
+        },
+      ],
+    });
+  }
+
+  /** Compute network/range/host info and (capped) IP list for an IPv4 CIDR. */
+  private computeCidrInfo(cidr: string): any {
+    if (!cidr || cidr.indexOf('/') < 0) {
+      return null;
+    }
+    const [addr, prefixStr] = cidr.split('/');
+    const prefix = parseInt(prefixStr, 10);
+    if (addr.includes(':')) {
+      return { cidr, ipv6: true };   // IPv6：不枚举
+    }
+    const parts = addr.split('.').map(x => parseInt(x, 10));
+    if (parts.length !== 4 || parts.some(x => isNaN(x) || x < 0 || x > 255)
+      || isNaN(prefix) || prefix < 0 || prefix > 32) {
+      return null;
+    }
+    const toStr = (n: number) => [ (n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255 ].join('.');
+    const ipNum = ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+    const mask = prefix === 0 ? 0 : (0xFFFFFFFF << (32 - prefix)) >>> 0;
+    const network = (ipNum & mask) >>> 0;
+    const broadcast = (network | (~mask >>> 0)) >>> 0;
+    const total = Math.pow(2, 32 - prefix);
+    const cap = 1024;
+    const capped = total > cap;
+    const limit = capped ? cap : total;
+    const ips: string[] = [];
+    for (let i = 0; i < limit; i++) {
+      ips.push(toStr((network + i) >>> 0));
+    }
+    let usableFirst: string;
+    let usableLast: string;
+    let usableCount: number;
+    if (prefix <= 30) {
+      usableFirst = toStr((network + 1) >>> 0);
+      usableLast = toStr((broadcast - 1) >>> 0);
+      usableCount = total - 2;
+    } else {
+      usableFirst = toStr(network);
+      usableLast = toStr(broadcast);
+      usableCount = total;
+    }
+    return {
+      cidr,
+      ipv6: false,
+      network: toStr(network),
+      netmask: toStr(mask),
+      broadcast: toStr(broadcast),
+      first: toStr(network),
+      last: toStr(broadcast),
+      total,
+      usableFirst,
+      usableLast,
+      usableCount,
+      ips,
+      capped,
+      cap,
+    };
+  }
+
+  /** devui tag labelStyle for an IP entry: green=single IP/CIDR, red=allow-all. */
+  ipTagStyle(ip: string): string {
+    return this.isAllowAllIp(ip) ? 'red-w98' : 'green-w98';
   }
 
   /** Custom tag color: allow-all (0.0.0.0/0, ::/0) => orange, all other IPs => green. */
@@ -277,16 +362,59 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
 
   /** Copy the raw JSON to the clipboard. */
   copyRaw() {
-    const text = this.workersRulesRaw || '';
+    this.copyToClipboard(this.workersRulesRaw || '');
+  }
+
+  /** Build a Markdown doc for a single rule and copy it to the clipboard. */
+  copyRuleMarkdown(rule: CloudFlareWorkersCallbackRule) {
+    this.copyToClipboard(this.buildRuleMarkdown(rule));
+  }
+
+  /** Generate the Markdown document for a rule. */
+  private buildRuleMarkdown(rule: CloudFlareWorkersCallbackRule): string {
+    const lines: string[] = [];
+    lines.push('#### 路由规则名称');
+    lines.push('- ' + (rule?.name || '-'));
+    lines.push('');
+    lines.push('#### Callback域名');
+    lines.push('- ' + (this.trafficLayerDomain?.domain || '-'));
+    lines.push('');
+    lines.push('#### API Paths');
+    const paths = rule?.paths || [];
+    if (paths.length) {
+      paths.forEach(p => lines.push('- ' + p));
+    } else {
+      lines.push('- -');
+    }
+    lines.push('');
+    lines.push('#### IP Whitelist');
+    const ips = rule?.whitelist || [];
+    if (ips.length) {
+      ips.forEach(ip => lines.push('- ' + ip));
+    } else {
+      lines.push('- -');
+    }
+    return lines.join('\n');
+  }
+
+  /** Copy text to clipboard with an http-safe fallback + toast feedback. */
+  private copyToClipboard(text: string) {
     const done = () => this.toastUtil.onSuccessToast('Copied to clipboard');
     const fail = () => this.toastUtil.onErrorToast('Copy failed');
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, fail);
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => this.fallbackCopy(text, done, fail));
       return;
     }
+    this.fallbackCopy(text, done, fail);
+  }
+
+  private fallbackCopy(text: string, done: () => void, fail: () => void) {
     try {
       const ta = document.createElement('textarea');
       ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');

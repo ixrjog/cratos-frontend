@@ -83,6 +83,7 @@ export interface KubernetesReplicaSetVO {
 
 export interface KubernetesClusterVO {
   name: string;
+  instanceId: number;
 }
 
 export interface KubernetesTopologyDetails {

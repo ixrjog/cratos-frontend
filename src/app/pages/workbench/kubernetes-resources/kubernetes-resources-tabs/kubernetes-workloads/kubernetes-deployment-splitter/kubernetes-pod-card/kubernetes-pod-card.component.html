@@ -81,6 +81,19 @@
           <i class="fa-solid fa-chart-line"></i>
         </a>
         <span style="margin-left: auto; display: inline-flex; align-items: center;">
+          <span dDropDown appendToBody style="margin-right: 8px;" *ngIf="canOps">
+            <d-button
+              bsStyle="text"
+              dDropDownToggle
+              [disabled]="opsHistogramLoading || opsJstackLoading || opsHeapDumpLoading"
+            >Ops
+            </d-button>
+            <ul dDropDownMenu class="devui-dropdown-menu" role="menu">
+              <li role="menuitem" class="devui-dropdown-item" (click)="onOpsJvmHistogram()">JVM Class Histogram</li>
+              <li role="menuitem" class="devui-dropdown-item" (click)="onOpsJstack()">Thread Dump (jstack)</li>
+              <li role="menuitem" class="devui-dropdown-item" (click)="onOpsHeapDump()">Heap Dump</li>
+            </ul>
+          </span>
           <d-button
             bsStyle="text"
             style="margin-right: 8px"
@@ -108,3 +121,10 @@
     </d-card-actions>
   </d-card>
 </div>
+
+<ng-template #opsHistogramTpl>
+  <div class="ops-histogram">
+    <div class="ops-histogram-cmd" *ngIf="histogramResult?.jcmd">$ {{ histogramResult.jcmd }}</div>
+    <pre class="ops-histogram-result">{{ histogramResult?.result }}</pre>
+  </div>
+</ng-template>

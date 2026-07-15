@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ApplicationPageQuery, ApplicationVO, ScanResource } from '../../../../@core/data/application';
 import { KubernetesDetailsVO } from '../../../../@core/data/kubernetes';
 import { ApplicationResourceService } from '../../../../@core/services/application-resource.service';
@@ -6,6 +6,7 @@ import { ApplicationService } from '../../../../@core/services/application.servi
 import {
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions,
+  OpsTaskVO,
 } from '../../../../@core/data/application-resource';
 import { finalize, of, Subject, Subscription, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -22,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserFavoriteService } from '../../../../@core/services/user-favorite.service';
 import { BusinessTypeEnum } from '../../../../@core/data/business';
 import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user-favorite';
+import { DialogService } from 'ng-devui';
 
 @Component({
   selector: 'app-kubernetes-resources-tabs',
@@ -47,6 +49,10 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
   /** Topology tab is restricted to a specific user. */
   // Topology is restricted to the 'baiyi' user or sessions authenticated via biometric/WebAuthn.
   canViewTopology = localStorage.getItem('username') === 'baiyi'
+    || localStorage.getItem('loginMethod') === 'webauthn';
+
+  /** Ops actions (task files, pod-card Ops) restricted to 'baiyi' or biometric/WebAuthn sessions. */
+  canOps = localStorage.getItem('username') === 'baiyi'
     || localStorage.getItem('loginMethod') === 'webauthn';
 
   private static readonly APP_STORAGE_KEY = 'k8s_resources_selected_app';
@@ -107,7 +113,175 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private wsApiService: WebSocketApiService,
     private toastUtil: ToastUtil,
+    private dialogService: DialogService,
   ) {
+  }
+
+  /** ===== My Ops task files (jstack/heap dumps etc.) ===== */
+  @ViewChild('myOpsFilesTpl') myOpsFilesTpl: TemplateRef<any>;
+  myOpsTasks: OpsTaskVO[] = [];
+  myOpsTasksLoading = false;
+  opsTaskDownloading: { [taskNo: string]: boolean } = {};
+
+  opsTaskAnalyzing: { [taskNo: string]: boolean } = {};
+
+  /** Open a dialog listing my latest 5 ops task files. */
+  openMyOpsFiles() {
+    this.myOpsTasks = [];
+    this.myOpsTasksLoading = true;
+    const results = this.dialogService.open({
+      id: 'k8s-my-ops-files',
+      width: '1400px',
+      maxHeight: '80vh',
+      title: 'My Ops Task Files',
+      dialogtype: 'standard',
+      backdropCloseable: true,
+      contentTemplate: this.myOpsFilesTpl,
+      buttons: [
+        {
+          cssClass: 'common',
+          text: 'Close',
+          handler: () => results.modalInstance.hide(),
+        },
+      ],
+    });
+    this.applicationResourceService.queryMyOpsTaskFiles()
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.myOpsTasksLoading = false),
+      )
+      .subscribe(({ body }) => {
+        this.myOpsTasks = body || [];
+      });
+  }
+
+  /** Fetch the presigned download URL for a task and copy it to the clipboard. */
+  copyOpsTaskDownloadUrl(task: OpsTaskVO) {
+    if (!task || !task.taskNo || this.opsTaskDownloading[task.taskNo]) {
+      return;
+    }
+    this.opsTaskDownloading[task.taskNo] = true;
+    this.applicationResourceService.getOpsTaskFile({ taskNo: task.taskNo })
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.opsTaskDownloading[task.taskNo] = false),
+      )
+      .subscribe({
+        next: ({ body }) => {
+          if (body?.downloadUrl) {
+            this.copyText(body.downloadUrl, '下载地址已复制');
+          } else {
+            this.toastUtil.onErrorToast('下载地址不可用（文件可能已过期/无效）。');
+          }
+        },
+        error: () => this.toastUtil.onErrorToast('获取下载地址失败'),
+      });
+  }
+
+  /** Fetch the signed analysis request, base64-encode it, and open the Jifa online-analysis page. */
+  onOpsTaskAnalyze(task: OpsTaskVO) {
+    if (!task || !task.taskNo || this.opsTaskAnalyzing[task.taskNo]) {
+      return;
+    }
+    this.opsTaskAnalyzing[task.taskNo] = true;
+    this.applicationResourceService.getOpsTaskFile({ taskNo: task.taskNo })
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.opsTaskAnalyzing[task.taskNo] = false),
+      )
+      .subscribe({
+        next: ({ body }) => {
+          if (body?.jifaAnalysisRequest) {
+            const ar = encodeURIComponent(this.toBase64(body.jifaAnalysisRequest));
+            window.open(`https://jifa.palmpay-inc.com?ar=${ar}`, '_blank', 'noopener,noreferrer');
+          } else {
+            this.toastUtil.onErrorToast('该任务暂不支持在线分析。');
+          }
+        },
+        error: () => this.toastUtil.onErrorToast('获取分析请求失败'),
+      });
+  }
+
+  /** UTF-8 safe base64 encoding. */
+  private toBase64(str: string): string {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
+  /** Human-readable expiry, e.g. "5小时后过期" / "已过期". */
+  expireText(expiredTime: string): string {
+    if (!expiredTime) {
+      return '-';
+    }
+    const diff = new Date(expiredTime).getTime() - Date.now();
+    if (diff <= 0) {
+      return 'Expired';
+    }
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) {
+      return 'Expires in ' + mins + (mins === 1 ? ' minute' : ' minutes');
+    }
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) {
+      return 'Expires in ' + hours + (hours === 1 ? ' hour' : ' hours');
+    }
+    const days = Math.floor(hours / 24);
+    return 'Expires in ' + days + (days === 1 ? ' day' : ' days');
+  }
+
+  /** A task is expired/unusable if it is invalid or its expiry time has passed. */
+  isTaskExpired(task: OpsTaskVO): boolean {
+    if (!task.valid) {
+      return true;
+    }
+    if (!task.expiredTime) {
+      return false;
+    }
+    return new Date(task.expiredTime).getTime() <= Date.now();
+  }
+
+  /** Human-readable file size, e.g. "1.2 MB". */
+  humanFileSize(bytes: number | undefined): string {
+    if (bytes == null || bytes <= 0) {
+      return '';
+    }
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let value = bytes;
+    let i = 0;
+    while (value >= 1024 && i < units.length - 1) {
+      value /= 1024;
+      i++;
+    }
+    return `${i === 0 ? value : value.toFixed(1)} ${units[i]}`;
+  }
+
+  private copyText(text: string, successMsg: string = '已复制') {
+    const done = () => this.toastUtil.onSuccessToast(successMsg);
+    const fail = () => this.toastUtil.onErrorToast('复制失败');
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => this.fallbackCopy(text, done, fail));
+      return;
+    }
+    this.fallbackCopy(text, done, fail);
+  }
+
+  private fallbackCopy(text: string, done: () => void, fail: () => void) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    } catch (e) {
+      fail();
+    }
   }
 
   private initRouteParams(): void {

@@ -5,46 +5,52 @@
     [dValidateRules]="formRules['rule']"
     [layout]="layoutDirection"
   >
-    <d-form-item>
-      <d-form-label [required]="true">Approve</d-form-label>
-      <d-form-control>
-        <d-select
-          name="approve"
-          [filterKey]="'username'"
-          [appendToBody]="true"
-          [(ngModel)]="approveUser"
-          [searchFn]="onSearchCommandExecUser"
-          [isSearch]="true"
-          placeholder="Search and select approve user"
-          (valueChange)="onApproveUserChange($event)"
-        >
-          <ng-template let-option="option">
-            <span>{{ option.username }} : {{ option.name }}</span>
-            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
-          </ng-template>
-        </d-select>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item>
-      <d-form-label>CC</d-form-label>
-      <d-form-control>
-        <d-select
-          name="ccTo"
-          [filterKey]="'username'"
-          [appendToBody]="true"
-          [(ngModel)]="ccUser"
-          [searchFn]="onSearchUser"
-          [isSearch]="true"
-          placeholder="Search and select cc user"
-          (valueChange)="onCCUserChange($event)"
-        >
-          <ng-template let-option="option">
-            <span>{{ option.username }} : {{ option.name }}</span>
-            <span style="float: right; padding: 3px 0">{{ option.email }}</span>
-          </ng-template>
-        </d-select>
-      </d-form-control>
-    </d-form-item>
+    <d-row [dGutter]="12" [dGutterNoOuter]="true">
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Approve</d-form-label>
+          <d-form-control>
+            <d-select
+              name="approve"
+              [filterKey]="'username'"
+              [appendToBody]="true"
+              [(ngModel)]="approveUser"
+              [searchFn]="onSearchCommandExecUser"
+              [isSearch]="true"
+              placeholder="Search and select approve user"
+              (valueChange)="onApproveUserChange($event)"
+            >
+              <ng-template let-option="option">
+                <span>{{ option.username }} : {{ option.name }}</span>
+                <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+              </ng-template>
+            </d-select>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label>CC</d-form-label>
+          <d-form-control>
+            <d-select
+              name="ccTo"
+              [filterKey]="'username'"
+              [appendToBody]="true"
+              [(ngModel)]="ccUser"
+              [searchFn]="onSearchUser"
+              [isSearch]="true"
+              placeholder="Search and select cc user"
+              (valueChange)="onCCUserChange($event)"
+            >
+              <ng-template let-option="option">
+                <span>{{ option.username }} : {{ option.name }}</span>
+                <span style="float: right; padding: 3px 0">{{ option.email }}</span>
+              </ng-template>
+            </d-select>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+    </d-row>
     <d-row [dGutter]="12" [dGutterNoOuter]="true">
       <d-col [dSpan]="12">
         <d-form-item>
@@ -68,19 +74,26 @@
         <d-form-item>
           <d-form-label [required]="true">Namespace</d-form-label>
           <d-form-control>
-            <d-select
-              name="namespace"
-              [appendToBody]="true"
-              [options]="namespaceOptions"
-              [(ngModel)]="execTarget.namespace"
-              placeholder="Select namespace"
-            ></d-select>
+            <d-tabs
+              type="options"
+              [activeTab]="execTarget.namespace"
+              (activeTabChange)="execTarget.namespace = $any($event)"
+            >
+              <d-tab *ngFor="let ns of namespaceOptions" [id]="ns" [title]="ns"></d-tab>
+            </d-tabs>
           </d-form-control>
         </d-form-item>
       </d-col>
     </d-row>
     <d-form-item>
-      <d-form-label [required]="true">Command</d-form-label>
+      <d-form-label [required]="true">
+        Command
+        <span
+          class="command-size"
+          [style.color]="commandOversize ? 'var(--devui-danger, #f66f6a)' : 'var(--devui-aide-text, #8a8e99)'"
+          style="margin-left: 8px; font-weight: normal; font-size: 12px;"
+        >{{ (commandByteSize / 1024) | number: '1.0-1' }} KB / 120 KB</span>
+      </d-form-label>
       <d-form-control>
         <app-ace-editor
           [minLines]="10"
@@ -90,34 +103,44 @@
           (onChange)="onCommandChange($event,formData)"
         >
         </app-ace-editor>
+        <div
+          *ngIf="commandOversize"
+          style="margin-top: 4px; font-size: 12px; color: var(--devui-danger, #f66f6a);"
+        >命令内容超过 120KB 限制，请精简后再提交。</div>
       </d-form-control>
     </d-form-item>
-    <d-form-item>
-      <d-form-label [required]="true">Auto Exec</d-form-label>
-      <d-form-control>
-        <d-toggle name="autoExec" [(ngModel)]="formData.autoExec"></d-toggle>
-      </d-form-control>
-    </d-form-item>
-    <d-form-item *ngIf="formData.autoExec">
-      <d-form-label [required]="true">Max Waiting Time</d-form-label>
-      <d-form-control>
-        <div class="composite-slider slider-wrapper">
-          <d-slider name="limit" [(ngModel)]="maxWaitingTime" [min]="min" [max]="max" class="slider"></d-slider>
-          <div class="snapshot-value">
-            <d-input-number
-              name="limit"
-              [min]="min"
-              [max]="max"
-              [allowEmpty]="false"
-              [(ngModel)]="maxWaitingTime"
-              class="input-number"
-            ></d-input-number>
-          </div>
-          <span style="margin-top: 15px">{{ min }}</span>
-          <span style="margin:15px 10px 0 0">{{ max }}</span>
-        </div>
-      </d-form-control>
-    </d-form-item>
+    <d-row [dGutter]="12" [dGutterNoOuter]="true">
+      <d-col [dSpan]="12">
+        <d-form-item>
+          <d-form-label [required]="true">Auto Exec</d-form-label>
+          <d-form-control>
+            <d-toggle name="autoExec" [(ngModel)]="formData.autoExec"></d-toggle>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+      <d-col [dSpan]="12">
+        <d-form-item *ngIf="formData.autoExec">
+          <d-form-label [required]="true">Max Waiting Time</d-form-label>
+          <d-form-control>
+            <div class="composite-slider slider-wrapper">
+              <d-slider name="limit" [(ngModel)]="maxWaitingTime" [min]="min" [max]="max" class="slider"></d-slider>
+              <div class="snapshot-value">
+                <d-input-number
+                  name="limit"
+                  [min]="min"
+                  [max]="max"
+                  [allowEmpty]="false"
+                  [(ngModel)]="maxWaitingTime"
+                  class="input-number"
+                ></d-input-number>
+              </div>
+              <span style="margin-top: 15px">{{ min }}</span>
+              <span style="margin:15px 10px 0 0">{{ max }}</span>
+            </div>
+          </d-form-control>
+        </d-form-item>
+      </d-col>
+    </d-row>
     <d-form-item>
       <d-form-label [required]="true">Remark</d-form-label>
       <d-form-control>

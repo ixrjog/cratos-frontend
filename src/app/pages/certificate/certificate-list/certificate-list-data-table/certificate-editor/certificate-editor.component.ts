@@ -53,6 +53,8 @@ export class CertificateEditorComponent implements OnInit {
     this.fromAssetId = this.data['fromAssetId'];
     this.certificateFormGroup = new UntypedFormGroup({
       id: new UntypedFormControl(this.formData.id ? this.formData.id : null),
+      instanceId: new UntypedFormControl(this.formData.instanceId ?? null),
+      assetId: new UntypedFormControl(this.formData.assetId ?? null),
       certificateId: new UntypedFormControl(this.formData.certificateId),
       name: new UntypedFormControl(this.formData.name),
       domainName: new UntypedFormControl(this.formData.domainName),

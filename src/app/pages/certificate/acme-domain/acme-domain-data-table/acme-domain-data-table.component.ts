@@ -187,8 +187,38 @@ export class AcmeDomainDataTableComponent implements OnInit {
       });
   }
 
-  calcDays(from: any, to: any): number {
-    const start = from ? new Date(from).getTime() : Date.now();
+  /** Copy the given text to the clipboard with a fallback for non-secure contexts. */
+  copyText(text: string, label: string) {
+    if (!text) {
+      return;
+    }
+    const done = () => this.toastUtil.onSuccessToast(`${label} copied`);
+    const fail = () => this.toastUtil.onErrorToast('Copy failed');
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => this.fallbackCopy(text, done, fail));
+      return;
+    }
+    this.fallbackCopy(text, done, fail);
+  }
+
+  private fallbackCopy(text: string, done: () => void, fail: () => void) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    } catch (e) {
+      fail();
+    }
+  }
+
+  calcDays(from: any, to: any): number {    const start = from ? new Date(from).getTime() : Date.now();
     const end = to ? new Date(to).getTime() : Date.now();
     return Math.floor((end - start) / (1000 * 60 * 60 * 24));
   }

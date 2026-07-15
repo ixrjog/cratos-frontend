@@ -22,7 +22,7 @@
           </d-select>
         </div>
         <div class="dual-col">
-          <label class="sub-label">Country</label>
+          <label class="sub-label"><span class="req">*</span>Country</label>
           <input dTextInput formControlName="country" placeholder="e.g. NG" />
         </div>
       </div>
@@ -32,7 +32,7 @@
     <d-form-control>
       <div class="dual-row">
         <div class="dual-col">
-          <label class="sub-label">Application</label>
+          <label class="sub-label"><span class="req">*</span>Application</label>
           <d-select
             [filterKey]="'name'"
             [appendToBody]="true"
@@ -50,20 +50,20 @@
           </d-select>
         </div>
         <div class="dual-col">
-          <label class="sub-label">Service</label>
+          <label class="sub-label"><span class="req">*</span>Service</label>
           <input dTextInput formControlName="service" placeholder="Service (defaults to application name)" />
         </div>
       </div>
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Route Channel</d-form-label>
+    <d-form-label [required]="true">Route Channel</d-form-label>
     <d-form-control>
       <input dTextInput formControlName="routeChannel" placeholder="e.g. OPAY" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Kubernetes Instance ID</d-form-label>
+    <d-form-label [required]="true">Kubernetes Instance ID</d-form-label>
     <d-form-control>
       <d-tabs
         *ngIf="kubernetesInstanceOptions.length; else noInstance"
@@ -79,19 +79,19 @@
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Save API</d-form-label>
+    <d-form-label [required]="true">Save API</d-form-label>
     <d-form-control>
       <input dTextInput formControlName="saveApi" placeholder="e.g. /opay/config/save" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Query API</d-form-label>
+    <d-form-label [required]="true">Query API</d-form-label>
     <d-form-control>
       <input dTextInput formControlName="queryApi" placeholder="e.g. /opay/config/query" />
     </d-form-control>
   </d-form-item>
   <d-form-item>
-    <d-form-label>Namespace</d-form-label>
+    <d-form-label [required]="true">Namespace</d-form-label>
     <d-form-control>
       <d-tabs
         *ngIf="namespaceOptions.length; else noNamespace"

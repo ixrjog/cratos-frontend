@@ -120,6 +120,16 @@
   word-break: break-all;
 }
 
+.cf-rule-md-btn {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--devui-brand, #5e7ce0);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 /* Count badge shown at the top-right of each section. */
 .cf-count-badge {
   display: inline-flex;
@@ -139,12 +149,89 @@
   }
 }
 
-/* Paths: plain blue text, no border/background. */
+/* Paths: 每个接口单独一行，左对齐，蓝色等宽文字，无边框 */
+.cf-rule-node .cf-rule-section .cf-rule-value.cf-paths {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
 .path-chip {
+  display: block;
+  width: 100%;
+  text-align: left;
   color: var(--devui-brand, #3a5bbc);
   font-family: monospace;
   font-size: 12px;
   word-break: break-all;
+}
+
+/* IP 白名单条目：tag + CIDR 明细图标 */
+.ip-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.cidr-info-icon {
+  cursor: pointer;
+  font-size: 13px;
+  color: rgb(95, 170, 21);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* CIDR 明细弹窗 */
+.cidr-detail {
+  .cidr-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    margin-bottom: 12px;
+
+    .k {
+      display: inline-block;
+      width: 76px;
+      color: var(--devui-aide-text, #9195a3);
+      font-size: 12px;
+    }
+
+    .v {
+      color: var(--devui-text, #252b3a);
+      font-family: monospace;
+      font-size: 12px;
+    }
+  }
+
+  .cidr-ips-title {
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    margin-bottom: 6px;
+
+    .cidr-cap-note {
+      font-weight: 400;
+      color: var(--devui-aide-text, #9195a3);
+      font-size: 12px;
+    }
+  }
+
+  .cidr-ips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    max-height: 46vh;
+    overflow-y: auto;
+
+    .cidr-ip {
+      font-family: monospace;
+      font-size: 12px;
+      color: rgb(95, 170, 21);
+      min-width: 116px;
+    }
+  }
 }
 
 .empty-hint {

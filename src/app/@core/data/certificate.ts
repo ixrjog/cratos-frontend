@@ -6,6 +6,8 @@ import { EdsAssetVO, EdsInstanceVO } from './ext-datasource';
 
 export interface CertificateVO extends BaseVO, ValidVO, BusinessDocsVO, BusinessTagsVO {
   id: number;
+  instanceId?: number;
+  assetId?: number;
   certificateId: string;
   name: string;
   domainName: string;
@@ -22,6 +24,8 @@ export interface CertificatePageQuery extends PageQuery {
 
 export interface CertificateEdit {
   id?: number;
+  instanceId?: number;
+  assetId?: number;
   certificateId: string;
   name: string;
   domainName: string;

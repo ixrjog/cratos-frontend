@@ -48,6 +48,7 @@ export interface CommandExecPageQuery extends PageQuery {
   applyUsername: string;
   approvedBy: string;
   success: boolean;
+  remark: string;
 }
 
 

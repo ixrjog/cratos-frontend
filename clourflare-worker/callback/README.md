@@ -63,3 +63,6 @@ wrangler deploy
 ```bash
 wrangler tail   # 实时日志
 ```
+
+CF_CALLBACK_PK_RULES_CONFIG
+CF_CHANNEL_PALMPAY_RULES_CONFIG

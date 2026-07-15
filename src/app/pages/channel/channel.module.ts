@@ -29,9 +29,6 @@ import {
 import {
   ChannelRouteConfigEditorComponent
 } from './channel-route-config/channel-route-config-data-table/channel-route-config-editor/channel-route-config-editor.component';
-import {
-  ChannelRouteConfigLineComponent
-} from './channel-route-config/channel-route-config-data-table/channel-route-config-line/channel-route-config-line.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import {
   ButtonModule,
@@ -78,7 +75,6 @@ import { WorkbenchModule } from '../workbench/workbench.module';
     ChannelRouteConfigComponent,
     ChannelRouteConfigDataTableComponent,
     ChannelRouteConfigEditorComponent,
-    ChannelRouteConfigLineComponent,
   ],
   imports: [
     CommonModule,

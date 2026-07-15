@@ -221,15 +221,24 @@
       </d-data-table>
     </div>
     <div *ngIf="certificate.certificate" style="margin-top: 16px;">
-      <label style="font-weight: bold;">Certificate:</label>
+      <label style="font-weight: bold;">Certificate:
+        <d-icon [icon]="'icon-copy'" [operable]="true" title="Copy Certificate" style="margin-left: 6px;"
+                (click)="copyText(certificate.certificate, 'Certificate')"></d-icon>
+      </label>
       <pre style="margin-top: 4px; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto;">{{ certificate.certificate }}</pre>
     </div>
     <div *ngIf="certificate.certificateChain" style="margin-top: 12px;">
-      <label style="font-weight: bold;">Certificate Chain:</label>
+      <label style="font-weight: bold;">Certificate Chain:
+        <d-icon [icon]="'icon-copy'" [operable]="true" title="Copy Certificate Chain" style="margin-left: 6px;"
+                (click)="copyText(certificate.certificateChain, 'Certificate Chain')"></d-icon>
+      </label>
       <pre style="margin-top: 4px; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto;">{{ certificate.certificateChain }}</pre>
     </div>
     <div *ngIf="certificate.privateKey" style="margin-top: 12px;">
-      <label style="font-weight: bold;">Private Key:</label>
+      <label style="font-weight: bold;">Private Key:
+        <d-icon [icon]="'icon-copy'" [operable]="true" title="Copy Private Key" style="margin-left: 6px;"
+                (click)="copyText(certificate.privateKey, 'Private Key')"></d-icon>
+      </label>
       <pre style="margin-top: 4px; font-size: 11px; white-space: pre-wrap; background: var(--devui-base-bg, #f5f5f5); padding: 8px; border-radius: 4px; border: 1px solid var(--devui-dividing-line, #ddd); max-height: 200px; overflow-y: auto; filter: blur(4px); transition: filter 0.3s; cursor: pointer; user-select: none;" (click)="showPrivateKey = !showPrivateKey" [style.filter]="showPrivateKey ? 'none' : 'blur(4px)'" [style.user-select]="showPrivateKey ? 'text' : 'none'">{{ certificate.privateKey }}</pre>
     </div>
   </div>

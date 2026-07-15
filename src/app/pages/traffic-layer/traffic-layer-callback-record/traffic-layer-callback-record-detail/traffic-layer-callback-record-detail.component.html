@@ -112,13 +112,18 @@
           <div class="cf-node cf-rule-node" *ngFor="let rule of workersRules; let i = index" [id]="'cf-rule-node-' + i">
             <div class="cf-rule-head">
               <span class="rule-name-badge">{{ rule.name }}</span>
+              <i
+                class="icon icon-copy cf-rule-md-btn"
+                title="复制 Markdown 文档"
+                (click)="copyRuleMarkdown(rule)"
+              ></i>
             </div>
             <div class="cf-rule-section" *ngIf="rule.paths?.length">
               <div class="cf-rule-section-head">
                 <span class="cf-rule-label">Paths</span>
                 <span class="cf-count-badge">{{ (rule.paths || []).length }}</span>
               </div>
-              <div class="cf-rule-value">
+              <div class="cf-rule-value cf-paths">
                 <span class="path-chip" *ngFor="let p of rule.paths">{{ p }}</span>
               </div>
             </div>
@@ -128,13 +133,20 @@
                 <span class="cf-count-badge cf-count-badge--ip">{{ (rule.whitelist || []).length }}</span>
               </div>
               <div class="cf-rule-value">
-                <d-tag
-                  *ngFor="let ip of rule.whitelist"
-                  [tag]="ip"
-                  [labelStyle]="ipTagStyle(ip)"
-                  [customColor]="ipTagColor(ip)"
-                  [titleContent]="ipTagTitle(ip)"
-                ></d-tag>
+                <span class="ip-entry" *ngFor="let ip of rule.whitelist">
+                  <d-tag
+                    [tag]="ip"
+                    [labelStyle]="ipTagStyle(ip)"
+                    [customColor]="ipTagColor(ip)"
+                    [titleContent]="ipTagTitle(ip)"
+                  ></d-tag>
+                  <i
+                    *ngIf="isCidr(ip)"
+                    class="icon icon-view cidr-info-icon"
+                    title="查看 CIDR 明细"
+                    (click)="openCidrDetail(ip)"
+                  ></i>
+                </span>
                 <span class="empty-hint" *ngIf="!(rule.whitelist && rule.whitelist.length)">—</span>
               </div>
             </div>
@@ -152,5 +164,33 @@
       [aceValue]="workersRulesRaw"
       [mode]="'ace/mode/json'"
     ></app-ace-editor>
+  </div>
+</ng-template>
+
+<ng-template #cidrDetailTpl>
+  <div class="cidr-detail" *ngIf="cidrDetail">
+    <ng-container *ngIf="!cidrDetail.ipv6; else cidrIpv6">
+      <div class="cidr-meta">
+        <div><span class="k">Network</span><span class="v">{{ cidrDetail.network }}</span></div>
+        <div><span class="k">Netmask</span><span class="v">{{ cidrDetail.netmask }}</span></div>
+        <div><span class="k">Range</span><span class="v">{{ cidrDetail.first }} – {{ cidrDetail.last }}</span></div>
+        <div><span class="k">Broadcast</span><span class="v">{{ cidrDetail.broadcast }}</span></div>
+        <div><span class="k">Total</span><span class="v">{{ cidrDetail.total }}</span></div>
+        <div><span class="k">Usable</span><span class="v">{{ cidrDetail.usableFirst }} – {{ cidrDetail.usableLast }} ({{ cidrDetail.usableCount }})</span></div>
+      </div>
+      <div class="cidr-ips-title">
+        IP Addresses
+        <span *ngIf="cidrDetail.capped" class="cidr-cap-note">(前 {{ cidrDetail.cap }} 个，共 {{ cidrDetail.total }}）</span>
+      </div>
+      <div class="cidr-ips">
+        <span class="cidr-ip" *ngFor="let ip of cidrDetail.ips">{{ ip }}</span>
+      </div>
+    </ng-container>
+    <ng-template #cidrIpv6>
+      <div class="cidr-meta">
+        <div><span class="k">CIDR</span><span class="v">{{ cidrDetail.cidr }}</span></div>
+      </div>
+      <div class="cidr-ips-title">IPv6 网段不做逐一枚举。</div>
+    </ng-template>
   </div>
 </ng-template>

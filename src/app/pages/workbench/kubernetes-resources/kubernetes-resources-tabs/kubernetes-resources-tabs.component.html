@@ -9,6 +9,16 @@
     <i class="icon" [ngClass]="isFavorite?'icon-star':'icon-star-o'" ></i>
     {{ 'kubernetes.actions.favorite' | translate }}
   </d-button>
+  <d-button
+    *ngIf="!effectiveMobile && canOps"
+    class="button"
+    bsStyle="common"
+    (click)="openMyOpsFiles()"
+    title="My Ops Task Files (jstack / dumps)"
+  >
+    <i class="icon icon-file"></i>
+    Ops Files
+  </d-button>
   <d-select
     class="select"
     style="width: 300px;max-width: 300px"
@@ -160,3 +170,73 @@
     </div>
   </div>
 </div>
+
+<ng-template #myOpsFilesTpl>
+  <div dLoading [loading]="myOpsTasksLoading" style="min-height: 120px;">
+    <div *ngIf="!myOpsTasksLoading && myOpsTasks.length === 0" class="ops-files-empty">
+      No task files.
+    </div>
+    <table class="ops-files-table" *ngIf="myOpsTasks.length">
+      <thead>
+      <tr>
+        <th>Task No</th>
+        <th>OpsType</th>
+        <th>Application</th>
+        <th>Kubernetes</th>
+        <th>Time</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let task of myOpsTasks">
+        <td class="ops-files-mono" [title]="task.taskNo">{{ task.taskNo }}</td>
+        <td>
+          <d-tag
+            [tag]="task.opsType"
+            [labelStyle]="task.opsType === 'OPS_HEAP_DUMP' ? 'blue-w98' : task.opsType === 'OPS_JSTACK' ? 'green-w98' : 'default'"
+          ></d-tag>
+        </td>
+        <td [title]="task.applicationName">{{ task.applicationName }}</td>
+        <td>
+          <div [title]="task.instanceName"><span class="ops-files-label">cluster:</span>{{ task.instanceName }}</div>
+          <div class="ops-files-sub" [title]="task.namespace"><span class="ops-files-label">ns:</span>{{ task.namespace }}</div>
+          <div class="ops-files-mono" [title]="task.podName"><span class="ops-files-label">pod:</span>{{ task.podName }}</div>
+        </td>
+        <td>
+          <div>Created {{ task.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</div>
+          <div class="ops-files-expire" [class.expired]="!task.valid">{{ expireText(task.expiredTime) }}</div>
+        </td>
+        <td>
+          <span *ngIf="isTaskExpired(task)" class="ops-files-invalid">失效</span>
+          <div *ngIf="!isTaskExpired(task)" class="ops-files-actions">
+            <d-button
+              bsStyle="text"
+              [disabled]="opsTaskDownloading[task.taskNo]"
+              (click)="copyOpsTaskDownloadUrl(task)"
+              title="点击复制下载地址"
+            ><i class="icon icon-copy" style="margin-right: 4px;"></i>复制下载地址<span class="ops-files-size" *ngIf="task.fileSize">{{ humanFileSize(task.fileSize) }}</span></d-button>
+            <d-button
+              bsStyle="text"
+              [disabled]="opsTaskAnalyzing[task.taskNo]"
+              (click)="onOpsTaskAnalyze(task)"
+              title="在 Jifa 平台在线分析"
+            ><i class="icon icon-jump" style="margin-right: 4px;"></i>在线分析</d-button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="ops-files-footer">
+      <span class="ops-files-footer-tip">前往 (Java Issues Finding Assistant)</span>
+      <a
+        href="https://jifa.palmpay-inc.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ops-files-jifa-link"
+      >
+        <i class="icon icon-jump" style="margin-right: 4px;"></i>JIFA 在线分析平台
+      </a>
+    </div>
+  </div>
+</ng-template>

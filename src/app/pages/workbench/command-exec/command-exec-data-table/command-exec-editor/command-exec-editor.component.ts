@@ -23,9 +23,13 @@ export class CommandExecEditorComponent implements OnInit {
   execTarget: { instanceId: number, namespace: string } = { instanceId: null, namespace: '' };
   maxWaitingTime: number = 10;
   min: number = 10;
-  max: number = 60;
+  max: number = 300;
   namespaceOptions: string[] = [];
   instance: EdsInstanceVO;
+
+  /** Command content size limit: 120KB (UTF-8 bytes). */
+  readonly COMMAND_MAX_BYTES = 120 * 1024;
+  commandByteSize = 0;
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -37,6 +41,18 @@ export class CommandExecEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
+    this.updateCommandSize();
+  }
+
+  get commandOversize(): boolean {
+    return this.commandByteSize > this.COMMAND_MAX_BYTES;
+  }
+
+  /** Recompute the command byte size and enable/disable the dialog confirm button. */
+  private updateCommandSize() {
+    const command = this.formData?.command || '';
+    this.commandByteSize = new TextEncoder().encode(command).length;
+    this.data?.canConfirm?.(!this.commandOversize);
   }
 
   addForm() {
@@ -52,6 +68,7 @@ export class CommandExecEditorComponent implements OnInit {
 
   onCommandChange(command: string, commandExec: CommandExecVO) {
     commandExec.command = command;
+    this.updateCommandSize();
   }
 
   onSearchUser = (term: string) => {
@@ -93,7 +110,9 @@ export class CommandExecEditorComponent implements OnInit {
   onGetNamespace(instanceId: number) {
     this.commandService.queryCommandExecEdsInstanceNamespace({ instanceId: instanceId })
       .subscribe(({ body }) => {
-        this.namespaceOptions = body;
+        this.namespaceOptions = body || [];
+        // 查询后默认选中第一个命名空间
+        this.execTarget.namespace = this.namespaceOptions.length ? this.namespaceOptions[0] : '';
       });
   }
 

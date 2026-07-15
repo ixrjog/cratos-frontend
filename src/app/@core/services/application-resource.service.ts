@@ -8,6 +8,10 @@ import {
   KubernetesDeploymentImageVersion,
   QueryApplicationResourceKubernetesDetails,
   QueryKubernetesDeploymentOptions, RedeployKubernetesDeployment,
+  OpsJvmClassHistogram, JvmClassHistogramVO,
+  OpsJstack, JstackTaskVO,
+  OpsHeapDump, HeapDumpTaskVO,
+  OpsTaskVO, GetOpsTaskFileParam, GetOpsTaskFileVO,
 } from '../data/application-resource';
 
 @Injectable()
@@ -39,5 +43,25 @@ export class ApplicationResourceService extends ApplicationResourceData {
 
   redeployApplicationResourceKubernetesDeployment(param: RedeployKubernetesDeployment): Observable<HttpResult<Boolean>> {
     return this.apiService.put(this.baseUrl, '/kubernetes/deployment/redeploy', param);
+  }
+
+  opsJvmClassHistogram(param: OpsJvmClassHistogram): Observable<HttpResult<JvmClassHistogramVO>> {
+    return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/ops/jvm/class-histogram', param);
+  }
+
+  opsJstackTask(param: OpsJstack): Observable<HttpResult<JstackTaskVO>> {
+    return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/ops/jstack/task', param);
+  }
+
+  opsHeapDumpTask(param: OpsHeapDump): Observable<HttpResult<HeapDumpTaskVO>> {
+    return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/ops/heap/dump/task', param);
+  }
+
+  queryMyOpsTaskFiles(): Observable<HttpResult<OpsTaskVO[]>> {
+    return this.apiService.get(this.baseUrl, '/kubernetes/deployment/pod/container/ops/task/file/my/query', {});
+  }
+
+  getOpsTaskFile(param: GetOpsTaskFileParam): Observable<HttpResult<GetOpsTaskFileVO>> {
+    return this.apiService.post(this.baseUrl, '/kubernetes/deployment/pod/container/ops/task/file/get', param);
   }
 }

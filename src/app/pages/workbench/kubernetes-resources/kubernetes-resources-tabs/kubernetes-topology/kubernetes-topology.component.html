@@ -60,7 +60,7 @@
               <span class="topo-route-domain">{{ domain }}</span>
               <i
                 *ngIf="dnsMatch[domain]"
-                class="fa-solid fa-circle-check topo-route-dns-ok"
+                class="icon-right topo-route-dns-ok"
                 [title]="'DNS CNAME matches: ' + (dnsResolved[domain] || '')"
               ></i>
               <ng-container *ngIf="getRoute(dp.path, domain) as r">

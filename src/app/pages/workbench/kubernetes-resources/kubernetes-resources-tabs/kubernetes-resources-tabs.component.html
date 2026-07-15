@@ -61,6 +61,7 @@
     <d-tab [id]="''" [title]="'All'"></d-tab>
     <d-tab *ngFor="let cc of countryCodeOptions.slice(1)" [id]="cc" [title]="cc.toUpperCase()"></d-tab>
   </d-tabs>
+  <!-- 隐藏「选择资源名称」查询项（按需可恢复）
   <d-select
     *ngIf="!effectiveMobile"
     class="select"
@@ -73,6 +74,7 @@
     [isSearch]="true"
     (valueChange)="onResourceNameChange($event)"
   ></d-select>
+  -->
   <d-checkbox
     *ngIf="!isMobile"
     class="checkbox"
@@ -94,9 +96,9 @@
   </d-button>
 
 
-  <span class="ws-status" [ngClass]="'ws-status--' + wsStatus" title="WebSocket connection status">
+  <span class="ws-status" [ngClass]="'ws-status--' + wsStatus" title="Socket connection status">
     <span class="ws-status-dot"></span>
-    <span class="ws-status-text">{{ wsStatus === 'connected' ? 'WebSocket' : wsStatus === 'connecting' ? 'Connecting' : 'Offline' }}</span>
+    <span class="ws-status-text">{{ wsStatus === 'connected' ? 'Socket' : wsStatus === 'connecting' ? 'Connecting' : 'Offline' }}</span>
   </span>
 
   <span class="right-button" *ngIf="!effectiveMobile">

@@ -63,14 +63,13 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="recordName" header="Record Name" [editable]="true">
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
-          </div>
+    <d-column field="recordName" header="Record Name">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem['recordName'] }}</span>
+          <i class="icon icon-copy" style="margin-left: 6px; cursor: pointer; color: var(--devui-text-weak, #999);" dClipboard [content]="rowItem['recordName']"></i>
         </ng-template>
-      </d-cell-edit>
+      </d-cell>
     </d-column>
     <d-column field="envName" header="Env Name">
       <d-cell>
@@ -88,14 +87,13 @@
         </ng-template>
       </d-cell-edit>
     </d-column>
-    <d-column field="originServer" header="Origin Server" [editable]="true">
-      <d-cell-edit>
-        <ng-template let-rowItem="rowItem" let-column="column">
-          <div class="customized-editor edit-padding-fix">
-            <input class="devui-form-control" [(ngModel)]="rowItem[column.field]" />
-          </div>
+    <d-column field="originServer" header="Origin Server">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <span>{{ rowItem['originServer'] }}</span>
+          <i class="icon icon-copy" style="margin-left: 6px; cursor: pointer; color: var(--devui-text-weak, #999);" dClipboard [content]="rowItem['originServer']"></i>
         </ng-template>
-      </d-cell-edit>
+      </d-cell>
     </d-column>
     <d-column header="Tags" [width]="'250px'">
       <d-cell>
@@ -108,6 +106,7 @@
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onRowEdit(rowItem)"></d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
             <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
             <d-icon
@@ -154,6 +153,11 @@
       <li role="menuitem" (click)="onBatchDelete()">
         <a dDropDownMenuItem>
           <span class="icon-delete" style="padding-right: 5px; vertical-align: middle"> Delete</span>
+        </a>
+      </li>
+      <li role="menuitem" (click)="onBatchExportZoneFile()">
+        <a dDropDownMenuItem>
+          <span class="icon-export" style="padding-right: 5px; vertical-align: middle"> Export Zone File</span>
         </a>
       </li>
     </ul>

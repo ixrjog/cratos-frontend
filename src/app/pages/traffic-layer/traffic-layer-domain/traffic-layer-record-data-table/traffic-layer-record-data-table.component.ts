@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableComponent } from 'ng-devui';
 import { HttpResult, Table, TABLE_DATA } from '../../../../@core/data/base-data';
-import { ADD_OPERATION, DIALOG_DATA, DialogUtil } from '../../../../@shared/utils/dialog.util';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../../@shared/utils/dialog.util';
 import { TOAST_CONTENT, ToastUtil } from '../../../../@shared/utils/toast.util';
 import { getRowColor, onFetchValidData } from '../../../../@shared/utils/data-table.utli';
 import { Observable, zip } from 'rxjs';
@@ -185,6 +185,16 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
     }, JSON.parse(JSON.stringify(this.newTrafficLayerRecord)), { trafficLayerDomain: this.trafficLayerDomain });
   }
 
+  onRowEdit(rowItem: TrafficLayerRecordVO) {
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit Traffic Layer Record',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, rowItem, { trafficLayerDomain: this.trafficLayerDomain });
+  }
+
   onRowValid(rowItem: TrafficLayerRecordVO) {
     this.trafficLayerService.setTrafficLayerRecordValidById({ id: rowItem.id })
       .subscribe(() => {
@@ -276,4 +286,38 @@ export class TrafficLayerRecordDataTableComponent implements OnInit {
   }
 
   protected readonly getRowColor = getRowColor;
+
+  onBatchExportZoneFile() {
+    const rows: TrafficLayerRecordVO[] = this.datatable.getCheckedRows();
+    if (!rows || rows.length === 0) {
+      this.toastUtil.onErrorToast('Please select at least one record.');
+      return;
+    }
+    const lines: string[] = [];
+    lines.push('; Zone file exported from Cratos');
+    lines.push(`$TTL 300`);
+    rows.forEach(row => {
+      const recordName = row.recordName.endsWith('.') ? row.recordName : row.recordName + '.';
+      const target = row.routeTrafficTo || row.originServer;
+      if (target) {
+        const targetValue = target.endsWith('.') ? target : target + '.';
+        lines.push(`${recordName} 300 IN CNAME ${targetValue}`);
+      }
+    });
+    const content = lines.join('\n');
+    const dialogDate = {
+      id: 'zone-file-dialog',
+      width: '1200px',
+      maxHeight: '800px',
+      backdropCloseable: true,
+      html: true,
+      dialogtype: 'standard',
+      title: 'DNS Zone File',
+      content: `<div style="position: relative;"><i class="icon icon-copy" style="position: absolute; top: 8px; right: 8px; cursor: pointer; color: var(--devui-text-weak, #999); font-size: 16px; z-index: 1;" onclick="navigator.clipboard.writeText(document.getElementById('zone-file-content').innerText)"></i><pre id="zone-file-content" style="white-space: pre-wrap; word-break: break-all; max-height: 500px; overflow: auto; background: var(--devui-base-bg, #f5f5f5); padding: 12px; border-radius: 4px; font-size: 13px; color: var(--devui-text, #252b3a); border: 1px solid var(--devui-dividing-line, #dfe1e6);">${content}</pre></div>`,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      navigator.clipboard.writeText(content);
+      this.toastUtil.onSuccessToast('Copied to clipboard');
+    });
+  }
 }

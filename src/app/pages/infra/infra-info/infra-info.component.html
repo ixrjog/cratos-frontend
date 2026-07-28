@@ -1,0 +1,86 @@
+<div class="infra-info-page" dLoading [loading]="loading">
+  <!-- Country Tabs (top) -->
+  <div class="country-tabs">
+    <d-tabs type="options" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($any($event))">
+      <d-tab [id]="''" [title]="'All'"></d-tab>
+      <d-tab *ngFor="let cc of countryOptions" [id]="cc" [title]="cc"></d-tab>
+    </d-tabs>
+  </div>
+
+  <div class="main-layout">
+    <!-- Left: Aggregated project list -->
+    <div class="project-sidebar">
+      <div class="project-list">
+        <div
+          *ngFor="let p of projectList"
+          class="project-item"
+          [class.active]="selectedProject === p.project"
+          (click)="onSelectProject(p.project)"
+        >
+          <span class="project-name">{{ p.project }}</span>
+          <d-tag *ngIf="p.country" [tag]="p.country" [labelStyle]="'blue-w98'"></d-tag>
+        </div>
+      </div>
+      <div class="project-empty" *ngIf="projectList.length === 0 && !loading">No data</div>
+    </div>
+
+    <!-- Right: Env tabs + detail doc -->
+    <div class="detail-panel">
+      <div *ngIf="!selectedProject" class="empty-state">Select a project from the left</div>
+      <div *ngIf="selectedProject">
+        <!-- Env tabs -->
+        <div class="env-tabs" *ngIf="envList.length">
+          <d-tabs type="options" [activeTab]="selectedItem?.id" (activeTabChange)="onEnvChange($any($event))">
+            <d-tab *ngFor="let env of envList" [id]="env.id" [title]="env.envName || '-'"></d-tab>
+          </d-tabs>
+        </div>
+        <div *ngIf="selectedItem">
+          <div class="detail-toolbar">
+            <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onEdit()" title="Edit"></d-icon>
+          </div>
+          <div class="detail-doc" *ngIf="selectedItem.doc">
+            <markdown mermaid [data]="selectedItem.doc" [disableSanitizer]="true"></markdown>
+          </div>
+          <div class="empty-state" *ngIf="!selectedItem.doc">No document</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Dialog -->
+<div class="edit-overlay" *ngIf="editVisible" (click)="editVisible = false">
+  <div class="edit-dialog" (click)="$event.stopPropagation()">
+    <h4>Edit Infra Info <span class="edit-close" (click)="editVisible = false">&times;</span></h4>
+    <div class="edit-form">
+      <div class="edit-row">
+        <label>Name</label>
+        <input [(ngModel)]="editData.name" placeholder="Name" />
+      </div>
+      <div class="edit-row">
+        <label>Project</label>
+        <input [(ngModel)]="editData.project" placeholder="Project" />
+      </div>
+      <div class="edit-row">
+        <label>Env</label>
+        <input [(ngModel)]="editData.envName" placeholder="Env Name" />
+      </div>
+      <div class="edit-row">
+        <label>Country</label>
+        <input [(ngModel)]="editData.country" placeholder="Country" />
+      </div>
+      <div class="edit-row">
+        <label>Comment</label>
+        <input [(ngModel)]="editData.comment" placeholder="Comment" />
+      </div>
+      <div class="edit-row edit-row-full">
+        <label>Doc (Markdown)</label>
+        <textarea [(ngModel)]="editData.doc" placeholder="Markdown content" rows="12"></textarea>
+      </div>
+    </div>
+    <div class="edit-actions">
+      <button class="btn-cancel" (click)="editVisible = false">Cancel</button>
+      <button class="btn-save" [disabled]="editSaving" (click)="onSaveEdit()">{{ editSaving ? 'Saving...' : 'Save' }}</button>
+    </div>
+  </div>
+</div>

@@ -200,6 +200,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   fetchRelations() {
+    this.loadChannelRouteConfig();
     this.channelInfoService.queryChannelExtensions({ channelId: this.selectedChannel.id })
       .subscribe(({ body }) => {
         this.selectedChannel.members = {};
@@ -397,11 +398,32 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   routeConfigLoading = false;
   routeConfigId: number = null;
   routeConfig: ChannelRouteConfigVO = null;
+  /** Route config of the currently selected channel; drives the nav route-switch icon visibility. */
+  channelRouteConfig: ChannelRouteConfigVO = null;
   routeLineGroups: RouteLineGroup[] = [];
   routeSaving = false;
 
   get rangeSpace(): number {
     return ChannelViewComponent.RANGE_SPACE;
+  }
+
+  /**
+   * Load the selected channel's route config so the nav route-switch icon only shows
+   * when a real config exists. The backend returns a NO_DATA sentinel (id === null)
+   * when there is none, so gate on the id rather than the object itself.
+   */
+  private loadChannelRouteConfig() {
+    this.channelRouteConfig = null;
+    const channelId = this.selectedChannel?.id;
+    if (channelId == null) {
+      return;
+    }
+    this.channelRouteConfigService.getRouteConfig({ channelId })
+      .subscribe(({ body }) => {
+        this.channelRouteConfig = body && body.id != null ? body : null;
+      }, () => {
+        this.channelRouteConfig = null;
+      });
   }
 
   onOpenRouteConfig() {

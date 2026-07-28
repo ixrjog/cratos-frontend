@@ -81,6 +81,10 @@ const routes: Routes = [
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
       },
       {
+        path: 'infra',
+        loadChildren: () => import('./infra/infra.module').then(m => m.InfraModule),
+      },
+      {
         path: '',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
       },

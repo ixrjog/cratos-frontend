@@ -1,0 +1,280 @@
+.infra-info-page {
+  padding: 16px;
+}
+
+.country-tabs {
+  margin-bottom: 12px;
+}
+
+.main-layout {
+  display: flex;
+  gap: 12px;
+  min-height: calc(100vh - 200px);
+}
+
+.project-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--devui-base-bg, #fff);
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .project-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--devui-text, #252b3a);
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--devui-list-item-hover-bg, #f2f3f5);
+    }
+
+    &.active {
+      background: var(--devui-list-item-active-bg, #e9edfa);
+      border-left: 3px solid var(--devui-brand, #5e7ce0);
+      padding-left: 7px;
+    }
+  }
+
+  .project-empty {
+    text-align: center;
+    color: var(--devui-aide-text, #8a8e99);
+    padding: 24px 0;
+    font-size: 12px;
+  }
+}
+
+.detail-panel {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.env-tabs {
+  margin-bottom: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--devui-aide-text, #8a8e99);
+  padding: 60px 0;
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  .item-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: border-color 0.2s, background 0.2s;
+
+    &:hover {
+      border-color: var(--devui-brand, #5e7ce0);
+    }
+
+    &.active {
+      border-color: var(--devui-brand, #5e7ce0);
+      background: var(--devui-list-item-active-bg, #e9edfa);
+    }
+
+    .item-name {
+      font-weight: 500;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+}
+
+.item-detail {
+  margin-top: 8px;
+
+  h4 {
+    margin: 0 0 12px;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+
+    strong {
+      color: var(--devui-aide-text, #8a8e99);
+      margin-right: 4px;
+    }
+  }
+
+  .detail-comment {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+
+    strong {
+      color: var(--devui-aide-text, #8a8e99);
+      margin-right: 4px;
+    }
+  }
+
+  .detail-doc {
+    border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+    padding-top: 12px;
+  }
+}
+
+.detail-pagination {
+  margin-top: 16px;
+}
+
+// Edit Dialog
+.edit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 24px;
+  width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  h4 {
+    margin: 0 0 16px;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .edit-close {
+    float: right;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+}
+
+.edit-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .edit-row {
+    display: flex;
+    flex-direction: column;
+    width: calc(50% - 6px);
+
+    label {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 4px;
+    }
+
+    input {
+      padding: 6px 10px;
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 4px;
+      font-size: 13px;
+      background: var(--devui-global-bg, #f5f5f5);
+      color: var(--devui-text, #252b3a);
+      outline: none;
+
+      &:focus {
+        border-color: var(--devui-brand, #5e7ce0);
+      }
+    }
+
+    &.edit-row-full {
+      width: 100%;
+
+      textarea {
+        padding: 8px 10px;
+        border: 1px solid var(--devui-dividing-line, #dfe1e6);
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 13px;
+        background: var(--devui-global-bg, #f5f5f5);
+        color: var(--devui-text, #252b3a);
+        resize: vertical;
+        outline: none;
+
+        &:focus {
+          border-color: var(--devui-brand, #5e7ce0);
+        }
+      }
+    }
+  }
+}
+
+.edit-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  .btn-cancel {
+    padding: 6px 16px;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 4px;
+    background: var(--devui-base-bg, #fff);
+    color: var(--devui-text, #252b3a);
+    cursor: pointer;
+  }
+
+  .btn-save {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--devui-brand, #5e7ce0);
+    color: #fff;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.detail-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}

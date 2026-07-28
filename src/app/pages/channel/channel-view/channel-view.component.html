@@ -25,6 +25,7 @@
       [title]="editMode ? 'Exit edit mode' : 'Enter edit mode'"
     ></d-icon>
     <d-icon
+      *ngIf="channelRouteConfig"
       style="vertical-align: bottom; margin-left: 10px;"
       [icon]="'icon-switch'"
       [operable]="true"

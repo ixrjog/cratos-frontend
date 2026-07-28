@@ -96,9 +96,25 @@
   </d-button>
 
 
-  <span class="ws-status" [ngClass]="'ws-status--' + wsStatus" title="Socket connection status">
+  <span
+    class="ws-status"
+    [ngClass]="'ws-status--' + wsStatus"
+    title="Socket 实时收发（应用层 payload 近似，不含压缩/帧头/TLS）"
+  >
     <span class="ws-status-dot"></span>
     <span class="ws-status-text">{{ wsStatus === 'connected' ? 'Socket' : wsStatus === 'connecting' ? 'Connecting' : 'Offline' }}</span>
+    <i
+      *ngIf="wsStatus === 'connected'"
+      class="ws-traffic-toggle"
+      [ngClass]="wsTrafficExpanded ? 'icon-chevron-up' : 'icon-chevron-down'"
+      (click)="wsTrafficExpanded = !wsTrafficExpanded"
+      title="展开/收起实时流量"
+    ></i>
+    <span class="ws-traffic" *ngIf="wsStatus === 'connected' && wsTrafficExpanded">
+      <span class="ws-traffic-rate">↓ {{ formatWsBytes(wsRateIn) }}/s</span>
+      <span class="ws-traffic-rate">↑ {{ formatWsBytes(wsRateOut) }}/s</span>
+      <span class="ws-traffic-total">Σ ↓ {{ formatWsBytes(wsBytesIn) }} · ↑ {{ formatWsBytes(wsBytesOut) }}</span>
+    </span>
   </span>
 
   <span class="right-button" *ngIf="!effectiveMobile">

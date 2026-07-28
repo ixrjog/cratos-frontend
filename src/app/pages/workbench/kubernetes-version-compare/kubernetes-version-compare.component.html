@@ -40,7 +40,7 @@
       </div>
       <div class="spacing-table" dLoading [loading]="loading" [backdrop]="true">
         <d-data-table
-          [dataSource]="filteredVersions"
+          [dataSource]="pagedVersions"
           [scrollable]="true"
           [tableOverflowType]="'overlay'"
         >
@@ -51,37 +51,80 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="DC Version">
+          <d-column [header]="result?.dcTitle || 'DC Version'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <div *ngFor="let img of rowItem.dcDeploymentImages">
-                  <span style="font-size: 11px; color: var(--devui-aide-text, #8a8e99); margin-right: 4px;">{{ img.name }}</span>
-                  <d-tag [tag]="getImageTag(img.image)" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                <div class="deploy-cards">
+                  <div class="deploy-card" *ngFor="let img of rowItem.dcDeploymentImages; trackBy: trackByImage">
+                    <div class="deploy-card-header">
+                      <span class="deploy-name" [title]="img.name">{{ img.name }}</span>
+                      <d-badge [count]="img.replicas" [style]="img.$replicasStyle" [status]="'warning'" [maxCount]="9999"></d-badge>
+                    </div>
+                    <div class="deploy-card-divider"></div>
+                    <div class="card-row">
+                      <span class="card-label">Image</span>
+                      <span class="card-value">
+                        <d-tag [tag]="img.$tag" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                      </span>
+                    </div>
+                    <div class="card-row" *ngIf="img.$hasResources">
+                      <span class="card-label">Resources</span>
+                      <span class="card-value"><i class="fa-solid fa-microchip res-icon"></i>{{ img.$limits }}</span>
+                    </div>
+                  </div>
                 </div>
-                <span *ngIf="!rowItem.dcDeploymentImages?.length" style="color: var(--devui-aide-text, #8a8e99);">-</span>
+                <span *ngIf="!rowItem.dcDeploymentImages?.length" class="deploy-empty">-</span>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="DR Version">
+          <d-column *ngIf="hasDrInfo" [header]="result?.drTitle || 'DR Version'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <div *ngFor="let img of rowItem.drDeploymentImages">
-                  <span style="font-size: 11px; color: var(--devui-aide-text, #8a8e99); margin-right: 4px;">{{ img.name }}</span>
-                  <d-tag [tag]="getImageTag(img.image)" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                <div class="deploy-cards">
+                  <div class="deploy-card" *ngFor="let img of rowItem.drDeploymentImages; trackBy: trackByImage">
+                    <div class="deploy-card-header">
+                      <span class="deploy-name" [title]="img.name">{{ img.name }}</span>
+                      <d-badge [count]="img.replicas" [style]="img.$replicasStyle" [status]="'warning'" [maxCount]="9999"></d-badge>
+                    </div>
+                    <div class="deploy-card-divider"></div>
+                    <div class="card-row">
+                      <span class="card-label">Image</span>
+                      <span class="card-value">
+                        <d-tag [tag]="img.$tag" [titleContent]="img.image" [labelStyle]="'blue-w98'"></d-tag>
+                      </span>
+                    </div>
+                    <div class="card-row" *ngIf="img.$hasResources">
+                      <span class="card-label">Resources</span>
+                      <span class="card-value"><i class="fa-solid fa-microchip res-icon"></i>{{ img.$limits }}</span>
+                    </div>
+                  </div>
                 </div>
-                <span *ngIf="!rowItem.drDeploymentImages?.length" style="color: var(--devui-aide-text, #8a8e99);">-</span>
+                <span *ngIf="!rowItem.drDeploymentImages?.length" class="deploy-empty">-</span>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Status">
+          <d-column *ngIf="hasDrInfo" header="Status">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <d-tag *ngIf="isVersionMatch(rowItem)" tag="MATCH" [labelStyle]="'green-w98'"></d-tag>
-                <d-tag *ngIf="!isVersionMatch(rowItem)" tag="DIFF" [labelStyle]="'red-w98'"></d-tag>
+                <d-tag *ngIf="rowItem.$match" tag="MATCH" [labelStyle]="'green-w98'"></d-tag>
+                <d-tag *ngIf="!rowItem.$match" tag="DIFF" [labelStyle]="'red-w98'"></d-tag>
               </ng-template>
             </d-cell>
           </d-column>
         </d-data-table>
+      </div>
+      <div class="spacing-pagination" *ngIf="filteredVersions.length > 0">
+        <d-pagination
+          [total]="filteredVersions.length"
+          [(pageSize)]="pageSize"
+          [(pageIndex)]="pageIndex"
+          [canViewTotal]="true"
+          [canChangePageSize]="true"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          [maxItems]="5"
+          (pageIndexChange)="onPageIndexChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></d-pagination>
       </div>
     </div>
   </da-col-item>

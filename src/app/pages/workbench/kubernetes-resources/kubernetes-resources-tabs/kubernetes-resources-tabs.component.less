@@ -58,6 +58,35 @@
   50% { opacity: 0.3; }
 }
 
+.ws-traffic-toggle {
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.ws-traffic {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 2px;
+  padding-left: 8px;
+  border-left: 1px solid var(--devui-dividing-line, #dfe1e6);
+  font-variant-numeric: tabular-nums;
+  .ws-traffic-rate {
+    white-space: nowrap;
+  }
+
+  .ws-traffic-total {
+    color: var(--devui-aide-text, #b7b9bf);
+    white-space: nowrap;
+  }
+}
+
 .ops-files-empty {
   padding: 24px 0;
   text-align: center;

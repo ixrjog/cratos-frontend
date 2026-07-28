@@ -15,6 +15,7 @@
           [(ngModel)]="trafficLayerDomain"
           [searchFn]="onSearchDomain"
           [isSearch]="true"
+          [disabled]="!operationType"
           placeholder="Search and select domain"
           (valueChange)="onDomainChange($event)"
         >

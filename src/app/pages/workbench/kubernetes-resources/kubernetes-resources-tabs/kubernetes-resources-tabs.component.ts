@@ -91,6 +91,16 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
 
   ws: WebSocket;
   wsStatus: 'connecting' | 'connected' | 'closed' = 'closed';
+  // Live WS traffic meter (application-layer payload approximation; excludes framing/compression/TLS).
+  wsBytesIn = 0;
+  wsBytesOut = 0;
+  wsMsgIn = 0;
+  wsMsgOut = 0;
+  wsRateIn = 0;   // bytes/sec over the last sampling window
+  wsRateOut = 0;  // bytes/sec over the last sampling window
+  wsTrafficExpanded = false;  // show the live traffic detail only after expanding
+  private wsLastBytesIn = 0;
+  private wsLastBytesOut = 0;
   timerRequest: Subscription;
   wsHeartbeatTimerRequest: Subscription;
   private destroy$ = new Subject<void>();
@@ -255,6 +265,57 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       i++;
     }
     return `${i === 0 ? value : value.toFixed(1)} ${units[i]}`;
+  }
+
+  /** Byte size of a WS payload: UTF-8 length for strings, exact for binary. */
+  private wsByteLength(data: any): number {
+    if (data == null) {
+      return 0;
+    }
+    if (typeof data === 'string') {
+      return new TextEncoder().encode(data).length;
+    }
+    if (data instanceof ArrayBuffer) {
+      return data.byteLength;
+    }
+    if (typeof Blob !== 'undefined' && data instanceof Blob) {
+      return data.size;
+    }
+    try {
+      return new TextEncoder().encode(String(data)).length;
+    } catch {
+      return 0;
+    }
+  }
+
+  /** Record an inbound WS message for the traffic meter. */
+  private recordWsIn(data: any): void {
+    this.wsBytesIn += this.wsByteLength(data);
+    this.wsMsgIn++;
+  }
+
+  /** Send over the WS while accounting outbound bytes for the traffic meter. */
+  private wsSend(data: string): void {
+    this.wsBytesOut += this.wsByteLength(data);
+    this.wsMsgOut++;
+    this.ws?.send(data);
+  }
+
+  /** Sample the byte counters once per second to derive send/receive rates (bytes/s). */
+  private startWsTrafficMeter(): void {
+    timer(1000, 1000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.wsRateIn = this.wsBytesIn - this.wsLastBytesIn;
+        this.wsRateOut = this.wsBytesOut - this.wsLastBytesOut;
+        this.wsLastBytesIn = this.wsBytesIn;
+        this.wsLastBytesOut = this.wsBytesOut;
+      });
+  }
+
+  /** Format bytes for the traffic meter (shows "0 B" instead of an empty string). */
+  formatWsBytes(bytes: number): string {
+    return this.humanFileSize(bytes) || '0 B';
   }
 
   private copyText(text: string, successMsg: string = '已复制') {
@@ -586,6 +647,8 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
       .subscribe(num => {
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.wsApiService.onPing(this.ws);
+          // Ping is an empty frame (~0 payload bytes); count it as one outbound message.
+          this.wsMsgOut++;
         }
       });
   }
@@ -612,6 +675,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
     this.wsOnOpen();
     this.initInterval();
     this.onWsHeartbeat();
+    this.startWsTrafficMeter();
     this.initRouteParams();
     this.onGetUserFavorite();
     document.addEventListener('visibilitychange', this.visibilityHandler);
@@ -699,7 +763,7 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         name: this.queryParam.name,
         countryCode: this.queryParam.countryCode,
       };
-      this.ws.send(JSON.stringify(param));
+      this.wsSend(JSON.stringify(param));
     }
   }
 
@@ -709,12 +773,13 @@ export class KubernetesResourcesTabsComponent implements OnInit, OnDestroy {
         topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS,
         action: WsMessageActionEnum.UNSUBSCRIBE,
       };
-      this.ws.send(JSON.stringify(param));
+      this.wsSend(JSON.stringify(param));
     }
   }
 
   wsOnMessage() {
     this.ws.onmessage = (event) => {
+      this.recordWsIn(event.data);
       const msg: MessageResponse<KubernetesDetailsVO> = JSON.parse(event.data);
       if (msg.topic === WsMessageTopicEnum.APPLICATION_KUBERNETES_DETAILS) {
         if (msg.body.success) {

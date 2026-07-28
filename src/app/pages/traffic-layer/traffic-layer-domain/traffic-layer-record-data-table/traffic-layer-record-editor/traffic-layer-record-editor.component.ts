@@ -26,6 +26,7 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
   trafficLayerDomain: TrafficLayerDomainVO;
   env: EnvVO;
   dnsRecord: string = '';
+  operationType: boolean;
 
   formRules: { [key: string]: DValidateRules } = {
     rule: { message: 'The form verification failed, please check.', messageShowType: 'text' },
@@ -50,8 +51,12 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.formData = this.data['formData'];
+    this.operationType = this.data['operationType'];
     this.trafficLayerDomain = this.data['trafficLayerDomain'];
     this.formData.domainId = this.trafficLayerDomain?.id;
+    if (!this.operationType && this.formData['env']) {
+      this.env = this.formData['env'];
+    }
   }
 
   addForm() {
@@ -59,6 +64,13 @@ export class TrafficLayerRecordEditorComponent implements OnInit {
       ...this.formData,
     };
     return this.trafficLayerService.addTrafficLayerRecord(param);
+  }
+
+  updateForm() {
+    const param: TrafficLayerRecordEdit = {
+      ...this.formData,
+    };
+    return this.trafficLayerService.updateTrafficLayerRecord(param);
   }
 
   onSearchDomain = (term: string) => {

@@ -364,6 +364,7 @@ export class ChannelNodeListDataTableComponent implements OnInit, OnDestroy, Aft
   }
 
   onChannelChange(selected: any) {
+    this.selectedChannel = selected;
     this.queryParam.channelId = selected?.value || null;
     if (selected) {
       localStorage.setItem(ChannelNodeListDataTableComponent.CHANNEL_STORAGE_KEY, JSON.stringify(selected));

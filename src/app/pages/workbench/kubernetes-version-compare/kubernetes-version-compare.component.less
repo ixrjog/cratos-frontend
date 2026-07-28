@@ -1,1 +1,74 @@
+.deploy-cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
+.deploy-card {
+  width: 264px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: var(--devui-base-bg, #fff);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 1px 8px var(--devui-light-shadow, rgba(45, 47, 51, 0.12));
+  }
+
+  .deploy-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    .deploy-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .deploy-card-divider {
+    border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+    margin: 8px 0;
+  }
+
+  .card-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    line-height: 20px;
+
+    .card-label {
+      color: #99a9bf;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    .card-value {
+      color: var(--devui-text, #252b3a);
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+/* Icon matches the text color and keeps a 2px gap. Uses ::ng-deep because
+   FontAwesome may replace <i> with a runtime <svg> that loses the component
+   style-encapsulation attribute. */
+:host ::ng-deep .res-icon {
+  color: inherit;
+  margin-right: 2px;
+}
+
+.deploy-empty {
+  color: var(--devui-aide-text, #8a8e99);
+}

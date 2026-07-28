@@ -11,3 +11,144 @@
     margin-left: 8px;
   }
 }
+
+// Route Switch Dialog
+.route-config-dialog {
+  padding: 8px 16px 16px;
+  min-height: 120px;
+
+  .rc-empty {
+    text-align: center;
+    color: var(--devui-aide-text, #8a8e99);
+    padding: 32px 0;
+  }
+
+  .rc-section {
+    margin-bottom: 20px;
+
+    .rc-section-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+      border-left: 3px solid var(--devui-brand, #5e7ce0);
+      padding-left: 8px;
+
+      .rc-hash-hint {
+        margin-left: 8px;
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--devui-aide-text, #8a8e99);
+      }
+    }
+  }
+
+  .rc-line-card {
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    background: var(--devui-base-bg, #fff);
+    transition: opacity 0.2s;
+
+    &.rc-disabled {
+      opacity: 0.55;
+    }
+
+    .rc-line-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+
+      .rc-line-tag {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--devui-text, #252b3a);
+      }
+    }
+
+    .rc-line-actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+  }
+
+  .rc-biz-card {
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+
+    .rc-biz-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .rc-biz-empty {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .rc-biz-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+
+      &.rc-disabled {
+        opacity: 0.55;
+      }
+
+      .rc-biz-line-tag {
+        width: 120px;
+        font-size: 12px;
+        color: var(--devui-text, #252b3a);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &.rc-off {
+          color: var(--devui-aide-text, #8a8e99);
+          text-decoration: line-through;
+        }
+      }
+
+      .rc-biz-slider {
+        flex: 1;
+      }
+
+      .rc-biz-weight {
+        min-width: 30px;
+        text-align: right;
+        font-size: 12px;
+        color: var(--devui-text, #252b3a);
+      }
+
+      .rc-biz-percent {
+        min-width: 50px;
+        text-align: right;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--devui-brand, #5e7ce0);
+      }
+
+      .rc-biz-range {
+        min-width: 110px;
+        text-align: right;
+        font-size: 11px;
+        font-family: monospace;
+        color: var(--devui-text, #252b3a);
+
+        &.rc-off {
+          color: var(--devui-aide-text, #8a8e99);
+          text-decoration: line-through;
+        }
+      }
+    }
+  }
+}

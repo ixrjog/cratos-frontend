@@ -4,7 +4,7 @@
       <h4>API安全测试 <span style="margin-left: 8px; background: #e6f7ed; color: #3dcca6; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"><i class="fa-solid fa-shield-halved"></i> SSRF</span> <span style="margin-left: 4px; background: #e9edfa; color: #5e7ce0; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"><i class="fa-solid fa-lock"></i> 权限控制</span> <span style="margin-left: 4px; background: #fff3e0; color: #f0a422; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"><i class="fa-solid fa-clipboard-list"></i> 审计</span> <span style="margin-left: 4px; background: #f3e8ff; color: #a97de0; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;"><i class="fa-solid fa-eye-slash"></i> 数据脱敏</span></h4>
 
       <div class="form-group">
-        <label style="margin-bottom: 2px; display: inline-flex; align-items: center;">请求报文 <span class="body-preview-btn" (click)="showBodyPreview()"><i class="icon icon-view"></i></span></label>
+        <label style="margin-bottom: 2px; display: inline-flex; align-items: center;">请求报文 <span class="body-preview-btn" (click)="showBodyPreview()"><i class="icon icon-view"></i></span><span class="curl-btn" (click)="openCurlDialog()" title="粘贴 curl 命令，转换为请求报文">curl 转报文</span></label>
         <app-ace-editor
           *ngIf="aceEditorVisible"
           [minLines]="10"
@@ -106,6 +106,24 @@
     ></app-ace-editor>
     <div style="margin-top: 12px; text-align: right;">
       <button class="btn-save" style="padding:6px 16px;border:none;border-radius:4px;background:var(--devui-brand,#5e7ce0);color:#fff;cursor:pointer;" (click)="saveBodyToMessage()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Curl -> Request Message Dialog -->
+<div class="sign-map-overlay" *ngIf="curlDialogVisible" (click)="curlDialogVisible = false">
+  <div class="sign-map-dialog" (click)="$event.stopPropagation()">
+    <h4>curl 转报文 <span style="float:right;cursor:pointer;font-size:18px;color:#999" (click)="curlDialogVisible = false">&times;</span></h4>
+    <textarea
+      class="curl-input"
+      [(ngModel)]="curlInput"
+      placeholder="粘贴 curl 命令，例如：&#10;curl -X POST 'https://host/api/xxx' -H 'k: v' -d '{&quot;a&quot;:1}'"
+      spellcheck="false"
+    ></textarea>
+    <div class="curl-error" *ngIf="curlError">{{ curlError }}</div>
+    <div class="sign-map-actions">
+      <button class="btn-cancel" (click)="curlDialogVisible = false">取消</button>
+      <button class="btn-save" (click)="convertCurl()">转换并填充</button>
     </div>
   </div>
 </div>

@@ -27,7 +27,7 @@
     [loading]="table.loading"
     [checkable]="true"
   >
-    <d-column header="Name" [width]="'200px'">
+    <d-column header="Name" [width]="'500px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon
@@ -40,6 +40,13 @@
           >
             <span iconPrefix>{{ rowItem['name'] }}</span>
           </d-icon>
+          <d-tag
+            *ngIf="rowItem['gateway']"
+            tag="G"
+            [customColor]="'rgb(103, 58, 183)'"
+            [titleContent]="'Gateway'"
+            style="margin-left: 5px"
+          ></d-tag>
           <ng-template #configTemplate>
             <app-ace-editor
               [readonly]="true"
@@ -48,14 +55,16 @@
             ></app-ace-editor>
           </ng-template>
           <br />
-          <span class="font-color-comment">{{ rowItem['comment'] }}</span>
+          <span class="font-color-comment" style="word-break: break-word; overflow-wrap: anywhere;">{{ rowItem['comment'] }}</span>
+          <hr style="margin: 6px 0; border: none; border-top: 1px solid var(--devui-dividing-line, #dfe1e6);" />
+          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column field="resources" header="Resources" [width]="'300px'">
+    <d-column field="resources" header="Resources & Permissions">
       <d-cell>
-        <ng-template let-cellItem="cellItem">
-          <div *ngFor="let resource of cellItem | keyvalue">
+        <ng-template let-rowItem="rowItem">
+          <div *ngFor="let resource of rowItem['resources'] | keyvalue" style="word-break: break-word; overflow-wrap: anywhere;">
             <strong>{{ resource.key }}</strong>
             <br />
             <app-application-resources
@@ -64,12 +73,7 @@
             >
             </app-application-resources>
           </div>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Permissions" [width]="'300px'">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
+          <hr style="margin: 6px 0; border: none; border-top: 1px solid var(--devui-dividing-line, #dfe1e6);" />
           <div dLoading [loading]="rowItem['$loading']">
             <span *ngIf="rowItem['$show']">
               <app-application-permission-tag
@@ -86,14 +90,7 @@
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Tags" [width]="'200px'">
-      <d-cell>
-        <ng-template let-rowItem="rowItem">
-          <app-business-tags [businessTags]="rowItem['businessTags']"></app-business-tags>
-        </ng-template>
-      </d-cell>
-    </d-column>
-    <d-column header="Actions" [width]="'150px'">
+    <d-column header="Actions" [width]="'250px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
           <d-icon-group>

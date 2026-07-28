@@ -40,6 +40,11 @@ export class ApiSecurityTestComponent {
   bodyPreviewContent = '';
   aceEditorVisible = true;
 
+  // curl -> 报文 转换
+  curlDialogVisible = false;
+  curlInput = '';
+  curlError = '';
+
   signatureAlgorithmOptions = ['PALMPAYAPPSIGN', 'FLEXIBANKAPPSIGN', 'ADMINPALMMERCHANTSIGN', 'PARTNERAPPSIGN', 'APIPALMPAYH5SIGN', 'PALMPAYBUSINESSAPPSIGN', 'APIBUSINESSWEBSIGN', 'TZAPPSIGN', 'NILEWEBSIGN', 'NONE'];
   privateKeyTypeOptions = ['DEBUG', 'RELEASE'];
 
@@ -417,5 +422,145 @@ Date: ${dateStr}
       this.aceEditorVisible = true;
       this.saveForm();
     });
+  }
+
+  // ---------- curl -> 报文 转换 ----------
+
+  openCurlDialog() {
+    this.curlInput = '';
+    this.curlError = '';
+    this.curlDialogVisible = true;
+  }
+
+  convertCurl() {
+    const curl = (this.curlInput || '').trim();
+    if (!curl) {
+      this.curlError = '请粘贴 curl 命令';
+      return;
+    }
+    const msg = this.curlToRequestMessage(curl);
+    if (!msg) {
+      this.curlError = '解析失败：未识别到 URL，请检查 curl 命令';
+      return;
+    }
+    this.curlError = '';
+    // 刷新 ace 编辑器以显示新内容（与 saveBodyToMessage 相同的做法）
+    this.aceEditorVisible = false;
+    this.requestMessage = msg;
+    this.curlDialogVisible = false;
+    setTimeout(() => {
+      this.aceEditorVisible = true;
+      this.saveForm();
+    });
+  }
+
+  /** Convert a curl command into the raw request-message format used by this page. */
+  private curlToRequestMessage(curl: string): string | null {
+    const tokens = this.tokenizeShell(curl);
+    let method = '';
+    let url = '';
+    let bareUrlFallback = '';
+    const headers: { key: string; value: string }[] = [];
+    let body = '';
+    const dataFlags = ['-d', '--data', '--data-raw', '--data-binary', '--data-ascii', '--data-urlencode'];
+    const noArgFlags = ['--compressed', '-k', '--insecure', '-s', '--silent', '-i', '--include',
+      '-L', '--location', '-v', '--verbose', '-g', '--globoff', '-#', '--progress-bar', '-f', '--fail'];
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (!t || t === 'curl') {
+        continue;
+      }
+      if (t === '-X' || t === '--request') {
+        method = tokens[++i] || '';
+        continue;
+      }
+      if (t === '-H' || t === '--header') {
+        const h = tokens[++i] || '';
+        const idx = h.indexOf(':');
+        if (idx > 0) {
+          headers.push({ key: h.slice(0, idx).trim(), value: h.slice(idx + 1).trim() });
+        }
+        continue;
+      }
+      if (dataFlags.includes(t)) {
+        body = tokens[++i] || '';
+        continue;
+      }
+      if (t === '-A' || t === '--user-agent') {
+        headers.push({ key: 'user-agent', value: tokens[++i] || '' });
+        continue;
+      }
+      if (t === '-e' || t === '--referer') {
+        headers.push({ key: 'referer', value: tokens[++i] || '' });
+        continue;
+      }
+      if (t === '-b' || t === '--cookie') {
+        headers.push({ key: 'cookie', value: tokens[++i] || '' });
+        continue;
+      }
+      if (noArgFlags.includes(t)) {
+        continue;
+      }
+      if (t.startsWith('-')) {
+        // Unknown flag: skip the flag itself (leave any following value to be treated normally).
+        continue;
+      }
+      // Bare token -> URL candidate (prefer an http(s) URL).
+      if (/^https?:\/\//i.test(t)) {
+        if (!url) {
+          url = t;
+        }
+      } else if (!bareUrlFallback) {
+        bareUrlFallback = t;
+      }
+    }
+    if (!url) {
+      url = bareUrlFallback;
+    }
+    if (!url) {
+      return null;
+    }
+    if (!method) {
+      method = body ? 'POST' : 'GET';
+    }
+    method = method.toUpperCase();
+    let msg = `${method} ${url} HTTP/1.1\n`;
+    msg += headers.map(h => `${h.key}: ${h.value}`).join('\n');
+    msg += body ? `\n\n${body}` : '\n';
+    return msg;
+  }
+
+  /** Minimal shell tokenizer: splits on whitespace while respecting single/double quotes. */
+  private tokenizeShell(input: string): string[] {
+    const s = input.replace(/\\\r?\n/g, ' '); // join line continuations
+    const tokens: string[] = [];
+    let i = 0;
+    const n = s.length;
+    while (i < n) {
+      while (i < n && /\s/.test(s[i])) {
+        i++;
+      }
+      if (i >= n) {
+        break;
+      }
+      let token = '';
+      while (i < n && !/\s/.test(s[i])) {
+        const ch = s[i];
+        if (ch === '\'' || ch === '"') {
+          const quote = ch;
+          i++;
+          while (i < n && s[i] !== quote) {
+            token += s[i];
+            i++;
+          }
+          i++; // skip closing quote
+        } else {
+          token += ch;
+          i++;
+        }
+      }
+      tokens.push(token);
+    }
+    return tokens;
   }
 }

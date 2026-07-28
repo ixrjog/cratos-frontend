@@ -43,7 +43,9 @@ export class ApplicationResourcesComponent {
         return value.displayName;
       case 'KUBERNETES_DEPLOYMENT':
       case 'KUBERNETES_SERVICE':
-        return value.displayName + '@' + value.instanceName;
+        return value.namespace
+          ? value.displayName + '@' + value.namespace + '@' + value.instanceName
+          : value.displayName + '@' + value.instanceName;
       default:
         return value.displayName;
     }

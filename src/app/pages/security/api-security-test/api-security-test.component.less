@@ -256,6 +256,59 @@
   }
 }
 
+.curl-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid @devui-dividing-line;
+  border-radius: 4px;
+  background: @devui-base-bg;
+  color: @devui-text;
+
+  &:hover {
+    border-color: var(--devui-brand, #5e7ce0);
+    color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.curl-input {
+  width: 100%;
+  height: 220px;
+  min-height: 120px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid @devui-dividing-line;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  background: @devui-global-bg;
+  color: @devui-text;
+  resize: vertical;
+  outline: none;
+
+  &::placeholder {
+    color: var(--devui-aide-text, #8a8e99);
+  }
+
+  &:focus {
+    border-color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.curl-error {
+  margin-top: 8px;
+  color: #f66f6a;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
 .auto-match-label {
   display: inline-flex !important;
   align-items: center;

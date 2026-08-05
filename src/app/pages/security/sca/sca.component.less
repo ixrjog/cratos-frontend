@@ -1,0 +1,312 @@
+.sca-page {
+  padding: 16px;
+}
+
+.sca-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .app-select {
+    width: 400px;
+  }
+
+  .branch-input {
+    width: 180px;
+  }
+}
+
+.sca-result {
+  min-height: 0;
+}
+
+.info-cards-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--devui-aide-text, #8a8e99);
+  padding: 24px 0;
+  font-size: 14px;
+}
+
+.info-card {
+  width: 600px;
+  flex: 0 0 600px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+
+  &.scan-card {
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+  }
+
+  h5 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .build-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .same-tasks {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--devui-dividing-line, #dfe1e6);
+
+    .same-tasks-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 6px;
+    }
+
+    .same-task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 12px;
+
+      .task-build {
+        color: var(--devui-brand, #5e7ce0);
+        min-width: 40px;
+      }
+
+      .task-time {
+        color: var(--devui-aide-text, #8a8e99);
+        margin-left: auto;
+      }
+
+      .task-view {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .info-row {
+    display: flex;
+    align-items: baseline;
+    padding: 4px 0;
+    font-size: 13px;
+
+    .label {
+      width: 100px;
+      flex-shrink: 0;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .value {
+      color: var(--devui-text, #252b3a);
+      word-break: break-all;
+    }
+
+    .commit-msg {
+      white-space: pre-line;
+      max-width: 600px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.scan-history {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  background: var(--devui-base-bg, #fff);
+
+  .scan-history-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0 0 0 auto;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .scan-search {
+      width: 260px;
+    }
+  }
+
+  d-pagination {
+    margin-top: 12px;
+  }
+}
+
+.components-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.components-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 20px;
+  width: 1200px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .components-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .components-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .components-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    input {
+      flex: 1;
+    }
+  }
+
+  .components-paste {
+    margin-bottom: 12px;
+
+    textarea {
+      width: 100%;
+      min-height: 60px;
+      resize: vertical;
+      font-size: 12px;
+      font-family: monospace;
+    }
+  }
+
+  .components-table {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+
+  .risk-tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: default;
+    vertical-align: middle;
+  }
+}
+
+.vuln-popover {
+  max-height: 360px;
+  overflow-y: auto;
+
+  .vuln-item {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .vuln-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .vuln-sev {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 0 6px;
+      border-radius: 8px;
+    }
+
+    .vuln-id {
+      font-weight: 600;
+      color: var(--devui-brand, #5e7ce0);
+    }
+
+    .vuln-score {
+      color: var(--devui-aide-text, #8a8e99);
+      font-size: 11px;
+    }
+
+    .vuln-summary {
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+      margin: 2px 0;
+    }
+
+    .vuln-fixed {
+      font-size: 12px;
+      color: rgb(95, 170, 21);
+    }
+
+    .vuln-aliases {
+      font-size: 11px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}
+
+.sca-spin {
+  display: inline-block;
+  animation: sca-rotate 1s linear infinite;
+  color: var(--devui-brand, #5e7ce0);
+}
+
+@keyframes sca-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

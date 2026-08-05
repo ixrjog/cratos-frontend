@@ -11,6 +11,8 @@ import { ApiSecurityTestComponent } from './api-security-test/api-security-test.
 import { ApiSecurityTestRecordComponent } from './api-security-test-record/api-security-test-record.component';
 import { CredentialLeakComponent } from './credential-leak/credential-leak.component';
 import { ApiScanComponent } from './api-scan/api-scan.component';
+import { ScaComponent } from './sca/sca.component';
+import { SastComponent } from './sast/sast.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -29,6 +31,8 @@ import { MarkdownModule } from 'ngx-markdown';
     ApiSecurityTestRecordComponent,
     CredentialLeakComponent,
     ApiScanComponent,
+    ScaComponent,
+    SastComponent,
   ],
   imports: [
     CommonModule,

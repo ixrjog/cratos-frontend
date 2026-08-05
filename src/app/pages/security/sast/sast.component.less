@@ -1,0 +1,281 @@
+.sca-page {
+  padding: 16px;
+}
+
+.sca-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .app-select {
+    width: 400px;
+  }
+
+  .branch-input {
+    width: 180px;
+  }
+}
+
+.sca-result {
+  min-height: 0;
+}
+
+.info-cards-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--devui-aide-text, #8a8e99);
+  padding: 24px 0;
+  font-size: 14px;
+}
+
+.info-card {
+  width: 600px;
+  flex: 0 0 600px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+
+  h5 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .build-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .scan-options {
+    margin-top: 10px;
+
+    .opt-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+
+      .opt-label {
+        width: 48px;
+        flex-shrink: 0;
+        font-size: 13px;
+        color: var(--devui-aide-text, #8a8e99);
+      }
+    }
+
+    .opt-tips {
+      margin-left: 56px;
+      font-size: 11px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .same-tasks {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--devui-dividing-line, #dfe1e6);
+
+    .same-tasks-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 6px;
+    }
+
+    .same-task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 12px;
+
+      .task-build {
+        color: var(--devui-brand, #5e7ce0);
+        min-width: 40px;
+      }
+
+      .task-time {
+        color: var(--devui-aide-text, #8a8e99);
+        margin-left: auto;
+      }
+
+      .task-view {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .info-row {
+    display: flex;
+    align-items: baseline;
+    padding: 4px 0;
+    font-size: 13px;
+
+    .label {
+      width: 100px;
+      flex-shrink: 0;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .value {
+      color: var(--devui-text, #252b3a);
+      word-break: break-all;
+    }
+
+    .commit-msg {
+      white-space: pre-line;
+      max-width: 600px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.scan-history {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  background: var(--devui-base-bg, #fff);
+
+  .scan-history-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0 0 0 auto;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .scan-search {
+      width: 260px;
+    }
+  }
+
+  d-pagination {
+    margin-top: 12px;
+  }
+}
+
+.components-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.components-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 20px;
+  width: 1200px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  .components-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .components-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .report-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+    font-size: 12px;
+    color: var(--devui-text, #252b3a);
+
+    b {
+      color: var(--devui-aide-text, #8a8e99);
+      font-weight: 600;
+    }
+  }
+
+  .report-body {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 65vh;
+    padding: 4px 8px;
+
+    .report-md {
+      display: block;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--devui-text, #252b3a);
+
+      // 交给全局 markdown 主题渲染，仅补充表格边框，避免报告表格无框
+      ::ng-deep table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 8px 0;
+      }
+      ::ng-deep th,
+      ::ng-deep td {
+        border: 1px solid var(--devui-dividing-line, #dfe1e6);
+        padding: 6px 10px;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.sca-spin {
+  display: inline-block;
+  animation: sca-rotate 1s linear infinite;
+  color: var(--devui-brand, #5e7ce0);
+}
+
+@keyframes sca-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

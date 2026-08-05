@@ -7,6 +7,8 @@ import { ApiSecurityTestComponent } from './api-security-test/api-security-test.
 import { ApiSecurityTestRecordComponent } from './api-security-test-record/api-security-test-record.component';
 import { CredentialLeakComponent } from './credential-leak/credential-leak.component';
 import { ApiScanComponent } from './api-scan/api-scan.component';
+import { ScaComponent } from './sca/sca.component';
+import { SastComponent } from './sast/sast.component';
 
 const routes: Routes = [
   {
@@ -19,6 +21,8 @@ const routes: Routes = [
       { path: 'api-test-record', component: ApiSecurityTestRecordComponent },
       { path: 'credential-leak', component: CredentialLeakComponent },
       { path: 'api-scan', component: ApiScanComponent },
+      { path: 'sca', component: ScaComponent },
+      { path: 'sast', component: SastComponent },
     ],
   },
 ];

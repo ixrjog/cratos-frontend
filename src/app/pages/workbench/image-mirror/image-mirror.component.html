@@ -1,0 +1,170 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="mirror-page">
+
+      <!-- 提交搬运 -->
+      <div class="mirror-form">
+        <h5 class="form-title">镜像搬运（公有镜像 → 私有仓库）</h5>
+        <div class="form-grid">
+          <div class="form-item full">
+            <label>源镜像 <span class="hint">Docker Hub，如 nginx:1.25.3 / bitnami/redis:7.2</span></label>
+            <input dTextInput [(ngModel)]="sourceImage" placeholder="nginx:1.25.3" />
+          </div>
+          <div class="form-item">
+            <label>目标仓库</label>
+            <d-select [options]="registries" [(ngModel)]="targetRegistry" [appendToBody]="true"></d-select>
+          </div>
+          <div class="form-item">
+            <label>项目/命名空间</label>
+            <input dTextInput [(ngModel)]="targetProject" placeholder="library" />
+          </div>
+          <div class="form-item">
+            <label>目标镜像名 <span class="hint">可选，默认取源名</span></label>
+            <input dTextInput [(ngModel)]="targetImage" placeholder="(默认与源相同)" />
+          </div>
+          <div class="form-item">
+            <label>目标 tag <span class="hint">可选，默认同源</span></label>
+            <input dTextInput [(ngModel)]="targetTag" placeholder="(默认与源相同)" />
+          </div>
+          <div class="form-item">
+            <label>全部架构</label>
+            <d-toggle [(ngModel)]="allArch"></d-toggle>
+          </div>
+        </div>
+        <div class="form-preview" *ngIf="formTargetPreview">
+          <div class="preview-label">搬运后使用示例</div>
+          <pre>目标镜像：{{ formTargetPreview }}</pre>
+          <pre>FROM {{ formTargetPreview }}</pre>
+          <pre>docker pull {{ formTargetPreview }}</pre>
+        </div>
+
+        <div class="form-actions">
+          <d-button bsStyle="primary" [disabled]="!sourceImage.trim() || pushing" (click)="onPush()">
+            {{ pushing ? 'Pushing...' : '搬运' }}
+          </d-button>
+        </div>
+      </div>
+
+      <!-- 历史 -->
+      <div class="mirror-history">
+        <div class="history-header">
+          <d-search class="search" [(ngModel)]="queryName" [iconPosition]="'left'"
+                    placeholder="Search by image / no" (searchFn)="onSearch()"></d-search>
+          <d-button bsStyle="common" (click)="onSearch()">Query</d-button>
+          <d-checkbox [label]="'Auto Refresh'" [isShowTitle]="false"
+                      [(ngModel)]="autoRefresh" (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
+          <h5>搬运记录</h5>
+        </div>
+        <div dLoading [loading]="loading" [backdrop]="true">
+          <d-data-table [dataSource]="mirrorHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
+            <d-column field="mirrorNo" header="No" [width]="'90px'"></d-column>
+            <d-column field="sourceImage" header="源镜像" [width]="'240px'"></d-column>
+            <d-column header="目标镜像" [width]="'340px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span dClipboard [content]="rowItem.targetRegistry + '/' + rowItem.targetProject + '/' + rowItem.targetImage + ':' + rowItem.targetTag"
+                        style="word-break: break-all;">
+                    {{ rowItem.targetRegistry }}/{{ rowItem.targetProject }}/{{ rowItem.targetImage }}:{{ rowItem.targetTag }}
+                  </span>
+                  <a (click)="onViewUsage(rowItem)" style="margin-left: 8px; color: var(--devui-brand, #5e7ce0); cursor: pointer; white-space: nowrap;" title="查看 Docker 使用示例">
+                    <i class="fas fa-code"></i> 示例
+                  </a>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="架构" [width]="'70px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span style="font-size: 12px;">{{ rowItem.allArch ? 'all' : 'single' }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="buildId" header="Build" [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <a *ngIf="rowItem.buildId && rowItem.jobName" [href]="getBuildUrl(rowItem)" target="_blank"
+                     style="color: var(--devui-brand, #5e7ce0);">#{{ rowItem.buildId }}</a>
+                  <span *ngIf="!rowItem.buildId">-</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="Operator" [width]="'100px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="Time" [width]="'180px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+                  <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="Status" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <i *ngIf="rowItem.mirrorStatus === 'RUNNING' || rowItem.mirrorStatus === 'QUEUED'"
+                     class="icon icon-loading mirror-spin" style="margin-right: 4px;"></i>
+                  <d-tag [tag]="rowItem.mirrorStatus"
+                         [labelStyle]="rowItem.mirrorStatus === 'SUCCESS' ? 'green-w98' : rowItem.mirrorStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="Actions" [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDelete(rowItem)" title="Delete"></d-icon>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
+        </div>
+        <d-pagination
+          *ngIf="mirrorTotal > 0"
+          [total]="mirrorTotal"
+          [(pageSize)]="pageSize"
+          [(pageIndex)]="pageIndex"
+          [canViewTotal]="true"
+          [canChangePageSize]="true"
+          [maxItems]="5"
+          (pageIndexChange)="onPageIndexChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></d-pagination>
+      </div>
+
+    </div>
+  </da-col-item>
+</da-layout-row>
+
+<!-- 使用示例弹窗 -->
+<div class="components-overlay" *ngIf="showUsageDialog" (click)="showUsageDialog = false">
+  <div class="usage-dialog" (click)="$event.stopPropagation()">
+    <div class="usage-header">
+      <h5>Docker 使用示例</h5>
+      <div class="usage-header-actions">
+        <d-button bsStyle="common" bsSize="sm" (click)="copyUsageMarkdown()">复制 Markdown</d-button>
+        <span class="close-btn" (click)="showUsageDialog = false">&times;</span>
+      </div>
+    </div>
+    <div class="usage-body">
+      <div class="usage-block old">
+        <div class="usage-label">原始用法（公有仓库 Docker Hub）</div>
+        <pre>FROM {{ sourceRef(usageRow) }}</pre>
+        <pre>docker pull {{ sourceRef(usageRow) }}</pre>
+      </div>
+
+      <div class="usage-arrow">⬇ 改为私有仓库</div>
+
+      <div class="usage-block new">
+        <div class="usage-label">现在用法（私有仓库）
+          <i class="icon icon-copy usage-copy" dClipboard [content]="targetRef(usageRow)" title="复制镜像地址"></i>
+        </div>
+        <pre>FROM {{ targetRef(usageRow) }}</pre>
+        <pre>docker pull {{ targetRef(usageRow) }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

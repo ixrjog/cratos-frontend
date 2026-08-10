@@ -214,6 +214,22 @@ export class ScaComponent implements OnInit, OnDestroy {
     return '#';
   }
 
+  /**
+   * 解析 languageStats(JSON 字符串)为语言分布数组,用于代码行数 popover。
+   * 结构: [{ language, code, comment, files }],取前若干项。
+   */
+  parseLangs(languageStats: string): any[] {
+    if (!languageStats) {
+      return [];
+    }
+    try {
+      const arr = JSON.parse(languageStats);
+      return Array.isArray(arr) ? arr.slice(0, 8) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   // Components dialog
   showComponentsDialog = false;
   componentsList: any[] = [];

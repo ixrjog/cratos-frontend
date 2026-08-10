@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
+import { UserService } from '../../../@core/services/user.service';
 import { map } from 'rxjs/operators';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 import { ActivatedRoute } from '@angular/router';
@@ -62,6 +63,7 @@ export class SastComponent implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private applicationService: ApplicationService,
+    private userService: UserService,
     private route: ActivatedRoute,
   ) {}
 
@@ -123,6 +125,35 @@ export class SastComponent implements OnInit, OnDestroy {
       clearInterval(this.refreshTimer);
       this.refreshTimer = null;
     }
+  }
+
+  // 安全故障定级规范文档
+  showPolicyDialog = false;
+  policyContent = '';
+
+  onOpenPolicy() {
+    this.showPolicyDialog = true;
+    if (!this.policyContent) {
+      fetch('assets/docs/security-vulnerability-grading-and-postmortem-policy.md')
+        .then(r => r.text())
+        .then(t => this.policyContent = t)
+        .catch(() => this.policyContent = '文档加载失败');
+    }
+  }
+
+  onExportPolicy() {
+    if (!this.policyContent) {
+      return;
+    }
+    const blob = new Blob([this.policyContent], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'security-vulnerability-grading-and-postmortem-policy.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   onSearchApplication = (term: string) => {
@@ -228,6 +259,23 @@ export class SastComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * 从已完成的 Jenkins 构建恢复报告（进程中断后修复用）
+   */
+  onRecoverReport(rowItem: any) {
+    if (rowItem.recovering) {
+      return;
+    }
+    rowItem.recovering = true;
+    this.apiService.post('/sast', '/scan/report/recover?scanId=' + rowItem.id, {})
+      .subscribe(() => {
+        rowItem.recovering = false;
+        this.queryScanHistory();
+      }, () => {
+        rowItem.recovering = false;
+      });
+  }
+
   getBuildUrl(rowItem: any): string {
     if (rowItem.queueRef) {
       try {
@@ -244,11 +292,13 @@ export class SastComponent implements OnInit, OnDestroy {
   reportScan: any = null;
   reportContent = '';
   tokenUsage: any = null;
+  remediationContent = '';
 
   onViewReport(rowItem: any) {
     this.reportScan = rowItem;
     this.reportContent = '';
     this.tokenUsage = null;
+    this.remediationContent = '';
     this.showReportDialog = true;
     this.fetchReport(rowItem.id);
   }
@@ -260,6 +310,7 @@ export class SastComponent implements OnInit, OnDestroy {
     }).subscribe(({ body }: any) => {
       this.reportContent = (body && body.securityReport) || '';
       this.tokenUsage = this.parseTokenUsage(body && body.tokenUsage);
+      this.remediationContent = (body && body.remediationNote) || '';
       this.reportLoading = false;
     }, () => {
       this.reportLoading = false;
@@ -329,5 +380,87 @@ export class SastComponent implements OnInit, OnDestroy {
       case 'LOW': return 'rgb(140, 140, 140)';
       default: return 'rgb(140, 140, 140)';
     }
+  }
+
+  // ===== 行编辑：跟进群 / 安全负责人 =====
+  showConfigDialog = false;
+  configSaving = false;
+  configScan: any = null;
+  configFollowUpGroup = '';
+  selectedOfficer: any = null;
+  configRemediationNote = '';
+  officerOptions: string[] = [];
+
+  onEditConfig(rowItem: any) {
+    this.configScan = rowItem;
+    this.configFollowUpGroup = rowItem.followUpGroup || '';
+    this.selectedOfficer = rowItem.securityOfficer ? { username: rowItem.securityOfficer } : null;
+    this.configRemediationNote = rowItem.remediationNote || '';
+    this.showConfigDialog = true;
+    this.loadOfficerOptions();
+  }
+
+  /**
+   * 加载历史记录中出现过的安全负责人(去重),用于快捷选择
+   */
+  private loadOfficerOptions() {
+    this.apiService.post('/sast', '/scan/officers/query', {})
+      .subscribe(({ body }: any) => {
+        this.officerOptions = body || [];
+      }, () => {
+        this.officerOptions = [];
+      });
+  }
+
+  /**
+   * 快捷选择安全负责人
+   */
+  pickOfficer(username: string) {
+    this.selectedOfficer = { username };
+  }
+
+  onOfficerTabChange(id: any) {
+    this.selectedOfficer = { username: String(id) };
+  }
+
+  // 查看处理结果(Markdown)
+  showRemediationDialog = false;
+  remediationViewContent = '';
+  remediationViewApp = '';
+
+  onViewRemediation(rowItem: any) {
+    this.remediationViewContent = rowItem.remediationNote || '';
+    this.remediationViewApp = rowItem.applicationName || '';
+    this.showRemediationDialog = true;
+  }
+
+  onSearchUser = (term: string) => {
+    return this.userService.queryUserPage({ queryName: term, page: 1, length: 10 })
+      .pipe(
+        map(({ body }: any) => body.data.map((user: any, index: number) => ({ id: index, option: user }))),
+      );
+  };
+
+  onOfficerChange(user: any) {
+    this.selectedOfficer = user || null;
+  }
+
+  onSaveConfig() {
+    if (!this.configScan) {
+      return;
+    }
+    this.configSaving = true;
+    this.apiService.post('/sast', '/scan/config/update', {
+      scanId: this.configScan.id,
+      followUpGroup: this.configFollowUpGroup || null,
+      securityOfficer: this.selectedOfficer?.username || null,
+      remediationNote: this.configRemediationNote || null,
+    }).subscribe(() => {
+      this.configSaving = false;
+      this.showConfigDialog = false;
+      this.queryScanHistory();
+    }, () => {
+      this.configSaving = false;
+    });
   }
 }

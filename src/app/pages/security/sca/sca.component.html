@@ -76,9 +76,9 @@
             </div>
 
             <!-- 相同 commit 的历史扫描任务 -->
-            <div class="same-tasks" *ngIf="build.theSameScanningTasks?.length">
-              <div class="same-tasks-title">Existing scans ({{ build.theSameScanningTasks.length }})</div>
-              <div class="same-task-item" *ngFor="let task of build.theSameScanningTasks">
+            <div class="same-tasks" *ngIf="build.theSameScaScanningTasks?.length">
+              <div class="same-tasks-title">Existing scans ({{ build.theSameScaScanningTasks.length }})</div>
+              <div class="same-task-item" *ngFor="let task of build.theSameScaScanningTasks">
                 <span class="task-status">
                   <i *ngIf="task.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
                   <d-tag [tag]="task.scanStatus" [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
@@ -129,12 +129,33 @@
           [tableOverflowType]="'overlay'"
         >
           <d-column field="scanNo" header="Scan No" [width]="'160px'"></d-column>
-          <d-column field="applicationName" header="Application" [width]="'180px'"></d-column>
-          <d-column header="Branch" [width]="'150px'">
+          <d-column header="Application / Repository" [width]="'220px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <span>{{ rowItem.branch }}</span>
-                <span *ngIf="rowItem.commitId" style="margin-left: 4px; font-size: 11px; color: rgb(95, 170, 21);">{{ rowItem.commitId | slice:0:8 }}</span>
+                <div class="app-name">{{ rowItem.applicationName }}</div>
+                <div class="repo-line">
+                  <span
+                    class="repo-branch"
+                    dPopover
+                    [trigger]="'click'"
+                    [position]="'bottom'"
+                    [controlled]="true"
+                    [content]="gitUrlTpl"
+                    [popoverStyle]="{ width: '520px' }"
+                    title="点击查看 Git URL"
+                  >
+                    <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
+                  </span>
+                  <span *ngIf="rowItem.commitId" style="margin-left: 8px; font-size: 11px; color: rgb(95, 170, 21);">
+                    <i class="fas fa-code-commit" style="margin-right: 3px;"></i>{{ rowItem.commitId | slice:0:8 }}
+                  </span>
+                </div>
+                <ng-template #gitUrlTpl>
+                  <div class="giturl-popover">
+                    <span class="giturl-text">{{ rowItem.gitUrl || '-' }}</span>
+                    <i *ngIf="rowItem.gitUrl" class="icon icon-copy giturl-copy" dClipboard [content]="rowItem.gitUrl" title="Copy"></i>
+                  </div>
+                </ng-template>
               </ng-template>
             </d-cell>
           </d-column>
@@ -143,6 +164,41 @@
               <ng-template let-rowItem="rowItem">
                 <d-badge [count]="rowItem.componentCount" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999" title="Total components"></d-badge>
                 <d-badge *ngIf="rowItem.vulnerableCount > 0" [count]="rowItem.vulnerableCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999" style="margin-left: 12px;" title="Vulnerable components"></d-badge>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="Code Lines" [width]="'130px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <ng-container *ngIf="rowItem.codeLines != null; else noLoc">
+                  <span
+                    class="loc-value"
+                    dPopover
+                    [trigger]="'hover'"
+                    [position]="'bottom'"
+                    [content]="locTpl"
+                    [popoverStyle]="{ width: '260px' }"
+                  >{{ rowItem.codeLines | number }}</span>
+                  <ng-template #locTpl>
+                    <div class="loc-popover">
+                      <div class="loc-sum">
+                        <span>代码 {{ rowItem.codeLines | number }}</span>
+                        <span>注释 {{ rowItem.commentLines | number }}</span>
+                        <span>文件 {{ rowItem.fileCount | number }}</span>
+                      </div>
+                      <table class="loc-lang" *ngIf="parseLangs(rowItem.languageStats).length">
+                        <tr *ngFor="let l of parseLangs(rowItem.languageStats)">
+                          <td class="lang-name">{{ l.language }}</td>
+                          <td class="lang-code">{{ l.code | number }}</td>
+                          <td class="lang-files">{{ l.files }} 文件</td>
+                        </tr>
+                      </table>
+                    </div>
+                  </ng-template>
+                </ng-container>
+                <ng-template #noLoc>
+                  <span style="color: var(--devui-aide-text, #8a8e99);">--</span>
+                </ng-template>
               </ng-template>
             </d-cell>
           </d-column>

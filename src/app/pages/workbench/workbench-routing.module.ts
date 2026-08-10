@@ -7,6 +7,7 @@ import { WorkOrderComponent } from './work-order/work-order.component';
 import { ApplicationCredentialComponent } from './application-credential/application-credential.component';
 import { WebTerminalComponent } from './web-terminal/web-terminal.component';
 import { KubernetesVersionCompareComponent } from './kubernetes-version-compare/kubernetes-version-compare.component';
+import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
 
 const routes: Routes = [
   { path: 'kubernetes-resources', component: KubernetesResourcesComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'work-order', component: WorkOrderComponent },
   { path: 'application-credential', component: ApplicationCredentialComponent },
   { path: 'web-terminal', component: WebTerminalComponent },
+  { path: 'image-mirror', component: ImageMirrorComponent },
 ];
 
 @NgModule({

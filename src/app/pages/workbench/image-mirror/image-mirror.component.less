@@ -1,0 +1,208 @@
+.mirror-page {
+  padding: 16px;
+}
+
+.mirror-form {
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  padding: 16px;
+  background: var(--devui-base-bg, #fff);
+  margin-bottom: 20px;
+
+  .form-title {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .form-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 300px;
+
+      &.full {
+        width: 632px;
+      }
+
+      label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--devui-text, #252b3a);
+
+        .hint {
+          font-weight: 400;
+          font-size: 11px;
+          color: var(--devui-aide-text, #8a8e99);
+          margin-left: 6px;
+        }
+      }
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  .form-preview {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border: 1px solid var(--devui-brand, #5e7ce0);
+    border-radius: 6px;
+    background: var(--devui-global-bg, #f7f8fa);
+
+    .preview-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--devui-brand, #5e7ce0);
+      margin-bottom: 6px;
+    }
+
+    pre {
+      margin: 2px 0;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
+
+  .form-actions {
+    margin-top: 16px;
+  }
+}
+.mirror-history {
+  padding: 16px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  background: var(--devui-base-bg, #fff);
+
+  .history-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    .search {
+      width: 260px;
+    }
+
+    h5 {
+      margin: 0 0 0 auto;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+
+  d-pagination {
+    margin-top: 12px;
+  }
+}
+
+.mirror-spin {
+  display: inline-block;
+  animation: mirror-rotate 1s linear infinite;
+  color: var(--devui-brand, #5e7ce0);
+}
+
+.components-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.usage-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 20px 24px;
+  width: 720px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+
+  .usage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .usage-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .usage-body {
+    .usage-block {
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 6px;
+      padding: 10px 14px;
+      background: var(--devui-global-bg, #f7f8fa);
+
+      &.new {
+        border-color: var(--devui-brand, #5e7ce0);
+      }
+
+      .usage-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--devui-aide-text, #8a8e99);
+        margin-bottom: 6px;
+
+        .usage-copy {
+          cursor: pointer;
+          color: var(--devui-brand, #5e7ce0);
+          margin-left: 6px;
+        }
+      }
+
+      pre {
+        margin: 2px 0;
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: 13px;
+        color: var(--devui-text, #252b3a);
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+    }
+
+    .usage-arrow {
+      text-align: center;
+      color: var(--devui-brand, #5e7ce0);
+      font-size: 12px;
+      margin: 10px 0;
+    }
+  }
+}
+
+@keyframes mirror-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

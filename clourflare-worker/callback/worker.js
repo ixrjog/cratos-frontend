@@ -18,7 +18,7 @@ const DEFAULT_CONFIG = {
 };
 
 const DENY_STATUS = 403;
-const DENY_BODY = JSON.stringify({ code: 403, message: 'Access denied: The IP is not on the whitelist.' });
+const denyBody = (ip) => JSON.stringify({ code: 403, message: `Access denied: IP ${ip} is not on the whitelist.` });
 
 export default {
   async fetch(request, env, ctx) {
@@ -33,7 +33,7 @@ export default {
     if (rule) {
       const allowed = rule.whitelist.some(entry => ipMatch(clientIp, entry));
       if (!allowed) {
-        return new Response(DENY_BODY, {
+        return new Response(denyBody(clientIp), {
           status: DENY_STATUS,
           headers: { 'Content-Type': 'application/json' },
         });

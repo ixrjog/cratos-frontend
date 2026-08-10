@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <da-layout-row [daGutter]="[12, 12]">
   <da-col-item [daSpan]="24" [daXs]="24">
     <div class="sca-page">
@@ -25,6 +26,16 @@
           placeholder="branch or tag"
         />
         <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
+        <a class="grafana-link"
+           href="https://grafana.palmpay-inc.com/d/fee94066-9508-4fb4-b8c1-831639be9c0d/aws-pz-bill?orgId=1&from=now-30d&to=now&timezone=browser"
+           target="_blank"
+           rel="noopener noreferrer"
+           title="AWS 账单成本分析 (Grafana)">
+          <i class="fas fa-chart-line" style="margin-right: 4px;"></i>Cost Analysis
+        </a>
+        <a class="grafana-link" style="margin-left: 16px; cursor: pointer;" (click)="onOpenPolicy()" title="高危漏洞安全故障定级与强制复盘规范">
+          <i class="fas fa-book" style="margin-right: 4px;"></i>定级规范
+        </a>
       </div>
 
       <!-- Result -->
@@ -84,26 +95,55 @@
               <div class="opt-tips">Sonnet 5（推荐）· Opus 5（最高质量）· Haiku 4.5（经济）</div>
             </div>
 
-            <!-- 相同 commit 的历史扫描任务 -->
-            <div class="same-tasks" *ngIf="build.theSameScanningTasks?.length">
-              <div class="same-tasks-title">Existing scans ({{ build.theSameScanningTasks.length }})</div>
-              <div class="same-task-item" *ngFor="let task of build.theSameScanningTasks">
-                <span class="task-status">
-                  <i *ngIf="task.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
-                  <d-tag [tag]="task.scanStatus" [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
-                </span>
-                <a *ngIf="task.buildId && task.jobName" class="task-build" [href]="getBuildUrl(task)" target="_blank">#{{ task.buildId }}</a>
-                <span *ngIf="task.buildId && !task.jobName" class="task-build">#{{ task.buildId }}</span>
-                <span class="task-time">{{ task.createTime | dDatePipe: 'y/M/d HH:mm' }}</span>
-                <d-icon
-                  class="task-view"
-                  [icon]="'icon-go-document'"
-                  [operable]="true"
-                  [disabled]="task.scanStatus !== 'SUCCESS'"
-                  (click)="onViewReport(task)"
-                  title="Report"
-                ></d-icon>
+            <!-- 相同 commit 的历史扫描任务（SAST + SCA） -->
+            <div class="same-tasks" *ngIf="build.theSameSastScanningTasks?.length || build.theSameScaScanningTasks?.length">
+
+              <!-- SAST 任务 -->
+              <div *ngIf="build.theSameSastScanningTasks?.length" class="same-tasks-group">
+                <div class="same-tasks-title">SAST scans ({{ build.theSameSastScanningTasks.length }})</div>
+                <div class="same-task-item" *ngFor="let task of build.theSameSastScanningTasks">
+                  <span class="task-status">
+                    <i *ngIf="task.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
+                    <d-tag [tag]="task.scanStatus" [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
+                  </span>
+                  <a *ngIf="task.buildId && task.jobName" class="task-build" [href]="getBuildUrl(task)" target="_blank">#{{ task.buildId }}</a>
+                  <span *ngIf="task.buildId && !task.jobName" class="task-build">#{{ task.buildId }}</span>
+                  <span class="task-count" title="Findings / Risk">
+                    <d-badge [count]="task.findingCount || 0" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999"></d-badge>
+                    <d-badge *ngIf="task.riskCount > 0" [count]="task.riskCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999" style="margin-left: 8px;"></d-badge>
+                  </span>
+                  <span class="task-time">{{ task.createTime | dDatePipe: 'y/M/d HH:mm:ss' }} <strong>{{ task.createTime | dRelativeTime: limit | async }}</strong></span>
+                  <d-icon
+                    class="task-view"
+                    [icon]="'icon-go-document'"
+                    [operable]="true"
+                    [disabled]="task.scanStatus !== 'SUCCESS'"
+                    (click)="onViewReport(task)"
+                    title="Report"
+                  ></d-icon>
+                </div>
               </div>
+
+              <!-- SCA 任务 -->
+              <div *ngIf="build.theSameScaScanningTasks?.length" class="same-tasks-group">
+                <div class="same-tasks-title">SCA scans ({{ build.theSameScaScanningTasks.length }})</div>
+                <div class="same-task-item" *ngFor="let task of build.theSameScaScanningTasks">
+                  <span class="task-status">
+                    <i *ngIf="task.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
+                    <d-tag [tag]="task.scanStatus" [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
+                  </span>
+                  <a *ngIf="task.buildId && task.jobName" class="task-build" [href]="getBuildUrl(task)" target="_blank">#{{ task.buildId }}</a>
+                  <span *ngIf="task.buildId && !task.jobName" class="task-build">#{{ task.buildId }}</span>
+                  <span class="task-count" title="Components">
+                    <d-badge [count]="task.componentCount || 0" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999"></d-badge>
+                  </span>
+                  <span class="task-time">{{ task.createTime | dDatePipe: 'y/M/d HH:mm:ss' }} <strong>{{ task.createTime | dRelativeTime: limit | async }}</strong></span>
+                  <a class="task-view" [href]="'#/pages/security/sca?scanNo=' + task.scanNo" target="_blank" title="View in SCA">
+                    <d-icon [icon]="'icon-go-document'" [operable]="true"></d-icon>
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -134,17 +174,38 @@
           [scrollable]="true"
           [tableOverflowType]="'overlay'"
         >
-          <d-column field="scanNo" header="Scan No" [width]="'160px'"></d-column>
-          <d-column field="applicationName" header="Application" [width]="'180px'"></d-column>
-          <d-column header="Branch" [width]="'150px'">
+          <d-column field="scanNo" header="Scan No" [width]="'80px'"></d-column>
+          <d-column header="Application / Repository" [width]="'200px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <span>{{ rowItem.branch }}</span>
-                <span *ngIf="rowItem.commitId" style="margin-left: 4px; font-size: 11px; color: rgb(95, 170, 21);">{{ rowItem.commitId | slice:0:8 }}</span>
+                <div class="app-name">{{ rowItem.applicationName }}</div>
+                <div class="repo-line">
+                  <span
+                    class="repo-branch"
+                    dPopover
+                    [trigger]="'click'"
+                    [position]="'bottom'"
+                    [controlled]="true"
+                    [content]="gitUrlTpl"
+                    [popoverStyle]="{ width: '520px' }"
+                    title="点击查看 Git URL"
+                  >
+                    <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
+                  </span>
+                  <span *ngIf="rowItem.commitId" style="margin-left: 8px; font-size: 11px; color: rgb(95, 170, 21);">
+                    <i class="fas fa-code-commit" style="margin-right: 3px;"></i>{{ rowItem.commitId | slice:0:8 }}
+                  </span>
+                </div>
+                <ng-template #gitUrlTpl>
+                  <div class="giturl-popover">
+                    <span class="giturl-text">{{ rowItem.gitUrl || '-' }}</span>
+                    <i *ngIf="rowItem.gitUrl" class="icon icon-copy giturl-copy" dClipboard [content]="rowItem.gitUrl" title="Copy"></i>
+                  </div>
+                </ng-template>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Findings" [width]="'140px'">
+          <d-column header="Findings" [width]="'100px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <d-badge [count]="rowItem.findingCount" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999" title="Total findings"></d-badge>
@@ -165,20 +226,45 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Model" [width]="'120px'">
+          <d-column header="Model / Cost" [width]="'120px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <span style="font-size: 12px; color: var(--devui-aide-text, #8a8e99);">{{ rowItem.aiModel }}</span>
+                <span *ngIf="rowItem.tokenCostUsd != null" style="font-size: 12px; color: rgb(95, 170, 21); font-weight: 600;" title="Cost (USD)">
+                  <br/>
+                  ${{ rowItem.tokenCostUsd | number:'1.2-4' }}
+                </span>
+                <span *ngIf="rowItem.tokenCostUsd == null" style="color: var(--devui-aide-text, #8a8e99);"><br/>--</span>
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Cost" [width]="'110px'">
+          <d-column header="Follow-up Group" [width]="'130px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
-                <span *ngIf="rowItem.tokenCostUsd != null" style="font-size: 12px; color: rgb(95, 170, 21); font-weight: 600;" title="Cost (USD)">
-                  ${{ rowItem.tokenCostUsd | number:'1.2-4' }}
-                </span>
-                <span *ngIf="rowItem.tokenCostUsd == null" style="color: var(--devui-aide-text, #8a8e99);">-</span>
+                <a *ngIf="rowItem.followUpGroup" [href]="rowItem.followUpGroup" target="_blank" rel="noopener noreferrer"
+                   style="color: var(--devui-brand, #5e7ce0);" title="打开钉钉群">
+                  <i class="fas fa-users" style="margin-right: 4px;"></i>钉钉群
+                </a>
+                <span *ngIf="!rowItem.followUpGroup" style="color: var(--devui-aide-text, #8a8e99);">--</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="Security Officer" [width]="'120px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <app-user-popover *ngIf="rowItem.securityOfficer" [username]="rowItem.securityOfficer"></app-user-popover>
+                <span *ngIf="!rowItem.securityOfficer" style="color: var(--devui-aide-text, #8a8e99);">--</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column header="Remediation Note" [width]="'100px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <a *ngIf="rowItem.remediationNote" (click)="onViewRemediation(rowItem)"
+                   style="color: var(--devui-brand, #5e7ce0); cursor: pointer;" title="查看处理结果">
+                  <i class="fas fa-file-alt" style="margin-right: 4px;"></i>查看
+                </a>
+                <span *ngIf="!rowItem.remediationNote" style="color: var(--devui-aide-text, #8a8e99);">--</span>
               </ng-template>
             </d-cell>
           </d-column>
@@ -189,7 +275,7 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Time" [width]="'180px'">
+          <d-column header="Time" [width]="'150px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
@@ -197,7 +283,7 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Status" [width]="'110px'">
+          <d-column header="Status" [width]="'90px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <i *ngIf="rowItem.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
@@ -215,6 +301,20 @@
                     [disabled]="rowItem.scanStatus !== 'SUCCESS'"
                     (click)="onViewReport(rowItem)"
                     title="Report"
+                  ></d-icon>
+                  <d-icon
+                    *ngIf="rowItem.scanStatus !== 'SUCCESS'"
+                    [icon]="rowItem.recovering ? 'icon-loading' : 'icon-refresh'"
+                    [ngClass]="{ 'sca-spin': rowItem.recovering }"
+                    [operable]="true"
+                    (click)="onRecoverReport(rowItem)"
+                    title="Recover report from build"
+                  ></d-icon>
+                  <d-icon
+                    [icon]="'icon-edit'"
+                    [operable]="true"
+                    (click)="onEditConfig(rowItem)"
+                    title="Edit follow-up / officer"
                   ></d-icon>
                   <d-icon
                     [icon]="'icon-delete'"
@@ -266,6 +366,10 @@
     </div>
 
     <div class="report-body" dLoading [loading]="reportLoading" [backdrop]="true">
+      <div class="remediation-box" *ngIf="remediationContent">
+        <div class="remediation-title">问题处理结果</div>
+        <markdown class="report-md" [data]="remediationContent" [disableSanitizer]="true"></markdown>
+      </div>
       <markdown *ngIf="reportContent"
                 class="report-md"
                 lineNumbers
@@ -274,6 +378,85 @@
                 [data]="reportContent"
                 [disableSanitizer]="true"></markdown>
       <div class="empty-state" *ngIf="!reportLoading && !reportContent">No report content.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Config Edit Dialog: Follow-up Group / Security Officer -->
+<div class="components-overlay" *ngIf="showConfigDialog" (click)="showConfigDialog = false">
+  <div class="config-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>Edit — {{ configScan?.applicationName }} ({{ configScan?.scanNo }})</h5>
+      <span class="close-btn" (click)="showConfigDialog = false">&times;</span>
+    </div>
+    <div class="config-body">
+      <div class="config-item">
+        <label>处理跟进群 <span class="config-hint">钉钉群邀请 URL，保存后列表可直接跳转</span></label>
+        <input dTextInput [(ngModel)]="configFollowUpGroup" placeholder="https://qr.dingtalk.com/action/joingroup?..." />
+      </div>
+      <div class="config-item">
+        <label>安全负责人 <span class="config-hint">搜索用户，或点击下方历史负责人快捷选择</span></label>
+        <d-select
+          [filterKey]="'username'"
+          [appendToBody]="true"
+          [searchFn]="onSearchUser"
+          [isSearch]="true"
+          [allowClear]="true"
+          [(ngModel)]="selectedOfficer"
+          placeholder="按 username 搜索用户"
+          (valueChange)="onOfficerChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.username }}</span>
+            <span style="float: right; color: #999;">{{ option.displayName }}</span>
+          </ng-template>
+        </d-select>
+        <div class="officer-tabs" *ngIf="officerOptions.length">
+          <d-tabs type="options" [activeTab]="selectedOfficer?.username" (activeTabChange)="onOfficerTabChange($event)">
+            <d-tab *ngFor="let o of officerOptions" [id]="o" [title]="o"></d-tab>
+          </d-tabs>
+        </div>
+      </div>
+      <div class="config-item">
+        <label>问题处理结果 <span class="config-hint">Markdown，处置/整改说明</span></label>
+        <textarea dTextarea [(ngModel)]="configRemediationNote" rows="8"
+                  placeholder="# 处置说明&#10;- 已修复的问题&#10;- 修复方式 / 关联 MR&#10;- 遗留风险与后续计划"></textarea>
+      </div>
+    </div>
+    <div class="config-footer">
+      <d-button bsStyle="common" (click)="showConfigDialog = false">Cancel</d-button>
+      <d-button bsStyle="primary" [disabled]="configSaving" (click)="onSaveConfig()">
+        {{ configSaving ? 'Saving...' : 'Save' }}
+      </d-button>
+    </div>
+  </div>
+</div>
+
+<!-- Remediation Viewer Dialog -->
+<div class="components-overlay" *ngIf="showRemediationDialog" (click)="showRemediationDialog = false">
+  <div class="config-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>问题处理结果 — {{ remediationViewApp }}</h5>
+      <span class="close-btn" (click)="showRemediationDialog = false">&times;</span>
+    </div>
+    <div class="report-body" style="max-height: 60vh;">
+      <markdown class="report-md" [data]="remediationViewContent" [disableSanitizer]="true"></markdown>
+    </div>
+  </div>
+</div>
+
+<!-- Policy Doc Dialog -->
+<div class="components-overlay" *ngIf="showPolicyDialog" (click)="showPolicyDialog = false">
+  <div class="components-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>安全故障定级与强制复盘规范</h5>
+      <div class="components-header-actions">
+        <d-button bsStyle="common" bsSize="sm" [disabled]="!policyContent" (click)="onExportPolicy()">Export MD</d-button>
+        <span class="close-btn" (click)="showPolicyDialog = false">&times;</span>
+      </div>
+    </div>
+    <div class="report-body">
+      <markdown class="report-md" [data]="policyContent" [disableSanitizer]="true"></markdown>
     </div>
   </div>
 </div>

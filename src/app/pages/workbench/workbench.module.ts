@@ -185,6 +185,7 @@ import { WorkOrderAwsIamTicketComponent } from './work-order/work-order-layout/w
 import { WorkOrderApplicationJvmTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-application-jvm-ticket/work-order-application-jvm-ticket.component';
 import { WorkOrderGcpIamTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-identity-ticket/work-order-gcp-iam-ticket/work-order-gcp-iam-ticket.component';
 import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layout/work-order-ticket/work-order-cloud-policy-ticket/work-order-gcp-iam-role-ticket/work-order-gcp-iam-role-ticket.component';
+import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
 
 @NgModule({
   declarations: [
@@ -267,6 +268,7 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
     WorkOrderGcpIamTicketComponent,
     WorkOrderGcpIamRoleTicketComponent,
     KubernetesVersionCompareComponent,
+    ImageMirrorComponent,
   ],
   imports: [
     CommonModule,

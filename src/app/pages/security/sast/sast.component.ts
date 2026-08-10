@@ -423,6 +423,82 @@ export class SastComponent implements OnInit, OnDestroy {
     this.selectedOfficer = { username: String(id) };
   }
 
+  // ===== SCA 组件查看弹窗 =====
+  showScaComponentsDialog = false;
+  scaComponentsLoading = false;
+  scaComponentsAll: any[] = [];
+  scaComponentsList: any[] = [];
+  scaComponentsApp = '';
+  scaComponentsGroupId = '';
+  scaComponentsArtifactId = '';
+  scaComponentsVersionFilter = 'ALL';
+  scaSnapshotCount = 0;
+  scaReleaseCount = 0;
+  scaVulnerableCount = 0;
+
+  /**
+   * 打开关联 SCA 扫描的组件列表(当前页弹窗)。
+   */
+  openScaComponents(scaScan: any) {
+    if (!scaScan || !scaScan.id) {
+      return;
+    }
+    this.scaComponentsApp = scaScan.applicationName || '';
+    this.scaComponentsGroupId = '';
+    this.scaComponentsArtifactId = '';
+    this.scaComponentsVersionFilter = 'ALL';
+    this.showScaComponentsDialog = true;
+    this.scaComponentsLoading = true;
+    this.apiService.post('/sca', '/scan/components/query', { scanId: scaScan.id })
+      .subscribe(({ body }: any) => {
+        this.scaComponentsAll = body || [];
+        this.scaSnapshotCount = this.scaComponentsAll.filter((c: any) => (c.version || '').toUpperCase().includes('SNAPSHOT')).length;
+        this.scaReleaseCount = this.scaComponentsAll.length - this.scaSnapshotCount;
+        this.scaVulnerableCount = this.scaComponentsAll.filter((c: any) => c.vulnerability).length;
+        this.filterScaComponents();
+        this.scaComponentsLoading = false;
+      }, () => {
+        this.scaComponentsLoading = false;
+      });
+  }
+
+  onScaComponentsSearch() {
+    this.filterScaComponents();
+  }
+
+  onScaVersionFilterChange(id: any) {
+    this.scaComponentsVersionFilter = String(id);
+    this.filterScaComponents();
+  }
+
+  private filterScaComponents() {
+    const groupId = this.scaComponentsGroupId.toLowerCase();
+    const artifactId = this.scaComponentsArtifactId.toLowerCase();
+    this.scaComponentsList = this.scaComponentsAll.filter((c: any) => {
+      if (groupId && !(c.groupId || '').toLowerCase().includes(groupId)) return false;
+      if (artifactId && !(c.artifactId || '').toLowerCase().includes(artifactId)) return false;
+      if (this.scaComponentsVersionFilter === 'SNAPSHOT' && !(c.version || '').toUpperCase().includes('SNAPSHOT')) return false;
+      if (this.scaComponentsVersionFilter === 'RELEASE' && (c.version || '').toUpperCase().includes('SNAPSHOT')) return false;
+      if (this.scaComponentsVersionFilter === 'VULNERABLE' && !c.vulnerability) return false;
+      return true;
+    });
+  }
+
+  /**
+   * 解析 SCA languageStats(JSON 字符串)为语言分布数组,用于 SCA 列代码行数 popover。
+   */
+  parseLangs(languageStats: string): any[] {
+    if (!languageStats) {
+      return [];
+    }
+    try {
+      const arr = JSON.parse(languageStats);
+      return Array.isArray(arr) ? arr.slice(0, 8) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   // 查看处理结果(Markdown)
   showRemediationDialog = false;
   remediationViewContent = '';

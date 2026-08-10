@@ -348,10 +348,22 @@
   }
 }
 
+.loc-cell {
+  text-align: left;
+}
+
 .loc-value {
-  cursor: default;
   color: var(--devui-text, #252b3a);
-  border-bottom: 1px dashed var(--devui-line, #adb0b8);
+}
+
+.loc-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  color: var(--devui-aide-text, #8a8e99);
+
+  &:hover {
+    color: var(--devui-brand, #5e7ce0);
+  }
 }
 
 .loc-popover {

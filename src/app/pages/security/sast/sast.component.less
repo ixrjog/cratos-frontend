@@ -441,3 +441,149 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.sca-line {
+  display: flex;
+  align-items: center;
+
+  & + .sca-line {
+    margin-top: 3px;
+  }
+}
+
+.sca-components {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.loc-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  color: var(--devui-aide-text, #8a8e99);
+
+  &:hover {
+    color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.loc-popover {
+  font-size: 12px;
+
+  .loc-sum {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+    color: var(--devui-text, #252b3a);
+  }
+
+  .loc-lang {
+    width: 100%;
+    border-collapse: collapse;
+
+    td {
+      padding: 2px 4px;
+    }
+    .lang-name {
+      color: var(--devui-text, #252b3a);
+    }
+    .lang-code {
+      text-align: right;
+      color: var(--devui-brand, #5e7ce0);
+      font-weight: 600;
+    }
+    .lang-files {
+      text-align: right;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}
+
+/* SCA Components 弹窗 */
+.components-dialog {
+  .components-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    input {
+      flex: 1;
+    }
+  }
+
+  .components-table {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+
+  .risk-tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: default;
+    vertical-align: middle;
+  }
+}
+
+.vuln-popover {
+  max-height: 360px;
+  overflow-y: auto;
+
+  .vuln-item {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .vuln-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .vuln-sev {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 0 6px;
+      border-radius: 8px;
+    }
+
+    .vuln-id {
+      font-weight: 600;
+      color: var(--devui-brand, #5e7ce0);
+    }
+
+    .vuln-score {
+      color: var(--devui-aide-text, #8a8e99);
+      font-size: 11px;
+    }
+
+    .vuln-summary {
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+      margin: 2px 0;
+    }
+
+    .vuln-fixed {
+      font-size: 12px;
+      color: rgb(95, 170, 21);
+    }
+
+    .vuln-aliases {
+      font-size: 11px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}

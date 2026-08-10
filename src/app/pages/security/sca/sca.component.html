@@ -167,18 +167,22 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Code Lines" [width]="'130px'">
+          <d-column header="Code Lines" [width]="'80px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
+                <div class="loc-cell">
                 <ng-container *ngIf="rowItem.codeLines != null; else noLoc">
+                  <span class="loc-value">{{ rowItem.codeLines | number }}</span>
                   <span
-                    class="loc-value"
+                    class="loc-icon"
                     dPopover
                     [trigger]="'hover'"
+                    [controlled]="true"
                     [position]="'bottom'"
                     [content]="locTpl"
-                    [popoverStyle]="{ width: '260px' }"
-                  >{{ rowItem.codeLines | number }}</span>
+                    [popoverStyle]="{ width: '340px' }"
+                    title="查看语言分布"
+                  ><i class="fas fa-chart-pie"></i></span>
                   <ng-template #locTpl>
                     <div class="loc-popover">
                       <div class="loc-sum">
@@ -199,6 +203,7 @@
                 <ng-template #noLoc>
                   <span style="color: var(--devui-aide-text, #8a8e99);">--</span>
                 </ng-template>
+                </div>
               </ng-template>
             </d-cell>
           </d-column>

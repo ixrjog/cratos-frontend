@@ -213,6 +213,52 @@
               </ng-template>
             </d-cell>
           </d-column>
+          <d-column header="SCA" [width]="'130px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <ng-container *ngIf="rowItem.scaScan; else noSca">
+                  <div class="sca-line sca-components" (click)="openScaComponents(rowItem.scaScan)" title="查看扫描组件">
+                    <d-badge [count]="rowItem.scaScan.componentCount || 0" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999" title="组件总数"></d-badge>
+                    <d-badge *ngIf="rowItem.scaScan.riskCount > 0" [count]="rowItem.scaScan.riskCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999" style="margin-left: 12px;" title="有漏洞组件数"></d-badge>
+                  </div>
+                  <div class="sca-line" *ngIf="rowItem.scaScan.codeLines != null">
+                    <span style="font-size: 12px; color: var(--devui-aide-text, #8a8e99);" title="代码行数">
+                      <i class="fas fa-code" style="margin-right: 4px;"></i>{{ rowItem.scaScan.codeLines | number }}
+                    </span>
+                    <span
+                      class="loc-icon"
+                      dPopover
+                      [trigger]="'hover'"
+                      [controlled]="true"
+                      [position]="'bottom'"
+                      [content]="scaLocTpl"
+                      [popoverStyle]="{ width: '340px' }"
+                      title="查看语言分布"
+                    ><i class="fas fa-chart-pie"></i></span>
+                    <ng-template #scaLocTpl>
+                      <div class="loc-popover">
+                        <div class="loc-sum">
+                          <span>代码 {{ rowItem.scaScan.codeLines | number }}</span>
+                          <span>注释 {{ rowItem.scaScan.commentLines | number }}</span>
+                          <span>文件 {{ rowItem.scaScan.fileCount | number }}</span>
+                        </div>
+                        <table class="loc-lang" *ngIf="parseLangs(rowItem.scaScan.languageStats).length">
+                          <tr *ngFor="let l of parseLangs(rowItem.scaScan.languageStats)">
+                            <td class="lang-name">{{ l.language }}</td>
+                            <td class="lang-code">{{ l.code | number }}</td>
+                            <td class="lang-files">{{ l.files }} 文件</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </ng-template>
+                  </div>
+                </ng-container>
+                <ng-template #noSca>
+                  <span style="color: var(--devui-aide-text, #8a8e99);">--</span>
+                </ng-template>
+              </ng-template>
+            </d-cell>
+          </d-column>
           <d-column field="buildId" header="Build" [width]="'80px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
@@ -457,6 +503,88 @@
     </div>
     <div class="report-body">
       <markdown class="report-md" [data]="policyContent" [disableSanitizer]="true"></markdown>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCA Components Dialog -->
+<div class="components-overlay" *ngIf="showScaComponentsDialog" (click)="showScaComponentsDialog = false">
+  <div class="components-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>SCA Components — {{ scaComponentsApp }} ({{ scaComponentsList.length }})</h5>
+      <span class="close-btn" (click)="showScaComponentsDialog = false">&times;</span>
+    </div>
+    <div class="components-search">
+      <input dTextInput [(ngModel)]="scaComponentsGroupId" placeholder="Group ID" (change)="onScaComponentsSearch()" />
+      <input dTextInput [(ngModel)]="scaComponentsArtifactId" placeholder="Artifact ID" (change)="onScaComponentsSearch()" />
+      <d-tabs type="options" [activeTab]="scaComponentsVersionFilter" (activeTabChange)="onScaVersionFilterChange($event)">
+        <d-tab [id]="'ALL'">
+          <ng-template dTabTitle>ALL <d-badge [count]="scaComponentsAll.length" [style]="'--devui-warning: rgb(79, 125, 255)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+        </d-tab>
+        <d-tab [id]="'SNAPSHOT'">
+          <ng-template dTabTitle>SNAPSHOT <d-badge [count]="scaSnapshotCount" [style]="'--devui-warning: rgb(255, 106, 13)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+        </d-tab>
+        <d-tab [id]="'RELEASE'">
+          <ng-template dTabTitle>RELEASE <d-badge [count]="scaReleaseCount" [style]="'--devui-warning: rgb(95, 170, 21)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+        </d-tab>
+        <d-tab [id]="'VULNERABLE'">
+          <ng-template dTabTitle>VULNERABLE <d-badge [count]="scaVulnerableCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+        </d-tab>
+      </d-tabs>
+    </div>
+    <div class="components-table" dLoading [loading]="scaComponentsLoading" [backdrop]="true">
+      <d-data-table
+        [dataSource]="scaComponentsList"
+        [scrollable]="true"
+        [tableOverflowType]="'overlay'"
+      >
+        <d-column field="groupId" header="Group ID"></d-column>
+        <d-column field="artifactId" header="Artifact ID"></d-column>
+        <d-column field="version" header="Version"></d-column>
+        <d-column field="scope" header="Scope"></d-column>
+        <d-column header="Risk" [width]="'160px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <span
+                *ngIf="rowItem.vulnerability"
+                class="risk-tag"
+                [style.background]="riskColor(rowItem.riskLevel)"
+                dPopover
+                [trigger]="'hover'"
+                [position]="'left-top'"
+                [controlled]="true"
+                [mouseEnterDelay]="300"
+                [content]="rowItem.vulnerabilities?.length ? scaVulnTemplate : null"
+                [popoverStyle]="{ width: '520px' }"
+              >{{ rowItem.riskLevel || 'UNKNOWN' }}</span>
+              <d-badge
+                *ngIf="rowItem.vulnerability && rowItem.vulnerabilities?.length"
+                [count]="rowItem.vulnerabilities.length"
+                [style]="'--devui-warning: ' + riskColor(rowItem.riskLevel)"
+                [status]="'warning'"
+                [maxCount]="9999"
+                style="margin-left: 10px;"
+              ></d-badge>
+              <ng-template #scaVulnTemplate>
+                <div class="vuln-popover">
+                  <div class="vuln-item" *ngFor="let v of rowItem.vulnerabilities">
+                    <div class="vuln-line">
+                      <span class="vuln-sev" [style.background]="riskColor(v.severity)">{{ v.severity || '-' }}</span>
+                      <a *ngIf="v.referenceUrl" [href]="v.referenceUrl" target="_blank" class="vuln-id">{{ v.id }}</a>
+                      <span *ngIf="!v.referenceUrl" class="vuln-id">{{ v.id }}</span>
+                      <span *ngIf="v.cvssScore != null" class="vuln-score">CVSS {{ v.cvssScore }}</span>
+                    </div>
+                    <div class="vuln-summary" *ngIf="v.summary">{{ v.summary }}</div>
+                    <div class="vuln-fixed" *ngIf="v.fixedVersion">Fixed in: <strong>{{ v.fixedVersion }}</strong></div>
+                    <div class="vuln-aliases" *ngIf="v.aliases?.length">{{ v.aliases.join(', ') }}</div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-template>
+          </d-cell>
+        </d-column>
+      </d-data-table>
     </div>
   </div>
 </div>

@@ -1,0 +1,389 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="ak-apply-page">
+
+      <!-- 列表 -->
+      <div class="ak-list">
+        <div class="list-header">
+          <d-button class="button" bsStyle="primary" (click)="onOpenApply()">New Apply</d-button>
+          <d-search class="search" [(ngModel)]="queryName" [iconPosition]="'left'"
+                    placeholder="申请单号 / 申请人 / 云实例" (searchFn)="onSearch()"></d-search>
+          <d-select class="status-select" [options]="statusOptions" [(ngModel)]="applyStatus"
+                    [appendToBody]="true" placeholder="状态" (ngModelChange)="onSearch()"></d-select>
+          <d-button bsStyle="common" (click)="onSearch()">查询</d-button>
+        </div>
+
+        <div dLoading [loading]="loading" [backdrop]="true">
+          <d-data-table [dataSource]="applyList" [scrollable]="true" [tableOverflowType]="'overlay'">
+            <d-column field="applyNo" header="申请单号" [width]="'160px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span dClipboard [content]="rowItem.applyNo" style="word-break: break-all;">{{ rowItem.applyNo }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="申请人" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-user-popover *ngIf="rowItem.applicant" [username]="rowItem.applicant"></app-user-popover>
+                  <span *ngIf="!rowItem.applicant">-</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="instanceName" header="云实例" [width]="'160px'"></d-column>
+            <d-column field="akAccountName" header="AK账户" [width]="'140px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span>{{ rowItem.akAccountName  }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="applyReason" header="申请说明" [width]="'260px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span [title]="rowItem.applyReason" class="ellipsis">{{ rowItem.applyReason }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="状态" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <d-tag [tag]="rowItem.applyStatus" [labelStyle]="statusLabelStyle(rowItem.applyStatus)"></d-tag>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="policyVersion" header="规范版本" [width]="'90px'"></d-column>
+            <d-column header="处理人" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-user-popover *ngIf="rowItem.operator" [username]="rowItem.operator"></app-user-popover>
+                  <span *ngIf="!rowItem.operator">-</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="申请时间" [width]="'170px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="操作" [width]="'150px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <a *ngIf="rowItem.applyStatus === 'CREATED'"
+                     class="op-link" (click)="onProcess(rowItem)">处理</a>
+                  <a *ngIf="rowItem.applyStatus === 'ISSUED'"
+                     class="op-link" (click)="onConfig(rowItem)">配置</a>
+                  <a *ngIf="rowItem.applyStatus === 'ISSUED' && rowItem.currentApplicant"
+                     class="op-link" (click)="onExtract(rowItem)">提取</a>
+                  <span *ngIf="rowItem.applyStatus !== 'CREATED' && rowItem.applyStatus !== 'ISSUED'">-</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
+        </div>
+
+        <d-pagination
+          *ngIf="total > 0"
+          [total]="total"
+          [(pageSize)]="pageSize"
+          [(pageIndex)]="pageIndex"
+          [canViewTotal]="true"
+          [canChangePageSize]="true"
+          [maxItems]="5"
+          (pageIndexChange)="onPageIndexChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></d-pagination>
+      </div>
+
+    </div>
+  </da-col-item>
+</da-layout-row>
+
+<!-- 申请弹窗 -->
+<div class="components-overlay" *ngIf="showApplyDialog" (click)="onCloseApply()">
+  <div class="apply-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h5>云 AK/SK 申请</h5>
+      <span class="close-btn" (click)="onCloseApply()">&times;</span>
+    </div>
+
+    <div class="dialog-body">
+      <!-- 安全规范承诺 -->
+      <div class="policy-box">
+        <div class="policy-title">
+          <i class="fas fa-shield-alt"></i> 核心承诺（申请即视为承诺）
+        </div>
+        <ol class="policy-list">
+          <li *ngFor="let item of commitments">{{ item }}</li>
+        </ol>
+        <p class="policy-hint">
+          AK/SK 等同账号密码：最小权限、集中托管、绝不入码入库入日志；泄漏先吊销、按敏感度与条目定级问责并复盘。
+        </p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-item full">
+          <label>云类型 <span class="req">*</span></label>
+          <d-tabs type="options" [activeTab]="selectedCloudType" (activeTabChange)="onCloudTypeChange($any($event))">
+            <d-tab *ngFor="let t of cloudTypes" [id]="t.id">
+              <ng-template dTabTitle>{{ t.label }}</ng-template>
+            </d-tab>
+          </d-tabs>
+        </div>
+        <div class="form-item">
+          <label>云实例 <span class="req">*</span></label>
+          <d-select
+            [options]="instances"
+            [filterKey]="'instanceName'"
+            [(ngModel)]="selectedInstance"
+            [isSearch]="true"
+            [appendToBody]="true"
+            dLoading
+            [loading]="instanceLoading"
+            [placeholder]="'选择 ' + selectedCloudType + ' 云实例'">
+          </d-select>
+        </div>
+        <div class="form-item">
+          <label>AK 账户名称 <span class="hint">可选，格式 ak-xxx（小写字母/数字，以 - 连接）</span></label>
+          <input dTextInput [(ngModel)]="akAccountName" placeholder="ak-my-application-xxx" />
+          <span class="field-error" *ngIf="!akAccountNameValid">
+            格式不正确：必须以 ak- 开头，仅含小写字母/数字并以 - 连接，末尾不能有 -，不能含其他特殊字符
+          </span>
+        </div>
+        <div class="form-item full">
+          <label>申请说明 <span class="req">*</span> <span class="hint">需包含：应用程序名称 / 用途 / 访问资源范围 / 数据敏感级</span></label>
+          <textarea dTextarea [(ngModel)]="applyReason" [rows]="8"
+                    placeholder="请填写应用程序名称，并说明用途、需访问的资源(bucket/前缀/服务)、所需权限与数据敏感级"></textarea>
+        </div>
+      </div>
+
+      <div class="commit-row">
+        <d-checkbox [(ngModel)]="commitmentAgreed"
+                    label="我已阅读并同意上述《AK/SK申请与安全管理规范》核心承诺"></d-checkbox>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <d-button bsStyle="common" [disabled]="submitting" (click)="onCloseApply()">取消</d-button>
+      <d-button bsStyle="primary" [disabled]="!canSubmit" (click)="onSubmit()">
+        {{ submitting ? '提交中...' : '提交申请' }}
+      </d-button>
+    </div>
+  </div>
+</div>
+
+<!-- 处理(创建 AK RAM 账户)弹窗 -->
+<div class="components-overlay" *ngIf="showProcessDialog" (click)="onCloseProcess()">
+  <div class="apply-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h5>处理申请（创建 AK RAM 账户）</h5>
+      <span class="close-btn" (click)="onCloseProcess()">&times;</span>
+    </div>
+
+    <div class="dialog-body">
+      <div class="process-meta" *ngIf="processRow">
+        <div><span class="k">申请单号</span><span class="v">{{ processRow.applyNo }}</span></div>
+        <div><span class="k">申请人</span><span class="v">{{ processRow.applicant }}</span></div>
+        <div><span class="k">云实例</span><span class="v">{{ processRow.instanceName }}</span></div>
+        <div class="full"><span class="k">申请说明</span><span class="v">{{ processRow.applyReason }}</span></div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-item full">
+          <label>云类型 <span class="req">*</span></label>
+          <d-tabs type="options" [activeTab]="processCloudType" (activeTabChange)="onProcessCloudTypeChange($any($event))">
+            <d-tab *ngFor="let t of cloudTypes" [id]="t.id">
+              <ng-template dTabTitle>{{ t.label }}</ng-template>
+            </d-tab>
+          </d-tabs>
+        </div>
+        <div class="form-item">
+          <label>云实例 <span class="req">*</span></label>
+          <d-select
+            [options]="processInstances"
+            [filterKey]="'instanceName'"
+            [(ngModel)]="processInstance"
+            [isSearch]="true"
+            [appendToBody]="true"
+            dLoading
+            [loading]="processInstanceLoading"
+            [placeholder]="'选择 ' + processCloudType + ' 云实例'">
+          </d-select>
+        </div>
+        <div class="form-item">
+          <label>AK 账户名称 <span class="req">*</span> <span class="hint">用于创建云 RAM 账户，格式 ak-xxx</span></label>
+          <input dTextInput [(ngModel)]="processAkAccountName" placeholder="ak-my-application-xxx" />
+          <span class="field-error" *ngIf="processAkAccountName && !processAkAccountNameValid">
+            格式不正确：必须以 ak- 开头，仅含小写字母/数字并以 - 连接
+          </span>
+        </div>
+        <div class="form-item">
+          <label>处理备注 <span class="hint">可选</span></label>
+          <input dTextInput [(ngModel)]="processComment" placeholder="(可选)" />
+        </div>
+      </div>
+
+      <p class="process-tip">确认后将调用云 API 创建 AK RAM 账户（RAM 用户），不会签发 AccessKey；AK/SK 由后续步骤单独签发。</p>
+    </div>
+
+    <div class="dialog-footer">
+      <d-button bsStyle="common" [disabled]="processing" (click)="onCloseProcess()">取消</d-button>
+      <d-button bsStyle="primary" [disabled]="!canProcess" (click)="submitProcess()">
+        {{ processing ? '处理中...' : '确认创建账户' }}
+      </d-button>
+    </div>
+  </div>
+</div>
+
+<!-- 配置详情弹窗(阿里云实例 + RAM 账户信息) -->
+<div class="components-overlay" *ngIf="showConfigDialog" (click)="onCloseConfig()">
+  <div class="apply-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h5>账户配置详情</h5>
+      <span class="close-btn" (click)="onCloseConfig()">&times;</span>
+    </div>
+
+    <div class="dialog-body" dLoading [loading]="configLoading" [backdrop]="true">
+      <ng-container *ngIf="configDetail">
+        <div class="config-section-title">阿里云实例</div>
+        <div class="process-meta">
+          <div><span class="k">实例名称</span><span class="v">{{ configDetail.instanceName  }}</span></div>
+          <div><span class="k">地域(Region)</span><span class="v">{{ configDetail.regionId  }}</span></div>
+          <div><span class="k">主账号UID</span><span class="v">{{ configDetail.accountUid  }}</span></div>
+          <div><span class="k">主账号名称</span><span class="v">{{ configDetail.accountName  }}</span></div>
+        </div>
+
+        <div class="config-section-title">账户信息(RAM 用户)</div>
+        <div class="process-meta">
+          <div><span class="k">申请单号</span><span class="v">{{ configDetail.applyNo  }}</span></div>
+          <div><span class="k">申请人</span><span class="v">{{ configDetail.applicant  }}</span></div>
+          <div><span class="k">RAM 用户ID</span><span class="v">{{ configDetail.ramUserId  }}</span></div>
+          <div><span class="k">RAM 用户名</span><span class="v">{{ configDetail.ramUserName  }}</span></div>
+          <div><span class="k">显示名称</span><span class="v">{{ configDetail.ramDisplayName  }}</span></div>
+          <div><span class="k">创建时间</span><span class="v">{{ configDetail.ramCreateDate  }}</span></div>
+          <div class="full"><span class="k">备注</span><span class="v">{{ configDetail.ramComments  }}</span></div>
+        </div>
+        <p class="process-tip" *ngIf="!configDetail.ramUserName">
+          未能从阿里云获取到该 RAM 账户信息（可能已被删除或无访问权限），以上仅展示本地记录与实例信息。
+        </p>
+
+        <div class="config-section-title">附加策略（当前 RAM 账户）</div>
+        <div class="policy-attach-row">
+          <d-select
+            class="policy-select"
+            [options]="policyOptions"
+            [filterKey]="'assetKey'"
+            [(ngModel)]="selectedPolicy"
+            [isSearch]="true"
+            [appendToBody]="true"
+            dLoading
+            [loading]="policyLoading"
+            placeholder="搜索并选择要附加的策略">
+          </d-select>
+          <d-button bsStyle="primary" [disabled]="!canAttachPolicy" (click)="onAttachPolicy()">
+            {{ attaching ? '附加中...' : '附加策略' }}
+          </d-button>
+        </div>
+        <d-data-table
+          *ngIf="configDetail.policies?.length"
+          [dataSource]="configDetail.policies"
+          [scrollable]="true"
+          [tableOverflowType]="'overlay'">
+          <d-column field="policyName" header="策略名称" [width]="'180px'"></d-column>
+          <d-column field="policyType" header="类型" [width]="'110px'"></d-column>
+          <d-column field="defaultVersion" header="版本" [width]="'80px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <span>{{ rowItem.defaultVersion  }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column field="description" header="描述">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <span [title]="rowItem.description">{{ rowItem.description  }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column field="attachDate" header="附加时间" [width]="'170px'">
+            <d-cell>
+              <ng-template let-rowItem="rowItem">
+                <span>{{ rowItem.attachDate  }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+        </d-data-table>
+        <p class="process-tip" *ngIf="!configDetail.policies?.length">
+          当前 RAM 账户暂未附加任何策略。
+        </p>
+      </ng-container>
+      <p *ngIf="!configLoading && !configDetail" class="process-tip">未获取到配置详情。</p>
+    </div>
+
+    <div class="dialog-footer">
+      <d-button bsStyle="primary" (click)="onCloseConfig()">关闭</d-button>
+    </div>
+  </div>
+</div>
+
+<!-- 提取 AK/SK 弹窗 -->
+<div class="components-overlay" *ngIf="showExtractDialog" (click)="onCloseExtract()">
+  <div class="apply-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h5>提取 AK/SK</h5>
+      <span class="close-btn" (click)="onCloseExtract()">&times;</span>
+    </div>
+
+    <div class="dialog-body" dLoading [loading]="extractLoading" [backdrop]="true">
+      <!-- 未提取：确认提示 -->
+      <ng-container *ngIf="!extractSecret">
+        <div class="process-meta" *ngIf="extractRow">
+          <div><span class="k">申请单号</span><span class="v">{{ extractRow.applyNo }}</span></div>
+          <div><span class="k">AK账户</span><span class="v">{{ extractRow.akAccountName  }}</span></div>
+        </div>
+        <p class="process-tip">
+          AK/SK 属高敏感凭据，<b>仅允许通过生物识别认证登录的用户提取</b>。SK <b>仅本次可见、领取后即焚</b>，请务必在关闭弹窗前复制并妥善保管；关闭后无法再次获取。
+        </p>
+        <p class="field-error" *ngIf="!biometricAuthenticated">
+          当前会话未使用生物识别认证登录，无法提取。请退出后使用生物识别登录再试。
+        </p>
+        <div class="dialog-footer">
+          <d-button bsStyle="common" [disabled]="extractLoading" (click)="onCloseExtract()">取消</d-button>
+          <d-button bsStyle="primary" [disabled]="extractLoading || !biometricAuthenticated" (click)="submitExtract()">
+            {{ extractLoading ? '提取中...' : '确认提取' }}
+          </d-button>
+        </div>
+      </ng-container>
+
+      <!-- 已提取：展示可复制的 AK/SK -->
+      <ng-container *ngIf="extractSecret">
+        <div class="secret-box">
+          <label>AK 账户名</label>
+          <div class="secret-row">
+            <input dTextInput readonly [value]="extractSecret.akAccountName " />
+          </div>
+          <label>AccessKeyId</label>
+          <div class="secret-row">
+            <input dTextInput readonly [value]="extractSecret.accessKeyId || ''" />
+            <d-button bsStyle="common" dClipboard [content]="extractSecret.accessKeyId"
+                      (click)="onCopied()">复制</d-button>
+          </div>
+          <label>AccessKeySecret</label>
+          <div class="secret-row">
+            <input dTextInput readonly [value]="extractSecret.accessKeySecret || ''" />
+            <d-button bsStyle="common" dClipboard [content]="extractSecret.accessKeySecret"
+                      (click)="onCopied()">复制</d-button>
+          </div>
+        </div>
+        <p class="process-tip">
+          请立即复制并妥善保管。SK 已在服务端销毁，关闭后将无法再次查看。
+        </p>
+        <div class="dialog-footer">
+          <d-button bsStyle="primary" (click)="onCloseExtract()">我已保存，关闭</d-button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

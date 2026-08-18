@@ -167,6 +167,51 @@
   </div>
 </ng-template>
 
+<ng-template #ruleBuilderTpl>
+  <div class="rule-builder">
+    <div class="rb-editor">
+      <div class="rb-rule" *ngFor="let rule of builderRules; let ri = index; trackBy: trackByIndex">
+        <div class="rb-rule-head">
+          <input dTextInput [(ngModel)]="rule.name" [ngModelOptions]="{ standalone: true }"
+                 placeholder="规则名称，例如 bd-bkash-channel" />
+          <i class="icon icon-delete rb-remove-rule" title="删除规则" (click)="removeRule(ri)"></i>
+        </div>
+
+        <div class="rb-section">
+          <div class="rb-section-head">
+            <span class="rb-label">Paths</span>
+            <span class="rb-add" (click)="addPath(rule)">+ Path</span>
+          </div>
+          <div class="rb-row" *ngFor="let p of rule.paths; let pi = index; trackBy: trackByIndex">
+            <input dTextInput [(ngModel)]="rule.paths[pi]" [ngModelOptions]="{ standalone: true }"
+                   placeholder="/bkash/checkout/payment/notify" />
+            <i class="icon icon-delete rb-remove" title="删除" (click)="removePath(rule, pi)"></i>
+          </div>
+        </div>
+
+        <div class="rb-section">
+          <div class="rb-section-head">
+            <span class="rb-label">IP Whitelist</span>
+            <span class="rb-add" (click)="addWhitelist(rule)">+ IP</span>
+          </div>
+          <div class="rb-row" *ngFor="let w of rule.whitelist; let wi = index; trackBy: trackByIndex">
+            <input dTextInput [(ngModel)]="rule.whitelist[wi]" [ngModelOptions]="{ standalone: true }"
+                   placeholder="0.0.0.0/0" />
+            <i class="icon icon-delete rb-remove" title="删除" (click)="removeWhitelist(rule, wi)"></i>
+          </div>
+        </div>
+      </div>
+
+      <d-button bsStyle="common" (click)="addRule()">+ 添加规则</d-button>
+    </div>
+
+    <div class="rb-preview">
+      <div class="rb-preview-head">JSON 预览（可复制）</div>
+      <pre class="rb-json">{{ builderJson }}</pre>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #cidrDetailTpl>
   <div class="cidr-detail" *ngIf="cidrDetail">
     <ng-container *ngIf="!cidrDetail.ipv6; else cidrIpv6">

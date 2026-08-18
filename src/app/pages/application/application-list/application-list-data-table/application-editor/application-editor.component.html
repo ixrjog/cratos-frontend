@@ -16,9 +16,74 @@
       </d-form-control>
     </d-form-item>
     <d-form-item>
-      <d-form-label>Config</d-form-label>
+      <d-form-label>Builds</d-form-label>
+      <d-form-control>
+        <div class="builds-editor">
+          <div class="build-card" *ngFor="let build of builds; let i = index">
+            <div class="build-card-head">
+              <span class="build-title">Build #{{ i + 1 }}</span>
+              <d-icon class="build-remove" [icon]="'icon-delete'" [operable]="true"
+                      title="删除" (click)="removeBuild(i)"></d-icon>
+            </div>
+
+            <div class="build-type">
+              <label>type</label>
+              <d-tabs type="options" [activeTab]="build.type || buildTypes[0]"
+                      (activeTabChange)="onBuildTypeChange(build, $any($event))">
+                <d-tab *ngFor="let t of buildTypes" [id]="t">
+                  <ng-template dTabTitle>{{ t }}</ng-template>
+                </d-tab>
+              </d-tabs>
+            </div>
+
+            <div class="build-grid">
+              <div class="build-field">
+                <label>project</label>
+                <input dTextInput [(ngModel)]="build.project" [name]="'project_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="project" />
+              </div>
+              <div class="build-field">
+                <label>moduleName</label>
+                <input dTextInput [(ngModel)]="build.moduleName" [name]="'moduleName_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="moduleName" />
+              </div>
+              <div class="build-field">
+                <label>branch</label>
+                <input dTextInput [(ngModel)]="build.branch" [name]="'branch_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="master" />
+              </div>
+              <div class="build-field">
+                <label>jdkVersion</label>
+                <input dTextInput [(ngModel)]="build.jdkVersion" [name]="'jdkVersion_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="1.8" />
+              </div>
+              <div class="build-field full">
+                <label>buildCmd</label>
+                <input dTextInput [(ngModel)]="build.buildCmd" [name]="'buildCmd_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="/opt/tools/maven/bin/mvn" />
+              </div>
+              <div class="build-field full">
+                <label>sshUrl</label>
+                <input dTextInput [(ngModel)]="build.sshUrl" [name]="'sshUrl_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="git@gitlab.example.com:group/repo.git" />
+              </div>
+            </div>
+          </div>
+
+          <d-button bsStyle="common" [icon]="'icon-add'" (click)="addBuild()">添加 Build</d-button>
+        </div>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>
+        <span class="config-toggle" (click)="showConfig = !showConfig">
+          <i class="fa-solid" [ngClass]="showConfig ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          Config
+        </span>
+      </d-form-label>
       <d-form-control>
         <app-ace-editor
+          *ngIf="showConfig"
           [minLines]="20"
           [maxLines]="30"
           [mode]="'ace/mode/yaml'"

@@ -215,6 +215,26 @@ export class ScaComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 将扫描时长(毫秒)人性化展示，如 "1 小时 28 分" / "3 分 5 秒" / "42 秒"
+   */
+  humanizeDuration(ms: number): string {
+    if (!ms || ms <= 0) {
+      return '';
+    }
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) {
+      return `${h} 小时 ${m} 分`;
+    }
+    if (m > 0) {
+      return `${m} 分 ${s} 秒`;
+    }
+    return `${s} 秒`;
+  }
+
+  /**
    * 解析 languageStats(JSON 字符串)为语言分布数组,用于代码行数 popover。
    * 结构: [{ language, code, comment, files }],取前若干项。
    */
@@ -234,6 +254,12 @@ export class ScaComponent implements OnInit, OnDestroy {
   showComponentsDialog = false;
   componentsList: any[] = [];
   allComponents: any[] = [];
+
+  // 内部模块弹窗
+  showInternalModulesDialog = false;
+  internalModulesLoading = false;
+  internalModulesList: any[] = [];
+  internalModulesScanApp = '';
   componentsLoading = false;
   snapshotCount = 0;
   releaseCount = 0;
@@ -403,6 +429,22 @@ export class ScaComponent implements OnInit, OnDestroy {
       this.componentsLoading = false;
     }, () => {
       this.componentsLoading = false;
+    });
+  }
+
+  // ===== 内部模块弹窗 =====
+  onViewInternalModules(rowItem: any) {
+    this.internalModulesScanApp = rowItem.applicationName;
+    this.internalModulesList = [];
+    this.showInternalModulesDialog = true;
+    this.internalModulesLoading = true;
+    this.apiService.post('/sca', '/scan/internal-module/query', {
+      scanId: rowItem.id,
+    }).subscribe(({ body }: any) => {
+      this.internalModulesList = body || [];
+      this.internalModulesLoading = false;
+    }, () => {
+      this.internalModulesLoading = false;
     });
   }
 

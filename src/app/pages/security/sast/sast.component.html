@@ -321,11 +321,14 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Time" [width]="'150px'">
+          <d-column header="Time" [width]="'180px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
                 <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                <span *ngIf="rowItem.scanDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
+                  耗时 {{ humanizeDuration(rowItem.scanDuration) }}
+                </span>
               </ng-template>
             </d-cell>
           </d-column>

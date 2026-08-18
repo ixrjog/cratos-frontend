@@ -54,6 +54,11 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
   @ViewChild('rawJsonTpl') rawJsonTpl: TemplateRef<any>;
   /** Template rendered inside the CIDR detail dialog. */
   @ViewChild('cidrDetailTpl') cidrDetailTpl: TemplateRef<any>;
+  /** Template rendered inside the visual rule-builder dialog. */
+  @ViewChild('ruleBuilderTpl') ruleBuilderTpl: TemplateRef<any>;
+
+  /** Rules being edited in the visual builder. */
+  builderRules: { name: string; paths: string[]; whitelist: string[] }[] = [];
 
   constructor(private trafficLayerService: TrafficLayerService,
               private dialogService: DialogService,
@@ -332,24 +337,69 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
     return this.isCidr(ip) ? 'CIDR range' : 'Single IP';
   }
 
+  // ===== Visual rule builder =====
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  addRule() {
+    this.builderRules.push({ name: '', paths: [ '' ], whitelist: [ '0.0.0.0/0' ] });
+  }
+
+  removeRule(index: number) {
+    this.builderRules.splice(index, 1);
+  }
+
+  addPath(rule: any) {
+    rule.paths.push('');
+  }
+
+  removePath(rule: any, index: number) {
+    rule.paths.splice(index, 1);
+  }
+
+  addWhitelist(rule: any) {
+    rule.whitelist.push('');
+  }
+
+  removeWhitelist(rule: any, index: number) {
+    rule.whitelist.splice(index, 1);
+  }
+
+  /** Live JSON built from the builder state (trims empties). */
+  get builderJson(): string {
+    const rules = (this.builderRules || []).map(r => ({
+      name: (r.name || '').trim(),
+      paths: (r.paths || []).map(p => (p || '').trim()).filter(p => p.length > 0),
+      whitelist: (r.whitelist || []).map(w => (w || '').trim()).filter(w => w.length > 0),
+    }));
+    return JSON.stringify({ rules }, null, 2);
+  }
+
   /** Open the raw JSON in a dialog. */
   openRawJson() {
-    if (!this.workersRulesRaw) {
-      return;
+    // 用当前已解析的规则初始化可视化编辑器；没有则给一条空规则
+    this.builderRules = (this.workersRules || []).map(r => ({
+      name: r.name || '',
+      paths: [ ...(r.paths || []) ],
+      whitelist: [ ...(r.whitelist || []) ],
+    }));
+    if (!this.builderRules.length) {
+      this.addRule();
     }
     const results = this.dialogService.open({
       id: 'cf-rules-raw-json',
       width: '70%',
       maxHeight: '90vh',
-      title: 'CloudFlare Workers Rules — Raw JSON',
+      title: 'CloudFlare Workers Rules — 编辑 / 复制 JSON',
       dialogtype: 'standard',
-      backdropCloseable: true,
-      contentTemplate: this.rawJsonTpl,
+      backdropCloseable: false,
+      contentTemplate: this.ruleBuilderTpl,
       buttons: [
         {
           cssClass: 'primary',
-          text: 'Copy',
-          handler: () => this.copyRaw(),
+          text: 'Copy JSON',
+          handler: () => this.copyToClipboard(this.builderJson),
         },
         {
           cssClass: 'common',

@@ -1,0 +1,83 @@
+.config-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: var(--devui-aide-text, #8a8e99);
+  }
+}
+
+.builds-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .build-card {
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: var(--devui-global-bg, #f7f8fa);
+  }
+
+  .build-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .build-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .build-remove {
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+
+      &:hover {
+        color: var(--devui-danger, #f66f6a);
+      }
+    }
+  }
+
+  .build-type {
+    margin-bottom: 10px;
+
+    > label {
+      display: block;
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 4px;
+    }
+  }
+
+  .build-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+
+    .build-field {
+      display: flex;
+      flex-direction: column;
+      width: calc(50% - 8px);
+
+      &.full {
+        width: 100%;
+      }
+
+      > label {
+        font-size: 12px;
+        color: var(--devui-aide-text, #8a8e99);
+        margin-bottom: 4px;
+      }
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+}

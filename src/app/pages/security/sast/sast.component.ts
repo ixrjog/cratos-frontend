@@ -286,6 +286,26 @@ export class SastComponent implements OnInit, OnDestroy {
     return '#';
   }
 
+  /**
+   * 将扫描时长(毫秒)人性化展示，如 "1 小时 28 分" / "3 分 5 秒" / "42 秒"
+   */
+  humanizeDuration(ms: number): string {
+    if (!ms || ms <= 0) {
+      return '';
+    }
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) {
+      return `${h} 小时 ${m} 分`;
+    }
+    if (m > 0) {
+      return `${m} 分 ${s} 秒`;
+    }
+    return `${s} 秒`;
+  }
+
   // Report dialog
   showReportDialog = false;
   reportLoading = false;

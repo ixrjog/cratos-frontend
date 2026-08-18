@@ -1,0 +1,112 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="artifact-publish-page">
+      <!-- Search bar -->
+      <div class="ap-search">
+        <d-select
+          class="app-select"
+          [filterKey]="'name'"
+          [appendToBody]="true"
+          [(ngModel)]="selectedApplication"
+          [searchFn]="onSearchApplication"
+          [isSearch]="true"
+          placeholder="Search and select application"
+          (valueChange)="onApplicationChange($event)"
+        >
+          <ng-template let-option="option">
+            <span>{{ option.name }}</span>
+            <span *ngIf="option.comment" style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ option.comment }}</span>
+          </ng-template>
+        </d-select>
+        <input
+          class="branch-input"
+          dTextInput
+          [(ngModel)]="branch"
+          placeholder="branch or tag"
+        />
+        <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
+      </div>
+
+      <!-- Result: build cards -->
+      <div class="ap-result" dLoading [loading]="loading" [backdrop]="true">
+        <div *ngIf="result?.builds?.length" class="info-cards-row">
+          <div class="info-card" *ngFor="let build of result.builds">
+            <div class="build-card-header">
+              <h5>{{ build.project || build.moduleName || 'Build' }}</h5>
+              <d-button
+                bsStyle="primary"
+                [disabled]="publishingProject === build.project || !build.selectedModuleId || !build.selectedVersion"
+                (click)="onPublish(build)"
+              >
+                {{ publishingProject === build.project ? 'Publishing...' : 'Publish' }}
+              </d-button>
+            </div>
+
+            <!-- 可发布模块(来自 SCA 内部模块) -->
+            <div class="publish-modules" dLoading [loading]="build.internalModulesLoading" [backdrop]="true">
+              <div class="publish-modules-title">发布模块（来自 SCA 内部模块）</div>
+              <d-tabs
+                *ngIf="build.internalModules?.length"
+                type="options"
+                [activeTab]="build.selectedModuleId"
+                (activeTabChange)="onModuleTabChange(build, $any($event))"
+              >
+                <d-tab *ngFor="let m of build.internalModules" [id]="moduleId(m)">
+                  <ng-template dTabTitle>{{ m.artifactId }}</ng-template>
+                </d-tab>
+              </d-tabs>
+              <div class="publish-modules-empty"
+                   *ngIf="!build.internalModulesLoading && !build.internalModules?.length">
+                未找到该仓库的 SCA 内部模块（请先在 SCA 完成一次扫描）
+              </div>
+            </div>
+            <div class="info-row" *ngIf="build.buildProject?.repository?.sshUrl">
+              <span class="label">GitLab</span>
+              <span class="value" dClipboard [content]="build.buildProject.repository.sshUrl">{{ build.buildProject.repository.sshUrl }}</span>
+            </div>
+            <div class="info-row" *ngIf="build.buildProject?.commit">
+              <span class="label">Commit</span>
+              <span class="value">
+                <a *ngIf="build.buildProject.commit.webUrl" [href]="build.buildProject.commit.webUrl" target="_blank" style="color: rgb(95, 170, 21);">
+                  {{ build.buildProject.commit.id | slice:0:8 }}
+                </a>
+                <span *ngIf="!build.buildProject.commit.webUrl" style="color: rgb(95, 170, 21);">{{ build.buildProject.commit.id | slice:0:8 }}</span>
+              </span>
+            </div>
+            <div class="info-row" *ngIf="build.buildProject?.commit?.message">
+              <span class="label">Message</span>
+              <span class="value commit-msg">{{ build.buildProject.commit.message }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Type</span>
+              <span class="value">{{ build.type }}</span>
+            </div>
+            <div class="info-row" *ngIf="build.buildCmd">
+              <span class="label">Build Cmd</span>
+              <span class="value">{{ build.buildCmd }}</span>
+            </div>
+            <div class="info-row" *ngIf="build.jdkVersion">
+              <span class="label">JDK</span>
+              <span class="value">{{ build.jdkVersion }}</span>
+            </div>
+            <div class="info-row" *ngIf="getSelectedModule(build) as sm">
+              <span class="label">Group ID</span>
+              <span class="value">{{ sm.groupId }}</span>
+            </div>
+            <div class="info-row" *ngIf="getSelectedModule(build) as sm">
+              <span class="label">Artifact ID</span>
+              <span class="value">{{ sm.artifactId }}</span>
+            </div>
+            <div class="info-row" *ngIf="getSelectedModule(build)">
+              <span class="label">Version</span>
+              <span class="value">{{ build.versionLoading ? '查询中...' : (build.selectedVersion || '') }}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="result && !result.builds?.length" class="ap-empty">
+          该应用未查询到可发布的构建模块(builds)
+        </div>
+      </div>
+    </div>
+  </da-col-item>
+</da-layout-row>

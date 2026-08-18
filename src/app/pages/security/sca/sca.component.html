@@ -224,6 +224,7 @@
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
+                <span *ngIf="!rowItem.username" style="color: var(--devui-aide-text, #8a8e99); font-size: 12px;">push事件触发</span>
               </ng-template>
             </d-cell>
           </d-column>
@@ -232,6 +233,9 @@
               <ng-template let-rowItem="rowItem">
                 <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
                 <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                <span *ngIf="rowItem.scanDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
+                  耗时 {{ humanizeDuration(rowItem.scanDuration) }}
+                </span>
               </ng-template>
             </d-cell>
           </d-column>
@@ -243,7 +247,7 @@
               </ng-template>
             </d-cell>
           </d-column>
-          <d-column header="Actions" [width]="'100px'">
+          <d-column header="Actions" [width]="'130px'">
             <d-cell>
               <ng-template let-rowItem="rowItem">
                 <d-icon-group>
@@ -253,6 +257,13 @@
                     [disabled]="rowItem.scanStatus !== 'SUCCESS'"
                     (click)="onViewComponents(rowItem)"
                     title="Components"
+                  ></d-icon>
+                  <d-icon
+                    [icon]="'icon-list-view'"
+                    [operable]="true"
+                    [disabled]="rowItem.scanStatus !== 'SUCCESS'"
+                    (click)="onViewInternalModules(rowItem)"
+                    title="Internal Modules"
                   ></d-icon>
                   <d-icon
                     [icon]="'icon-delete'"
@@ -324,6 +335,18 @@
         <d-column field="artifactId" header="Artifact ID"></d-column>
         <d-column field="version" header="Version"></d-column>
         <d-column field="scope" header="Scope"></d-column>
+        <d-column header="Internal" [width]="'90px'">
+          <d-cell>
+            <ng-template let-rowItem="rowItem">
+              <d-icon
+                *ngIf="rowItem.internal"
+                [icon]="'icon-right'"
+                [color]="'#3dcca6'"
+                title="内部包"
+              ></d-icon>
+            </ng-template>
+          </d-cell>
+        </d-column>
         <d-column header="Risk" [width]="'160px'">
           <d-cell>
             <ng-template let-rowItem="rowItem">
@@ -366,6 +389,32 @@
           </d-cell>
         </d-column>
       </d-data-table>
+    </div>
+  </div>
+</div>
+
+<!-- Internal Modules Dialog -->
+<div class="components-overlay" *ngIf="showInternalModulesDialog" (click)="showInternalModulesDialog = false">
+  <div class="components-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>Internal Modules — {{ internalModulesScanApp }} ({{ internalModulesList.length }})</h5>
+      <div class="components-header-actions">
+        <span class="close-btn" (click)="showInternalModulesDialog = false">&times;</span>
+      </div>
+    </div>
+    <div class="components-table" dLoading [loading]="internalModulesLoading" [backdrop]="true">
+      <d-data-table
+        [dataSource]="internalModulesList"
+        [scrollable]="true"
+        [tableOverflowType]="'overlay'"
+      >
+        <d-column field="groupId" header="Group ID"></d-column>
+        <d-column field="artifactId" header="Artifact ID"></d-column>
+      </d-data-table>
+      <div *ngIf="!internalModulesLoading && !internalModulesList.length"
+           style="padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);">
+        无内部模块数据（该扫描可能来自旧版 pipeline，未采集 internal-modules.txt）
+      </div>
     </div>
   </div>
 </div>

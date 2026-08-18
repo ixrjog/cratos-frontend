@@ -8,6 +8,8 @@ import { ApplicationCredentialComponent } from './application-credential/applica
 import { WebTerminalComponent } from './web-terminal/web-terminal.component';
 import { KubernetesVersionCompareComponent } from './kubernetes-version-compare/kubernetes-version-compare.component';
 import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
+import { CloudAkApplyComponent } from './cloud-ak-apply/cloud-ak-apply.component';
+import { ArtifactPublishComponent } from './artifact-publish/artifact-publish.component';
 
 const routes: Routes = [
   { path: 'kubernetes-resources', component: KubernetesResourcesComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'application-credential', component: ApplicationCredentialComponent },
   { path: 'web-terminal', component: WebTerminalComponent },
   { path: 'image-mirror', component: ImageMirrorComponent },
+  { path: 'cloud-ak-apply', component: CloudAkApplyComponent },
+  { path: 'artifact-publish', component: ArtifactPublishComponent },
 ];
 
 @NgModule({

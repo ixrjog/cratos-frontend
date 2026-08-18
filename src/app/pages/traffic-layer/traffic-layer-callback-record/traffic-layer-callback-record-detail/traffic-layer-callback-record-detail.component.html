@@ -170,6 +170,7 @@
 <ng-template #ruleBuilderTpl>
   <div class="rule-builder">
     <div class="rb-editor">
+      <d-button class="rb-add-rule-btn" bsStyle="common" (click)="addRule()">+ 添加规则</d-button>
       <div class="rb-rule" *ngFor="let rule of builderRules; let ri = index; trackBy: trackByIndex">
         <div class="rb-rule-head">
           <input dTextInput [(ngModel)]="rule.name" [ngModelOptions]="{ standalone: true }"
@@ -201,8 +202,6 @@
           </div>
         </div>
       </div>
-
-      <d-button bsStyle="common" (click)="addRule()">+ 添加规则</d-button>
     </div>
 
     <div class="rb-preview">

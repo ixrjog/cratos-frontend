@@ -343,7 +343,7 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
   }
 
   addRule() {
-    this.builderRules.push({ name: '', paths: [ '' ], whitelist: [ '0.0.0.0/0' ] });
+    this.builderRules.unshift({ name: '', paths: [ '' ], whitelist: [ '0.0.0.0/0' ] });
   }
 
   removeRule(index: number) {

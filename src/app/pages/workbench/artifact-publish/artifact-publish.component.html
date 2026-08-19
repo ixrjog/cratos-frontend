@@ -18,12 +18,16 @@
             <span *ngIf="option.comment" style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ option.comment }}</span>
           </ng-template>
         </d-select>
-        <input
-          class="branch-input"
-          dTextInput
-          [(ngModel)]="branch"
-          placeholder="branch or tag"
-        />
+        <span class="branch-field">
+          <i class="fas fa-code-branch branch-icon"></i>
+          <input
+            class="branch-input"
+            dTextInput
+            [(ngModel)]="branch"
+            (ngModelChange)="onBranchChange()"
+            placeholder="branch or tag"
+          />
+        </span>
         <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
       </div>
 
@@ -101,11 +105,167 @@
               <span class="label">Version</span>
               <span class="value">{{ build.versionLoading ? '查询中...' : (build.selectedVersion || '') }}</span>
             </div>
+            <div class="build-repo" *ngIf="getSelectedModule(build) && build.selectedVersion">
+              <div class="repo-label">制品仓库</div>
+              <d-tabs type="options" [activeTab]="build.repository"
+                      (activeTabChange)="build.repository = $any($event)">
+                <d-tab *ngFor="let repo of repositoryOptionsFor(build)" [id]="repo">
+                  <ng-template dTabTitle>{{ repo }}</ng-template>
+                </d-tab>
+              </d-tabs>
+            </div>
           </div>
         </div>
         <div *ngIf="result && !result.builds?.length" class="ap-empty">
           该应用未查询到可发布的构建模块(builds)
         </div>
+      </div>
+
+      <!-- 发布历史 -->
+      <div class="ap-history">
+        <div class="ap-history-header">
+          <d-search class="history-search" [(ngModel)]="publishQueryName" [iconPosition]="'left'"
+                    placeholder="应用名 / 发布单号 / 模块" (searchFn)="onPublishSearch()"></d-search>
+          <d-button bsStyle="common" (click)="onPublishSearch()">查询</d-button>
+          <d-checkbox [label]="'自动刷新'" [isShowTitle]="false" [(ngModel)]="autoRefresh"
+                      (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
+          <h5>发布历史</h5>
+        </div>
+        <div dLoading [loading]="publishLoading" [backdrop]="true">
+          <d-data-table [dataSource]="publishHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
+            <d-column field="publishNo" header="发布单号" [width]="'170px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span dClipboard [content]="rowItem.publishNo" style="word-break: break-all;">{{ rowItem.publishNo }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="应用 / 仓库" [width]="'240px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <div class="app-name">{{ rowItem.applicationName }}</div>
+                  <div class="repo-line">
+                    <span
+                      class="repo-branch"
+                      dPopover
+                      [trigger]="'click'"
+                      [position]="'bottom'"
+                      [controlled]="true"
+                      [content]="gitUrlTpl"
+                      [popoverStyle]="{ width: '520px' }"
+                      title="点击查看 Git URL"
+                    >
+                      <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
+                    </span>
+                    <span *ngIf="rowItem.commitId" style="margin-left: 8px; font-size: 11px; color: rgb(95, 170, 21);">
+                      <i class="fas fa-code-commit" style="margin-right: 3px;"></i>{{ rowItem.commitId | slice:0:8 }}
+                    </span>
+                  </div>
+                  <ng-template #gitUrlTpl>
+                    <div class="giturl-popover">
+                      <span class="giturl-text">{{ rowItem.gitUrl }}</span>
+                      <i *ngIf="rowItem.gitUrl" class="icon icon-copy giturl-copy" dClipboard [content]="rowItem.gitUrl" title="Copy"></i>
+                    </div>
+                  </ng-template>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="模块 / 制品仓库" [width]="'360px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <div class="gav-line">{{ rowItem.groupId }}:{{ rowItem.artifactId }}:{{ rowItem.version }}</div>
+                  <a class="repo-url" [href]="artifactUrl(rowItem)" target="_blank" rel="noopener"
+                     [title]="artifactUrl(rowItem)">{{ rowItem.repository }} <i class="icon icon-open-new-window"></i></a>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="依赖配置" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span
+                    class="dep-config-link"
+                    dPopover
+                    [trigger]="'click'"
+                    [position]="'left-top'"
+                    [controlled]="true"
+                    [content]="depTpl"
+                    [popoverStyle]="{ width: '650px' }"
+                    title="查看 Maven/Gradle 配置"
+                  ><i class="icon icon-copy" style="margin-right: 4px;"></i>配置样例</span>
+                  <ng-template #depTpl>
+                    <div class="dep-config-popover">
+                      <div class="dep-block">
+                        <div class="dep-head">
+                          <span>Maven</span>
+                          <i class="icon icon-copy dep-copy" dClipboard [content]="mavenSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                        </div>
+                        <pre class="dep-code">{{ mavenSnippet(rowItem) }}</pre>
+                      </div>
+                      <div class="dep-block">
+                        <div class="dep-head">
+                          <span>Gradle</span>
+                          <i class="icon icon-copy dep-copy" dClipboard [content]="gradleSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                        </div>
+                        <pre class="dep-code">{{ gradleSnippet(rowItem) }}</pre>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="状态" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <i *ngIf="rowItem.publishStatus === 'RUNNING' || rowItem.publishStatus === 'QUEUED'"
+                     class="icon icon-loading" style="margin-right: 4px;"></i>
+                  <d-tag [tag]="rowItem.publishStatus" [labelStyle]="statusLabelStyle(rowItem.publishStatus)"></d-tag>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="buildId" header="Build" [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <a *ngIf="rowItem.buildId && buildLink(rowItem)"
+                     [href]="buildLink(rowItem)"
+                     target="_blank"
+                     style="color: var(--devui-brand, #5e7ce0);">
+                    #{{ rowItem.buildId }}
+                  </a>
+                  <span *ngIf="rowItem.buildId && !buildLink(rowItem)">#{{ rowItem.buildId }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="操作人" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="时间" [width]="'200px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+                  <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                  <span *ngIf="rowItem.publishDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
+                    耗时 {{ humanizeDuration(rowItem.publishDuration) }}
+                  </span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
+        </div>
+        <d-pagination
+          *ngIf="publishTotal > 0"
+          [total]="publishTotal"
+          [(pageSize)]="publishPageSize"
+          [(pageIndex)]="publishPageIndex"
+          [canViewTotal]="true"
+          [canChangePageSize]="true"
+          [maxItems]="5"
+          (pageIndexChange)="onPublishPageIndexChange($event)"
+          (pageSizeChange)="onPublishPageSizeChange($event)"
+        ></d-pagination>
       </div>
     </div>
   </da-col-item>

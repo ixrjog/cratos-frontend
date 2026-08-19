@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
+import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 
 /**
  * 二方包发布(Artifact Publish)
@@ -15,9 +16,10 @@ import { ToastUtil } from '../../../@shared/utils/toast.util';
   templateUrl: './artifact-publish.component.html',
   styleUrls: ['./artifact-publish.component.less'],
 })
-export class ArtifactPublishComponent implements OnInit {
+export class ArtifactPublishComponent implements OnInit, OnDestroy {
 
   private static readonly STORAGE_KEY = 'artifact_publish_selected_application';
+  private static readonly BRANCH_MAP_KEY = 'artifact_publish_branch_by_app';
 
   // 应用查询
   selectedApplication: any = null;
@@ -29,6 +31,25 @@ export class ArtifactPublishComponent implements OnInit {
 
   // 发布中的项目(占位，后端接入后启用)
   publishingProject: string = null;
+
+  // 发布历史(分页)
+  publishHistory: any[] = [];
+  publishTotal = 0;
+  publishPageIndex = 1;
+  publishPageSize = 10;
+  publishQueryName = '';
+  publishLoading = false;
+  autoRefresh = true;
+  private refreshTimer: any = null;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
+
+  // 制品仓库(完整 URL，自动按版本匹配 snapshots/releases，可手动切换)
+  readonly repositoryOptions = [
+    'https://nexus.chuanyinet.com/repository/maven-snapshots/',
+    'https://nexus.chuanyinet.com/repository/maven-releases/',
+    'https://nexus.transspay.net/repository/maven-snapshots/',
+    'https://nexus.transspay.net/repository/maven-releases/',
+  ];
 
   constructor(
     private apiService: ApiService,
@@ -43,6 +64,168 @@ export class ArtifactPublishComponent implements OnInit {
         this.selectedApplication = JSON.parse(saved);
       } catch (e) {}
     }
+    // 恢复该应用关联的分支
+    const savedBranch = this.loadBranchForApp(this.selectedApplication?.name);
+    if (savedBranch) {
+      this.branch = savedBranch;
+    }
+    // 加载发布历史 + 自动刷新
+    this.queryPublishHistory();
+    this.startAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    this.stopAutoRefresh();
+  }
+
+  // ===== 发布历史(分页) =====
+  queryPublishHistory(silent = false) {
+    if (!silent) {
+      this.publishLoading = true;
+    }
+    this.apiService.post('/application', '/artifact/publish/publish/page/query', {
+      queryName: this.publishQueryName,
+      page: this.publishPageIndex,
+      length: this.publishPageSize,
+    }).subscribe(({ body }: any) => {
+      this.publishHistory = body?.data || [];
+      this.publishTotal = body?.totalNum || 0;
+      this.publishLoading = false;
+    }, () => {
+      this.publishLoading = false;
+    });
+  }
+
+  onPublishSearch() {
+    this.publishPageIndex = 1;
+    this.queryPublishHistory();
+  }
+
+  onPublishPageIndexChange(pageIndex: number) {
+    this.publishPageIndex = pageIndex;
+    this.queryPublishHistory();
+  }
+
+  onPublishPageSizeChange(pageSize: number) {
+    this.publishPageSize = pageSize;
+    this.publishPageIndex = 1;
+    this.queryPublishHistory();
+  }
+
+  onAutoRefreshChange(enabled: boolean) {
+    if (enabled) {
+      this.startAutoRefresh();
+    } else {
+      this.stopAutoRefresh();
+    }
+  }
+
+  private startAutoRefresh() {
+    this.stopAutoRefresh();
+    this.refreshTimer = setInterval(() => this.queryPublishHistory(true), 10000);
+  }
+
+  private stopAutoRefresh() {
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer);
+      this.refreshTimer = null;
+    }
+  }
+
+  statusLabelStyle(status: string): string {
+    return status === 'SUCCESS' ? 'green-w98' : status === 'FAILED' ? 'red-w98' : 'blue-w98';
+  }
+
+  humanizeDuration(ms: number): string {
+    if (!ms || ms <= 0) {
+      return '';
+    }
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) {
+      return `${h} 小时 ${m} 分`;
+    }
+    if (m > 0) {
+      return `${m} 分 ${s} 秒`;
+    }
+    return `${s} 秒`;
+  }
+
+  /** Maven 依赖配置样例 */
+  mavenSnippet(row: any): string {
+    return `<dependency>
+    <groupId>${row.groupId}</groupId>
+    <artifactId>${row.artifactId}</artifactId>
+    <version>${row.version}</version>
+</dependency>`;
+  }
+
+  /** Gradle 依赖配置样例 */
+  gradleSnippet(row: any): string {
+    return `implementation '${row.groupId}:${row.artifactId}:${row.version}'`;
+  }
+
+  /** 组件在 Nexus UI 浏览页地址(定位到 artifactId 一级): host/#browse/browse:repo:encoded(group/artifactId) */
+  artifactUrl(row: any): string {
+    if (!row?.repository || !row?.groupId || !row?.artifactId) {
+      return '';
+    }
+    const path = row.groupId.replace(/\./g, '/') + '/' + row.artifactId + (row.version ? '/' + row.version : '');
+    // 从仓库 URL 解析 host 与仓库名: https://host/repository/<repo>/
+    const m = row.repository.match(/^(https?:\/\/[^/]+)\/repository\/([^/]+)/);
+    if (m) {
+      return `${m[1]}/#browse/browse:${m[2]}:${encodeURIComponent(path)}`;
+    }
+    // 兜底: 直接用仓库内容路径
+    return `${row.repository.replace(/\/+$/, '')}/${path}/`;
+  }
+
+  onCopied() {
+    this.toastUtil.onSuccessToast('已复制到剪贴板');
+  }
+
+  /** Jenkins 构建地址: https://<instanceName>/job/<jobName>/<buildId>/ */
+  getBuildUrl(rowItem: any): string {
+    if (rowItem.instanceName && rowItem.jobName && rowItem.buildId) {
+      return `https://${rowItem.instanceName}/job/${rowItem.jobName}/${rowItem.buildId}/`;
+    }
+    return '';
+  }
+
+  /** 最终可跳转的构建地址: 优先 buildUrl, 回退 getBuildUrl; 仅返回绝对 http(s) 地址, 否则空 */
+  buildLink(rowItem: any): string {
+    const url = rowItem?.buildUrl || this.getBuildUrl(rowItem);
+    return /^https?:\/\//.test(url || '') ? url : '';
+  }
+
+  /** 读取“应用 -> 分支”映射 */
+  private loadBranchMap(): { [appName: string]: string } {
+    try {
+      return JSON.parse(localStorage.getItem(ArtifactPublishComponent.BRANCH_MAP_KEY) || '{}') || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  /** 取指定应用记住的分支 */
+  private loadBranchForApp(appName?: string): string {
+    if (!appName) {
+      return '';
+    }
+    return this.loadBranchMap()[appName] || '';
+  }
+
+  /** 分支变更时按当前应用持久化 */
+  onBranchChange() {
+    const appName = this.selectedApplication?.name;
+    if (!appName) {
+      return;
+    }
+    const map = this.loadBranchMap();
+    map[appName] = this.branch || 'master';
+    localStorage.setItem(ArtifactPublishComponent.BRANCH_MAP_KEY, JSON.stringify(map));
   }
 
   onSearchApplication = (term: string) => {
@@ -57,8 +240,11 @@ export class ArtifactPublishComponent implements OnInit {
     this.result = null;
     if (app) {
       localStorage.setItem(ArtifactPublishComponent.STORAGE_KEY, JSON.stringify({ name: app.name, comment: app.comment }));
+      // 切换应用时恢复该应用关联的分支(无记录则默认 master)
+      this.branch = this.loadBranchForApp(app.name) || 'master';
     } else {
       localStorage.removeItem(ArtifactPublishComponent.STORAGE_KEY);
+      this.branch = 'master';
     }
   }
 
@@ -146,14 +332,60 @@ export class ArtifactPublishComponent implements OnInit {
     }).subscribe(({ body }: any) => {
       build.selectedVersion = body?.version || null;
       build.versionLoading = false;
+      this.autoMatchRepository(build);
     }, () => {
       build.versionLoading = false;
     });
   }
 
+  /** 根据版本类型返回可选的制品仓库(SNAPSHOT->snapshots, 否则 releases) */
+  repositoryOptionsFor(build: any): string[] {
+    const v = (build?.selectedVersion || '').toUpperCase();
+    if (!v) {
+      return [];
+    }
+    const snapshot = v.includes('SNAPSHOT');
+    return this.repositoryOptions.filter(u => snapshot ? u.includes('snapshot') : !u.includes('snapshot'));
+  }
+
+  /** 制品仓库 tab 的展示标签: host-类型 */
+  repoLabel(url: string): string {
+    if (!url) {
+      return '';
+    }
+    const host = url.includes('transspay') ? 'transspay' : 'chuanyi';
+    const type = url.includes('snapshot') ? 'snapshots' : 'releases';
+    return host + '-' + type;
+  }
+
+  /** 根据版本自动匹配制品仓库(完整 URL): 默认选中该类型下的第一个(chuanyi) */
+  autoMatchRepository(build: any) {
+    const options = this.repositoryOptionsFor(build);
+    build.repository = options.length ? options[0] : null;
+  }
+
   onPublish(build: any) {
-    // 占位：发布后端接口就绪后替换为 /api/artifact/publish 调用
-    this.toastUtil.onSuccessToast('发布功能开发中，敬请期待');
+    const sm = this.getSelectedModule(build);
+    if (!sm || !build.selectedVersion || this.publishingProject === build.project) {
+      return;
+    }
+    this.publishingProject = build.project;
+    this.apiService.post('/application', '/artifact/publish/publish', {
+      applicationName: this.selectedApplication?.name,
+      branch: this.branch || 'master',
+      project: build.project,
+      moduleName: sm.artifactId,
+      groupId: sm.groupId,
+      artifactId: sm.artifactId,
+      version: build.selectedVersion,
+      repository: build.repository,
+    }).subscribe(() => {
+      this.publishingProject = null;
+      this.toastUtil.onSuccessToast('发布已触发');
+      this.queryPublishHistory();
+    }, () => {
+      this.publishingProject = null;
+    });
   }
 
 }

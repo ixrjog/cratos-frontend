@@ -15,6 +15,25 @@
   .branch-input {
     width: 180px;
   }
+
+  .branch-field {
+    position: relative;
+    display: inline-block;
+
+    .branch-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--devui-aide-text, #8a8e99);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .branch-input {
+      padding-left: 28px;
+    }
+  }
 }
 
 .ap-result {
@@ -26,6 +45,134 @@
   color: var(--devui-aide-text, #8a8e99);
   padding: 24px 0;
   font-size: 14px;
+}
+
+.ap-history {
+  margin-top: 24px;
+
+  .ap-history-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .history-search {
+      width: 320px;
+    }
+
+    h5 {
+      margin: 0 0 0 auto;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+  }
+
+  .ellipsis {
+    display: inline-block;
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  .app-name {
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .gav-line {
+    font-family: monospace;
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+  }
+
+  .repo-url {
+    display: inline-block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--devui-brand, #5e7ce0);
+    word-break: break-all;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .dep-config-link {
+    cursor: pointer;
+    color: var(--devui-brand, #5e7ce0);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .repo-line {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+
+    .repo-branch {
+      cursor: pointer;
+    }
+  }
+}
+
+.giturl-popover {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .giturl-text {
+    word-break: break-all;
+    font-size: 12px;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .giturl-copy {
+    cursor: pointer;
+    color: var(--devui-brand, #5e7ce0);
+  }
+}
+
+.dep-config-popover {
+  .dep-block {
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .dep-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 4px;
+
+      .dep-copy {
+        cursor: pointer;
+        color: var(--devui-brand, #5e7ce0);
+      }
+    }
+
+    .dep-code {
+      margin: 0;
+      padding: 10px;
+      background: var(--devui-global-bg, #f7f8fa);
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
 }
 
 .info-cards-row {
@@ -77,6 +224,16 @@
     .publish-modules-empty {
       font-size: 12px;
       color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .build-repo {
+    padding: 8px 0 4px;
+
+    .repo-label {
+      font-size: 13px;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 6px;
     }
   }
 

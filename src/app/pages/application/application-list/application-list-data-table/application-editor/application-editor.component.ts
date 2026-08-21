@@ -10,6 +10,7 @@ interface BuildItem {
   sshUrl?: string;
   type?: string;
   buildCmd?: string;
+  buildArgs?: string;
   branch?: string;
   moduleName?: string;
   jdkVersion?: string;
@@ -29,9 +30,14 @@ export class ApplicationEditorComponent implements OnInit {
 
   // builds 表单
   readonly buildTypes = [ 'maven', 'gradle', 'node' ];
+  // 各构建类型的默认 buildCmd
+  private readonly defaultBuildCmds: { [type: string]: string } = {
+    maven: '/opt/tools/maven/bin/mvn',
+    gradle: '/opt/tools/gradle-4.6/bin/gradle',
+  };
   // 字段顺序（序列化时保持稳定）
   private readonly buildFieldOrder: (keyof BuildItem)[] = [
-    'branch', 'buildCmd', 'jdkVersion', 'moduleName', 'project', 'sshUrl', 'type',
+    'branch', 'buildArgs', 'buildCmd', 'jdkVersion', 'moduleName', 'project', 'sshUrl', 'type',
   ];
   builds: BuildItem[] = [];
 
@@ -74,7 +80,8 @@ export class ApplicationEditorComponent implements OnInit {
 
   // ===== builds 表单操作 =====
   addBuild() {
-    this.builds.push({ type: this.buildTypes[ 0 ] });
+    const type = this.buildTypes[ 0 ];
+    this.builds.push({ type, buildCmd: this.defaultBuildCmd(type) });
     this.syncBuildsToConfig();
   }
 
@@ -84,8 +91,18 @@ export class ApplicationEditorComponent implements OnInit {
   }
 
   onBuildTypeChange(build: BuildItem, type: string) {
+    const prevDefault = this.defaultBuildCmd(build.type);
     build.type = type;
+    // buildCmd 为空或仍是上一类型的默认值时，自动切换为当前类型的默认命令(不覆盖自定义值)
+    if (!build.buildCmd || build.buildCmd === prevDefault) {
+      build.buildCmd = this.defaultBuildCmd(type);
+    }
     this.syncBuildsToConfig();
+  }
+
+  /** 按构建类型返回默认 buildCmd */
+  private defaultBuildCmd(type?: string): string {
+    return this.defaultBuildCmds[ type || '' ] || '';
   }
 
   // 表单变更后，将 builds 序列化回配置字符串（保留其余内容），并刷新 YAML 编辑器展示
@@ -146,7 +163,8 @@ export class ApplicationEditorComponent implements OnInit {
         return v != null && String(v).length > 0;
       });
       if (keys.length === 0) {
-        lines.push('- {}');
+        // 所有字段为空时，生成默认配置(占位)
+        lines.push('- moduleName: \'\'');
         continue;
       }
       keys.forEach((k, idx) => {

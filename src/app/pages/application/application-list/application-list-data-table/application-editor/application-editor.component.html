@@ -63,6 +63,11 @@
                        (ngModelChange)="syncBuildsToConfig()" placeholder="/opt/tools/maven/bin/mvn" />
               </div>
               <div class="build-field full">
+                <label>buildArgs</label>
+                <input dTextInput [(ngModel)]="build.buildArgs" [name]="'buildArgs_' + i"
+                       (ngModelChange)="syncBuildsToConfig()" placeholder="-pl module -am -DskipTests" />
+              </div>
+              <div class="build-field full">
                 <label>sshUrl</label>
                 <input dTextInput [(ngModel)]="build.sshUrl" [name]="'sshUrl_' + i"
                        (ngModelChange)="syncBuildsToConfig()" placeholder="git@gitlab.example.com:group/repo.git" />

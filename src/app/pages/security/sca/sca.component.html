@@ -1,101 +1,112 @@
-<da-layout-row [daGutter]="[12, 12]">
-  <da-col-item [daSpan]="24" [daXs]="24">
-    <div class="sca-page">
+<da-layout-row [daGutter]='[12, 12]'>
+  <da-col-item [daSpan]='24' [daXs]='24'>
+    <div class='sca-page'>
       <!-- Search bar -->
-      <div class="sca-search">
+      <div class='sca-search'>
         <d-select
-          class="app-select"
+          class='app-select'
           [filterKey]="'name'"
-          [appendToBody]="true"
-          [(ngModel)]="selectedApplication"
-          [searchFn]="onSearchApplication"
-          [isSearch]="true"
-          placeholder="Search and select application"
-          (valueChange)="onApplicationChange($event)"
+          [appendToBody]='true'
+          [(ngModel)]='selectedApplication'
+          [searchFn]='onSearchApplication'
+          [isSearch]='true'
+          placeholder='Search and select application'
+          (valueChange)='onApplicationChange($event)'
         >
-          <ng-template let-option="option">
+          <ng-template let-option='option'>
             <span>{{ option.name }}</span>
-            <span *ngIf="option.comment" style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ option.comment }}</span>
+            <span *ngIf='option.comment'
+                  style='float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);'>{{ option.comment }}</span>
           </ng-template>
         </d-select>
-        <input
-          class="branch-input"
-          dTextInput
-          [(ngModel)]="branch"
-          placeholder="branch or tag"
-        />
-        <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
+        <span class='branch-field'>
+          <i class='fas fa-code-branch branch-icon'></i>
+          <input
+            class='branch-input'
+            dTextInput
+            [(ngModel)]='branch'
+            placeholder='branch or tag'
+          />
+        </span>
+        <d-button bsStyle='primary' [disabled]='!selectedApplication' (click)='onQuery()'>Query</d-button>
       </div>
 
       <!-- Result -->
-      <div class="sca-result" dLoading [loading]="loading" [backdrop]="true">
-        <div *ngIf="result?.builds?.length" class="info-cards-row">
-          <div class="info-card" *ngFor="let build of result.builds">
-            <div class="build-card-header">
+      <div class='sca-result' dLoading [loading]='loading' [backdrop]='true'>
+        <div *ngIf='result?.builds?.length' class='info-cards-row'>
+          <div class='info-card' *ngFor='let build of result.builds'>
+            <div class='build-card-header'>
               <h5>{{ build.project || build.moduleName || 'Build' }}</h5>
               <d-button
-                bsStyle="primary"
-                [disabled]="scanningProject === build.project"
-                (click)="onScan(build)"
+                bsStyle='primary'
+                [disabled]='scanningProject === build.project'
+                (click)='onScan(build)'
               >
                 {{ scanningProject === build.project ? 'Scanning...' : 'Scan' }}
               </d-button>
             </div>
-            <div class="info-row" *ngIf="build.buildProject?.repository?.sshUrl">
-              <span class="label">GitLab</span>
-              <span class="value" dClipboard [content]="build.buildProject.repository.sshUrl">{{ build.buildProject.repository.sshUrl }}</span>
+            <div class='info-row' *ngIf='build.buildProject?.repository?.sshUrl'>
+              <span class='label'>GitLab</span>
+              <span class='value' dClipboard
+                    [content]='build.buildProject.repository.sshUrl'>{{ build.buildProject.repository.sshUrl }}</span>
             </div>
-            <div class="info-row" *ngIf="build.buildProject?.commit">
-              <span class="label">Commit</span>
-              <span class="value">
-                <a *ngIf="build.buildProject.commit.webUrl" [href]="build.buildProject.commit.webUrl" target="_blank" style="color: rgb(95, 170, 21);">
+            <div class='info-row' *ngIf='build.buildProject?.commit'>
+              <span class='label'>Commit</span>
+              <span class='value'>
+                <a *ngIf='build.buildProject.commit.webUrl' [href]='build.buildProject.commit.webUrl' target='_blank'
+                   style='color: rgb(95, 170, 21);'>
                   {{ build.buildProject.commit.id | slice:0:8 }}
                 </a>
-                <span *ngIf="!build.buildProject.commit.webUrl" style="color: rgb(95, 170, 21);">{{ build.buildProject.commit.id | slice:0:8 }}</span>
+                <span *ngIf='!build.buildProject.commit.webUrl'
+                      style='color: rgb(95, 170, 21);'>{{ build.buildProject.commit.id | slice:0:8 }}</span>
               </span>
             </div>
-            <div class="info-row" *ngIf="build.buildProject?.commit?.message">
-              <span class="label">Message</span>
-              <span class="value commit-msg">{{ build.buildProject.commit.message }}</span>
+            <div class='info-row' *ngIf='build.buildProject?.commit?.message'>
+              <span class='label'>Message</span>
+              <span class='value commit-msg'>{{ build.buildProject.commit.message }}</span>
             </div>
-            <div class="info-row">
-              <span class="label">Type</span>
-              <span class="value">{{ build.type }}</span>
+            <div class='info-row'>
+              <span class='label'>Type</span>
+              <span class='value'>{{ build.type }}</span>
             </div>
-            <div class="info-row" *ngIf="build.buildCmd">
-              <span class="label">Build Cmd</span>
-              <span class="value">{{ build.buildCmd }}</span>
+            <div class='info-row' *ngIf='build.buildCmd'>
+              <span class='label'>Build Cmd</span>
+              <span class='value'>{{ build.buildCmd }}</span>
             </div>
-            <div class="info-row" *ngIf="build.moduleName">
-              <span class="label">Module</span>
-              <span class="value">{{ build.moduleName }}</span>
+            <div class='info-row' *ngIf='build.moduleName'>
+              <span class='label'>Module</span>
+              <span class='value'>{{ build.moduleName }}</span>
             </div>
-            <div class="info-row" *ngIf="build.jdkVersion">
-              <span class="label">JDK</span>
-              <span class="value">{{ build.jdkVersion }}</span>
+            <div class='info-row' *ngIf='build.jdkVersion'>
+              <span class='label'>JDK</span>
+              <span class='value'>{{ build.jdkVersion }}</span>
             </div>
 
             <!-- 相同 commit 的历史扫描任务 -->
-            <div class="same-tasks" *ngIf="build.theSameScaScanningTasks?.length">
-              <div class="same-tasks-title">Existing scans ({{ build.theSameScaScanningTasks.length }})</div>
-              <div class="same-task-item" *ngFor="let task of build.theSameScaScanningTasks">
-                <span class="task-status">
-                  <i *ngIf="task.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
-                  <d-tag [tag]="task.scanStatus" [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
+            <div class='same-tasks' *ngIf='build.theSameScaScanningTasks?.length'>
+              <div class='same-tasks-title'>Existing scans ({{ build.theSameScaScanningTasks.length }})</div>
+              <div class='same-task-item' *ngFor='let task of build.theSameScaScanningTasks'>
+                <span class='task-status'>
+                  <i *ngIf="task.scanStatus === 'RUNNING'" class='icon icon-loading sca-spin'
+                     style='margin-right: 4px;'></i>
+                  <d-tag [tag]='task.scanStatus'
+                         [labelStyle]="task.scanStatus === 'SUCCESS' ? 'green-w98' : task.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
                 </span>
-                <a *ngIf="task.buildId && task.jobName" class="task-build" [href]="getBuildUrl(task)" target="_blank">#{{ task.buildId }}</a>
-                <span *ngIf="task.buildId && !task.jobName" class="task-build">#{{ task.buildId }}</span>
-                <span class="task-count" title="Components">
-                  <d-badge [count]="task.componentCount || 0" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999"></d-badge>
+                <a *ngIf='task.buildId && task.jobName' class='task-build' [href]='getBuildUrl(task)'
+                   target='_blank'>#{{ task.buildId }}</a>
+                <span *ngIf='task.buildId && !task.jobName' class='task-build'>#{{ task.buildId }}</span>
+                <span class='task-count' title='Components'>
+                  <d-badge [count]='task.componentCount || 0' [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                           [status]="'warning'" [maxCount]='9999'></d-badge>
                 </span>
-                <span class="task-time">{{ task.createTime | dDatePipe: 'y/M/d HH:mm' }}</span>
+                <span class='task-time'>{{ task.createTime | dDatePipe: 'y/M/d HH:mm' }}</span>
                 <d-icon
-                  class="task-view"
+                  class='task-view'
                   [icon]="'icon-go-document'"
-                  [operable]="true"
+                  [operable]='true'
                   [disabled]="task.scanStatus !== 'SUCCESS'"
-                  (click)="onViewComponents(task)"
-                  title="Components"
+                  (click)='onViewComponents(task)'
+                  title='Components'
                 ></d-icon>
               </div>
             </div>
@@ -104,284 +115,309 @@
       </div>
 
       <!-- Scan History -->
-      <div class="scan-history">
-      <div class="scan-history-header">
-        <d-search
-          class="scan-search"
-          [(ngModel)]="scanQueryName"
-          [iconPosition]="'left'"
-          placeholder="Search by app or scan no"
-          (searchFn)="onScanSearch()"
-        ></d-search>
-        <d-button bsStyle="common" (click)="onScanSearch()">Query</d-button>
-        <d-checkbox
-          [label]="'Auto Refresh'"
-          [isShowTitle]="false"
-          [(ngModel)]="autoRefresh"
-          (ngModelChange)="onAutoRefreshChange($event)"
-        ></d-checkbox>
-        <h5>Scan History</h5>
-      </div>
-      <div dLoading [loading]="scanLoading" [backdrop]="true">
-        <d-data-table
-          [dataSource]="scanHistory"
-          [scrollable]="true"
-          [tableOverflowType]="'overlay'"
-        >
-          <d-column field="scanNo" header="Scan No" [width]="'160px'"></d-column>
-          <d-column header="Application / Repository" [width]="'220px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <div class="app-name">{{ rowItem.applicationName }}</div>
-                <div class="repo-line">
+      <div class='scan-history'>
+        <div class='scan-history-header'>
+          <d-search
+            class='scan-search'
+            [(ngModel)]='scanQueryName'
+            [iconPosition]="'left'"
+            placeholder='Search by app or scan no'
+            (searchFn)='onScanSearch()'
+          ></d-search>
+          <d-button bsStyle='common' (click)='onScanSearch()'>Query</d-button>
+          <d-checkbox
+            [label]="'Auto Refresh'"
+            [isShowTitle]='false'
+            [(ngModel)]='autoRefresh'
+            (ngModelChange)='onAutoRefreshChange($event)'
+          ></d-checkbox>
+          <h5>Scan History</h5>
+        </div>
+        <div dLoading [loading]='scanLoading' [backdrop]='true'>
+          <d-data-table
+            [dataSource]='scanHistory'
+            [scrollable]='true'
+            [tableOverflowType]="'overlay'"
+          >
+            <d-column field='scanNo' header='Scan No' [width]="'160px'"></d-column>
+            <d-column header='Application / Repository' [width]="'220px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <div class='app-name'>{{ rowItem.applicationName }}</div>
+                  <div class='repo-line'>
                   <span
-                    class="repo-branch"
+                    class='repo-branch'
                     dPopover
                     [trigger]="'click'"
                     [position]="'bottom'"
-                    [controlled]="true"
-                    [content]="gitUrlTpl"
+                    [controlled]='true'
+                    [content]='gitUrlTpl'
                     [popoverStyle]="{ width: '520px' }"
-                    title="点击查看 Git URL"
+                    title='点击查看 Git URL'
                   >
-                    <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
+                    <i class='fas fa-code-branch'
+                       style='margin-right: 4px; color: var(--devui-aide-text, #8a8e99);'></i>{{ rowItem.branch }}
                   </span>
-                  <span *ngIf="rowItem.commitId" style="margin-left: 8px; font-size: 11px; color: rgb(95, 170, 21);">
-                    <i class="fas fa-code-commit" style="margin-right: 3px;"></i>{{ rowItem.commitId | slice:0:8 }}
+                    <span *ngIf='rowItem.commitId' style='margin-left: 8px; font-size: 11px; color: rgb(95, 170, 21);'>
+                    <i class='fas fa-code-commit' style='margin-right: 3px;'></i>{{ rowItem.commitId | slice:0:8 }}
                   </span>
-                </div>
-                <ng-template #gitUrlTpl>
-                  <div class="giturl-popover">
-                    <span class="giturl-text">{{ rowItem.gitUrl || '-' }}</span>
-                    <i *ngIf="rowItem.gitUrl" class="icon icon-copy giturl-copy" dClipboard [content]="rowItem.gitUrl" title="Copy"></i>
                   </div>
-                </ng-template>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Components" [width]="'140px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <d-badge [count]="rowItem.componentCount" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'" [status]="'warning'" [maxCount]="9999" title="Total components"></d-badge>
-                <d-badge *ngIf="rowItem.vulnerableCount > 0" [count]="rowItem.vulnerableCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999" style="margin-left: 12px;" title="Vulnerable components"></d-badge>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Code Lines" [width]="'80px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <div class="loc-cell">
-                <ng-container *ngIf="rowItem.codeLines != null; else noLoc">
-                  <span class="loc-value">{{ rowItem.codeLines | number }}</span>
-                  <span
-                    class="loc-icon"
-                    dPopover
-                    [trigger]="'hover'"
-                    [controlled]="true"
-                    [position]="'bottom'"
-                    [content]="locTpl"
-                    [popoverStyle]="{ width: '340px' }"
-                    title="查看语言分布"
-                  ><i class="fas fa-chart-pie"></i></span>
-                  <ng-template #locTpl>
-                    <div class="loc-popover">
-                      <div class="loc-sum">
-                        <span>代码 {{ rowItem.codeLines | number }}</span>
-                        <span>注释 {{ rowItem.commentLines | number }}</span>
-                        <span>文件 {{ rowItem.fileCount | number }}</span>
-                      </div>
-                      <table class="loc-lang" *ngIf="parseLangs(rowItem.languageStats).length">
-                        <tr *ngFor="let l of parseLangs(rowItem.languageStats)">
-                          <td class="lang-name">{{ l.language }}</td>
-                          <td class="lang-code">{{ l.code | number }}</td>
-                          <td class="lang-files">{{ l.files }} 文件</td>
-                        </tr>
-                      </table>
+                  <ng-template #gitUrlTpl>
+                    <div class='giturl-popover'>
+                      <span class='giturl-text'>{{ rowItem.gitUrl || '-' }}</span>
+                      <i *ngIf='rowItem.gitUrl' class='icon icon-copy giturl-copy' dClipboard [content]='rowItem.gitUrl'
+                         title='Copy'></i>
                     </div>
                   </ng-template>
-                </ng-container>
-                <ng-template #noLoc>
-                  <span style="color: var(--devui-aide-text, #8a8e99);">--</span>
                 </ng-template>
-                </div>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column field="buildId" header="Build" [width]="'80px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <a *ngIf="rowItem.buildId && rowItem.jobName"
-                   [href]="getBuildUrl(rowItem)"
-                   target="_blank"
-                   style="color: var(--devui-brand, #5e7ce0);">
-                  #{{ rowItem.buildId }}
-                </a>
-                <span *ngIf="rowItem.buildId && !rowItem.jobName">#{{ rowItem.buildId }}</span>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Operator" [width]="'100px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
-                <span *ngIf="!rowItem.username" style="color: var(--devui-aide-text, #8a8e99); font-size: 12px;">push事件触发</span>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Time" [width]="'180px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
-                <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
-                <span *ngIf="rowItem.scanDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
+              </d-cell>
+            </d-column>
+            <d-column header='Components' [width]="'140px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <d-badge [count]='rowItem.componentCount' [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                           [status]="'warning'" [maxCount]='9999' title='Total components'></d-badge>
+                  <d-badge *ngIf='rowItem.vulnerableCount > 0' [count]='rowItem.vulnerableCount'
+                           [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]='9999'
+                           style='margin-left: 12px;' title='Vulnerable components'></d-badge>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header='Code Lines' [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <div class='loc-cell'>
+                    <ng-container *ngIf='rowItem.codeLines != null; else noLoc'>
+                      <span class='loc-value'>{{ rowItem.codeLines | number }}</span>
+                      <span
+                        class='loc-icon'
+                        dPopover
+                        [trigger]="'hover'"
+                        [controlled]='true'
+                        [position]="'bottom'"
+                        [content]='locTpl'
+                        [popoverStyle]="{ width: '340px' }"
+                        title='查看语言分布'
+                      ><i class='fas fa-chart-pie'></i></span>
+                      <ng-template #locTpl>
+                        <div class='loc-popover'>
+                          <div class='loc-sum'>
+                            <span>代码 {{ rowItem.codeLines | number }}</span>
+                            <span>注释 {{ rowItem.commentLines | number }}</span>
+                            <span>文件 {{ rowItem.fileCount | number }}</span>
+                          </div>
+                          <table class='loc-lang' *ngIf='parseLangs(rowItem.languageStats).length'>
+                            <tr *ngFor='let l of parseLangs(rowItem.languageStats)'>
+                              <td class='lang-name'>{{ l.language }}</td>
+                              <td class='lang-code'>{{ l.code | number }}</td>
+                              <td class='lang-files'>{{ l.files }} 文件</td>
+                            </tr>
+                          </table>
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                    <ng-template #noLoc>
+                      <span style='color: var(--devui-aide-text, #8a8e99);'>--</span>
+                    </ng-template>
+                  </div>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field='buildId' header='Build' [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <a *ngIf='rowItem.buildId && rowItem.jobName'
+                     [href]='getBuildUrl(rowItem)'
+                     target='_blank'
+                     style='color: var(--devui-brand, #5e7ce0);'>
+                    #{{ rowItem.buildId }}
+                  </a>
+                  <span *ngIf='rowItem.buildId && !rowItem.jobName'>#{{ rowItem.buildId }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header='Operator' [width]="'100px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <app-user-popover *ngIf='rowItem.username' [username]='rowItem.username'></app-user-popover>
+                  <span *ngIf='!rowItem.username' style='color: var(--devui-aide-text, #8a8e99); font-size: 12px;'>push事件触发</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header='Time' [width]="'180px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+                  <strong style='margin-left: 4px;'>{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                  <span *ngIf='rowItem.scanDuration'
+                        style='display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;'>
                   耗时 {{ humanizeDuration(rowItem.scanDuration) }}
                 </span>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Status" [width]="'110px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <i *ngIf="rowItem.scanStatus === 'RUNNING'" class="icon icon-loading sca-spin" style="margin-right: 4px;"></i>
-                <d-tag [tag]="rowItem.scanStatus" [labelStyle]="rowItem.scanStatus === 'SUCCESS' ? 'green-w98' : rowItem.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
-              </ng-template>
-            </d-cell>
-          </d-column>
-          <d-column header="Actions" [width]="'130px'">
-            <d-cell>
-              <ng-template let-rowItem="rowItem">
-                <d-icon-group>
-                  <d-icon
-                    [icon]="'icon-go-document'"
-                    [operable]="true"
-                    [disabled]="rowItem.scanStatus !== 'SUCCESS'"
-                    (click)="onViewComponents(rowItem)"
-                    title="Components"
-                  ></d-icon>
-                  <d-icon
-                    [icon]="'icon-list-view'"
-                    [operable]="true"
-                    [disabled]="rowItem.scanStatus !== 'SUCCESS'"
-                    (click)="onViewInternalModules(rowItem)"
-                    title="Internal Modules"
-                  ></d-icon>
-                  <d-icon
-                    [icon]="'icon-delete'"
-                    [operable]="true"
-                    (click)="onDeleteScan(rowItem)"
-                    title="Delete"
-                  ></d-icon>
-                </d-icon-group>
-              </ng-template>
-            </d-cell>
-          </d-column>
-        </d-data-table>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header='Status' [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <i *ngIf="rowItem.scanStatus === 'RUNNING'" class='icon icon-loading sca-spin'
+                     style='margin-right: 4px;'></i>
+                  <d-tag [tag]='rowItem.scanStatus'
+                         [labelStyle]="rowItem.scanStatus === 'SUCCESS' ? 'green-w98' : rowItem.scanStatus === 'FAILED' ? 'red-w98' : 'blue-w98'"></d-tag>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header='Actions' [width]="'130px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <d-icon-group>
+                    <d-icon
+                      [icon]="'icon-go-document'"
+                      [operable]='true'
+                      [disabled]="rowItem.scanStatus !== 'SUCCESS'"
+                      (click)='onViewComponents(rowItem)'
+                      title='Components'
+                    ></d-icon>
+                    <d-icon
+                      [icon]="'icon-list-view'"
+                      [operable]='true'
+                      [disabled]="rowItem.scanStatus !== 'SUCCESS'"
+                      (click)='onViewInternalModules(rowItem)'
+                      title='Internal Modules'
+                    ></d-icon>
+                    <d-icon
+                      [icon]="'icon-delete'"
+                      [operable]='true'
+                      (click)='onDeleteScan(rowItem)'
+                      title='Delete'
+                    ></d-icon>
+                  </d-icon-group>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
+        </div>
+        <d-pagination
+          *ngIf='scanTotal > 0'
+          [total]='scanTotal'
+          [(pageSize)]='scanPageSize'
+          [(pageIndex)]='scanPageIndex'
+          [canViewTotal]='true'
+          [canChangePageSize]='true'
+          [maxItems]='5'
+          (pageIndexChange)='onScanPageIndexChange($event)'
+          (pageSizeChange)='onScanPageSizeChange($event)'
+        ></d-pagination>
       </div>
-      <d-pagination
-        *ngIf="scanTotal > 0"
-        [total]="scanTotal"
-        [(pageSize)]="scanPageSize"
-        [(pageIndex)]="scanPageIndex"
-        [canViewTotal]="true"
-        [canChangePageSize]="true"
-        [maxItems]="5"
-        (pageIndexChange)="onScanPageIndexChange($event)"
-        (pageSizeChange)="onScanPageSizeChange($event)"
-      ></d-pagination>
-    </div>
     </div>
   </da-col-item>
 </da-layout-row>
 
 <!-- Components Dialog -->
-<div class="components-overlay" *ngIf="showComponentsDialog" (click)="showComponentsDialog = false">
-  <div class="components-dialog" (click)="$event.stopPropagation()">
-    <div class="components-header">
+<div class='components-overlay' *ngIf='showComponentsDialog' (click)='showComponentsDialog = false'>
+  <div class='components-dialog' (click)='$event.stopPropagation()'>
+    <div class='components-header'>
       <h5>Components — {{ componentsScanApp }} ({{ componentsList.length }})</h5>
-      <div class="components-header-actions">
-        <d-button bsStyle="common" bsSize="sm" [disabled]="!componentsList.length" (click)="onExportComponents()">Export Components MD</d-button>
-        <d-button bsStyle="common" bsSize="sm" [disabled]="!vulnerableCount" (click)="onExportVulnerableComponents()">Export Vulnerable Components MD</d-button>
-        <span class="close-btn" (click)="showComponentsDialog = false">&times;</span>
+      <div class='components-header-actions'>
+        <d-button bsStyle='common' bsSize='sm' [disabled]='!componentsList.length' (click)='onExportComponents()'>Export
+          Components MD
+        </d-button>
+        <d-button bsStyle='common' bsSize='sm' [disabled]='!vulnerableCount' (click)='onExportVulnerableComponents()'>
+          Export Vulnerable Components MD
+        </d-button>
+        <span class='close-btn' (click)='showComponentsDialog = false'>&times;</span>
       </div>
     </div>
-    <div class="components-search">
-      <input dTextInput [(ngModel)]="componentsGroupId" placeholder="Group ID" (change)="onComponentsSearch()" />
-      <input dTextInput [(ngModel)]="componentsArtifactId" placeholder="Artifact ID" (change)="onComponentsSearch()" />
-      <d-tabs type="options" [activeTab]="componentsVersionFilter" (activeTabChange)="onVersionFilterChange($event)">
+    <div class='components-search'>
+      <input dTextInput [(ngModel)]='componentsGroupId' placeholder='Group ID' (change)='onComponentsSearch()' />
+      <input dTextInput [(ngModel)]='componentsArtifactId' placeholder='Artifact ID' (change)='onComponentsSearch()' />
+      <d-tabs type='options' [activeTab]='componentsVersionFilter' (activeTabChange)='onVersionFilterChange($event)'>
         <d-tab [id]="'ALL'">
-          <ng-template dTabTitle>ALL <d-badge [count]="allComponents.length" [style]="'--devui-warning: rgb(79, 125, 255)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+          <ng-template dTabTitle>ALL
+            <d-badge [count]='allComponents.length' [style]="'--devui-warning: rgb(79, 125, 255)'" [status]="'warning'"
+                     [maxCount]='9999'></d-badge>
+          </ng-template>
         </d-tab>
         <d-tab [id]="'SNAPSHOT'">
-          <ng-template dTabTitle>SNAPSHOT <d-badge [count]="snapshotCount" [style]="'--devui-warning: rgb(255, 106, 13)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+          <ng-template dTabTitle>SNAPSHOT
+            <d-badge [count]='snapshotCount' [style]="'--devui-warning: rgb(255, 106, 13)'" [status]="'warning'"
+                     [maxCount]='9999'></d-badge>
+          </ng-template>
         </d-tab>
         <d-tab [id]="'RELEASE'">
-          <ng-template dTabTitle>RELEASE <d-badge [count]="releaseCount" [style]="'--devui-warning: rgb(95, 170, 21)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+          <ng-template dTabTitle>RELEASE
+            <d-badge [count]='releaseCount' [style]="'--devui-warning: rgb(95, 170, 21)'" [status]="'warning'"
+                     [maxCount]='9999'></d-badge>
+          </ng-template>
         </d-tab>
         <d-tab [id]="'VULNERABLE'">
-          <ng-template dTabTitle>VULNERABLE <d-badge [count]="vulnerableCount" [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'" [maxCount]="9999"></d-badge></ng-template>
+          <ng-template dTabTitle>VULNERABLE
+            <d-badge [count]='vulnerableCount' [style]="'--devui-warning: rgb(217, 48, 37)'" [status]="'warning'"
+                     [maxCount]='9999'></d-badge>
+          </ng-template>
         </d-tab>
       </d-tabs>
     </div>
-    <div class="components-paste">
-      <textarea dTextarea [(ngModel)]="componentsPasteInput" placeholder="Paste Maven XML or Gradle dependency to parse" (input)="onParseDependency()" rows="3"></textarea>
+    <div class='components-paste'>
+      <textarea dTextarea [(ngModel)]='componentsPasteInput' placeholder='Paste Maven XML or Gradle dependency to parse'
+                (input)='onParseDependency()' rows='3'></textarea>
     </div>
-    <div class="components-table" dLoading [loading]="componentsLoading" [backdrop]="true">
+    <div class='components-table' dLoading [loading]='componentsLoading' [backdrop]='true'>
       <d-data-table
-        [dataSource]="componentsList"
-        [scrollable]="true"
+        [dataSource]='componentsList'
+        [scrollable]='true'
         [tableOverflowType]="'overlay'"
       >
-        <d-column field="groupId" header="Group ID"></d-column>
-        <d-column field="artifactId" header="Artifact ID"></d-column>
-        <d-column field="version" header="Version"></d-column>
-        <d-column field="scope" header="Scope"></d-column>
-        <d-column header="Internal" [width]="'90px'">
+        <d-column field='groupId' header='Group ID'></d-column>
+        <d-column field='artifactId' header='Artifact ID'></d-column>
+        <d-column field='version' header='Version'></d-column>
+        <d-column field='scope' header='Scope'></d-column>
+        <d-column header='Internal' [width]="'90px'">
           <d-cell>
-            <ng-template let-rowItem="rowItem">
+            <ng-template let-rowItem='rowItem'>
               <d-icon
-                *ngIf="rowItem.internal"
+                *ngIf='rowItem.internal'
                 [icon]="'icon-right'"
                 [color]="'#3dcca6'"
-                title="内部包"
+                title='内部包'
               ></d-icon>
             </ng-template>
           </d-cell>
         </d-column>
-        <d-column header="Risk" [width]="'160px'">
+        <d-column header='Risk' [width]="'160px'">
           <d-cell>
-            <ng-template let-rowItem="rowItem">
+            <ng-template let-rowItem='rowItem'>
               <span
-                *ngIf="rowItem.vulnerability"
-                class="risk-tag"
-                [style.background]="riskColor(rowItem.riskLevel)"
+                *ngIf='rowItem.vulnerability'
+                class='risk-tag'
+                [style.background]='riskColor(rowItem.riskLevel)'
                 dPopover
                 [trigger]="'hover'"
                 [position]="'left-top'"
-                [controlled]="true"
-                [mouseEnterDelay]="300"
-                [content]="rowItem.vulnerabilities?.length ? vulnTemplate : null"
+                [controlled]='true'
+                [mouseEnterDelay]='300'
+                [content]='rowItem.vulnerabilities?.length ? vulnTemplate : null'
                 [popoverStyle]="{ width: '520px' }"
               >{{ rowItem.riskLevel || 'UNKNOWN' }}</span>
               <d-badge
-                *ngIf="rowItem.vulnerability && rowItem.vulnerabilities?.length"
-                [count]="rowItem.vulnerabilities.length"
+                *ngIf='rowItem.vulnerability && rowItem.vulnerabilities?.length'
+                [count]='rowItem.vulnerabilities.length'
                 [style]="'--devui-warning: ' + riskColor(rowItem.riskLevel)"
                 [status]="'warning'"
-                [maxCount]="9999"
-                style="margin-left: 10px;"
+                [maxCount]='9999'
+                style='margin-left: 10px;'
               ></d-badge>
               <ng-template #vulnTemplate>
-                <div class="vuln-popover">
-                  <div class="vuln-item" *ngFor="let v of rowItem.vulnerabilities">
-                    <div class="vuln-line">
-                      <span class="vuln-sev" [style.background]="riskColor(v.severity)">{{ v.severity || '-' }}</span>
-                      <a *ngIf="v.referenceUrl" [href]="v.referenceUrl" target="_blank" class="vuln-id">{{ v.id }}</a>
-                      <span *ngIf="!v.referenceUrl" class="vuln-id">{{ v.id }}</span>
-                      <span *ngIf="v.cvssScore != null" class="vuln-score">CVSS {{ v.cvssScore }}</span>
+                <div class='vuln-popover'>
+                  <div class='vuln-item' *ngFor='let v of rowItem.vulnerabilities'>
+                    <div class='vuln-line'>
+                      <span class='vuln-sev' [style.background]='riskColor(v.severity)'>{{ v.severity || '-' }}</span>
+                      <a *ngIf='v.referenceUrl' [href]='v.referenceUrl' target='_blank' class='vuln-id'>{{ v.id }}</a>
+                      <span *ngIf='!v.referenceUrl' class='vuln-id'>{{ v.id }}</span>
+                      <span *ngIf='v.cvssScore != null' class='vuln-score'>CVSS {{ v.cvssScore }}</span>
                     </div>
-                    <div class="vuln-summary" *ngIf="v.summary">{{ v.summary }}</div>
-                    <div class="vuln-fixed" *ngIf="v.fixedVersion">Fixed in: <strong>{{ v.fixedVersion }}</strong></div>
-                    <div class="vuln-aliases" *ngIf="v.aliases?.length">{{ v.aliases.join(', ') }}</div>
+                    <div class='vuln-summary' *ngIf='v.summary'>{{ v.summary }}</div>
+                    <div class='vuln-fixed' *ngIf='v.fixedVersion'>Fixed in: <strong>{{ v.fixedVersion }}</strong></div>
+                    <div class='vuln-aliases' *ngIf='v.aliases?.length'>{{ v.aliases.join(', ') }}</div>
                   </div>
                 </div>
               </ng-template>
@@ -394,25 +430,25 @@
 </div>
 
 <!-- Internal Modules Dialog -->
-<div class="components-overlay" *ngIf="showInternalModulesDialog" (click)="showInternalModulesDialog = false">
-  <div class="components-dialog" (click)="$event.stopPropagation()">
-    <div class="components-header">
+<div class='components-overlay' *ngIf='showInternalModulesDialog' (click)='showInternalModulesDialog = false'>
+  <div class='components-dialog' (click)='$event.stopPropagation()'>
+    <div class='components-header'>
       <h5>Internal Modules — {{ internalModulesScanApp }} ({{ internalModulesList.length }})</h5>
-      <div class="components-header-actions">
-        <span class="close-btn" (click)="showInternalModulesDialog = false">&times;</span>
+      <div class='components-header-actions'>
+        <span class='close-btn' (click)='showInternalModulesDialog = false'>&times;</span>
       </div>
     </div>
-    <div class="components-table" dLoading [loading]="internalModulesLoading" [backdrop]="true">
+    <div class='components-table' dLoading [loading]='internalModulesLoading' [backdrop]='true'>
       <d-data-table
-        [dataSource]="internalModulesList"
-        [scrollable]="true"
+        [dataSource]='internalModulesList'
+        [scrollable]='true'
         [tableOverflowType]="'overlay'"
       >
-        <d-column field="groupId" header="Group ID"></d-column>
-        <d-column field="artifactId" header="Artifact ID"></d-column>
+        <d-column field='groupId' header='Group ID'></d-column>
+        <d-column field='artifactId' header='Artifact ID'></d-column>
       </d-data-table>
-      <div *ngIf="!internalModulesLoading && !internalModulesList.length"
-           style="padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);">
+      <div *ngIf='!internalModulesLoading && !internalModulesList.length'
+           style='padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);'>
         无内部模块数据（该扫描可能来自旧版 pipeline，未采集 internal-modules.txt）
       </div>
     </div>

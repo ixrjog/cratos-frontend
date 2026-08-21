@@ -13,7 +13,26 @@
   }
 
   .branch-input {
-    width: 180px;
+    width: 250px;
+  }
+
+  .branch-field {
+    position: relative;
+    display: inline-block;
+
+    .branch-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--devui-aide-text, #8a8e99);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .branch-input {
+      padding-left: 28px;
+    }
   }
 }
 

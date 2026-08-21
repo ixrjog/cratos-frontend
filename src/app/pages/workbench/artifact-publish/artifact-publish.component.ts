@@ -43,6 +43,258 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
   private refreshTimer: any = null;
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
+  // 配置帮助弹窗
+  showHelp = false;
+  helpTab = 'gradle';
+
+  /** Gradle build.gradle 配置样例 */
+  readonly gradleBuildExample = `buildscript {
+    ext {
+        springBootVersion = '1.5.10.RELEASE'
+    }
+    repositories {
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+        maven {
+            url 'https://nexus.transspay.net/repository/maven-public/'
+            credentials {
+                // 登录制品仓库凭据使用标准变量名称
+                username = mavenusername
+                password = mavenpassword
+            }
+        }
+        mavenCentral()
+    }
+}`;
+
+  /** Gradle gradle.properties 配置样例(mavenusername 注入当前登录用户) */
+  get gradlePropertiesExample(): string {
+    const username = localStorage.getItem('username') || '你的Cratos用户名';
+    return `# 此文件为用户私有文件，请勿提交到代码仓库
+# 建议存放到 Gradle 用户目录下全局生效：~/.gradle/gradle.properties
+mavenusername=${username}
+mavenpassword=你的Cratos密码`;
+  }
+
+  // Maven settings.xml: 用户名取当前登录用户，密码由用户输入，替换模板占位并下载
+  mavenSettingsPassword = '';
+  showMavenPassword = false;
+
+  /** 当前登录用户名 */
+  get currentUsername(): string {
+    return localStorage.getItem('username') || '';
+  }
+
+  /** settings.xml 模板(占位: {CRATOS_USERNAME} / {CRATOS_PASSWD}) */
+  private readonly mavenSettingsTemplate = `<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <pluginGroups>
+  </pluginGroups>
+
+  <proxies>
+  </proxies>
+
+  <servers>
+    <server>
+      <id>releases</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>chuanyi-releases</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>chuanyi-snapshots</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>chuanyi-central</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>chuanyi-public</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>transsnet-releases</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>transsnet-snapshots</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+    <server>
+      <id>transsnet-public</id>
+      <username>{CRATOS_USERNAME}</username>
+      <password>{CRATOS_PASSWD}</password>
+    </server>
+  </servers>
+
+  <mirrors>
+    <mirror>
+      <id>chuanyi-public</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://nexus.chuanyinet.com/repository/maven-public/</url>
+    </mirror>
+
+    <mirror>
+      <id>transsnet-public</id>
+      <mirrorOf>transsnet-public</mirrorOf>
+      <url>https://nexus.transspay.net/repository/maven-public/</url>
+    </mirror>
+
+    <mirror>
+        <id>nexus-aliyun</id>
+        <mirrorOf>*</mirrorOf>
+        <name>Nexus aliyun</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+            <id>chuanyi</id>
+            <repositories>
+                <repository>
+                    <id>chuanyi-snapshots</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.chuanyinet.com/repository/maven-snapshots/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>chuanyi-releases</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.chuanyinet.com/repository/maven-releases/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>transsnet-snapshots</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.transspay.net/repository/maven-snapshots/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>transsnet-releases</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.transspay.net/repository/maven-releases/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>chuanyi-public</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.chuanyinet.com/repository/maven-public/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>chuanyi-central</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.chuanyinet.com/repository/maven-central/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>central</id>
+                    <name>Central Repository</name>
+                    <url>http://repo.maven.apache.org/maven2</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>spy</id>
+                    <name>Spy Repository</name>
+                    <url>http://files.couchbase.com/maven2/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>chuanyi</id>
+                    <name>Team Nexus Repository</name>
+                    <url>https://nexus.chuanyinet.com/repository/maven-releases/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+      <profile>
+        <id>transsnet</id>
+        <repositories>
+          <repository>
+            <id>transsnet-public</id>
+            <name>Team Nexus Repository</name>
+            <url>https://nexus.chuanyinet.com/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+          </repository>
+        </repositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+     <activeProfile>chuanyi</activeProfile>
+     <activeProfile>transsnet</activeProfile>
+  </activeProfiles>
+</settings>`;
+
+  /** XML 转义(防止用户名/密码中的特殊字符破坏 XML) */
+  private xmlEscape(s: string): string {
+    return (s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  /** 用当前用户名 + 输入密码替换占位并下载 settings.xml */
+  downloadMavenSettings(): void {
+    if (!this.mavenSettingsPassword) {
+      return;
+    }
+    const user = this.xmlEscape(this.currentUsername);
+    const pass = this.xmlEscape(this.mavenSettingsPassword);
+    const content = this.mavenSettingsTemplate
+      .replace(/\{CRATOS_USERNAME\}/g, user)
+      .replace(/\{CRATOS_PASSWD\}/g, pass);
+    const blob = new Blob([content], { type: 'application/xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'settings.xml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    this.toastUtil.onSuccessToast('settings.xml 已生成下载');
+  }
+
   // 制品仓库(完整 URL，自动按版本匹配 snapshots/releases，可手动切换)
   readonly repositoryOptions = [
     'https://nexus.chuanyinet.com/repository/maven-snapshots/',

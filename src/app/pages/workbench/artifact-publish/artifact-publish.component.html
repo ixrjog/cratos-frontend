@@ -29,6 +29,9 @@
           />
         </span>
         <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
+        <d-button class="help-btn" bsStyle="common" (click)="showHelp = true">
+          <i class="icon icon-info-o" style="margin-right: 4px;"></i>配置帮助
+        </d-button>
       </div>
 
       <!-- Result: build cards -->
@@ -133,14 +136,14 @@
         </div>
         <div dLoading [loading]="publishLoading" [backdrop]="true">
           <d-data-table [dataSource]="publishHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
-            <d-column field="publishNo" header="发布单号" [width]="'170px'">
+            <d-column field="publishNo" header="发布单号" [width]="'80px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <span dClipboard [content]="rowItem.publishNo" style="word-break: break-all;">{{ rowItem.publishNo }}</span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="应用 / 仓库" [width]="'240px'">
+            <d-column header="应用 / 仓库 / 制品仓库" [width]="'240px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <div class="app-name">{{ rowItem.applicationName }}</div>
@@ -167,22 +170,17 @@
                       <i *ngIf="rowItem.gitUrl" class="icon icon-copy giturl-copy" dClipboard [content]="rowItem.gitUrl" title="Copy"></i>
                     </div>
                   </ng-template>
-                </ng-template>
-              </d-cell>
-            </d-column>
-            <d-column header="模块 / 制品仓库" [width]="'360px'">
-              <d-cell>
-                <ng-template let-rowItem="rowItem">
-                  <div class="gav-line">{{ rowItem.groupId }}:{{ rowItem.artifactId }}:{{ rowItem.version }}</div>
                   <a class="repo-url" [href]="artifactUrl(rowItem)" target="_blank" rel="noopener"
                      [title]="artifactUrl(rowItem)">{{ rowItem.repository }} <i class="icon icon-open-new-window"></i></a>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="依赖配置" [width]="'110px'">
+            <d-column header="制品（模块）" [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
-                  <span
+                  <div class="gav-line">GroupId: {{ rowItem.groupId }}</div>
+                  <div class="gav-line">ArtifactId: {{ rowItem.artifactId }}</div>
+                  <div class="gav-line">Version: {{ rowItem.version }} <span
                     class="dep-config-link"
                     dPopover
                     [trigger]="'click'"
@@ -192,24 +190,24 @@
                     [popoverStyle]="{ width: '650px' }"
                     title="查看 Maven/Gradle 配置"
                   ><i class="icon icon-copy" style="margin-right: 4px;"></i>配置样例</span>
-                  <ng-template #depTpl>
-                    <div class="dep-config-popover">
-                      <div class="dep-block">
-                        <div class="dep-head">
-                          <span>Maven</span>
-                          <i class="icon icon-copy dep-copy" dClipboard [content]="mavenSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                    <ng-template #depTpl>
+                      <div class="dep-config-popover">
+                        <div class="dep-block">
+                          <div class="dep-head">
+                            <span>Maven</span>
+                            <i class="icon icon-copy dep-copy" dClipboard [content]="mavenSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                          </div>
+                          <pre class="dep-code">{{ mavenSnippet(rowItem) }}</pre>
                         </div>
-                        <pre class="dep-code">{{ mavenSnippet(rowItem) }}</pre>
-                      </div>
-                      <div class="dep-block">
-                        <div class="dep-head">
-                          <span>Gradle</span>
-                          <i class="icon icon-copy dep-copy" dClipboard [content]="gradleSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                        <div class="dep-block">
+                          <div class="dep-head">
+                            <span>Gradle</span>
+                            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                          </div>
+                          <pre class="dep-code">{{ gradleSnippet(rowItem) }}</pre>
                         </div>
-                        <pre class="dep-code">{{ gradleSnippet(rowItem) }}</pre>
                       </div>
-                    </div>
-                  </ng-template>
+                    </ng-template></div>
                 </ng-template>
               </d-cell>
             </d-column>
@@ -270,3 +268,76 @@
     </div>
   </da-col-item>
 </da-layout-row>
+
+<!-- 配置帮助弹窗 -->
+<div class="components-overlay" *ngIf="showHelp" (click)="showHelp = false">
+  <div class="components-dialog help-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>制品发布配置帮助</h5>
+      <div class="components-header-actions">
+        <span class="close-btn" (click)="showHelp = false">&times;</span>
+      </div>
+    </div>
+
+    <d-tabs type="options" [activeTab]="helpTab" (activeTabChange)="helpTab = $any($event)">
+      <d-tab id="gradle"><ng-template dTabTitle>Gradle</ng-template></d-tab>
+      <d-tab id="maven"><ng-template dTabTitle>Maven</ng-template></d-tab>
+    </d-tabs>
+
+    <div class="help-body">
+      <!-- Gradle -->
+      <div class="help-section" *ngIf="helpTab === 'gradle'">
+        <div class="help-note">
+          <p>1. 在项目根目录 <code>gradle.properties</code> 中配置 Cratos 账号，<b>请勿在 build.gradle 中写入明文密码</b>。</p>
+          <p>2. 在 <code>build.gradle</code> 的制品仓库 <code>credentials</code> 中，使用标准变量名 <code>mavenusername</code> / <code>mavenpassword</code> 引用凭据。</p>
+        </div>
+
+        <div class="dep-block">
+          <div class="dep-head">
+            <span>build.gradle</span>
+            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleBuildExample" (click)="onCopied()" title="复制"></i>
+          </div>
+          <pre class="dep-code">{{ gradleBuildExample }}</pre>
+        </div>
+
+        <div class="dep-block">
+          <div class="dep-head">
+            <span>gradle.properties</span>
+            <i class="icon icon-copy dep-copy" dClipboard [content]="gradlePropertiesExample" (click)="onCopied()" title="复制"></i>
+          </div>
+          <pre class="dep-code">{{ gradlePropertiesExample }}</pre>
+        </div>
+      </div>
+
+      <!-- Maven -->
+      <div class="help-section" *ngIf="helpTab === 'maven'">
+        <div class="help-note">
+          <p>Maven <code>settings.xml</code> 凭据配置：用户名使用当前登录用户，密码请填写你的 Cratos 密码；下载后放到 <code>~/.m2/settings.xml</code>。</p>
+          <p><b>该文件包含明文密码，请勿提交到代码仓库。</b></p>
+        </div>
+        <div class="help-form">
+          <div class="form-row">
+            <span class="form-label">用户名</span>
+            <div class="control">
+              <input [value]="currentUsername" [readonly]="true" />
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="form-label">密码</span>
+            <div class="control input-with-eye">
+              <input [type]="showMavenPassword ? 'text' : 'password'" [(ngModel)]="mavenSettingsPassword"
+                     placeholder="输入你的 Cratos 密码" autocomplete="new-password" />
+              <span class="eye-icon" (click)="showMavenPassword = !showMavenPassword">
+                <i [class]="showMavenPassword ? 'icon icon-preview' : 'icon icon-preview-forbidden'"></i>
+              </span>
+            </div>
+          </div>
+          <div class="form-tip">密码中的特殊字符（如 <code>&amp; &lt; &gt; " '</code>）会自动转义为 XML 格式，直接输入原始密码即可。</div>
+          <d-button bsStyle="primary" [disabled]="!mavenSettingsPassword" (click)="downloadMavenSettings()">
+            <i class="icon icon-download" style="margin-right: 4px;"></i>下载 settings.xml
+          </d-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

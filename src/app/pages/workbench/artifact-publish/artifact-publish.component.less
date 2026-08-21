@@ -1,3 +1,5 @@
+@import 'ng-devui/styles-var/devui-var.less';
+
 .artifact-publish-page {
   padding: 16px;
 }
@@ -13,7 +15,7 @@
   }
 
   .branch-input {
-    width: 180px;
+    width: 250px;
   }
 
   .branch-field {
@@ -84,7 +86,9 @@
 
   .gav-line {
     font-family: monospace;
-    color: var(--devui-text, #252b3a);
+    font-size: 10px;
+    //color: var(--devui-text, #252b3a);
+    color: var(--devui-aide-text, #8a8e99);
     word-break: break-all;
   }
 
@@ -273,6 +277,177 @@
         font-style: normal;
         font-size: 12px;
         color: var(--devui-aide-text, #8a8e99);
+      }
+    }
+  }
+}
+
+/* ===== 配置帮助弹窗 ===== */
+.help-btn {
+  margin-left: 8px;
+}
+
+.components-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.components-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .components-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}
+
+.help-dialog {
+  width: 720px;
+}
+
+.help-body {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 64vh;
+  margin-top: 12px;
+
+  .help-note {
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+    line-height: 1.7;
+    margin-bottom: 12px;
+
+    p {
+      margin: 0 0 4px;
+    }
+
+    code {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--devui-global-bg, #f7f8fa);
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--devui-brand, #5e7ce0);
+    }
+  }
+
+  .dep-block {
+    margin-bottom: 14px;
+
+    .dep-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-bottom: 4px;
+
+      .dep-copy {
+        cursor: pointer;
+        color: var(--devui-brand, #5e7ce0);
+      }
+    }
+
+    .dep-code {
+      margin: 0;
+      padding: 10px;
+      background: var(--devui-global-bg, #f7f8fa);
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
+
+  .help-form {
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .form-label {
+        width: 64px;
+        font-size: 13px;
+        color: @devui-text;
+      }
+
+      .control {
+        flex: 1;
+        max-width: 360px;
+        position: relative;
+
+        input {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid @devui-dividing-line;
+          border-radius: 4px;
+          font-size: 13px;
+          background: @devui-base-bg;
+          color: @devui-text;
+        }
+
+        &.input-with-eye input {
+          padding-right: 36px;
+        }
+
+        .eye-icon {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+          user-select: none;
+          color: @devui-aide-text;
+        }
+      }
+    }
+
+    .form-tip {
+      font-size: 12px;
+      color: @devui-aide-text;
+      margin: -4px 0 12px 64px;
+      line-height: 1.6;
+
+      code {
+        padding: 0 4px;
+        border-radius: 3px;
+        background: @devui-global-bg;
+        border: 1px solid @devui-dividing-line;
+        font-family: monospace;
+        color: @devui-brand;
       }
     }
   }

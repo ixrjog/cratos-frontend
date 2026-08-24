@@ -88,6 +88,15 @@
       <h3>CloudFlare Workers Rules / IP Whitelist</h3>
       <span class="rules-summary" *ngIf="workersRules.length">{{ workersRules.length }} rules</span>
       <d-button
+        *ngIf="workersDashUrl"
+        class="raw-json-btn"
+        bsStyle="common"
+        (click)="openCloudFlareDash()"
+        title="在 CloudFlare 控制台打开"
+      >
+        <i class="icon icon-jump-out" style="margin-right: 4px;"></i>CloudFlare 控制台
+      </d-button>
+      <d-button
         class="raw-json-btn"
         bsStyle="common"
         [disabled]="!workersRulesRaw"

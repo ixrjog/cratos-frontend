@@ -90,6 +90,8 @@ export interface TrafficLayerRecordQueryDetails {
 /** Response of /cloudflare/workers/callback/rules. `rules` is a raw JSON string. */
 export interface TrafficLayerCloudFlareWorkersCallbackRules {
   rules: string;
+  /** CloudFlare 控制台(dashboard) 地址，用于快捷跳转。 */
+  dashUrl?: string;
 }
 
 /** Parsed shape of a single CloudFlare Worker callback rule. */

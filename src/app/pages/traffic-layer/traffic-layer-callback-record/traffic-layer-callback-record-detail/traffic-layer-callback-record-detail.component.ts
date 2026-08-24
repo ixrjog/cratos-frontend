@@ -46,6 +46,8 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
   workersRulesError = '';
   workersRulesRaw = '';
   workersRules: CloudFlareWorkersCallbackRule[] = [];
+  /** CloudFlare 控制台地址(来自查询响应的 dashUrl)，用于快捷跳转。 */
+  workersDashUrl = '';
   /** LeaderLine instances connecting the root node to each rule node. */
   private ruleLines: any[] = [];
   private needDrawRuleLines = false;
@@ -132,12 +134,14 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
     this.workersRulesError = '';
     this.workersRulesRaw = '';
     this.workersRules = [];
+    this.workersDashUrl = '';
     this.removeRuleLines();
     this.trafficLayerService.queryCloudFlareWorkersCallbackRules({ callbackDomain: this.trafficLayerDomain.domain })
       .pipe(
         finalize(() => this.workersRulesLoading = false),
       )
       .subscribe(({ body }) => {
+        this.workersDashUrl = body?.dashUrl || '';
         const rulesText = body?.rules;
         if (!rulesText) {
           this.workersRulesError = 'No CloudFlare Workers rules are configured for this callback domain.';
@@ -159,6 +163,13 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
           this.needDrawRuleLines = true;
         }
       });
+  }
+
+  /** 打开 CloudFlare 控制台(dashUrl) */
+  openCloudFlareDash() {
+    if (this.workersDashUrl) {
+      window.open(this.workersDashUrl, '_blank', 'noopener');
+    }
   }
 
   /**

@@ -47,6 +47,17 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
   showHelp = false;
   helpTab = 'gradle';
 
+  // 版本规范说明弹窗(内容从 assets/docs/maven-version-spec.md 加载)
+  showVersionSpec = false;
+
+  /** 钉钉问题处理群加群链接 */
+  private readonly issueGroupUrl = 'https://qr.dingtalk.com/action/joingroup?code=v1,k1,qYbMMEL0CS0L1d4zV/hGCRkOTvuty4o9oEG/rlJPR+hi/KBalOWoyQ==&_dt_no_comment=1&origin=11';
+
+  /** 跳转到钉钉问题处理群 */
+  openIssueGroup() {
+    window.open(this.issueGroupUrl, '_blank', 'noopener');
+  }
+
   /** Gradle build.gradle 配置样例 */
   readonly gradleBuildExample = `buildscript {
     ext {

@@ -32,6 +32,12 @@
         <d-button class="help-btn" bsStyle="common" (click)="showHelp = true">
           <i class="icon icon-info-o" style="margin-right: 4px;"></i>配置帮助
         </d-button>
+        <d-button class="help-btn" bsStyle="common" (click)="showVersionSpec = true">
+          <i class="icon icon-standard" style="margin-right: 4px;"></i>版本规范说明
+        </d-button>
+        <d-button class="help-btn" bsStyle="common" (click)="openIssueGroup()">
+          <img src="assets/eds/dingtalk_app.svg" class="dingtalk-icon" alt="钉钉" />问题处理群
+        </d-button>
       </div>
 
       <!-- Result: build cards -->
@@ -338,6 +344,21 @@
           </d-button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 版本规范说明弹窗 -->
+<div class="components-overlay" *ngIf="showVersionSpec" (click)="showVersionSpec = false">
+  <div class="components-dialog version-spec-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>版本规范说明</h5>
+      <div class="components-header-actions">
+        <span class="close-btn" (click)="showVersionSpec = false">&times;</span>
+      </div>
+    </div>
+    <div class="version-spec-body">
+      <markdown src="assets/docs/maven-version-spec.md" [disableSanitizer]="true"></markdown>
     </div>
   </div>
 </div>

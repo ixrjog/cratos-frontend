@@ -103,11 +103,11 @@
               <span class="value">{{ build.jdkVersion }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build) as sm">
-              <span class="label">Group ID</span>
+              <span class="label">Group</span>
               <span class="value">{{ sm.groupId }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build) as sm">
-              <span class="label">Artifact ID</span>
+              <span class="label">Name</span>
               <span class="value">{{ sm.artifactId }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build)">
@@ -184,8 +184,8 @@
             <d-column header="制品（模块）" [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
-                  <div class="gav-line">GroupId: {{ rowItem.groupId }}</div>
-                  <div class="gav-line">ArtifactId: {{ rowItem.artifactId }}</div>
+                  <div class="gav-line">Group: {{ rowItem.groupId }}</div>
+                  <div class="gav-line">Name: {{ rowItem.artifactId }}</div>
                   <div class="gav-line">Version: {{ rowItem.version }} <span
                     class="dep-config-link"
                     dPopover

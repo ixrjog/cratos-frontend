@@ -9,6 +9,7 @@ import { CredentialLeakComponent } from './credential-leak/credential-leak.compo
 import { ApiScanComponent } from './api-scan/api-scan.component';
 import { ScaComponent } from './sca/sca.component';
 import { SastComponent } from './sast/sast.component';
+import { LogLintComponent } from './log-lint/log-lint.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       { path: 'api-scan', component: ApiScanComponent },
       { path: 'sca', component: ScaComponent },
       { path: 'sast', component: SastComponent },
+      { path: 'loglint', component: LogLintComponent },
     ],
   },
 ];

@@ -112,7 +112,18 @@
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build)">
               <span class="label">Version</span>
-              <span class="value">{{ build.versionLoading ? '查询中...' : (build.selectedVersion || '') }}</span>
+              <span class="value">
+                <ng-container *ngIf="!build.versionLoading && build.selectedVersion">
+                  <span *ngIf="isValidVersion(build.selectedVersion)" class="version-ok" title="符合版本规范">
+                    <i class="icon icon-right"></i>符合规范
+                  </span>
+                  <span *ngIf="!isValidVersion(build.selectedVersion)"
+                        class="version-warn"
+                        title="不符合版本规范，点击查看规范说明"
+                        (click)="showVersionSpec = true">⚠️ 不符合规范，查看规范说明</span>
+                </ng-container>
+                {{ build.versionLoading ? '查询中...' : (build.selectedVersion || '') }}
+              </span>
             </div>
             <div class="build-repo" *ngIf="getSelectedModule(build) && build.selectedVersion">
               <div class="repo-label">制品仓库</div>
@@ -254,6 +265,21 @@
                   <span *ngIf="rowItem.publishDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
                     耗时 {{ humanizeDuration(rowItem.publishDuration) }}
                   </span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column header="操作" [width]="'70px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <d-icon-group>
+                    <d-icon
+                      [icon]="'icon-delete'"
+                      [operable]="true"
+                      [disabled]="rowItem.publishStatus === 'SUCCESS'"
+                      (click)="onDeletePublish(rowItem)"
+                      title="删除"
+                    ></d-icon>
+                  </d-icon-group>
                 </ng-template>
               </d-cell>
             </d-column>

@@ -13,6 +13,7 @@ import { CredentialLeakComponent } from './credential-leak/credential-leak.compo
 import { ApiScanComponent } from './api-scan/api-scan.component';
 import { ScaComponent } from './sca/sca.component';
 import { SastComponent } from './sast/sast.component';
+import { LogLintComponent } from './log-lint/log-lint.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -33,6 +34,7 @@ import { MarkdownModule } from 'ngx-markdown';
     ApiScanComponent,
     ScaComponent,
     SastComponent,
+    LogLintComponent,
   ],
   imports: [
     CommonModule,

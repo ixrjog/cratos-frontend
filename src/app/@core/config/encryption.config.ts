@@ -10,7 +10,7 @@ export const EncryptionConfig = {
 
   // 需要响应加密的接口路径（为空则全部加密）
   responseEncryptionPaths: [
-    '/log/login', '/security/credential-leak', '/sast/scan/report/query', '/sca/scan/components/query'
+    '/log/login', '/security/credential-leak', '/sast/scan/report/query', '/loglint/scan/report/query', '/sca/scan/components/query'
   ] as string[],
 
   // 密钥版本（用于密钥轮换）

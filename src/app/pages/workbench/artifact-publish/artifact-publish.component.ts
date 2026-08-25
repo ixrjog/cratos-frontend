@@ -364,6 +364,21 @@ mavenpassword=你的Cratos密码`;
     this.queryPublishHistory();
   }
 
+  /** 删除发布记录(仅非成功记录，进行中的记录后端也会拒绝) */
+  onDeletePublish(rowItem: any) {
+    if (rowItem.publishStatus === 'SUCCESS') {
+      return;
+    }
+    if (!confirm(`确认删除发布记录 ${rowItem.publishNo} ?`)) {
+      return;
+    }
+    this.apiService.post('/application', '/artifact/publish/publish/delete', { id: rowItem.id })
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast('已删除');
+        this.queryPublishHistory();
+      });
+  }
+
   onPublishPageIndexChange(pageIndex: number) {
     this.publishPageIndex = pageIndex;
     this.queryPublishHistory();
@@ -573,6 +588,14 @@ mavenpassword=你的Cratos密码`;
       return null;
     }
     return build.internalModules.find((m: any) => this.moduleId(m) === build.selectedModuleId) || null;
+  }
+
+  /** 校验版本号是否符合规范(SemVer: MAJOR.MINOR.PATCH[-限定符][+构建元数据]) */
+  isValidVersion(version: string): boolean {
+    if (!version) {
+      return false;
+    }
+    return /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$/.test(version.trim());
   }
 
   /** 查询选中模块的版本(读取仓库 pom 解析) */

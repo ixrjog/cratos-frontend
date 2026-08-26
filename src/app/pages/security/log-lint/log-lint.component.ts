@@ -5,6 +5,7 @@ import { UserService } from '../../../@core/services/user.service';
 import { map } from 'rxjs/operators';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 import { ActivatedRoute } from '@angular/router';
+import { ToastUtil } from '../../../@shared/utils/toast.util';
 
 /**
  * LogLint 日志规约扫描（参考 SAST 页面）
@@ -68,6 +69,7 @@ export class LogLintComponent implements OnInit, OnDestroy {
     private applicationService: ApplicationService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private toastUtil: ToastUtil,
   ) {}
 
   ngOnInit(): void {
@@ -79,11 +81,15 @@ export class LogLintComponent implements OnInit, OnDestroy {
     }
     const savedAutoRefresh = localStorage.getItem(LogLintComponent.AUTO_REFRESH_KEY);
     this.autoRefresh = savedAutoRefresh === null ? true : savedAutoRefresh === 'true';
+    // 分享链接: 带 scanNo 时先把搜索框填上, 让首次列表查询即按其过滤
+    const scanNo = this.route.snapshot.queryParamMap.get('scanNo');
+    if (scanNo) {
+      this.scanQueryName = scanNo;
+    }
     this.queryScanHistory();
     if (this.autoRefresh) {
       this.startAutoRefresh();
     }
-    const scanNo = this.route.snapshot.queryParamMap.get('scanNo');
     if (scanNo) {
       this.openReportByScanNo(scanNo);
     }
@@ -94,11 +100,22 @@ export class LogLintComponent implements OnInit, OnDestroy {
   }
 
   private openReportByScanNo(scanNo: string) {
+    // 分享链接打开: 搜索框自动填入 scanNo 并过滤列表
+    this.scanQueryName = scanNo;
+    this.scanPageIndex = 1;
     this.apiService.post('/loglint', '/scan/page/query', {
       queryName: scanNo,
       page: 1,
       length: 20,
     }).subscribe(({ body }: any) => {
+      this.scanHistory = (body.data || []).map((row: any) => {
+        const usage = this.parseTokenUsage(row.tokenUsage);
+        row.totalTokens = usage ? (usage.total_tokens
+          ?? ((usage.input_tokens || 0) + (usage.output_tokens || 0)
+            + (usage.cache_read_input_tokens || 0) + (usage.cache_creation_input_tokens || 0))) : null;
+        return row;
+      });
+      this.scanTotal = body.totalNum || 0;
       const match = (body.data || []).find((s: any) => s.scanNo === scanNo);
       if (match) {
         this.onViewReport(match);
@@ -282,6 +299,46 @@ export class LogLintComponent implements OnInit, OnDestroy {
   reportContent = '';
   tokenUsage: any = null;
   remediationContent = '';
+
+  /** 基于某行 scanNo 的分享链接: 打开后直接查看报告 */
+  rowShareUrl(row: any): string {
+    const no = row?.scanNo;
+    return no ? `${window.location.origin}/#/pages/security/loglint?scanNo=${no}` : '';
+  }
+
+  /** 复制某行的分享链接 */
+  onShare(row: any) {
+    const url = this.rowShareUrl(row);
+    if (!url) {
+      return;
+    }
+    this.copyText(url);
+  }
+
+  private copyText(text: string) {
+    const done = () => this.toastUtil.onSuccessToast('分享链接已复制');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(done)
+        .catch(() => this.fallbackCopy(text, done));
+    } else {
+      this.fallbackCopy(text, done);
+    }
+  }
+
+  private fallbackCopy(text: string, done: () => void) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      done();
+    } catch (e) {}
+    document.body.removeChild(ta);
+  }
 
   onViewReport(rowItem: any) {
     this.reportScan = rowItem;

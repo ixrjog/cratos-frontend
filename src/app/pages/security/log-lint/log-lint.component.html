@@ -120,7 +120,18 @@
             [scrollable]='true'
             [tableOverflowType]="'overlay'"
           >
-            <d-column field='scanNo' header='Scan No' [width]="'80px'"></d-column>
+            <d-column field='scanNo' header='Scan No' [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem='rowItem'>
+                  <span style='word-break: break-all;'>{{ rowItem.scanNo }}</span>
+                  <span class='share-btn'
+                        title='复制分享链接(打开后直接查看报告)'
+                        (click)='onShare(rowItem); $event.stopPropagation()'>
+                    <i class='fas fa-share-nodes'></i> 分享
+                  </span>
+                </ng-template>
+              </d-cell>
+            </d-column>
             <d-column header='Application / Repository' [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>

@@ -339,6 +339,92 @@ mavenpassword=你的Cratos密码`;
 
   ngOnDestroy(): void {
     this.stopAutoRefresh();
+    this.stopLogPolling();
+  }
+
+  // ===== 构建日志(流式/增量) =====
+  showLogDialog = false;
+  logScan: any = null;
+  logContent = '';
+  logLoading = false;
+  private logRaw = '';
+  private logNextStart = 0;
+  private logTimer: any = null;
+
+  /** 按发布单号打开并流式加载 Jenkins 构建日志 */
+  onViewLog(rowItem: any) {
+    this.stopLogPolling();
+    this.logScan = rowItem;
+    this.logContent = '';
+    this.logRaw = '';
+    this.logNextStart = 0;
+    this.showLogDialog = true;
+    this.logLoading = true;
+    this.pollLog();
+  }
+
+  private pollLog() {
+    if (!this.showLogDialog || !this.logScan) {
+      return;
+    }
+    this.apiService.post('/application', '/artifact/publish/publish/log/query', {
+      publishNo: this.logScan.publishNo,
+      start: this.logNextStart,
+    }).subscribe(({ body }: any) => {
+      this.logLoading = false;
+      if (!body || !this.showLogDialog) {
+        return;
+      }
+      if (body.log) {
+        // 累积原始日志, 显示时清洗 Jenkins ConsoleNote / ANSI 转义
+        this.logRaw += body.log;
+        this.logContent = this.stripAnsi(this.logRaw);
+        this.scrollLogToBottom();
+      }
+      if (body.nextStart != null) {
+        this.logNextStart = body.nextStart;
+      }
+      if (body.hasMore) {
+        this.logTimer = setTimeout(() => this.pollLog(), 1500);
+      }
+    }, () => {
+      this.logLoading = false;
+    });
+  }
+
+  /** 清洗 Jenkins 控制台日志中的 ConsoleNote 与 ANSI 转义序列 */
+  private stripAnsi(s: string): string {
+    if (!s) {
+      return '';
+    }
+    return s
+      // Jenkins ConsoleNote: ESC[8m<base64>ESC[0m (隐藏的注解元数据)
+      .replace(/\u001b\[8m[\s\S]*?\u001b\[0m/g, '')
+      // 其余 ANSI 颜色/样式转义序列
+      .replace(/\u001b\[[0-9;]*m/g, '')
+      // 残留的孤立 ESC
+      .replace(/\u001b/g, '');
+  }
+
+  closeLogDialog() {
+    this.showLogDialog = false;
+    this.stopLogPolling();
+  }
+
+  private stopLogPolling() {
+    if (this.logTimer) {
+      clearTimeout(this.logTimer);
+      this.logTimer = null;
+    }
+  }
+
+  private scrollLogToBottom() {
+    setTimeout(() => {
+      const el = document.querySelector('.log-body');
+      if (el) {
+        el.scrollTop = el.scrollHeight;
+      }
+    });
   }
 
   // ===== 发布历史(分页) =====

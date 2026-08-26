@@ -550,3 +550,29 @@
     }
   }
 }
+
+/* ===== 构建日志(流式)弹窗 ===== */
+.log-dialog {
+  width: 80vw;
+  max-width: 80vw;
+}
+
+.log-body {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 72vh;
+  margin-top: 8px;
+  background: #1e1e1e;
+  border-radius: 4px;
+
+  .log-pre {
+    margin: 0;
+    padding: 12px 14px;
+    color: #d4d4d4;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+}

@@ -269,10 +269,16 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作" [width]="'70px'">
+            <d-column header="操作" [width]="'90px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <d-icon-group>
+                    <d-icon
+                      [icon]="'icon-view'"
+                      [operable]="true"
+                      (click)="onViewLog(rowItem)"
+                      title="查看构建日志"
+                    ></d-icon>
                     <d-icon
                       [icon]="'icon-delete'"
                       [operable]="true"
@@ -386,6 +392,27 @@
     </div>
     <div class="version-spec-body">
       <markdown src="assets/docs/maven-version-spec.md" [disableSanitizer]="true"></markdown>
+    </div>
+  </div>
+</div>
+
+<!-- 构建日志(流式) -->
+<div class="components-overlay" *ngIf="showLogDialog" (click)="closeLogDialog()">
+  <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>
+        构建日志 — {{ logScan?.publishNo }}
+        <i *ngIf="logScan?.publishStatus === 'RUNNING' || logScan?.publishStatus === 'QUEUED'"
+           class="icon icon-loading" style="margin-left: 6px;"></i>
+        <d-tag *ngIf="logScan?.publishStatus" [tag]="logScan.publishStatus"
+               [labelStyle]="statusLabelStyle(logScan.publishStatus)" style="margin-left: 6px;"></d-tag>
+        <a *ngIf="buildLink(logScan)" [href]="buildLink(logScan)" target="_blank"
+           style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">在 Jenkins 打开</a>
+      </h5>
+      <span class="close-btn" (click)="closeLogDialog()">&times;</span>
+    </div>
+    <div class="log-body" dLoading [loading]="logLoading && !logContent" [backdrop]="true">
+      <pre class="log-pre">{{ logContent || (logLoading ? '加载中...' : '暂无日志') }}</pre>
     </div>
   </div>
 </div>

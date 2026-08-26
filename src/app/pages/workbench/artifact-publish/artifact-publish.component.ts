@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+import { WebLinksAddon } from '@xterm/addon-web-links';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
@@ -340,27 +343,72 @@ mavenpassword=你的Cratos密码`;
   ngOnDestroy(): void {
     this.stopAutoRefresh();
     this.stopLogPolling();
+    this.disposeTerminal();
   }
 
-  // ===== 构建日志(流式/增量) =====
+  // ===== 构建日志(流式/增量, xterm.js 渲染) =====
   showLogDialog = false;
   logScan: any = null;
-  logContent = '';
   logLoading = false;
-  private logRaw = '';
+  @ViewChild('logTerm') private logTermRef: ElementRef;
+  private xterm: Terminal;
+  private fitAddon: FitAddon;
+  private logResizeObserver: any = null;
   private logNextStart = 0;
   private logTimer: any = null;
+  private logRaw = '';
+  private logWritten = 0;
 
   /** 按发布单号打开并流式加载 Jenkins 构建日志 */
   onViewLog(rowItem: any) {
     this.stopLogPolling();
+    this.disposeTerminal();
     this.logScan = rowItem;
-    this.logContent = '';
-    this.logRaw = '';
     this.logNextStart = 0;
+    this.logRaw = '';
+    this.logWritten = 0;
     this.showLogDialog = true;
     this.logLoading = true;
-    this.pollLog();
+    // 等弹窗 DOM 渲染后再初始化终端并开始轮询
+    setTimeout(() => {
+      this.initTerminal();
+      this.pollLog();
+    }, 50);
+  }
+
+  private initTerminal() {
+    if (this.xterm || !this.logTermRef) {
+      return;
+    }
+    this.xterm = new Terminal({
+      fontFamily: '"SFMono-Regular", Consolas, "Courier New", monospace',
+      fontSize: 12,
+      lineHeight: 1.2,
+      cursorBlink: false,
+      disableStdin: true,      // 只读日志
+      convertEol: true,        // \n 视为回车换行
+      scrollback: 100000,      // 构建日志较长, 加大缓冲
+      theme: { background: '#1e1e1e', foreground: '#d4d4d4' },
+    });
+    this.fitAddon = new FitAddon();
+    this.xterm.loadAddon(this.fitAddon);
+    this.xterm.loadAddon(new WebLinksAddon());
+    this.xterm.open(this.logTermRef.nativeElement);
+    // 弹窗展开/尺寸稳定后多次 fit, 避免初始宽度未定导致换行错位
+    this.safeFit();
+    setTimeout(() => this.safeFit(), 60);
+    setTimeout(() => this.safeFit(), 250);
+    // 容器尺寸变化(弹窗动画、窗口缩放)时自动重排
+    if ((window as any).ResizeObserver) {
+      this.logResizeObserver = new (window as any).ResizeObserver(() => this.safeFit());
+      this.logResizeObserver.observe(this.logTermRef.nativeElement);
+    }
+  }
+
+  private safeFit() {
+    try {
+      this.fitAddon?.fit();
+    } catch (e) {}
   }
 
   private pollLog() {
@@ -375,11 +423,10 @@ mavenpassword=你的Cratos密码`;
       if (!body || !this.showLogDialog) {
         return;
       }
+      // 写入原始增量: xterm 原生处理 ANSI 颜色 / \r 进度回写; ConsoleNote(ESC[8m..ESC[0m) 需自行剥离
       if (body.log) {
-        // 累积原始日志, 显示时清洗 Jenkins ConsoleNote / ANSI 转义
         this.logRaw += body.log;
-        this.logContent = this.stripAnsi(this.logRaw);
-        this.scrollLogToBottom();
+        this.flushLog();
       }
       if (body.nextStart != null) {
         this.logNextStart = body.nextStart;
@@ -392,23 +439,47 @@ mavenpassword=你的Cratos密码`;
     });
   }
 
-  /** 清洗 Jenkins 控制台日志中的 ConsoleNote 与 ANSI 转义序列 */
-  private stripAnsi(s: string): string {
-    if (!s) {
-      return '';
+  /**
+   * 将累积原始日志中"可安全写入"的增量剥离 ConsoleNote 后写入 xterm。
+   * 为兼容分块边界: 遇到未闭合的 ESC[8m 或结尾不完整的转义序列时, 本次保留、下次再写。
+   */
+  private flushLog() {
+    if (!this.xterm) {
+      return;
     }
-    return s
-      // Jenkins ConsoleNote: ESC[8m<base64>ESC[0m (隐藏的注解元数据)
-      .replace(/\u001b\[8m[\s\S]*?\u001b\[0m/g, '')
-      // 其余 ANSI 颜色/样式转义序列
-      .replace(/\u001b\[[0-9;]*m/g, '')
-      // 残留的孤立 ESC
-      .replace(/\u001b/g, '');
+    const esc = '\u001b';
+    const pending = this.logRaw.slice(this.logWritten);
+    if (!pending) {
+      return;
+    }
+    let safe = pending.length;
+    // 未闭合的 ConsoleNote(ESC[8m 之后还没出现 ESC[0m): 从该处起保留到下次
+    const lastOpen = pending.lastIndexOf(esc + '[8m');
+    const lastClose = pending.lastIndexOf(esc + '[0m');
+    if (lastOpen !== -1 && lastOpen > lastClose) {
+      safe = Math.min(safe, lastOpen);
+    }
+    // 结尾悬挂的不完整转义(如以 ESC 或 ESC[.. 结尾): 截断到它之前
+    const dangling = pending.slice(0, safe)
+      .search(/\u001b(\[[0-9;]*)?$/);
+    if (dangling !== -1) {
+      safe = dangling;
+    }
+    if (safe <= 0) {
+      return;
+    }
+    const chunk = pending.slice(0, safe)
+      .replace(/\u001b\[8m[\s\S]*?\u001b\[0m/g, '');
+    if (chunk) {
+      this.xterm.write(chunk);
+    }
+    this.logWritten += safe;
   }
 
   closeLogDialog() {
     this.showLogDialog = false;
     this.stopLogPolling();
+    this.disposeTerminal();
   }
 
   private stopLogPolling() {
@@ -418,13 +489,16 @@ mavenpassword=你的Cratos密码`;
     }
   }
 
-  private scrollLogToBottom() {
-    setTimeout(() => {
-      const el = document.querySelector('.log-body');
-      if (el) {
-        el.scrollTop = el.scrollHeight;
-      }
-    });
+  private disposeTerminal() {
+    if (this.logResizeObserver) {
+      this.logResizeObserver.disconnect();
+      this.logResizeObserver = null;
+    }
+    if (this.xterm) {
+      this.xterm.dispose();
+      this.xterm = null;
+    }
+    this.fitAddon = null;
   }
 
   // ===== 发布历史(分页) =====

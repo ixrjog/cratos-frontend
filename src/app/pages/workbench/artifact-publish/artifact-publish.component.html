@@ -411,8 +411,8 @@
       </h5>
       <span class="close-btn" (click)="closeLogDialog()">&times;</span>
     </div>
-    <div class="log-body" dLoading [loading]="logLoading && !logContent" [backdrop]="true">
-      <pre class="log-pre">{{ logContent || (logLoading ? '加载中...' : '暂无日志') }}</pre>
+    <div class="log-body" dLoading [loading]="logLoading" [backdrop]="true">
+      <div #logTerm class="log-term"></div>
     </div>
   </div>
 </div>

@@ -18,11 +18,18 @@
   >
     <div class="my-sidebar">
       <d-sticky>
-        <ul class="step-nav">
-          <li *ngFor="let businessDoc of businessDocs;index as i" (click)="onSelectDoc(businessDoc)">
-            {{ businessDoc.name }}
-          </li>
-        </ul>
+        <div class="doc-list">
+          <div
+            *ngFor="let businessDoc of businessDocs; index as i"
+            class="doc-item"
+            [class.active]="selectBusinessDoc?.id === businessDoc.id"
+            (click)="onSelectDoc(businessDoc)"
+            [title]="businessDoc.name"
+          >
+            <i class="icon icon-file doc-item-icon"></i>
+            <span class="doc-item-name">{{ businessDoc.name }}</span>
+          </div>
+        </div>
       </d-sticky>
     </div>
     <div class="my-content">
@@ -76,7 +83,8 @@
         <section>
           <div *ngIf="editing">
             <app-ace-editor
-              [maxLines]="30"
+              [minLines]="editorMaxLines"
+              [maxLines]="editorMaxLines"
               [aceValue]="selectBusinessDoc.content"
               (onChange)="onContentChange($event,selectBusinessDoc)"
             >

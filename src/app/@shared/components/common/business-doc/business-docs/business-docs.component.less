@@ -1,64 +1,50 @@
 @import "../../../../../../styles";
 
-/* 序号 */
-.step-nav {
+/* 文档名称列表(参考 channel-view 样式) */
+.doc-list {
   padding-top: 8px;
-  //width: 240px;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
 
-  > li {
-    list-style: none;
-    counter-increment: stepli;
-    padding: 0;
-    cursor: pointer;
-    height: 30px;
-    line-height: 1.5;
-    font-size: @devui-font-size;
-    color: @devui-text-weak;
-    position: relative;
+  .doc-item {
     display: flex;
     align-items: center;
-  }
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    transition: background 0.2s;
+    color: @devui-text-weak;
 
-  > li:hover {
-    color: @devui-brand-active;
-  }
+    &:hover {
+      background: var(--devui-list-item-hover-bg, #f2f3f5);
+    }
 
-  > li.active {
-    color: @devui-brand-active;
-  }
+    &.active {
+      background: var(--devui-brand, #5e7ce0);
 
-  > li.active::before {
-    border-color: @devui-brand-active;
-  }
+      .doc-item-icon {
+        color: #fff;
+      }
 
-  > li::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    text-align: center;
-    line-height: 26px;
-    border-radius: 50%;
-    background-color: @devui-base-bg;
-    margin-right: 20px;
-    border: 2px solid @devui-dividing-line;
-  }
+      .doc-item-name {
+        color: #fff;
+        font-weight: 600;
+      }
+    }
 
-  /* 左侧线 */
+    .doc-item-icon {
+      flex-shrink: 0;
+      color: @devui-text-weak;
+    }
 
-  > li:not(:first-of-type) {
-    margin-top: 32px;
-  }
-
-  > li:not(:first-of-type)::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: -32px;
-    left: 5px;
-    width: 1px;
-    height: 32px;
-    border-left: 2px solid @devui-dividing-line;
+    .doc-item-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: @devui-text;
+    }
   }
 }
 

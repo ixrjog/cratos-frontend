@@ -21,6 +21,8 @@ export class BusinessDocsComponent implements OnInit {
   businessType: string;
   businessDocs: BusinessDocVO[];
   selectBusinessDoc: BusinessDocVO;
+  /** 编辑器行数: 默认按当前页面(视口)高度自适应 */
+  editorMaxLines = 30;
   dialogDate = {
     warningOperateData: {
       ...DIALOG_DATA.warningOperateData,
@@ -38,6 +40,8 @@ export class BusinessDocsComponent implements OnInit {
 
   ngOnInit(): void {
     this.businessType = this.data.businessType;
+    // 编辑器高度按当前视口自适应: 取视口约 55%(每行约 17px), 保证在弹窗内不溢出
+    this.editorMaxLines = Math.max(15, Math.floor((window.innerHeight * 0.55) / 17));
     this.queryBusinessDocByBusiness(0);
   }
 

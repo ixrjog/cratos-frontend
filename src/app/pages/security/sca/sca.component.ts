@@ -132,7 +132,7 @@ export class ScaComponent implements OnInit, OnDestroy {
     this.result = null;
     this.apiService.post('/sca', '/application/config/query', {
       applicationName: this.selectedApplication.name,
-      branch: this.branch || 'master',
+      branch: (this.branch || '').trim() || 'master',
     }).subscribe(({ body }: any) => {
       this.result = body;
       this.loading = false;
@@ -148,7 +148,7 @@ export class ScaComponent implements OnInit, OnDestroy {
     this.scanningProject = build.project;
     this.apiService.post('/sca', '/application/scan', {
       applicationName: this.selectedApplication.name,
-      branch: this.branch || 'master',
+      branch: (this.branch || '').trim() || 'master',
       project: build.project,
     }).subscribe(() => {
       this.scanningProject = null;

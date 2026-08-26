@@ -25,6 +25,7 @@
             class='branch-input'
             dTextInput
             [(ngModel)]='branch'
+            (blur)="branch = (branch || '').trim()"
             placeholder='branch or tag'
           />
         </span>

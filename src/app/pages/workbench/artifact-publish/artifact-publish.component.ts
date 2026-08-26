@@ -495,15 +495,26 @@ mavenpassword=你的Cratos密码`;
     return this.loadBranchMap()[appName] || '';
   }
 
-  /** 分支变更时按当前应用持久化 */
+  /** 分支输入框失焦时去除首尾空格 */
+  onBranchBlur() {
+    this.branch = (this.branch || '').trim();
+    this.onBranchChange();
+  }
+
+  /** 分支变更时按当前应用持久化(去除首尾空格) */
   onBranchChange() {
     const appName = this.selectedApplication?.name;
     if (!appName) {
       return;
     }
     const map = this.loadBranchMap();
-    map[appName] = this.branch || 'master';
+    map[appName] = (this.branch || '').trim() || 'master';
     localStorage.setItem(ArtifactPublishComponent.BRANCH_MAP_KEY, JSON.stringify(map));
+  }
+
+  /** 归一化后的分支(去首尾空格, 空则 master) */
+  private currentBranch(): string {
+    return (this.branch || '').trim() || 'master';
   }
 
   onSearchApplication = (term: string) => {
@@ -534,7 +545,7 @@ mavenpassword=你的Cratos密码`;
     this.result = null;
     this.apiService.post('/sca', '/application/config/query', {
       applicationName: this.selectedApplication.name,
-      branch: this.branch || 'master',
+      branch: this.currentBranch(),
     }).subscribe(({ body }: any) => {
       this.result = body;
       this.loading = false;
@@ -610,7 +621,7 @@ mavenpassword=你的Cratos密码`;
     this.apiService.post('/application', '/artifact/publish/module/version/query', {
       applicationName: this.selectedApplication?.name,
       gitUrl,
-      ref: this.branch || 'master',
+      ref: this.currentBranch(),
       project: build.project,
       groupId: sm.groupId,
       artifactId: sm.artifactId,
@@ -658,7 +669,7 @@ mavenpassword=你的Cratos密码`;
     this.publishingProject = build.project;
     this.apiService.post('/application', '/artifact/publish/publish', {
       applicationName: this.selectedApplication?.name,
-      branch: this.branch || 'master',
+      branch: this.currentBranch(),
       project: build.project,
       moduleName: sm.artifactId,
       groupId: sm.groupId,

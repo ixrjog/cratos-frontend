@@ -25,6 +25,7 @@
             dTextInput
             [(ngModel)]="branch"
             (ngModelChange)="onBranchChange()"
+            (blur)="onBranchBlur()"
             placeholder="branch or tag"
           />
         </span>

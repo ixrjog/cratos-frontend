@@ -182,7 +182,7 @@ export class SastComponent implements OnInit, OnDestroy {
     // 应用配置查询复用 SCA 的返回结构
     this.apiService.post('/sast', '/application/config/query', {
       applicationName: this.selectedApplication.name,
-      branch: this.branch || 'master',
+      branch: (this.branch || '').trim() || 'master',
     }).subscribe(({ body }: any) => {
       this.result = body;
       this.loading = false;
@@ -198,7 +198,7 @@ export class SastComponent implements OnInit, OnDestroy {
     this.scanningProject = build.project;
     this.apiService.post('/sast', '/application/scan', {
       applicationName: this.selectedApplication.name,
-      branch: this.branch || 'master',
+      branch: (this.branch || '').trim() || 'master',
       project: build.project,
       skill: this.selectedSkill,
       model: this.selectedModel,

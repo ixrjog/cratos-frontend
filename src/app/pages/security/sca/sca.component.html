@@ -153,7 +153,7 @@
                     [position]="'bottom'"
                     [controlled]='true'
                     [content]='gitUrlTpl'
-                    [popoverStyle]="{ width: '520px' }"
+                    [popoverStyle]="getPopoverStyle({ width: '520px' })"
                     title='点击查看 Git URL'
                   >
                     <i class='fas fa-code-branch'
@@ -197,7 +197,7 @@
                         [controlled]='true'
                         [position]="'bottom'"
                         [content]='locTpl'
-                        [popoverStyle]="{ width: '340px' }"
+                        [popoverStyle]="getPopoverStyle({ width: '340px' })"
                         title='查看语言分布'
                       ><i class='fas fa-chart-pie'></i></span>
                       <ng-template #locTpl>
@@ -397,7 +397,7 @@
                 [controlled]='true'
                 [mouseEnterDelay]='300'
                 [content]='rowItem.vulnerabilities?.length ? vulnTemplate : null'
-                [popoverStyle]="{ width: '520px' }"
+                [popoverStyle]="getPopoverStyle({ width: '520px' })"
               >{{ rowItem.riskLevel || 'UNKNOWN' }}</span>
               <d-badge
                 *ngIf='rowItem.vulnerability && rowItem.vulnerabilities?.length'

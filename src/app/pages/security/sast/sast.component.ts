@@ -5,6 +5,7 @@ import { UserService } from '../../../@core/services/user.service';
 import { map } from 'rxjs/operators';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 import { ActivatedRoute } from '@angular/router';
+import { getPopoverStyle } from '../../../@shared/utils/theme.util';
 
 @Component({
   selector: 'app-sast',
@@ -15,6 +16,9 @@ export class SastComponent implements OnInit, OnDestroy {
 
   private static readonly STORAGE_KEY = 'sast_selected_application';
   private static readonly AUTO_REFRESH_KEY = 'sast_auto_refresh';
+
+  /** 主题感知的 popover 样式(亮/暗自适应) */
+  readonly getPopoverStyle = getPopoverStyle;
 
   // Application search & select
   selectedApplication: any = null;

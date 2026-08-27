@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
+import { getPopoverStyle } from '../../../@shared/utils/theme.util';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 
 /**
@@ -23,6 +24,9 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
 
   private static readonly STORAGE_KEY = 'artifact_publish_selected_application';
   private static readonly BRANCH_MAP_KEY = 'artifact_publish_branch_by_app';
+
+  /** 主题感知的 popover 样式(亮/暗自适应) */
+  readonly getPopoverStyle = getPopoverStyle;
 
   // 应用查询
   selectedApplication: any = null;

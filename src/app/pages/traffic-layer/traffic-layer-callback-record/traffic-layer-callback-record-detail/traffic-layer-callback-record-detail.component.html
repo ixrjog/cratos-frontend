@@ -1,39 +1,59 @@
-<div class="spacing-search">
-  <d-tabs
-    class="tabs"
-    type="options"
-    [(activeTab)]="activeDomainId"
-    (activeTabChange)="onDomainTabChange($any($event))"
-    *ngIf="callbackDomains.length"
-  >
-    <d-tab *ngFor="let d of callbackDomains" [id]="d.id" [title]="d.domain"></d-tab>
-  </d-tabs>
+<div class="cb-top">
+  <div class="spacing-search">
+    <d-tabs
+      class="tabs tag-tabs"
+      type="options"
+      [(activeTab)]="selectedTag"
+      (activeTabChange)="onTagChange($any($event))"
+      *ngIf="tagTabs.length"
+    >
+      <d-tab *ngFor="let t of tagTabs" [id]="t" [title]="t"></d-tab>
+    </d-tabs>
+  </div>
+  <div class="spacing-search">
+    <d-tabs
+      class="tabs"
+      type="options"
+      [(activeTab)]="tabActiveId"
+      (activeTabChange)="activeTabChange($event)"
+      *ngIf="JSON.stringify(envItems) !== '[]'"
+    >
+      <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName" [disabled]="!item.valid"></d-tab>
+    </d-tabs>
+    <d-button
+      [disabled]="queryParam.domainId === null || queryParam.envName === ''"
+      class="button"
+      bsStyle="common"
+      (click)="fetchData()"
+    >Fetch
+    </d-button>
+    <d-button
+      [disabled]="!trafficLayerDomain"
+      class="button"
+      bsStyle="common"
+      (click)="viewWorkersRules()"
+    >CloudFlare Rules
+    </d-button>
+  </div>
 </div>
-<div class="spacing-search">
-  <d-tabs
-    class="tabs"
-    type="options"
-    [(activeTab)]="tabActiveId"
-    (activeTabChange)="activeTabChange($event)"
-    *ngIf="JSON.stringify(envItems) !== '[]'"
-  >
-    <d-tab *ngFor="let item of envItems" [id]="item.envName" [title]="item.envName" [disabled]="!item.valid"></d-tab>
-  </d-tabs>
-  <d-button
-    [disabled]="queryParam.domainId === null || queryParam.envName === ''"
-    class="button"
-    bsStyle="common"
-    (click)="fetchData()"
-  >Fetch
-  </d-button>
-  <d-button
-    [disabled]="!trafficLayerDomain"
-    class="button"
-    bsStyle="common"
-    (click)="viewWorkersRules()"
-  >CloudFlare Rules
-  </d-button>
-</div>
+
+<div class="cb-body">
+  <!-- 左侧: 当前分类下的域名列表 -->
+  <div class="cb-domain-list">
+    <div
+      *ngFor="let d of domainsOfTag(selectedTag)"
+      class="cb-domain-item"
+      [class.active]="activeDomainId === d.id"
+      (click)="onTrafficLayerDomainChange(d)"
+      [title]="d.domain"
+    >
+      {{ d.domain }}
+    </div>
+    <div class="cb-domain-empty" *ngIf="!domainsOfTag(selectedTag).length">该分类下暂无域名</div>
+  </div>
+
+  <!-- 右侧: 详情 -->
+  <div class="cb-main">
 <div class="spacing-table" *ngIf="showRecord">
   <div dLoading [loading]="loading">
     <div *ngIf="!loading && showRecord">
@@ -163,6 +183,8 @@
         </div>
       </div>
     </div>
+    </div>
+  </div>
   </div>
 </div>
 

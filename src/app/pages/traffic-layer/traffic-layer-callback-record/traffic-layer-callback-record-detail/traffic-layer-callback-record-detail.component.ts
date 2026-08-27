@@ -39,6 +39,55 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
   callbackDomains: TrafficLayerDomainVO[] = [];
   /** Currently active domain tab id. */
   activeDomainId: any = null;
+  /** 当前选中的分类标签(tagValue: 国家码 或 国家码:业务)。 */
+  selectedTag: any = null;
+  /** 用于分类的 tag key。 */
+  private static readonly CALLBACK_TAG_KEY = 'Callback';
+
+  /** 取域名用于分类的 tagValue 集合(仅 tag.tagKey === "Callback" 的标签)。 */
+  domainTagValues(domain: TrafficLayerDomainVO): string[] {
+    const tags = (domain?.businessTags || [])
+      .filter(t => t?.tag?.tagKey === TrafficLayerCallbackRecordDetailComponent.CALLBACK_TAG_KEY)
+      .map(t => (t?.tagValue || '').trim())
+      .filter(v => v.length > 0);
+    return Array.from(new Set(tags));
+  }
+
+  /** 所有分类标签(去重排序); 无匹配标签的域名归入 OTHER。 */
+  get tagTabs(): string[] {
+    const set = new Set<string>();
+    let hasOther = false;
+    for (const d of this.callbackDomains) {
+      const vals = this.domainTagValues(d);
+      if (vals.length) {
+        vals.forEach(v => set.add(v));
+      } else {
+        hasOther = true;
+      }
+    }
+    const arr = Array.from(set)
+      .sort();
+    if (hasOther) {
+      arr.push('OTHER');
+    }
+    return arr;
+  }
+
+  /** 选中标签下的所有域名。 */
+  domainsOfTag(tag: string): TrafficLayerDomainVO[] {
+    if (!tag) {
+      return [];
+    }
+    if (tag === 'OTHER') {
+      return this.callbackDomains.filter(d => this.domainTagValues(d).length === 0);
+    }
+    return this.callbackDomains.filter(d => this.domainTagValues(d)
+      .includes(tag));
+  }
+
+  onTagChange(tag: any) {
+    this.selectedTag = String(tag);
+  }
 
   /** CloudFlare Workers callback rules / IP whitelist view state. */
   showWorkersRules = false;
@@ -98,6 +147,13 @@ export class TrafficLayerCallbackRecordDetailComponent implements OnInit, AfterV
           if (full) {
             this.trafficLayerDomain = full;
           }
+        }
+        // 默认选中分类标签: 优先取已恢复域名的标签, 否则第一个标签
+        if (!this.selectedTag) {
+          const restored = this.activeDomainId != null
+            ? this.callbackDomains.find(d => d.id === this.activeDomainId) : null;
+          const restoredTags = restored ? this.domainTagValues(restored) : [];
+          this.selectedTag = restoredTags[0] || this.tagTabs[0] || null;
         }
       });
   }

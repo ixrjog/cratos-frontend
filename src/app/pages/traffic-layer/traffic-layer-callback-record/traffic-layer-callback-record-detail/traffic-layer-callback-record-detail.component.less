@@ -388,3 +388,75 @@
     }
   }
 }
+
+/* 分类标签(options tabs)过多时换行, 让容器随之增高, 避免与下方内容重叠 */
+::ng-deep .tag-tabs .devui-nav-options {
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  row-gap: 4px;
+
+  > li {
+    float: none;
+  }
+}
+
+/* tagValue 分类下: 左侧域名列表 + 右侧详情 */
+.cb-body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.cb-domain-list {
+  width: 320px;
+  flex-shrink: 0;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  border-right: 1px solid var(--devui-dividing-line, #dfe1e6);
+  padding-right: 8px;
+
+  .cb-domain-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+    word-break: break-all;
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--devui-list-item-hover-bg, #f2f3f5);
+    }
+
+    &.active {
+      background: var(--devui-brand, #5e7ce0);
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+
+  .cb-domain-empty {
+    padding: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+}
+
+.cb-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 第一行: 分类标签 + 环境标签(+ 操作按钮) 同排 */
+.cb-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .spacing-search {
+    margin-bottom: 8px;
+  }
+}

@@ -296,7 +296,7 @@
           [dataSource]="configDetail.policies"
           [scrollable]="true"
           [tableOverflowType]="'overlay'">
-          <d-column field="policyName" header="策略名称" [width]="'180px'"></d-column>
+          <d-column field="policyName" header="策略名称" [width]="'350px'"></d-column>
           <d-column field="policyType" header="类型" [width]="'110px'"></d-column>
           <d-column field="defaultVersion" header="版本" [width]="'80px'">
             <d-cell>
@@ -326,7 +326,7 @@
 
         <div class="config-section-title ak-policy-title">
           <span>AccessKey 网络访问限制策略</span>
-          <d-button *ngIf="!akEditing" bsStyle="common" bsSize="sm" (click)="onEditAkPolicy()"
+          <d-button *ngIf="!akEditing" bsStyle="primary" bsSize="sm" (click)="onEditAkPolicy()"
                     style="margin-left: 12px;">
             <i class="icon icon-edit" style="margin-right: 4px;"></i>编辑
           </d-button>

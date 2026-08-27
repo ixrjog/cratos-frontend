@@ -173,7 +173,7 @@
                       [position]="'bottom'"
                       [controlled]="true"
                       [content]="gitUrlTpl"
-                      [popoverStyle]="{ width: '520px' }"
+                      [popoverStyle]="{ width: '520px', background: 'var(--devui-base-bg)', border: '1px solid var(--devui-dividing-line)', color: 'var(--devui-text)' }"
                       title="点击查看 Git URL"
                     >
                       <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
@@ -205,7 +205,7 @@
                     [position]="'left-top'"
                     [controlled]="true"
                     [content]="depTpl"
-                    [popoverStyle]="{ width: '650px' }"
+                    [popoverStyle]="{ width: '650px', background: 'var(--devui-base-bg)', border: '1px solid var(--devui-dividing-line)', color: 'var(--devui-text)' }"
                     title="查看 Maven/Gradle 配置"
                   ><i class="icon icon-copy" style="margin-right: 4px;"></i>配置样例</span>
                     <ng-template #depTpl>

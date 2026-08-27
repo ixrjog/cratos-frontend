@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../@core/services/api.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
+import { map } from 'rxjs/operators';
 
 /**
  * 云 AK/SK 申请
@@ -280,7 +281,6 @@ export class CloudAkApplyComponent implements OnInit {
   configInstanceId: number | null = null;
 
   // 策略下拉查询 / 附加
-  policyOptions: any[] = [];
   policyLoading = false;
   selectedPolicy: any = null;
   attaching = false;
@@ -290,10 +290,8 @@ export class CloudAkApplyComponent implements OnInit {
     this.configApplyId = rowItem.id;
     this.configInstanceId = rowItem.instanceId;
     this.selectedPolicy = null;
-    this.policyOptions = [];
     this.showConfigDialog = true;
     this.loadConfigDetail();
-    this.fetchPolicyOptions();
   }
 
   loadConfigDetail() {
@@ -311,19 +309,123 @@ export class CloudAkApplyComponent implements OnInit {
     });
   }
 
-  fetchPolicyOptions() {
-    if (this.configInstanceId == null) {
+  /** 附加策略: 输入关键词后走后端 API 查询(而非前端过滤) */
+  onSearchPolicy = (term: string) => {
+    return this.apiService.post('/cloud', '/ak/apply/aliyun/policy/query', {
+      instanceId: this.configInstanceId,
+      policyName: term || '',
+    }).pipe(
+      map(({ body }: any) => (body || []).map((p: any, i: number) => ({ id: i, option: p }))),
+    );
+  };
+
+  /** 解析 AccessKey 策略(兼容对象或 JSON 字符串) */
+  akPolicy(): any {
+    const raw = this.configDetail?.accessKeyPolicy;
+    if (!raw) {
+      return null;
+    }
+    if (typeof raw === 'string') {
+      try {
+        return JSON.parse(raw);
+      } catch (e) {
+        return null;
+      }
+    }
+    return raw;
+  }
+
+  akpVersion(p: any): any {
+    return p?.Version ?? p?.version;
+  }
+
+  akpStatus(p: any): any {
+    return p?.Status ?? p?.status;
+  }
+
+  akpStatements(p: any): any[] {
+    return p?.Statements ?? p?.statements ?? [];
+  }
+
+  stmtType(s: any): string {
+    return s?.Type ?? s?.type ?? '';
+  }
+
+  stmtValue(s: any): string {
+    return s?.Value ?? s?.value ?? '';
+  }
+
+  stmtIpList(s: any): string[] {
+    return s?.IPList ?? s?.ipList ?? [];
+  }
+
+  // ===== AccessKey 网络访问限制策略: 在线编辑 =====
+  akEditing = false;
+  akSaving = false;
+  akEditModel: { statements: { type: string; value: string; ipText: string }[] } = null;
+  readonly akTypeOptions = ['ClassicWhiteList', 'VPCWhiteList'];
+
+  onEditAkPolicy() {
+    const p = this.akPolicy();
+    const statements = this.akpStatements(p)
+      .map((s: any) => ({
+        type: this.stmtType(s) || 'ClassicWhiteList',
+        value: this.stmtValue(s) || '',
+        ipText: this.stmtIpList(s)
+          .join('\n'),
+      }));
+    this.akEditModel = {
+      statements: statements.length ? statements : [{ type: 'ClassicWhiteList', value: '', ipText: '' }],
+    };
+    this.akEditing = true;
+  }
+
+  addAkStatement() {
+    this.akEditModel?.statements.push({ type: 'ClassicWhiteList', value: '', ipText: '' });
+  }
+
+  removeAkStatement(index: number) {
+    this.akEditModel?.statements.splice(index, 1);
+  }
+
+  onCancelAkEdit() {
+    this.akEditing = false;
+    this.akEditModel = null;
+  }
+
+  onSaveAkPolicy() {
+    if (!this.akEditModel || this.akSaving) {
       return;
     }
-    this.policyLoading = true;
-    this.apiService.post('/cloud', '/ak/apply/aliyun/policy/query', {
-      instanceId: this.configInstanceId,
-      policyName: '',
-    }).subscribe(({ body }: any) => {
-      this.policyOptions = body || [];
-      this.policyLoading = false;
+    const statements = this.akEditModel.statements.map(s => {
+      const ipList = (s.ipText || '')
+        .split(/\r?\n/)
+        .map(v => v.trim())
+        .filter(v => v.length > 0);
+      const stmt: any = { Type: s.type, IPList: ipList };
+      // 仅 VPCWhiteList 携带 Value(VPC 实例 ID)
+      if (s.type === 'VPCWhiteList' && s.value && s.value.trim()) {
+        stmt.Value = s.value.trim();
+      }
+      return stmt;
+    });
+    const policy = {
+      Version: 1,
+      Status: 'Active',
+      Statements: statements,
+    };
+    this.akSaving = true;
+    this.apiService.post('/cloud', '/ak/apply/aliyun/accesskey/policy/update', {
+      id: this.configApplyId,
+      accessKeyPolicy: JSON.stringify(policy),
+    }).subscribe(() => {
+      this.akSaving = false;
+      this.akEditing = false;
+      this.akEditModel = null;
+      this.toastUtil.onSuccessToast('AccessKey 网络访问限制策略已更新');
+      this.loadConfigDetail();
     }, () => {
-      this.policyLoading = false;
+      this.akSaving = false;
     });
   }
 

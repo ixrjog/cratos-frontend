@@ -73,11 +73,11 @@
                 <ng-template let-rowItem="rowItem">
                   <a *ngIf="rowItem.applyStatus === 'CREATED'"
                      class="op-link" (click)="onProcess(rowItem)">处理</a>
-                  <a *ngIf="rowItem.applyStatus === 'ISSUED'"
+                  <a *ngIf="rowItem.applyStatus === 'ISSUED' || rowItem.applyStatus === 'EXTRACTED'"
                      class="op-link" (click)="onConfig(rowItem)">配置</a>
                   <a *ngIf="rowItem.applyStatus === 'ISSUED' && rowItem.currentApplicant"
                      class="op-link" (click)="onExtract(rowItem)">提取</a>
-                  <span *ngIf="rowItem.applyStatus !== 'CREATED' && rowItem.applyStatus !== 'ISSUED'">-</span>
+                  <span *ngIf="rowItem.applyStatus !== 'CREATED' && rowItem.applyStatus !== 'ISSUED' && rowItem.applyStatus !== 'EXTRACTED'">-</span>
                 </ng-template>
               </d-cell>
             </d-column>
@@ -273,14 +273,19 @@
         <div class="policy-attach-row">
           <d-select
             class="policy-select"
-            [options]="policyOptions"
             [filterKey]="'assetKey'"
+            [searchFn]="onSearchPolicy"
             [(ngModel)]="selectedPolicy"
             [isSearch]="true"
             [appendToBody]="true"
             dLoading
             [loading]="policyLoading"
-            placeholder="搜索并选择要附加的策略">
+            placeholder="输入关键词，后端搜索并选择要附加的策略">
+            <ng-template let-option="option">
+              <span>{{ option.assetKey }}</span>
+              <span *ngIf="option.kind"
+                    style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ option.kind }}</span>
+            </ng-template>
           </d-select>
           <d-button bsStyle="primary" [disabled]="!canAttachPolicy" (click)="onAttachPolicy()">
             {{ attaching ? '附加中...' : '附加策略' }}
@@ -318,6 +323,90 @@
         <p class="process-tip" *ngIf="!configDetail.policies?.length">
           当前 RAM 账户暂未附加任何策略。
         </p>
+
+        <div class="config-section-title ak-policy-title">
+          <span>AccessKey 网络访问限制策略</span>
+          <d-button *ngIf="!akEditing" bsStyle="common" bsSize="sm" (click)="onEditAkPolicy()"
+                    style="margin-left: 12px;">
+            <i class="icon icon-edit" style="margin-right: 4px;"></i>编辑
+          </d-button>
+        </div>
+
+        <!-- 查看模式 -->
+        <ng-container *ngIf="!akEditing">
+          <ng-container *ngIf="akPolicy() as akp; else noAkPolicy">
+            <div class="process-meta">
+              <div><span class="k">Version</span><span class="v">{{ akpVersion(akp) }}</span></div>
+              <div><span class="k">Status</span><span class="v">{{ akpStatus(akp) }}</span></div>
+            </div>
+            <d-data-table
+              *ngIf="akpStatements(akp).length"
+              [dataSource]="akpStatements(akp)"
+              [scrollable]="true"
+              [tableOverflowType]="'overlay'">
+              <d-column header="类型" [width]="'150px'">
+                <d-cell>
+                  <ng-template let-rowItem="rowItem">
+                    <span>{{ stmtType(rowItem) }}</span>
+                  </ng-template>
+                </d-cell>
+              </d-column>
+              <d-column header="Value" [width]="'220px'">
+                <d-cell>
+                  <ng-template let-rowItem="rowItem">
+                    <span>{{ stmtValue(rowItem) || '-' }}</span>
+                  </ng-template>
+                </d-cell>
+              </d-column>
+              <d-column header="IP 列表">
+                <d-cell>
+                  <ng-template let-rowItem="rowItem">
+                    <span class="ip-chip" *ngFor="let ip of stmtIpList(rowItem)">{{ ip }}</span>
+                    <span *ngIf="!stmtIpList(rowItem).length">-</span>
+                  </ng-template>
+                </d-cell>
+              </d-column>
+            </d-data-table>
+            <p class="process-tip" *ngIf="!akpStatements(akp).length">该策略暂无 Statements。</p>
+          </ng-container>
+          <ng-template #noAkPolicy>
+            <p class="process-tip">暂无 AccessKey 策略配置。</p>
+          </ng-template>
+        </ng-container>
+
+        <!-- 编辑模式 -->
+        <div class="ak-edit" *ngIf="akEditing && akEditModel">
+          <div class="ak-stmt" *ngFor="let s of akEditModel.statements; let i = index">
+            <div class="ak-stmt-head">
+              <span class="ak-stmt-title">Statement #{{ i + 1 }}</span>
+              <i class="icon icon-delete ak-stmt-del" title="删除" (click)="removeAkStatement(i)"></i>
+            </div>
+            <div class="ak-edit-row">
+              <span class="ak-edit-label">类型</span>
+              <d-select class="ak-type-select" [options]="akTypeOptions" [(ngModel)]="s.type"></d-select>
+            </div>
+            <div class="ak-edit-row" *ngIf="s.type === 'VPCWhiteList'">
+              <span class="ak-edit-label">Value</span>
+              <input dTextInput class="ak-value-input" [(ngModel)]="s.value" placeholder="VPC 实例 ID，如 vpc-bp1xxxx" />
+            </div>
+            <div class="ak-edit-row ak-ip-row">
+              <span class="ak-edit-label">IP 列表</span>
+              <textarea dTextarea class="ak-ip-text" [(ngModel)]="s.ipText" rows="4"
+                        placeholder="每行一个 IP / CIDR，例如：&#10;203.0.113.1&#10;198.51.100.0/24&#10;2001:db8::/32"></textarea>
+            </div>
+          </div>
+
+          <d-button bsStyle="common" bsSize="sm" (click)="addAkStatement()">
+            <i class="icon icon-add" style="margin-right: 4px;"></i>添加 Statement
+          </d-button>
+
+          <div class="ak-edit-footer">
+            <d-button bsStyle="common" (click)="onCancelAkEdit()">取消</d-button>
+            <d-button bsStyle="primary" [disabled]="akSaving" (click)="onSaveAkPolicy()">
+              {{ akSaving ? '保存中...' : '保存' }}
+            </d-button>
+          </div>
+        </div>
       </ng-container>
       <p *ngIf="!configLoading && !configDetail" class="process-tip">未获取到配置详情。</p>
     </div>
@@ -329,7 +418,7 @@
 </div>
 
 <!-- 提取 AK/SK 弹窗 -->
-<div class="components-overlay" *ngIf="showExtractDialog" (click)="onCloseExtract()">
+<div class="components-overlay" *ngIf="showExtractDialog" (click)="extractSecret ? null : onCloseExtract()">
   <div class="apply-dialog" (click)="$event.stopPropagation()">
     <div class="dialog-header">
       <h5>提取 AK/SK</h5>

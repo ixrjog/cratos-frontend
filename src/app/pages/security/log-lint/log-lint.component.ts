@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 import { ActivatedRoute } from '@angular/router';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
+import { getPopoverStyle } from '../../../@shared/utils/theme.util';
 
 /**
  * LogLint 日志规约扫描（参考 SAST 页面）
@@ -19,6 +20,9 @@ export class LogLintComponent implements OnInit, OnDestroy {
 
   private static readonly STORAGE_KEY = 'loglint_selected_application';
   private static readonly AUTO_REFRESH_KEY = 'loglint_auto_refresh';
+
+  /** 主题感知的 popover 样式(亮/暗自适应) */
+  readonly getPopoverStyle = getPopoverStyle;
 
   // Application search & select
   selectedApplication: any = null;
@@ -161,6 +165,19 @@ export class LogLintComponent implements OnInit, OnDestroy {
     } else {
       localStorage.removeItem(LogLintComponent.STORAGE_KEY);
     }
+  }
+
+  /** 从扫描历史行"重新扫描": 把应用+分支填入顶部搜索项并重新查询构建 */
+  onRescan(rowItem: any) {
+    if (!rowItem?.applicationName) {
+      return;
+    }
+    this.onApplicationChange({ name: rowItem.applicationName, comment: rowItem.applicationName });
+    this.branch = (rowItem.branch || 'master').trim() || 'master';
+    this.onQuery();
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
   }
 
   onQuery() {

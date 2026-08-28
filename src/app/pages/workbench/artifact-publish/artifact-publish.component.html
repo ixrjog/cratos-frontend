@@ -150,6 +150,8 @@
           <d-button bsStyle="common" (click)="onPublishSearch()">查询</d-button>
           <d-checkbox [label]="'自动刷新'" [isShowTitle]="false" [(ngModel)]="autoRefresh"
                       (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
+          <d-checkbox [label]="'只看我的'" [isShowTitle]="false" [(ngModel)]="onlyMine"
+                      (ngModelChange)="onOnlyMineChange($event)"></d-checkbox>
           <h5>发布历史</h5>
         </div>
         <div dLoading [loading]="publishLoading" [backdrop]="true">
@@ -269,10 +271,16 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作" [width]="'90px'">
+            <d-column header="操作" [width]="'120px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <d-icon-group>
+                    <d-icon
+                      [icon]="'icon-refresh'"
+                      [operable]="true"
+                      (click)="onRedeploy(rowItem)"
+                      title="重新部署（填入应用+分支并查询）"
+                    ></d-icon>
                     <d-icon
                       [icon]="'icon-view'"
                       [operable]="true"

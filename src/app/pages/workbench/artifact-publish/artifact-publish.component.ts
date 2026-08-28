@@ -25,6 +25,7 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
 
   private static readonly STORAGE_KEY = 'artifact_publish_selected_application';
   private static readonly BRANCH_MAP_KEY = 'artifact_publish_branch_by_app';
+  private static readonly ONLY_MINE_KEY = 'artifact_publish_only_mine';
 
   /** 主题感知的 popover 样式(亮/暗自适应) */
   readonly getPopoverStyle = getPopoverStyle;
@@ -48,6 +49,7 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
   publishQueryName = '';
   publishLoading = false;
   autoRefresh = true;
+  onlyMine = false;
   private refreshTimer: any = null;
   protected readonly limit = RELATIVE_TIME_LIMIT;
 
@@ -341,6 +343,8 @@ mavenpassword=你的Cratos密码`;
     if (savedBranch) {
       this.branch = savedBranch;
     }
+    // 恢复"只看我的"持久化状态
+    this.onlyMine = localStorage.getItem(ArtifactPublishComponent.ONLY_MINE_KEY) === 'true';
     // 加载发布历史 + 自动刷新
     this.queryPublishHistory();
     this.startAutoRefresh();
@@ -542,6 +546,7 @@ mavenpassword=你的Cratos密码`;
     }
     this.apiService.post('/application', '/artifact/publish/publish/page/query', {
       queryName: this.publishQueryName,
+      username: this.onlyMine ? this.currentUsername : null,
       page: this.publishPageIndex,
       length: this.publishPageSize,
     }).subscribe(({ body }: any) => {
@@ -556,6 +561,12 @@ mavenpassword=你的Cratos密码`;
   onPublishSearch() {
     this.publishPageIndex = 1;
     this.queryPublishHistory();
+  }
+
+  /** "只看我的"切换: 持久化并重新查询 */
+  onOnlyMineChange(checked: boolean) {
+    localStorage.setItem(ArtifactPublishComponent.ONLY_MINE_KEY, checked ? 'true' : 'false');
+    this.onPublishSearch();
   }
 
   /** 删除发布记录(仅非成功记录，进行中的记录后端也会拒绝) */
@@ -729,6 +740,24 @@ mavenpassword=你的Cratos密码`;
       localStorage.removeItem(ArtifactPublishComponent.STORAGE_KEY);
       this.branch = 'master';
     }
+  }
+
+  /** 从发布历史行"重新部署": 把应用+分支填入顶部搜索项并重新查询构建 */
+  onRedeploy(rowItem: any) {
+    if (!rowItem?.applicationName) {
+      return;
+    }
+    // 填入应用(触发持久化与分支恢复)
+    this.onApplicationChange({ name: rowItem.applicationName, comment: rowItem.applicationName });
+    // 覆盖为该记录的分支
+    this.branch = (rowItem.branch || 'master').trim() || 'master';
+    this.onBranchChange();
+    // 重新查询该应用的可发布构建
+    this.onQuery();
+    // 滚动到顶部, 便于查看搜索栏与构建卡片
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
   }
 
   onQuery() {

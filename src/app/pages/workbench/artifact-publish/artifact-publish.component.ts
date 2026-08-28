@@ -7,6 +7,7 @@ import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { getPopoverStyle } from '../../../@shared/utils/theme.util';
+import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 
 /**
@@ -325,6 +326,7 @@ mavenpassword=你的Cratos密码`;
     private apiService: ApiService,
     private applicationService: ApplicationService,
     private toastUtil: ToastUtil,
+    private terminalThemeService: TerminalThemeService,
   ) {}
 
   ngOnInit(): void {
@@ -384,15 +386,38 @@ mavenpassword=你的Cratos密码`;
     if (this.xterm || !this.logTermRef) {
       return;
     }
+    // 复用 web-terminal 的主题配色/字体
+    const t = this.terminalThemeService.getCurrentTheme();
+    const c = t.colors;
     this.xterm = new Terminal({
-      fontFamily: '"SFMono-Regular", Consolas, "Courier New", monospace',
-      fontSize: 12,
-      lineHeight: 1.2,
+      fontFamily: t.fontFamily || '"SFMono-Regular", Consolas, "Courier New", monospace',
+      fontSize: t.fontSize || 12,
+      lineHeight: t.lineHeight || 1.2,
       cursorBlink: false,
       disableStdin: true,      // 只读日志
       convertEol: true,        // \n 视为回车换行
       scrollback: 100000,      // 构建日志较长, 加大缓冲
-      theme: { background: '#1e1e1e', foreground: '#d4d4d4' },
+      theme: {
+        foreground: c.foreground,
+        background: c.background,
+        cursor: c.cursor,
+        black: c.black,
+        red: c.red,
+        green: c.green,
+        yellow: c.yellow,
+        blue: c.blue,
+        magenta: c.magenta,
+        cyan: c.cyan,
+        white: c.white,
+        brightBlack: c.brightBlack,
+        brightRed: c.brightRed,
+        brightGreen: c.brightGreen,
+        brightYellow: c.brightYellow,
+        brightBlue: c.brightBlue,
+        brightMagenta: c.brightMagenta,
+        brightCyan: c.brightCyan,
+        brightWhite: c.brightWhite,
+      },
     });
     this.fitAddon = new FitAddon();
     this.xterm.loadAddon(this.fitAddon);
@@ -413,6 +438,11 @@ mavenpassword=你的Cratos密码`;
     try {
       this.fitAddon?.fit();
     } catch (e) {}
+  }
+
+  /** 日志终端背景色(取 web-terminal 当前主题背景) */
+  get logTermBg(): string {
+    return this.terminalThemeService.getCurrentTheme()?.colors?.background || '#1e1e1e';
   }
 
   private pollLog() {

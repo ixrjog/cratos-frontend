@@ -411,7 +411,7 @@
       </h5>
       <span class="close-btn" (click)="closeLogDialog()">&times;</span>
     </div>
-    <div class="log-body" dLoading [loading]="logLoading" [backdrop]="true">
+    <div class="log-body" dLoading [loading]="logLoading" [backdrop]="true" [style.background]="logTermBg">
       <div #logTerm class="log-term"></div>
     </div>
   </div>

@@ -128,6 +128,19 @@ export class ScaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** 从扫描历史行"重新扫描": 把应用+分支填入顶部搜索项并重新查询构建 */
+  onRescan(rowItem: any) {
+    if (!rowItem?.applicationName) {
+      return;
+    }
+    this.onApplicationChange({ name: rowItem.applicationName, comment: rowItem.applicationName });
+    this.branch = (rowItem.branch || 'master').trim() || 'master';
+    this.onQuery();
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+  }
+
   onQuery() {
     if (!this.selectedApplication?.name) {
       return;

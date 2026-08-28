@@ -267,10 +267,16 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header='Actions' [width]="'130px'">
+            <d-column header='Actions' [width]="'160px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <d-icon-group>
+                    <d-icon
+                      [icon]="'icon-refresh'"
+                      [operable]='true'
+                      (click)='onRescan(rowItem)'
+                      title='重新扫描（填入应用+分支并查询）'
+                    ></d-icon>
                     <d-icon
                       [icon]="'icon-go-document'"
                       [operable]='true'

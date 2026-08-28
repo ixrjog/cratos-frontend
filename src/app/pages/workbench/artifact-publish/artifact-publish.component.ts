@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
-import { getPopoverStyle } from '../../../@shared/utils/theme.util';
+import { getPopoverStyle, isDark } from '../../../@shared/utils/theme.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
 import { TranslateService } from '@ngx-translate/core';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
@@ -645,16 +645,19 @@ mavenpassword=你的Cratos密码`;
   }
 
   private pieOption(data: any[]) {
+    const textColor = isDark() ? '#d0d3db' : '#252b3a';
     return {
+      textStyle: { color: textColor },
       tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
-      legend: { type: 'scroll', bottom: 0 },
+      legend: { type: 'scroll', bottom: 0, textStyle: { color: textColor } },
       series: [
         {
           type: 'pie',
           radius: ['40%', '65%'],
           center: ['50%', '45%'],
           avoidLabelOverlap: true,
-          label: { show: true, formatter: '{b}\n{c}' },
+          label: { show: true, color: textColor, formatter: '{b}\n{c}' },
+          labelLine: { lineStyle: { color: textColor } },
           data: data || [],
         },
       ],
@@ -664,7 +667,9 @@ mavenpassword=你的Cratos密码`;
   private barOption(list: any[]) {
     const arr = (list || []).slice()
       .reverse();
+    const textColor = isDark() ? '#d0d3db' : '#252b3a';
     return {
+      textStyle: { color: textColor },
       tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
       grid: { left: 8, right: 24, top: 16, bottom: 16, containLabel: true },
       xAxis: { type: 'value', minInterval: 1 },
@@ -674,7 +679,7 @@ mavenpassword=你的Cratos密码`;
           type: 'bar',
           barMaxWidth: 18,
           itemStyle: { color: '#5E7CE0' },
-          label: { show: true, position: 'right' },
+          label: { show: true, position: 'right', color: textColor },
           data: arr.map((x: any) => x.count),
         },
       ],

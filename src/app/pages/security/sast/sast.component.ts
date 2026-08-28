@@ -177,6 +177,15 @@ export class SastComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** 取最新 N 条扫描(按创建时间倒序), 用于 build 卡片只展示最近几条 */
+  latestScans(tasks: any[], n = 2): any[] {
+    if (!tasks || !tasks.length) {
+      return [];
+    }
+    return [...tasks].sort((a, b) =>
+      new Date(b.createTime).getTime() - new Date(a.createTime).getTime()).slice(0, n);
+  }
+
   /** 从扫描历史行"重新扫描": 把应用+分支填入顶部搜索项并重新查询构建 */
   onRescan(rowItem: any) {
     if (!rowItem?.applicationName) {

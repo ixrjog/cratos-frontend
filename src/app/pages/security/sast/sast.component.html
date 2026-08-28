@@ -143,7 +143,7 @@
               <!-- SCA 任务 -->
               <div *ngIf='build.theSameScaScanningTasks?.length' class='same-tasks-group'>
                 <div class='same-tasks-title'>SCA scans ({{ build.theSameScaScanningTasks.length }})</div>
-                <div class='same-task-item' *ngFor='let task of build.theSameScaScanningTasks'>
+                <div class='same-task-item' *ngFor='let task of latestScans(build.theSameScaScanningTasks, 2)'>
                   <span class='task-status'>
                     <i *ngIf="task.scanStatus === 'RUNNING'" class='icon icon-loading sca-spin'
                        style='margin-right: 4px;'></i>

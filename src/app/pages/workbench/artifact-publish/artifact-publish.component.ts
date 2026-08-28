@@ -571,6 +571,116 @@ mavenpassword=你的Cratos密码`;
     this.onPublishSearch();
   }
 
+  // ===== 发布报表 =====
+  showReport = false;
+  reportLoading = false;
+  reportDays = 30;
+  report: any = null;
+  trendOption: any = null;
+  statusOption: any = null;
+  buildTypeOption: any = null;
+  repoOption: any = null;
+  topAppsOption: any = null;
+  topPublishersOption: any = null;
+
+  /** 打开报表弹窗并加载 */
+  openReport() {
+    this.showReport = true;
+    this.loadReport();
+  }
+
+  /** 切换统计区间 */
+  onReportRangeChange(days: number) {
+    if (this.reportDays === days) {
+      return;
+    }
+    this.reportDays = days;
+    this.loadReport();
+  }
+
+  /** 拉取报表数据并生成图表 */
+  loadReport() {
+    this.reportLoading = true;
+    this.apiService.post('/application', '/artifact/publish/publish/report/query', {
+      days: this.reportDays,
+      username: this.onlyMine ? this.currentUsername : null,
+    }).subscribe(({ body }: any) => {
+      this.report = body || {};
+      this.buildReportCharts();
+      this.reportLoading = false;
+    }, () => {
+      this.reportLoading = false;
+    });
+  }
+
+  private buildReportCharts() {
+    const r = this.report || {};
+    const t = (k: string) => this.translate.instant('artifactPublish.report.' + k);
+    const nameCounts = (arr: any[]) => (arr || []).map((x) => ({ name: x.name, value: x.count }));
+
+    // 趋势(成功/失败堆叠柱)
+    const trend = r.trend || [];
+    this.trendOption = {
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      legend: { data: [t('trendSuccess'), t('trendFailed')] },
+      grid: { left: 40, right: 16, top: 30, bottom: 24 },
+      xAxis: { type: 'category', data: trend.map((p: any) => p.date) },
+      yAxis: { type: 'value', minInterval: 1 },
+      series: [
+        { name: t('trendSuccess'), type: 'bar', stack: 'total', itemStyle: { color: '#50D4AB' }, data: trend.map((p: any) => p.success) },
+        { name: t('trendFailed'), type: 'bar', stack: 'total', itemStyle: { color: '#F66F6A' }, data: trend.map((p: any) => p.failed) },
+      ],
+    };
+
+    // 状态分布(饼)
+    this.statusOption = this.pieOption(nameCounts(r.statusDistribution));
+    // 构建类型(饼)
+    this.buildTypeOption = this.pieOption(nameCounts(r.buildTypeDistribution));
+    // 仓库分布(横向柱)
+    this.repoOption = this.barOption(r.repositoryDistribution);
+    // Top 应用(横向柱)
+    this.topAppsOption = this.barOption(r.topApplications);
+    // 发布人排行(横向柱)
+    this.topPublishersOption = this.barOption(r.topPublishers);
+  }
+
+  private pieOption(data: any[]) {
+    return {
+      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      legend: { type: 'scroll', bottom: 0 },
+      series: [
+        {
+          type: 'pie',
+          radius: ['40%', '65%'],
+          center: ['50%', '45%'],
+          avoidLabelOverlap: true,
+          label: { show: true, formatter: '{b}\n{c}' },
+          data: data || [],
+        },
+      ],
+    };
+  }
+
+  private barOption(list: any[]) {
+    const arr = (list || []).slice()
+      .reverse();
+    return {
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      grid: { left: 8, right: 24, top: 16, bottom: 16, containLabel: true },
+      xAxis: { type: 'value', minInterval: 1 },
+      yAxis: { type: 'category', data: arr.map((x: any) => x.name) },
+      series: [
+        {
+          type: 'bar',
+          barMaxWidth: 18,
+          itemStyle: { color: '#5E7CE0' },
+          label: { show: true, position: 'right' },
+          data: arr.map((x: any) => x.count),
+        },
+      ],
+    };
+  }
+
   /** 删除发布记录(仅非成功记录，进行中的记录后端也会拒绝) */
   onDeletePublish(rowItem: any) {
     if (rowItem.publishStatus === 'SUCCESS') {

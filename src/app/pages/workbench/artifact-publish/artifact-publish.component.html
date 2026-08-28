@@ -39,6 +39,9 @@
         <d-button class="help-btn" bsStyle="common" (click)="openIssueGroup()">
           <img src="assets/eds/dingtalk_app.svg" class="dingtalk-icon" alt="钉钉" />{{ 'artifactPublish.search.issueGroup' | translate }}
         </d-button>
+        <d-button class="help-btn" bsStyle="common" (click)="openReport()">
+          <i class="fas fa-chart-column" style="margin-right: 4px;"></i>{{ 'artifactPublish.report.button' | translate }}
+        </d-button>
       </div>
 
       <!-- Result: build cards -->
@@ -421,6 +424,66 @@
     </div>
     <div class="log-body" dLoading [loading]="logLoading" [backdrop]="true" [style.background]="logTermBg">
       <div #logTerm class="log-term"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 发布报表 -->
+<div class="components-overlay" *ngIf="showReport" (click)="showReport = false">
+  <div class="components-dialog report-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ 'artifactPublish.report.title' | translate }}</h5>
+      <div class="components-header-actions">
+        <d-tabs type="pills" [activeTab]="reportDays" (activeTabChange)="onReportRangeChange($any($event))">
+          <d-tab [id]="7"><ng-template dTabTitle>{{ 'artifactPublish.report.range7' | translate }}</ng-template></d-tab>
+          <d-tab [id]="30"><ng-template dTabTitle>{{ 'artifactPublish.report.range30' | translate }}</ng-template></d-tab>
+          <d-tab [id]="90"><ng-template dTabTitle>{{ 'artifactPublish.report.range90' | translate }}</ng-template></d-tab>
+        </d-tabs>
+        <span class="close-btn" (click)="showReport = false">&times;</span>
+      </div>
+    </div>
+    <div class="report-body" dLoading [loading]="reportLoading" [backdrop]="true">
+      <!-- KPI 卡片 -->
+      <div class="kpi-row" *ngIf="report">
+        <div class="kpi-card"><div class="kpi-value">{{ report.total || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiTotal' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value ok">{{ report.successRate || 0 }}%</div><div class="kpi-label">{{ 'artifactPublish.report.kpiSuccessRate' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value warn">{{ report.failedCount || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiFailed' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value">{{ report.runningCount || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiRunning' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value">{{ report.distinctApps || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiApps' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value">{{ report.distinctArtifacts || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiArtifacts' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value">{{ humanizeDuration(report.avgDurationMs) }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiAvgDuration' | translate }}</div></div>
+        <div class="kpi-card"><div class="kpi-value">{{ report.snapshotCount || 0 }} / {{ report.releaseCount || 0 }}</div><div class="kpi-label">{{ 'artifactPublish.report.kpiSnapshot' | translate }} / {{ 'artifactPublish.report.kpiRelease' | translate }}</div></div>
+      </div>
+
+      <!-- 图表 -->
+      <div class="chart-grid" *ngIf="report">
+        <div class="chart-box chart-wide">
+          <div class="chart-title">{{ 'artifactPublish.report.chartTrend' | translate }}</div>
+          <d-echarts *ngIf="trendOption" [options]="trendOption" height="240px"></d-echarts>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">{{ 'artifactPublish.report.chartStatus' | translate }}</div>
+          <d-echarts *ngIf="statusOption" [options]="statusOption" height="240px"></d-echarts>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">{{ 'artifactPublish.report.chartBuildType' | translate }}</div>
+          <d-echarts *ngIf="buildTypeOption" [options]="buildTypeOption" height="240px"></d-echarts>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">{{ 'artifactPublish.report.chartRepo' | translate }}</div>
+          <d-echarts *ngIf="repoOption" [options]="repoOption" height="240px"></d-echarts>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">{{ 'artifactPublish.report.chartTopApps' | translate }}</div>
+          <d-echarts *ngIf="topAppsOption" [options]="topAppsOption" height="240px"></d-echarts>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">{{ 'artifactPublish.report.chartTopPublishers' | translate }}</div>
+          <d-echarts *ngIf="topPublishersOption" [options]="topPublishersOption" height="240px"></d-echarts>
+        </div>
+      </div>
+
+      <div class="report-empty" *ngIf="report && !report.total">{{ 'artifactPublish.report.empty' | translate }}</div>
     </div>
   </div>
 </div>

@@ -188,6 +188,7 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
 import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
 import { CloudAkApplyComponent } from './cloud-ak-apply/cloud-ak-apply.component';
 import { ArtifactPublishComponent } from './artifact-publish/artifact-publish.component';
+import { EchartsModule } from '../../@shared/components/echarts/echarts.module';
 
 @NgModule({
   declarations: [
@@ -280,6 +281,7 @@ import { ArtifactPublishComponent } from './artifact-publish/artifact-publish.co
     SharedModule,
     MarkdownModule,
     ExtDatasourceModule,
+    EchartsModule,
   ],
   exports: [
     KubernetesWorkloadsComponent,

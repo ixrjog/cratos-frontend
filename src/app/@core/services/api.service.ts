@@ -46,7 +46,7 @@ export class ApiService {
     // 如果启用加密，则加密 body
     if (EncryptionConfig.enabled) {
       return from(this.encryptionService.encryptBody(data)).pipe(
-        switchMap(({ encryptedBody, encryptedKey }) => {
+        switchMap(({ encryptedBody, encryptedKey, aesKey }) => {
           const encryptedData = {
             encryptedBody,
             encryptedKey
@@ -55,23 +55,20 @@ export class ApiService {
             `${this.apiUrl}${baseUrl}${url}`,
             JSON.stringify(encryptedData),
             { headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
+          ).pipe(
+            switchMap((response: any) => {
+              // 用“本次请求”的 aesKey 解密响应, 避免并发覆盖
+              if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+                return from(this.encryptionService.decryptResponse(response.encryptedData, aesKey)).pipe(
+                  map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+                );
+              }
+              return of(response);
+            })
           );
-        }),
-        switchMap((response: any) => {
-          // 如果启用了响应加密且响应包含加密数据
-          // console.log('Response received:', response);
-          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
-            console.log('Decrypting response...');
-            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
-              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
-            );
-          }
-          // console.log('Response not encrypted, returning as-is');
-          return of(response);
         }),
         catchError(error => {
           console.error('Encryption/Decryption error:', error);
-          this.encryptionService.clearAESKey();
           throw error;
         })
       );
@@ -85,7 +82,7 @@ export class ApiService {
     // 如果启用加密，则加密 body
     if (EncryptionConfig.enabled) {
       return from(this.encryptionService.encryptBody(data)).pipe(
-        switchMap(({ encryptedBody, encryptedKey }) => {
+        switchMap(({ encryptedBody, encryptedKey, aesKey }) => {
           const encryptedData = {
             encryptedBody,
             encryptedKey
@@ -94,19 +91,19 @@ export class ApiService {
             `${this.apiUrl}${baseUrl}${url}`,
             JSON.stringify(encryptedData),
             { headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
+          ).pipe(
+            switchMap((response: any) => {
+              if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+                return from(this.encryptionService.decryptResponse(response.encryptedData, aesKey)).pipe(
+                  map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+                );
+              }
+              return of(response);
+            })
           );
-        }),
-        switchMap((response: any) => {
-          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
-            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
-              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
-            );
-          }
-          return of(response);
         }),
         catchError((error: any) => {
           console.error('Encryption/Decryption error:', error);
-          this.encryptionService.clearAESKey();
           throw error;
         })
       );
@@ -128,7 +125,7 @@ export class ApiService {
     // 如果启用加密，则加密 body
     if (EncryptionConfig.enabled) {
       return from(this.encryptionService.encryptBody(data)).pipe(
-        switchMap(({ encryptedBody, encryptedKey }) => {
+        switchMap(({ encryptedBody, encryptedKey, aesKey }) => {
           const encryptedData = {
             encryptedBody,
             encryptedKey
@@ -136,19 +133,19 @@ export class ApiService {
           return this.http.delete(
             `${this.apiUrl}${baseUrl}${url}`,
             { body: JSON.stringify(encryptedData), headers: this.getEncryptedHeaders(`${baseUrl}${url}`) }
+          ).pipe(
+            switchMap((response: any) => {
+              if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
+                return from(this.encryptionService.decryptResponse(response.encryptedData, aesKey)).pipe(
+                  map((decrypted: any) => this.handleDecryptedResult(decrypted)),
+                );
+              }
+              return of(response);
+            })
           );
-        }),
-        switchMap((response: any) => {
-          if (EncryptionConfig.responseEncryptionEnabled && response?.encryptedData) {
-            return from(this.encryptionService.decryptResponse(response.encryptedData)).pipe(
-              map((decrypted: any) => this.handleDecryptedResult(decrypted)),
-            );
-          }
-          return of(response);
         }),
         catchError((error: any) => {
           console.error('Encryption/Decryption error:', error);
-          this.encryptionService.clearAESKey();
           throw error;
         })
       );

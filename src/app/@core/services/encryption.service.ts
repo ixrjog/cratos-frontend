@@ -8,75 +8,59 @@ import { EncryptionConfig } from '../config/encryption.config';
   providedIn: 'root',
 })
 export class EncryptionService {
-  // 缓存当前请求的 AES 密钥（用于解密响应）
-  private currentAESKey: CryptoKey | null = null;
-
   /**
    * 加密 Body
    * @param data 原始数据对象
-   * @returns 加密后的数据 {encryptedBody, encryptedKey}
+   * @returns 加密后的数据 {encryptedBody, encryptedKey, aesKey}
+   *          aesKey 用于解密“同一请求”的响应(按请求传递, 避免并发共享状态导致解密错乱)
    */
-  async encryptBody(data: any): Promise<{ encryptedBody: string; encryptedKey: string }> {
-    // 1. 生成随机 AES 密钥
+  async encryptBody(data: any): Promise<{ encryptedBody: string; encryptedKey: string; aesKey: CryptoKey }> {
+    // 1. 生成随机 AES 密钥(每个请求独立)
     const aesKey = await this.generateAESKey();
 
-    // 2. 缓存 AES 密钥（用于解密响应）
-    this.currentAESKey = aesKey;
-
-    // 3. 用 AES 加密 Body
+    // 2. 用 AES 加密 Body
     const jsonString = JSON.stringify(data);
     const encryptedBody = await this.encryptWithAES(jsonString, aesKey);
 
-    // 4. 用 RSA 公钥加密 AES 密钥
+    // 3. 用 RSA 公钥加密 AES 密钥
     const encryptedKey = await this.encryptWithRSA(aesKey);
 
-    return { encryptedBody, encryptedKey };
+    return { encryptedBody, encryptedKey, aesKey };
   }
 
   /**
    * 解密响应数据
    * @param encryptedResponse 加密的响应数据（格式: Base64(IV).Base64(Ciphertext)）
+   * @param aesKey 该请求对应的 AES 密钥(由 encryptBody 返回, 按请求传入)
    * @returns 解密后的原始数据对象
    */
-  async decryptResponse(encryptedResponse: string): Promise<any> {
-    if (!this.currentAESKey) {
+  async decryptResponse(encryptedResponse: string, aesKey: CryptoKey): Promise<any> {
+    if (!aesKey) {
       throw new Error('No AES key available for decryption');
     }
 
-    try {
-      // 解析格式: Base64(IV).Base64(Ciphertext)
-      const [ivBase64, ciphertextBase64] = encryptedResponse.split('.');
-      if (!ivBase64 || !ciphertextBase64) {
-        throw new Error('Invalid encrypted response format');
-      }
-
-      // Base64 解码
-      const iv = this.base64ToArrayBuffer(ivBase64);
-      const ciphertext = this.base64ToArrayBuffer(ciphertextBase64);
-
-      // AES-GCM 解密
-      const decrypted = await crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv: new Uint8Array(iv) },
-        this.currentAESKey,
-        ciphertext
-      );
-
-      // 转换为字符串并解析 JSON
-      const decoder = new TextDecoder();
-      const jsonString = decoder.decode(decrypted);
-      
-      return JSON.parse(jsonString);
-    } finally {
-      // 清除密钥缓存
-      this.currentAESKey = null;
+    // 解析格式: Base64(IV).Base64(Ciphertext)
+    const [ivBase64, ciphertextBase64] = encryptedResponse.split('.');
+    if (!ivBase64 || !ciphertextBase64) {
+      throw new Error('Invalid encrypted response format');
     }
-  }
 
-  /**
-   * 清除缓存的 AES 密钥
-   */
-  clearAESKey(): void {
-    this.currentAESKey = null;
+    // Base64 解码
+    const iv = this.base64ToArrayBuffer(ivBase64);
+    const ciphertext = this.base64ToArrayBuffer(ciphertextBase64);
+
+    // AES-GCM 解密
+    const decrypted = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv: new Uint8Array(iv) },
+      aesKey,
+      ciphertext
+    );
+
+    // 转换为字符串并解析 JSON
+    const decoder = new TextDecoder();
+    const jsonString = decoder.decode(decrypted);
+
+    return JSON.parse(jsonString);
   }
 
   /**

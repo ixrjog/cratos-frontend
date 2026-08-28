@@ -10,7 +10,7 @@
           [(ngModel)]="selectedApplication"
           [searchFn]="onSearchApplication"
           [isSearch]="true"
-          placeholder="Search and select application"
+          [placeholder]="'artifactPublish.search.appPlaceholder' | translate"
           (valueChange)="onApplicationChange($event)"
         >
           <ng-template let-option="option">
@@ -26,18 +26,18 @@
             [(ngModel)]="branch"
             (ngModelChange)="onBranchChange()"
             (blur)="onBranchBlur()"
-            placeholder="branch or tag"
+            [placeholder]="'artifactPublish.search.branchPlaceholder' | translate"
           />
         </span>
-        <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">Query</d-button>
+        <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">{{ 'artifactPublish.search.query' | translate }}</d-button>
         <d-button class="help-btn" bsStyle="common" (click)="showHelp = true">
-          <i class="icon icon-info-o" style="margin-right: 4px;"></i>配置帮助
+          <i class="icon icon-info-o" style="margin-right: 4px;"></i>{{ 'artifactPublish.search.configHelp' | translate }}
         </d-button>
         <d-button class="help-btn" bsStyle="common" (click)="showVersionSpec = true">
-          <i class="icon icon-standard" style="margin-right: 4px;"></i>版本规范说明
+          <i class="icon icon-standard" style="margin-right: 4px;"></i>{{ 'artifactPublish.search.versionSpec' | translate }}
         </d-button>
         <d-button class="help-btn" bsStyle="common" (click)="openIssueGroup()">
-          <img src="assets/eds/dingtalk_app.svg" class="dingtalk-icon" alt="钉钉" />问题处理群
+          <img src="assets/eds/dingtalk_app.svg" class="dingtalk-icon" alt="钉钉" />{{ 'artifactPublish.search.issueGroup' | translate }}
         </d-button>
       </div>
 
@@ -46,19 +46,19 @@
         <div *ngIf="result?.builds?.length" class="info-cards-row">
           <div class="info-card" *ngFor="let build of result.builds">
             <div class="build-card-header">
-              <h5>{{ build.project || build.moduleName || 'Build' }}</h5>
+              <h5>{{ build.project || build.moduleName || ('artifactPublish.card.buildFallback' | translate) }}</h5>
               <d-button
                 bsStyle="primary"
                 [disabled]="publishingProject === build.project || !build.selectedModuleId || !build.selectedVersion"
                 (click)="onPublish(build)"
               >
-                {{ publishingProject === build.project ? 'Publishing...' : 'Publish' }}
+                {{ publishingProject === build.project ? ('artifactPublish.card.publishing' | translate) : ('artifactPublish.card.publish' | translate) }}
               </d-button>
             </div>
 
             <!-- 可发布模块(来自 SCA 内部模块) -->
             <div class="publish-modules" dLoading [loading]="build.internalModulesLoading" [backdrop]="true">
-              <div class="publish-modules-title">发布模块（来自 SCA 内部模块）</div>
+              <div class="publish-modules-title">{{ 'artifactPublish.card.publishModules' | translate }}</div>
               <d-tabs
                 *ngIf="build.internalModules?.length"
                 type="options"
@@ -71,15 +71,15 @@
               </d-tabs>
               <div class="publish-modules-empty"
                    *ngIf="!build.internalModulesLoading && !build.internalModules?.length">
-                未找到该仓库的 SCA 内部模块（请先在 SCA 完成一次扫描）
+                {{ 'artifactPublish.card.noInternalModules' | translate }}
               </div>
             </div>
             <div class="info-row" *ngIf="build.buildProject?.repository?.sshUrl">
-              <span class="label">GitLab</span>
+              <span class="label">{{ 'artifactPublish.card.gitlab' | translate }}</span>
               <span class="value" dClipboard [content]="build.buildProject.repository.sshUrl">{{ build.buildProject.repository.sshUrl }}</span>
             </div>
             <div class="info-row" *ngIf="build.buildProject?.commit">
-              <span class="label">Commit</span>
+              <span class="label">{{ 'artifactPublish.card.commit' | translate }}</span>
               <span class="value">
                 <a *ngIf="build.buildProject.commit.webUrl" [href]="build.buildProject.commit.webUrl" target="_blank" style="color: rgb(95, 170, 21);">
                   {{ build.buildProject.commit.id | slice:0:8 }}
@@ -88,46 +88,46 @@
               </span>
             </div>
             <div class="info-row" *ngIf="build.buildProject?.commit?.message">
-              <span class="label">Message</span>
+              <span class="label">{{ 'artifactPublish.card.message' | translate }}</span>
               <span class="value commit-msg">{{ build.buildProject.commit.message }}</span>
             </div>
             <div class="info-row">
-              <span class="label">Type</span>
+              <span class="label">{{ 'artifactPublish.card.type' | translate }}</span>
               <span class="value">{{ build.type }}</span>
             </div>
             <div class="info-row" *ngIf="build.buildCmd">
-              <span class="label">Build Cmd</span>
+              <span class="label">{{ 'artifactPublish.card.buildCmd' | translate }}</span>
               <span class="value">{{ build.buildCmd }}</span>
             </div>
             <div class="info-row" *ngIf="build.jdkVersion">
-              <span class="label">JDK</span>
+              <span class="label">{{ 'artifactPublish.card.jdk' | translate }}</span>
               <span class="value">{{ build.jdkVersion }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build) as sm">
-              <span class="label">Group</span>
+              <span class="label">{{ 'artifactPublish.card.group' | translate }}</span>
               <span class="value">{{ sm.groupId }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build) as sm">
-              <span class="label">Name</span>
+              <span class="label">{{ 'artifactPublish.card.name' | translate }}</span>
               <span class="value">{{ sm.artifactId }}</span>
             </div>
             <div class="info-row" *ngIf="getSelectedModule(build)">
-              <span class="label">Version</span>
+              <span class="label">{{ 'artifactPublish.card.version' | translate }}</span>
               <span class="value">
                 <ng-container *ngIf="!build.versionLoading && build.selectedVersion">
-                  <span *ngIf="isValidVersion(build.selectedVersion)" class="version-ok" title="符合版本规范">
-                    <i class="icon icon-right"></i>符合规范
+                  <span *ngIf="isValidVersion(build.selectedVersion)" class="version-ok" [title]="'artifactPublish.card.versionOkTitle' | translate">
+                    <i class="icon icon-right"></i>{{ 'artifactPublish.card.versionOk' | translate }}
                   </span>
                   <span *ngIf="!isValidVersion(build.selectedVersion)"
                         class="version-warn"
-                        title="不符合版本规范，点击查看规范说明"
-                        (click)="showVersionSpec = true">⚠️ 不符合规范，查看规范说明</span>
+                        [title]="'artifactPublish.card.versionWarnTitle' | translate"
+                        (click)="showVersionSpec = true">{{ 'artifactPublish.card.versionWarn' | translate }}</span>
                 </ng-container>
-                {{ build.versionLoading ? '查询中...' : (build.selectedVersion || '') }}
+                {{ build.versionLoading ? ('artifactPublish.card.versionLoading' | translate) : (build.selectedVersion || '') }}
               </span>
             </div>
             <div class="build-repo" *ngIf="getSelectedModule(build) && build.selectedVersion">
-              <div class="repo-label">制品仓库</div>
+              <div class="repo-label">{{ 'artifactPublish.card.repository' | translate }}</div>
               <d-tabs type="options" [activeTab]="build.repository"
                       (activeTabChange)="build.repository = $any($event)">
                 <d-tab *ngFor="let repo of repositoryOptionsFor(build)" [id]="repo">
@@ -138,7 +138,7 @@
           </div>
         </div>
         <div *ngIf="result && !result.builds?.length" class="ap-empty">
-          该应用未查询到可发布的构建模块(builds)
+          {{ 'artifactPublish.empty' | translate }}
         </div>
       </div>
 
@@ -146,24 +146,24 @@
       <div class="ap-history">
         <div class="ap-history-header">
           <d-search class="history-search" [(ngModel)]="publishQueryName" [iconPosition]="'left'"
-                    placeholder="应用名 / 发布单号 / 模块" (searchFn)="onPublishSearch()"></d-search>
-          <d-button bsStyle="common" (click)="onPublishSearch()">查询</d-button>
-          <d-checkbox [label]="'自动刷新'" [isShowTitle]="false" [(ngModel)]="autoRefresh"
+                    [placeholder]="'artifactPublish.history.searchPlaceholder' | translate" (searchFn)="onPublishSearch()"></d-search>
+          <d-button bsStyle="common" (click)="onPublishSearch()">{{ 'artifactPublish.history.query' | translate }}</d-button>
+          <d-checkbox [label]="'artifactPublish.history.autoRefresh' | translate" [isShowTitle]="false" [(ngModel)]="autoRefresh"
                       (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
-          <d-checkbox [label]="'只看我的'" [isShowTitle]="false" [(ngModel)]="onlyMine"
+          <d-checkbox [label]="'artifactPublish.history.onlyMine' | translate" [isShowTitle]="false" [(ngModel)]="onlyMine"
                       (ngModelChange)="onOnlyMineChange($event)"></d-checkbox>
-          <h5>发布历史</h5>
+          <h5>{{ 'artifactPublish.history.title' | translate }}</h5>
         </div>
         <div dLoading [loading]="publishLoading" [backdrop]="true">
           <d-data-table [dataSource]="publishHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
-            <d-column field="publishNo" header="发布单号" [width]="'80px'">
+            <d-column field="publishNo" [header]="'artifactPublish.history.colPublishNo' | translate" [width]="'80px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <span dClipboard [content]="rowItem.publishNo" style="word-break: break-all;">{{ rowItem.publishNo }}</span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="应用 / 仓库 / 制品仓库" [width]="'240px'">
+            <d-column [header]="'artifactPublish.history.colAppRepo' | translate" [width]="'240px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <div class="app-name">{{ rowItem.applicationName }}</div>
@@ -176,7 +176,7 @@
                       [controlled]="true"
                       [content]="gitUrlTpl"
                       [popoverStyle]="getPopoverStyle({ width: '520px' })"
-                      title="点击查看 Git URL"
+                      [title]="'artifactPublish.history.gitUrlTitle' | translate"
                     >
                       <i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}
                     </span>
@@ -195,12 +195,12 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="制品（模块）" [width]="'200px'">
+            <d-column [header]="'artifactPublish.history.colArtifact' | translate" [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
-                  <div class="gav-line">Group: {{ rowItem.groupId }}</div>
-                  <div class="gav-line">Name: {{ rowItem.artifactId }}</div>
-                  <div class="gav-line">Version: {{ rowItem.version }} <span
+                  <div class="gav-line">{{ 'artifactPublish.history.group' | translate }}: {{ rowItem.groupId }}</div>
+                  <div class="gav-line">{{ 'artifactPublish.history.name' | translate }}: {{ rowItem.artifactId }}</div>
+                  <div class="gav-line">{{ 'artifactPublish.history.version' | translate }}: {{ rowItem.version }} <span
                     class="dep-config-link"
                     dPopover
                     [trigger]="'click'"
@@ -208,21 +208,21 @@
                     [controlled]="true"
                     [content]="depTpl"
                     [popoverStyle]="getPopoverStyle({ width: '650px' })"
-                    title="查看 Maven/Gradle 配置"
-                  ><i class="icon icon-copy" style="margin-right: 4px;"></i>配置样例</span>
+                    [title]="'artifactPublish.history.configSampleTitle' | translate"
+                  ><i class="icon icon-copy" style="margin-right: 4px;"></i>{{ 'artifactPublish.history.configSample' | translate }}</span>
                     <ng-template #depTpl>
                       <div class="dep-config-popover">
                         <div class="dep-block">
                           <div class="dep-head">
                             <span>Maven</span>
-                            <i class="icon icon-copy dep-copy" dClipboard [content]="mavenSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                            <i class="icon icon-copy dep-copy" dClipboard [content]="mavenSnippet(rowItem)" (click)="onCopied()" [title]="'artifactPublish.history.copy' | translate"></i>
                           </div>
                           <pre class="dep-code">{{ mavenSnippet(rowItem) }}</pre>
                         </div>
                         <div class="dep-block">
                           <div class="dep-head">
                             <span>Gradle</span>
-                            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleSnippet(rowItem)" (click)="onCopied()" title="复制"></i>
+                            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleSnippet(rowItem)" (click)="onCopied()" [title]="'artifactPublish.history.copy' | translate"></i>
                           </div>
                           <pre class="dep-code">{{ gradleSnippet(rowItem) }}</pre>
                         </div>
@@ -231,7 +231,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="状态" [width]="'110px'">
+            <d-column [header]="'artifactPublish.history.colStatus' | translate" [width]="'110px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <i *ngIf="rowItem.publishStatus === 'RUNNING' || rowItem.publishStatus === 'QUEUED'"
@@ -240,7 +240,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column field="buildId" header="Build" [width]="'80px'">
+            <d-column field="buildId" [header]="'artifactPublish.history.colBuild' | translate" [width]="'80px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <a *ngIf="rowItem.buildId && buildLink(rowItem)"
@@ -253,25 +253,25 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作人" [width]="'110px'">
+            <d-column [header]="'artifactPublish.history.colOperator' | translate" [width]="'110px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="时间" [width]="'200px'">
+            <d-column [header]="'artifactPublish.history.colTime' | translate" [width]="'100px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
                   <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
                   <span *ngIf="rowItem.publishDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
-                    耗时 {{ humanizeDuration(rowItem.publishDuration) }}
+                    {{ 'artifactPublish.history.durationPrefix' | translate }} {{ humanizeDuration(rowItem.publishDuration) }}
                   </span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作" [width]="'120px'">
+            <d-column [header]="'artifactPublish.history.colAction' | translate" [width]="'120px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <d-icon-group>
@@ -279,20 +279,20 @@
                       [icon]="'icon-refresh'"
                       [operable]="true"
                       (click)="onRedeploy(rowItem)"
-                      title="重新部署（填入应用+分支并查询）"
+                      [title]="'artifactPublish.history.redeploy' | translate"
                     ></d-icon>
                     <d-icon
                       [icon]="'icon-view'"
                       [operable]="true"
                       (click)="onViewLog(rowItem)"
-                      title="查看构建日志"
+                      [title]="'artifactPublish.history.viewLog' | translate"
                     ></d-icon>
                     <d-icon
                       [icon]="'icon-delete'"
                       [operable]="true"
                       [disabled]="rowItem.publishStatus === 'SUCCESS'"
                       (click)="onDeletePublish(rowItem)"
-                      title="删除"
+                      [title]="'artifactPublish.history.delete' | translate"
                     ></d-icon>
                   </d-icon-group>
                 </ng-template>
@@ -320,29 +320,29 @@
 <div class="components-overlay" *ngIf="showHelp" (click)="showHelp = false">
   <div class="components-dialog help-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
-      <h5>制品发布配置帮助</h5>
+      <h5>{{ 'artifactPublish.help.title' | translate }}</h5>
       <div class="components-header-actions">
         <span class="close-btn" (click)="showHelp = false">&times;</span>
       </div>
     </div>
 
     <d-tabs type="options" [activeTab]="helpTab" (activeTabChange)="helpTab = $any($event)">
-      <d-tab id="gradle"><ng-template dTabTitle>Gradle</ng-template></d-tab>
-      <d-tab id="maven"><ng-template dTabTitle>Maven</ng-template></d-tab>
+      <d-tab id="gradle"><ng-template dTabTitle>{{ 'artifactPublish.help.gradleTab' | translate }}</ng-template></d-tab>
+      <d-tab id="maven"><ng-template dTabTitle>{{ 'artifactPublish.help.mavenTab' | translate }}</ng-template></d-tab>
     </d-tabs>
 
     <div class="help-body">
       <!-- Gradle -->
       <div class="help-section" *ngIf="helpTab === 'gradle'">
         <div class="help-note">
-          <p>1. 在项目根目录 <code>gradle.properties</code> 中配置 Cratos 账号，<b>请勿在 build.gradle 中写入明文密码</b>。</p>
-          <p>2. 在 <code>build.gradle</code> 的制品仓库 <code>credentials</code> 中，使用标准变量名 <code>mavenusername</code> / <code>mavenpassword</code> 引用凭据。</p>
+          <p [innerHTML]="'artifactPublish.help.gradleNote1' | translate"></p>
+          <p [innerHTML]="'artifactPublish.help.gradleNote2' | translate"></p>
         </div>
 
         <div class="dep-block">
           <div class="dep-head">
             <span>build.gradle</span>
-            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleBuildExample" (click)="onCopied()" title="复制"></i>
+            <i class="icon icon-copy dep-copy" dClipboard [content]="gradleBuildExample" (click)="onCopied()" [title]="'artifactPublish.history.copy' | translate"></i>
           </div>
           <pre class="dep-code">{{ gradleBuildExample }}</pre>
         </div>
@@ -350,7 +350,7 @@
         <div class="dep-block">
           <div class="dep-head">
             <span>gradle.properties</span>
-            <i class="icon icon-copy dep-copy" dClipboard [content]="gradlePropertiesExample" (click)="onCopied()" title="复制"></i>
+            <i class="icon icon-copy dep-copy" dClipboard [content]="gradlePropertiesExample" (click)="onCopied()" [title]="'artifactPublish.history.copy' | translate"></i>
           </div>
           <pre class="dep-code">{{ gradlePropertiesExample }}</pre>
         </div>
@@ -359,29 +359,29 @@
       <!-- Maven -->
       <div class="help-section" *ngIf="helpTab === 'maven'">
         <div class="help-note">
-          <p>Maven <code>settings.xml</code> 凭据配置：用户名使用当前登录用户，密码请填写你的 Cratos 密码；下载后放到 <code>~/.m2/settings.xml</code>。</p>
-          <p><b>该文件包含明文密码，请勿提交到代码仓库。</b></p>
+          <p [innerHTML]="'artifactPublish.help.mavenNote1' | translate"></p>
+          <p [innerHTML]="'artifactPublish.help.mavenNote2' | translate"></p>
         </div>
         <div class="help-form">
           <div class="form-row">
-            <span class="form-label">用户名</span>
+            <span class="form-label">{{ 'artifactPublish.help.username' | translate }}</span>
             <div class="control">
               <input [value]="currentUsername" [readonly]="true" />
             </div>
           </div>
           <div class="form-row">
-            <span class="form-label">密码</span>
+            <span class="form-label">{{ 'artifactPublish.help.password' | translate }}</span>
             <div class="control input-with-eye">
               <input [type]="showMavenPassword ? 'text' : 'password'" [(ngModel)]="mavenSettingsPassword"
-                     placeholder="输入你的 Cratos 密码" autocomplete="new-password" />
+                     [placeholder]="'artifactPublish.help.passwordPlaceholder' | translate" autocomplete="new-password" />
               <span class="eye-icon" (click)="showMavenPassword = !showMavenPassword">
                 <i [class]="showMavenPassword ? 'icon icon-preview' : 'icon icon-preview-forbidden'"></i>
               </span>
             </div>
           </div>
-          <div class="form-tip">密码中的特殊字符（如 <code>&amp; &lt; &gt; " '</code>）会自动转义为 XML 格式，直接输入原始密码即可。</div>
+          <div class="form-tip" [innerHTML]="'artifactPublish.help.formTip' | translate"></div>
           <d-button bsStyle="primary" [disabled]="!mavenSettingsPassword" (click)="downloadMavenSettings()">
-            <i class="icon icon-download" style="margin-right: 4px;"></i>下载 settings.xml
+            <i class="icon icon-download" style="margin-right: 4px;"></i>{{ 'artifactPublish.help.download' | translate }}
           </d-button>
         </div>
       </div>
@@ -393,7 +393,7 @@
 <div class="components-overlay" *ngIf="showVersionSpec" (click)="showVersionSpec = false">
   <div class="components-dialog version-spec-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
-      <h5>版本规范说明</h5>
+      <h5>{{ 'artifactPublish.versionSpecTitle' | translate }}</h5>
       <div class="components-header-actions">
         <span class="close-btn" (click)="showVersionSpec = false">&times;</span>
       </div>
@@ -409,13 +409,13 @@
   <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
       <h5>
-        构建日志 — {{ logScan?.publishNo }}
+        {{ 'artifactPublish.log.title' | translate }} — {{ logScan?.publishNo }}
         <i *ngIf="logScan?.publishStatus === 'RUNNING' || logScan?.publishStatus === 'QUEUED'"
            class="icon icon-loading" style="margin-left: 6px;"></i>
         <d-tag *ngIf="logScan?.publishStatus" [tag]="logScan.publishStatus"
                [labelStyle]="statusLabelStyle(logScan.publishStatus)" style="margin-left: 6px;"></d-tag>
         <a *ngIf="buildLink(logScan)" [href]="buildLink(logScan)" target="_blank"
-           style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">在 Jenkins 打开</a>
+           style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">{{ 'artifactPublish.log.openInJenkins' | translate }}</a>
       </h5>
       <span class="close-btn" (click)="closeLogDialog()">&times;</span>
     </div>

@@ -14,6 +14,7 @@ import user from './en-US/user';
 import apiSecurityRisk from './en-US/api-security-risk';
 import accountEntity from './en-US/account-entity';
 import commandExec from './en-US/command-exec';
+import artifactPublish from './en-US/artifact-publish';
 
 export default {
   ...pages,
@@ -32,4 +33,5 @@ export default {
   ...apiSecurityRisk,
   ...accountEntity,
   ...commandExec,
+  ...artifactPublish,
 };

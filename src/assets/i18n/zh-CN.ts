@@ -14,6 +14,7 @@ import user from './zh-CN/user';
 import apiSecurityRisk from './zh-CN/api-security-risk';
 import accountEntity from './zh-CN/account-entity';
 import commandExec from './zh-CN/command-exec';
+import artifactPublish from './zh-CN/artifact-publish';
 
 export default {
   ...pages,
@@ -32,4 +33,5 @@ export default {
   ...apiSecurityRisk,
   ...accountEntity,
   ...commandExec,
+  ...artifactPublish,
 };

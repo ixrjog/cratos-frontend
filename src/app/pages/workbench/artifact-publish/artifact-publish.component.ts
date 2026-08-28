@@ -8,6 +8,7 @@ import { ApplicationService } from '../../../@core/services/application.service'
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { getPopoverStyle } from '../../../@shared/utils/theme.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 
 /**
@@ -313,7 +314,7 @@ mavenpassword=你的Cratos密码`;
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    this.toastUtil.onSuccessToast('settings.xml 已生成下载');
+    this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.settingsGenerated'));
   }
 
   // 制品仓库(完整 URL，自动按版本匹配 snapshots/releases，可手动切换)
@@ -329,6 +330,7 @@ mavenpassword=你的Cratos密码`;
     private applicationService: ApplicationService,
     private toastUtil: ToastUtil,
     private terminalThemeService: TerminalThemeService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -574,12 +576,12 @@ mavenpassword=你的Cratos密码`;
     if (rowItem.publishStatus === 'SUCCESS') {
       return;
     }
-    if (!confirm(`确认删除发布记录 ${rowItem.publishNo} ?`)) {
+    if (!confirm(this.translate.instant('artifactPublish.toast.deleteConfirm', { publishNo: rowItem.publishNo }))) {
       return;
     }
     this.apiService.post('/application', '/artifact/publish/publish/delete', { id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast('已删除');
+        this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.deleted'));
         this.queryPublishHistory();
       });
   }
@@ -666,7 +668,7 @@ mavenpassword=你的Cratos密码`;
   }
 
   onCopied() {
-    this.toastUtil.onSuccessToast('已复制到剪贴板');
+    this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.copied'));
   }
 
   /** Jenkins 构建地址: https://<instanceName>/job/<jobName>/<buildId>/ */
@@ -901,7 +903,7 @@ mavenpassword=你的Cratos密码`;
       repository: build.repository,
     }).subscribe(() => {
       this.publishingProject = null;
-      this.toastUtil.onSuccessToast('发布已触发');
+      this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.publishTriggered'));
       this.queryPublishHistory();
     }, () => {
       this.publishingProject = null;

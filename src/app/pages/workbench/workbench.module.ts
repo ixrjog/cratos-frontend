@@ -188,6 +188,7 @@ import { WorkOrderGcpIamRoleTicketComponent } from './work-order/work-order-layo
 import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
 import { CloudAkApplyComponent } from './cloud-ak-apply/cloud-ak-apply.component';
 import { ArtifactPublishComponent } from './artifact-publish/artifact-publish.component';
+import { ApolloPortalImageBuildComponent } from './apollo-portal-image-build/apollo-portal-image-build.component';
 import { EchartsModule } from '../../@shared/components/echarts/echarts.module';
 
 @NgModule({
@@ -274,6 +275,7 @@ import { EchartsModule } from '../../@shared/components/echarts/echarts.module';
     ImageMirrorComponent,
     CloudAkApplyComponent,
     ArtifactPublishComponent,
+    ApolloPortalImageBuildComponent,
   ],
   imports: [
     CommonModule,

@@ -6,10 +6,10 @@
         <span class="app-badge"><i class="fas fa-box" style="margin-right: 6px;"></i>pp-apollo-portal</span>
         <span class="branch-field">
           <i class="fas fa-code-branch branch-icon"></i>
-          <input class="branch-input" dTextInput [(ngModel)]="branch" (blur)="onBranchBlur()" placeholder="branch or tag" />
+          <input class="branch-input" dTextInput [(ngModel)]="branch" (blur)="onBranchBlur()" [placeholder]="'apolloPortalImageBuild.search.branchPlaceholder' | translate" />
         </span>
         <d-button bsStyle="primary" [disabled]="configLoading" (click)="onQueryConfig()">
-          {{ configLoading ? '查询中...' : '查询' }}
+          {{ configLoading ? ('apolloPortalImageBuild.search.querying' | translate) : ('apolloPortalImageBuild.search.query' | translate) }}
         </d-button>
       </div>
 
@@ -19,34 +19,34 @@
           <div class="build-card-header">
             <h5>pp-apollo-portal</h5>
             <d-button bsStyle="primary" [disabled]="triggering" (click)="onTrigger()">
-              {{ triggering ? '触发中...' : '开始打包' }}
+              {{ triggering ? ('apolloPortalImageBuild.card.building' | translate) : ('apolloPortalImageBuild.card.startBuild' | translate) }}
             </d-button>
           </div>
           <div class="info-row">
-            <span class="label">GitLab</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.gitlab' | translate }}</span>
             <span class="value" dClipboard [content]="config.gitUrl">{{ config.gitUrl }}</span>
           </div>
           <div class="info-row">
-            <span class="label">Branch</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.branch' | translate }}</span>
             <span class="value">{{ config.branch }}</span>
           </div>
           <div class="info-row" *ngIf="config.commitId">
-            <span class="label">Commit</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.commit' | translate }}</span>
             <span class="value">
               <a *ngIf="config.commitWebUrl" [href]="config.commitWebUrl" target="_blank" style="color: rgb(95, 170, 21);">{{ config.commitId | slice:0:8 }}</a>
               <span *ngIf="!config.commitWebUrl" style="color: rgb(95, 170, 21);">{{ config.commitId | slice:0:8 }}</span>
             </span>
           </div>
           <div class="info-row" *ngIf="config.commitMessage">
-            <span class="label">Message</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.message' | translate }}</span>
             <span class="value commit-msg">{{ config.commitMessage }}</span>
           </div>
           <div class="info-row" *ngIf="!config.commitId">
-            <span class="label">Commit</span>
-            <span class="value" style="color: var(--devui-danger, #f66f6a);">未解析到该分支的 commit(仍可打包, 由 pipeline 拉取分支最新代码)</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.commit' | translate }}</span>
+            <span class="value" style="color: var(--devui-danger, #f66f6a);">{{ 'apolloPortalImageBuild.card.noCommit' | translate }}</span>
           </div>
           <div class="info-row">
-            <span class="label">镜像</span>
+            <span class="label">{{ 'apolloPortalImageBuild.card.image' | translate }}</span>
             <span class="value image-cell">{{ '{}' }}/library/apollo-portal:2.1.0-&lt;buildId&gt;</span>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="deploy-group" *ngFor="let g of groupsOfCountry(selectedCountry)">
             <div class="deploy-group-head">
               <span class="dg-proj" *ngIf="g.project">Project: {{ g.project }}</span>
-              <span class="dg-proj" *ngIf="!g.project">默认</span>
+              <span class="dg-proj" *ngIf="!g.project">{{ 'apolloPortalImageBuild.servers.defaultProject' | translate }}</span>
               <d-badge class="dg-count" [count]="g.servers.length" [maxCount]="999"></d-badge>
             </div>
             <div class="server-cards">
@@ -73,27 +73,27 @@
                   <span class="sc-name"><i class="fas fa-server" style="margin-right: 6px;"></i>{{ s.name }}</span>
                   <d-button class="sc-deploy-btn" bsStyle="primary" bsSize="sm"
                             [disabled]="deployingAsset[s.id] || !deployTarget?.image || isSameVersion(s)" (click)="onServerDeploy(s)">
-                    {{ deployingAsset[s.id] ? '部署中...' : (isSameVersion(s) ? '已是该版本' : '部署') }}
+                    {{ deployingAsset[s.id] ? ('apolloPortalImageBuild.servers.deploying' | translate) : (isSameVersion(s) ? ('apolloPortalImageBuild.servers.sameVersion' | translate) : ('apolloPortalImageBuild.servers.deploy' | translate)) }}
                   </d-button>
                 </div>
                 <div class="sc-row sc-current">
-                  <span class="sc-label">当前版本</span>
-                  <span class="sc-val image-cell">{{ deployVersionMap[s.name]?.currentTag || deployVersionMap[s.name]?.currentImage || '未知' }}</span>
+                  <span class="sc-label">{{ 'apolloPortalImageBuild.servers.currentVersion' | translate }}</span>
+                  <span class="sc-val image-cell">{{ deployVersionMap[s.name]?.currentTag || deployVersionMap[s.name]?.currentImage || ('apolloPortalImageBuild.servers.unknown' | translate) }}</span>
                 </div>
                 <div class="sc-row sc-image" *ngIf="deployTarget?.image">
-                  <span class="sc-label">发布镜像</span>
+                  <span class="sc-label">{{ 'apolloPortalImageBuild.servers.publishImage' | translate }}</span>
                   <span class="sc-val image-cell">{{ deployTarget.imageTag || shortImage(deployTarget.image) }}</span>
                 </div>
-                <div class="sc-row"><span class="sc-label">Host</span><span class="sc-val">{{ s.assetKey }}</span></div>
-                <div class="sc-row"><span class="sc-label">Asset ID</span><span class="sc-val">{{ s.assetId }}</span></div>
-                <div class="sc-row" *ngIf="s.region"><span class="sc-label">Region</span><span class="sc-val">{{ s.region }}</span></div>
-                <div class="sc-row" *ngIf="s.assetType"><span class="sc-label">Type</span><span class="sc-val">{{ s.assetType }}</span></div>
+                <div class="sc-row"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.host' | translate }}</span><span class="sc-val">{{ s.assetKey }}</span></div>
+                <div class="sc-row"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.assetId' | translate }}</span><span class="sc-val">{{ s.assetId }}</span></div>
+                <div class="sc-row" *ngIf="s.region"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.region' | translate }}</span><span class="sc-val">{{ s.region }}</span></div>
+                <div class="sc-row" *ngIf="s.assetType"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.type' | translate }}</span><span class="sc-val">{{ s.assetType }}</span></div>
                 <div class="sc-actions" *ngIf="deployResultMap[s.id]">
                   <span class="sc-deploy-status" [class.ok]="deployResultMap[s.id].success" [class.fail]="!deployResultMap[s.id].success">
-                    {{ deployResultMap[s.id].success ? '部署成功' : '部署失败' }}
+                    {{ deployResultMap[s.id].success ? ('apolloPortalImageBuild.servers.deploySuccess' | translate) : ('apolloPortalImageBuild.servers.deployFailed' | translate) }}
                   </span>
                   <d-button bsStyle="common" bsSize="sm" (click)="onViewDeployLog(s)">
-                    <i class="icon icon-view" style="margin-right: 4px;"></i>部署日志
+                    <i class="icon icon-view" style="margin-right: 4px;"></i>{{ 'apolloPortalImageBuild.servers.deployLog' | translate }}
                   </d-button>
                 </div>
               </div>
@@ -106,22 +106,22 @@
       <div class="ab-history">
         <div class="ab-history-header">
           <d-search class="history-search" [(ngModel)]="buildQueryName" [iconPosition]="'left'"
-                    placeholder="打包单号 / 分支 / tag" (searchFn)="onBuildSearch()"></d-search>
-          <d-button bsStyle="common" (click)="onBuildSearch()">查询</d-button>
-          <d-checkbox [label]="'自动刷新'" [isShowTitle]="false" [(ngModel)]="autoRefresh"
+                    [placeholder]="'apolloPortalImageBuild.history.searchPlaceholder' | translate" (searchFn)="onBuildSearch()"></d-search>
+          <d-button bsStyle="common" (click)="onBuildSearch()">{{ 'apolloPortalImageBuild.history.query' | translate }}</d-button>
+          <d-checkbox [label]="'apolloPortalImageBuild.history.autoRefresh' | translate" [isShowTitle]="false" [(ngModel)]="autoRefresh"
                       (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
-          <h5>打包历史</h5>
+          <h5>{{ 'apolloPortalImageBuild.history.title' | translate }}</h5>
         </div>
         <div dLoading [loading]="buildLoading" [backdrop]="true">
           <d-data-table [dataSource]="buildHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
-            <d-column field="buildNo" header="打包单号" [width]="'170px'">
+            <d-column field="buildNo" [header]="'apolloPortalImageBuild.history.colBuildNo' | translate" [width]="'170px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <span dClipboard [content]="rowItem.buildNo" style="word-break: break-all;">{{ rowItem.buildNo }}</span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="分支 / Commit" [width]="'200px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colBranchCommit' | translate" [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <div class="repo-line">
@@ -133,17 +133,17 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="镜像" [width]="'320px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colImage' | translate" [width]="'320px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
-                  <span *ngIf="rowItem.image" class="image-cell" dClipboard [content]="rowItem.image" [title]="rowItem.image + ' (点击复制)'">
+                  <span *ngIf="rowItem.image" class="image-cell" dClipboard [content]="rowItem.image" [title]="rowItem.image + ' ' + ('apolloPortalImageBuild.history.copyHint' | translate)">
                     <i class="icon icon-copy" style="margin-right: 4px;"></i>{{ shortImage(rowItem.image) }}
                   </span>
                   <span *ngIf="!rowItem.image" style="color: var(--devui-aide-text, #8a8e99);">--</span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column field="buildId" header="Build" [width]="'80px'">
+            <d-column field="buildId" [header]="'apolloPortalImageBuild.history.colBuild' | translate" [width]="'80px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <a *ngIf="rowItem.buildId && buildLink(rowItem)" [href]="buildLink(rowItem)" target="_blank"
@@ -152,7 +152,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="状态" [width]="'110px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colStatus' | translate" [width]="'110px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <i *ngIf="rowItem.buildStatus === 'RUNNING' || rowItem.buildStatus === 'QUEUED'"
@@ -161,37 +161,37 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作人" [width]="'110px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colOperator' | translate" [width]="'110px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="时间" [width]="'220px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colTime' | translate" [width]="'220px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
                   <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
                   <span *ngIf="rowItem.buildDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
-                    耗时 {{ humanizeDuration(rowItem.buildDuration) }}
+                    {{ 'apolloPortalImageBuild.history.durationPrefix' | translate }} {{ humanizeDuration(rowItem.buildDuration) }}
                   </span>
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header="操作" [width]="'150px'">
+            <d-column [header]="'apolloPortalImageBuild.history.colAction' | translate" [width]="'150px'">
               <d-cell>
                 <ng-template let-rowItem="rowItem">
                   <d-icon-group>
                     <d-icon [icon]="'icon-publish'" [operable]="true" (click)="onDeploy(rowItem)"
-                            title="发布到 apollo-portal 服务器"></d-icon>
+                            [title]="'apolloPortalImageBuild.history.actionDeploy' | translate"></d-icon>
                     <d-icon [icon]="'icon-refresh'" [operable]="true" (click)="onReuse(rowItem)"
-                            title="复用该分支并查询"></d-icon>
+                            [title]="'apolloPortalImageBuild.history.actionReuse' | translate"></d-icon>
                     <d-icon [icon]="'icon-view'" [operable]="true" (click)="onViewLog(rowItem)"
-                            title="查看构建日志"></d-icon>
+                            [title]="'apolloPortalImageBuild.history.actionViewLog' | translate"></d-icon>
                     <d-icon [icon]="'icon-delete'" [operable]="true"
                             [disabled]="rowItem.buildStatus === 'SUCCESS'"
-                            (click)="onDelete(rowItem)" title="删除"></d-icon>
+                            (click)="onDelete(rowItem)" [title]="'apolloPortalImageBuild.history.actionDelete' | translate"></d-icon>
                   </d-icon-group>
                 </ng-template>
               </d-cell>
@@ -219,13 +219,13 @@
   <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
       <h5>
-        构建日志 — {{ logScan?.buildNo }}
+        {{ 'apolloPortalImageBuild.log.buildTitle' | translate }} — {{ logScan?.buildNo }}
         <i *ngIf="logScan?.buildStatus === 'RUNNING' || logScan?.buildStatus === 'QUEUED'"
            class="icon icon-loading" style="margin-left: 6px;"></i>
         <d-tag *ngIf="logScan?.buildStatus" [tag]="logScan.buildStatus"
                [labelStyle]="statusLabelStyle(logScan.buildStatus)" style="margin-left: 6px;"></d-tag>
         <a *ngIf="buildLink(logScan)" [href]="buildLink(logScan)" target="_blank"
-           style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">在 Jenkins 打开</a>
+           style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">{{ 'apolloPortalImageBuild.log.openInJenkins' | translate }}</a>
       </h5>
       <span class="close-btn" (click)="closeLogDialog()">&times;</span>
     </div>
@@ -241,7 +241,7 @@
 <div class="components-overlay" *ngIf="showDeployLog" (click)="closeDeployLog()">
   <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
-      <h5>部署日志 — {{ deployLogTitle }}</h5>
+      <h5>{{ 'apolloPortalImageBuild.log.deployTitle' | translate }} — {{ deployLogTitle }}</h5>
       <span class="close-btn" (click)="closeDeployLog()">&times;</span>
     </div>
     <div class="log-body" [style.background]="logTermBg">
@@ -254,20 +254,20 @@
 <div class="components-overlay" *ngIf="showDeployConfirm" (click)="closeDeployConfirm()">
   <div class="components-dialog confirm-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
-      <h5>确认部署</h5>
+      <h5>{{ 'apolloPortalImageBuild.confirm.title' | translate }}</h5>
       <span class="close-btn" (click)="closeDeployConfirm()">&times;</span>
     </div>
     <div class="confirm-body" *ngIf="confirmServer">
-      <div class="cf-row"><span class="cf-label">主机</span><span class="cf-val">{{ confirmServer.name }}</span></div>
-      <div class="cf-row"><span class="cf-label">Host</span><span class="cf-val">{{ confirmServer.assetKey }}</span></div>
-      <div class="cf-row"><span class="cf-label">当前版本</span><span class="cf-val cur">{{ currentVersion(confirmServer) }}</span></div>
-      <div class="cf-row"><span class="cf-label">发布版本</span><span class="cf-val new">{{ deployTarget?.imageTag || shortImage(deployTarget?.image) }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'apolloPortalImageBuild.confirm.host' | translate }}</span><span class="cf-val">{{ confirmServer.name }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'apolloPortalImageBuild.confirm.hostAddr' | translate }}</span><span class="cf-val">{{ confirmServer.assetKey }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'apolloPortalImageBuild.confirm.currentVersion' | translate }}</span><span class="cf-val cur">{{ currentVersion(confirmServer) }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'apolloPortalImageBuild.confirm.publishVersion' | translate }}</span><span class="cf-val new">{{ deployTarget?.imageTag || shortImage(deployTarget?.image) }}</span></div>
       <div class="cf-image">{{ deployTarget?.image }}</div>
-      <div class="cf-warn"><i class="icon icon-warning" style="margin-right: 4px;"></i>将替换该主机 compose 镜像并重启服务，请确认。</div>
+      <div class="cf-warn"><i class="icon icon-warning" style="margin-right: 4px;"></i>{{ 'apolloPortalImageBuild.confirm.warn' | translate }}</div>
     </div>
     <div class="confirm-footer">
-      <d-button bsStyle="common" (click)="closeDeployConfirm()">取消</d-button>
-      <d-button bsStyle="primary" (click)="confirmDeploy()">确认部署</d-button>
+      <d-button bsStyle="common" (click)="closeDeployConfirm()">{{ 'apolloPortalImageBuild.confirm.cancel' | translate }}</d-button>
+      <d-button bsStyle="primary" (click)="confirmDeploy()">{{ 'apolloPortalImageBuild.confirm.confirm' | translate }}</d-button>
     </div>
   </div>
 </div>

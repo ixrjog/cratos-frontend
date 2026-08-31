@@ -15,6 +15,7 @@ import apiSecurityRisk from './zh-CN/api-security-risk';
 import accountEntity from './zh-CN/account-entity';
 import commandExec from './zh-CN/command-exec';
 import artifactPublish from './zh-CN/artifact-publish';
+import apolloPortalImageBuild from './zh-CN/apollo-portal-image-build';
 
 export default {
   ...pages,
@@ -34,4 +35,5 @@ export default {
   ...accountEntity,
   ...commandExec,
   ...artifactPublish,
+  ...apolloPortalImageBuild,
 };

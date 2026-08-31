@@ -5,6 +5,7 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ApiService } from '../../../@core/services/api.service';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
+import { TranslateService } from '@ngx-translate/core';
 import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
 
 /**
@@ -43,6 +44,7 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private toastUtil: ToastUtil,
     private terminalThemeService: TerminalThemeService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +103,7 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
       commitId: this.config.commitId || '',
     }).subscribe(() => {
       this.triggering = false;
-      this.toastUtil.onSuccessToast('打包已触发');
+      this.toastUtil.onSuccessToast(this.translate.instant('apolloPortalImageBuild.toast.buildTriggered'));
       this.buildPageIndex = 1;
       this.queryBuildHistory();
     }, () => {
@@ -177,12 +179,12 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
     if (rowItem.buildStatus === 'SUCCESS') {
       return;
     }
-    if (!confirm(`确认删除打包记录 ${rowItem.buildNo} ?`)) {
+    if (!confirm(this.translate.instant('apolloPortalImageBuild.toast.deleteConfirm', { buildNo: rowItem.buildNo }))) {
       return;
     }
     this.apiService.post('/application', '/apollo-portal/image/pack/delete', { id: rowItem.id })
       .subscribe(() => {
-        this.toastUtil.onSuccessToast('已删除');
+        this.toastUtil.onSuccessToast(this.translate.instant('apolloPortalImageBuild.toast.deleted'));
         this.queryBuildHistory();
       });
   }
@@ -309,7 +311,7 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
   /** 当前版本(用于确认弹框展示) */
   currentVersion(server: any): string {
     const d = server && this.deployVersionMap[server.name];
-    return (d && (d.currentTag || d.currentImage)) || '未知';
+    return (d && (d.currentTag || d.currentImage)) || this.translate.instant('apolloPortalImageBuild.servers.unknown');
   }
 
   /** 当前版本 == 发布版本(完整镜像相同)时禁用部署 */
@@ -339,7 +341,7 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
       this.deployingAsset[server.id] = false;
       this.deployResultMap[server.id] = body;
       if (body?.success) {
-        this.toastUtil.onSuccessToast(`${server.name} 部署成功`);
+        this.toastUtil.onSuccessToast(this.translate.instant('apolloPortalImageBuild.toast.deploySuccess', { host: server.name }));
       }
       this.loadDeployVersions();
       this.onViewDeployLog(server);

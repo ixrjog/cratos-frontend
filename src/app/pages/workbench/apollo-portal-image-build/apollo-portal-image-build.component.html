@@ -53,11 +53,18 @@
 
         <!-- 发布: portal 服务器平铺卡片 -->
         <div class="deploy-servers" *ngIf="deployGroups.length">
-          <div class="deploy-tip">group = apollo-portal 服务器 <d-badge [count]="deployServers.length" [maxCount]="999"></d-badge> ，按 CountryCode / Project 合并</div>
-          <div class="deploy-group" *ngFor="let g of deployGroups">
+          <d-tabs class="country-tabs" type="tabs" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($any($event))">
+            <d-tab *ngFor="let cc of deployCountries" [id]="cc">
+              <ng-template dTabTitle>
+                <i class="fas fa-earth-asia" style="margin-right: 6px;"></i>{{ cc }}
+                <d-badge [count]="countryServerCount(cc)" [maxCount]="999" style="margin-left: 6px;"></d-badge>
+              </ng-template>
+            </d-tab>
+          </d-tabs>
+          <div class="deploy-group" *ngFor="let g of groupsOfCountry(selectedCountry)">
             <div class="deploy-group-head">
-              <span class="dg-cc"><i class="fas fa-earth-asia" style="margin-right: 6px;"></i>{{ g.countryCode }}</span>
               <span class="dg-proj" *ngIf="g.project">Project: {{ g.project }}</span>
+              <span class="dg-proj" *ngIf="!g.project">默认</span>
               <d-badge class="dg-count" [count]="g.servers.length" [maxCount]="999"></d-badge>
             </div>
             <div class="server-cards">
@@ -65,8 +72,8 @@
                 <div class="sc-head">
                   <span class="sc-name"><i class="fas fa-server" style="margin-right: 6px;"></i>{{ s.name }}</span>
                   <d-button class="sc-deploy-btn" bsStyle="primary" bsSize="sm"
-                            [disabled]="deployingAsset[s.id] || !deployTarget?.image" (click)="onServerDeploy(s)">
-                    {{ deployingAsset[s.id] ? '部署中...' : '部署' }}
+                            [disabled]="deployingAsset[s.id] || !deployTarget?.image || isSameVersion(s)" (click)="onServerDeploy(s)">
+                    {{ deployingAsset[s.id] ? '部署中...' : (isSameVersion(s) ? '已是该版本' : '部署') }}
                   </d-button>
                 </div>
                 <div class="sc-row sc-current">

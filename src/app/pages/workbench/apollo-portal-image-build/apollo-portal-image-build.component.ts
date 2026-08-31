@@ -249,6 +249,30 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
     }
     this.deployGroups = Array.from(map.values())
       .sort((a, b) => (a.countryCode + '|' + a.project).localeCompare(b.countryCode + '|' + b.project));
+    // CountryCode 去重(用于 Tab 切换)
+    this.deployCountries = Array.from(new Set(this.deployGroups.map((g) => g.countryCode)))
+      .sort((a, b) => a.localeCompare(b));
+    if (!this.deployCountries.includes(this.selectedCountry)) {
+      this.selectedCountry = this.deployCountries.length ? this.deployCountries[0] : '';
+    }
+  }
+
+  // CountryCode Tab
+  deployCountries: string[] = [];
+  selectedCountry = '';
+
+  onCountryChange(cc: string) {
+    this.selectedCountry = cc;
+  }
+
+  /** 指定 CountryCode 下的分组(按 Project) */
+  groupsOfCountry(cc: string): any[] {
+    return this.deployGroups.filter((g) => g.countryCode === cc);
+  }
+
+  countryServerCount(cc: string): number {
+    return this.groupsOfCountry(cc)
+      .reduce((sum, g) => sum + (g.servers?.length || 0), 0);
   }
 
   // 单机部署状态/结果: assetId -> 值
@@ -286,6 +310,15 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
   currentVersion(server: any): string {
     const d = server && this.deployVersionMap[server.name];
     return (d && (d.currentTag || d.currentImage)) || '未知';
+  }
+
+  /** 当前版本 == 发布版本(完整镜像相同)时禁用部署 */
+  isSameVersion(server: any): boolean {
+    const d = server && this.deployVersionMap[server.name];
+    if (!d || !d.currentImage || !this.deployTarget?.image) {
+      return false;
+    }
+    return d.currentImage === this.deployTarget.image;
   }
 
   confirmDeploy() {

@@ -234,6 +234,16 @@
   .country-tabs {
     flex: 0 0 100%;
     margin-bottom: 4px;
+
+    .cc-flag {
+      width: 20px;
+      height: 14px;
+      margin-right: 6px;
+      object-fit: cover;
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 2px;
+      vertical-align: middle;
+    }
   }
 
   .deploy-tip {
@@ -343,14 +353,12 @@
       }
     }
 
-    .sc-actions {
-      display: flex;
+    .sc-current {
       align-items: center;
-      gap: 10px;
-      margin-top: 10px;
 
       .sc-deploy-status {
         font-size: 12px;
+        margin-left: 8px;
 
         &.ok {
           color: var(--devui-success, #50d4ab);
@@ -359,6 +367,22 @@
         &.fail {
           color: var(--devui-danger, #f66f6a);
         }
+      }
+
+      .sc-deploy-log-link {
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--devui-brand, #5e7ce0);
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .sc-last-time {
+        font-size: 11px;
+        color: var(--devui-aide-text, #8a8e99);
+        margin-left: 8px;
       }
     }
 

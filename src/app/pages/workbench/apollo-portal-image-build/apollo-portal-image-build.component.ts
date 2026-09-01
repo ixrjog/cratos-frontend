@@ -277,6 +277,14 @@ export class ApolloPortalImageBuildComponent implements OnInit, OnDestroy {
       .reduce((sum, g) => sum + (g.servers?.length || 0), 0);
   }
 
+  /** 国家码(ISO alpha-2) 转矩形国旗图片(flagcdn SVG); 非两位字母返回空 */
+  countryFlagUrl(cc: string): string {
+    if (!cc || !/^[A-Za-z]{2}$/.test(cc)) {
+      return '';
+    }
+    return 'https://flagcdn.com/' + cc.toLowerCase() + '.svg';
+  }
+
   // 单机部署状态/结果: assetId -> 值
   deployingAsset: { [id: number]: boolean } = {};
   deployResultMap: { [id: number]: any } = {};

@@ -24,6 +24,7 @@ export default {
       assetId: 'Asset ID',
       region: 'Region',
       type: 'Type',
+      cloud: 'Cloud',
       deploy: 'Deploy',
       deploying: 'Deploying...',
       sameVersion: 'Up to date',

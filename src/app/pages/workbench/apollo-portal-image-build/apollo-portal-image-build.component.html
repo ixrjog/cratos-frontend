@@ -56,14 +56,16 @@
           <d-tabs class="country-tabs" type="tabs" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($any($event))">
             <d-tab *ngFor="let cc of deployCountries" [id]="cc">
               <ng-template dTabTitle>
-                <i class="fas fa-earth-asia" style="margin-right: 6px;"></i>{{ cc }}
+                <img class="cc-flag" *ngIf="countryFlagUrl(cc)" [src]="countryFlagUrl(cc)" alt="{{ cc }}"
+                     (error)="$any($event.target).style.display='none'" />
+                <i class="fas fa-earth-asia" *ngIf="!countryFlagUrl(cc)" style="margin-right: 6px;"></i>{{ cc }}
                 <d-badge [count]="countryServerCount(cc)" [maxCount]="999" style="margin-left: 6px;"></d-badge>
               </ng-template>
             </d-tab>
           </d-tabs>
           <div class="deploy-group" *ngFor="let g of groupsOfCountry(selectedCountry)">
             <div class="deploy-group-head">
-              <span class="dg-proj" *ngIf="g.project">Project: {{ g.project }}</span>
+              <span class="dg-proj" *ngIf="g.project">{{ g.project }}</span>
               <span class="dg-proj" *ngIf="!g.project">{{ 'apolloPortalImageBuild.servers.defaultProject' | translate }}</span>
               <d-badge class="dg-count" [count]="g.servers.length" [maxCount]="999"></d-badge>
             </div>
@@ -79,6 +81,26 @@
                 <div class="sc-row sc-current">
                   <span class="sc-label">{{ 'apolloPortalImageBuild.servers.currentVersion' | translate }}</span>
                   <span class="sc-val image-cell">{{ deployVersionMap[s.name]?.currentTag || deployVersionMap[s.name]?.currentImage || ('apolloPortalImageBuild.servers.unknown' | translate) }}</span>
+                  <ng-container *ngIf="deployResultMap[s.id]; else lastDeploy">
+                    <span class="sc-deploy-status" [class.ok]="deployResultMap[s.id].success" [class.fail]="!deployResultMap[s.id].success">
+                      {{ deployResultMap[s.id].success ? ('apolloPortalImageBuild.servers.deploySuccess' | translate) : ('apolloPortalImageBuild.servers.deployFailed' | translate) }}
+                    </span>
+                    <a class="sc-deploy-log-link" (click)="onViewDeployLog(s)">
+                      <i class="icon icon-view" style="margin-right: 2px;"></i>{{ 'apolloPortalImageBuild.servers.deployLog' | translate }}
+                    </a>
+                  </ng-container>
+                  <ng-template #lastDeploy>
+                    <span *ngIf="deployVersionMap[s.name]?.lastDeployStatus"
+                          class="sc-deploy-status"
+                          [class.ok]="deployVersionMap[s.name].lastDeployStatus === 'SUCCESS'"
+                          [class.fail]="deployVersionMap[s.name].lastDeployStatus === 'FAILED'">
+                      {{ deployVersionMap[s.name].lastDeployStatus }}
+                    </span>
+                    <span *ngIf="deployVersionMap[s.name]?.lastDeployTime" class="sc-last-time">
+                      {{ deployVersionMap[s.name].lastDeployTime | dDatePipe: 'y/M/d HH:mm' }}
+                      <ng-container *ngIf="deployVersionMap[s.name]?.lastDeployUsername">· {{ deployVersionMap[s.name].lastDeployUsername }}</ng-container>
+                    </span>
+                  </ng-template>
                 </div>
                 <div class="sc-row sc-image" *ngIf="deployTarget?.image">
                   <span class="sc-label">{{ 'apolloPortalImageBuild.servers.publishImage' | translate }}</span>
@@ -87,15 +109,7 @@
                 <div class="sc-row"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.host' | translate }}</span><span class="sc-val">{{ s.assetKey }}</span></div>
                 <div class="sc-row"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.assetId' | translate }}</span><span class="sc-val">{{ s.assetId }}</span></div>
                 <div class="sc-row" *ngIf="s.region"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.region' | translate }}</span><span class="sc-val">{{ s.region }}</span></div>
-                <div class="sc-row" *ngIf="s.assetType"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.type' | translate }}</span><span class="sc-val">{{ s.assetType }}</span></div>
-                <div class="sc-actions" *ngIf="deployResultMap[s.id]">
-                  <span class="sc-deploy-status" [class.ok]="deployResultMap[s.id].success" [class.fail]="!deployResultMap[s.id].success">
-                    {{ deployResultMap[s.id].success ? ('apolloPortalImageBuild.servers.deploySuccess' | translate) : ('apolloPortalImageBuild.servers.deployFailed' | translate) }}
-                  </span>
-                  <d-button bsStyle="common" bsSize="sm" (click)="onViewDeployLog(s)">
-                    <i class="icon icon-view" style="margin-right: 4px;"></i>{{ 'apolloPortalImageBuild.servers.deployLog' | translate }}
-                  </d-button>
-                </div>
+                <div class="sc-row" *ngIf="s.instanceName"><span class="sc-label">{{ 'apolloPortalImageBuild.servers.cloud' | translate }}</span><span class="sc-val">{{ s.instanceName }}</span></div>
               </div>
             </div>
           </div>

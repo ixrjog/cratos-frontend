@@ -24,6 +24,7 @@ export default {
       assetId: 'Asset ID',
       region: 'Region',
       type: 'Type',
+      cloud: 'Cloud',
       deploy: '部署',
       deploying: '部署中...',
       sameVersion: '已是该版本',

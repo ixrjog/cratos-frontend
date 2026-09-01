@@ -355,10 +355,14 @@
 
     .sc-current {
       align-items: center;
+      flex-wrap: wrap;
+      row-gap: 4px;
 
       .sc-deploy-status {
         font-size: 12px;
         margin-left: 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
 
         &.ok {
           color: var(--devui-success, #50d4ab);
@@ -373,6 +377,9 @@
         font-size: 12px;
         cursor: pointer;
         color: var(--devui-brand, #5e7ce0);
+        margin-left: 10px;
+        white-space: nowrap;
+        flex-shrink: 0;
 
         &:hover {
           text-decoration: underline;

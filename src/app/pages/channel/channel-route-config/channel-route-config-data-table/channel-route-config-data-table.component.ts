@@ -19,6 +19,7 @@ import {
 interface RouteLineGroup {
   lineTag: string;
   enable: boolean;
+  enables: { [actionType: string]: boolean };
   actionTypes: string[];
   weights: { [actionType: string]: number };
   rawLines: ChannelRouteLineVO[];
@@ -74,7 +75,9 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
   routeSwitchSaving = false;
   routeLineGroups: RouteLineGroup[] = [];
   private routeSwitchConfig: ChannelRouteConfigVO = null;
-  private static readonly RANGE_SPACE = 10001;
+  // 后端 hash 值域上限为 10000, 左开右闭 [0, 10000)。历史数据可能出现 10001 等越界值, 读写时需兼容/钳制。
+  private static readonly RANGE_SPACE = 10000;
+  private static readonly RANGE_MAX = 10000;
 
   get rangeSpace(): number {
     return ChannelRouteConfigDataTableComponent.RANGE_SPACE;
@@ -181,7 +184,8 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
       if (!map.has(l.lineTag)) {
         map.set(l.lineTag, {
           lineTag: l.lineTag,
-          enable: l.enable !== false,
+          enable: false,
+          enables: {},
           actionTypes: [],
           weights: {},
           rawLines: [],
@@ -193,22 +197,50 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
         if (!group.actionTypes.includes(l.actionType)) {
           group.actionTypes.push(l.actionType);
         }
+        // enable 是 (lineTag × actionType) 级别的, 分别记录
+        group.enables[l.actionType] = l.enable !== false;
         group.weights[l.actionType] = (l.weight !== null && l.weight !== undefined)
-          ? l.weight
-          : Math.max(0, (l.randomEnd || 0) - (l.randomStart || 0));
+          ? Math.min(100, Math.max(0, l.weight))
+          : this.weightFromRange(l.randomStart, l.randomEnd);
       }
+    });
+    // 线路整体开关: 该线路在任一业务下启用即视为启用
+    map.forEach(g => {
+      g.enable = g.actionTypes.some(at => g.enables[at]);
     });
     this.routeLineGroups = Array.from(map.values());
   }
 
+  /**
+   * 从后端 randomStart/randomEnd 推导滑块权重(0-100), 兼容脏数据:
+   * - 后端区间以 RANGE_MAX(=10000) 为满值, 这里归一化到 0-100 供滑块使用;
+   * - 负值/undefined 归零; 越界(如 randomEnd=10001)钳制到 RANGE_MAX; start>end 记为 0;
+   * - 归一化后四舍五入到整数, 且保证原本 >0 的权重至少为 1(避免被舍成 0)。
+   */
+  private weightFromRange(randomStart?: number, randomEnd?: number): number {
+    const max = ChannelRouteConfigDataTableComponent.RANGE_MAX;
+    const start = Math.min(Math.max(0, randomStart || 0), max);
+    const end = Math.min(Math.max(0, randomEnd || 0), max);
+    const span = Math.max(0, end - start);
+    if (span <= 0) {
+      return 0;
+    }
+    const weight = Math.round((span / max) * 100);
+    return weight < 1 ? 1 : weight;
+  }
+
   onLineEnableChange(line: RouteLineGroup, enabled: boolean) {
     line.enable = enabled;
+    // 整体开关联动到该线路所有业务的 enable
+    line.actionTypes.forEach(at => {
+      line.enables[at] = enabled;
+    });
     if (enabled) {
       return;
     }
     line.actionTypes.forEach(actionType => {
       this.routeLineGroups.forEach(g => {
-        if (g.lineTag !== line.lineTag && g.enable && g.actionTypes.includes(actionType)) {
+        if (g.lineTag !== line.lineTag && this.isActionEnabled(g, actionType) && g.weights[actionType] === 0) {
           g.weights[actionType] = 100;
         }
       });
@@ -223,23 +255,29 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
     return this.computeBusinessRanges(actionType).get(group.lineTag) || { start: 0, end: 0, percent: 0 };
   }
 
+  /** 该线路在指定业务下是否启用(enable 为 lineTag×actionType 级别) */
+  isActionEnabled(group: RouteLineGroup, actionType: string): boolean {
+    return group.enable && group.enables[actionType] !== false;
+  }
+
   private computeBusinessRanges(actionType: string): Map<string, { start: number; end: number; percent: number }> {
     const serving = this.getServingGroups(actionType);
     const totalPositive = serving
-      .filter(g => g.enable && (g.weights[actionType] || 0) > 0)
+      .filter(g => this.isActionEnabled(g, actionType) && (g.weights[actionType] || 0) > 0)
       .reduce((sum, g) => sum + (g.weights[actionType] || 0), 0);
     const space = ChannelRouteConfigDataTableComponent.RANGE_SPACE;
     const result = new Map<string, { start: number; end: number; percent: number }>();
     let cursor = 0;
     serving.forEach(g => {
       const weight = g.weights[actionType] || 0;
-      if (g.enable && weight > 0 && totalPositive > 0) {
+      const enabled = this.isActionEnabled(g, actionType);
+      if (enabled && weight > 0 && totalPositive > 0) {
         const start = Math.floor((cursor / totalPositive) * space);
         cursor += weight;
         const end = Math.floor((cursor / totalPositive) * space);
         const percent = Math.round((weight / totalPositive) * 1000) / 10;
         result.set(g.lineTag, { start, end, percent });
-      } else if (g.enable && weight === 0) {
+      } else if (enabled && weight === 0) {
         result.set(g.lineTag, { start: 0, end: 1, percent: 0 });
       } else {
         result.set(g.lineTag, { start: 0, end: 0, percent: 0 });
@@ -254,11 +292,15 @@ export class ChannelRouteConfigDataTableComponent implements OnInit {
       const ranges = this.computeBusinessRanges(actionType);
       this.getServingGroups(actionType).forEach(g => {
         const r = ranges.get(g.lineTag) || { start: 0, end: 0, percent: 0 };
+        const max = ChannelRouteConfigDataTableComponent.RANGE_MAX;
+        // 兼容后端值域上限, 钳制到 [0, RANGE_MAX], 且保证 start<=end
+        const start = Math.min(Math.max(0, r.start), max);
+        const end = Math.min(Math.max(start, r.end), max);
         result.push({
           lineTag: g.lineTag,
-          randomStart: r.start,
-          randomEnd: r.end,
-          enable: g.enable,
+          randomStart: start,
+          randomEnd: end,
+          enable: this.isActionEnabled(g, actionType),
           actionTypeEnum: actionType,
           suffixNumber: [],
           whiteListAccounts: [],

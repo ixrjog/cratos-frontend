@@ -24,6 +24,7 @@ declare var LeaderLine: any;
 interface RouteLineGroup {
   lineTag: string;
   enable: boolean;
+  enables: { [actionType: string]: boolean };
   actionTypes: string[];
   weights: { [actionType: string]: number };
   rawLines: ChannelRouteLineVO[];
@@ -472,7 +473,8 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       if (!map.has(l.lineTag)) {
         map.set(l.lineTag, {
           lineTag: l.lineTag,
-          enable: l.enable !== false,
+          enable: false,
+          enables: {},
           actionTypes: [],
           weights: {},
           rawLines: [],
@@ -484,13 +486,35 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
         if (!group.actionTypes.includes(l.actionType)) {
           group.actionTypes.push(l.actionType);
         }
-        // weight is per (line, business) pair, independent of other businesses
+        // enable 与 weight 均为 (line, business) 级别
+        group.enables[l.actionType] = l.enable !== false;
         group.weights[l.actionType] = (l.weight !== null && l.weight !== undefined)
-          ? l.weight
-          : Math.max(0, (l.randomEnd || 0) - (l.randomStart || 0));
+          ? Math.min(100, Math.max(0, l.weight))
+          : this.weightFromRange(l.randomStart, l.randomEnd);
       }
     });
+    map.forEach(g => {
+      g.enable = g.actionTypes.some(at => g.enables[at]);
+    });
     this.routeLineGroups = Array.from(map.values());
+  }
+
+  /** 后端区间(0-10000)归一化到滑块权重 0-100, 兼容越界/脏数据 */
+  private weightFromRange(randomStart?: number, randomEnd?: number): number {
+    const max = ChannelViewComponent.RANGE_MAX;
+    const start = Math.min(Math.max(0, randomStart || 0), max);
+    const end = Math.min(Math.max(0, randomEnd || 0), max);
+    const span = Math.max(0, end - start);
+    if (span <= 0) {
+      return 0;
+    }
+    const weight = Math.round((span / max) * 100);
+    return weight < 1 ? 1 : weight;
+  }
+
+  /** 该线路在指定业务下是否启用(enable 为 line×business 级别) */
+  isActionEnabled(group: RouteLineGroup, actionType: string): boolean {
+    return group.enable && group.enables[actionType] !== false;
   }
 
   /**
@@ -500,12 +524,15 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
    */
   onLineEnableChange(line: RouteLineGroup, enabled: boolean) {
     line.enable = enabled;
+    line.actionTypes.forEach(at => {
+      line.enables[at] = enabled;
+    });
     if (enabled) {
       return;
     }
     line.actionTypes.forEach(actionType => {
       this.routeLineGroups.forEach(g => {
-        if (g.lineTag !== line.lineTag && g.enable && g.actionTypes.includes(actionType)) {
+        if (g.lineTag !== line.lineTag && this.isActionEnabled(g, actionType) && g.weights[actionType] === 0) {
           g.weights[actionType] = 100;
         }
       });
@@ -518,8 +545,9 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
     return Array.from(set);
   }
 
-  /** Upper bound of the hash space; requests hash into (0, RANGE_SPACE]. */
-  static readonly RANGE_SPACE = 10001;
+  /** Upper bound of the hash space; requests hash into [0, RANGE_SPACE). Backend max = 10000. */
+  static readonly RANGE_SPACE = 10000;
+  static readonly RANGE_MAX = 10000;
 
   /** Lines serving a business (actionType), in stable order, incl. disabled ones. */
   getServingGroups(actionType: string): RouteLineGroup[] {
@@ -535,20 +563,21 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   private computeBusinessRanges(actionType: string): Map<string, { start: number; end: number; percent: number }> {
     const serving = this.getServingGroups(actionType);
     const totalPositive = serving
-      .filter(g => g.enable && (g.weights[actionType] || 0) > 0)
+      .filter(g => this.isActionEnabled(g, actionType) && (g.weights[actionType] || 0) > 0)
       .reduce((sum, g) => sum + (g.weights[actionType] || 0), 0);
     const space = ChannelViewComponent.RANGE_SPACE;
     const result = new Map<string, { start: number; end: number; percent: number }>();
     let cursor = 0;
     serving.forEach(g => {
       const weight = g.weights[actionType] || 0;
-      if (g.enable && weight > 0 && totalPositive > 0) {
+      const enabled = this.isActionEnabled(g, actionType);
+      if (enabled && weight > 0 && totalPositive > 0) {
         const start = Math.floor((cursor / totalPositive) * space);
         cursor += weight;
         const end = Math.floor((cursor / totalPositive) * space);
         const percent = Math.round((weight / totalPositive) * 1000) / 10;
         result.set(g.lineTag, { start, end, percent });
-      } else if (g.enable && weight === 0) {
+      } else if (enabled && weight === 0) {
         result.set(g.lineTag, { start: 0, end: 1, percent: 0 });
       } else {
         result.set(g.lineTag, { start: 0, end: 0, percent: 0 });
@@ -565,7 +594,7 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
   /** Total weight of enabled lines serving a business. */
   getBusinessTotal(actionType: string): number {
     return this.routeLineGroups
-      .filter(g => g.actionTypes.includes(actionType) && g.enable)
+      .filter(g => g.actionTypes.includes(actionType) && this.isActionEnabled(g, actionType))
       .reduce((sum, g) => sum + (g.weights[actionType] || 0), 0);
   }
 
@@ -576,11 +605,14 @@ export class ChannelViewComponent implements OnInit, OnDestroy, AfterViewChecked
       const ranges = this.computeBusinessRanges(actionType);
       this.getServingGroups(actionType).forEach(g => {
         const r = ranges.get(g.lineTag) || { start: 0, end: 0, percent: 0 };
+        const max = ChannelViewComponent.RANGE_MAX;
+        const start = Math.min(Math.max(0, r.start), max);
+        const end = Math.min(Math.max(start, r.end), max);
         result.push({
           lineTag: g.lineTag,
-          randomStart: r.start,
-          randomEnd: r.end,
-          enable: g.enable,
+          randomStart: start,
+          randomEnd: end,
+          enable: this.isActionEnabled(g, actionType),
           actionTypeEnum: actionType,
           suffixNumber: [],
           whiteListAccounts: [],

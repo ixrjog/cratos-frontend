@@ -5,6 +5,7 @@ import { EaseidTenantViewComponent } from './easeid/tenant-view/easeid-tenant-vi
 import { TmsTenantViewComponent } from './tms/tenant-view/tms-tenant-view.component';
 import { TongdunTenantViewComponent } from './tongdun/tenant-view/tongdun-tenant-view.component';
 import { CloudflareTenantViewComponent } from './cloudflare/tenant-view/cloudflare-tenant-view.component';
+import { AutomqTenantViewComponent } from './automq/tenant-view/automq-tenant-view.component';
 import { ProjectConfigComponent } from './project-config/project-config.component';
 import { ProjectTenantComponent } from './project-tenant/project-tenant.component';
 
@@ -17,6 +18,7 @@ const routes: Routes = [
       { path: 'tms/tenant-view', component: TmsTenantViewComponent },
       { path: 'tongdun/tenant-view', component: TongdunTenantViewComponent },
       { path: 'cloudflare/tenant-view', component: CloudflareTenantViewComponent },
+      { path: 'automq/tenant-view', component: AutomqTenantViewComponent },
       { path: 'list', component: ProjectConfigComponent },
       { path: 'tenant', component: ProjectTenantComponent },
     ],

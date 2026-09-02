@@ -28,8 +28,8 @@ export default {
       deploy: 'Deploy',
       deploying: 'Deploying...',
       sameVersion: 'Up to date',
-      deploySuccess: 'Success',
-      deployFailed: 'Failed',
+      deploySuccess: 'SUCCESS',
+      deployFailed: 'FAILED',
       deployLog: 'Deploy Log',
     },
     history: {

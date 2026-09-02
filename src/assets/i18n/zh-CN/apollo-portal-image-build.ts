@@ -28,8 +28,8 @@ export default {
       deploy: '部署',
       deploying: '部署中...',
       sameVersion: '已是该版本',
-      deploySuccess: '部署成功',
-      deployFailed: '部署失败',
+      deploySuccess: 'SUCCESS',
+      deployFailed: 'FAILED',
       deployLog: '部署日志',
     },
     history: {

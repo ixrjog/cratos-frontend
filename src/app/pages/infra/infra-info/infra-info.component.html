@@ -49,7 +49,7 @@
 </div>
 
 <!-- Edit Dialog -->
-<div class="edit-overlay" *ngIf="editVisible" (click)="editVisible = false">
+<div class="edit-overlay" *ngIf="editVisible">
   <div class="edit-dialog" (click)="$event.stopPropagation()">
     <h4>Edit Infra Info <span class="edit-close" (click)="editVisible = false">&times;</span></h4>
     <div class="edit-form">

@@ -4,8 +4,10 @@
   min-height: 300px;
   background-color: #000;
   border-radius: 4px;
-  padding: 8px;
   overflow: hidden;
+  // 注意: 此处不要加 padding。xterm FitAddon.fit() 按容器 clientHeight(含 padding)
+  // 计算行数, 若终端 DOM 自带 padding 会多算出行, 导致最后一行被容器底部裁掉一半。
+  // 留白改由父级 d-card-content 承担。
 }
 
 .font-color-name {

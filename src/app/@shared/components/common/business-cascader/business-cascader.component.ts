@@ -23,9 +23,20 @@ export class BusinessCascaderComponent {
   tagOptionsLength: number = null;
 
   @Input() businessType: string;
+  /**
+   * 可选: 初始选中值, 用于外部持久化恢复时回显级联选择。
+   * 不传则保持原行为(无回显)。
+   */
+  @Input() initialValue: QueryByTag;
   @Output() onChange = new EventEmitter<QueryByTag>();
 
   getTagOptions() {
+    // 若外部传入了初始值(持久化恢复), 先回显到级联控件
+    if (this.initialValue && this.initialValue.tagId != null) {
+      this.tags = this.initialValue.tagValue != null && this.initialValue.tagValue !== ''
+        ? [ this.initialValue.tagId, this.initialValue.tagValue ]
+        : [ this.initialValue.tagId ];
+    }
     this.tagService.queryTagByBusinessType({ businessType: this.businessType })
       .subscribe(({ body }) => {
         this.tagOptionsLength = body.length

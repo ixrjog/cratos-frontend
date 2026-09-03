@@ -2,6 +2,7 @@ import { BaseVO, DataTable, HttpResult, OptionsVO, PageQuery, ResourceCountVO, V
 import { Observable } from 'rxjs';
 import { CredentialVO } from './credential';
 import { BusinessTagsVO } from './business-tag';
+import { BusinessDocsVO } from './business-doc';
 
 export interface EdsInstanceVO extends BaseVO, ValidVO, BusinessTagsVO {
   id: number;
@@ -31,7 +32,7 @@ export interface EdsConfigVO extends BaseVO, ValidVO {
   credential: CredentialVO;
 }
 
-export interface EdsAssetVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagsVO {
+export interface EdsAssetVO extends BaseVO, ValidVO, ResourceCountVO, BusinessTagsVO, BusinessDocsVO {
   id: number;
   parentId: number;
   instanceId: number;

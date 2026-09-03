@@ -168,7 +168,11 @@ export class EdsAssetDataTableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.assetType === this.currentType) {
+      // 恢复该 实例+资产类型 上次的搜索条件
+      this.restoreQueryParam();
       setTimeout(() => {
+        // 将已恢复的标签筛选值传给级联组件以回显, 再加载选项
+        this.businessCascader.initialValue = this.queryParam.queryByTag;
         this.businessCascader.getTagOptions();
       }, 500);
       this.fetchData();
@@ -248,6 +252,7 @@ export class EdsAssetDataTableComponent implements OnChanges {
   }
 
   fetchData() {
+    this.persistQueryParam();
     const param: AssetPageQuery = {
       ...this.queryParam,
       instanceId: this.instanceId,
@@ -256,6 +261,43 @@ export class EdsAssetDataTableComponent implements OnChanges {
       length: this.table.pager.pageSize,
     };
     onFetchValidData(this.table, this.edsService.queryEdsInstanceAssetPage(param));
+  }
+
+  /** 搜索条件持久化存储 key(按 实例 + 资产类型 区分, 避免不同 tab 互相覆盖) */
+  private get queryStorageKey(): string {
+    return `eds-asset-query:${this.instanceId}:${this.assetType}`;
+  }
+
+  /** 将当前搜索条件写入 localStorage */
+  private persistQueryParam(): void {
+    try {
+      localStorage.setItem(this.queryStorageKey, JSON.stringify(this.queryParam));
+    } catch (e) {
+      // localStorage 不可用时静默忽略, 不影响搜索
+    }
+  }
+
+  /** 从 localStorage 恢复搜索条件; 返回是否恢复成功 */
+  private restoreQueryParam(): boolean {
+    try {
+      const raw = localStorage.getItem(this.queryStorageKey);
+      if (!raw) {
+        return false;
+      }
+      const saved = JSON.parse(raw);
+      // 合并到默认结构, 防止旧数据缺字段
+      this.queryParam = {
+        queryName: saved.queryName ?? '',
+        valid: saved.valid ?? null,
+        queryByTag: {
+          tagId: saved.queryByTag?.tagId ?? null,
+          tagValue: saved.queryByTag?.tagValue ?? null,
+        },
+      };
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   onInstanceAssetDelete() {

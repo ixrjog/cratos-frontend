@@ -175,7 +175,22 @@
             >
             </d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>
-            <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            <d-badge
+              *ngIf="rowItem.businessDocs?.length"
+              [count]="rowItem.businessDocs.length"
+              [maxCount]="99"
+              position="top-right"
+              [status]="'warning'"
+              [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+              title="文档数量">
+              <d-icon [icon]="'icon-go-document'" [operable]="true" (click)="onRowBusinessDoc(rowItem)"></d-icon>
+            </d-badge>
+            <d-icon
+              *ngIf="!rowItem.businessDocs?.length"
+              [icon]="'icon-go-document'"
+              [operable]="true"
+              (click)="onRowBusinessDoc(rowItem)">
+            </d-icon>
             <d-icon
               [icon]="'icon-priority'"
               [operable]="true"

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EdsAssetVO } from '../../../../../../@core/data/ext-datasource';
 import { fromEvent, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
@@ -21,6 +21,10 @@ import { ServerAccountPageQuery, ServerAccountVO } from '../../../../../../@core
 })
 export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() data: any;
+
+  @ViewChild('termEl', { static: false }) private termRef: ElementRef;
+  private resizeObserver: any = null;
+  private resizeDebounce: any = null;
 
   /** 弹窗内 section 高度(默认 100%, 打开时可传入固定像素让终端撑满 80% 弹窗) */
   sectionHeight = '100%';
@@ -80,16 +84,36 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      this.terminal.open(document.getElementById('edsAssetSshTerminal'));
+      this.terminal.open(this.termRef?.nativeElement || document.getElementById('edsAssetSshTerminal'));
       this.rows = this.calculateRows();
 
       fromEvent(window, 'resize')
         .pipe(debounceTime(300), takeUntil(this.destroy$))
         .subscribe(() => this.handleTerminalResize());
+
+      // 监听终端容器尺寸变化(内联面板/tab 切换/窗口缩放都能覆盖), 动态 refit
+      const el = this.termRef?.nativeElement;
+      if (el && (window as any).ResizeObserver) {
+        this.resizeObserver = new (window as any).ResizeObserver(() => {
+          if (this.resizeDebounce) {
+            clearTimeout(this.resizeDebounce);
+          }
+          this.resizeDebounce = setTimeout(() => this.handleTerminalResize(), 150);
+        });
+        this.resizeObserver.observe(el);
+      }
     }, 100);
   }
 
   ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    if (this.resizeDebounce) {
+      clearTimeout(this.resizeDebounce);
+      this.resizeDebounce = null;
+    }
     this.destroy$.next();
     this.destroy$.complete();
     this.cleanup();

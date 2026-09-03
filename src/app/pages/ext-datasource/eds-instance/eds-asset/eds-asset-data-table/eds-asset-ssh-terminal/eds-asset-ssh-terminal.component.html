@@ -20,7 +20,7 @@
     </d-card-header>
 
     <d-card-content style="height: calc(100% - 40px); padding: 0;">
-      <div class="eds-asset-ssh-terminal" id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
+      <div class="eds-asset-ssh-terminal" #termEl id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
     </d-card-content>
   </d-card>
 </section>

@@ -40,6 +40,25 @@
       (click)="onBatchImport()">Import</d-button>
   </span>
 </div>
+<!-- 内联终端(多会话 tab, 表格上方) -->
+<div class="inline-terminal-panel" *ngIf="inlineSessions.length">
+  <d-tabs [activeTab]="activeInlineKey" (activeTabChange)="onInlineTabChange($any($event))">
+    <d-tab *ngFor="let s of inlineSessions" [id]="s.key">
+      <ng-template dTabTitle>
+        <span style="display:inline-flex; align-items:center; gap:6px;">
+          <i class="icon icon-console"></i>{{ s.title }}
+          <i class="icon icon-close" style="cursor:pointer;" (click)="$event.stopPropagation(); closeInlineSession(s.key)"></i>
+        </span>
+      </ng-template>
+    </d-tab>
+  </d-tabs>
+  <div class="inline-terminal-body">
+    <div *ngFor="let s of inlineSessions" [hidden]="s.key !== activeInlineKey" class="inline-terminal-session">
+      <app-eds-asset-ssh-terminal [data]="s.data"></app-eds-asset-ssh-terminal>
+    </div>
+  </div>
+</div>
+
 <div class="spacing-table">
   <d-data-table
     dLoading
@@ -145,6 +164,14 @@
               [icon]="'icon-run-with-parameter'"
               [operable]="true"
               (click)="onAssetLogin(rowItem)"
+            >
+            </d-icon>
+            <d-icon
+              *ngIf="rowItem['loginServer'] !== null && rowItem['loginServer']['valid']"
+              [icon]="'icon-console'"
+              [operable]="true"
+              title="内联终端"
+              (click)="onAssetLoginInline(rowItem)"
             >
             </d-icon>
             <d-icon [icon]="'icon-add-label'" [operable]="true" (click)="onRowBusinessTag(rowItem)"></d-icon>

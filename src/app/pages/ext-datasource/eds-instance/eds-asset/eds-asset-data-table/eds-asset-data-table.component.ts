@@ -56,6 +56,45 @@ export class EdsAssetDataTableComponent implements OnChanges {
   businessType: string = BusinessTypeEnum.EDS_ASSET;
   supportManualAsset: EdsSupportManualAssetVO;
 
+  // ===== 内联终端(表格上方, 多会话 tab) =====
+  inlineSessions: { key: string; title: string; data: any }[] = [];
+  activeInlineKey = '';
+
+  /** 打开内联终端(不弹窗); 已存在同资产会话则激活, 否则新增 tab */
+  onAssetLoginInline(rowItem: EdsAssetVO) {
+    const key = (rowItem.assetKey || rowItem.name || '') + '#' + (rowItem.id || rowItem.name);
+    const exist = this.inlineSessions.find(s => s.key === key);
+    if (exist) {
+      this.activeInlineKey = key;
+      return;
+    }
+    const data = {
+      formData: { ...rowItem },
+      // 复用终端组件的关闭回调, 内联下用于关闭该 tab
+      hideDialog: () => this.closeInlineSession(key),
+    };
+    this.inlineSessions.push({ key, title: rowItem.name || rowItem.assetKey, data });
+    this.activeInlineKey = key;
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+  }
+
+  onInlineTabChange(key: any) {
+    this.activeInlineKey = key;
+  }
+
+  closeInlineSession(key: string) {
+    const idx = this.inlineSessions.findIndex(s => s.key === key);
+    if (idx === -1) {
+      return;
+    }
+    this.inlineSessions.splice(idx, 1);
+    if (this.activeInlineKey === key) {
+      this.activeInlineKey = this.inlineSessions.length ? this.inlineSessions[Math.max(0, idx - 1)].key : '';
+    }
+  }
+
   easyEdit: boolean = false;
 
   queryParam = {

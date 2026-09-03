@@ -99,8 +99,8 @@
                 <d-form-label [required]="true">Config Content</d-form-label>
                 <d-form-control>
                   <app-ace-editor
-                    [minLines]="19"
-                    [maxLines]="50"
+                    [minLines]="30"
+                    [maxLines]="30"
                     [mode]="'ace/mode/yaml'"
                     [aceValue]="formData.configContent"
                     (onChange)="onContentChange($event,formData)"

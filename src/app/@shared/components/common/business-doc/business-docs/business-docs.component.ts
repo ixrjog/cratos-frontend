@@ -45,7 +45,7 @@ export class BusinessDocsComponent implements OnInit {
     this.queryBusinessDocByBusiness(0);
   }
 
-  queryBusinessDocByBusiness(index: number) {
+  queryBusinessDocByBusiness(index: number, enterEdit: boolean = false) {
     this.loading = true
     this.businessDocs = [];
     const param: GetByBusiness = {
@@ -62,6 +62,10 @@ export class BusinessDocsComponent implements OnInit {
           this.selectBusinessDoc = this.businessDocs[index];
           this.unSaveContent = this.selectBusinessDoc.content;
           this.unSaveName = this.selectBusinessDoc.name
+          // 新建文档后直接进入编辑模式
+          if (enterEdit) {
+            this.editing = true;
+          }
         }
       });
   }
@@ -71,13 +75,13 @@ export class BusinessDocsComponent implements OnInit {
       businessId: this.data.businessObject.id,
       businessType: this.businessType,
       comment: '',
-      content: 'Nothing written',
+      content: '',
       documentType: 'MARKDOWN',
       name: 'New doc',
       seq: 0,
     };
     this.businessDocService.addBusinessDoc(param)
-      .subscribe(() => this.queryBusinessDocByBusiness(this.businessDocs.length));
+      .subscribe(() => this.queryBusinessDocByBusiness(this.businessDocs.length, true));
   }
 
   onUpdateBusinessDoc(businessDoc: BusinessDocVO) {

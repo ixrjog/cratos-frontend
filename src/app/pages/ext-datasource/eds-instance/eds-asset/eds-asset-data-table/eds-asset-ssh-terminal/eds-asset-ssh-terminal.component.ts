@@ -22,6 +22,9 @@ import { ServerAccountPageQuery, ServerAccountVO } from '../../../../../../@core
 export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() data: any;
 
+  /** 弹窗内 section 高度(默认 100%, 打开时可传入固定像素让终端撑满 80% 弹窗) */
+  sectionHeight = '100%';
+
   private destroy$ = new Subject<void>();
 
   uuid: string;
@@ -68,6 +71,10 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   ngOnInit(): void {
     this.closeHandler = this.data['hideDialog'];
     this.formData = this.data['formData'];
+    // 弹窗高度(打开时按页面高度 80% 计算的固定像素), 用于让终端区域撑满弹窗
+    if (this.formData && (this.formData as any).__dialogHeight) {
+      this.sectionHeight = (this.formData as any).__dialogHeight;
+    }
     this.initServerAccount();
   }
 

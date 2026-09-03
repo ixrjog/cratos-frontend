@@ -181,10 +181,18 @@ export class EdsAssetDataTableComponent implements OnChanges {
   }
 
   onAssetLogin(rowItem: EdsAssetVO) {
+    // 终端弹窗宽=页面 80%, 高=页面 95%(固定像素, 之后缩放浏览器不改变)
+    const w = Math.round(window.innerWidth * 0.8);
+    const h = Math.round(window.innerHeight * 0.8);
     const dialogDate = {
       ...this.dialogDate.loginEditData,
+      width: w + 'px',
+      height: h + 'px',
+      maxHeight: h + 'px',
     };
-    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, rowItem);
+    // 终端 section 高度 = 弹窗高 - 标题/内边距(约 96px), 让终端撑满
+    const formData: any = { ...rowItem, __dialogHeight: Math.max(300, h - 96) + 'px' };
+    this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, formData);
   }
 
   onBatchImport() {

@@ -50,6 +50,7 @@ import { I18nTranPipe } from './pipe/i18n-tran.pipe';
 import { UserTagComponent } from './components/common/tag/user-tag/user-tag.component';
 import { UserInfoCardComponent } from './components/common/user-info-card/user-info-card.component';
 import { UserPopoverComponent } from './components/common/user-popover/user-popover.component';
+import { UserScriptPickerComponent } from './components/common/user-script-picker/user-script-picker.component';
 import { TicketStatePipe } from './pipe/ticket-state.pipe';
 
 const DEVUI_MODULES = [
@@ -117,6 +118,7 @@ const CRATOS_UTILS = [
     UserTagComponent,
     UserInfoCardComponent,
     UserPopoverComponent,
+    UserScriptPickerComponent,
   ],
   imports: [
     CommonModule,
@@ -154,6 +156,7 @@ const CRATOS_UTILS = [
     UserTagComponent,
     UserInfoCardComponent,
     UserPopoverComponent,
+    UserScriptPickerComponent,
   ],
 })
 

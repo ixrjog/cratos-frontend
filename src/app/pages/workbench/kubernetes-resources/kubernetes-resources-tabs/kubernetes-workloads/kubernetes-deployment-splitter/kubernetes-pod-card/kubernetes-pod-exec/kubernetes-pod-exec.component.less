@@ -14,4 +14,21 @@
       }
     }
   }
+
+  /* 内联脚本选择面板: 悬浮在终端右上角, 不使用全屏遮罩 */
+  .script-picker-panel {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 600px;
+    max-width: calc(100% - 24px);
+    max-height: calc(100% - 24px);
+    overflow: auto;
+    padding: 16px;
+    background: var(--devui-base-bg, #fff);
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
 }

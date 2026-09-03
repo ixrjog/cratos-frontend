@@ -1,7 +1,7 @@
-<section [style.height]="sectionHeight" style="min-height: 400px;">
-  <d-card style="padding: 5px 10px; height: 100%;">
+<section [style.height]="sectionHeight" style="min-height: 400px; display: flex; flex-direction: column;">
+  <d-card style="padding: 5px 10px; height: 100%; display: flex; flex-direction: column; min-height: 0;">
 
-    <d-card-header style="margin-bottom: 5px; height: 28px;">
+    <d-card-header style="margin-bottom: 5px; flex: 0 0 auto;">
       <d-card-title>
         <div style="display: flex; align-items: center; gap: 12px; font-size: 12px;">
           <span style="color: #666">Login:</span>
@@ -15,12 +15,28 @@
           <span style="color: #666">|</span>
           <span style="color: #666">{{ formData.name }}</span>
           <span style="color: #666" dClipboard [content]="formData.assetKey">{{ formData.assetKey }}</span>
+          <span style="color: #666" *ngIf="userScripts.length">|</span>
+          <d-button
+            *ngIf="userScripts.length"
+            bsStyle="common"
+            [bsSize]="'sm'"
+            (click)="openScriptPicker()"
+          >
+            <i class="icon icon-code" style="margin-right: 4px;"></i>{{ 'userScript.runScript' | translate }}
+          </d-button>
         </div>
       </d-card-title>
     </d-card-header>
 
-    <d-card-content style="height: calc(100% - 40px); padding: 8px;">
+    <d-card-content style="flex: 1 1 auto; min-height: 0; padding: 8px; position: relative;">
       <div class="eds-asset-ssh-terminal" #termEl id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
+      <div class="script-picker-panel" *ngIf="showScriptPicker">
+        <app-user-script-picker
+          [scripts]="userScripts"
+          (pick)="onPickScript($event)"
+          (cancel)="closeScriptPicker()"
+        ></app-user-script-picker>
+      </div>
     </d-card-content>
   </d-card>
 </section>

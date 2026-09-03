@@ -1,0 +1,62 @@
+<section class="script-picker">
+  <div class="picker-row">
+    <label class="picker-label">{{ 'userScript.function' | translate }}</label>
+    <d-select
+      [options]="functions"
+      [(ngModel)]="selectedFunction"
+      [isSearch]="true"
+      [appendToBody]="true"
+      [placeholder]="'userScript.function' | translate"
+      (valueChange)="onSelectFunction($event)"
+    ></d-select>
+  </div>
+
+  <div class="picker-row">
+    <label class="picker-label">{{ 'userScript.osType' | translate }}</label>
+    <d-select
+      [options]="osTypes"
+      [(ngModel)]="selectedOsType"
+      [isSearch]="true"
+      [appendToBody]="true"
+      [disabled]="!selectedFunction"
+      [placeholder]="'userScript.osType' | translate"
+      (valueChange)="onSelectOsType($event)"
+    ></d-select>
+  </div>
+
+  <div class="picker-row">
+    <label class="picker-label">{{ 'userScript.name' | translate }}</label>
+    <d-select
+      [options]="scriptOptions"
+      [filterKey]="'name'"
+      [(ngModel)]="selectedScript"
+      [isSearch]="true"
+      [appendToBody]="true"
+      [disabled]="!selectedOsType"
+      [placeholder]="'userScript.name' | translate"
+      (valueChange)="onSelectScript($event)"
+    ></d-select>
+  </div>
+
+  <div class="picker-preview" *ngIf="selectedScript">
+    <div class="preview-header">
+      <label class="picker-label">{{ 'userScript.scriptContent' | translate }}</label>
+      <d-button bsStyle="text" [bsSize]="'sm'" (click)="onCopy()">
+        <i class="icon icon-copy" style="margin-right: 4px;"></i>{{ copied ? 'Copied' : 'Copy' }}
+      </d-button>
+    </div>
+    <textarea
+      class="preview-content"
+      [(ngModel)]="editableContent"
+      spellcheck="false"
+      wrap="off"
+    ></textarea>
+  </div>
+
+  <div class="picker-actions">
+    <d-button bsStyle="common" (click)="onCancel()">Cancel</d-button>
+    <d-button bsStyle="primary" [disabled]="!selectedScript" (click)="onRun()">
+      {{ 'userScript.runScript' | translate }}
+    </d-button>
+  </div>
+</section>

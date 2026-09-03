@@ -1,0 +1,155 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DataTableComponent } from 'ng-devui';
+import { HttpResult, Table, TABLE_DATA } from '../../../@core/data/base-data';
+import { ADD_OPERATION, DIALOG_DATA, DialogUtil, UPDATE_OPERATION } from '../../../@shared/utils/dialog.util';
+import { TOAST_CONTENT, ToastUtil } from '../../../@shared/utils/toast.util';
+import { getRowColor, onFetchValidData } from '../../../@shared/utils/data-table.utli';
+import { Observable, zip } from 'rxjs';
+import { UserScriptEdit, UserScriptPageQuery, UserScriptVO } from '../../../@core/data/user-script';
+import { UserScriptService } from '../../../@core/services/user-script.service';
+import { UserScriptEditorComponent } from './user-script-editor/user-script-editor.component';
+import { RELATIVE_TIME_LIMIT } from '../../../@shared/constant/date.constant';
+
+@Component({
+  selector: 'app-user-script-data-table',
+  templateUrl: './user-script-data-table.component.html',
+  styleUrls: [ './user-script-data-table.component.less' ],
+})
+export class UserScriptDataTableComponent implements OnInit {
+
+  @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
+
+  queryParam = {
+    queryName: '',
+    function: '',
+    osType: '',
+    valid: null,
+  };
+
+  table: Table<UserScriptVO> = JSON.parse(JSON.stringify(TABLE_DATA));
+
+  newUserScript: UserScriptEdit = {
+    name: '',
+    function: '',
+    osType: '',
+    scriptContent: '',
+    comment: '',
+    valid: true,
+  };
+
+  dialogDate = {
+    editorData: {
+      ...DIALOG_DATA.editorData,
+      content: UserScriptEditorComponent,
+    },
+    warningOperateData: {
+      ...DIALOG_DATA.warningOperateData,
+    },
+    content: {
+      ...DIALOG_DATA.content,
+    },
+  };
+
+  constructor(
+    private userScriptService: UserScriptService,
+    private dialogUtil: DialogUtil,
+    private toastUtil: ToastUtil,
+  ) {
+  }
+
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    const param: UserScriptPageQuery = {
+      ...this.queryParam,
+      page: this.table.pager.pageIndex,
+      length: this.table.pager.pageSize,
+    };
+    onFetchValidData(this.table, this.userScriptService.queryUserScriptPage(param));
+  }
+
+  pageIndexChange(pageIndex) {
+    this.table.pager.pageIndex = pageIndex;
+    this.fetchData();
+  }
+
+  pageSizeChange(pageSize) {
+    this.table.pager.pageSize = pageSize;
+    this.fetchData();
+  }
+
+  onRowNew() {
+    const h = Math.round(window.innerHeight * 0.8);
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'New Script',
+      width: '60%',
+      height: h + 'px',
+      maxHeight: h + 'px',
+    };
+    this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, JSON.parse(JSON.stringify(this.newUserScript)));
+  }
+
+  onRowEdit(rowItem: UserScriptVO) {
+    const h = Math.round(window.innerHeight * 0.8);
+    const dialogDate = {
+      ...this.dialogDate.editorData,
+      title: 'Edit Script',
+      width: '60%',
+      height: h + 'px',
+      maxHeight: h + 'px',
+    };
+    this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
+      this.fetchData();
+    }, JSON.parse(JSON.stringify(rowItem)));
+  }
+
+  onRowValid(rowItem: UserScriptVO) {
+    this.userScriptService.setUserScriptValidById({ id: rowItem.id })
+      .subscribe(() => {
+        this.fetchData();
+      });
+  }
+
+  onRowDelete(rowItem: UserScriptVO) {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.delete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      this.userScriptService.deleteUserScriptById({ id: rowItem.id })
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.fetchData();
+        });
+    });
+  }
+
+  onBatchDelete() {
+    const dialogDate = {
+      ...this.dialogDate.warningOperateData,
+      content: this.dialogDate.content.batchDelete,
+    };
+    this.dialogUtil.onDialog(dialogDate, () => {
+      let obList: Observable<HttpResult<Boolean>>[] = [];
+      this.datatable.getCheckedRows().map(row => {
+        obList.push(this.userScriptService.deleteUserScriptById({ id: row.id }));
+      });
+      zip(obList).subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.BATCH_DELETE);
+        this.fetchData();
+      });
+    });
+  }
+
+  onSearch() {
+    this.fetchData();
+  }
+
+  protected readonly getRowColor = getRowColor;
+  protected readonly limit = RELATIVE_TIME_LIMIT;
+}

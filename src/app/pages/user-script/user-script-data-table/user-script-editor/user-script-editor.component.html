@@ -1,0 +1,64 @@
+<section>
+  <form
+    dForm
+    ngForm
+    [dValidateRules]="formRules['rule']"
+    [layout]="layoutDirection"
+  >
+    <d-form-item>
+      <d-form-label [required]="true">{{ 'userScript.name' | translate }}</d-form-label>
+      <d-form-control>
+        <input
+          dTextInput
+          name="name"
+          [(ngModel)]="formData.name"
+          [dValidateRules]="formRules['name']" />
+      </d-form-control>
+    </d-form-item>
+    <div style="display: flex; gap: 12px;">
+      <d-form-item style="flex: 1;">
+        <d-form-label>{{ 'userScript.function' | translate }}</d-form-label>
+        <d-form-control>
+          <input dTextInput name="function" [(ngModel)]="formData.function" placeholder="Zabbix" />
+        </d-form-control>
+      </d-form-item>
+      <d-form-item style="flex: 1;">
+        <d-form-label>{{ 'userScript.osType' | translate }}</d-form-label>
+        <d-form-control>
+          <input dTextInput name="osType" [(ngModel)]="formData.osType" placeholder="CentOS8" />
+        </d-form-control>
+      </d-form-item>
+    </div>
+    <d-form-item>
+      <d-form-label>{{ 'userScript.scriptContent' | translate }}</d-form-label>
+      <d-form-control>
+        <app-ace-editor
+          [minLines]="20"
+          [maxLines]="20"
+          [mode]="'ace/mode/sh'"
+          [useWorker]="false"
+          [aceValue]="formData.scriptContent"
+          (onChange)="onContentChange($event, formData)"
+        >
+        </app-ace-editor>
+        <d-alert
+          style="margin-top: 8px"
+          [type]="'info'"
+          [closeable]="false"
+        >{{ 'userScript.placeholderTip' | translate }}</d-alert>
+      </d-form-control>
+    </d-form-item>
+    <d-form-item>
+      <d-form-label>{{ 'userScript.comment' | translate }}</d-form-label>
+      <d-form-control>
+        <textarea
+          dTextarea
+          name="comment"
+          maxlength="200"
+          style="height: 60px"
+          [(ngModel)]="formData.comment"
+        ></textarea>
+      </d-form-control>
+    </d-form-item>
+  </form>
+</section>

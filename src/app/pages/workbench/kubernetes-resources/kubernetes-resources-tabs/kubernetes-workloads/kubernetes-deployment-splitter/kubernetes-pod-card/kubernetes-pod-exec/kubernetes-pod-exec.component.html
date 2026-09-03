@@ -11,6 +11,13 @@
         </span>
         <span style="position: absolute;right: 0;top: 0; display: flex; gap: 8px;">
           <d-button
+            *ngIf="userScripts.length"
+            bsStyle="text"
+            (click)="openScriptPicker()"
+          >
+            <i class="icon icon-code" style="margin-right: 4px;"></i>{{ 'userScript.runScript' | translate }}
+          </d-button>
+          <d-button
             bsStyle="text"
             [disabled]="connectionStatus === 'Connected' || connectionStatus === 'Connecting'"
             (click)="onReconnect()"
@@ -24,8 +31,15 @@
         </span>
       </d-card-subtitle>
     </d-card-header>
-    <d-card-content>
+    <d-card-content style="position: relative;">
       <div class="kubernetes-pod-exec" id="kubernetesPodExec" (window:resize)="onResize($event)"></div>
+      <div class="script-picker-panel" *ngIf="showScriptPicker">
+        <app-user-script-picker
+          [scripts]="userScripts"
+          (pick)="onPickScript($event)"
+          (cancel)="closeScriptPicker()"
+        ></app-user-script-picker>
+      </div>
     </d-card-content>
   </d-card>
 </section>

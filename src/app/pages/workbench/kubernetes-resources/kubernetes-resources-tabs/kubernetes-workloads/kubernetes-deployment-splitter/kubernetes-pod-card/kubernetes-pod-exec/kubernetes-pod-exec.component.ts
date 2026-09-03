@@ -21,6 +21,8 @@ import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { BASE_TERMINAL_OPTIONS } from '../../../../../../../../@shared/constant/xterm.constant';
 import { getRowColor } from '../../../../../../../../@shared/utils/data-table.utli';
+import { UserScriptService } from '../../../../../../../../@core/services/user-script.service';
+import { UserScriptVO } from '../../../../../../../../@core/data/user-script';
 
 @Component({
   selector: 'app-kubernetes-pod-exec',
@@ -59,9 +61,14 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   baseTerminalOptions: ITerminalOptions = BASE_TERMINAL_OPTIONS;
   private terminalDisposables: { dispose(): void }[] = [];
 
+  /** 本人脚本列表 + 内联选择面板 */
+  userScripts: UserScriptVO[] = [];
+  showScriptPicker = false;
+
   constructor(
     private wsApiService: WebSocketApiService,
-    private uuidUtil: UuidUtil
+    private uuidUtil: UuidUtil,
+    private userScriptService: UserScriptService,
   ) {
     this.initializeTerminal();
   }
@@ -183,6 +190,85 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.initializeComponent();
     this.initializeWebSocket();
     this.startHeartbeat();
+    this.loadUserScripts();
+  }
+
+  /** 加载当前登录用户的启用脚本(私有) */
+  private loadUserScripts(): void {
+    this.userScriptService.queryUserScriptPage({
+      page: 1,
+      length: 200,
+      queryName: '',
+      function: '',
+      osType: '',
+      valid: true,
+    }).pipe(takeUntil(this.destroy$))
+      .subscribe(({ body }) => {
+        this.userScripts = body.data;
+      });
+  }
+
+  /** 显示/隐藏 内联脚本选择面板 */
+  openScriptPicker(): void {
+    if (this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    this.showScriptPicker = !this.showScriptPicker;
+  }
+
+  closeScriptPicker(): void {
+    this.showScriptPicker = false;
+  }
+
+  /** 内联面板选中脚本后执行(不关闭面板) */
+  onPickScript(content: string): void {
+    this.execScriptContent(content);
+  }
+
+  /**
+   * 渲染 {{name}}/{{ip}} 并逐行写入容器终端执行。
+   * name = Pod 名(kubernetesPod.metadata.name), ip = Pod IP(kubernetesPod.status.podIP)。
+   */
+  private execScriptContent(content: string): void {
+    if (!content || this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    const name = this.kubernetesPod?.metadata?.name ?? '';
+    const ip = this.kubernetesPod?.status?.podIP ?? '';
+    const rendered = content
+      .replace(/\{\{\s*name\s*\}\}/g, name)
+      .replace(/\{\{\s*ip\s*\}\}/g, ip);
+    const lines = rendered.split('\n');
+    lines.forEach(line => this.sendContainerInput(line + '\r'));
+    this.terminal.focus();
+  }
+
+  /** 通过容器终端 INPUT 通道发送一段输入 */
+  private sendContainerInput(input: string): void {
+    const param: ApplicationKubernetesDetailsRequest = {
+      topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_POD_EXEC,
+      action: WsMessageActionEnum.INPUT,
+      applicationName: this.application.name,
+      namespace: this.kubernetesDeployment.metadata.namespace,
+      deployments: [],
+    };
+    const deployment: ApplicationKubernetesDeploymentRequest = {
+      kubernetesClusterName: this.kubernetesDeployment.kubernetesCluster.name,
+      name: this.kubernetesDeployment.metadata.name,
+      pods: [],
+    };
+    const pod: ApplicationKubernetesPodRequest = {
+      instanceId: this.instanceId,
+      name: this.kubernetesPod.metadata.name,
+      namespace: this.kubernetesPod.metadata.namespace,
+      container: {
+        name: this.containerName,
+      },
+      input: input,
+    };
+    deployment.pods.push(pod);
+    param.deployments.push(deployment);
+    this.sendWebSocketMessage(param);
   }
 
   ngAfterViewInit(): void {

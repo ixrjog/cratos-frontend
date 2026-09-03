@@ -13,6 +13,8 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import { BASE_TERMINAL_OPTIONS } from '../../../../../../@shared/constant/xterm.constant';
 import { ServerAccountService } from '../../../../../../@core/services/server-account.service';
 import { ServerAccountPageQuery, ServerAccountVO } from '../../../../../../@core/data/server-account';
+import { UserScriptService } from '../../../../../../@core/services/user-script.service';
+import { UserScriptVO } from '../../../../../../@core/data/user-script';
 
 @Component({
   selector: 'app-eds-asset-ssh-terminal',
@@ -50,6 +52,9 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   hasError = false;
   showAssetDetails = true;
 
+  /** 本人脚本列表(终端内快速执行) */
+  userScripts: UserScriptVO[] = [];
+
   private ws: WebSocket | null = null;
   private heartbeatSubscription: Subscription | null = null;
 
@@ -62,6 +67,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     private wsApiService: WebSocketApiService,
     private uuidUtil: UuidUtil,
     private serverAccountService: ServerAccountService,
+    private userScriptService: UserScriptService,
   ) {
     this.initializeTerminal();
   }
@@ -80,6 +86,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
       this.sectionHeight = (this.formData as any).__dialogHeight;
     }
     this.initServerAccount();
+    this.loadUserScripts();
   }
 
   ngAfterViewInit(): void {
@@ -274,6 +281,65 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
         terminal: { cols: this.terminal.cols, rows: this.rows },
       });
     });
+  }
+
+  /** 加载当前登录用户的启用脚本(私有) */
+  private loadUserScripts(): void {
+    this.userScriptService.queryUserScriptPage({
+      page: 1,
+      length: 200,
+      queryName: '',
+      function: '',
+      osType: '',
+      valid: true,
+    }).pipe(takeUntil(this.destroy$))
+      .subscribe(({ body }) => {
+        this.userScripts = body.data;
+      });
+  }
+
+  /** 显示/隐藏 内联脚本选择面板(不使用全屏遮罩弹窗, 避免背景变色) */
+  showScriptPicker = false;
+
+  openScriptPicker(): void {
+    if (this.hasError || this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    this.showScriptPicker = !this.showScriptPicker;
+  }
+
+  /** 内联面板选中脚本后执行(内容为在线编辑后的文本, 不关闭面板) */
+  onPickScript(content: string): void {
+    this.execScriptContent(content);
+  }
+
+  /** 渲染 {{name}}/{{ip}} 并逐行写入终端执行 */
+  private execScriptContent(content: string): void {
+    if (!content) {
+      return;
+    }
+    if (this.hasError || this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    const name = this.formData?.name ?? '';
+    const ip = this.formData?.assetKey ?? '';
+    const rendered = content
+      .replace(/\{\{\s*name\s*\}\}/g, name)
+      .replace(/\{\{\s*ip\s*\}\}/g, ip);
+    const lines = rendered.split('\n');
+    lines.forEach(line => {
+      this.sendMessage({
+        state: WebTerminalStatus.COMMAND,
+        instanceId: this.instanceId,
+        input: line + '\r',
+        terminal: { cols: this.terminal.cols, rows: this.rows },
+      });
+    });
+    this.terminal.focus();
+  }
+
+  closeScriptPicker(): void {
+    this.showScriptPicker = false;
   }
 
   private handleTerminalResize(): void {

@@ -70,6 +70,13 @@
           ><i class="icon icon-setting"></i>{{ "header.userSettings" | translate }}</a
           >
         </li>
+        <li role="menuitem">
+          <a
+            class="devui-dropdown-item"
+            [routerLink]="['/pages', 'user-script']"
+          ><i class="icon icon-code"></i>{{ "header.userScript" | translate }}</a
+          >
+        </li>
         <li role="menuitem" (click)="handleUserOps('logout')">
           <a class="devui-dropdown-item logout"
           ><i class="icon icon-exit"></i>{{ "header.logout" | translate }}</a

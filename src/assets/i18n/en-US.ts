@@ -16,6 +16,8 @@ import accountEntity from './en-US/account-entity';
 import commandExec from './en-US/command-exec';
 import artifactPublish from './en-US/artifact-publish';
 import apolloPortalImageBuild from './en-US/apollo-portal-image-build';
+import appContinuousDelivery from './en-US/app-continuous-delivery';
+import userScript from './en-US/user-script';
 
 export default {
   ...pages,
@@ -36,4 +38,6 @@ export default {
   ...commandExec,
   ...artifactPublish,
   ...apolloPortalImageBuild,
+  ...appContinuousDelivery,
+  ...userScript,
 };

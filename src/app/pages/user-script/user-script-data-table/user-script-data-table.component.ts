@@ -31,6 +31,9 @@ export class UserScriptDataTableComponent implements OnInit {
   /** 功能 tab: 所有不重名的 function('' 表示全部) */
   functionTabs: string[] = [];
   activeFunction: string | number = '';
+  /** 系统类型 tab: 所有不重名的 osType('' 表示全部) */
+  osTypeTabs: string[] = [];
+  activeOsType: string | number = '';
 
   newUserScript: UserScriptEdit = {
     name: '',
@@ -66,7 +69,7 @@ export class UserScriptDataTableComponent implements OnInit {
     this.loadFunctionTabs();
   }
 
-  /** 拉取(不分页)提取所有不重名的功能作为 tab */
+  /** 拉取(不分页)提取所有不重名的功能/系统类型作为 tab */
   loadFunctionTabs() {
     this.userScriptService.queryUserScriptPage({
       page: 1,
@@ -76,19 +79,31 @@ export class UserScriptDataTableComponent implements OnInit {
       osType: '',
       valid: null,
     }).subscribe(({ body }) => {
-      const set = new Set<string>();
+      const fnSet = new Set<string>();
+      const osSet = new Set<string>();
       (body.data || []).forEach(s => {
         if (s.function && s.function.trim()) {
-          set.add(s.function);
+          fnSet.add(s.function);
+        }
+        if (s.osType && s.osType.trim()) {
+          osSet.add(s.osType);
         }
       });
-      this.functionTabs = Array.from(set).sort();
+      this.functionTabs = Array.from(fnSet).sort();
+      this.osTypeTabs = Array.from(osSet).sort();
     });
   }
 
   onFunctionTabChange(fn: string) {
     this.activeFunction = fn;
     this.queryParam.function = fn;
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
+  }
+
+  onOsTypeTabChange(os: string) {
+    this.activeOsType = os;
+    this.queryParam.osType = os;
     this.table.pager.pageIndex = 1;
     this.fetchData();
   }

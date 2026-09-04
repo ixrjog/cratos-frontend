@@ -18,12 +18,16 @@
     <d-tab [id]="''" [title]="'All'"></d-tab>
     <d-tab *ngFor="let fn of functionTabs" [id]="fn" [title]="fn"></d-tab>
   </d-tabs>
-  <input
-    class="select"
-    dTextInput
-    [placeholder]="'userScript.osType' | translate"
-    [(ngModel)]="queryParam.osType"
-  />
+  <d-tabs
+    *ngIf="osTypeTabs.length"
+    type="options"
+    [(activeTab)]="activeOsType"
+    (activeTabChange)="onOsTypeTabChange($any($event))"
+    class="function-tabs"
+  >
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let os of osTypeTabs" [id]="os" [title]="os"></d-tab>
+  </d-tabs>
   <d-button class="button" bsStyle="common" (click)="fetchData()">{{ 'userScript.filter' | translate }}</d-button>
 </div>
 <div class="spacing-table">

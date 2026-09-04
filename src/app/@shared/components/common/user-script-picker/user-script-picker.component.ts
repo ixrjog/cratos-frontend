@@ -13,7 +13,11 @@ import { UserScriptVO } from '../../../../@core/data/user-script';
 export class UserScriptPickerComponent implements OnInit {
 
   @Input() scripts: UserScriptVO[] = [];
+  /** 变量注入值: {{ name }} / {{ ip }}(由所在终端提供当前机器/容器上下文) */
+  @Input() injectName = '';
+  @Input() injectIp = '';
   @Output() pick = new EventEmitter<string>();
+  @Output() pickAsScript = new EventEmitter<string>();
   @Output() cancel = new EventEmitter<void>();
 
   functions: string[] = [];
@@ -26,6 +30,8 @@ export class UserScriptPickerComponent implements OnInit {
   /** 在线可编辑内容(临时, 不保存回脚本库; 执行时以此内容为准) */
   editableContent = '';
   copied = false;
+  /** 控制 ACE 编辑器重建(切换脚本时刷新内容) */
+  aceVisible = true;
 
   private readonly UNCATEGORIZED = '-';
   /** 选择持久化 key */
@@ -118,6 +124,25 @@ export class UserScriptPickerComponent implements OnInit {
     this.editableContent = script ? (script.scriptContent || '') : '';
     this.copied = false;
     this.persistSelection();
+    this.refreshEditor();
+  }
+
+  /** ACE 编辑器内容变化回写 */
+  onContentChange(content: string): void {
+    this.editableContent = content;
+  }
+
+  /** 重建 ACE 编辑器以加载新内容(ACE 仅在初始化读取 aceValue) */
+  private refreshEditor(): void {
+    this.aceVisible = false;
+    setTimeout(() => this.aceVisible = true, 0);
+  }
+
+  /** 将 {{ name }}/{{ ip }} 替换为当前上下文的值 */
+  private render(content: string): string {
+    return (content || '')
+      .replace(/\{\{\s*name\s*\}\}/g, this.injectName ?? '')
+      .replace(/\{\{\s*ip\s*\}\}/g, this.injectIp ?? '');
   }
 
   onRun(): void {
@@ -128,9 +153,17 @@ export class UserScriptPickerComponent implements OnInit {
     this.pick.emit(this.editableContent);
   }
 
-  /** 复制当前(可编辑)脚本内容到剪贴板 */
+  /** 作为 shell 脚本执行(写入 /tmp 文件后运行) */
+  onRunAsScript(): void {
+    if (!this.selectedScript) {
+      return;
+    }
+    this.pickAsScript.emit(this.editableContent);
+  }
+
+  /** 复制当前(可编辑)脚本内容到剪贴板(已注入 {{ name }}/{{ ip }}) */
   onCopy(): void {
-    const text = this.editableContent || '';
+    const text = this.render(this.editableContent);
     const done = () => {
       this.copied = true;
       setTimeout(() => this.copied = false, 1500);

@@ -8,12 +8,16 @@
     (change)="onSearch()"
   >
   </d-search>
-  <input
-    class="select"
-    dTextInput
-    [placeholder]="'userScript.function' | translate"
-    [(ngModel)]="queryParam.function"
-  />
+  <d-tabs
+    *ngIf="functionTabs.length"
+    type="options"
+    [(activeTab)]="activeFunction"
+    (activeTabChange)="onFunctionTabChange($any($event))"
+    class="function-tabs"
+  >
+    <d-tab [id]="''" [title]="'All'"></d-tab>
+    <d-tab *ngFor="let fn of functionTabs" [id]="fn" [title]="fn"></d-tab>
+  </d-tabs>
   <input
     class="select"
     dTextInput
@@ -45,6 +49,14 @@
       <d-cell>
         <ng-template let-cellItem="cellItem">
           <d-tag *ngIf="cellItem" [tag]="cellItem" [labelStyle]="'green-w98'"></d-tag>
+        </ng-template>
+      </d-cell>
+    </d-column>
+    <d-column field="scriptContent" header="{{ 'userScript.scriptContent' | translate }}" [width]="'320px'">
+      <d-cell>
+        <ng-template let-rowItem="rowItem">
+          <pre class="script-preview">{{ scriptPreview(rowItem.scriptContent) }}</pre>
+          <span class="font-color-comment">{{ 'userScript.totalLines' | translate }}: {{ scriptLineCount(rowItem.scriptContent) }}</span>
         </ng-template>
       </d-cell>
     </d-column>

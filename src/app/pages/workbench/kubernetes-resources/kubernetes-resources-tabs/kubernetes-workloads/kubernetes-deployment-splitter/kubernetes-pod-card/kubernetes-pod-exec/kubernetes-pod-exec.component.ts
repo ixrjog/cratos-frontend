@@ -225,6 +225,23 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
     this.execScriptContent(content);
   }
 
+  /** 作为 shell 脚本执行: heredoc 写入 /tmp 文件后运行 */
+  onPickScriptAsFile(content: string): void {
+    if (!content || this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    const name = this.kubernetesPod?.metadata?.name ?? '';
+    const ip = this.kubernetesPod?.status?.podIP ?? '';
+    const rendered = content
+      .replace(/\{\{\s*name\s*\}\}/g, name)
+      .replace(/\{\{\s*ip\s*\}\}/g, ip);
+    const file = `/tmp/cratos_script_${this.uuidUtil.uuid(8, 10)}.sh`;
+    const payload = `cat > ${file} << 'CRATOS_EOF'\n${rendered}\nCRATOS_EOF\n` +
+      `bash ${file}\n`;
+    this.sendContainerInput(payload);
+    this.terminal.focus();
+  }
+
   /**
    * 渲染 {{name}}/{{ip}} 并逐行写入容器终端执行。
    * name = Pod 名(kubernetesPod.metadata.name), ip = Pod IP(kubernetesPod.status.podIP)。

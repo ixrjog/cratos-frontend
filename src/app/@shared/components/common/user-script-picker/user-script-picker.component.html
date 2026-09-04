@@ -45,18 +45,24 @@
         <i class="icon icon-copy" style="margin-right: 4px;"></i>{{ copied ? 'Copied' : 'Copy' }}
       </d-button>
     </div>
-    <textarea
-      class="preview-content"
-      [(ngModel)]="editableContent"
-      spellcheck="false"
-      wrap="off"
-    ></textarea>
+    <app-ace-editor
+      *ngIf="aceVisible"
+      [minLines]="12"
+      [maxLines]="20"
+      [mode]="'ace/mode/sh'"
+      [useWorker]="false"
+      [aceValue]="editableContent"
+      (onChange)="onContentChange($event)"
+    ></app-ace-editor>
   </div>
 
   <div class="picker-actions">
     <d-button bsStyle="common" (click)="onCancel()">Cancel</d-button>
-    <d-button bsStyle="primary" [disabled]="!selectedScript" (click)="onRun()">
-      {{ 'userScript.runScript' | translate }}
+    <d-button bsStyle="common" [disabled]="!selectedScript" (click)="onRun()">
+      {{ 'userScript.runLines' | translate }}
+    </d-button>
+    <d-button bsStyle="primary" [disabled]="!selectedScript" (click)="onRunAsScript()">
+      {{ 'userScript.runAsScript' | translate }}
     </d-button>
   </div>
 </section>

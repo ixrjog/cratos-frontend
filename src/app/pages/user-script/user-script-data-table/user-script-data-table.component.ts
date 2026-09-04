@@ -28,6 +28,10 @@ export class UserScriptDataTableComponent implements OnInit {
 
   table: Table<UserScriptVO> = JSON.parse(JSON.stringify(TABLE_DATA));
 
+  /** 功能 tab: 所有不重名的 function('' 表示全部) */
+  functionTabs: string[] = [];
+  activeFunction: string | number = '';
+
   newUserScript: UserScriptEdit = {
     name: '',
     function: '',
@@ -58,6 +62,34 @@ export class UserScriptDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchData();
+    this.loadFunctionTabs();
+  }
+
+  /** 拉取(不分页)提取所有不重名的功能作为 tab */
+  loadFunctionTabs() {
+    this.userScriptService.queryUserScriptPage({
+      page: 1,
+      length: 500,
+      queryName: '',
+      function: '',
+      osType: '',
+      valid: null,
+    }).subscribe(({ body }) => {
+      const set = new Set<string>();
+      (body.data || []).forEach(s => {
+        if (s.function && s.function.trim()) {
+          set.add(s.function);
+        }
+      });
+      this.functionTabs = Array.from(set).sort();
+    });
+  }
+
+  onFunctionTabChange(fn: string) {
+    this.activeFunction = fn;
+    this.queryParam.function = fn;
+    this.table.pager.pageIndex = 1;
     this.fetchData();
   }
 
@@ -91,6 +123,7 @@ export class UserScriptDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(ADD_OPERATION, dialogDate, () => {
       this.fetchData();
+      this.loadFunctionTabs();
     }, JSON.parse(JSON.stringify(this.newUserScript)));
   }
 
@@ -105,6 +138,7 @@ export class UserScriptDataTableComponent implements OnInit {
     };
     this.dialogUtil.onEditDialog(UPDATE_OPERATION, dialogDate, () => {
       this.fetchData();
+      this.loadFunctionTabs();
     }, JSON.parse(JSON.stringify(rowItem)));
   }
 
@@ -125,6 +159,7 @@ export class UserScriptDataTableComponent implements OnInit {
         .subscribe(() => {
           this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
           this.fetchData();
+          this.loadFunctionTabs();
         });
     });
   }
@@ -148,6 +183,22 @@ export class UserScriptDataTableComponent implements OnInit {
 
   onSearch() {
     this.fetchData();
+  }
+
+  /** 脚本前 2 行预览 */
+  scriptPreview(content: string): string {
+    if (!content) {
+      return '';
+    }
+    return content.split('\n').slice(0, 2).join('\n');
+  }
+
+  /** 脚本总行数 */
+  scriptLineCount(content: string): number {
+    if (!content) {
+      return 0;
+    }
+    return content.split('\n').length;
   }
 
   protected readonly getRowColor = getRowColor;

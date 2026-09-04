@@ -313,6 +313,11 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
     this.execScriptContent(content);
   }
 
+  /** 作为 shell 脚本执行: heredoc 写入 /tmp 文件后运行 */
+  onPickScriptAsFile(content: string): void {
+    this.execScriptAsFile(content);
+  }
+
   /** 渲染 {{name}}/{{ip}} 并逐行写入终端执行 */
   private execScriptContent(content: string): void {
     if (!content) {
@@ -334,6 +339,35 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
         input: line + '\r',
         terminal: { cols: this.terminal.cols, rows: this.rows },
       });
+    });
+    this.terminal.focus();
+  }
+
+  /**
+   * 作为 shell 脚本执行: 用 heredoc 将脚本写入 /tmp 唯一文件, 再 bash 执行。
+   * 适合多行/含控制流的脚本(逐行敲入无法正确处理 if/for/函数等)。
+   */
+  private execScriptAsFile(content: string): void {
+    if (!content) {
+      return;
+    }
+    if (this.hasError || this.ws?.readyState !== WebSocket.OPEN) {
+      return;
+    }
+    const name = this.formData?.name ?? '';
+    const ip = this.formData?.assetKey ?? '';
+    const rendered = content
+      .replace(/\{\{\s*name\s*\}\}/g, name)
+      .replace(/\{\{\s*ip\s*\}\}/g, ip);
+    const file = `/tmp/cratos_script_${this.uuidUtil.uuid(8, 10)}.sh`;
+    // heredoc 用单引号 EOF, 内容原样写入(脚本内的 $VAR 交给 bash 执行时展开)
+    const payload = `cat > ${file} << 'CRATOS_EOF'\n${rendered}\nCRATOS_EOF\n` +
+      `bash ${file}\n`;
+    this.sendMessage({
+      state: WebTerminalStatus.COMMAND,
+      instanceId: this.instanceId,
+      input: payload,
+      terminal: { cols: this.terminal.cols, rows: this.rows },
     });
     this.terminal.focus();
   }

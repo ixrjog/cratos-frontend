@@ -33,7 +33,10 @@
       <div class="script-picker-panel" *ngIf="showScriptPicker">
         <app-user-script-picker
           [scripts]="userScripts"
+          [injectName]="formData.name"
+          [injectIp]="formData.assetKey"
           (pick)="onPickScript($event)"
+          (pickAsScript)="onPickScriptAsFile($event)"
           (cancel)="closeScriptPicker()"
         ></app-user-script-picker>
       </div>

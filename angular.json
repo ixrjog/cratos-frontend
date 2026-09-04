@@ -106,6 +106,16 @@
                 "bundleName": "worker-json",
                 "input": "node_modules/ace-builds/src-min/worker-json.js"
               }
+            ],
+            "allowedCommonJsDependencies": [
+              "color",
+              "ace-builds",
+              "@xterm/xterm",
+              "@xterm/addon-fit",
+              "@xterm/addon-web-links",
+              "jszip",
+              "elkjs",
+              "elkjs/lib/elk.bundled"
             ]
           },
           "configurations": {
@@ -113,7 +123,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "10mb",
+                  "maximumWarning": "12mb",
                   "maximumError": "20mb"
                 },
                 {

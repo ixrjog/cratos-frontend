@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -331,6 +332,7 @@ mavenpassword=你的Cratos密码`;
     private toastUtil: ToastUtil,
     private terminalThemeService: TerminalThemeService,
     private translate: TranslateService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -350,6 +352,19 @@ mavenpassword=你的Cratos密码`;
     // 加载发布历史 + 自动刷新
     this.queryPublishHistory();
     this.startAutoRefresh();
+
+    // URL 参数自动化发布: ?applicationName=&project=&branch=&moduleName=&confirm=yes
+    const qp = this.route.snapshot.queryParams;
+    if (qp['applicationName'] && qp['project']) {
+      this.autoPublishFromUrl({
+        applicationName: qp['applicationName'],
+        project: qp['project'],
+        branch: qp['branch'] || 'master',
+        moduleName: qp['moduleName'] || '',
+        repository: qp['repository'] || '',
+        confirm: (qp['confirm'] || '').toLowerCase() === 'yes',
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -891,9 +906,42 @@ mavenpassword=你的Cratos密码`;
       this.loading = false;
       // 为每个 build card 加载 SCA 内部模块(按 应用+gitUrl)，做成 tab 供选择发布模块
       (this.result?.builds || []).forEach((build: any) => this.fetchInternalModules(build));
+      // 统计该应用各模块历史发布成功次数(用于模块 tab 徽标)
+      this.loadPublishCounts();
     }, () => {
       this.loading = false;
     });
+  }
+
+  /** 各模块(artifactId)历史发布成功次数 */
+  publishCountMap: { [artifactId: string]: number } = {};
+
+  /** 拉取该应用发布历史(大页), 按 artifactId 统计 SUCCESS 次数 */
+  private loadPublishCounts() {
+    const appName = this.selectedApplication?.name;
+    if (!appName) {
+      return;
+    }
+    this.apiService.post('/application', '/artifact/publish/publish/page/query', {
+      queryName: '',
+      username: null,
+      applicationName: appName,
+      page: 1,
+      length: 1000,
+    }).subscribe(({ body }: any) => {
+      const map: { [k: string]: number } = {};
+      (body?.data || []).forEach((r: any) => {
+        if (r.applicationName === appName && r.publishStatus === 'SUCCESS' && r.artifactId) {
+          map[r.artifactId] = (map[r.artifactId] || 0) + 1;
+        }
+      });
+      this.publishCountMap = map;
+    });
+  }
+
+  /** 取某模块(artifactId)的历史发布次数 */
+  publishCountOf(artifactId: string): number {
+    return (artifactId && this.publishCountMap[artifactId]) || 0;
   }
 
   /**
@@ -906,6 +954,7 @@ mavenpassword=你的Cratos密码`;
       return;
     }
     build.internalModulesLoading = true;
+    build.publishKind = build.publishKind || 'module';
     this.apiService.post('/sca', '/scan/internal-module/query-by-app', {
       applicationName: this.selectedApplication?.name,
       gitUrl,
@@ -926,6 +975,79 @@ mavenpassword=你的Cratos密码`;
   /** 模块唯一标识 groupId:artifactId */
   moduleId(m: any): string {
     return (m?.groupId || '') + ':' + (m?.artifactId || '');
+  }
+
+  /** dependency 唯一标识 group:name */
+  dependencyId(d: any): string {
+    return (d?.group || '') + ':' + (d?.name || '');
+  }
+
+  /** 切换发布类型(module / dependency), 重置选中并按类型查版本 */
+  onPublishKindChange(build: any, kind: string) {
+    build.publishKind = kind;
+    build.selectedVersion = null;
+    if (kind === 'dependency') {
+      build.selectedDependencyId = build.dependencies?.length ? this.dependencyId(build.dependencies[0]) : null;
+      this.fetchDependencyVersion(build);
+    } else {
+      build.selectedModuleId = build.internalModules?.length ? this.moduleId(build.internalModules[0]) : null;
+      this.fetchModuleVersion(build);
+    }
+  }
+
+  onDependencyTabChange(build: any, dependencyId: string) {
+    build.selectedDependencyId = dependencyId;
+    this.fetchDependencyVersion(build);
+  }
+
+  /** 返回当前选中的 dependency 对象 */
+  getSelectedDependency(build: any): any {
+    if (!build?.dependencies?.length || !build.selectedDependencyId) {
+      return null;
+    }
+    return build.dependencies.find((d: any) => this.dependencyId(d) === build.selectedDependencyId) || null;
+  }
+
+  /** 是否为 dependency 发布模式 */
+  isDependencyKind(build: any): boolean {
+    return build?.publishKind === 'dependency';
+  }
+
+  /** 当前选中项(module 或 dependency)统一为 {groupId, artifactId}, 用于展示与发布 */
+  getSelectedItem(build: any): any {
+    if (this.isDependencyKind(build)) {
+      const d = this.getSelectedDependency(build);
+      return d ? { groupId: d.group, artifactId: d.name, path: d.path } : null;
+    }
+    return this.getSelectedModule(build);
+  }
+
+  /** 查询选中 dependency 的版本(读取 path/pom.xml 的 <version>) */
+  fetchDependencyVersion(build: any) {
+    const d = this.getSelectedDependency(build);
+    const gitUrl = build?.buildProject?.repository?.sshUrl;
+    build.selectedVersion = null;
+    if (!d || !gitUrl) {
+      return;
+    }
+    build.versionLoading = true;
+    this.apiService.post('/application', '/artifact/publish/module/version/query', {
+      applicationName: this.selectedApplication?.name,
+      gitUrl,
+      ref: this.currentBranch(),
+      project: build.project,
+      groupId: d.group,
+      artifactId: d.name,
+      buildType: build.type,
+      isDependency: true,
+      path: d.path,
+    }).subscribe(({ body }: any) => {
+      build.selectedVersion = body?.version || null;
+      build.versionLoading = false;
+      this.autoMatchRepository(build);
+    }, () => {
+      build.versionLoading = false;
+    });
   }
 
   onModuleTabChange(build: any, moduleId: string) {
@@ -1002,8 +1124,9 @@ mavenpassword=你的Cratos密码`;
   }
 
   onPublish(build: any) {
-    const sm = this.getSelectedModule(build);
-    if (!sm || !build.selectedVersion || this.publishingProject === build.project) {
+    const isDependency = this.isDependencyKind(build);
+    const item = this.getSelectedItem(build);
+    if (!item || !build.selectedVersion || this.publishingProject === build.project) {
       return;
     }
     this.publishingProject = build.project;
@@ -1011,18 +1134,161 @@ mavenpassword=你的Cratos密码`;
       applicationName: this.selectedApplication?.name,
       branch: this.currentBranch(),
       project: build.project,
-      moduleName: sm.artifactId,
-      groupId: sm.groupId,
-      artifactId: sm.artifactId,
+      isDependency,
+      moduleName: item.artifactId,
+      groupId: item.groupId,
+      artifactId: item.artifactId,
       version: build.selectedVersion,
       repository: build.repository,
     }).subscribe(() => {
       this.publishingProject = null;
       this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.publishTriggered'));
       this.queryPublishHistory();
+      this.loadPublishCounts();
     }, () => {
       this.publishingProject = null;
     });
+  }
+
+  // ===== URL 参数自动化发布 =====
+  /** 自动化处理中标志(避免重复触发) */
+  autoRunning = false;
+
+  // ===== 自动化调用命令示例(Mac open) 弹窗 =====
+  showAutoCmd = false;
+  autoCmdBuild: any = null;
+
+  /** 打开某 build 的自动化命令示例弹窗 */
+  onShowAutoCmd(build: any) {
+    this.autoCmdBuild = build;
+    this.showAutoCmd = true;
+  }
+
+  closeAutoCmd() {
+    this.showAutoCmd = false;
+    this.autoCmdBuild = null;
+  }
+
+  /** 当前选中模块/二方包的名称(用作 moduleName) */
+  autoCmdSelectedModuleName(build: any): string {
+    const item = this.getSelectedItem(build);
+    return item?.artifactId || '';
+  }
+
+  /** 生成单个模块的 Mac open 自动化发布命令 */
+  autoCmdLine(build: any, moduleName: string): string {
+    const origin = window.location.origin;
+    const params = [
+      'applicationName=' + encodeURIComponent(this.selectedApplication?.name || ''),
+      'project=' + encodeURIComponent(build?.project || ''),
+      'branch=' + encodeURIComponent(this.currentBranch()),
+      'moduleName=' + encodeURIComponent(moduleName || ''),
+    ];
+    if (build?.repository) {
+      params.push('repository=' + encodeURIComponent(build.repository));
+    }
+    params.push('confirm=yes');
+    const url = `${origin}/#/pages/workbench/artifact-publish?${params.join('&')}`;
+    return `open -a "Google Chrome" "${url}"`;
+  }
+
+  /**
+   * 轮询等待条件成立(带超时)。cond() 返回 true 则 resolve, 超时 reject。
+   */
+  private waitFor(cond: () => boolean, timeoutMs = 20000, intervalMs = 200): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      const timer = setInterval(() => {
+        if (cond()) {
+          clearInterval(timer);
+          resolve();
+        } else if (Date.now() - start > timeoutMs) {
+          clearInterval(timer);
+          reject(new Error('timeout'));
+        }
+      }, intervalMs);
+    });
+  }
+
+  /**
+   * 根据 URL 参数自动预填并(可选)自动发布二方包。
+   * 流程: 设应用/分支 -> 查 builds -> 定位 project 对应 build -> 选模块(module 或 dependency)
+   *      -> 等版本+仓库就位 -> confirm=yes 则自动发布, 否则仅定位等待用户确认。
+   */
+  private async autoPublishFromUrl(cfg: { applicationName: string; project: string; branch: string; moduleName: string; repository: string; confirm: boolean }) {
+    if (this.autoRunning) {
+      return;
+    }
+    this.autoRunning = true;
+    try {
+      // 1. 设应用 + 分支
+      this.onApplicationChange({ name: cfg.applicationName, comment: cfg.applicationName });
+      this.branch = (cfg.branch || 'master').trim() || 'master';
+      this.onBranchChange();
+
+      // 2. 查询可发布构建
+      this.onQuery();
+      await this.waitFor(() => Array.isArray(this.result?.builds) && this.result.builds.length > 0);
+
+      // 3. 定位 project 对应的 build
+      const build = this.result.builds.find((b: any) => b.project === cfg.project);
+      if (!build) {
+        this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.auto.buildNotFound', { project: cfg.project }));
+        return;
+      }
+
+      // 4. 等内部模块/依赖加载完成(fetchInternalModules 完成后 internalModulesLoading=false)
+      await this.waitFor(() => build.internalModulesLoading === false || Array.isArray(build.internalModules));
+
+      // 5. 按 moduleName 选中 module 或 dependency
+      if (cfg.moduleName) {
+        const module = (build.internalModules || []).find((m: any) => m.artifactId === cfg.moduleName);
+        const dependency = (build.dependencies || []).find((d: any) => d.name === cfg.moduleName);
+        if (module) {
+          if (build.publishKind !== 'module') {
+            this.onPublishKindChange(build, 'module');
+          }
+          this.onModuleTabChange(build, this.moduleId(module));
+        } else if (dependency) {
+          this.onPublishKindChange(build, 'dependency');
+          this.onDependencyTabChange(build, this.dependencyId(dependency));
+        } else {
+          this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.auto.moduleNotFound', { moduleName: cfg.moduleName }));
+          return;
+        }
+      }
+      // 未指定 moduleName 时沿用默认选中(第一个模块), fetchInternalModules 已触发查版本
+
+      // 6. 等版本与制品仓库就位
+      await this.waitFor(() => !!build.selectedVersion && build.versionLoading !== true);
+      await this.waitFor(() => !!build.repository, 5000);
+
+      // 6b. URL 指定了推送仓库则覆盖(需在该版本允许的仓库选项内, 否则保留自动匹配并告警)
+      if (cfg.repository) {
+        const options = this.repositoryOptionsFor(build);
+        if (options.includes(cfg.repository)) {
+          build.repository = cfg.repository;
+        } else {
+          this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.auto.repositoryInvalid', { repository: cfg.repository }));
+        }
+      }
+
+      // 定位到构建卡片
+      try {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (e) {}
+
+      // 7. confirm=yes 自动发布; 否则仅提示用户确认
+      if (cfg.confirm) {
+        this.onPublish(build);
+      } else {
+        this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.auto.readyToPublish'));
+      }
+    } catch (e) {
+      this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.auto.timeout'));
+    } finally {
+      this.autoRunning = false;
+    }
   }
 
 }

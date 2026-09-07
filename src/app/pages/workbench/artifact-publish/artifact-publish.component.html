@@ -50,17 +50,31 @@
           <div class="info-card" *ngFor="let build of result.builds">
             <div class="build-card-header">
               <h5>{{ build.project || build.moduleName || ('artifactPublish.card.buildFallback' | translate) }}</h5>
-              <d-button
-                bsStyle="primary"
-                [disabled]="publishingProject === build.project || !build.selectedModuleId || !build.selectedVersion"
-                (click)="onPublish(build)"
-              >
-                {{ publishingProject === build.project ? ('artifactPublish.card.publishing' | translate) : ('artifactPublish.card.publish' | translate) }}
-              </d-button>
+              <span style="display:inline-flex; align-items:center; gap:8px;">
+                <d-icon [icon]="'icon-code'" [operable]="true"
+                        [title]="'artifactPublish.auto.cmdTitle' | translate"
+                        (click)="onShowAutoCmd(build)"></d-icon>
+                <d-button
+                  bsStyle="primary"
+                  [disabled]="publishingProject === build.project || !getSelectedItem(build) || !build.selectedVersion"
+                  (click)="onPublish(build)"
+                >
+                  {{ publishingProject === build.project ? ('artifactPublish.card.publishing' | translate) : ('artifactPublish.card.publish' | translate) }}
+                </d-button>
+              </span>
+            </div>
+
+            <!-- 发布类型切换: Modules / Dependencies(仅当配置了 dependencies 时显示切换) -->
+            <div class="publish-kind" *ngIf="build.dependencies?.length">
+              <d-radio-group [(ngModel)]="build.publishKind" direction="row"
+                             (ngModelChange)="onPublishKindChange(build, $event)">
+                <d-radio [value]="'module'">{{ 'artifactPublish.card.kindModules' | translate }}</d-radio>
+                <d-radio [value]="'dependency'">{{ 'artifactPublish.card.kindDependencies' | translate }}</d-radio>
+              </d-radio-group>
             </div>
 
             <!-- 可发布模块(来自 SCA 内部模块) -->
-            <div class="publish-modules" dLoading [loading]="build.internalModulesLoading" [backdrop]="true">
+            <div class="publish-modules" *ngIf="!isDependencyKind(build)" dLoading [loading]="build.internalModulesLoading" [backdrop]="true">
               <div class="publish-modules-title">{{ 'artifactPublish.card.publishModules' | translate }}</div>
               <d-tabs
                 *ngIf="build.internalModules?.length"
@@ -69,13 +83,35 @@
                 (activeTabChange)="onModuleTabChange(build, $any($event))"
               >
                 <d-tab *ngFor="let m of build.internalModules" [id]="moduleId(m)">
-                  <ng-template dTabTitle>{{ m.artifactId }}</ng-template>
+                  <ng-template dTabTitle>
+                    {{ m.artifactId }}
+                    <d-badge *ngIf="publishCountOf(m.artifactId)"
+                             [count]="publishCountOf(m.artifactId)" [maxCount]="9999"
+                             [status]="'warning'" [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                             style="margin-left: 6px;"
+                             [title]="'artifactPublish.card.publishedTimes' | translate"></d-badge>
+                  </ng-template>
                 </d-tab>
               </d-tabs>
               <div class="publish-modules-empty"
                    *ngIf="!build.internalModulesLoading && !build.internalModules?.length">
                 {{ 'artifactPublish.card.noInternalModules' | translate }}
               </div>
+            </div>
+
+            <!-- 可发布 Dependencies(来自应用配置 build.dependencies) -->
+            <div class="publish-modules" *ngIf="isDependencyKind(build)">
+              <div class="publish-modules-title">{{ 'artifactPublish.card.publishDependencies' | translate }}</div>
+              <d-tabs
+                *ngIf="build.dependencies?.length"
+                type="options"
+                [activeTab]="build.selectedDependencyId"
+                (activeTabChange)="onDependencyTabChange(build, $any($event))"
+              >
+                <d-tab *ngFor="let d of build.dependencies" [id]="dependencyId(d)">
+                  <ng-template dTabTitle>{{ d.name }}</ng-template>
+                </d-tab>
+              </d-tabs>
             </div>
             <div class="info-row" *ngIf="build.buildProject?.repository?.sshUrl">
               <span class="label">{{ 'artifactPublish.card.gitlab' | translate }}</span>
@@ -106,15 +142,15 @@
               <span class="label">{{ 'artifactPublish.card.jdk' | translate }}</span>
               <span class="value">{{ build.jdkVersion }}</span>
             </div>
-            <div class="info-row" *ngIf="getSelectedModule(build) as sm">
+            <div class="info-row" *ngIf="getSelectedItem(build) as sm">
               <span class="label">{{ 'artifactPublish.card.group' | translate }}</span>
               <span class="value">{{ sm.groupId }}</span>
             </div>
-            <div class="info-row" *ngIf="getSelectedModule(build) as sm">
+            <div class="info-row" *ngIf="getSelectedItem(build) as sm">
               <span class="label">{{ 'artifactPublish.card.name' | translate }}</span>
               <span class="value">{{ sm.artifactId }}</span>
             </div>
-            <div class="info-row" *ngIf="getSelectedModule(build)">
+            <div class="info-row" *ngIf="getSelectedItem(build)">
               <span class="label">{{ 'artifactPublish.card.version' | translate }}</span>
               <span class="value">
                 <ng-container *ngIf="!build.versionLoading && build.selectedVersion">
@@ -129,7 +165,7 @@
                 {{ build.versionLoading ? ('artifactPublish.card.versionLoading' | translate) : (build.selectedVersion || '') }}
               </span>
             </div>
-            <div class="build-repo" *ngIf="getSelectedModule(build) && build.selectedVersion">
+            <div class="build-repo" *ngIf="getSelectedItem(build) && build.selectedVersion">
               <div class="repo-label">{{ 'artifactPublish.card.repository' | translate }}</div>
               <d-tabs type="options" [activeTab]="build.repository"
                       (activeTabChange)="build.repository = $any($event)">
@@ -484,6 +520,31 @@
       </div>
 
       <div class="report-empty" *ngIf="report && !report.total">{{ 'artifactPublish.report.empty' | translate }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- 自动化调用命令示例(Mac open) -->
+<div class="components-overlay" *ngIf="showAutoCmd" (click)="closeAutoCmd()">
+  <div class="components-dialog auto-cmd-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ 'artifactPublish.auto.cmdTitle' | translate }} — {{ autoCmdBuild?.project }}</h5>
+      <div class="components-header-actions">
+        <span class="close-btn" (click)="closeAutoCmd()">&times;</span>
+      </div>
+    </div>
+    <div class="auto-cmd-body">
+      <div class="auto-cmd-tip">{{ 'artifactPublish.auto.cmdTip' | translate }}</div>
+      <div class="auto-cmd-list" *ngIf="autoCmdSelectedModuleName(autoCmdBuild); else noModule">
+        <div class="auto-cmd-item">
+          <div class="auto-cmd-module">{{ autoCmdSelectedModuleName(autoCmdBuild) }}</div>
+          <div class="auto-cmd-os"><i class="fab fa-apple" style="margin-right: 4px;"></i>Mac Cmd</div>
+          <pre class="auto-cmd-line" dClipboard [content]="autoCmdLine(autoCmdBuild, autoCmdSelectedModuleName(autoCmdBuild))" (click)="onCopied()">{{ autoCmdLine(autoCmdBuild, autoCmdSelectedModuleName(autoCmdBuild)) }}</pre>
+        </div>
+      </div>
+      <ng-template #noModule>
+        <div class="auto-cmd-empty">{{ 'artifactPublish.card.noInternalModules' | translate }}</div>
+      </ng-template>
     </div>
   </div>
 </div>

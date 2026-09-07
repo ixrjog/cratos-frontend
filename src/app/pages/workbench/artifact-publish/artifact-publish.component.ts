@@ -271,7 +271,21 @@ mavenpassword=你的Cratos密码`;
           <repository>
             <id>transsnet-public</id>
             <name>Team Nexus Repository</name>
+            <url>https://nexus.transspay.net/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+          </repository>
+          <repository>
+            <id>chuanyi-public</id>
+            <name>Team Nexus Repository</name>
             <url>https://nexus.chuanyinet.com/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

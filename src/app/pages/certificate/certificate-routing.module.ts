@@ -7,6 +7,7 @@ import { AcmeDomainComponent } from './acme-domain/acme-domain.component';
 import { AcmeOrderComponent } from './acme-order/acme-order.component';
 import { AcmeAccountComponent } from './acme-account/acme-account.component';
 import { DcvAcmeDomainComponent } from './dcv-acme-domain/dcv-acme-domain.component';
+import { AcmeReconciliationComponent } from './acme-reconciliation/acme-reconciliation.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'acme/domain', component: AcmeDomainComponent },
       { path: 'acme/order', component: AcmeOrderComponent },
       { path: 'acme/account', component: AcmeAccountComponent },
+      { path: 'acme/reconciliation', component: AcmeReconciliationComponent },
       { path: 'dcv/acme/domain', component: DcvAcmeDomainComponent },
     ],
   },

@@ -1,7 +1,7 @@
 <section [style.height]="sectionHeight" style="min-height: 400px; display: flex; flex-direction: column;">
-  <d-card style="padding: 5px 10px; height: 100%; display: flex; flex-direction: column; min-height: 0;">
+  <d-card style="padding: 2px 4px; height: 100%; display: flex; flex-direction: column; min-height: 0;">
 
-    <d-card-header style="margin-bottom: 5px; flex: 0 0 auto;">
+    <d-card-header style="margin-bottom: 4px; flex: 0 0 auto;">
       <d-card-title>
         <div style="display: flex; align-items: center; gap: 12px; font-size: 12px;">
           <span style="color: #666">Login:</span>
@@ -28,7 +28,7 @@
       </d-card-title>
     </d-card-header>
 
-    <d-card-content style="flex: 1 1 auto; min-height: 0; padding: 8px; position: relative;">
+    <d-card-content style="flex: 1 1 auto; min-height: 0; padding: 4px; position: relative;">
       <div class="eds-asset-ssh-terminal" #termEl id="edsAssetSshTerminal" (window:resize)="onResize()"></div>
       <div class="script-picker-panel" *ngIf="showScriptPicker">
         <app-user-script-picker

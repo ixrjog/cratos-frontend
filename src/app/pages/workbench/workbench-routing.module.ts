@@ -11,6 +11,7 @@ import { ImageMirrorComponent } from './image-mirror/image-mirror.component';
 import { CloudAkApplyComponent } from './cloud-ak-apply/cloud-ak-apply.component';
 import { ArtifactPublishComponent } from './artifact-publish/artifact-publish.component';
 import { ApolloPortalImageBuildComponent } from './apollo-portal-image-build/apollo-portal-image-build.component';
+import { AppContinuousDeliveryComponent } from './app-continuous-delivery/app-continuous-delivery.component';
 
 const routes: Routes = [
   { path: 'kubernetes-resources', component: KubernetesResourcesComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'cloud-ak-apply', component: CloudAkApplyComponent },
   { path: 'artifact-publish', component: ArtifactPublishComponent },
   { path: 'apollo-portal-image-build', component: ApolloPortalImageBuildComponent },
+  { path: 'app-continuous-delivery', component: AppContinuousDeliveryComponent },
 ];
 
 @NgModule({

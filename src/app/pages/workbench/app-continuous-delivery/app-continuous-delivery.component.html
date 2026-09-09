@@ -1,0 +1,275 @@
+<da-layout-row [daGutter]="[12, 12]">
+  <da-col-item [daSpan]="24" [daXs]="24">
+    <div class="acd-page">
+      <!-- 查询栏 -->
+      <div class="acd-search">
+        <d-select class="app-select" [(ngModel)]="selectedApp" [options]="appNames"
+                  [appendToBody]="true" (valueChange)="onAppChange($event)"
+                  [placeholder]="'appContinuousDelivery.search.appPlaceholder' | translate">
+        </d-select>
+        <span class="branch-field">
+          <i class="fas fa-code-branch branch-icon"></i>
+          <input class="branch-input" dTextInput [(ngModel)]="branch" (blur)="onBranchBlur()"
+                 [placeholder]="'appContinuousDelivery.search.branchPlaceholder' | translate" />
+        </span>
+        <d-button bsStyle="primary" [disabled]="!selectedApp || configLoading" (click)="onQueryConfig()">
+          {{ configLoading ? ('appContinuousDelivery.search.querying' | translate) : ('appContinuousDelivery.search.query' | translate) }}
+        </d-button>
+        <d-button bsStyle="common" [disabled]="!selectedApp" (click)="onViewServerInfo()">
+          {{ 'appContinuousDelivery.search.serverInfo' | translate }}
+        </d-button>
+      </div>
+
+      <!-- 查询结果: 每个 build(仓库) 一张卡片, 各自打包 -->
+      <div class="acd-result" dLoading [loading]="configLoading || deployLoading" [backdrop]="true">
+        <div *ngIf="result?.builds?.length" class="build-cards">
+          <div class="build-card" *ngFor="let build of result.builds">
+            <div class="build-card-header">
+              <h5>{{ build.project || build.moduleName || 'Build' }}</h5>
+              <d-button bsStyle="primary" bsSize="sm" [disabled]="triggeringProject === build.project"
+                        (click)="onTrigger(build)">
+                {{ triggeringProject === build.project ? ('appContinuousDelivery.card.building' | translate) : ('appContinuousDelivery.card.startBuild' | translate) }}
+              </d-button>
+            </div>
+            <div class="info-row" *ngIf="buildSshUrl(build)">
+              <span class="label">{{ 'appContinuousDelivery.card.gitlab' | translate }}</span>
+              <span class="value" dClipboard [content]="buildSshUrl(build)">{{ buildSshUrl(build) }}</span>
+            </div>
+            <div class="info-row" *ngIf="build.buildProject?.commit">
+              <span class="label">{{ 'appContinuousDelivery.card.commit' | translate }}</span>
+              <span class="value">
+                <a *ngIf="build.buildProject.commit.webUrl" [href]="build.buildProject.commit.webUrl" target="_blank" style="color: rgb(95, 170, 21);">{{ build.buildProject.commit.id | slice:0:8 }}</a>
+                <span *ngIf="!build.buildProject.commit.webUrl" style="color: rgb(95, 170, 21);">{{ build.buildProject.commit.id | slice:0:8 }}</span>
+              </span>
+            </div>
+            <div class="info-row" *ngIf="build.buildProject?.commit?.message">
+              <span class="label">{{ 'appContinuousDelivery.card.message' | translate }}</span>
+              <span class="value commit-msg">{{ build.buildProject.commit.message }}</span>
+            </div>
+            <div class="info-row" *ngIf="build.type">
+              <span class="label">{{ 'appContinuousDelivery.card.type' | translate }}</span>
+              <span class="value">{{ build.type }}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="result && !result.builds?.length" class="acd-empty">
+          {{ 'appContinuousDelivery.card.empty' | translate }}
+        </div>
+
+        <!-- 部署: 服务器按 CountryCode 平铺 -->
+        <div class="deploy-servers" *ngIf="deployGroups.length">
+          <d-tabs class="country-tabs" type="tabs" [activeTab]="selectedCountry" (activeTabChange)="onCountryChange($any($event))">
+            <d-tab *ngFor="let cc of deployCountries" [id]="cc">
+              <ng-template dTabTitle>
+                <img class="cc-flag" *ngIf="countryFlagUrl(cc)" [src]="countryFlagUrl(cc)" alt="{{ cc }}"
+                     (error)="$any($event.target).style.display='none'" />
+                <i class="fas fa-earth-asia" *ngIf="!countryFlagUrl(cc)" style="margin-right: 6px;"></i>{{ cc }}
+                <d-badge [count]="countryServerCount(cc)" [maxCount]="999" style="margin-left: 6px;"></d-badge>
+              </ng-template>
+            </d-tab>
+          </d-tabs>
+          <div class="deploy-group" *ngFor="let g of groupsOfCountry(selectedCountry)">
+            <div class="deploy-group-head">
+              <span class="dg-proj" *ngIf="g.project">{{ g.project }}</span>
+              <span class="dg-proj" *ngIf="!g.project">{{ 'appContinuousDelivery.servers.defaultProject' | translate }}</span>
+              <d-badge class="dg-count" [count]="g.servers.length" [maxCount]="999"></d-badge>
+            </div>
+            <div class="server-cards">
+              <div class="server-card" *ngFor="let s of g.servers">
+                <div class="sc-head">
+                  <span class="sc-name"><i class="fas fa-server" style="margin-right: 6px;"></i>{{ s.name }}</span>
+                  <span style="display:inline-flex; align-items:center; gap:8px;">
+                    <d-icon [icon]="'icon-console'" [operable]="true" title="打开终端"
+                            (click)="onServerTerminal(s)"></d-icon>
+                    <d-button class="sc-deploy-btn" bsStyle="primary" bsSize="sm"
+                              [disabled]="deployingAsset[s.id] || !deployTarget?.image || isSameVersion(s)" (click)="onServerDeploy(s)">
+                      {{ deployingAsset[s.id] ? ('appContinuousDelivery.servers.deploying' | translate) : (isSameVersion(s) ? ('appContinuousDelivery.servers.sameVersion' | translate) : ('appContinuousDelivery.servers.deploy' | translate)) }}
+                    </d-button>
+                  </span>
+                </div>
+                <div class="sc-row sc-current">
+                  <span class="sc-label">{{ 'appContinuousDelivery.servers.currentVersion' | translate }}</span>
+                  <span class="sc-val image-cell">{{ deployVersionMap[s.name]?.currentTag || deployVersionMap[s.name]?.currentImage || ('appContinuousDelivery.servers.unknown' | translate) }}</span>
+                  <ng-container *ngIf="deployResultMap[s.id]; else lastDeploy">
+                    <span class="sc-deploy-status" [class.ok]="deployResultMap[s.id].success" [class.fail]="!deployResultMap[s.id].success">
+                      {{ deployResultMap[s.id].success ? ('appContinuousDelivery.servers.deploySuccess' | translate) : ('appContinuousDelivery.servers.deployFailed' | translate) }}
+                    </span>
+                    <a class="sc-deploy-log-link" (click)="onViewDeployLog(s)">
+                      <i class="icon icon-view" style="margin-right: 2px;"></i>{{ 'appContinuousDelivery.servers.deployLog' | translate }}
+                    </a>
+                  </ng-container>
+                  <ng-template #lastDeploy>
+                    <span *ngIf="deployVersionMap[s.name]?.lastDeployStatus" class="sc-deploy-status"
+                          [class.ok]="deployVersionMap[s.name].lastDeployStatus === 'SUCCESS'"
+                          [class.fail]="deployVersionMap[s.name].lastDeployStatus === 'FAILED'">
+                      {{ deployVersionMap[s.name].lastDeployStatus }}
+                    </span>
+                    <span *ngIf="deployVersionMap[s.name]?.lastDeployTime" class="sc-last-time">
+                      {{ deployVersionMap[s.name].lastDeployTime | dDatePipe: 'y/M/d HH:mm' }}
+                      <ng-container *ngIf="deployVersionMap[s.name]?.lastDeployUsername">· {{ deployVersionMap[s.name].lastDeployUsername }}</ng-container>
+                    </span>
+                  </ng-template>
+                </div>
+                <div class="sc-row sc-image" *ngIf="deployTarget?.image">
+                  <span class="sc-label">{{ 'appContinuousDelivery.servers.publishImage' | translate }}</span>
+                  <span class="sc-val image-cell">{{ deployTarget.imageTag || shortImage(deployTarget.image) }}</span>
+                </div>
+                <div class="sc-row"><span class="sc-label">{{ 'appContinuousDelivery.servers.host' | translate }}</span><span class="sc-val">{{ s.assetKey }}</span></div>
+                <div class="sc-row" *ngIf="s.instanceName"><span class="sc-label">{{ 'appContinuousDelivery.servers.cloud' | translate }}</span><span class="sc-val">{{ s.instanceName }}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 打包历史 -->
+      <div class="acd-history">
+        <div class="acd-history-header">
+          <d-search class="history-search" [(ngModel)]="buildQueryName" [iconPosition]="'left'"
+                    [placeholder]="'appContinuousDelivery.history.searchPlaceholder' | translate" (searchFn)="onBuildSearch()"></d-search>
+          <d-button bsStyle="common" (click)="onBuildSearch()">{{ 'appContinuousDelivery.history.query' | translate }}</d-button>
+          <d-checkbox [label]="'appContinuousDelivery.history.autoRefresh' | translate" [isShowTitle]="false" [(ngModel)]="autoRefresh"
+                      (ngModelChange)="onAutoRefreshChange($event)"></d-checkbox>
+          <h5>{{ 'appContinuousDelivery.history.title' | translate }}</h5>
+        </div>
+        <div dLoading [loading]="buildLoading" [backdrop]="true">
+          <d-data-table [dataSource]="buildHistory" [scrollable]="true" [tableOverflowType]="'overlay'">
+            <d-column field="buildNo" [header]="'appContinuousDelivery.history.colBuildNo' | translate" [width]="'170px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span dClipboard [content]="rowItem.buildNo" style="word-break: break-all;">{{ rowItem.buildNo }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colBranchCommit' | translate" [width]="'200px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <div><i class="fas fa-code-branch" style="margin-right: 4px; color: var(--devui-aide-text, #8a8e99);"></i>{{ rowItem.branch }}</div>
+                  <div *ngIf="rowItem.commitId" style="margin-top: 2px; font-size: 11px; color: rgb(95, 170, 21);">
+                    <i class="fas fa-code-commit" style="margin-right: 3px;"></i>{{ rowItem.commitId | slice:0:8 }}
+                  </div>
+                  <div *ngIf="rowItem.project" style="font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ rowItem.project }}</div>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colImage' | translate" [width]="'320px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span *ngIf="rowItem.image" class="image-cell" dClipboard [content]="rowItem.image" [title]="rowItem.image">
+                    <i class="icon icon-copy" style="margin-right: 4px;"></i>{{ shortImage(rowItem.image) }}
+                  </span>
+                  <span *ngIf="!rowItem.image" style="color: var(--devui-aide-text, #8a8e99);">--</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column field="buildId" [header]="'appContinuousDelivery.history.colBuild' | translate" [width]="'80px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <a *ngIf="rowItem.buildId && buildLink(rowItem)" [href]="buildLink(rowItem)" target="_blank" style="color: var(--devui-brand, #5e7ce0);">#{{ rowItem.buildId }}</a>
+                  <span *ngIf="rowItem.buildId && !buildLink(rowItem)">#{{ rowItem.buildId }}</span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colStatus' | translate" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <i *ngIf="rowItem.buildStatus === 'RUNNING' || rowItem.buildStatus === 'QUEUED'" class="icon icon-loading" style="margin-right: 4px;"></i>
+                  <d-tag [tag]="rowItem.buildStatus" [labelStyle]="statusLabelStyle(rowItem.buildStatus)"></d-tag>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colOperator' | translate" [width]="'110px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <app-user-popover *ngIf="rowItem.username" [username]="rowItem.username"></app-user-popover>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colTime' | translate" [width]="'220px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+                  <strong style="margin-left: 4px;">{{ rowItem.createTime | dRelativeTime: limit | async }}</strong>
+                  <span *ngIf="rowItem.buildDuration" style="display: block; color: var(--devui-aide-text, #8a8e99); font-size: 12px; margin-top: 2px;">
+                    {{ 'appContinuousDelivery.history.durationPrefix' | translate }} {{ humanizeDuration(rowItem.buildDuration) }}
+                  </span>
+                </ng-template>
+              </d-cell>
+            </d-column>
+            <d-column [header]="'appContinuousDelivery.history.colAction' | translate" [width]="'150px'">
+              <d-cell>
+                <ng-template let-rowItem="rowItem">
+                  <d-icon-group>
+                    <d-icon [icon]="'icon-publish'" [operable]="true"
+                            [disabled]="rowItem.buildStatus !== 'SUCCESS'"
+                            (click)="onDeploy(rowItem)" [title]="'appContinuousDelivery.history.actionDeploy' | translate"></d-icon>
+                    <d-icon [icon]="'icon-view'" [operable]="true" (click)="onViewLog(rowItem)"
+                            [title]="'appContinuousDelivery.history.actionViewLog' | translate"></d-icon>
+                    <d-icon [icon]="'icon-delete'" [operable]="true" [disabled]="rowItem.buildStatus === 'SUCCESS'"
+                            (click)="onDelete(rowItem)" [title]="'appContinuousDelivery.history.actionDelete' | translate"></d-icon>
+                  </d-icon-group>
+                </ng-template>
+              </d-cell>
+            </d-column>
+          </d-data-table>
+        </div>
+        <d-pagination *ngIf="buildTotal > 0" [total]="buildTotal" [(pageSize)]="buildPageSize" [(pageIndex)]="buildPageIndex"
+                      [canViewTotal]="true" [canChangePageSize]="true" [maxItems]="5"
+                      (pageIndexChange)="onBuildPageIndexChange($event)" (pageSizeChange)="onBuildPageSizeChange($event)"></d-pagination>
+      </div>
+    </div>
+  </da-col-item>
+</da-layout-row>
+
+<!-- 构建日志(流式) -->
+<div class="components-overlay" *ngIf="showLogDialog" (click)="closeLogDialog()">
+  <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>
+        {{ 'appContinuousDelivery.log.buildTitle' | translate }} — {{ logScan?.buildNo }}
+        <i *ngIf="logScan?.buildStatus === 'RUNNING' || logScan?.buildStatus === 'QUEUED'" class="icon icon-loading" style="margin-left: 6px;"></i>
+        <d-tag *ngIf="logScan?.buildStatus" [tag]="logScan.buildStatus" [labelStyle]="statusLabelStyle(logScan.buildStatus)" style="margin-left: 6px;"></d-tag>
+        <a *ngIf="buildLink(logScan)" [href]="buildLink(logScan)" target="_blank" style="margin-left: 8px; font-size: 12px; color: var(--devui-brand, #5e7ce0);">{{ 'appContinuousDelivery.log.openInJenkins' | translate }}</a>
+      </h5>
+      <span class="close-btn" (click)="closeLogDialog()">&times;</span>
+    </div>
+    <div class="log-body" dLoading [loading]="logLoading" [backdrop]="true" [style.background]="logTermBg">
+      <div #logTerm class="log-term"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 部署日志(xterm) -->
+<div class="components-overlay" *ngIf="showDeployLog" (click)="closeDeployLog()">
+  <div class="components-dialog log-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ 'appContinuousDelivery.log.deployTitle' | translate }} — {{ deployLogTitle }}</h5>
+      <span class="close-btn" (click)="closeDeployLog()">&times;</span>
+    </div>
+    <div class="log-body" [style.background]="logTermBg">
+      <div #deployLogTerm class="log-term"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 部署确认弹框 -->
+<div class="components-overlay" *ngIf="showDeployConfirm" (click)="closeDeployConfirm()">
+  <div class="components-dialog confirm-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ 'appContinuousDelivery.confirm.title' | translate }}</h5>
+      <span class="close-btn" (click)="closeDeployConfirm()">&times;</span>
+    </div>
+    <div class="confirm-body" *ngIf="confirmServer">
+      <div class="cf-row"><span class="cf-label">{{ 'appContinuousDelivery.confirm.host' | translate }}</span><span class="cf-val">{{ confirmServer.name }}</span></div>
+      <div class="cf-row"><span class="cf-label">Host</span><span class="cf-val">{{ confirmServer.assetKey }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'appContinuousDelivery.confirm.currentVersion' | translate }}</span><span class="cf-val cur">{{ currentVersion(confirmServer) }}</span></div>
+      <div class="cf-row"><span class="cf-label">{{ 'appContinuousDelivery.confirm.publishVersion' | translate }}</span><span class="cf-val new">{{ deployTarget?.imageTag || shortImage(deployTarget?.image) }}</span></div>
+      <div class="cf-image">{{ deployTarget?.image }}</div>
+      <div class="cf-warn"><i class="icon icon-warning" style="margin-right: 4px;"></i>{{ 'appContinuousDelivery.confirm.warn' | translate }}</div>
+    </div>
+    <div class="confirm-footer">
+      <d-button bsStyle="common" (click)="closeDeployConfirm()">{{ 'appContinuousDelivery.confirm.cancel' | translate }}</d-button>
+      <d-button bsStyle="primary" (click)="confirmDeploy()">{{ 'appContinuousDelivery.confirm.confirm' | translate }}</d-button>
+    </div>
+  </div>
+</div>

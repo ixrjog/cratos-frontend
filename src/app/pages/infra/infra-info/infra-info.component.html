@@ -37,6 +37,7 @@
         <div *ngIf="selectedItem">
           <div class="detail-toolbar">
             <d-icon [icon]="'icon-edit'" [operable]="true" (click)="onEdit()" title="Edit"></d-icon>
+            <d-icon [icon]="'icon-link'" [operable]="true" (click)="onShareCopy()" title="复制分享链接" style="margin-left: 8px;"></d-icon>
           </div>
           <div class="detail-doc" *ngIf="selectedItem.doc">
             <markdown mermaid [data]="selectedItem.doc" [disableSanitizer]="true"></markdown>

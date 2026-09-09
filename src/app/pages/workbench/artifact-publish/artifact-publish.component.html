@@ -3,6 +3,15 @@
     <div class="artifact-publish-page">
       <!-- Search bar -->
       <div class="ap-search">
+        <d-button
+          [disabled]="!selectedApplication"
+          class="button"
+          bsStyle="common"
+          (click)="onToggleCurrentFavorite()"
+        >
+          <i class="icon" [ngClass]="isCurrentFavorite() ? 'icon-star' : 'icon-star-o'"></i>
+          {{ 'artifactPublish.search.favorite' | translate }}
+        </d-button>
         <d-select
           class="app-select"
           [filterKey]="'name'"

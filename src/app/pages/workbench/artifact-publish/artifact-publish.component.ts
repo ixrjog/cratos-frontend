@@ -894,6 +894,60 @@ mavenpassword=你的Cratos密码`;
     }
   }
 
+  /** 当前选中应用是否已收藏 */
+  isCurrentFavorite(): boolean {
+    const name = this.selectedApplication?.name;
+    if (!name) {
+      return false;
+    }
+    return this.favoriteApplicationList.some((a) => a.name === name);
+  }
+
+  /** 收藏/取消收藏 当前选中应用 */
+  onToggleCurrentFavorite() {
+    const app = this.selectedApplication;
+    if (!app?.name) {
+      return;
+    }
+    if (this.isCurrentFavorite()) {
+      const fav = this.favoriteApplicationList.find((a) => a.name === app.name);
+      const param: RemoveUserFavorite = {
+        businessType: BusinessTypeEnum.APPLICATION,
+        businessId: fav?.id ?? app.id,
+      };
+      this.userFavoriteService.removeApplicationFavorite(param)
+        .subscribe(() => {
+          this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.deleted'));
+          this.loadFavoriteApplications();
+        });
+    } else {
+      // selectedApplication 可能来自 localStorage 恢复/收藏面板/自动发布(无 id), 需先按 name 查出 id
+      if (app.id != null) {
+        this.doAddFavorite(app.id, app.name);
+      } else {
+        this.applicationService.getApplicationByName({ name: app.name })
+          .subscribe(({ body }: any) => {
+            if (body?.id != null) {
+              this.doAddFavorite(body.id, app.name);
+            }
+          });
+      }
+    }
+  }
+
+  private doAddFavorite(businessId: number, name: string) {
+    const param: AddUserFavorite = {
+      businessType: BusinessTypeEnum.APPLICATION,
+      businessId,
+      name,
+    };
+    this.userFavoriteService.addApplicationFavorite(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.favorited'));
+        this.loadFavoriteApplications();
+      });
+  }
+
   // ===== 我的收藏应用 =====
   favoriteApplicationList: ApplicationVO[] = [];
 

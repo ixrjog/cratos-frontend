@@ -7,6 +7,7 @@ export default {
       configHelp: '配置帮助',
       versionSpec: '版本规范说明',
       issueGroup: '问题处理群',
+      favorite: '收藏',
     },
     card: {
       buildFallback: '构建',
@@ -111,6 +112,7 @@ export default {
       deleted: '已删除',
       copied: '已复制到剪贴板',
       publishTriggered: '发布已触发',
+      favorited: '已收藏',
       deleteConfirm: '确认删除发布记录 {publishNo} ?',
     },
     auto: {

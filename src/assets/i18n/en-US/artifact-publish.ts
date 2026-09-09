@@ -7,6 +7,7 @@ export default {
       configHelp: 'Config Help',
       versionSpec: 'Version Spec',
       issueGroup: 'Support Group',
+      favorite: 'Favorite',
     },
     card: {
       buildFallback: 'Build',
@@ -111,6 +112,7 @@ export default {
       deleted: 'Deleted',
       copied: 'Copied to clipboard',
       publishTriggered: 'Publish triggered',
+      favorited: 'Favorited',
       deleteConfirm: 'Delete publish record {publishNo}?',
     },
     auto: {

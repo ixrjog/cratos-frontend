@@ -18,6 +18,8 @@ import {
   QueryUserPermissionByBusiness,
 } from '../../../../@core/data/user-permission';
 import { getPopoverStyle } from '../../../../@shared/utils/theme.util';
+import { UserFavoriteService } from '../../../../@core/services/user-favorite.service';
+import { AddUserFavorite, RemoveUserFavorite } from '../../../../@core/data/user-favorite';
 
 @Component({
   selector: 'app-application-list-data-table',
@@ -65,10 +67,12 @@ export class ApplicationListDataTableComponent implements OnInit {
     private dialogUtil: DialogUtil,
     private toastUtil: ToastUtil,
     private userPermissionService: UserPermissionService,
+    private userFavoriteService: UserFavoriteService,
   ) {
   }
 
   fetchData() {
+    this.persistQueryParam();
     const param: ApplicationPageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,
@@ -78,10 +82,46 @@ export class ApplicationListDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.restoreQueryParam();
     setTimeout(() => {
+      // 恢复的标签筛选值传给级联组件回显
+      this.businessCascader.initialValue = this.queryParam.queryByTag;
       this.businessCascader.getTagOptions();
     }, 500);
     this.fetchData();
+    this.loadFavoriteApplications();
+  }
+
+  /** 我收藏的应用(搜索栏下方展示, 点击快速筛选) */
+  favoriteApplicationList: ApplicationVO[] = [];
+
+  loadFavoriteApplications() {
+    this.userFavoriteService.getMyFavoriteApplication()
+      .subscribe(({ body }) => {
+        this.favoriteApplicationList = body || [];
+      });
+  }
+
+  /** 点击收藏的应用: 填入搜索名并查询 */
+  onSelectFavorite(application: ApplicationVO) {
+    this.queryParam.queryName = application.name;
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
+  }
+
+  /** 取消收藏(从收藏区的 x) */
+  onRemoveFavorite(application: ApplicationVO) {
+    const param: RemoveUserFavorite = {
+      businessType: this.businessType,
+      businessId: application.id,
+    };
+    this.userFavoriteService.removeApplicationFavorite(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+        this.loadFavoriteApplications();
+        // 同步刷新列表中该行的收藏态
+        this.fetchData();
+      });
   }
 
   pageIndexChange(pageIndex) {
@@ -201,6 +241,65 @@ export class ApplicationListDataTableComponent implements OnInit {
 
   onTagChanges(value: any) {
     this.queryParam.queryByTag = value;
+  }
+
+  /** 收藏/取消收藏应用(复用 user-favorite) */
+  onToggleFavorite(rowItem: ApplicationVO) {
+    if (rowItem.favorited) {
+      const param: RemoveUserFavorite = {
+        businessType: this.businessType,
+        businessId: rowItem.id,
+      };
+      this.userFavoriteService.removeApplicationFavorite(param)
+        .subscribe(() => {
+          rowItem.favorited = false;
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.DELETE);
+          this.loadFavoriteApplications();
+        });
+    } else {
+      const param: AddUserFavorite = {
+        businessType: this.businessType,
+        businessId: rowItem.id,
+      };
+      this.userFavoriteService.addApplicationFavorite(param)
+        .subscribe(() => {
+          rowItem.favorited = true;
+          this.toastUtil.onSuccessToast(TOAST_CONTENT.OPERATION);
+          this.loadFavoriteApplications();
+        });
+    }
+  }
+
+  // ===== 搜索条件持久化 =====
+  private static readonly QUERY_STORAGE_KEY = 'application_list_query';
+
+  /** 保存当前搜索条件 */
+  private persistQueryParam() {
+    try {
+      localStorage.setItem(ApplicationListDataTableComponent.QUERY_STORAGE_KEY, JSON.stringify(this.queryParam));
+    } catch (e) {
+      // 忽略 localStorage 异常
+    }
+  }
+
+  /** 恢复搜索条件(合并默认结构, 防旧数据缺字段) */
+  private restoreQueryParam() {
+    try {
+      const raw = localStorage.getItem(ApplicationListDataTableComponent.QUERY_STORAGE_KEY);
+      if (!raw) {
+        return;
+      }
+      const saved = JSON.parse(raw);
+      this.queryParam = {
+        queryName: saved.queryName ?? '',
+        queryByTag: {
+          tagId: saved.queryByTag?.tagId ?? null,
+          tagValue: saved.queryByTag?.tagValue ?? null,
+        },
+      };
+    } catch (e) {
+      // 忽略解析异常
+    }
   }
 
   onScanAll() {

@@ -6,6 +6,10 @@ import { WebLinksAddon } from '@xterm/addon-web-links';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
+import { UserFavoriteService } from '../../../@core/services/user-favorite.service';
+import { AddUserFavorite, RemoveUserFavorite } from '../../../@core/data/user-favorite';
+import { ApplicationVO } from '../../../@core/data/application';
+import { BusinessTypeEnum } from '../../../@core/data/business';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { getPopoverStyle, isDark } from '../../../@shared/utils/theme.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
@@ -347,6 +351,7 @@ mavenpassword=你的Cratos密码`;
     private terminalThemeService: TerminalThemeService,
     private translate: TranslateService,
     private route: ActivatedRoute,
+    private userFavoriteService: UserFavoriteService,
   ) {}
 
   ngOnInit(): void {
@@ -366,6 +371,7 @@ mavenpassword=你的Cratos密码`;
     // 加载发布历史 + 自动刷新
     this.queryPublishHistory();
     this.startAutoRefresh();
+    this.loadFavoriteApplications();
 
     // URL 参数自动化发布: ?applicationName=&project=&branch=&moduleName=&confirm=yes
     const qp = this.route.snapshot.queryParams;
@@ -886,6 +892,38 @@ mavenpassword=你的Cratos密码`;
       localStorage.removeItem(ArtifactPublishComponent.STORAGE_KEY);
       this.branch = 'master';
     }
+  }
+
+  // ===== 我的收藏应用 =====
+  favoriteApplicationList: ApplicationVO[] = [];
+
+  loadFavoriteApplications() {
+    this.userFavoriteService.getMyFavoriteApplication()
+      .subscribe(({ body }: any) => {
+        this.favoriteApplicationList = body || [];
+      });
+  }
+
+  /** 点击收藏应用: 选中到应用选择框并查询构建 */
+  onSelectFavorite(application: ApplicationVO) {
+    this.onApplicationChange({ name: application.name, comment: application.comment });
+    this.onQuery();
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+  }
+
+  /** 取消收藏 */
+  onRemoveFavorite(application: ApplicationVO) {
+    const param: RemoveUserFavorite = {
+      businessType: BusinessTypeEnum.APPLICATION,
+      businessId: application.id,
+    };
+    this.userFavoriteService.removeApplicationFavorite(param)
+      .subscribe(() => {
+        this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.toast.deleted'));
+        this.loadFavoriteApplications();
+      });
   }
 
   /** 从发布历史行"重新部署": 把应用+分支填入顶部搜索项并重新查询构建 */

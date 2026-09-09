@@ -15,6 +15,33 @@
     <d-button bsStyle="danger" (click)="onScanAll()">Scan All</d-button>
   </span>
 </div>
+<d-panel
+  #favoritePanel
+  [hasLeftPadding]="false"
+  [showAnimation]="true"
+  *ngIf="favoriteApplicationList.length"
+  style="margin-bottom: 10px"
+>
+  <d-panel-header>
+    <em class="icon icon-select-arrow" [ngClass]="{ open: favoritePanel.isCollapsed }"></em>
+    我的收藏
+  </d-panel-header>
+  <d-panel-body style="padding: 5px">
+    <d-tag
+      *ngFor="let application of favoriteApplicationList"
+      style="margin: 5px 5px 0 0"
+      [tag]="application"
+      [customViewTemplate]="favoriteTag"
+      [labelStyle]="'blue-w98'"
+    >
+    </d-tag>
+    <ng-template #favoriteTag let-tag="tag">
+      <span style="cursor: pointer" (click)="onSelectFavorite(tag)">{{ tag.name }}</span>
+      <span class="icon-close" style="vertical-align: center; padding-left: 4px; cursor: pointer"
+            (click)="onRemoveFavorite(tag)"></span>
+    </ng-template>
+  </d-panel-body>
+</d-panel>
 <div class="spacing-table">
   <d-data-table
     dLoading
@@ -30,6 +57,14 @@
     <d-column header="Name" [width]="'500px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
+          <d-icon
+            [icon]="rowItem['favorited'] ? 'icon-star' : 'icon-star-o'"
+            [operable]="true"
+            [color]="rowItem['favorited'] ? 'var(--devui-warning, #fac20a)' : ''"
+            title="收藏"
+            style="margin-right: 6px;"
+            (click)="onToggleFavorite(rowItem)"
+          ></d-icon>
           <d-icon
             dPopover
             [icon]="'icon-view'"

@@ -13,13 +13,13 @@ export class WebSocketApiService {
   createWsClient(url: string): WebSocket {
     let token = localStorage.getItem('id_token');
     let username = localStorage.getItem('username');
-    let jti = localStorage.getItem('jti');
 
-    if (token && jti) {
-      // 签名模式
+    if (token) {
+      // 签名模式：Jti 由 HttpOnly Cookie 在握手时自动携带（同源），前端不再读取/传递 jti。
+      // 签名内容为 timestamp（去 jti），密钥仍为 token。
       const timestamp = String(Date.now());
-      const sign = this.requestSignService.hmacSha256Sync(jti + timestamp, token);
-      const params = `?jti=${encodeURIComponent(jti)}&t=${timestamp}&sign=${encodeURIComponent(sign)}`;
+      const sign = this.requestSignService.hmacSha256Sync(timestamp, token);
+      const params = `?t=${timestamp}&sign=${encodeURIComponent(sign)}`;
       return new WebSocket(environment.wsUrl + this.wsUrl + url + '/' + username + params, 'cratos-v1');
     }
     // 兼容旧模式

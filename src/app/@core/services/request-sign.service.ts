@@ -6,21 +6,19 @@ import { Injectable } from '@angular/core';
 export class RequestSignService {
 
   /**
-   * 生成请求签名 headers: Jti, Timestamp, Jwt-Sign
-   * Sign = HMAC-SHA256(Jti + Timestamp + ContentLength, token)
-   * 注意：Content-Length 在发送时由浏览器自动计算，这里用 '0' 占位（GET 请求）
-   * POST 请求的 Content-Length 需要在实际发送时计算
+   * 生成请求签名 headers: Timestamp, Jwt-Sign
+   * Sign = HMAC-SHA256(Timestamp + bodyHash, token)
+   * Jti 已迁移为 HttpOnly Cookie，由浏览器自动携带，前端不再读取/发送 Jti，
+   * 签名内容也不再包含 Jti（前端读不到）。密钥仍为 token，签名强度不变。
    */
   generateSignHeaders(token: string, encryptedBody?: string): { [key: string]: string } | null {
-    const jti = localStorage.getItem('jti');
-    if (!jti) {
+    if (!token) {
       return null;
     }
     const timestamp = String(Date.now());
     const bodyHash = encryptedBody ? this.sha256Hex(encryptedBody) : '';
-    const sign = this.hmacSha256(jti + timestamp + bodyHash, token);
+    const sign = this.hmacSha256(timestamp + bodyHash, token);
     const headers: { [key: string]: string } = {
-      'Jti': jti,
       'Timestamp': timestamp,
       'Jwt-Sign': sign,
     };

@@ -23,6 +23,8 @@ export class LogService extends LogData {
     localStorage.removeItem('userinfo');
     localStorage.removeItem('robotToken');
     localStorage.removeItem('loginMethod');
+    // 清理历史遗留的 jti（现由后端下发的 HttpOnly Cookie 承载，登出时后端会 Set-Cookie 清除）
+    localStorage.removeItem('jti');
     return this.apiService.put(this.baseUrl, '/login');
   }
 
@@ -32,7 +34,7 @@ export class LogService extends LogData {
     localStorage.setItem('userinfo', JSON.stringify(userInfo));
     localStorage.setItem('expires_at', '120');
     localStorage.setItem('username', userInfo.username);
-    localStorage.setItem('jti', userInfo.jti || '');
+    // jti 不再存 localStorage：登录响应由后端写入 HttpOnly Cookie，前端无需持有
   }
 
   isUserLoggedIn() {

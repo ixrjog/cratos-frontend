@@ -100,11 +100,11 @@ export class DefaultInterceptor implements HttpInterceptor {
     });
 
     if (req.url.startsWith('/api')) {
-      // 添加请求签名
-      let signedReq = newReq;
+      // 添加请求签名。withCredentials 让浏览器携带 HttpOnly 的 Jti Cookie。
+      let signedReq = newReq.clone({ withCredentials: true });
       const token = localStorage.getItem('id_token');
-      const jti = localStorage.getItem('jti');
-      if (token && jti) {
+      // Jti 已迁移为 HttpOnly Cookie，前端读不到；仅凭 token（HMAC 密钥）判断已登录并签名
+      if (token) {
         // 提取 encryptedBody（如果有加密 body）
         let encryptedBody = '';
         if (newReq.body) {
@@ -115,11 +115,11 @@ export class DefaultInterceptor implements HttpInterceptor {
         }
         const signHeaders = this.requestSignService.generateSignHeaders(token, encryptedBody);
         if (signHeaders) {
-          let headers = newReq.headers.delete('Authorization');
+          let headers = signedReq.headers.delete('Authorization');
           Object.keys(signHeaders).forEach(key => {
             headers = headers.set(key, signHeaders[key]);
           });
-          signedReq = newReq.clone({ headers });
+          signedReq = signedReq.clone({ headers });
         }
       }
 

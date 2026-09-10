@@ -126,6 +126,7 @@
             (searchFn)='onScanSearch()'
           ></d-search>
           <d-button bsStyle='common' (click)='onScanSearch()'>Query</d-button>
+          <d-button bsStyle='primary' (click)='openUsageDialog()'>组件反查应用</d-button>
           <d-checkbox
             [label]="'Auto Refresh'"
             [isShowTitle]='false'
@@ -457,6 +458,63 @@
       <div *ngIf='!internalModulesLoading && !internalModulesList.length'
            style='padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);'>
         无内部模块数据（该扫描可能来自旧版 pipeline，未采集 internal-modules.txt）
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 组件反查应用 弹窗 -->
+<div class='components-overlay' *ngIf='showUsageDialog' (click)='closeUsageDialog()'>
+  <div class='components-dialog' (click)='$event.stopPropagation()'>
+    <div class='components-header'>
+      <h5>组件反查应用<span *ngIf='usageSearched && !usageLoading'> — {{ usageList.length }} 个应用</span></h5>
+      <span class='close-btn' (click)='closeUsageDialog()'>&times;</span>
+    </div>
+
+    <div class='components-search'>
+      <input dTextInput [(ngModel)]='usageGroupId' placeholder='Group ID (如 com.alibaba)'
+             (keyup.enter)='queryUsage()' style='width: 220px;' />
+      <input dTextInput [(ngModel)]='usageArtifactId' placeholder='Artifact ID (如 easyexcel)'
+             (keyup.enter)='queryUsage()' style='width: 200px;' />
+      <input dTextInput [(ngModel)]='usageVersion' placeholder='Version (可选, 如 2.2.6)'
+             (keyup.enter)='queryUsage()' style='width: 160px;' />
+      <d-button bsStyle='primary' [disabled]='!usageGroupId || !usageArtifactId' (click)='queryUsage()'>查询</d-button>
+    </div>
+
+    <div class='components-paste'>
+      <textarea dTextInput [(ngModel)]='usagePasteInput'
+                placeholder='粘贴 Maven &lt;dependency&gt; 或 Gradle 依赖声明自动解析 GAV'
+                (input)='onParseUsageDependency()' rows='3' style='width: 100%;'></textarea>
+    </div>
+
+    <div class='components-body' dLoading [loading]='usageLoading'>
+      <d-data-table *ngIf='usageList.length' [dataSource]='usageList' [scrollable]='true'>
+        <d-column field='applicationName' header='应用'></d-column>
+        <d-column field='version' header='使用版本' [width]="'140px'"></d-column>
+        <d-column field='scope' header='Scope' [width]="'100px'"></d-column>
+        <d-column header='风险' [width]="'100px'">
+          <d-cell>
+            <ng-template let-rowItem='rowItem'>
+              <span *ngIf='rowItem.vulnerability' style='color: var(--devui-danger, #f66f6a); font-weight: 600;'>{{ rowItem.riskLevel || 'RISK' }}</span>
+              <span *ngIf='!rowItem.vulnerability' style='color: var(--devui-success, #50d4ab);'>OK</span>
+            </ng-template>
+          </d-cell>
+        </d-column>
+        <d-column header='最近扫描时间' [width]="'170px'">
+          <d-cell>
+            <ng-template let-rowItem='rowItem'>
+              <span>{{ rowItem.scanTime | dDatePipe: 'y/M/d HH:mm' }}</span>
+            </ng-template>
+          </d-cell>
+        </d-column>
+      </d-data-table>
+      <div *ngIf='usageSearched && !usageLoading && !usageList.length'
+           style='padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);'>
+        没有应用使用该组件（或该组件尚未被任何扫描采集到）
+      </div>
+      <div *ngIf='!usageSearched'
+           style='padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);'>
+        输入 Group ID + Artifact ID（可选 Version），查询哪些应用在使用该组件。结果按每个应用最近一次扫描去重。
       </div>
     </div>
   </div>

@@ -338,6 +338,90 @@ export class ScaComponent implements OnInit, OnDestroy {
     this.filterComponents();
   }
 
+  // ==================== 反向依赖查询（哪些应用在用某组件） ====================
+  showUsageDialog = false;
+  usageLoading = false;
+  usageGroupId = '';
+  usageArtifactId = '';
+  usageVersion = '';
+  usagePasteInput = '';
+  usageList: any[] = [];
+  usageSearched = false;
+
+  openUsageDialog() {
+    this.usageGroupId = '';
+    this.usageArtifactId = '';
+    this.usageVersion = '';
+    this.usagePasteInput = '';
+    this.usageList = [];
+    this.usageSearched = false;
+    this.showUsageDialog = true;
+  }
+
+  closeUsageDialog() {
+    this.showUsageDialog = false;
+  }
+
+  /** 解析粘贴的 Maven XML / Gradle 依赖，提取 groupId / artifactId / version */
+  onParseUsageDependency() {
+    const input = this.usagePasteInput || '';
+    // Maven XML
+    const g = input.match(/<groupId>\s*([^<]+)\s*<\/groupId>/);
+    const a = input.match(/<artifactId>\s*([^<]+)\s*<\/artifactId>/);
+    const v = input.match(/<version>\s*([^<]+)\s*<\/version>/);
+    if (g && a) {
+      this.usageGroupId = g[1].trim();
+      this.usageArtifactId = a[1].trim();
+      this.usageVersion = v ? v[1].trim() : '';
+      this.queryUsage();
+      return;
+    }
+    // Gradle 长式: group: 'x', name: 'y', version: 'z'
+    const gg = input.match(/group:\s*['"]([^'"]+)['"]/);
+    const gn = input.match(/name:\s*['"]([^'"]+)['"]/);
+    const gv = input.match(/version:\s*['"]([^'"]+)['"]/);
+    if (gg && gn) {
+      this.usageGroupId = gg[1].trim();
+      this.usageArtifactId = gn[1].trim();
+      this.usageVersion = gv ? gv[1].trim() : '';
+      this.queryUsage();
+      return;
+    }
+    // Gradle 短式: 'group:artifact:version'
+    const short = input.match(/['"]?([\w.\-]+):([\w.\-]+):([\w.\-]+)['"]?/);
+    if (short) {
+      this.usageGroupId = short[1].trim();
+      this.usageArtifactId = short[2].trim();
+      this.usageVersion = short[3].trim();
+      this.queryUsage();
+      return;
+    }
+  }
+
+  queryUsage() {
+    const groupId = (this.usageGroupId || '').trim();
+    const artifactId = (this.usageArtifactId || '').trim();
+    if (!groupId || !artifactId) {
+      return;
+    }
+    this.usageLoading = true;
+    this.usageSearched = true;
+    this.apiService.post('/sca', '/component/usage/query', {
+      groupId,
+      artifactId,
+      version: (this.usageVersion || '').trim() || null,
+    }).subscribe({
+      next: ({ body }: any) => {
+        this.usageList = body || [];
+        this.usageLoading = false;
+      },
+      error: () => {
+        this.usageList = [];
+        this.usageLoading = false;
+      },
+    });
+  }
+
   /**
    * 导出当前筛选后的组件为 Markdown 表格文件
    */

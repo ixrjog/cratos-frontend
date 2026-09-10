@@ -468,7 +468,10 @@
   <div class='components-dialog' (click)='$event.stopPropagation()'>
     <div class='components-header'>
       <h5>组件反查应用<span *ngIf='usageSearched && !usageLoading'> — {{ usageList.length }} 个应用</span></h5>
-      <span class='close-btn' (click)='closeUsageDialog()'>&times;</span>
+      <div class='components-header-actions'>
+        <d-button bsStyle='common' bsSize='sm' [disabled]='!usageList.length' (click)='onExportUsage()'>导出 MD</d-button>
+        <span class='close-btn' (click)='closeUsageDialog()'>&times;</span>
+      </div>
     </div>
 
     <div class='components-search'>
@@ -487,12 +490,12 @@
                 (input)='onParseUsageDependency()' rows='3' style='width: 100%;'></textarea>
     </div>
 
-    <div class='components-body' dLoading [loading]='usageLoading'>
-      <d-data-table *ngIf='usageList.length' [dataSource]='usageList' [scrollable]='true'>
-        <d-column field='applicationName' header='应用'></d-column>
-        <d-column field='version' header='使用版本' [width]="'140px'"></d-column>
-        <d-column field='scope' header='Scope' [width]="'100px'"></d-column>
-        <d-column header='风险' [width]="'100px'">
+    <div class='components-table' dLoading [loading]='usageLoading'>
+      <d-data-table *ngIf='usageList.length' class='usage-table' [dataSource]='usageList' [scrollable]='true' [tableOverflowType]="'overlay'">
+        <d-column field='applicationName' header='应用' [width]="'20%'"></d-column>
+        <d-column field='version' header='使用版本' [width]="'20%'"></d-column>
+        <d-column field='scope' header='Scope' [width]="'20%'"></d-column>
+        <d-column header='风险' [width]="'20%'">
           <d-cell>
             <ng-template let-rowItem='rowItem'>
               <span *ngIf='rowItem.vulnerability' style='color: var(--devui-danger, #f66f6a); font-weight: 600;'>{{ rowItem.riskLevel || 'RISK' }}</span>
@@ -500,7 +503,7 @@
             </ng-template>
           </d-cell>
         </d-column>
-        <d-column header='最近扫描时间' [width]="'170px'">
+        <d-column header='最近扫描时间' [width]="'20%'">
           <d-cell>
             <ng-template let-rowItem='rowItem'>
               <span>{{ rowItem.scanTime | dDatePipe: 'y/M/d HH:mm' }}</span>

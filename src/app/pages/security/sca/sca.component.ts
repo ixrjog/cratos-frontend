@@ -356,6 +356,44 @@ export class ScaComponent implements OnInit, OnDestroy {
     this.usageList = [];
     this.usageSearched = false;
     this.showUsageDialog = true;
+    // 恢复上次查询条件（仅回填输入，结果重新查询以保证时效）
+    const restored = this.loadUsageState();
+    if (restored) {
+      this.usageGroupId = restored.groupId || '';
+      this.usageArtifactId = restored.artifactId || '';
+      this.usageVersion = restored.version || '';
+      if (this.usageGroupId && this.usageArtifactId) {
+        this.queryUsage();
+      }
+    }
+  }
+
+  private static readonly USAGE_STORAGE_KEY = 'sca_component_usage_query';
+
+  private loadUsageState(): { groupId: string; artifactId: string; version: string } | null {
+    try {
+      const raw = localStorage.getItem(ScaComponent.USAGE_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj.groupId !== 'string') {
+        return null;
+      }
+      return { groupId: obj.groupId, artifactId: obj.artifactId || '', version: obj.version || '' };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  private saveUsageState() {
+    try {
+      localStorage.setItem(ScaComponent.USAGE_STORAGE_KEY, JSON.stringify({
+        groupId: (this.usageGroupId || '').trim(),
+        artifactId: (this.usageArtifactId || '').trim(),
+        version: (this.usageVersion || '').trim(),
+      }));
+    } catch (e) {}
   }
 
   closeUsageDialog() {
@@ -406,6 +444,7 @@ export class ScaComponent implements OnInit, OnDestroy {
     }
     this.usageLoading = true;
     this.usageSearched = true;
+    this.saveUsageState();
     this.apiService.post('/sca', '/component/usage/query', {
       groupId,
       artifactId,
@@ -420,6 +459,42 @@ export class ScaComponent implements OnInit, OnDestroy {
         this.usageLoading = false;
       },
     });
+  }
+
+  /** 导出反查结果为 Markdown 表格文件 */
+  onExportUsage() {
+    const list = this.usageList || [];
+    if (!list.length) {
+      return;
+    }
+    const gav = [this.usageGroupId, this.usageArtifactId, this.usageVersion]
+      .filter(Boolean).join(':');
+    const escape = (v: any) => String(v ?? '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+    const lines: string[] = [];
+    lines.push(`# 组件反查应用 — ${gav}`);
+    lines.push('');
+    lines.push(`- **组件**: ${gav}`);
+    lines.push(`- **使用应用数**: ${list.length}`);
+    lines.push(`- **导出时间**: ${new Date().toLocaleString()}`);
+    lines.push('- **说明**: 每个应用取最近一次扫描结果');
+    lines.push('');
+    lines.push('| # | 应用 | 使用版本 | Scope | 风险 | 最近扫描时间 |');
+    lines.push('| --- | --- | --- | --- | --- | --- |');
+    list.forEach((u, i) => {
+      const risk = u.vulnerability ? (u.riskLevel || 'RISK') : 'OK';
+      const t = u.scanTime ? new Date(u.scanTime).toLocaleString() : '';
+      lines.push(`| ${i + 1} | ${escape(u.applicationName)} | ${escape(u.version)} | ${escape(u.scope)} | ${risk} | ${escape(t)} |`);
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safe = (this.usageArtifactId || 'component').replace(/[^\w.-]+/g, '_');
+    a.download = `usage-${safe}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   /**

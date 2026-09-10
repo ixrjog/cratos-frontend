@@ -250,6 +250,23 @@
     flex: 1;
     overflow-y: auto;
     max-height: 60vh;
+
+    // 反查结果表：占满弹窗宽度 + 列等宽
+    .usage-table {
+      width: 100%;
+
+      ::ng-deep table {
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      ::ng-deep td,
+      ::ng-deep th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 
   .risk-tag {

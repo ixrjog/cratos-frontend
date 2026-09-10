@@ -12,6 +12,7 @@ import { SshKeygenComponent } from './ssh-keygen/ssh-keygen.component';
 import { PasswordGenComponent } from './password-gen/password-gen.component';
 import { HashToolComponent } from './hash-tool/hash-tool.component';
 import { WorldClockComponent } from './world-clock/world-clock.component';
+import { IpCalcComponent } from './ip-calc/ip-calc.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { WorldClockComponent } from './world-clock/world-clock.component';
     PasswordGenComponent,
     HashToolComponent,
     WorldClockComponent,
+    IpCalcComponent,
   ],
   imports: [
     CommonModule,

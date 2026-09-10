@@ -1,0 +1,185 @@
+.ip-tool {
+  padding: 16px;
+  box-sizing: border-box;
+
+  .ip-tool-header {
+    margin-bottom: 16px;
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--devui-brand, #5e7ce0);
+      cursor: pointer;
+
+      .icon {
+        font-size: 12px;
+        margin-right: 2px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    h3 {
+      margin: 6px 0 2px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    .ip-input {
+      width: 360px;
+      max-width: 100%;
+      font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+    }
+
+    .prefix-picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .status-error {
+    font-size: 13px;
+    color: var(--devui-danger, #f66f6a);
+    margin-bottom: 12px;
+  }
+
+  .results {
+    max-width: 640px;
+
+    .ip-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--devui-dividing-line, #dfe1e6);
+
+      .k {
+        width: 200px;
+        flex-shrink: 0;
+        font-size: 13px;
+        color: var(--devui-aide-text, #8a8e99);
+      }
+
+      .v {
+        flex: 1;
+        min-width: 0;
+        font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+        font-size: 13px;
+        color: var(--devui-text, #252b3a);
+        word-break: break-all;
+      }
+
+      .copy {
+        flex-shrink: 0;
+        margin-left: 10px;
+        font-size: 12px;
+        color: var(--devui-brand, #5e7ce0);
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .ranges {
+    margin-top: 24px;
+
+    .ranges-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+      margin-bottom: 8px;
+    }
+
+    .ranges-line {
+      display: flex;
+      align-items: center;
+      padding: 5px 8px;
+      font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+      font-size: 12px;
+      color: var(--devui-text, #252b3a);
+      border-bottom: 1px solid var(--devui-dividing-line, #dfe1e6);
+      cursor: pointer;
+      border-radius: 3px;
+
+      &:hover {
+        background: var(--devui-global-bg, #f7f8fa);
+      }
+
+      &.active {
+        background: rgba(94, 124, 224, 0.12);
+        font-weight: 600;
+      }
+
+      .c-prefix {
+        width: 48px;
+        flex-shrink: 0;
+      }
+
+      .c-cidr {
+        width: 150px;
+        flex-shrink: 0;
+        color: var(--devui-brand, #5e7ce0);
+      }
+
+      .c-mask {
+        width: 140px;
+        flex-shrink: 0;
+      }
+
+      .c-range {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .c-hosts {
+        width: 110px;
+        flex-shrink: 0;
+        text-align: right;
+      }
+
+      .c-op {
+        width: 40px;
+        flex-shrink: 0;
+        text-align: right;
+        color: var(--devui-brand, #5e7ce0);
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .ranges-head {
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--devui-aide-text, #8a8e99);
+      cursor: default;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+}

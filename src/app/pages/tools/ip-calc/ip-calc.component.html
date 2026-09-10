@@ -1,0 +1,68 @@
+<div class="ip-tool">
+  <div class="ip-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>IP 计算器</h3>
+    <span class="subtitle">IPv4 子网计算（CIDR）；纯前端本地计算</span>
+  </div>
+
+  <div class="toolbar">
+    <input
+      dTextInput
+      class="ip-input"
+      [(ngModel)]="input"
+      (keyup.enter)="calc()"
+      placeholder="192.168.1.10/24 或 192.168.1.10 255.255.255.0"
+    />
+    <d-button bsStyle="primary" (click)="calc()">计算</d-button>
+
+    <span class="prefix-picker">
+      子网
+      <d-select
+        [(ngModel)]="selectedPrefix"
+        [options]="prefixOptions"
+        [filterKey]="'label'"
+        [valueKey]="'value'"
+        [isSearch]="true"
+        [width]="220"
+        (valueChange)="onPrefixChange()"
+      ></d-select>
+    </span>
+  </div>
+
+  <div class="status-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="results" *ngIf="rows.length">
+    <div class="ip-row" *ngFor="let r of rows">
+      <span class="k">{{ r.label }}</span>
+      <span class="v">{{ r.value }}</span>
+      <a class="copy" (click)="copy(r.value)">复制</a>
+    </div>
+  </div>
+
+  <div class="ranges" *ngIf="ranges.length">
+    <div class="ranges-title">该 IP 所属网段一览（/0 – /32）</div>
+    <div class="ranges-head ranges-line">
+      <span class="c-prefix">前缀</span>
+      <span class="c-cidr">网段 (CIDR)</span>
+      <span class="c-mask">掩码</span>
+      <span class="c-range">地址范围</span>
+      <span class="c-hosts">地址数</span>
+      <span class="c-op"></span>
+    </div>
+    <div
+      class="ranges-line"
+      *ngFor="let g of ranges"
+      [class.active]="g.prefix === selectedPrefix"
+      (click)="selectedPrefix = g.prefix; onPrefixChange()"
+    >
+      <span class="c-prefix">/{{ g.prefix }}</span>
+      <span class="c-cidr">{{ g.cidr }}</span>
+      <span class="c-mask">{{ g.mask }}</span>
+      <span class="c-range">{{ g.range }}</span>
+      <span class="c-hosts">{{ g.hosts }}</span>
+      <a class="c-op" (click)="$event.stopPropagation(); copy(g.cidr)">复制</a>
+    </div>
+  </div>
+</div>

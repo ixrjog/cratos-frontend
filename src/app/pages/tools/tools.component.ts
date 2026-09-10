@@ -25,6 +25,7 @@ export class ToolsComponent {
     { key: 'password', name: '随机密码生成', desc: '加密安全随机密码，多种字符集', icon: 'icon-hotkey', route: [ '/pages', 'tools', 'password' ] },
     { key: 'hash', name: 'Hash 值计算', desc: 'MD5 / SHA-1 / SHA-256/384/512', icon: 'icon-scan-focus', route: [ '/pages', 'tools', 'hash' ] },
     { key: 'world-clock', name: '世界时间', desc: '多国家/城市实时时间，可增删', icon: 'icon-global-guide', route: [ '/pages', 'tools', 'world-clock' ] },
+    { key: 'ip-calc', name: 'IP 计算器', desc: 'IPv4 子网 / CIDR 计算', icon: 'icon-ip-legality', route: [ '/pages', 'tools', 'ip-calc' ] },
     // 以下为占位，后续实现后补上 route 即可
     { key: 'timestamp', name: '时间戳转换', desc: 'Unix 时间戳 <-> 日期互转', icon: 'icon-time' },
   ];

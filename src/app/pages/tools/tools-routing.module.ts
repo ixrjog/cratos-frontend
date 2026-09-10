@@ -7,6 +7,7 @@ import { SshKeygenComponent } from './ssh-keygen/ssh-keygen.component';
 import { PasswordGenComponent } from './password-gen/password-gen.component';
 import { HashToolComponent } from './hash-tool/hash-tool.component';
 import { WorldClockComponent } from './world-clock/world-clock.component';
+import { IpCalcComponent } from './ip-calc/ip-calc.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'world-clock',
     component: WorldClockComponent,
+  },
+  {
+    path: 'ip-calc',
+    component: IpCalcComponent,
   },
 ];
 

@@ -1,0 +1,48 @@
+<div class="hash-tool">
+  <div class="hash-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>Hash 值计算</h3>
+    <span class="subtitle">纯前端计算 MD5 / SHA-1 / SHA-256 / SHA-384 / SHA-512；数据不会离开浏览器</span>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">输入文本</div>
+    <textarea
+      class="editor"
+      [(ngModel)]="input"
+      spellcheck="false"
+      placeholder="在此输入要计算 hash 的文本"
+    ></textarea>
+  </div>
+
+  <div class="toolbar">
+    <d-button bsStyle="primary" [disabled]="computing" (click)="computeText()">计算文本 Hash</d-button>
+
+    <span class="file-btn">
+      <d-button bsStyle="common" [disabled]="computing" (click)="fileInput.click()">选择文件计算</d-button>
+      <input #fileInput type="file" (change)="onFileSelected($event)" hidden />
+    </span>
+    <span class="file-name" *ngIf="fileName">{{ fileName }}</span>
+
+    <label class="upper">
+      <input type="checkbox" [(ngModel)]="upper" (change)="toggleCase()" /> 大写
+    </label>
+
+    <d-button bsStyle="text" (click)="clear()">清空</d-button>
+  </div>
+
+  <div class="results" *ngIf="rows.length">
+    <div class="hash-row" *ngFor="let r of rows">
+      <span class="algo">{{ r.algo }}</span>
+      <input class="value" [value]="r.value" readonly spellcheck="false" />
+      <a class="copy" (click)="copy(r.value)">复制</a>
+    </div>
+  </div>
+
+  <div class="status">
+    <span class="status-error" *ngIf="errorMsg">{{ errorMsg }}</span>
+    <span class="status-ok" *ngIf="okMsg && !errorMsg">{{ okMsg }}</span>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="wc-display">
+  <div class="wc-title" *ngIf="title">{{ title }}</div>
+
+  <div class="wc-utc" *ngIf="showUtc && utcRow">
+    <div class="uc-left">
+      <span class="uc-badge">UTC</span>
+      <span class="uc-label">世界标准时间</span>
+    </div>
+    <div class="uc-right">
+      <span class="uc-time">{{ utcRow.time }}</span>
+      <span class="uc-date">{{ utcRow.date }}</span>
+    </div>
+  </div>
+
+  <div class="wc-grid">
+    <div class="wc-card" *ngFor="let r of rows">
+      <div class="cc-head">
+        <img
+          *ngIf="r.zone.iso2"
+          class="cc-flag"
+          [src]="flagUrl(r.zone.iso2)"
+          [alt]="r.zone.iso2"
+          loading="lazy"
+        />
+        <span class="cc-label">{{ r.zone.label }}</span>
+      </div>
+      <div class="cc-time">{{ r.time }}</div>
+      <div class="cc-sub">
+        <span class="cc-date">{{ r.date }}</span>
+        <span class="cc-sub-right">
+          <span class="cc-offset">{{ r.offset }}</span>
+          <span class="cc-code-br" *ngIf="r.zone.iso2">{{ r.zone.iso2 }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

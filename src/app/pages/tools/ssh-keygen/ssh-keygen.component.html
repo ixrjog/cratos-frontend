@@ -1,0 +1,65 @@
+<div class="ssh-tool">
+  <div class="ssh-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>SSH 密钥生成</h3>
+    <span class="subtitle">纯前端在浏览器本地生成，私钥不上传；输出标准 OpenSSH 公私钥</span>
+  </div>
+
+  <div class="form">
+    <div class="form-row">
+      <span class="label">算法</span>
+      <d-select [(ngModel)]="kind" [options]="kindOptions" [filterKey]="'label'" [valueKey]="'value'" [width]="180"></d-select>
+    </div>
+
+    <div class="form-row" *ngIf="kind === 'rsa'">
+      <span class="label">RSA 位数</span>
+      <d-select [(ngModel)]="rsaBits" [options]="rsaBitsOptions" [filterKey]="'label'" [valueKey]="'value'" [width]="120"></d-select>
+    </div>
+
+    <div class="form-row">
+      <span class="label">注释</span>
+      <input dTextInput [(ngModel)]="comment" placeholder="user@host（可选）" style="width: 260px;" />
+    </div>
+
+    <div class="form-row">
+      <d-button bsStyle="primary" [disabled]="generating" (click)="generate()">
+        {{ generating ? '生成中…' : '生成密钥对' }}
+      </d-button>
+    </div>
+  </div>
+
+  <div class="results" *ngIf="publicKey || privateKey">
+    <div class="fp" *ngIf="fingerprint">
+      指纹 <code>{{ fingerprint }}</code>
+    </div>
+
+    <div class="key-block">
+      <div class="key-title">
+        公钥（{{ pubFileName }} / authorized_keys）
+        <span class="key-actions">
+          <a (click)="copy(publicKey)">复制</a>
+          <a (click)="download(publicKey, pubFileName)">下载</a>
+        </span>
+      </div>
+      <textarea class="key-area pub" [value]="publicKey" readonly spellcheck="false"></textarea>
+    </div>
+
+    <div class="key-block">
+      <div class="key-title">
+        私钥（{{ privFileName }}，权限记得设 600）
+        <span class="key-actions">
+          <a (click)="copy(privateKey)">复制</a>
+          <a (click)="download(privateKey, privFileName)">下载</a>
+        </span>
+      </div>
+      <textarea class="key-area priv" [value]="privateKey" readonly spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div class="status">
+    <span class="status-error" *ngIf="errorMsg">{{ errorMsg }}</span>
+    <span class="status-ok" *ngIf="okMsg && !errorMsg">{{ okMsg }}</span>
+  </div>
+</div>

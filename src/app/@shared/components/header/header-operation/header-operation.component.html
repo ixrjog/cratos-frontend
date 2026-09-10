@@ -5,6 +5,9 @@
     [noBorder]="true"
     (searchFn)="onSearch($event)"
   ></d-search>
+  <a class="da-tools-entry" [routerLink]="['/pages', 'tools']" [title]="'header.tools' | translate">
+    <i class="icon icon-build-with-tool"></i>
+  </a>
   <a href="https://devui.design/admin-page/docs" target="_blank">
     <i class="icon icon-helping"></i>
   </a>

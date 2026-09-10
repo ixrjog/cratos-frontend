@@ -1,0 +1,142 @@
+.json-tool {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+
+  .json-tool-header {
+    margin-bottom: 12px;
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--devui-brand, #5e7ce0);
+      cursor: pointer;
+
+      .icon {
+        font-size: 12px;
+        margin-right: 2px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    h3 {
+      margin: 6px 0 2px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    .indent-picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--devui-aide-text, #8a8e99);
+      margin-left: 8px;
+    }
+  }
+
+  .panels {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    min-height: 320px;
+
+    .panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .panel-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--devui-text, #252b3a);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .panel-actions {
+          font-weight: 400;
+
+          a {
+            font-size: 12px;
+            color: var(--devui-brand, #5e7ce0);
+            cursor: pointer;
+            margin-left: 12px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      .editor {
+        flex: 1;
+        width: 100%;
+        min-height: 320px;
+        resize: vertical;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        border: 1px solid var(--devui-form-control-line, #adb0b8);
+        border-radius: 4px;
+        background: var(--devui-base-bg, #fff);
+        color: var(--devui-text, #252b3a);
+        outline: none;
+
+        &:focus {
+          border-color: var(--devui-brand, #5e7ce0);
+        }
+
+        &[readonly] {
+          background: var(--devui-global-bg, #f7f8fa);
+        }
+      }
+    }
+  }
+
+  .status {
+    margin-top: 10px;
+    min-height: 20px;
+    font-size: 13px;
+
+    .status-error {
+      color: var(--devui-danger, #f66f6a);
+      word-break: break-all;
+    }
+
+    .status-ok {
+      color: var(--devui-success, #50d4ab);
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .json-tool .panels {
+    flex-direction: column;
+  }
+}

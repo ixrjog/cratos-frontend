@@ -89,6 +89,10 @@ const routes: Routes = [
         loadChildren: () => import('./user-script/user-script.module').then(m => m.UserScriptModule),
       },
       {
+        path: 'tools',
+        loadChildren: () => import('./tools/tools.module').then(m => m.ToolsModule),
+      },
+      {
         path: '',
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
       },

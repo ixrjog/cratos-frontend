@@ -1,0 +1,27 @@
+<div class="tools-page">
+  <div class="tools-header">
+    <h3>工具箱</h3>
+    <span class="tools-subtitle">一些运维常用小工具，点击卡片使用</span>
+  </div>
+
+  <da-layout-row [daGutter]="[16, 16]">
+    <da-col-item
+      *ngFor="let tool of tools"
+      [daSpan]="6"
+      [daMd]="8"
+      [daSm]="12"
+      [daXs]="24"
+    >
+      <div class="tool-card" [class.disabled]="!tool.route" (click)="onOpen(tool)">
+        <i class="icon tool-card-icon" [ngClass]="tool.icon"></i>
+        <div class="tool-card-body">
+          <div class="tool-card-name">
+            {{ tool.name }}
+            <span class="soon" *ngIf="!tool.route">开发中</span>
+          </div>
+          <div class="tool-card-desc">{{ tool.desc }}</div>
+        </div>
+      </div>
+    </da-col-item>
+  </da-layout-row>
+</div>

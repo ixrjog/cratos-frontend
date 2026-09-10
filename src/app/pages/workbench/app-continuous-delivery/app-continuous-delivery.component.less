@@ -410,3 +410,18 @@
     margin-top: 12px;
   }
 }
+
+/* ===== RUNNING / QUEUED 状态 loading 图标旋转 ===== */
+.icon-loading {
+  display: inline-block;
+  animation: cd-icon-spin 1s linear infinite;
+}
+
+@keyframes cd-icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

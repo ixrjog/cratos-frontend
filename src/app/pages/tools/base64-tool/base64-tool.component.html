@@ -1,0 +1,61 @@
+<div class="b64-tool">
+  <div class="b64-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>Base64 编解码</h3>
+    <span class="subtitle">纯前端处理，文本 UTF-8 安全，支持文件；数据不会离开浏览器</span>
+  </div>
+
+  <div class="toolbar">
+    <d-button bsStyle="primary" (click)="encode()">编码</d-button>
+    <d-button bsStyle="common" (click)="decode()">解码</d-button>
+
+    <label class="url-safe">
+      <input type="checkbox" [(ngModel)]="urlSafe" /> URL-safe
+    </label>
+
+    <span class="file-btn">
+      <d-button bsStyle="common" (click)="fileInput.click()">选择文件编码</d-button>
+      <input #fileInput type="file" (change)="onFileSelected($event)" hidden />
+    </span>
+
+    <d-button bsStyle="common" (click)="makeDataUri()">转 data URI</d-button>
+    <d-button bsStyle="common" (click)="downloadDecoded()">解码并下载</d-button>
+    <d-button bsStyle="text" (click)="clear()">清空</d-button>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <div class="panel-title">输入（文本 / Base64）</div>
+      <textarea
+        class="editor"
+        [(ngModel)]="input"
+        spellcheck="false"
+        placeholder="编码：粘贴原始文本&#10;解码：粘贴 Base64 字符串"
+      ></textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        输出
+        <span class="panel-actions" *ngIf="output">
+          <a (click)="copyOutput()">复制</a>
+          <a (click)="useOutputAsInput()">作为输入</a>
+        </span>
+      </div>
+      <textarea
+        class="editor"
+        [value]="output"
+        spellcheck="false"
+        readonly
+        placeholder="结果显示在这里"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="status">
+    <span class="status-error" *ngIf="errorMsg">{{ errorMsg }}</span>
+    <span class="status-ok" *ngIf="okMsg && !errorMsg">{{ okMsg }}</span>
+  </div>
+</div>

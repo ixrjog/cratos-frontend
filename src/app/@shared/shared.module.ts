@@ -50,6 +50,7 @@ import { I18nTranPipe } from './pipe/i18n-tran.pipe';
 import { UserTagComponent } from './components/common/tag/user-tag/user-tag.component';
 import { UserInfoCardComponent } from './components/common/user-info-card/user-info-card.component';
 import { UserPopoverComponent } from './components/common/user-popover/user-popover.component';
+import { WorldClockDisplayComponent } from './components/world-clock-display/world-clock-display.component';
 import { UserScriptPickerComponent } from './components/common/user-script-picker/user-script-picker.component';
 import { TicketStatePipe } from './pipe/ticket-state.pipe';
 
@@ -119,6 +120,7 @@ const CRATOS_UTILS = [
     UserInfoCardComponent,
     UserPopoverComponent,
     UserScriptPickerComponent,
+    WorldClockDisplayComponent,
   ],
   imports: [
     CommonModule,
@@ -157,6 +159,7 @@ const CRATOS_UTILS = [
     UserInfoCardComponent,
     UserPopoverComponent,
     UserScriptPickerComponent,
+    WorldClockDisplayComponent,
   ],
 })
 

@@ -1,0 +1,83 @@
+.tools-page {
+  padding: 16px;
+
+  .tools-header {
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .tools-subtitle {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .tool-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 8px;
+    background: var(--devui-base-bg, #fff);
+    cursor: pointer;
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+
+    &:hover {
+      border-color: var(--devui-brand, #5e7ce0);
+      box-shadow: 0 2px 12px rgba(94, 124, 224, 0.15);
+      transform: translateY(-2px);
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+
+      &:hover {
+        border-color: var(--devui-dividing-line, #dfe1e6);
+        box-shadow: none;
+        transform: none;
+      }
+    }
+
+    .soon {
+      margin-left: 6px;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--devui-aide-text, #8a8e99);
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 3px;
+      padding: 0 4px;
+    }
+
+    .tool-card-icon {
+      font-size: 28px;
+      color: var(--devui-brand, #5e7ce0);
+      flex-shrink: 0;
+    }
+
+    .tool-card-body {
+      min-width: 0;
+
+      .tool-card-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--devui-text, #252b3a);
+      }
+
+      .tool-card-desc {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--devui-aide-text, #8a8e99);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

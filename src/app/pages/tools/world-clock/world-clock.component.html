@@ -1,0 +1,80 @@
+<div class="clock-tool">
+  <div class="clock-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>世界时间</h3>
+    <span class="subtitle">实时显示多个国家/城市的当前时间，本地时区：{{ localTz }}</span>
+  </div>
+
+  <div class="toolbar">
+    <span class="add-group">
+      <d-select
+        [(ngModel)]="toAdd"
+        [options]="selectOptions"
+        [filterKey]="'label'"
+        [valueKey]="'value'"
+        [isSearch]="true"
+        [placeholder]="'选择要添加的国家/城市'"
+        [width]="260"
+      ></d-select>
+      <d-button bsStyle="primary" (click)="add()">添加</d-button>
+    </span>
+
+    <label class="fmt">
+      <input type="checkbox" [(ngModel)]="use24h" (change)="toggleFormat()" /> 24 小时制
+    </label>
+  </div>
+
+  <div class="utc-card" *ngIf="utcRow">
+    <div class="uc-left">
+      <span class="uc-badge">UTC</span>
+      <span class="uc-label">世界标准时间</span>
+    </div>
+    <div class="uc-right">
+      <span class="uc-time">{{ utcRow.time }}</span>
+      <span class="uc-date">{{ utcRow.date }}</span>
+    </div>
+  </div>
+
+  <div class="clock-grid">
+    <div
+      class="clock-card"
+      *ngFor="let r of rows; let i = index"
+      draggable="true"
+      [class.dragging]="dragIndex === i"
+      [class.drag-over]="overIndex === i && dragIndex !== i"
+      (dragstart)="onDragStart(i)"
+      (dragover)="onDragOver(i, $event)"
+      (drop)="onDrop(i, $event)"
+      (dragend)="onDragEnd()"
+    >
+      <div class="cc-head">
+        <span class="cc-label">
+          <i class="icon icon-drag cc-drag" title="拖动排序"></i>
+          <img
+            *ngIf="r.zone.iso2"
+            class="cc-flag"
+            [src]="'https://flagcdn.com/' + r.zone.iso2.toLowerCase() + '.svg'"
+            [alt]="r.zone.iso2"
+            loading="lazy"
+          />
+          {{ r.zone.label }}
+        </span>
+        <i class="icon icon-close cc-remove" (click)="remove(r.zone.tz)" title="移除"></i>
+      </div>
+      <div class="cc-time">{{ r.time }}</div>
+      <div class="cc-sub">
+        <span class="cc-date">{{ r.date }}</span>
+        <span class="cc-sub-right">
+          <span class="cc-offset">{{ r.offset }}</span>
+          <span class="cc-code-br" *ngIf="r.zone.iso2">{{ r.zone.iso2 }}</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="empty" *ngIf="!rows.length">
+      还没有添加任何时区，从上方选择一个国家/城市并点「添加」。
+    </div>
+  </div>
+</div>

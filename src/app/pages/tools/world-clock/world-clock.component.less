@@ -1,0 +1,227 @@
+.clock-tool {
+  padding: 16px;
+  box-sizing: border-box;
+
+  .clock-tool-header {
+    margin-bottom: 16px;
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--devui-brand, #5e7ce0);
+      cursor: pointer;
+
+      .icon {
+        font-size: 12px;
+        margin-right: 2px;
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    h3 {
+      margin: 6px 0 2px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    .add-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fmt {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--devui-aide-text, #8a8e99);
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+
+  .utc-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--devui-brand, #5e7ce0), #7a90e8);
+    color: #fff;
+
+    .uc-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .uc-badge {
+        font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 4px;
+      }
+
+      .uc-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+
+    .uc-right {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+
+      .uc-time {
+        font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+
+      .uc-date {
+        font-size: 13px;
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .clock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    gap: 14px;
+
+    .clock-card {
+      padding: 16px;
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 10px;
+      background: var(--devui-base-bg, #fff);
+      cursor: grab;
+      transition: box-shadow 0.15s, border-color 0.15s, opacity 0.15s;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &.dragging {
+        opacity: 0.4;
+      }
+
+      &.drag-over {
+        border-color: var(--devui-brand, #5e7ce0);
+        box-shadow: 0 0 0 2px rgba(94, 124, 224, 0.35);
+      }
+
+      .cc-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .cc-drag {
+          font-size: 13px;
+          margin-right: 4px;
+          color: var(--devui-aide-text, #8a8e99);
+          vertical-align: middle;
+          cursor: grab;
+        }
+
+        .cc-flag {
+          width: 22px;
+          height: 15px;
+          margin-right: 6px;
+          object-fit: cover;
+          border-radius: 2px;
+          border: 1px solid var(--devui-dividing-line, #dfe1e6);
+          vertical-align: middle;
+        }
+
+        .cc-label {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--devui-text, #252b3a);
+        }
+
+        .cc-remove {
+          font-size: 12px;
+          color: var(--devui-aide-text, #8a8e99);
+          cursor: pointer;
+
+          &:hover {
+            color: var(--devui-danger, #f66f6a);
+          }
+        }
+      }
+
+      .cc-time {
+        margin: 10px 0 6px;
+        font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--devui-brand, #5e7ce0);
+      }
+
+      .cc-sub {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--devui-aide-text, #8a8e99);
+
+        .cc-offset {
+          font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+          background: var(--devui-global-bg, #f7f8fa);
+          padding: 1px 6px;
+          border-radius: 3px;
+        }
+
+        .cc-sub-right {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+
+          .cc-code-br {
+            font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 16px;
+            padding: 0 5px;
+            color: #fff;
+            background: var(--devui-brand, #5e7ce0);
+            border-radius: 3px;
+          }
+        }
+      }
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 40px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}

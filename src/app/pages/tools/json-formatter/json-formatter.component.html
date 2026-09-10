@@ -1,0 +1,64 @@
+<div class="json-tool">
+  <div class="json-tool-header">
+    <a class="back-link" [routerLink]="['/pages', 'tools']">
+      <i class="icon icon-go-back"></i> 返回工具箱
+    </a>
+    <h3>JSON 格式化</h3>
+    <span class="subtitle">纯前端处理，数据不会离开浏览器</span>
+  </div>
+
+  <div class="toolbar">
+    <d-button bsStyle="primary" (click)="format()">格式化</d-button>
+    <d-button bsStyle="common" (click)="minify()">压缩</d-button>
+    <d-button bsStyle="common" (click)="validate()">校验</d-button>
+    <d-button bsStyle="common" (click)="escape()">转义</d-button>
+    <d-button bsStyle="common" (click)="unescape()">反转义</d-button>
+
+    <span class="indent-picker">
+      缩进
+      <d-select
+        [(ngModel)]="indent"
+        [options]="indentOptions"
+        [filterKey]="'label'"
+        [valueKey]="'value'"
+        [width]="130"
+      ></d-select>
+    </span>
+
+    <d-button bsStyle="text" (click)="clear()">清空</d-button>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <div class="panel-title">输入</div>
+      <textarea
+        class="editor"
+        [(ngModel)]="input"
+        spellcheck="false"
+        placeholder='在此粘贴 JSON，例如 {"a":1,"b":[2,3]}'
+      ></textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        输出
+        <span class="panel-actions" *ngIf="output">
+          <a (click)="copyOutput()">复制</a>
+          <a (click)="useOutputAsInput()">作为输入</a>
+        </span>
+      </div>
+      <textarea
+        class="editor"
+        [value]="output"
+        spellcheck="false"
+        readonly
+        placeholder="结果显示在这里"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="status">
+    <span class="status-error" *ngIf="errorMsg">{{ errorMsg }}</span>
+    <span class="status-ok" *ngIf="okMsg && !errorMsg">{{ okMsg }}</span>
+  </div>
+</div>

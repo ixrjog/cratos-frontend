@@ -529,12 +529,12 @@
 
 <!-- Remediation Viewer Dialog -->
 <div class='components-overlay' *ngIf='showRemediationDialog' (click)='showRemediationDialog = false'>
-  <div class='config-dialog' (click)='$event.stopPropagation()'>
+  <div class='config-dialog remediation-dialog' (click)='$event.stopPropagation()'>
     <div class='components-header'>
       <h5>问题处理结果 — {{ remediationViewApp }}</h5>
       <span class='close-btn' (click)='showRemediationDialog = false'>&times;</span>
     </div>
-    <div class='report-body' style='max-height: 60vh;'>
+    <div class='report-body remediation-body'>
       <markdown class='report-md' [data]='remediationViewContent' [disableSanitizer]='true'></markdown>
     </div>
   </div>

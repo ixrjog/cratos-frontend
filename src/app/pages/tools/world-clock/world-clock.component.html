@@ -37,6 +37,7 @@
     </div>
   </div>
 
+  <div class="clock-layout">
   <div class="clock-grid">
     <div
       class="clock-card"
@@ -76,5 +77,20 @@
     <div class="empty" *ngIf="!rows.length">
       还没有添加任何时区，从上方选择一个国家/城市并点「添加」。
     </div>
+  </div>
+
+  <!-- 世界地图（自绘 equirectangular 轮廓线稿，按经纬度打点标注已添加城市） -->
+  <div class="world-map" *ngIf="rows.length">
+    <img class="wm-img" src="assets/img/world-outline.svg" alt="World Map" />
+    <div class="wm-marker"
+         *ngFor="let m of markers"
+         [style.left.%]="m.leftPct"
+         [style.top.%]="m.topPct"
+         [title]="m.label + ' ' + m.time">
+      <span class="wm-dot"></span>
+      <span class="wm-lead" [ngClass]="'wm-lead-' + m.dir"></span>
+      <span class="wm-tip" [ngClass]="'wm-tip-' + m.dir">{{ m.label }} · {{ m.time }}</span>
+    </div>
+  </div>
   </div>
 </div>

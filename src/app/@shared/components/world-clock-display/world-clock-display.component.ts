@@ -1,5 +1,7 @@
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 
+import { ZONE_LATLON } from '../../data/zone-latlon';
+
 interface Zone {
   tz: string;
   label: string;
@@ -29,11 +31,13 @@ export class WorldClockDisplayComponent implements OnInit, OnDestroy {
 
   @Input() showUtc = true;
   @Input() title = '世界时间';
+  @Input() showMap = true;
 
   use24h = true;
   zones: Zone[] = [];
   rows: ClockRow[] = [];
   utcRow: ClockRow | null = null;
+  markers: { label: string; time: string; leftPct: number; topPct: number; dir: string }[] = [];
 
   private timer: any = null;
 
@@ -106,11 +110,74 @@ export class WorldClockDisplayComponent implements OnInit, OnDestroy {
     if (this.showUtc) {
       this.utcRow = this.buildRow({ tz: 'UTC', label: 'UTC 世界标准时间', iso2: '' }, now);
     }
+    if (this.showMap) {
+      this.buildMarkers();
+    }
+  }
+
+  private buildMarkers(): void {
+    const pts: { label: string; time: string; leftPct: number; topPct: number }[] = [];
+    for (const r of this.rows) {
+      const ll = ZONE_LATLON[r.zone.tz];
+      if (!ll) {
+        continue;
+      }
+      const [lat, lon] = ll;
+      pts.push({
+        label: r.zone.label,
+        time: r.time,
+        leftPct: (lon + 180) / 360 * 100,
+        topPct: (90 - lat) / 180 * 100,
+      });
+    }
+
+    const LABEL_W = 13;
+    const LABEL_H = 6;
+    const GAP = 1.2;
+    const candidates = [
+      { dir: 'up', dx: 0, dy: -(LABEL_H / 2 + GAP) },
+      { dir: 'down', dx: 0, dy: (LABEL_H / 2 + GAP) },
+      { dir: 'right', dx: (LABEL_W / 2 + GAP), dy: 0 },
+      { dir: 'left', dx: -(LABEL_W / 2 + GAP), dy: 0 },
+      { dir: 'up', dx: 0, dy: -(LABEL_H + GAP + LABEL_H / 2) },
+      { dir: 'down', dx: 0, dy: (LABEL_H + GAP + LABEL_H / 2) },
+      { dir: 'right', dx: (LABEL_W + GAP + LABEL_W / 2), dy: 0 },
+      { dir: 'left', dx: -(LABEL_W + GAP + LABEL_W / 2), dy: 0 },
+    ];
+
+    const placed: { l: number; r: number; t: number; b: number }[] = [];
+    const overlaps = (a: any, b: any) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+
+    const markers: { label: string; time: string; leftPct: number; topPct: number; dir: string }[] = [];
+    const order = pts.map((p, i) => i).sort((i, j) => pts[i].topPct - pts[j].topPct);
+    for (const idx of order) {
+      const p = pts[idx];
+      let chosen = candidates[0];
+      let done = false;
+      for (const c of candidates) {
+        const cx = p.leftPct + c.dx;
+        const cy = p.topPct + c.dy;
+        const box = { l: cx - LABEL_W / 2, r: cx + LABEL_W / 2, t: cy - LABEL_H / 2, b: cy + LABEL_H / 2 };
+        if (!placed.some((pb) => overlaps(box, pb))) {
+          chosen = c;
+          placed.push(box);
+          done = true;
+          break;
+        }
+      }
+      if (!done) {
+        const cx = p.leftPct + chosen.dx;
+        const cy = p.topPct + chosen.dy;
+        placed.push({ l: cx - LABEL_W / 2, r: cx + LABEL_W / 2, t: cy - LABEL_H / 2, b: cy + LABEL_H / 2 });
+      }
+      markers.push({ label: p.label, time: p.time, leftPct: p.leftPct, topPct: p.topPct, dir: chosen.dir });
+    }
+    this.markers = markers;
   }
 
   private buildRow(zone: Zone, now: Date): ClockRow {
     const time = new Intl.DateTimeFormat('zh-CN', {
-      timeZone: zone.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: !this.use24h,
+      timeZone: zone.tz, hour: '2-digit', minute: '2-digit', hour12: !this.use24h,
     }).format(now);
     const date = new Intl.DateTimeFormat('zh-CN', {
       timeZone: zone.tz, year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short',

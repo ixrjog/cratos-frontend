@@ -435,3 +435,108 @@
     }
   }
 }
+
+/* ========== SCA 汇总报表弹窗 ========== */
+.report-dialog {
+  width: 80% !important;
+  max-width: 1400px;
+
+  .report-scroll {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 68vh;
+    padding-right: 4px;
+  }
+
+  .report-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .rc {
+      border: 1px solid var(--devui-dividing-line, #dfe1e6);
+      border-radius: 6px;
+      padding: 14px 16px;
+      background: var(--devui-global-bg, #f7f8fa);
+      text-align: center;
+
+      .rc-num {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--devui-text, #252b3a);
+        line-height: 1.2;
+
+        &.rc-ok { color: var(--devui-success, #50d4ab); }
+        &.rc-fail { color: var(--devui-danger, #f66f6a); }
+        &.rc-warn { color: var(--devui-warning, #fac20a); }
+        &.rc-dur { font-size: 18px; }
+      }
+
+      .rc-label {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--devui-aide-text, #8a8e99);
+      }
+    }
+  }
+
+  .report-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    margin: 18px 0 10px;
+    padding-left: 8px;
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+  }
+
+  .risk-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+
+    .risk-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .risk-name {
+        flex: 0 0 84px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--devui-text, #252b3a);
+        text-align: right;
+      }
+
+      .risk-track {
+        flex: 1 1 auto;
+        height: 18px;
+        background: var(--devui-global-bg, #f7f8fa);
+        border-radius: 4px;
+        overflow: hidden;
+
+        .risk-fill {
+          height: 100%;
+          min-width: 2px;
+          border-radius: 4px;
+          transition: width 0.4s ease;
+        }
+      }
+
+      .risk-count {
+        flex: 0 0 48px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--devui-text, #252b3a);
+      }
+    }
+  }
+
+  .report-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+}

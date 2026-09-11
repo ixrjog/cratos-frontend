@@ -30,6 +30,7 @@
           />
         </span>
         <d-button bsStyle='primary' [disabled]='!selectedApplication' (click)='onQuery()'>Query</d-button>
+        <d-button bsStyle='common' (click)='openReportDialog()'>报表</d-button>
       </div>
 
       <!-- Result -->
@@ -519,6 +520,86 @@
            style='padding: 24px; text-align: center; color: var(--devui-aide-text, #8a8e99);'>
         输入 Group ID + Artifact ID（可选 Version），查询哪些应用在使用该组件。结果按每个应用最近一次扫描去重。
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCA 汇总报表弹窗（宽度 80%，口径：每应用最近一次扫描） ========== -->
+<div class='components-overlay' *ngIf='showReportDialog' (click)='closeReportDialog()'>
+  <div class='components-dialog report-dialog' (click)='$event.stopPropagation()'>
+    <div class='components-header'>
+      <h5>SCA 汇总报表<span *ngIf='!reportLoading && report'> — {{ report.summary?.applicationCount || 0 }} 个应用</span></h5>
+      <div class='components-header-actions'>
+        <d-button bsStyle='common' bsSize='sm' [disabled]='!report' (click)='onExportReport()'>导出 MD</d-button>
+        <d-button bsStyle='common' bsSize='sm' (click)='loadReport()'>刷新</d-button>
+        <span class='close-btn' (click)='closeReportDialog()'>&times;</span>
+      </div>
+    </div>
+
+    <div class='report-scroll' dLoading [loading]='reportLoading' [backdrop]='true'>
+      <ng-container *ngIf='report'>
+        <!-- 总览卡片 -->
+        <div class='report-cards'>
+          <div class='rc'><div class='rc-num'>{{ report.summary?.applicationCount || 0 }}</div><div class='rc-label'>应用总数</div></div>
+          <div class='rc'><div class='rc-num rc-ok'>{{ report.summary?.successCount || 0 }}</div><div class='rc-label'>最近扫描成功</div></div>
+          <div class='rc'><div class='rc-num rc-fail'>{{ report.summary?.failedCount || 0 }}</div><div class='rc-label'>最近扫描失败</div></div>
+          <div class='rc'><div class='rc-num rc-dur'>{{ humanizeDuration(report.summary?.avgScanDuration) || '—' }}</div><div class='rc-label'>平均扫描时长</div></div>
+          <div class='rc'><div class='rc-num rc-warn'>{{ report.summary?.vulnerableAppCount || 0 }}</div><div class='rc-label'>含漏洞应用</div></div>
+          <div class='rc'><div class='rc-num'>{{ report.summary?.totalComponents || 0 }}</div><div class='rc-label'>组件总量</div></div>
+          <div class='rc'><div class='rc-num rc-warn'>{{ report.summary?.totalVulnerableComponents || 0 }}</div><div class='rc-label'>漏洞组件总量</div></div>
+          <div class='rc'><div class='rc-num'>{{ report.summary?.totalCodeLines || 0 | number }}</div><div class='rc-label'>代码总行数</div></div>
+        </div>
+
+        <!-- 风险等级分布：横向柱状图 -->
+        <div class='report-section-title'>风险等级分布（漏洞组件）</div>
+        <div class='risk-chart'>
+          <div class='risk-row'>
+            <span class='risk-name'>CRITICAL</span>
+            <div class='risk-track'>
+              <div class='risk-fill' [style.width.%]='(report.riskDistribution?.critical || 0) / riskMax * 100' style='background: rgb(217,48,37);'></div>
+            </div>
+            <span class='risk-count'>{{ report.riskDistribution?.critical || 0 }}</span>
+          </div>
+          <div class='risk-row'>
+            <span class='risk-name'>HIGH</span>
+            <div class='risk-track'>
+              <div class='risk-fill' [style.width.%]='(report.riskDistribution?.high || 0) / riskMax * 100' style='background: rgb(255,106,13);'></div>
+            </div>
+            <span class='risk-count'>{{ report.riskDistribution?.high || 0 }}</span>
+          </div>
+          <div class='risk-row'>
+            <span class='risk-name'>MEDIUM</span>
+            <div class='risk-track'>
+              <div class='risk-fill' [style.width.%]='(report.riskDistribution?.medium || 0) / riskMax * 100' style='background: rgb(250,173,20);'></div>
+            </div>
+            <span class='risk-count'>{{ report.riskDistribution?.medium || 0 }}</span>
+          </div>
+          <div class='risk-row'>
+            <span class='risk-name'>LOW</span>
+            <div class='risk-track'>
+              <div class='risk-fill' [style.width.%]='(report.riskDistribution?.low || 0) / riskMax * 100' style='background: rgb(140,140,140);'></div>
+            </div>
+            <span class='risk-count'>{{ report.riskDistribution?.low || 0 }}</span>
+          </div>
+        </div>
+
+        <!-- 漏洞 TOP 组件 -->
+        <div class='report-section-title'>漏洞 TOP 组件（按命中应用数）</div>
+        <d-data-table *ngIf='report.topVulnerableComponents?.length' [dataSource]='report.topVulnerableComponents' [scrollable]='true' [tableOverflowType]="'overlay'">
+          <d-column field='groupId' header='Group ID' [width]="'35%'"></d-column>
+          <d-column field='artifactId' header='Artifact ID' [width]="'35%'"></d-column>
+          <d-column header='最高风险' [width]="'15%'">
+            <d-cell>
+              <ng-template let-rowItem='rowItem'>
+                <span [style.color]='riskColor(rowItem.maxRiskLevel)' style='font-weight: 600;'>{{ rowItem.maxRiskLevel }}</span>
+              </ng-template>
+            </d-cell>
+          </d-column>
+          <d-column field='appCount' header='命中应用数' [width]="'15%'"></d-column>
+        </d-data-table>
+        <div *ngIf='!report.topVulnerableComponents?.length' class='report-empty'>没有漏洞组件</div>
+      </ng-container>
+      <div *ngIf='!reportLoading && !report' class='report-empty'>加载失败或暂无数据</div>
     </div>
   </div>
 </div>

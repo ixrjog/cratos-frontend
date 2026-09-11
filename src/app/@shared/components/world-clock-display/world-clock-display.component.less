@@ -57,7 +57,7 @@
 
   .wc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
+    grid-template-columns: repeat(2, 280px);
     gap: 14px;
 
     .wc-card {
@@ -93,6 +93,7 @@
         font-size: 30px;
         font-weight: 600;
         letter-spacing: 1px;
+        text-align: center;
         color: var(--devui-brand, #5e7ce0);
       }
 
@@ -126,6 +127,90 @@
             border-radius: 3px;
           }
         }
+      }
+    }
+  }
+}
+
+/* ===== 两栏布局：左时钟卡片，右世界地图 ===== */
+.wc-display {
+  .wc-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+
+    .wc-grid {
+      flex: 0 0 auto;
+    }
+
+    .world-map {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+
+  .world-map {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 8px;
+    overflow: hidden;
+    line-height: 0;
+    background: var(--devui-global-bg, #f7f8fa);
+
+    .wm-img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .wm-marker {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      line-height: normal;
+
+      .wm-dot {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--devui-danger, #f66f6a);
+        border: 2px solid #fff;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .wm-tip {
+        position: absolute;
+        white-space: nowrap;
+        font-size: 11px;
+        line-height: 1.4;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        pointer-events: none;
+      }
+
+      .wm-tip-up { left: 50%; bottom: 100%; margin-bottom: 22px; transform: translateX(-50%); }
+      .wm-tip-down { left: 50%; top: 100%; margin-top: 22px; transform: translateX(-50%); }
+      .wm-tip-right { left: 100%; margin-left: 22px; top: 50%; transform: translateY(-50%); }
+      .wm-tip-left { right: 100%; margin-right: 22px; top: 50%; transform: translateY(-50%); }
+
+      .wm-lead {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background: var(--devui-line-bg-color, #8a8e99);
+        pointer-events: none;
+      }
+      .wm-lead-up { width: 1px; height: 22px; transform: translate(-50%, -100%); }
+      .wm-lead-down { width: 1px; height: 22px; transform: translate(-50%, 0); }
+      .wm-lead-right { height: 1px; width: 22px; transform: translate(0, -50%); }
+      .wm-lead-left { height: 1px; width: 22px; transform: translate(-100%, -50%); }
+
+      &:hover {
+        z-index: 2;
+        .wm-dot { background: var(--devui-brand, #5e7ce0); }
       }
     }
   }

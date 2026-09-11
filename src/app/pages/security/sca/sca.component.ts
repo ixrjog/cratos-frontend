@@ -400,6 +400,107 @@ export class ScaComponent implements OnInit, OnDestroy {
     this.showUsageDialog = false;
   }
 
+  // ==================== 汇总报表 ====================
+  showReportDialog = false;
+  reportLoading = false;
+  report: any = null;
+
+  openReportDialog() {
+    this.showReportDialog = true;
+    this.loadReport();
+  }
+
+  closeReportDialog() {
+    this.showReportDialog = false;
+  }
+
+  /** 风险分布柱状图的最大值（用于柱宽百分比归一化，至少为1避免除0） */
+  get riskMax(): number {
+    const rd = this.report?.riskDistribution;
+    if (!rd) {
+      return 1;
+    }
+    return Math.max(1, rd.critical || 0, rd.high || 0, rd.medium || 0, rd.low || 0);
+  }
+
+  loadReport() {
+    this.reportLoading = true;
+    this.apiService.post('/sca', '/report/query', {}).subscribe({
+      next: ({ body }: any) => {
+        this.report = body || null;
+        this.reportLoading = false;
+      },
+      error: () => {
+        this.report = null;
+        this.reportLoading = false;
+      },
+    });
+  }
+
+  /** 导出报表为 Markdown 文件 */
+  onExportReport() {
+    const r = this.report;
+    if (!r) {
+      return;
+    }
+    const escape = (v: any) => String(v ?? '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+    const s = r.summary || {};
+    const rd = r.riskDistribution || {};
+    const lines: string[] = [];
+    lines.push('# SCA 汇总报表');
+    lines.push('');
+    lines.push(`- **导出时间**: ${new Date().toLocaleString()}`);
+    lines.push('- **口径**: 每个应用取最近一次扫描');
+    lines.push('');
+    lines.push('## 总览');
+    lines.push('');
+    lines.push('| 指标 | 值 |');
+    lines.push('| --- | --- |');
+    lines.push(`| 应用总数 | ${s.applicationCount ?? 0} |`);
+    lines.push(`| 最近扫描成功 | ${s.successCount ?? 0} |`);
+    lines.push(`| 最近扫描失败 | ${s.failedCount ?? 0} |`);
+    lines.push(`| 平均扫描时长 | ${this.humanizeDuration(s.avgScanDuration) || '—'} |`);
+    lines.push(`| 含漏洞应用 | ${s.vulnerableAppCount ?? 0} |`);
+    lines.push(`| 组件总量 | ${s.totalComponents ?? 0} |`);
+    lines.push(`| 漏洞组件总量 | ${s.totalVulnerableComponents ?? 0} |`);
+    lines.push(`| 代码总行数 | ${s.totalCodeLines ?? 0} |`);
+    lines.push('');
+    lines.push('## 风险等级分布（漏洞组件）');
+    lines.push('');
+    lines.push('| 等级 | 数量 |');
+    lines.push('| --- | --- |');
+    lines.push(`| CRITICAL | ${rd.critical ?? 0} |`);
+    lines.push(`| HIGH | ${rd.high ?? 0} |`);
+    lines.push(`| MEDIUM | ${rd.medium ?? 0} |`);
+    lines.push(`| LOW | ${rd.low ?? 0} |`);
+    lines.push('');
+    lines.push('## 漏洞 TOP 组件（按命中应用数）');
+    lines.push('');
+    lines.push('| # | Group ID | Artifact ID | 最高风险 | 命中应用数 |');
+    lines.push('| --- | --- | --- | --- | --- |');
+    (r.topVulnerableComponents || []).forEach((c: any, i: number) => {
+      lines.push(`| ${i + 1} | ${escape(c.groupId)} | ${escape(c.artifactId)} | ${escape(c.maxRiskLevel)} | ${c.appCount ?? 0} |`);
+    });
+    lines.push('');
+    lines.push('## 应用明细（每应用最近一次扫描）');
+    lines.push('');
+    lines.push('| # | 应用 | 分支 | 状态 | 组件数 | 漏洞数 | 扫描时间 |');
+    lines.push('| --- | --- | --- | --- | --- | --- | --- |');
+    (r.applications || []).forEach((a: any, i: number) => {
+      const t = a.scanTime ? new Date(a.scanTime).toLocaleString() : '';
+      lines.push(`| ${i + 1} | ${escape(a.applicationName)} | ${escape(a.branch)} | ${escape(a.scanStatus)} | ${a.componentCount ?? 0} | ${a.riskCount ?? 0} | ${escape(t)} |`);
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sca-report-${new Date().toISOString().slice(0, 10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   /** 解析粘贴的 Maven XML / Gradle 依赖，提取 groupId / artifactId / version */
   onParseUsageDependency() {
     const input = this.usagePasteInput || '';

@@ -1,6 +1,8 @@
 <div class="wc-display">
   <div class="wc-title" *ngIf="title">{{ title }}</div>
 
+  <div class="wc-layout">
+  <div class="wc-left">
   <div class="wc-utc" *ngIf="showUtc && utcRow">
     <div class="uc-left">
       <span class="uc-badge">UTC</span>
@@ -12,7 +14,6 @@
     </div>
   </div>
 
-  <div class="wc-layout">
   <div class="wc-grid">
     <div class="wc-card" *ngFor="let r of rows">
       <div class="cc-head">
@@ -35,18 +36,21 @@
       </div>
     </div>
   </div>
+  </div>
 
   <!-- 世界地图（自绘 equirectangular 轮廓，按经纬度打点标注城市） -->
   <div class="world-map" *ngIf="showMap && rows.length">
-    <img class="wm-img" src="assets/img/world-outline.svg" alt="World Map" />
-    <div class="wm-marker"
-         *ngFor="let m of markers"
-         [style.left.%]="m.leftPct"
-         [style.top.%]="m.topPct"
-         [title]="m.label + ' ' + m.time">
-      <span class="wm-dot"></span>
-      <span class="wm-lead" [ngClass]="'wm-lead-' + m.dir"></span>
-      <span class="wm-tip" [ngClass]="'wm-tip-' + m.dir">{{ m.label }} · {{ m.time }}</span>
+    <div class="wm-canvas">
+      <img class="wm-img" src="assets/img/world-outline.svg" alt="World Map" />
+      <div class="wm-marker"
+           *ngFor="let m of markers"
+           [style.left.%]="m.leftPct"
+           [style.top.%]="m.topPct"
+           [title]="m.label + ' ' + m.time">
+        <span class="wm-dot"></span>
+        <span class="wm-lead" [ngClass]="'wm-lead-' + m.dir"></span>
+        <span class="wm-tip" [ngClass]="'wm-tip-' + m.dir">{{ m.label }} · {{ m.time }}</span>
+      </div>
     </div>
   </div>
   </div>

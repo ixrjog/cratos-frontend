@@ -63,6 +63,137 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
   showHelp = false;
   helpTab = 'gradle';
 
+  // ===== 制品部署申请弹窗(纯前端表单雏形) =====
+  showDeployApply = false;
+  deployForm: {
+    applicationName: string;
+    project: string;
+    sshUrl: string;
+    branch: string;
+    jdkVersion: string;
+    type: string;
+    buildTool: string; // 选中的构建工具标识(决定 buildCmd)
+  } = this.emptyDeployForm();
+
+  readonly deployTypeOptions = ['maven', 'gradle'];
+  readonly deployJdkOptions = ['1.8', 'jdk-11', 'jdk-17', 'jdk-21'];
+
+  /** 各 type 可选的构建工具版本 -> 命令路径 */
+  readonly deployBuildTools: { [type: string]: { id: string; label: string; cmd: string }[] } = {
+    maven: [
+      { id: 'maven', label: 'maven', cmd: '/opt/tools/maven/bin/mvn' },
+    ],
+    gradle: [
+      { id: 'gradle-4.6', label: 'gradle-4.6', cmd: '/opt/tools/gradle-4.6/bin/gradle' },
+      { id: 'gradle-5.6', label: 'gradle-5.6', cmd: '/opt/tools/gradle-5.6/bin/gradle' },
+    ],
+  };
+
+  private emptyDeployForm() {
+    return {
+      applicationName: '',
+      project: '',
+      sshUrl: '',
+      branch: '',
+      jdkVersion: '1.8',
+      type: 'maven',
+      buildTool: 'maven',
+    };
+  }
+
+  /** 当前 type 下可选的构建工具列表 */
+  currentBuildTools() {
+    return this.deployBuildTools[this.deployForm.type] || [];
+  }
+
+  /** 自动生成的 build 命令(取选中工具版本的路径) */
+  get deployBuildCmd(): string {
+    const tools = this.currentBuildTools();
+    const t = tools.find((x) => x.id === this.deployForm.buildTool);
+    return t ? t.cmd : (tools[0]?.cmd || '');
+  }
+
+  /** 切换 Type: 重置构建工具为该 type 的第一个 */
+  onDeployTypeChange(type: string) {
+    this.deployForm.type = type;
+    const tools = this.deployBuildTools[type] || [];
+    this.deployForm.buildTool = tools.length ? tools[0].id : '';
+  }
+
+  openDeployApply() {
+    this.deployForm = this.emptyDeployForm();
+    this.deployPrevAppName = '';
+    this.showDeployApply = true;
+  }
+
+  /** 应用名变更时，Project 若为空或与旧应用名相同则同步默认为应用名 */
+  private deployPrevAppName = '';
+  onDeployAppNameChange() {
+    const f = this.deployForm;
+    if (!f.project?.trim() || f.project === this.deployPrevAppName) {
+      f.project = f.applicationName;
+    }
+    this.deployPrevAppName = f.applicationName;
+  }
+
+  closeDeployApply() {
+    this.showDeployApply = false;
+  }
+
+  /** 按申请格式生成 YAML 文本 */
+  get deployApplyText(): string {
+    const f = this.deployForm;
+    const user = this.currentUsername || 'xxx';
+    const branch = (f.branch || '').trim() || 'master';
+    return `${user} 用户申请新应用构建信息
+
+application: ${f.applicationName || ''}
+
+builds:
+- branch: ${branch}
+  buildCmd: ${this.deployBuildCmd}
+  jdkVersion: '${f.jdkVersion}'
+  project: ${f.project || ''}
+  sshUrl: ${f.sshUrl || ''}
+  type: ${f.type}`;
+  }
+
+  /** 复制申请: 校验必填 -> 生成 YAML -> 写入剪贴板 */
+  copyDeployApply() {
+    const f = this.deployForm;
+    if (!f.applicationName?.trim() || !f.project?.trim() || !f.sshUrl?.trim()) {
+      this.toastUtil.onErrorToast?.('请填写应用名称、Project、SSH URL');
+      return;
+    }
+    const text = this.deployApplyText;
+    const done = () => {
+      this.toastUtil.onSuccessToast('申请内容已复制，正在跳转问题处理群');
+      this.showDeployApply = false;
+      this.openIssueGroup();
+    };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(done, () => this.fallbackCopy(text, done));
+    } else {
+      this.fallbackCopy(text, done);
+    }
+  }
+
+  private fallbackCopy(text: string, done: () => void) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      done();
+    } catch (e) {
+      this.toastUtil.onErrorToast?.('复制失败，请手动复制');
+    }
+    document.body.removeChild(ta);
+  }
+
   // 版本规范说明弹窗(内容从 assets/docs/maven-version-spec.md 加载)
   showVersionSpec = false;
 

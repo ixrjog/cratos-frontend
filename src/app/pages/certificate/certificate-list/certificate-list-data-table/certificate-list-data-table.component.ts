@@ -24,7 +24,18 @@ export class CertificateListDataTableComponent implements OnInit {
   queryParam = {
     queryName: '',
     certificateType: localStorage.getItem(CertificateListDataTableComponent.CERT_TYPE_STORAGE_KEY) || '',
+    valid: undefined as boolean | undefined,
   };
+
+  /** 过滤无效证书: 勾选=仅看有效证书(valid=true), 不勾=全部(undefined) */
+  filterInvalid = false;
+
+  onFilterInvalidChange(checked: boolean) {
+    this.filterInvalid = checked;
+    this.queryParam.valid = checked ? true : undefined;
+    this.table.pager.pageIndex = 1;
+    this.fetchData();
+  }
 
   certificateTypeOptions = [];
   protected readonly limit = RELATIVE_TIME_LIMIT;

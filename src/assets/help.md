@@ -1,6 +1,4 @@
-![SVG Image](https://opscloud4-res.oss-cn-hangzhou.aliyuncs.com/logo/cratos-logo.svg)
-
-#### Start in sync with the world
+#### Welcome to Cratos
 
 > A secure general development framework for operations and maintenance
 

@@ -9,6 +9,14 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  // devui d-button 自带 margin 会叠加到 flex gap 上导致按钮间距不均，统一清零，只用 gap 控制
+  d-button,
+  .button,
+  .help-btn {
+    margin: 0 !important;
+  }
 
   .app-select {
     width: 400px;
@@ -729,5 +737,114 @@
       padding: 16px 0;
       text-align: center;
     }
+  }
+}
+
+/* ===== 制品部署申请弹窗 ===== */
+.deploy-apply-dialog {
+  width: 560px;
+  max-width: 92vw;
+  max-height: 84vh;
+  display: flex;
+  flex-direction: column;
+
+  .deploy-apply-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-top: 8px;
+  }
+
+  .da-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .da-section-title {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    padding-left: 8px;
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+  }
+
+  .da-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .da-label {
+      flex: 0 0 96px;
+      text-align: right;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+
+      .da-req {
+        color: var(--devui-danger, #f66f6a);
+        font-style: normal;
+        margin-right: 2px;
+      }
+    }
+
+    .da-control {
+      flex: 1 1 auto;
+      min-width: 0;
+
+      input,
+      d-select {
+        width: 100%;
+      }
+
+      input {
+        box-sizing: border-box;
+      }
+
+      .da-build-cmd {
+        margin-top: 8px;
+        font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+        font-size: 12px;
+        color: var(--devui-text, #252b3a);
+        background: var(--devui-global-bg, #f7f8fa);
+        border: 1px solid var(--devui-dividing-line, #dfe1e6);
+        border-radius: 4px;
+        padding: 6px 10px;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .da-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+  }
+
+  .da-preview-title {
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    padding-left: 8px;
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+  }
+
+  .da-preview {
+    margin: 0;
+    font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--devui-text, #252b3a);
+    background: var(--devui-global-bg, #f7f8fa);
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 4px;
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    word-break: break-all;
   }
 }

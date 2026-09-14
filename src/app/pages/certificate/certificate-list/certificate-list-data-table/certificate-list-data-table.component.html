@@ -21,6 +21,13 @@
     (valueChange)="onCertificateTypeChange($event)"
   >
   </d-select>
+  <d-checkbox
+    class="filter-invalid"
+    [label]="'过滤无效证书'"
+    [isShowTitle]="false"
+    [(ngModel)]="filterInvalid"
+    (ngModelChange)="onFilterInvalidChange($event)"
+  ></d-checkbox>
   <d-button class="button" bsStyle="common" (click)="fetchData()">Filter</d-button>
 </div>
 <div class="spacing-table">

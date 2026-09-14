@@ -51,6 +51,9 @@
         <d-button class="help-btn" bsStyle="common" (click)="openReport()">
           <i class="fas fa-chart-column" style="margin-right: 4px;"></i>{{ 'artifactPublish.report.button' | translate }}
         </d-button>
+        <d-button class="help-btn" bsStyle="primary" (click)="openDeployApply()">
+          <i class="icon icon-add" style="margin-right: 4px;"></i>新建制品部署配置申请
+        </d-button>
       </div>
 
       <d-panel
@@ -582,6 +585,82 @@
       <ng-template #noModule>
         <div class="auto-cmd-empty">{{ 'artifactPublish.card.noInternalModules' | translate }}</div>
       </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- 制品部署申请(纯前端表单雏形) -->
+<div class="components-overlay" *ngIf="showDeployApply" (click)="closeDeployApply()">
+  <div class="components-dialog deploy-apply-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>制品部署申请</h5>
+      <div class="components-header-actions">
+        <span class="close-btn" (click)="closeDeployApply()">&times;</span>
+      </div>
+    </div>
+
+    <div class="deploy-apply-body">
+      <div class="da-form">
+        <div class="da-row">
+          <span class="da-label"><i class="da-req">*</i>应用名称</span>
+          <div class="da-control">
+            <input dTextInput [(ngModel)]="deployForm.applicationName" (ngModelChange)="onDeployAppNameChange()" placeholder="请输入应用名称，如 common-util" />
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label"><i class="da-req">*</i>Project</span>
+          <div class="da-control">
+            <input dTextInput [(ngModel)]="deployForm.project" placeholder="默认取应用名" />
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label"><i class="da-req">*</i>SSH URL</span>
+          <div class="da-control">
+            <input dTextInput [(ngModel)]="deployForm.sshUrl" placeholder="git@gitlab.transspay.net:xxx/xxx.git" />
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label">Branch</span>
+          <div class="da-control">
+            <input dTextInput [(ngModel)]="deployForm.branch" placeholder="master" />
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label">JDK Version</span>
+          <div class="da-control">
+            <d-tabs type="options" [activeTab]="deployForm.jdkVersion" (activeTabChange)="deployForm.jdkVersion = $any($event)">
+              <d-tab *ngFor="let j of deployJdkOptions" [id]="j"><ng-template dTabTitle>{{ j }}</ng-template></d-tab>
+            </d-tabs>
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label">Type</span>
+          <div class="da-control">
+            <d-tabs type="options" [activeTab]="deployForm.type" (activeTabChange)="onDeployTypeChange($any($event))">
+              <d-tab *ngFor="let t of deployTypeOptions" [id]="t"><ng-template dTabTitle>{{ t }}</ng-template></d-tab>
+            </d-tabs>
+          </div>
+        </div>
+        <div class="da-row">
+          <span class="da-label">Build</span>
+          <div class="da-control">
+            <d-tabs type="options" [activeTab]="deployForm.buildTool" (activeTabChange)="deployForm.buildTool = $any($event)">
+              <d-tab *ngFor="let bt of currentBuildTools()" [id]="bt.id"><ng-template dTabTitle>{{ bt.label }}</ng-template></d-tab>
+            </d-tabs>
+            <div class="da-build-cmd">{{ deployBuildCmd }}</div>
+          </div>
+        </div>
+
+        <div class="da-preview-title">申请内容预览</div>
+        <pre class="da-preview">{{ deployApplyText }}</pre>
+      </div>
+
+      <div class="da-footer">
+        <d-button bsStyle="common" (click)="closeDeployApply()">取消</d-button>
+        <d-button bsStyle="primary" (click)="copyDeployApply()">
+          <i class="icon icon-copy" style="margin-right: 4px;"></i>复制申请
+        </d-button>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,42 @@
+.doc-panel {
+  padding: 12px;
+}
+
+.doc-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+
+  .doc-logo {
+    flex: 0 0 auto;
+    width: 260px;
+    max-width: 30%;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  .doc-md {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+// 窄屏回退：上下堆叠，logo 居中缩小
+@media (max-width: 768px) {
+  .doc-layout {
+    flex-direction: column;
+
+    .doc-logo {
+      width: 160px;
+      max-width: 50%;
+      align-self: center;
+    }
+  }
+}

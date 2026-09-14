@@ -4,6 +4,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ApiService } from '../../../@core/services/api.service';
 import { ApplicationService } from '../../../@core/services/application.service';
 import { UserFavoriteService } from '../../../@core/services/user-favorite.service';
@@ -145,7 +146,8 @@ export class ArtifactPublishComponent implements OnInit, OnDestroy {
     const f = this.deployForm;
     const user = this.currentUsername || 'xxx';
     const branch = (f.branch || '').trim() || 'master';
-    return `${user} 用户申请新应用构建信息
+    const header = this.translate.instant('artifactPublish.deployApply.requestHeader');
+    return `${user} ${header}
 
 application: ${f.applicationName || ''}
 
@@ -162,12 +164,12 @@ builds:
   copyDeployApply() {
     const f = this.deployForm;
     if (!f.applicationName?.trim() || !f.project?.trim() || !f.sshUrl?.trim()) {
-      this.toastUtil.onErrorToast?.('请填写应用名称、Project、SSH URL');
+      this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.deployApply.validateRequired'));
       return;
     }
     const text = this.deployApplyText;
     const done = () => {
-      this.toastUtil.onSuccessToast('申请内容已复制，正在跳转问题处理群');
+      this.toastUtil.onSuccessToast(this.translate.instant('artifactPublish.deployApply.copiedJump'));
       this.showDeployApply = false;
       this.openIssueGroup();
     };
@@ -189,7 +191,7 @@ builds:
       document.execCommand('copy');
       done();
     } catch (e) {
-      this.toastUtil.onErrorToast?.('复制失败，请手动复制');
+      this.toastUtil.onErrorToast?.(this.translate.instant('artifactPublish.deployApply.copyFailed'));
     }
     document.body.removeChild(ta);
   }
@@ -1150,7 +1152,119 @@ mavenpassword=你的Cratos密码`;
     });
   }
 
-  /** 各模块(artifactId)历史发布成功次数 */
+  // ===== 选择 Project 弹窗（按分支查配置列出 builds；分支选项复用 /sca 接口） =====
+  showBuildPicker = false;
+  buildPickerLoading = false;
+  buildPickerList: any[] = [];
+  selectedBuild: any = null;
+  branchOptionsLoading = false;
+  branchSelectOptions: any[] = []; // 扁平: [{ label, value, group, desc }]
+  selectedBranchOption: any = null; // d-select 绑定的选项对象
+  selectedBranch: string = null;    // 派生的分支名字符串
+
+  /** 分支框 d-search 的搜索动作: 持久化当前分支并弹出 project 选择 */
+  onBranchSearch() {
+    this.onBranchChange();
+    this.openBuildPicker();
+  }
+
+  /** 打开选择 project 弹窗: 按当前应用+分支查配置, 列出 builds(project + gitUrl) */
+  openBuildPicker() {
+    if (!this.selectedApplication?.name) {
+      return;
+    }
+    this.showBuildPicker = true;
+    this.buildPickerLoading = true;
+    this.buildPickerList = [];
+    this.apiService.post('/sca', '/application/config/query', {
+      applicationName: this.selectedApplication.name,
+      branch: this.currentBranch(),
+    }).subscribe(({ body }: any) => {
+      this.buildPickerList = (body?.builds || []).map((b: any) => ({
+        project: b.project || b.moduleName || '',
+        gitUrl: b?.buildProject?.repository?.sshUrl || '',
+        raw: b,
+      }));
+      this.selectedBuild = null;
+      this.branchSelectOptions = [];
+      this.selectedBranchOption = null;
+      this.selectedBranch = null;
+      if (this.buildPickerList.length === 1) {
+        this.onSelectBuild(this.buildPickerList[0]);
+      }
+      this.buildPickerLoading = false;
+    }, () => {
+      this.buildPickerList = [];
+      this.buildPickerLoading = false;
+    });
+  }
+
+  closeBuildPicker() {
+    this.showBuildPicker = false;
+  }
+
+  /** 选中一个 project 后, 复用 /sca 接口查询该 build(gitUrl)的 GitLab 分支选项 */
+  onSelectBuild(item: any) {
+    if (!item?.gitUrl) {
+      return;
+    }
+    this.selectedBuild = item;
+    this.branchSelectOptions = [];
+    this.selectedBranchOption = null;
+    this.selectedBranch = null;
+    this.branchOptionsLoading = true;
+    this.apiService.post('/sca', '/build/branch-options/query', {
+      gitUrl: item.gitUrl,
+      openTag: false,
+    }).subscribe(({ body }: any) => {
+      const groups = body?.options || [];
+      const multiGroup = groups.length > 1;
+      const flat: any[] = [];
+      groups.forEach((g: any) => {
+        (g.options || []).forEach((opt: any) => {
+          flat.push({
+            value: opt.value,
+            label: multiGroup ? `[${g.label}] ${opt.label}` : opt.label,
+            group: g.label,
+            desc: opt.desc || opt.commitMessage || '',
+          });
+        });
+      });
+      this.branchSelectOptions = flat;
+      this.selectedBranchOption = flat[0] || null;
+      this.selectedBranch = flat[0] ? flat[0].value : null;
+      this.branchOptionsLoading = false;
+    }, () => {
+      this.branchSelectOptions = [];
+      this.branchOptionsLoading = false;
+    });
+  }
+
+  /** 弹窗内 d-select 选中变化: 派生分支名字符串 (区别于页面级 onBranchChange) */
+  onPickerBranchChange(opt: any) {
+    this.selectedBranch = opt ? opt.value : null;
+  }
+
+  /** d-select 前端搜索: 按 label 过滤分支/Tag (返回 devui 期望的 {id, option} 包裹结构) */
+  onSearchBranch = (term: string) => {
+    const t = (term || '').toLowerCase();
+    const list = this.branchSelectOptions
+      .filter(o => (o.label || '').toLowerCase().includes(t))
+      .map((o, index) => ({ id: index, option: o }));
+    return new Observable<any[]>((observer) => {
+      observer.next(list);
+      observer.complete();
+    });
+  };
+
+  /** 确认分支: 填回主搜索的分支输入框(并触发已有的分支持久化)并关闭弹窗 */
+  confirmBranch() {
+    if (this.selectedBranch) {
+      this.branch = this.selectedBranch;
+      this.onBranchChange();
+    }
+    this.showBuildPicker = false;
+  }
   publishCountMap: { [artifactId: string]: number } = {};
 
   /** 拉取该应用发布历史(大页), 按 artifactId 统计 SUCCESS 次数 */

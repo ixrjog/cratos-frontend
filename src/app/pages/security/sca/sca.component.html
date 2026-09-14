@@ -21,13 +21,14 @@
         </d-select>
         <span class='branch-field'>
           <i class='fas fa-code-branch branch-icon'></i>
-          <input
-            class='branch-input'
-            dTextInput
+          <d-search
+            class='branch-search'
+            [size]="'sm'"
             [(ngModel)]='branch'
-            (blur)="branch = (branch || '').trim()"
+            [iconPosition]="'right'"
             placeholder='branch or tag'
-          />
+            (searchFn)='onBranchSearch()'
+          ></d-search>
         </span>
         <d-button bsStyle='primary' [disabled]='!selectedApplication' (click)='onQuery()'>Query</d-button>
         <d-button bsStyle='common' (click)='openReportDialog()'>报表</d-button>
@@ -600,6 +601,57 @@
         <div *ngIf='!report.topVulnerableComponents?.length' class='report-empty'>没有漏洞组件</div>
       </ng-container>
       <div *ngIf='!reportLoading && !report' class='report-empty'>加载失败或暂无数据</div>
+    </div>
+  </div>
+</div>
+
+<!-- 选择 Build 弹窗（按分支查询应用配置，列出 builds） -->
+<div class='components-overlay' *ngIf='showBuildPicker' (click)='closeBuildPicker()'>
+  <div class='components-dialog build-picker-dialog' (click)='$event.stopPropagation()'>
+    <div class='components-header'>
+      <h5>选择 Project — {{ selectedApplication?.name }} ({{ (branch || 'master').trim() || 'master' }})</h5>
+      <span class='close-btn' (click)='closeBuildPicker()'>&times;</span>
+    </div>
+    <div class='build-picker-body' dLoading [loading]='buildPickerLoading' [backdrop]='true'>
+      <div class='bp-section-title' *ngIf='buildPickerList.length'>选择 Project</div>
+      <div *ngFor='let item of buildPickerList' class='bp-item'
+           [class.selected]='selectedBuild === item'
+           (click)='onSelectBuild(item)'>
+        <div class='bp-project'>{{ item.project }}</div>
+        <div class='bp-giturl'>{{ item.gitUrl || '—' }}</div>
+      </div>
+      <div *ngIf='!buildPickerLoading && !buildPickerList.length' class='bp-empty'>
+        该应用在此分支下未查询到可选的 Project
+      </div>
+    </div>
+
+    <!-- 二级: 选中 build 后展示分支下拉(可搜索) —— 放在滚动区外, 避免下拉被裁剪 -->
+    <div class='bp-branch' *ngIf='selectedBuild' dLoading [loading]='branchOptionsLoading' [backdrop]='true'>
+      <div class='bp-section-title'>选择分支 / Tag</div>
+      <d-select
+        class='bp-branch-select'
+        [filterKey]="'label'"
+        [appendToBody]='false'
+        [isSearch]='true'
+        [searchFn]='onSearchBranch'
+        [(ngModel)]='selectedBranchOption'
+        (valueChange)='onBranchChange($event)'
+        placeholder='搜索并选择分支 / Tag'
+      >
+        <ng-template let-option='option'>
+          <span>{{ option.label }}</span>
+          <span *ngIf='option.desc'
+                style='float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>{{ option.desc }}</span>
+        </ng-template>
+      </d-select>
+      <div *ngIf='!branchOptionsLoading && !branchSelectOptions.length' class='bp-empty'>
+        未查询到分支（该仓库可能未被 EDS 索引）
+      </div>
+    </div>
+
+    <div class='bp-footer' *ngIf='buildPickerList.length'>
+      <d-button bsStyle='common' (click)='closeBuildPicker()'>取消</d-button>
+      <d-button bsStyle='primary' [disabled]='!selectedBranch' (click)='confirmBranch()'>确定</d-button>
     </div>
   </div>
 </div>

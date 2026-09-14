@@ -29,14 +29,14 @@
         </d-select>
         <span class="branch-field">
           <i class="fas fa-code-branch branch-icon"></i>
-          <input
-            class="branch-input"
-            dTextInput
+          <d-search
+            class="branch-search"
+            [size]="'sm'"
             [(ngModel)]="branch"
-            (ngModelChange)="onBranchChange()"
-            (blur)="onBranchBlur()"
+            [iconPosition]="'right'"
             [placeholder]="'artifactPublish.search.branchPlaceholder' | translate"
-          />
+            (searchFn)="onBranchSearch()"
+          ></d-search>
         </span>
         <d-button bsStyle="primary" [disabled]="!selectedApplication" (click)="onQuery()">{{ 'artifactPublish.search.query' | translate }}</d-button>
         <d-button class="help-btn" bsStyle="common" (click)="showHelp = true">
@@ -52,7 +52,7 @@
           <i class="fas fa-chart-column" style="margin-right: 4px;"></i>{{ 'artifactPublish.report.button' | translate }}
         </d-button>
         <d-button class="help-btn" bsStyle="primary" (click)="openDeployApply()">
-          <i class="icon icon-add" style="margin-right: 4px;"></i>新建制品部署配置申请
+          <i class="icon icon-add" style="margin-right: 4px;"></i>{{ 'artifactPublish.deployApply.button' | translate }}
         </d-button>
       </div>
 
@@ -593,7 +593,7 @@
 <div class="components-overlay" *ngIf="showDeployApply" (click)="closeDeployApply()">
   <div class="components-dialog deploy-apply-dialog" (click)="$event.stopPropagation()">
     <div class="components-header">
-      <h5>制品部署申请</h5>
+      <h5>{{ 'artifactPublish.deployApply.title' | translate }}</h5>
       <div class="components-header-actions">
         <span class="close-btn" (click)="closeDeployApply()">&times;</span>
       </div>
@@ -602,31 +602,31 @@
     <div class="deploy-apply-body">
       <div class="da-form">
         <div class="da-row">
-          <span class="da-label"><i class="da-req">*</i>应用名称</span>
+          <span class="da-label"><i class="da-req">*</i>{{ 'artifactPublish.deployApply.appName' | translate }}</span>
           <div class="da-control">
-            <input dTextInput [(ngModel)]="deployForm.applicationName" (ngModelChange)="onDeployAppNameChange()" placeholder="请输入应用名称，如 common-util" />
+            <input dTextInput [(ngModel)]="deployForm.applicationName" (ngModelChange)="onDeployAppNameChange()" [placeholder]="'artifactPublish.deployApply.appNamePlaceholder' | translate" />
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label"><i class="da-req">*</i>Project</span>
+          <span class="da-label"><i class="da-req">*</i>{{ 'artifactPublish.deployApply.project' | translate }}</span>
           <div class="da-control">
-            <input dTextInput [(ngModel)]="deployForm.project" placeholder="默认取应用名" />
+            <input dTextInput [(ngModel)]="deployForm.project" [placeholder]="'artifactPublish.deployApply.projectPlaceholder' | translate" />
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label"><i class="da-req">*</i>SSH URL</span>
+          <span class="da-label"><i class="da-req">*</i>{{ 'artifactPublish.deployApply.sshUrl' | translate }}</span>
           <div class="da-control">
-            <input dTextInput [(ngModel)]="deployForm.sshUrl" placeholder="git@gitlab.transspay.net:xxx/xxx.git" />
+            <input dTextInput [(ngModel)]="deployForm.sshUrl" [placeholder]="'artifactPublish.deployApply.sshUrlPlaceholder' | translate" />
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label">Branch</span>
+          <span class="da-label">{{ 'artifactPublish.deployApply.branch' | translate }}</span>
           <div class="da-control">
-            <input dTextInput [(ngModel)]="deployForm.branch" placeholder="master" />
+            <input dTextInput [(ngModel)]="deployForm.branch" [placeholder]="'artifactPublish.deployApply.branchPlaceholder' | translate" />
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label">JDK Version</span>
+          <span class="da-label">{{ 'artifactPublish.deployApply.jdkVersion' | translate }}</span>
           <div class="da-control">
             <d-tabs type="options" [activeTab]="deployForm.jdkVersion" (activeTabChange)="deployForm.jdkVersion = $any($event)">
               <d-tab *ngFor="let j of deployJdkOptions" [id]="j"><ng-template dTabTitle>{{ j }}</ng-template></d-tab>
@@ -634,7 +634,7 @@
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label">Type</span>
+          <span class="da-label">{{ 'artifactPublish.deployApply.type' | translate }}</span>
           <div class="da-control">
             <d-tabs type="options" [activeTab]="deployForm.type" (activeTabChange)="onDeployTypeChange($any($event))">
               <d-tab *ngFor="let t of deployTypeOptions" [id]="t"><ng-template dTabTitle>{{ t }}</ng-template></d-tab>
@@ -642,7 +642,7 @@
           </div>
         </div>
         <div class="da-row">
-          <span class="da-label">Build</span>
+          <span class="da-label">{{ 'artifactPublish.deployApply.build' | translate }}</span>
           <div class="da-control">
             <d-tabs type="options" [activeTab]="deployForm.buildTool" (activeTabChange)="deployForm.buildTool = $any($event)">
               <d-tab *ngFor="let bt of currentBuildTools()" [id]="bt.id"><ng-template dTabTitle>{{ bt.label }}</ng-template></d-tab>
@@ -651,16 +651,67 @@
           </div>
         </div>
 
-        <div class="da-preview-title">申请内容预览</div>
+        <div class="da-preview-title">{{ 'artifactPublish.deployApply.previewTitle' | translate }}</div>
         <pre class="da-preview">{{ deployApplyText }}</pre>
       </div>
 
       <div class="da-footer">
-        <d-button bsStyle="common" (click)="closeDeployApply()">取消</d-button>
+        <d-button bsStyle="common" (click)="closeDeployApply()">{{ 'artifactPublish.deployApply.cancel' | translate }}</d-button>
         <d-button bsStyle="primary" (click)="copyDeployApply()">
-          <i class="icon icon-copy" style="margin-right: 4px;"></i>复制申请
+          <i class="icon icon-copy" style="margin-right: 4px;"></i>{{ 'artifactPublish.deployApply.copy' | translate }}
         </d-button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 选择 Project 弹窗（按分支查询应用配置，列出 builds；分支选项复用 /sca 接口） -->
+<div class="components-overlay" *ngIf="showBuildPicker" (click)="closeBuildPicker()">
+  <div class="components-dialog build-picker-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>选择 Project — {{ selectedApplication?.name }} ({{ (branch || 'master').trim() || 'master' }})</h5>
+      <span class="close-btn" (click)="closeBuildPicker()">&times;</span>
+    </div>
+    <div class="build-picker-body" dLoading [loading]="buildPickerLoading" [backdrop]="true">
+      <div class="bp-section-title" *ngIf="buildPickerList.length">选择 Project</div>
+      <div *ngFor="let item of buildPickerList" class="bp-item"
+           [class.selected]="selectedBuild === item"
+           (click)="onSelectBuild(item)">
+        <div class="bp-project">{{ item.project }}</div>
+        <div class="bp-giturl">{{ item.gitUrl || '—' }}</div>
+      </div>
+      <div *ngIf="!buildPickerLoading && !buildPickerList.length" class="bp-empty">
+        该应用在此分支下未查询到可选的 Project
+      </div>
+    </div>
+
+    <!-- 二级: 选中 project 后展示分支下拉(可搜索) —— 放在滚动区外, 避免下拉被裁剪 -->
+    <div class="bp-branch" *ngIf="selectedBuild" dLoading [loading]="branchOptionsLoading" [backdrop]="true">
+      <div class="bp-section-title">选择分支 / Tag</div>
+      <d-select
+        class="bp-branch-select"
+        [filterKey]="'label'"
+        [appendToBody]="false"
+        [isSearch]="true"
+        [searchFn]="onSearchBranch"
+        [(ngModel)]="selectedBranchOption"
+        (valueChange)="onPickerBranchChange($event)"
+        placeholder="搜索并选择分支 / Tag"
+      >
+        <ng-template let-option="option">
+          <span>{{ option.label }}</span>
+          <span *ngIf="option.desc"
+                style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ option.desc }}</span>
+        </ng-template>
+      </d-select>
+      <div *ngIf="!branchOptionsLoading && !branchSelectOptions.length" class="bp-empty">
+        未查询到分支（该仓库可能未被 EDS 索引）
+      </div>
+    </div>
+
+    <div class="bp-footer" *ngIf="buildPickerList.length">
+      <d-button bsStyle="common" (click)="closeBuildPicker()">取消</d-button>
+      <d-button bsStyle="primary" [disabled]="!selectedBranch" (click)="confirmBranch()">确定</d-button>
     </div>
   </div>
 </div>

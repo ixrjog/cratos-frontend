@@ -28,6 +28,16 @@
       color: var(--devui-aide-text, #8a8e99);
       font-size: 13px;
       pointer-events: none;
+      z-index: 1;
+    }
+
+    .branch-search {
+      width: 250px;
+
+      // 给内部输入框留出左侧分支图标的空间
+      ::ng-deep input {
+        padding-left: 28px;
+      }
     }
 
     .branch-input {
@@ -538,5 +548,102 @@
     text-align: center;
     color: var(--devui-aide-text, #8a8e99);
     font-size: 13px;
+  }
+}
+
+/* ===== 选择 Build 弹窗 ===== */
+.build-picker-dialog {
+  width: 50%;
+  min-width: 480px;
+  max-width: 92vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+
+  .build-picker-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    align-content: start;
+  }
+
+  .bp-section-title,
+  .bp-empty {
+    grid-column: 1 / -1;
+  }
+
+  .bp-item {
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+      border-color: var(--devui-brand, #5e7ce0);
+      background: var(--devui-global-bg, #f7f8fa);
+    }
+
+    &.selected {
+      border-color: var(--devui-brand, #5e7ce0);
+      background: var(--devui-global-bg, #f7f8fa);
+      box-shadow: 0 0 0 1px var(--devui-brand, #5e7ce0) inset;
+    }
+
+    .bp-project {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .bp-giturl {
+      margin-top: 4px;
+      font-size: 12px;
+      font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+      color: var(--devui-aide-text, #8a8e99);
+      word-break: break-all;
+    }
+  }
+
+  .bp-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--devui-aide-text, #8a8e99);
+    font-size: 13px;
+  }
+
+  .bp-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+  }
+
+  .bp-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+    margin: 4px 0 10px;
+    padding-left: 8px;
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+  }
+
+  .bp-branch {
+    position: relative;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--devui-dividing-line, #dfe1e6);
+
+    .bp-branch-select {
+      display: block;
+      width: 100%;
+    }
   }
 }

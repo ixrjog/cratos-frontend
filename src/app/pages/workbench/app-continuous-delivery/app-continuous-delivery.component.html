@@ -22,6 +22,9 @@
         <d-button bsStyle="common" [disabled]="!selectedApp" (click)="openAuthDialog()">
           <i class="icon icon-user" style="margin-right: 4px;"></i>权限配置
         </d-button>
+        <d-button bsStyle="common" [disabled]="!selectedApp" (click)="openConfigDialog()">
+          <i class="icon icon-setting" style="margin-right: 4px;"></i>发布配置
+        </d-button>
       </div>
 
       <!-- 查询结果: 每个 build(仓库) 一张卡片, 各自打包 -->
@@ -382,6 +385,47 @@
 
     <div class="auth-footer">
       <d-button bsStyle="common" (click)="closeAuthDialog()">关闭</d-button>
+    </div>
+  </div>
+</div>
+
+<!-- 发布配置管理弹窗: 直接管理当前选中应用的配置 -->
+<div class="components-overlay" *ngIf="showConfigMgrDialog" (click)="closeConfigDialog()">
+  <div class="components-dialog config-mgr-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>发布配置 — {{ selectedApp }}</h5>
+      <span class="close-btn" (click)="closeConfigDialog()">&times;</span>
+    </div>
+
+    <div class="cfg-form" dLoading [loading]="configMgrLoading" [backdrop]="true" *ngIf="editingConfig">
+      <div class="cfg-tip" *ngIf="isNewConfig">该应用暂无发布配置, 填写并保存以创建。</div>
+      <div class="cfg-row"><label>应用名称</label>
+        <input dTextInput [(ngModel)]="editingConfig.applicationName" [disabled]="true" /></div>
+      <div class="cfg-row"><label>Server Group</label>
+        <input dTextInput [(ngModel)]="editingConfig.serverGroup" placeholder="部署目标 EDS Group 标签值" /></div>
+      <div class="cfg-row"><label>Jenkins Job</label>
+        <input dTextInput [(ngModel)]="editingConfig.jobName" placeholder="打包 job 名称" /></div>
+      <div class="cfg-row"><label>Compose File</label>
+        <input dTextInput [(ngModel)]="editingConfig.composeFile" placeholder="远程 docker-compose 路径" /></div>
+      <div class="cfg-row"><label>Tag 前缀</label>
+        <input dTextInput [(ngModel)]="editingConfig.tagPrefix" placeholder="tag = tagPrefix-buildId" /></div>
+      <div class="cfg-row"><label>镜像名</label>
+        <input dTextInput [(ngModel)]="editingConfig.imageName" placeholder="imageName" /></div>
+      <div class="cfg-row"><label>镜像仓库</label>
+        <input dTextInput [(ngModel)]="editingConfig.imageRegistry" placeholder="imageRegistry" /></div>
+      <div class="cfg-row"><label>镜像命名空间</label>
+        <input dTextInput [(ngModel)]="editingConfig.imageProject" placeholder="imageProject" /></div>
+      <div class="cfg-row cfg-row-cb">
+        <label class="cfg-cb"><d-checkbox [(ngModel)]="editingConfig.sudo"></d-checkbox><span>部署需 sudo</span></label>
+        <label class="cfg-cb"><d-checkbox [(ngModel)]="editingConfig.enabled"></d-checkbox><span>启用</span></label>
+      </div>
+      <div class="cfg-row"><label>备注</label>
+        <input dTextInput [(ngModel)]="editingConfig.comment" placeholder="comment" /></div>
+      <div class="cfg-form-footer">
+        <span style="flex:1"></span>
+        <d-button bsStyle="common" (click)="closeConfigDialog()">取消</d-button>
+        <d-button bsStyle="primary" [disabled]="configMgrSaving" (click)="onSaveConfig()">保存</d-button>
+      </div>
     </div>
   </div>
 </div>

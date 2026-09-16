@@ -61,14 +61,19 @@ export class AppContinuousDeliveryComponent implements OnInit, OnDestroy {
 
   /** 打开服务器终端(弹窗, 复用 EDS 资产 SSH 终端组件) */
   onServerTerminal(server: any) {
+    // 终端弹窗宽=页面 80%, 高=页面 80%(固定像素, 之后缩放浏览器不改变), 参考 eds/asset 终端实现
     const w = Math.round(window.innerWidth * 0.8);
+    const h = Math.round(window.innerHeight * 0.8);
     const dialogDate = {
       ...DIALOG_DATA.editorData,
       width: w + 'px',
+      height: h + 'px',
+      maxHeight: h + 'px',
       content: EdsAssetSshTerminalComponent,
       title: 'Asset Login',
     };
-    const formData: any = { ...server, __dialogHeight: '80vh' };
+    // 终端 section 高度 = 弹窗高 - 标题/内边距(约 96px), 让终端撑满
+    const formData: any = { ...server, __dialogHeight: Math.max(300, h - 96) + 'px' };
     this.dialogUtil.onEditWithoutButtonDialog(UPDATE_OPERATION, dialogDate, () => null, formData);
   }
 
@@ -348,6 +353,90 @@ export class AppContinuousDeliveryComponent implements OnInit, OnDestroy {
     }
     this.apiService.post('/application', '/app-release/auth/delete', { id: a.id })
       .subscribe(() => this.loadAuths(), () => this.loadAuths());
+  }
+
+  // ===== 发布配置管理弹窗(pp_app_release_config, 当前选中应用) =====
+  showConfigMgrDialog = false;
+  configMgrLoading = false;
+  configMgrSaving = false;
+  editingConfig: any = null;
+  isNewConfig = false;
+
+  openConfigDialog() {
+    if (!this.selectedApp) {
+      return;
+    }
+    this.showConfigMgrDialog = true;
+    this.editingConfig = null;
+    this.isNewConfig = false;
+    this.loadConfigForSelectedApp();
+  }
+
+  closeConfigDialog() {
+    this.showConfigMgrDialog = false;
+  }
+
+  /** 直接加载当前选中应用的配置(存在则编辑, 不存在则新建预填 applicationName) */
+  loadConfigForSelectedApp() {
+    this.configMgrLoading = true;
+    this.apiService.post('/application', '/app-release/config/query', {}).subscribe(({ body }: any) => {
+      const list = body || [];
+      const found = list.find((c: any) => c.applicationName === this.selectedApp);
+      if (found) {
+        this.isNewConfig = false;
+        this.editingConfig = { ...found };
+      } else {
+        this.isNewConfig = true;
+        this.editingConfig = {
+          applicationName: this.selectedApp,
+          serverGroup: '', jobName: '', composeFile: '', sudo: false,
+          tagPrefix: '', imageName: '', imageRegistry: '', imageProject: '',
+          enabled: true, comment: '',
+        };
+      }
+      this.configMgrLoading = false;
+    }, () => {
+      this.configMgrLoading = false;
+    });
+  }
+
+  onSaveConfig() {
+    const cfg = this.editingConfig;
+    if (!cfg || !cfg.applicationName?.trim()) {
+      return;
+    }
+    this.configMgrSaving = true;
+    this.apiService.post('/application', '/app-release/config/save', {
+      id: this.isNewConfig ? null : cfg.id,
+      applicationName: cfg.applicationName.trim(),
+      serverGroup: cfg.serverGroup,
+      jobName: cfg.jobName,
+      composeFile: cfg.composeFile,
+      sudo: !!cfg.sudo,
+      tagPrefix: cfg.tagPrefix,
+      imageName: cfg.imageName,
+      imageRegistry: cfg.imageRegistry,
+      imageProject: cfg.imageProject,
+      enabled: cfg.enabled !== false,
+      comment: cfg.comment,
+    }).subscribe(({ body }: any) => {
+      this.configMgrSaving = false;
+      if (body) {
+        this.isNewConfig = false;
+        this.editingConfig = { ...body };
+      }
+      this.closeConfigDialog();
+    }, () => {
+      this.configMgrSaving = false;
+    });
+  }
+
+  onDeleteConfig(c: any) {
+    if (!c?.id) {
+      return;
+    }
+    this.apiService.post('/application', '/app-release/config/delete', { id: c.id })
+      .subscribe(() => this.closeConfigDialog(), () => this.closeConfigDialog());
   }
 
   onQueryConfig() {

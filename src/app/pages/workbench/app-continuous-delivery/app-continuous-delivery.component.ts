@@ -4,6 +4,7 @@ import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ApiService } from '../../../@core/services/api.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -242,6 +243,111 @@ export class AppContinuousDeliveryComponent implements OnInit, OnDestroy {
       this.onBranchBlur();
     }
     this.showBuildPicker = false;
+  }
+
+  // ===== 权限配置弹窗(当前应用的 build/deploy 授权) =====
+  showAuthDialog = false;
+  authLoading = false;
+  authSaving = false;
+  authList: any[] = [];
+  newAuthUsername = '';
+  newAuthUserOption: any = null;
+  newAuthBuild = false;
+  newAuthDeploy = false;
+
+  /** d-select 搜索用户(参考 user/list 的 /user/page/query), 返回 devui {id, option} 包裹 */
+  onSearchUser = (term: string) => {
+    return this.apiService.post('/user', '/page/query', {
+      queryName: (term || '').trim(),
+      page: 1,
+      length: 20,
+    }).pipe(
+      map(({ body }: any) => (body?.data || []).map((u: any, index: number) => ({
+        id: index,
+        option: { label: u.username, value: u.username, desc: u.displayName || u.name || u.email || '' },
+      }))),
+    );
+  };
+
+  /** 选中用户后填入待添加用户名 */
+  onSelectAuthUser(opt: any) {
+    this.newAuthUsername = opt ? opt.value : '';
+  }
+
+  openAuthDialog() {
+    if (!this.selectedApp) {
+      return;
+    }
+    this.showAuthDialog = true;
+    this.newAuthUsername = '';
+    this.newAuthUserOption = null;
+    this.newAuthBuild = false;
+    this.newAuthDeploy = false;
+    this.loadAuths();
+  }
+
+  closeAuthDialog() {
+    this.showAuthDialog = false;
+  }
+
+  loadAuths() {
+    this.authLoading = true;
+    this.authList = [];
+    this.apiService.post('/application', '/app-release/auth/query', {
+      applicationName: this.selectedApp,
+    }).subscribe(({ body }: any) => {
+      this.authList = body || [];
+      this.authLoading = false;
+    }, () => {
+      this.authLoading = false;
+    });
+  }
+
+  onAddAuth() {
+    const username = (this.newAuthUsername || '').trim();
+    if (!username) {
+      return;
+    }
+    this.authSaving = true;
+    this.apiService.post('/application', '/app-release/auth/save', {
+      applicationName: this.selectedApp,
+      username,
+      buildPermission: this.newAuthBuild,
+      deployPermission: this.newAuthDeploy,
+      enabled: true,
+    }).subscribe(() => {
+      this.authSaving = false;
+      this.newAuthUsername = '';
+      this.newAuthUserOption = null;
+      this.newAuthBuild = false;
+      this.newAuthDeploy = false;
+      this.loadAuths();
+    }, () => {
+      this.authSaving = false;
+    });
+  }
+
+  /** 行内切换权限/启用后保存 */
+  onSaveAuthRow(a: any) {
+    this.apiService.post('/application', '/app-release/auth/save', {
+      id: a.id,
+      applicationName: this.selectedApp,
+      username: a.username,
+      buildPermission: !!a.buildPermission,
+      deployPermission: !!a.deployPermission,
+      enabled: !!a.enabled,
+    }).subscribe(() => {}, () => {
+      // 保存失败则刷新回真实状态
+      this.loadAuths();
+    });
+  }
+
+  onDeleteAuth(a: any) {
+    if (!a?.id) {
+      return;
+    }
+    this.apiService.post('/application', '/app-release/auth/delete', { id: a.id })
+      .subscribe(() => this.loadAuths(), () => this.loadAuths());
   }
 
   onQueryConfig() {

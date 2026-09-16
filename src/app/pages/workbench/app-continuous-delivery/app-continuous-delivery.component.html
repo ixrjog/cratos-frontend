@@ -19,6 +19,9 @@
         <d-button bsStyle="common" [disabled]="!selectedApp" (click)="onViewServerInfo()">
           {{ 'appContinuousDelivery.search.serverInfo' | translate }}
         </d-button>
+        <d-button bsStyle="common" [disabled]="!selectedApp" (click)="openAuthDialog()">
+          <i class="icon icon-user" style="margin-right: 4px;"></i>权限配置
+        </d-button>
       </div>
 
       <!-- 查询结果: 每个 build(仓库) 一张卡片, 各自打包 -->
@@ -322,6 +325,63 @@
     <div class="bp-footer" *ngIf="buildPickerList.length">
       <d-button bsStyle="common" (click)="closeBuildPicker()">取消</d-button>
       <d-button bsStyle="primary" [disabled]="!selectedBranch" (click)="confirmBranch()">确定</d-button>
+    </div>
+  </div>
+</div>
+
+<!-- 权限配置弹窗: 管理当前应用的 build/deploy 授权 -->
+<div class="components-overlay" *ngIf="showAuthDialog" (click)="closeAuthDialog()">
+  <div class="components-dialog auth-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>权限配置 — {{ selectedApp }}</h5>
+      <span class="close-btn" (click)="closeAuthDialog()">&times;</span>
+    </div>
+
+    <!-- 新增授权 -->
+    <div class="auth-add">
+      <d-select
+        class="auth-user-select"
+        [filterKey]="'label'"
+        [appendToBody]="false"
+        [isSearch]="true"
+        [searchFn]="onSearchUser"
+        [(ngModel)]="newAuthUserOption"
+        (valueChange)="onSelectAuthUser($event)"
+        placeholder="搜索并选择用户">
+        <ng-template let-option="option">
+          <span>{{ option.label }}</span>
+          <span *ngIf="option.desc"
+                style="float: right; font-size: 11px; color: var(--devui-aide-text, #8a8e99);">{{ option.desc }}</span>
+        </ng-template>
+      </d-select>
+      <label class="auth-cb"><d-checkbox [(ngModel)]="newAuthBuild"></d-checkbox><span>打包(build)</span></label>
+      <label class="auth-cb"><d-checkbox [(ngModel)]="newAuthDeploy"></d-checkbox><span>发布(deploy)</span></label>
+      <d-button bsStyle="primary" bsSize="sm" [disabled]="!newAuthUsername?.trim() || authSaving"
+                (click)="onAddAuth()">添加</d-button>
+    </div>
+
+    <div class="auth-body" dLoading [loading]="authLoading" [backdrop]="true">
+      <table class="auth-table" *ngIf="authList.length">
+        <thead>
+          <tr><th>用户名</th><th>打包(build)</th><th>发布(deploy)</th><th>启用</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of authList">
+            <td>{{ a.username }}</td>
+            <td><d-checkbox [(ngModel)]="a.buildPermission" (change)="onSaveAuthRow(a)"></d-checkbox></td>
+            <td><d-checkbox [(ngModel)]="a.deployPermission" (change)="onSaveAuthRow(a)"></d-checkbox></td>
+            <td><d-checkbox [(ngModel)]="a.enabled" (change)="onSaveAuthRow(a)"></d-checkbox></td>
+            <td><i class="icon icon-delete auth-del" (click)="onDeleteAuth(a)" title="删除"></i></td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!authLoading && !authList.length" class="auth-empty">
+        当前应用暂无授权记录（默认拒绝：无记录的用户无 build/deploy 权限，管理员除外）
+      </div>
+    </div>
+
+    <div class="auth-footer">
+      <d-button bsStyle="common" (click)="closeAuthDialog()">关闭</d-button>
     </div>
   </div>
 </div>

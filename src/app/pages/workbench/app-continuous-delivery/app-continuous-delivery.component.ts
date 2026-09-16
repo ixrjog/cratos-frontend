@@ -3,6 +3,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { ApiService } from '../../../@core/services/api.service';
+import { Observable } from 'rxjs';
 import { ToastUtil } from '../../../@shared/utils/toast.util';
 import { TerminalThemeService } from '../web-terminal/web-terminal-management/terminal-theme.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -127,6 +128,120 @@ export class AppContinuousDeliveryComponent implements OnInit, OnDestroy {
       map[this.selectedApp] = this.branch;
       localStorage.setItem(AppContinuousDeliveryComponent.BRANCH_KEY, JSON.stringify(map));
     }
+  }
+
+  // ===== 选择 Project 弹窗（分支选择器，参考 SCA 页；分支选项复用 /sca 接口） =====
+  showBuildPicker = false;
+  buildPickerLoading = false;
+  buildPickerList: any[] = [];
+  selectedBuild: any = null;
+  branchOptionsLoading = false;
+  branchSelectOptions: any[] = [];
+  selectedBranchOption: any = null;
+  selectedBranch: string = null;
+
+  /** 分支框 d-search 的搜索动作: 弹出 Project 选择 */
+  onBranchSearch() {
+    this.openBuildPicker();
+  }
+
+  /** 打开选择 project 弹窗: 用当前应用+分支查配置, 列出 builds(project + gitUrl) */
+  openBuildPicker() {
+    if (!this.selectedApp) {
+      return;
+    }
+    this.onBranchBlur();
+    this.showBuildPicker = true;
+    this.buildPickerLoading = true;
+    this.buildPickerList = [];
+    this.selectedBuild = null;
+    this.branchSelectOptions = [];
+    this.selectedBranchOption = null;
+    this.selectedBranch = null;
+    this.apiService.post('/application', '/app-release/build/config/query', {
+      applicationName: this.selectedApp,
+      branch: (this.branch || '').trim() || 'master',
+    }).subscribe(({ body }: any) => {
+      this.buildPickerList = (body?.builds || []).map((b: any) => ({
+        project: b.project || b.moduleName || '',
+        gitUrl: b?.buildProject?.repository?.sshUrl || '',
+        raw: b,
+      }));
+      if (this.buildPickerList.length === 1) {
+        this.onSelectBuild(this.buildPickerList[0]);
+      }
+      this.buildPickerLoading = false;
+    }, () => {
+      this.buildPickerList = [];
+      this.buildPickerLoading = false;
+    });
+  }
+
+  closeBuildPicker() {
+    this.showBuildPicker = false;
+  }
+
+  /** 选中一个 project 后, 复用 /sca 接口查询该 build(gitUrl)的 GitLab 分支选项 */
+  onSelectBuild(item: any) {
+    if (!item?.gitUrl) {
+      return;
+    }
+    this.selectedBuild = item;
+    this.branchSelectOptions = [];
+    this.selectedBranchOption = null;
+    this.selectedBranch = null;
+    this.branchOptionsLoading = true;
+    this.apiService.post('/sca', '/build/branch-options/query', {
+      gitUrl: item.gitUrl,
+      openTag: false,
+    }).subscribe(({ body }: any) => {
+      const groups = body?.options || [];
+      const multiGroup = groups.length > 1;
+      const flat: any[] = [];
+      groups.forEach((g: any) => {
+        (g.options || []).forEach((opt: any) => {
+          flat.push({
+            value: opt.value,
+            label: multiGroup ? `[${g.label}] ${opt.label}` : opt.label,
+            group: g.label,
+            desc: opt.desc || opt.commitMessage || '',
+          });
+        });
+      });
+      this.branchSelectOptions = flat;
+      this.selectedBranchOption = flat[0] || null;
+      this.selectedBranch = flat[0] ? flat[0].value : null;
+      this.branchOptionsLoading = false;
+    }, () => {
+      this.branchSelectOptions = [];
+      this.branchOptionsLoading = false;
+    });
+  }
+
+  /** 弹窗内 d-select 选中变化: 派生分支名字符串 */
+  onPickerBranchChange(opt: any) {
+    this.selectedBranch = opt ? opt.value : null;
+  }
+
+  /** d-select 前端搜索: 按 label 过滤分支/Tag (返回 devui 期望的 {id, option} 包裹结构) */
+  onSearchBranch = (term: string) => {
+    const t = (term || '').toLowerCase();
+    const list = this.branchSelectOptions
+      .filter(o => (o.label || '').toLowerCase().includes(t))
+      .map((o, index) => ({ id: index, option: o }));
+    return new Observable<any[]>((observer) => {
+      observer.next(list);
+      observer.complete();
+    });
+  };
+
+  /** 确认分支: 填回分支框(并走本页 per-app 持久化)并关闭弹窗 */
+  confirmBranch() {
+    if (this.selectedBranch) {
+      this.branch = this.selectedBranch;
+      this.onBranchBlur();
+    }
+    this.showBuildPicker = false;
   }
 
   onQueryConfig() {

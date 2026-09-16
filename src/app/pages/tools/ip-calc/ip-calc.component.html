@@ -41,6 +41,23 @@
     </div>
   </div>
 
+  <div class="pair-block">
+    <div class="ranges-title">两个 IP 的最小子网</div>
+    <div class="toolbar pair-toolbar">
+      <input dTextInput class="ip-input pair-input" [(ngModel)]="ipA" (keyup.enter)="calcCommonSubnet()" placeholder="IP A, 如 192.168.1.10" />
+      <input dTextInput class="ip-input pair-input" [(ngModel)]="ipB" (keyup.enter)="calcCommonSubnet()" placeholder="IP B, 如 192.168.1.200" />
+      <d-button bsStyle="primary" (click)="calcCommonSubnet()">计算最小子网</d-button>
+    </div>
+    <div class="status-error" *ngIf="pairError">{{ pairError }}</div>
+    <div class="results" *ngIf="pairRows.length">
+      <div class="ip-row" *ngFor="let r of pairRows">
+        <span class="k">{{ r.label }}</span>
+        <span class="v">{{ r.value }}</span>
+        <a class="copy" (click)="copy(r.value)">复制</a>
+      </div>
+    </div>
+  </div>
+
   <div class="ranges" *ngIf="ranges.length">
     <div class="ranges-title">该 IP 所属网段一览（/0 – /32）</div>
     <div class="ranges-head ranges-line">

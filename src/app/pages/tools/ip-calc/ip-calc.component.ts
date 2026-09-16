@@ -23,6 +23,55 @@ export class IpCalcComponent {
   rows: ResultRow[] = [];
   errorMsg = '';
 
+  // ===== 两个 IP 的最小包含子网 =====
+  ipA = '192.168.1.10';
+  ipB = '192.168.1.200';
+  pairRows: ResultRow[] = [];
+  pairError = '';
+
+  /** 计算同时包含 ipA、ipB 的最小子网(最长前缀) */
+  calcCommonSubnet(): void {
+    this.pairError = '';
+    this.pairRows = [];
+    try {
+      const a = (this.ipA || '').trim();
+      const b = (this.ipB || '').trim();
+      this.validateIp(a);
+      this.validateIp(b);
+      const na = this.toInt(a);
+      const nb = this.toInt(b);
+      // 异或后从高位起的公共前缀长度即最小子网前缀
+      const diff = (na ^ nb) >>> 0;
+      let prefix = 32;
+      if (diff !== 0) {
+        // clz: 最高差异位左侧的相同位数
+        let x = diff;
+        let firstDiff = 0; // 从高位数, 第一个为 1 的位序号(0-based)
+        while ((x & 0x80000000) === 0) {
+          firstDiff++;
+          x = (x << 1) >>> 0;
+        }
+        prefix = firstDiff; // 公共前缀长度
+      }
+      const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+      const wildcard = (~mask) >>> 0;
+      const network = (na & mask) >>> 0;
+      const broadcast = (network | wildcard) >>> 0;
+      const totalAddrs = Math.pow(2, 32 - prefix);
+      this.pairRows = [
+        { label: '最小子网 (CIDR)', value: `${this.toDotted(network)}/${prefix}` },
+        { label: '前缀长度', value: `/${prefix}` },
+        { label: '子网掩码', value: this.toDotted(mask) },
+        { label: '网络地址', value: this.toDotted(network) },
+        { label: '广播地址', value: prefix >= 31 ? '—' : this.toDotted(broadcast) },
+        { label: '地址范围', value: `${this.toDotted(network)} - ${this.toDotted(broadcast)}` },
+        { label: '地址总数', value: `${totalAddrs}` },
+      ];
+    } catch (e: any) {
+      this.pairError = e?.message || String(e);
+    }
+  }
+
   // 该 IP 在各前缀下所属的网段一览
   ranges: { prefix: number; cidr: string; mask: string; range: string; hosts: string }[] = [];
 

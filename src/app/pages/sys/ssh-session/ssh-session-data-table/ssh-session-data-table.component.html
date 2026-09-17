@@ -72,14 +72,22 @@
                 {{ rowItem['durationTime'] }}
               </span>
             </div>
+            <div>
+              <strong style="margin-right: 5px">Hostname</strong>
+              <span class="font-color-comment">
+                {{ rowItem['serverHostname'] | dSafeNullPipe: '?' }}
+              </span>
+            </div>
           </div>
         </ng-template>
       </d-cell>
     </d-column>
-    <d-column header="Username@Hostname" [width]="'200px'">
+    <d-column header="Operator" [width]="'200px'">
       <d-cell>
         <ng-template let-rowItem="rowItem">
-          <span>{{ rowItem['username'] }}@{{ rowItem['serverHostname'] }}</span>
+          <span>
+            <app-user-popover *ngIf="rowItem['username']" [username]="rowItem['username']"></app-user-popover>
+          </span>
         </ng-template>
       </d-cell>
     </d-column>

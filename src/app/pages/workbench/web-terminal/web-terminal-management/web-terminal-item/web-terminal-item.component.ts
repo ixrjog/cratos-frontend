@@ -214,6 +214,18 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
     this.xterm.refresh(0, this.xterm.rows - 1);
   }
 
+  /**
+   * 终端容器是否可见且有实际尺寸。
+   * offsetParent 为 null 表示自身或祖先 display:none(多 tab 切换时的隐藏 tab), 此时不可 fit。
+   */
+  private isTerminalVisible(): boolean {
+    const el = document.getElementById(`terminal-${this.terminal?.instanceId}`);
+    if (!el) {
+      return false;
+    }
+    return el.offsetParent !== null && el.clientWidth > 0 && el.clientHeight > 0;
+  }
+
   private attachTerminal(): void {
     const container = document.getElementById(`terminal-${this.terminal.instanceId}`);
     if (container && this.xterm) {
@@ -442,6 +454,11 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onResize(event?: Event): void {
+    // 隐藏期间(多 tab 切换)容器尺寸为 0, fit() 会算出错误列宽并同步到服务端 PTY,
+    // 远端 shell 据此重新折行, 切回该 tab 后内容出现断行错乱
+    if (!this.isTerminalVisible()) {
+      return;
+    }
     if (this.fitAddon && this.xterm) {
       try {
         setTimeout(() => {

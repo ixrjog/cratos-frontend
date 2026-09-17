@@ -40,9 +40,25 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
   rows: number = 24;
 
   private calculateRows(): number {
+    // 容器不可见(多 tab 切换时 display:none)尺寸为 0, 此时 fit() 会算出错误的 cols/rows, 保持现值
+    if (!this.isTerminalVisible()) {
+      return this.rows;
+    }
     // 使用fitAddon来获取准确的终端尺寸
     this.fitAddon.fit();
     return this.terminal.rows;
+  }
+
+  /**
+   * 终端容器是否可见且有实际尺寸。
+   * offsetParent 为 null 表示自身或祖先 display:none(多 tab 切换时的隐藏 tab)。
+   */
+  private isTerminalVisible(): boolean {
+    const el: HTMLElement | null = this.termRef?.nativeElement || document.getElementById('edsAssetSshTerminal');
+    if (!el) {
+      return false;
+    }
+    return el.offsetParent !== null && el.clientWidth > 0 && el.clientHeight > 0;
   }
   formData: EdsAssetVO;
   closeHandler: Function;
@@ -379,6 +395,9 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
 
   private handleTerminalResize(): void {
     if (this.ws?.readyState !== WebSocket.OPEN) return;
+    // 隐藏期间(多 tab 切换)容器尺寸为 0, 若此时 fit 并上报, 服务端 PTY 会被改成错误列宽,
+    // 远端 shell 按该列宽重新折行, 切回该 tab 后就看到断行错乱的内容
+    if (!this.isTerminalVisible()) return;
 
     this.rows = this.calculateRows();
 

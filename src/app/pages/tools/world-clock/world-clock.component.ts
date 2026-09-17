@@ -24,7 +24,7 @@ export class WorldClockComponent implements OnInit, OnDestroy {
   // 全部时区从浏览器原生 API 动态获取，避免手写清单不全
   options: Zone[] = [];
 
-  private readonly STORAGE_KEY = 'cratos.tools.worldClock.v4';
+  private readonly STORAGE_KEY = 'cratos.tools.worldClock.v5';
 
   selectOptions: { label: string; value: string }[] = [];
   toAdd = '';
@@ -65,6 +65,7 @@ export class WorldClockComponent implements OnInit, OnDestroy {
         'Africa/Dar_es_Salaam', // 坦桑尼亚
         'Africa/Lagos',         // 尼日利亚
         'Africa/Accra',         // 加纳
+        'Africa/Ouagadougou',   // 布基纳法索
         'Africa/Nairobi',       // 肯尼亚
         'Asia/Dhaka',           // 孟加拉
         'Asia/Karachi',         // 巴基斯坦

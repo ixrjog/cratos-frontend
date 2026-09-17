@@ -27,7 +27,7 @@ interface ClockRow {
 })
 export class WorldClockDisplayComponent implements OnInit, OnDestroy {
   // 与工具页 STORAGE_KEY 保持一致
-  private readonly STORAGE_KEY = 'cratos.tools.worldClock.v4';
+  private readonly STORAGE_KEY = 'cratos.tools.worldClock.v5';
 
   @Input() showUtc = true;
   @Input() title = '世界时间';
@@ -76,7 +76,7 @@ export class WorldClockDisplayComponent implements OnInit, OnDestroy {
     if (!tzs.length) {
       tzs = [
         'Asia/Shanghai', 'Europe/London', 'Europe/Berlin', 'Africa/Dar_es_Salaam',
-        'Africa/Lagos', 'Africa/Accra', 'Africa/Nairobi', 'Asia/Dhaka',
+        'Africa/Lagos', 'Africa/Accra', 'Africa/Ouagadougou', 'Africa/Nairobi', 'Asia/Dhaka',
         'Asia/Karachi', 'Africa/Kampala', 'Asia/Manila',
       ];
     }

@@ -38,6 +38,16 @@ export interface SshCommandVO extends BaseVO {
   input: string;
   inputFormatted: string;
   output: string;
+  /** 命令执行(回车提交)时间, 输入侧采集才有; 历史数据为 null */
+  inputAt?: string;
+  /** 采集到的输出行数 */
+  outputLines?: number;
+  /** 输出是否被截断(超过 3 行或 512 字符) */
+  outputTruncated?: boolean;
+  /** 命令耗时(毫秒, 近似) */
+  durationMs?: number;
+  /** 采集方式: AUDIT_PARSE / INPUT_TRACK */
+  source?: string;
 }
 
 export interface SshSessionPageQuery extends PageQuery {

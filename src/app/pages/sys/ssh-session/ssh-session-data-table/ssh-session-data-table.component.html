@@ -105,15 +105,17 @@
                   <span style="margin-left: 5px">{{ instance | sshInstance }}</span>
                 </span>
                 <span *ngIf="instance['instanceClosed']">
-                  <span>{{ instance | sshInstance }}
-                    &nbsp;<i class="fa-solid fa-terminal"></i>
-                  </span>
-                  <d-badge [count]=countResource(instance) status="common"></d-badge>
+                  <span>{{ instance | sshInstance }}</span>
                 </span>
               </div>
               <div class="instance-card-footer" *ngIf="instance['instanceClosed']">
                 <i class="fa-solid fa-video" [class.video-active]="instance.outputSize > 0"></i>
                 <span style="margin-left: 5px">{{ instance.outputSize | flowUnitTran }}</span>
+                <i class="fa-solid fa-terminal" style="margin-left: 12px"></i>
+                <d-badge [count]=countResource(instance)
+                         [style]="'--devui-warning: var(--devui-brand, #5e7ce0)'"
+                         [status]="countResource(instance) > 0 ? 'warning' : 'common'"
+                         [maxCount]='9999'></d-badge>
               </div>
             </div>
           </div>

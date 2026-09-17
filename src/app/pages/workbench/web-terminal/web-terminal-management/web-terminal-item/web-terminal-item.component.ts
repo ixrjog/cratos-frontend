@@ -20,6 +20,7 @@ import { TerminalThemeService } from '../terminal-theme.service';
 import { TerminalTheme } from '../terminal-themes.config';
 import { BusinessTypeEnum } from '../../../../../@core/data/business';
 import { DialogUtil } from '../../../../../@shared/utils/dialog.util';
+import { onTerminalDataWithImeFix } from '../../../../../@shared/utils/xterm-ime.util';
 
 @Component({
   selector: 'app-web-terminal-item',
@@ -160,8 +161,8 @@ export class WebTerminalItemComponent implements OnInit, OnDestroy, AfterViewIni
       return true;
     });
 
-    // 监听终端输入 - 直接通过xterm.js处理所有键盘输入
-    this.xterm.onData((data) => {
+    // 监听终端输入 - 直接通过xterm.js处理所有键盘输入(经 IME 去重包装)
+    onTerminalDataWithImeFix(this.xterm, (data) => {
       // 发送原始数据到后端
       this.onCommand.emit({
         instanceId: this.terminal.instanceId,

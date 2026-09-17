@@ -21,6 +21,7 @@ import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { BASE_TERMINAL_OPTIONS } from '../../../../../../../../@shared/constant/xterm.constant';
 import { getRowColor } from '../../../../../../../../@shared/utils/data-table.utli';
+import { onTerminalDataWithImeFix } from '../../../../../../../../@shared/utils/xterm-ime.util';
 import { UserScriptService } from '../../../../../../../../@core/services/user-script.service';
 import { UserScriptVO } from '../../../../../../../../@core/data/user-script';
 
@@ -427,7 +428,7 @@ export class KubernetesPodExecComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private setupTerminalInput(): void {
-    this.terminalDisposables.push(this.terminal.onData((event) => {
+    this.terminalDisposables.push(onTerminalDataWithImeFix(this.terminal, (event) => {
       const param: ApplicationKubernetesDetailsRequest = {
         topic: WsMessageTopicEnum.APPLICATION_KUBERNETES_POD_EXEC,
         action: WsMessageActionEnum.INPUT,

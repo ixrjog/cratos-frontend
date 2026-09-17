@@ -11,6 +11,7 @@ import { ITerminalOptions, Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { BASE_TERMINAL_OPTIONS } from '../../../../../../@shared/constant/xterm.constant';
+import { onTerminalDataWithImeFix } from '../../../../../../@shared/utils/xterm-ime.util';
 import { ServerAccountService } from '../../../../../../@core/services/server-account.service';
 import { ServerAccountPageQuery, ServerAccountVO } from '../../../../../../@core/data/server-account';
 import { UserScriptService } from '../../../../../../@core/services/user-script.service';
@@ -271,7 +272,7 @@ export class EdsAssetSshTerminalComponent implements OnInit, OnDestroy, AfterVie
       this.terminalInputDisposable.dispose();
     }
 
-    this.terminalInputDisposable = this.terminal.onData((event) => {
+    this.terminalInputDisposable = onTerminalDataWithImeFix(this.terminal, (event) => {
       if (this.hasError) return;
 
       this.sendMessage({

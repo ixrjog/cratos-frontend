@@ -196,11 +196,16 @@
             [scrollable]='true'
             [tableOverflowType]="'overlay'"
           >
-            <d-column field='scanNo' header='Scan No' [width]="'80px'"></d-column>
+            <d-column field='scanNo' header='Scan No' [width]="'60px'"></d-column>
             <d-column header='Application / Repository' [width]="'200px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <div class='app-name'>{{ rowItem.applicationName }}</div>
+                  <div class='repo-line' *ngIf='rowItem.project?.trim()'>
+                    <span class='scan-project' title='构建项目 (Build.project)'>
+                      <i class='fas fa-cube' style='margin-right: 4px; color: var(--devui-aide-text, #8a8e99);'></i>{{ rowItem.project }}
+                    </span>
+                  </div>
                   <div class='repo-line'>
                   <span
                     class='repo-branch'
@@ -240,7 +245,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header='SCA' [width]="'130px'">
+            <d-column header='SCA' [width]="'110px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <ng-container *ngIf='rowItem.scaScan; else noSca'>
@@ -291,7 +296,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column field='buildId' header='Build' [width]="'80px'">
+            <d-column field='buildId' header='Build' [width]="'60px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <a *ngIf='rowItem.buildId && rowItem.jobName'
@@ -318,7 +323,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header='Follow-up Group' [width]="'130px'">
+            <d-column header='Follow-up Group' [width]="'100px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <a *ngIf='rowItem.followUpGroup' [href]='rowItem.followUpGroup' target='_blank'
@@ -357,7 +362,7 @@
                 </ng-template>
               </d-cell>
             </d-column>
-            <d-column header='Time' [width]="'120px'">
+            <d-column header='Time' [width]="'130px'">
               <d-cell>
                 <ng-template let-rowItem='rowItem'>
                   <span>{{ rowItem.createTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>

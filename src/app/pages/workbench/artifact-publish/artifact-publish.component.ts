@@ -1287,12 +1287,52 @@ mavenpassword=你的Cratos密码`;
         }
       });
       this.publishCountMap = map;
+      // 次数可能晚于模块清单到达, 回补默认选中(发布次数最多的模块)
+      this.reapplyDefaultModuleSelection();
     });
   }
 
   /** 取某模块(artifactId)的历史发布次数 */
   publishCountOf(artifactId: string): number {
     return (artifactId && this.publishCountMap[artifactId]) || 0;
+  }
+
+  /**
+   * 默认选中的模块: 历史发布次数最多的那个。
+   * 次数相同(含全为 0, 例如发布次数还没加载回来)时取列表中第一个, 保证结果稳定。
+   */
+  private pickDefaultModuleId(modules: any[]): string | null {
+    if (!modules?.length) {
+      return null;
+    }
+    let best = modules[0];
+    let bestCount = this.publishCountOf(best?.artifactId);
+    for (const m of modules) {
+      const count = this.publishCountOf(m?.artifactId);
+      if (count > bestCount) {
+        best = m;
+        bestCount = count;
+      }
+    }
+    return this.moduleId(best);
+  }
+
+  /**
+   * 发布次数加载完成后回补默认选中。
+   * 模块清单与发布次数是两个并行请求, 若次数后到, 首次选中时拿到的计数全是 0(只能退化为第一个),
+   * 因此这里对"仍是自动选中"的 build 重新选一次; 用户手动切过 tab 的(moduleAutoSelected=false)不动。
+   */
+  private reapplyDefaultModuleSelection() {
+    (this.result?.builds || []).forEach((build: any) => {
+      if (!build?.moduleAutoSelected || !build?.internalModules?.length) {
+        return;
+      }
+      const picked = this.pickDefaultModuleId(build.internalModules);
+      if (picked && picked !== build.selectedModuleId) {
+        build.selectedModuleId = picked;
+        this.fetchModuleVersion(build);
+      }
+    });
   }
 
   /**
@@ -1311,10 +1351,9 @@ mavenpassword=你的Cratos密码`;
       gitUrl,
     }).subscribe(({ body }: any) => {
       build.internalModules = body || [];
-      // 默认选中第一个模块
-      build.selectedModuleId = build.internalModules.length
-        ? this.moduleId(build.internalModules[0])
-        : null;
+      // 默认选中发布次数最多的模块(次数未到时退化为第一个, 之后由 reapplyDefaultModuleSelection 回补)
+      build.selectedModuleId = this.pickDefaultModuleId(build.internalModules);
+      build.moduleAutoSelected = true;
       build.internalModulesLoading = false;
       this.fetchModuleVersion(build);
     }, () => {
@@ -1341,7 +1380,8 @@ mavenpassword=你的Cratos密码`;
       build.selectedDependencyId = build.dependencies?.length ? this.dependencyId(build.dependencies[0]) : null;
       this.fetchDependencyVersion(build);
     } else {
-      build.selectedModuleId = build.internalModules?.length ? this.moduleId(build.internalModules[0]) : null;
+      build.selectedModuleId = this.pickDefaultModuleId(build.internalModules);
+      build.moduleAutoSelected = true;
       this.fetchModuleVersion(build);
     }
   }
@@ -1403,6 +1443,8 @@ mavenpassword=你的Cratos密码`;
 
   onModuleTabChange(build: any, moduleId: string) {
     build.selectedModuleId = moduleId;
+    // 用户手动选过就不再被"发布次数最多"的回补逻辑覆盖
+    build.moduleAutoSelected = false;
     this.fetchModuleVersion(build);
   }
 

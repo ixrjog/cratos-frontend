@@ -53,9 +53,6 @@
                     <span class="font-color-comment">
                       {{ rowItem['inputAt'] | dDatePipe: 'y/M/d HH:mm:ss' | dSafeNullPipe: '?' }}
                     </span>
-                    <div *ngIf="rowItem['durationMs'] || rowItem['durationMs'] === 0" class="cmd-meta">
-                      {{ rowItem['durationMs'] }} ms
-                    </div>
                     <div *ngIf="rowItem['outputTruncated']" class="cmd-meta">输出已截断</div>
                   </ng-template>
                 </d-cell>

@@ -10,6 +10,7 @@ import { ApiScanComponent } from './api-scan/api-scan.component';
 import { ScaComponent } from './sca/sca.component';
 import { SastComponent } from './sast/sast.component';
 import { LogLintComponent } from './log-lint/log-lint.component';
+import { SecurityIncidentComponent } from './security-incident/security-incident.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       { path: 'sca', component: ScaComponent },
       { path: 'sast', component: SastComponent },
       { path: 'loglint', component: LogLintComponent },
+      { path: 'incident', component: SecurityIncidentComponent },
     ],
   },
 ];

@@ -14,6 +14,7 @@ import { ApiScanComponent } from './api-scan/api-scan.component';
 import { ScaComponent } from './sca/sca.component';
 import { SastComponent } from './sast/sast.component';
 import { LogLintComponent } from './log-lint/log-lint.component';
+import { SecurityIncidentComponent } from './security-incident/security-incident.component';
 import { DaGridModule } from '../../@shared/layouts/da-grid';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../../@shared/shared.module';
@@ -35,6 +36,7 @@ import { MarkdownModule } from 'ngx-markdown';
     ScaComponent,
     SastComponent,
     LogLintComponent,
+    SecurityIncidentComponent,
   ],
   imports: [
     CommonModule,

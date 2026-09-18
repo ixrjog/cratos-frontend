@@ -1,0 +1,367 @@
+/* ===== 弹窗容器 =====
+   .components-overlay / .components-dialog 在本项目里是每个组件各自定义一份的
+   (sast / sca / log-lint / image-mirror ... 各有一份), 没有全局样式,
+   Angular 组件样式隔离 => 这里必须自带, 否则弹窗会退化成页面里的普通块 */
+.components-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.components-dialog {
+  background: var(--devui-base-bg, #fff);
+  border-radius: 8px;
+  padding: 20px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  .components-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    h5 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .close-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+}
+
+.incident-search {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .search {
+    width: 240px;
+  }
+
+  /* 全局 .spacing-search 给 .search/.select 加了 margin-right,
+     与这里的 flex gap 叠加会让间距不均, 统一由 gap 负责 */
+  .search,
+  .select {
+    margin-right: 0;
+  }
+
+  .only-mine {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    font-size: 13px;
+    color: var(--devui-text, #252b3a);
+  }
+}
+
+.incident-title {
+  font-weight: 600;
+  color: var(--devui-brand, #5e7ce0);
+  cursor: pointer;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.incident-meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--devui-aide-text, #8a8e99);
+}
+
+.member-line {
+  font-size: 12px;
+  line-height: 20px;
+
+  .member-label {
+    display: inline-block;
+    width: 30px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+}
+
+.member-empty {
+  color: var(--devui-aide-text, #8a8e99);
+}
+
+.time-line-row {
+  font-size: 12px;
+  line-height: 20px;
+
+  strong {
+    display: inline-block;
+    width: 34px;
+    margin-right: 4px;
+  }
+}
+
+/* ===== 新建/编辑弹窗 ===== */
+.incident-dialog {
+  width: 70%;
+  min-width: 640px;
+  max-width: 1100px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  .incident-form {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+}
+
+.if-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  > label {
+    flex: 0 0 88px;
+    text-align: right;
+    font-size: 13px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+
+  input[dTextInput],
+  textarea[dTextarea] {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &.if-row-3 {
+    align-items: flex-start;
+
+    .if-cell {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      /* 与 .if-row 的 gap 保持一致, 保证控件起始位置同为 88+12=100px */
+      gap: 12px;
+
+      label {
+        /* 与 .if-row > label 同宽同对齐, 否则首列标签与"标题"行错位 */
+        flex: 0 0 88px;
+        text-align: right;
+        font-size: 13px;
+        color: var(--devui-aide-text, #8a8e99);
+        white-space: nowrap;
+      }
+
+      input[dTextInput],
+      d-select {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  }
+
+  &.if-row-area {
+    align-items: flex-start;
+
+    > label {
+      margin-top: 6px;
+    }
+  }
+
+  /* 负责人/处理人: 搜索框 + 已选标签, 行会变高故顶对齐 */
+  &.if-row-member {
+    align-items: flex-start;
+
+    > label {
+      margin-top: 6px;
+    }
+  }
+
+  .member-picker {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &.if-row-cb {
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-left: 100px;
+
+    .if-cb {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+      white-space: nowrap;
+    }
+
+    .if-cell-time {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      label {
+        font-size: 13px;
+        color: var(--devui-aide-text, #8a8e99);
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.member-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.member-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  background: var(--devui-global-bg, #f7f8fa);
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  color: var(--devui-text, #252b3a);
+
+  .remove {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--devui-aide-text, #8a8e99);
+
+    &:hover {
+      color: var(--devui-danger, #f66f6a);
+    }
+  }
+}
+
+.if-section-title {
+  margin: 14px 0 8px;
+  padding-left: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 3px solid var(--devui-brand, #5e7ce0);
+  color: var(--devui-text, #252b3a);
+}
+
+.if-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--devui-dividing-line, #dfe1e6);
+}
+
+/* ===== 详情弹窗 ===== */
+.incident-detail-dialog {
+  width: 70%;
+  min-width: 640px;
+  max-width: 1100px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  .detail-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--devui-aide-text, #8a8e99);
+}
+
+.detail-section {
+  margin-top: 16px;
+}
+
+.detail-section-title {
+  margin-bottom: 6px;
+  padding-left: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 3px solid var(--devui-brand, #5e7ce0);
+  color: var(--devui-text, #252b3a);
+}
+
+.tl-empty {
+  font-size: 13px;
+  color: var(--devui-aide-text, #8a8e99);
+  padding: 8px 0;
+}
+
+.tl-item {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-left: 2px solid var(--devui-dividing-line, #dfe1e6);
+  background: var(--devui-global-bg, #f7f8fa);
+  border-radius: 0 4px 4px 0;
+
+  .tl-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+
+  .tl-time {
+    font-weight: 600;
+    color: var(--devui-text, #252b3a);
+  }
+
+  .tl-action {
+    padding: 0 6px;
+    border-radius: 2px;
+    background: var(--devui-brand, #5e7ce0);
+    color: #fff;
+  }
+
+  .tl-content {
+    margin-top: 4px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .tl-attachment {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+}
+
+.tl-form {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--devui-dividing-line, #dfe1e6);
+}

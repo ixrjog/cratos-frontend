@@ -1,0 +1,390 @@
+<div class="app-data-table">
+  <h3>安全事件应急处置</h3>
+
+  <!-- 查询条件 -->
+  <div class="spacing-search incident-search">
+    <d-search class="search" [(ngModel)]="queryParam.queryName" [iconPosition]="'left'"
+              placeholder="标题 / 事件编号" (searchFn)="onSearch()"></d-search>
+    <d-select class="select" [(ngModel)]="queryParam.incidentType" [options]="typeOptions"
+              [valueKey]="'value'" [filterKey]="'label'" placeholder="事件类型"
+              (valueChange)="onSearch()"></d-select>
+    <d-select class="select" [(ngModel)]="queryParam.severity" [options]="severityOptions"
+              [valueKey]="'value'" [filterKey]="'label'" placeholder="定级"
+              (valueChange)="onSearch()"></d-select>
+    <d-select class="select" [(ngModel)]="queryParam.status" [options]="statusOptions"
+              [valueKey]="'value'" [filterKey]="'label'" placeholder="处置状态"
+              (valueChange)="onSearch()"></d-select>
+    <label class="only-mine">
+      <d-checkbox [(ngModel)]="queryParam.onlyMine" (change)="onSearch()"></d-checkbox>
+      <span>只看我参与的</span>
+    </label>
+    <d-button bsStyle="common" (click)="onSearch()">查询</d-button>
+    <d-button bsStyle="primary" (click)="openAddDialog()">新建事件</d-button>
+  </div>
+
+  <!-- 事件列表 -->
+  <div class="spacing-table">
+    <d-data-table dLoading [dataSource]="table.data" [tableOverflowType]="'overlay'"
+                  [backdrop]="true" [scrollable]="true" [loadingStyle]="'infinity'"
+                  [loading]="table.loading">
+      <d-column field="incidentNo" header="事件编号" [width]="'150px'"></d-column>
+      <d-column header="标题 / 类型" [width]="'260px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <div class="incident-title" (click)="openDetailDialog(rowItem)" title="查看详情">
+              {{ rowItem.title }}
+            </div>
+            <div class="incident-meta">
+              <span *ngIf="rowItem.incidentType">{{ labelOf(typeOptions, rowItem.incidentType) }}</span>
+              <span *ngIf="rowItem.source" style="margin-left: 8px;">来源: {{ labelOf(sourceOptions, rowItem.source) }}</span>
+            </div>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="定级 / 状态" [width]="'160px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-tag *ngIf="rowItem.severity" [tag]="labelOf(severityOptions, rowItem.severity)"
+                   [labelStyle]="severityStyle(rowItem.severity)"></d-tag>
+            <d-tag *ngIf="rowItem.status" [tag]="labelOf(statusOptions, rowItem.status)"
+                   [labelStyle]="statusStyle(rowItem.status)" style="margin-left: 4px;"></d-tag>
+            <div class="incident-meta" *ngIf="rowItem.dataInvolved">
+              <i class="fas fa-triangle-exclamation" style="margin-right: 4px; color: #f66f6a;"></i>涉数据泄漏
+            </div>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="安全负责人 / 处理人" [width]="'220px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <div class="member-line">
+              <span class="member-label">负责</span>
+              <span *ngIf="!rowItem.owners?.length" class="member-empty">—</span>
+              <app-user-popover *ngFor="let u of rowItem.owners" [username]="u"
+                                style="margin-right: 6px;"></app-user-popover>
+            </div>
+            <div class="member-line">
+              <span class="member-label">处理</span>
+              <span *ngIf="!rowItem.handlers?.length" class="member-empty">—</span>
+              <app-user-popover *ngFor="let u of rowItem.handlers" [username]="u"
+                                style="margin-right: 6px;"></app-user-popover>
+            </div>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="关键时间" [width]="'260px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <div class="time-line-row">
+              <strong>发现</strong>
+              <span class="font-color-comment">
+                {{ rowItem.discoverTime | dDatePipe: 'y/M/d HH:mm' | dSafeNullPipe: '?' }}
+              </span>
+            </div>
+            <div class="time-line-row">
+              <strong>恢复</strong>
+              <span class="font-color-comment">
+                {{ rowItem.recoverTime | dDatePipe: 'y/M/d HH:mm' | dSafeNullPipe: '?' }}
+              </span>
+            </div>
+            <div class="time-line-row" *ngIf="rowItem.durationMinutes || rowItem.durationMinutes === 0">
+              <strong>处置</strong>
+              <span class="font-color-comment">{{ rowItem.durationMinutes }} 分钟</span>
+            </div>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="监管上报" [width]="'110px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <span *ngIf="!rowItem.reportRequired" class="member-empty">不需要</span>
+            <span *ngIf="rowItem.reportRequired && rowItem.reported" style="color: #50d4ab;">已上报</span>
+            <span *ngIf="rowItem.reportRequired && !rowItem.reported" style="color: #f66f6a;">待上报</span>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column field="creator" header="创建人" [width]="'120px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <app-user-popover *ngIf="rowItem.creator" [username]="rowItem.creator"></app-user-popover>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <d-column header="操作" [width]="'140px'">
+        <d-cell>
+          <ng-template let-rowItem="rowItem">
+            <d-icon-group>
+              <d-icon [icon]="'icon-view'" [operable]="true" (click)="openDetailDialog(rowItem)"
+                      title="详情/时间线"></d-icon>
+              <d-icon [icon]="'icon-edit'" [operable]="true" (click)="openEditDialog(rowItem)"
+                      title="编辑" style="margin-left: 10px;"></d-icon>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDelete(rowItem)"
+                      title="删除" style="margin-left: 10px;"></d-icon>
+            </d-icon-group>
+          </ng-template>
+        </d-cell>
+      </d-column>
+      <ng-template #noResultTemplateRef>
+        <div class="no-data">暂无安全事件</div>
+      </ng-template>
+    </d-data-table>
+  </div>
+
+  <div class="spacing-pagination">
+    <d-pagination class="pagination" [total]="table.pager.total" [(pageSize)]="table.pager.pageSize"
+                  [(pageIndex)]="table.pager.pageIndex" [canViewTotal]="true" [canChangePageSize]="true"
+                  [maxItems]="5" (pageIndexChange)="pageIndexChange($event)"
+                  (pageSizeChange)="pageSizeChange($event)"></d-pagination>
+  </div>
+</div>
+
+<!-- 新建/编辑弹窗 -->
+<div class="components-overlay" *ngIf="showEditDialog" (click)="closeEditDialog()">
+  <div class="components-dialog incident-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ isNewIncident ? '新建安全事件' : '编辑安全事件' }}</h5>
+      <span class="close-btn" (click)="closeEditDialog()">&times;</span>
+    </div>
+
+    <div class="incident-form">
+      <div class="if-row">
+        <label>标题 *</label>
+        <input dTextInput [(ngModel)]="editForm.title" placeholder="一句话概括事件"/>
+      </div>
+      <div class="if-row if-row-3">
+        <span class="if-cell">
+          <label>类型</label>
+          <d-select [(ngModel)]="editForm.incidentType" [options]="typeOptions" [valueKey]="'value'"
+                    [filterKey]="'label'" placeholder="事件类型"></d-select>
+        </span>
+        <span class="if-cell">
+          <label>定级</label>
+          <d-select [(ngModel)]="editForm.severity" [options]="severityOptions" [valueKey]="'value'"
+                    [filterKey]="'label'" placeholder="定级"></d-select>
+        </span>
+        <span class="if-cell">
+          <label>状态</label>
+          <d-select [(ngModel)]="editForm.status" [options]="statusOptions" [valueKey]="'value'"
+                    [filterKey]="'label'" placeholder="处置状态"></d-select>
+        </span>
+      </div>
+      <div class="if-row if-row-3">
+        <span class="if-cell">
+          <label>来源</label>
+          <d-select [(ngModel)]="editForm.source" [options]="sourceOptions" [valueKey]="'value'"
+                    [filterKey]="'label'" placeholder="发现来源"></d-select>
+        </span>
+        <span class="if-cell">
+          <label>影响范围</label>
+          <input dTextInput [(ngModel)]="editForm.impactScope" placeholder="受影响系统 / 账户量级等"/>
+        </span>
+      </div>
+
+      <!-- 多人选择: 服务端搜索选中一人即加入下方标签, 与 sast 的负责人选择同款 -->
+      <div class="if-row if-row-member">
+        <label>安全负责人</label>
+        <div class="member-picker">
+          <d-select
+            [filterKey]="'username'"
+            [appendToBody]="true"
+            [searchFn]="onSearchUser"
+            [isSearch]="true"
+            [allowClear]="true"
+            [(ngModel)]="ownerPick"
+            placeholder="按 username 搜索用户, 可重复添加多人"
+            (valueChange)="onOwnerPicked($event)"
+          >
+            <ng-template let-option="option">
+              <span>{{ option.username }}</span>
+              <span style="float: right; color: #999;">{{ option.displayName }}</span>
+            </ng-template>
+          </d-select>
+          <div class="member-tags" *ngIf="editForm.owners?.length">
+            <span class="member-tag" *ngFor="let u of editForm.owners">
+              {{ u }}
+              <i class="remove" (click)="removeOwner(u)" title="移除">&times;</i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="if-row if-row-member">
+        <label>处理人</label>
+        <div class="member-picker">
+          <d-select
+            [filterKey]="'username'"
+            [appendToBody]="true"
+            [searchFn]="onSearchUser"
+            [isSearch]="true"
+            [allowClear]="true"
+            [(ngModel)]="handlerPick"
+            placeholder="按 username 搜索用户, 可重复添加多人"
+            (valueChange)="onHandlerPicked($event)"
+          >
+            <ng-template let-option="option">
+              <span>{{ option.username }}</span>
+              <span style="float: right; color: #999;">{{ option.displayName }}</span>
+            </ng-template>
+          </d-select>
+          <div class="member-tags" *ngIf="editForm.handlers?.length">
+            <span class="member-tag" *ngFor="let u of editForm.handlers">
+              {{ u }}
+              <i class="remove" (click)="removeHandler(u)" title="移除">&times;</i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="if-section-title">关键时间</div>
+      <div class="if-row if-row-3">
+        <span class="if-cell"><label>发生</label>
+          <input dTextInput [(ngModel)]="editForm.occurTime" placeholder="2026-09-18 10:00:00"/></span>
+        <span class="if-cell"><label>发现</label>
+          <input dTextInput [(ngModel)]="editForm.discoverTime" placeholder="2026-09-18 10:30:00"/></span>
+        <span class="if-cell"><label>开始处置</label>
+          <input dTextInput [(ngModel)]="editForm.respondTime" placeholder="2026-09-18 10:40:00"/></span>
+      </div>
+      <div class="if-row if-row-3">
+        <span class="if-cell"><label>止损</label>
+          <input dTextInput [(ngModel)]="editForm.containTime" placeholder="可留空"/></span>
+        <span class="if-cell"><label>业务恢复</label>
+          <input dTextInput [(ngModel)]="editForm.recoverTime" placeholder="可留空"/></span>
+        <span class="if-cell"><label>关闭</label>
+          <input dTextInput [(ngModel)]="editForm.closeTime" placeholder="可留空"/></span>
+      </div>
+
+      <div class="if-section-title">监管上报</div>
+      <div class="if-row if-row-cb">
+        <label class="if-cb"><d-checkbox [(ngModel)]="editForm.dataInvolved"></d-checkbox><span>涉及数据泄漏</span></label>
+        <label class="if-cb"><d-checkbox [(ngModel)]="editForm.reportRequired"></d-checkbox><span>需监管上报</span></label>
+        <label class="if-cb"><d-checkbox [(ngModel)]="editForm.reported"></d-checkbox><span>已完成上报</span></label>
+        <span class="if-cell if-cell-time"><label>上报时间</label>
+          <input dTextInput [(ngModel)]="editForm.reportTime" placeholder="可留空"/></span>
+      </div>
+
+      <div class="if-section-title">事件内容(支持 Markdown)</div>
+      <div class="if-row if-row-area">
+        <label>事件背景</label>
+        <textarea dTextarea [(ngModel)]="editForm.background" rows="4"
+                  placeholder="事件经过、如何发现、涉及系统"></textarea>
+      </div>
+      <div class="if-row if-row-area">
+        <label>处理过程</label>
+        <textarea dTextarea [(ngModel)]="editForm.handlingProcess" rows="4"
+                  placeholder="归纳性描述; 逐条动作请在详情页的处置时间线里记录"></textarea>
+      </div>
+      <div class="if-row if-row-area">
+        <label>根因</label>
+        <textarea dTextarea [(ngModel)]="editForm.rootCause" rows="3"
+                  placeholder="未归因前请留空, 不要用推测填充"></textarea>
+      </div>
+      <div class="if-row if-row-area">
+        <label>处理结果</label>
+        <textarea dTextarea [(ngModel)]="editForm.handlingResult" rows="3"
+                  placeholder="整改措施与结论"></textarea>
+      </div>
+      <div class="if-row if-row-area">
+        <label>复盘总结</label>
+        <textarea dTextarea [(ngModel)]="editForm.postmortemNote" rows="3" placeholder="可留空"></textarea>
+      </div>
+      <div class="if-row">
+        <label>跟进群</label>
+        <input dTextInput [(ngModel)]="editForm.followUpGroup" placeholder="钉钉群邀请 URL"/>
+      </div>
+      <div class="if-row">
+        <label>备注</label>
+        <input dTextInput [(ngModel)]="editForm.comment" placeholder="备注"/>
+      </div>
+
+      <div class="if-footer">
+        <span style="flex: 1"></span>
+        <d-button bsStyle="common" (click)="closeEditDialog()">取消</d-button>
+        <d-button bsStyle="primary" [disabled]="!editForm.title?.trim() || editSaving"
+                  (click)="onSaveIncident()">保存</d-button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 详情 + 处置时间线 -->
+<div class="components-overlay" *ngIf="showDetailDialog" (click)="closeDetailDialog()">
+  <div class="components-dialog incident-detail-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>{{ detail?.title || '事件详情' }}</h5>
+      <span class="close-btn" (click)="closeDetailDialog()">&times;</span>
+    </div>
+
+    <div class="detail-body" dLoading [loading]="detailLoading" [backdrop]="true">
+      <div *ngIf="detail">
+        <div class="detail-meta">
+          <span>{{ detail.incidentNo }}</span>
+          <d-tag *ngIf="detail.severity" [tag]="labelOf(severityOptions, detail.severity)"
+                 [labelStyle]="severityStyle(detail.severity)" style="margin-left: 8px;"></d-tag>
+          <d-tag *ngIf="detail.status" [tag]="labelOf(statusOptions, detail.status)"
+                 [labelStyle]="statusStyle(detail.status)" style="margin-left: 4px;"></d-tag>
+        </div>
+
+        <div class="detail-section" *ngIf="detail.background">
+          <div class="detail-section-title">事件背景</div>
+          <markdown [data]="detail.background"></markdown>
+        </div>
+        <div class="detail-section" *ngIf="detail.handlingProcess">
+          <div class="detail-section-title">处理过程</div>
+          <markdown [data]="detail.handlingProcess"></markdown>
+        </div>
+        <div class="detail-section" *ngIf="detail.rootCause">
+          <div class="detail-section-title">根因</div>
+          <markdown [data]="detail.rootCause"></markdown>
+        </div>
+        <div class="detail-section" *ngIf="detail.handlingResult">
+          <div class="detail-section-title">处理结果</div>
+          <markdown [data]="detail.handlingResult"></markdown>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">处置时间线</div>
+          <div class="tl-empty" *ngIf="!detail.timeline?.length">暂无记录</div>
+          <div class="tl-item" *ngFor="let e of detail.timeline">
+            <div class="tl-head">
+              <span class="tl-time">{{ e.eventTime | dDatePipe: 'y/M/d HH:mm:ss' }}</span>
+              <span class="tl-action" *ngIf="e.action">{{ labelOf(actionOptions, e.action) }}</span>
+              <app-user-popover *ngIf="e.username" [username]="e.username"></app-user-popover>
+              <span style="flex: 1"></span>
+              <d-icon [icon]="'icon-delete'" [operable]="true" (click)="onDeleteTimeline(e.id)"
+                      title="删除该记录"></d-icon>
+            </div>
+            <div class="tl-content">{{ e.content }}</div>
+            <div class="tl-attachment" *ngIf="e.attachment">
+              <a [href]="e.attachment" target="_blank" rel="noopener noreferrer">证据/附件</a>
+            </div>
+          </div>
+
+          <!-- 追加一条时间线 -->
+          <div class="tl-form" *ngIf="timelineForm">
+            <div class="if-row if-row-3">
+              <span class="if-cell"><label>时间</label>
+                <input dTextInput [(ngModel)]="timelineForm.eventTime"
+                       placeholder="2026-09-18 10:40:00"/></span>
+              <span class="if-cell"><label>动作</label>
+                <d-select [(ngModel)]="timelineForm.action" [options]="actionOptions"
+                          [valueKey]="'value'" [filterKey]="'label'"></d-select></span>
+              <span class="if-cell"><label>附件</label>
+                <input dTextInput [(ngModel)]="timelineForm.attachment" placeholder="链接, 可留空"/></span>
+            </div>
+            <div class="if-row if-row-area">
+              <label>内容 *</label>
+              <textarea dTextarea [(ngModel)]="timelineForm.content" rows="2"
+                        placeholder="做了什么、结果如何"></textarea>
+            </div>
+            <div class="if-footer">
+              <span style="flex: 1"></span>
+              <d-button bsStyle="primary" bsSize="sm"
+                        [disabled]="!timelineForm.content?.trim() || timelineSaving"
+                        (click)="onSaveTimeline()">添加记录</d-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

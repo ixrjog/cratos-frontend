@@ -48,9 +48,22 @@
         <d-button class="help-btn" bsStyle="common" (click)="openIssueGroup()">
           <img src="assets/eds/dingtalk_app.svg" class="dingtalk-icon" alt="钉钉" />{{ 'artifactPublish.search.issueGroup' | translate }}
         </d-button>
-        <d-button class="help-btn" bsStyle="common" (click)="openReport()">
-          <i class="fas fa-chart-column" style="margin-right: 4px;"></i>{{ 'artifactPublish.report.button' | translate }}
-        </d-button>
+        <d-icon
+          class="help-btn"
+          [icon]="'icon-go-chart'"
+          [operable]="true"
+          (click)="openReport()"
+          [title]="'artifactPublish.report.button' | translate"
+          style="font-size: 16px;"
+        ></d-icon>
+        <d-icon
+          class="help-btn"
+          [icon]="'icon-go-cloudserver'"
+          [operable]="true"
+          (click)="openWorkload()"
+          title="Jenkins 集群工作负载"
+          style="font-size: 16px;"
+        ></d-icon>
         <d-button class="help-btn" bsStyle="primary" (click)="openDeployApply()">
           <i class="icon icon-add" style="margin-right: 4px;"></i>{{ 'artifactPublish.deployApply.button' | translate }}
         </d-button>
@@ -712,6 +725,115 @@
     <div class="bp-footer" *ngIf="buildPickerList.length">
       <d-button bsStyle="common" (click)="closeBuildPicker()">取消</d-button>
       <d-button bsStyle="primary" [disabled]="!selectedBranch" (click)="confirmBranch()">确定</d-button>
+    </div>
+  </div>
+</div>
+
+<!-- Jenkins 工作负载弹窗 -->
+<div class="components-overlay" *ngIf="showWorkload" (click)="showWorkload = false">
+  <div class="components-dialog workload-dialog" (click)="$event.stopPropagation()">
+    <div class="components-header">
+      <h5>Jenkins 集群工作负载</h5>
+      <div class="components-header-actions">
+        <i class="fas fa-rotate-right wl-refresh" title="刷新" (click)="loadWorkload()"></i>
+        <span class="close-btn" (click)="showWorkload = false">&times;</span>
+      </div>
+    </div>
+
+    <div class="workload-body" dLoading [loading]="workloadLoading" [backdrop]="true">
+      <!-- 集群汇总 -->
+      <div class="wl-summary" *ngIf="workload">
+        <div class="wl-card">
+          <span class="wl-num">{{ workload.instanceCount || 0 }}</span>
+          <span class="wl-label">实例</span>
+        </div>
+        <div class="wl-card">
+          <span class="wl-num">{{ workload.nodeCount || 0 }}</span>
+          <span class="wl-label">节点</span>
+        </div>
+        <div class="wl-card">
+          <span class="wl-num wl-online">{{ workload.onlineNodeCount || 0 }}</span>
+          <span class="wl-label">在线</span>
+        </div>
+        <div class="wl-card">
+          <span class="wl-num wl-offline">{{ workload.offlineNodeCount || 0 }}</span>
+          <span class="wl-label">离线</span>
+        </div>
+        <div class="wl-card">
+          <span class="wl-num">{{ workload.busyExecutors || 0 }}/{{ workload.totalExecutors || 0 }}</span>
+          <span class="wl-label">忙碌/执行器</span>
+        </div>
+      </div>
+
+      <div class="wl-empty" *ngIf="workload && !workload.instances?.length">未发现 Jenkins 实例</div>
+
+      <!-- 逐实例 -->
+      <div class="wl-instance" *ngFor="let inst of workload?.instances">
+        <div class="wl-inst-head">
+          <span class="wl-inst-name">{{ inst.instanceName }}</span>
+          <span class="wl-inst-url" *ngIf="inst.url">{{ inst.url }}</span>
+          <span class="wl-inst-exec" *ngIf="inst.reachable">{{ inst.busyExecutors || 0 }}/{{ inst.totalExecutors || 0 }} 执行器</span>
+          <span class="wl-inst-err" *ngIf="!inst.reachable" title="{{ inst.errorMessage }}">连接失败</span>
+        </div>
+
+        <div class="wl-nodes" *ngIf="inst.reachable">
+          <div class="wl-empty" *ngIf="!inst.nodes?.length">无节点</div>
+          <div class="wl-node" *ngFor="let node of inst.nodes">
+            <div class="wl-node-top">
+              <span class="wl-node-name">{{ node.displayName }}</span>
+              <span class="wl-badge" [ngStyle]="nodeStatusStyle(node)">{{ nodeStatusText(node) }}</span>
+              <span class="wl-node-exec">{{ node.busyExecutors || 0 }}/{{ node.numExecutors || 0 }}</span>
+            </div>
+            <div class="wl-node-meta">
+              <span *ngIf="node.architecture">{{ node.architecture }}</span>
+              <span *ngIf="respMs(node) != null">响应 {{ respMs(node) }} ms</span>
+            </div>
+            <div class="wl-gauge" *ngIf="memTotal(node)">
+              <span class="wl-gauge-label">内存</span>
+              <span class="wl-gauge-bar">
+                <span class="wl-gauge-fill"
+                      [ngStyle]="{ width: usedPercent(memTotal(node), memAvail(node)) + '%',
+                                   background: usageColor(usedPercent(memTotal(node), memAvail(node))) }"></span>
+              </span>
+              <span class="wl-gauge-text">
+                {{ fmtBytes(memTotal(node) - memAvail(node)) }} / {{ fmtBytes(memTotal(node)) }}
+              </span>
+            </div>
+            <div class="wl-gauge" *ngIf="diskTotal(node)">
+              <span class="wl-gauge-label">磁盘</span>
+              <span class="wl-gauge-bar">
+                <span class="wl-gauge-fill"
+                      [ngStyle]="{ width: usedPercent(diskTotal(node), diskFree(node)) + '%',
+                                   background: usageColor(usedPercent(diskTotal(node), diskFree(node))) }"></span>
+              </span>
+              <span class="wl-gauge-text">
+                {{ fmtBytes(diskTotal(node) - diskFree(node)) }} / {{ fmtBytes(diskTotal(node)) }}
+              </span>
+            </div>
+            <div class="wl-gauge" *ngIf="swapTotal(node)">
+              <span class="wl-gauge-label">交换</span>
+              <span class="wl-gauge-bar">
+                <span class="wl-gauge-fill"
+                      [ngStyle]="{ width: usedPercent(swapTotal(node), swapAvail(node)) + '%',
+                                   background: usageColor(usedPercent(swapTotal(node), swapAvail(node))) }"></span>
+              </span>
+              <span class="wl-gauge-text">
+                {{ fmtBytes(swapTotal(node) - swapAvail(node)) }} / {{ fmtBytes(swapTotal(node)) }}
+              </span>
+            </div>
+            <div class="wl-node-offline" *ngIf="node.offline && node.offlineCauseReason?.trim()">
+              {{ node.offlineCauseReason }}
+            </div>
+            <div class="wl-tasks" *ngIf="node.runningTasks?.length">
+              <div class="wl-task" *ngFor="let t of node.runningTasks">
+                <span class="wl-task-name">{{ t.taskName || ('执行器 #' + t.number) }}</span>
+                <span class="wl-task-progress" *ngIf="t.progress != null && t.progress >= 0">{{ t.progress }}%</span>
+                <span class="wl-task-stuck" *ngIf="t.likelyStuck">疑似卡住</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

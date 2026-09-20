@@ -521,6 +521,104 @@ export class ScaComponent implements OnInit, OnDestroy {
   reportLoading = false;
   report: any = null;
 
+  // ==================== Jenkins 工作负载 ====================
+  showWorkload = false;
+  workloadLoading = false;
+  /** 后端 JankinsClusterVO.Workload */
+  workload: any = null;
+
+  openWorkload() {
+    this.showWorkload = true;
+    this.loadWorkload();
+  }
+
+  loadWorkload() {
+    this.workloadLoading = true;
+    this.apiService.get('/jankins/cluster', '/query', {}).subscribe(({ body }: any) => {
+      this.workload = body || {};
+      this.workloadLoading = false;
+    }, () => {
+      this.workloadLoading = false;
+    });
+  }
+
+  nodeStatusStyle(node: any): any {
+    if (node?.offline) {
+      return { background: '#f66f6a', color: '#fff' };
+    }
+    if (!node?.numExecutors) {
+      return { background: '#c0c4cc', color: '#fff' };
+    }
+    if (node?.idle) {
+      return { background: '#9b9b9b', color: '#fff' };
+    }
+    return { background: '#50d4ab', color: '#fff' };
+  }
+
+  nodeStatusText(node: any): string {
+    if (node?.offline) {
+      return node?.temporarilyOffline ? '临时下线' : '离线';
+    }
+    if (!node?.numExecutors) {
+      return '禁用';
+    }
+    return node?.idle ? '空闲' : '运行中';
+  }
+
+  fmtBytes(bytes: number): string {
+    if (bytes == null || isNaN(bytes)) {
+      return '';
+    }
+    const gb = bytes / 1024 / 1024 / 1024;
+    if (gb >= 1) {
+      return gb.toFixed(1) + ' GB';
+    }
+    return (bytes / 1024 / 1024).toFixed(0) + ' MB';
+  }
+
+  /** 兼容后端数值字段(新)与旧 Jenkins monitor 字符串: 数值优先, 否则从字符串正则抠 key=<number> */
+  monitorNum(node: any, numericField: string, rawString: string, rawKey: string): number {
+    const direct = node?.[numericField];
+    if (direct != null && !isNaN(Number(direct))) {
+      return Number(direct);
+    }
+    const raw = node?.[rawString];
+    if (typeof raw !== 'string') {
+      return null;
+    }
+    const m = raw.match(new RegExp(rawKey + '=(-?\\d+)'));
+    return m ? Number(m[1]) : null;
+  }
+
+  memTotal = (n: any) => this.monitorNum(n, 'memTotalBytes', 'swapSpace', 'totalPhysicalMemory');
+  memAvail = (n: any) => this.monitorNum(n, 'memAvailableBytes', 'swapSpace', 'availablePhysicalMemory');
+  diskTotal = (n: any) => this.monitorNum(n, 'diskTotalBytes', 'diskSpace', 'totalSize');
+  diskFree = (n: any) => this.monitorNum(n, 'diskFreeBytes', 'diskSpace', 'size');
+  swapTotal = (n: any) => this.monitorNum(n, 'swapTotalBytes', 'swapSpace', 'totalSwapSpace');
+  swapAvail = (n: any) => this.monitorNum(n, 'swapAvailableBytes', 'swapSpace', 'availableSwapSpace');
+  respMs = (n: any) => this.monitorNum(n, 'responseTimeMs', 'responseTime', 'average');
+
+  usedPercent(total: number, available: number): number {
+    if (!total || total <= 0 || available == null) {
+      return null;
+    }
+    const pct = Math.round((1 - available / total) * 100);
+    return Math.min(100, Math.max(0, pct));
+  }
+
+  usageColor(pct: number): string {
+    if (pct == null) {
+      return '#9b9b9b';
+    }
+    if (pct >= 90) {
+      return '#f66f6a';
+    }
+    if (pct >= 75) {
+      return '#fa9841';
+    }
+    return '#50d4ab';
+  }
+
   openReportDialog() {
     this.showReportDialog = true;
     this.loadReport();

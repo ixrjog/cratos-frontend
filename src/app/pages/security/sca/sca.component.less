@@ -647,3 +647,226 @@
     }
   }
 }
+
+/* ===== Jenkins 工作负载弹窗 ===== */
+.workload-dialog {
+  width: 70%;
+  min-width: 640px;
+  max-width: 1100px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+
+  .wl-refresh {
+    cursor: pointer;
+    margin-right: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+
+    &:hover {
+      color: var(--devui-brand, #5e7ce0);
+    }
+  }
+
+  .workload-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+}
+
+.wl-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 10px 4px 14px;
+
+  .wl-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 14px 8px;
+    border: 1px solid var(--devui-dividing-line, #dfe1e6);
+    border-radius: 8px;
+    background: var(--devui-base-bg, #fff);
+  }
+
+  .wl-num {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--devui-text, #252b3a);
+
+    &.wl-online {
+      color: #50d4ab;
+    }
+
+    &.wl-offline {
+      color: #f66f6a;
+    }
+  }
+
+  .wl-label {
+    font-size: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+}
+
+.wl-empty {
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--devui-aide-text, #8a8e99);
+}
+
+.wl-instance {
+  margin-top: 14px;
+
+  .wl-inst-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    font-size: 13px;
+    border-left: 3px solid var(--devui-brand, #5e7ce0);
+
+    .wl-inst-name {
+      font-weight: 600;
+      color: var(--devui-text, #252b3a);
+    }
+
+    .wl-inst-url {
+      color: var(--devui-aide-text, #8a8e99);
+      word-break: break-all;
+    }
+
+    .wl-inst-exec {
+      margin-left: auto;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .wl-inst-err {
+      margin-left: auto;
+      color: #f66f6a;
+      cursor: help;
+    }
+  }
+}
+
+.wl-nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.wl-node {
+  padding: 10px 12px;
+  border: 1px solid var(--devui-dividing-line, #dfe1e6);
+  border-radius: 6px;
+  background: var(--devui-global-bg, #f7f8fa);
+
+  .wl-node-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .wl-node-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--devui-text, #252b3a);
+      word-break: break-all;
+    }
+
+    .wl-badge {
+      padding: 0 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .wl-node-exec {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+  }
+
+  .wl-node-meta {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--devui-aide-text, #8a8e99);
+  }
+
+  .wl-gauge {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+
+    .wl-gauge-label {
+      flex: 0 0 28px;
+      color: var(--devui-aide-text, #8a8e99);
+    }
+
+    .wl-gauge-bar {
+      flex: 1;
+      min-width: 0;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--devui-dividing-line, #dfe1e6);
+      overflow: hidden;
+    }
+
+    .wl-gauge-fill {
+      display: block;
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .wl-gauge-text {
+      flex: 0 0 auto;
+      color: var(--devui-aide-text, #8a8e99);
+      white-space: nowrap;
+    }
+  }
+
+  .wl-node-offline {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #f66f6a;
+    word-break: break-all;
+  }
+
+  .wl-tasks {
+    margin-top: 8px;
+    border-top: 1px dashed var(--devui-dividing-line, #dfe1e6);
+    padding-top: 6px;
+
+    .wl-task {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 20px;
+
+      .wl-task-name {
+        color: var(--devui-text, #252b3a);
+        word-break: break-all;
+      }
+
+      .wl-task-progress {
+        color: var(--devui-brand, #5e7ce0);
+      }
+
+      .wl-task-stuck {
+        color: #fa9841;
+      }
+    }
+  }
+}

@@ -747,6 +747,12 @@ mavenpassword=你的Cratos密码`;
   trendOption: any = null;
   statusOption: any = null;
   buildTypeOption: any = null;
+
+  // ===== Jankins 工作负载弹窗 =====
+  showWorkload = false;
+  workloadLoading = false;
+  /** 后端 JankinsClusterVO.Workload: instances[] + 汇总计数 */
+  workload: any = null;
   repoOption: any = null;
   topAppsOption: any = null;
   topPublishersOption: any = null;
@@ -755,6 +761,111 @@ mavenpassword=你的Cratos密码`;
   openReport() {
     this.showReport = true;
     this.loadReport();
+  }
+
+  // ===== Jankins 工作负载 =====
+  openWorkload() {
+    this.showWorkload = true;
+    this.loadWorkload();
+  }
+
+  loadWorkload() {
+    this.workloadLoading = true;
+    this.apiService.get('/jankins/cluster', '/query', {}).subscribe(({ body }: any) => {
+      this.workload = body || {};
+      this.workloadLoading = false;
+    }, () => {
+      this.workloadLoading = false;
+    });
+  }
+
+  /** 节点状态胶囊的样式 */
+  nodeStatusStyle(node: any): any {
+    if (node?.offline) {
+      return { background: '#f66f6a', color: '#fff' };
+    }
+    // 无执行器 = 禁用(不参与构建)
+    if (!node?.numExecutors) {
+      return { background: '#c0c4cc', color: '#fff' };
+    }
+    if (node?.idle) {
+      return { background: '#9b9b9b', color: '#fff' };
+    }
+    // 在线且有任务在跑
+    return { background: '#50d4ab', color: '#fff' };
+  }
+
+  nodeStatusText(node: any): string {
+    if (node?.offline) {
+      return node?.temporarilyOffline ? '临时下线' : '离线';
+    }
+    if (!node?.numExecutors) {
+      return '禁用';
+    }
+    return node?.idle ? '空闲' : '运行中';
+  }
+
+  /** 字节 -> 人类可读 (GB/MB) */
+  fmtBytes(bytes: number): string {
+    if (bytes == null || isNaN(bytes)) {
+      return '';
+    }
+    const gb = bytes / 1024 / 1024 / 1024;
+    if (gb >= 1) {
+      return gb.toFixed(1) + ' GB';
+    }
+    return (bytes / 1024 / 1024).toFixed(0) + ' MB';
+  }
+
+  /**
+   * 从一个字段取数值, 兼容两种后端形态:
+   * (1) 新后端: 已是数值字段 (node.diskFreeBytes 等) -> 直接用;
+   * (2) 旧后端: 仍是 Jenkins monitor 的字符串 (node.diskSpace 里含 "size=..."),
+   *     从字符串里正则抠出 key=<number>。
+   * numericField 有值优先用它; 否则回退到 rawString 里解析 rawKey。
+   */
+  monitorNum(node: any, numericField: string, rawString: string, rawKey: string): number {
+    const direct = node?.[numericField];
+    if (direct != null && !isNaN(Number(direct))) {
+      return Number(direct);
+    }
+    const raw = node?.[rawString];
+    if (typeof raw !== 'string') {
+      return null;
+    }
+    const m = raw.match(new RegExp(rawKey + '=(-?\\d+)'));
+    return m ? Number(m[1]) : null;
+  }
+
+  memTotal = (n: any) => this.monitorNum(n, 'memTotalBytes', 'swapSpace', 'totalPhysicalMemory');
+  memAvail = (n: any) => this.monitorNum(n, 'memAvailableBytes', 'swapSpace', 'availablePhysicalMemory');
+  diskTotal = (n: any) => this.monitorNum(n, 'diskTotalBytes', 'diskSpace', 'totalSize');
+  diskFree = (n: any) => this.monitorNum(n, 'diskFreeBytes', 'diskSpace', 'size');
+  swapTotal = (n: any) => this.monitorNum(n, 'swapTotalBytes', 'swapSpace', 'totalSwapSpace');
+  swapAvail = (n: any) => this.monitorNum(n, 'swapAvailableBytes', 'swapSpace', 'availableSwapSpace');
+  respMs = (n: any) => this.monitorNum(n, 'responseTimeMs', 'responseTime', 'average');
+
+  /** 已用百分比 (total 与 available), 用于内存/磁盘条; 返回 0-100 或 null */
+  usedPercent(total: number, available: number): number {
+    if (!total || total <= 0 || available == null) {
+      return null;
+    }
+    const pct = Math.round((1 - available / total) * 100);
+    return Math.min(100, Math.max(0, pct));
+  }
+
+  /** 使用率对应的颜色: >=90 红, >=75 橙, 否则绿 */
+  usageColor(pct: number): string {
+    if (pct == null) {
+      return '#9b9b9b';
+    }
+    if (pct >= 90) {
+      return '#f66f6a';
+    }
+    if (pct >= 75) {
+      return '#fa9841';
+    }
+    return '#50d4ab';
   }
 
   /** 切换统计区间 */

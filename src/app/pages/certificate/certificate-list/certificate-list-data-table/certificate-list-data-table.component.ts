@@ -20,15 +20,46 @@ export class CertificateListDataTableComponent implements OnInit {
 
   @ViewChild(DataTableComponent, { static: true }) datatable: DataTableComponent;
   private static readonly CERT_TYPE_STORAGE_KEY = 'certificate_selected_type';
+  private static readonly SEARCH_STORAGE_KEY = 'certificate_list_search';
+
+  /** 读取持久化的搜索条件(queryName / certificateType / valid) */
+  private static loadSearchState(): { queryName: string; certificateType: string; valid: boolean | undefined } {
+    const fallbackType = localStorage.getItem(CertificateListDataTableComponent.CERT_TYPE_STORAGE_KEY) || '';
+    try {
+      const raw = localStorage.getItem(CertificateListDataTableComponent.SEARCH_STORAGE_KEY);
+      if (raw) {
+        const obj = JSON.parse(raw);
+        return {
+          queryName: typeof obj.queryName === 'string' ? obj.queryName : '',
+          certificateType: typeof obj.certificateType === 'string' ? obj.certificateType : fallbackType,
+          valid: obj.valid === true ? true : undefined,
+        };
+      }
+    } catch (e) {}
+    return { queryName: '', certificateType: fallbackType, valid: undefined };
+  }
+
+  private static readonly _initSearch = CertificateListDataTableComponent.loadSearchState();
 
   queryParam = {
-    queryName: '',
-    certificateType: localStorage.getItem(CertificateListDataTableComponent.CERT_TYPE_STORAGE_KEY) || '',
-    valid: undefined as boolean | undefined,
+    queryName: CertificateListDataTableComponent._initSearch.queryName,
+    certificateType: CertificateListDataTableComponent._initSearch.certificateType,
+    valid: CertificateListDataTableComponent._initSearch.valid,
   };
 
   /** 过滤无效证书: 勾选=仅看有效证书(valid=true), 不勾=全部(undefined) */
-  filterInvalid = false;
+  filterInvalid = CertificateListDataTableComponent._initSearch.valid === true;
+
+  /** 持久化当前搜索条件 */
+  private saveSearchState() {
+    try {
+      localStorage.setItem(CertificateListDataTableComponent.SEARCH_STORAGE_KEY, JSON.stringify({
+        queryName: this.queryParam.queryName || '',
+        certificateType: this.queryParam.certificateType || '',
+        valid: this.queryParam.valid === true ? true : undefined,
+      }));
+    } catch (e) {}
+  }
 
   onFilterInvalidChange(checked: boolean) {
     this.filterInvalid = checked;
@@ -76,6 +107,7 @@ export class CertificateListDataTableComponent implements OnInit {
   }
 
   fetchData() {
+    this.saveSearchState();
     const param: CertificatePageQuery = {
       ...this.queryParam,
       page: this.table.pager.pageIndex,

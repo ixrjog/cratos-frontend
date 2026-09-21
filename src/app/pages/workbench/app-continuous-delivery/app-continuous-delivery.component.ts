@@ -843,6 +843,10 @@ export class AppContinuousDeliveryComponent implements OnInit, OnDestroy {
       }
       map.get(key).servers.push(s);
     }
+    // 每组内的服务器按 serverName(s.name) 排序后再展示
+    for (const g of map.values()) {
+      g.servers.sort((a: any, b: any) => (a?.name || '').localeCompare(b?.name || ''));
+    }
     this.deployGroups = Array.from(map.values())
       .sort((a, b) => (a.countryCode + '|' + a.project).localeCompare(b.countryCode + '|' + b.project));
     this.deployCountries = Array.from(new Set(this.deployGroups.map((g) => g.countryCode)))
